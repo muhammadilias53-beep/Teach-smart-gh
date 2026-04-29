@@ -1,0 +1,90 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper Functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // User Profile Rules
+    match /users/{userId} {
+      function isValidUser(data) {
+        return data.keys().hasAll(['uid', 'email', 'displayName']) &&
+               data.uid == request.auth.uid &&
+               data.displayName is string && data.displayName.size() <= 100 &&
+               data.email == request.auth.token.email &&
+               (!('subjectsTaught' in data) || data.subjectsTaught is list) &&
+               (!('teachingExperienceYears' in data) || data.teachingExperienceYears is number || data.teachingExperienceYears == null) &&
+               (!('photoURL' in data) || (data.photoURL is string && data.photoURL.size() <= 2000000)); // ~2MB for base64
+      }
+
+      allow get: if isOwner(userId);
+      allow create: if isOwner(userId) && isValidUser(request.resource.data);
+      allow update: if isOwner(userId) && isValidUser(request.resource.data) &&
+                      request.resource.data.diff(resource.data).affectedKeys()
+                        .hasOnly(['displayName', 'school', 'region', 'district', 'town', 'level', 'subjectsTaught', 'teachingExperienceYears', 'updatedAt', 'photoURL']);
+    }
+
+    // Resource Library Rules
+    match /resources/{resourceId} {
+      function isValidResource(data) {
+        return data.authorId == request.auth.uid &&
+               data.title is string && data.title.size() <= 200 &&
+               data.type in ['PDF', 'Document', 'Link', 'Image'] &&
+               data.subject is string &&
+               data.level is string;
+      }
+
+      allow list: if isSignedIn() && (resource.data.authorId == request.auth.uid || resource.data.authorId == 'system');
+      allow get: if isSignedIn();
+      allow create: if isSignedIn() && isValidResource(request.resource.data);
+      allow update: if isOwner(resource.data.authorId) && isValidResource(request.resource.data);
+      allow delete: if isOwner(resource.data.authorId);
+    }
+
+    // Lesson Plans Rules
+    match /lessonPlans/{id} {
+      allow list: if isSignedIn() && resource.data.authorId == request.auth.uid;
+      allow get: if isSignedIn() && resource.data.authorId == request.auth.uid;
+      allow create: if isSignedIn() && request.resource.data.authorId == request.auth.uid;
+      allow update, delete: if isSignedIn() && resource.data.authorId == request.auth.uid;
+    }
+
+    // Exams Rules
+    match /exams/{id} {
+      allow list: if isSignedIn() && resource.data.authorId == request.auth.uid;
+      allow get: if isSignedIn() && resource.data.authorId == request.auth.uid;
+      allow create: if isSignedIn() && request.resource.data.authorId == request.auth.uid;
+      allow update, delete: if isSignedIn() && resource.data.authorId == request.auth.uid;
+    }
+
+    // Schemes Rules
+    match /schemes/{id} {
+      allow list: if isSignedIn() && resource.data.authorId == request.auth.uid;
+      allow get: if isSignedIn() && resource.data.authorId == request.auth.uid;
+      allow create: if isSignedIn() && request.resource.data.authorId == request.auth.uid;
+      allow update, delete: if isSignedIn() && resource.data.authorId == request.auth.uid;
+    }
+
+    // Notes Rules
+    match /notes/{id} {
+      allow list: if isSignedIn() && resource.data.authorId == request.auth.uid;
+      allow get: if isSignedIn() && resource.data.authorId == request.auth.uid;
+      allow create: if isSignedIn() && request.resource.data.authorId == request.auth.uid;
+      allow update, delete: if isSignedIn() && resource.data.authorId == request.auth.uid;
+    }
+  }
+}

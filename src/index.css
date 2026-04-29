@@ -1,0 +1,154 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap');
+
+@theme {
+  --color-ghana-red: #CE1126;
+  --color-ghana-gold: #FCD116;
+  --color-ghana-green: #006B3F;
+  --color-ghana-black: #000000;
+  
+  /* Refined Theme Colors */
+  --color-emerald-deep: #064e3b;
+  --color-emerald-mid: #065f46;
+  --color-emerald-light: #10b981;
+  --color-cream: #fcfcf9;
+  --color-slate-900: #0f172a;
+  --color-slate-800: #1e293b;
+  --color-slate-100: #f1f5f9;
+  --color-slate-50: #f8fafc;
+  
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Outfit", sans-serif;
+}
+
+:root {
+  --background: var(--color-cream);
+  --primary: var(--color-emerald-deep);
+  --primary-foreground: #ffffff;
+  --secondary: var(--color-ghana-gold);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--color-slate-800);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+}
+
+.ghana-gradient-border {
+  position: relative;
+}
+
+.ghana-gradient-border::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-ghana-red) 0%, var(--color-ghana-gold) 50%, var(--color-ghana-green) 100%);
+  border-radius: 4px 4px 0 0;
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.05);
+}
+
+@layer components {
+  .btn-primary {
+    @apply flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl font-bold transition-all active:scale-95 text-sm uppercase tracking-wider bg-emerald-deep text-white shadow-lg shadow-emerald-900/20 hover:bg-emerald-800;
+  }
+  .btn-secondary {
+    @apply flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl font-bold transition-all active:scale-95 text-sm uppercase tracking-wider bg-ghana-gold text-emerald-deep shadow-lg shadow-ghana-gold/20 hover:opacity-90;
+  }
+  .btn-ghost {
+    @apply flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl font-bold transition-all active:scale-95 text-sm uppercase tracking-wider bg-white/50 text-slate-600 border border-slate-100 hover:bg-white hover:text-emerald-deep;
+  }
+  
+  .input-field {
+    @apply w-full px-5 py-4 rounded-2xl border border-slate-100 bg-white/80 focus:bg-white focus:border-emerald-500/50 focus:ring-4 focus:ring-emerald-500/5 outline-none transition-all font-medium text-slate-700 shadow-sm;
+  }
+  
+  .card-fancy {
+    @apply bg-white border border-slate-100 rounded-[2rem] p-8 shadow-sm hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-500;
+  }
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.05);
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(0,0,0,0.1);
+}
+
+/* Markdown Enhancements */
+.markdown-body {
+  font-family: var(--font-sans);
+}
+
+.markdown-body h1 {
+  @apply text-3xl font-black mb-8 border-b-2 border-slate-900 pb-4 tracking-tighter uppercase;
+}
+
+.markdown-body h2 {
+  @apply text-xl font-bold mt-12 mb-4 text-slate-800 tracking-tight border-l-4 border-emerald-500 pl-4 bg-emerald-50/30 py-2;
+}
+
+.markdown-body h3 {
+  @apply text-lg font-bold mt-8 mb-3 text-slate-700 tracking-tight;
+}
+
+.markdown-body p {
+  @apply mb-6 text-slate-600 leading-relaxed;
+}
+
+.markdown-body ul, .markdown-body ol {
+  @apply my-6 space-y-2 ml-6;
+}
+
+.markdown-body li {
+  @apply text-slate-600 leading-relaxed;
+}
+
+.markdown-body table {
+  @apply w-full border-collapse my-8 overflow-hidden rounded-2xl border border-slate-200 shadow-sm;
+}
+
+.markdown-body th {
+  @apply bg-slate-50 text-slate-900 font-black text-xs uppercase tracking-wider p-4 text-left border-b border-slate-200;
+}
+
+.markdown-body td {
+  @apply p-4 text-sm text-slate-600 border-b border-slate-100;
+}
+
+.markdown-body tr:last-child td {
+  @apply border-b-0;
+}
+
+.markdown-body code {
+  @apply bg-slate-100 text-emerald-deep px-1.5 py-0.5 rounded font-mono text-[0.9em] border border-slate-200;
+}
+
+.markdown-body pre {
+  @apply bg-slate-900 text-slate-50 p-6 rounded-2xl my-6 overflow-x-auto shadow-inner;
+}
+
+.markdown-body pre code {
+  @apply bg-transparent text-inherit p-0 border-0 text-xs;
+}

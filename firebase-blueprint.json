@@ -1,0 +1,82 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Teacher profile information",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "school": { "type": "string" },
+        "region": { "type": "string" },
+        "district": { "type": "string" },
+        "town": { "type": "string" },
+        "level": { "type": "string" },
+        "subjectsTaught": { 
+          "type": "array", 
+          "items": { "type": "string" } 
+        },
+        "teachingExperienceYears": { "type": "number" },
+        "subscriptionStatus": { "type": "string" },
+        "trialStartDate": { "type": "string", "format": "date-time" },
+        "photoURL": { "type": "string", "description": "Base64 encoded profile picture" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "displayName"]
+    },
+    "Resource": {
+      "title": "Resource",
+      "description": "Library resources like books or documents",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "authorId": { "type": "string" },
+        "title": { "type": "string" },
+        "type": { "type": "string" },
+        "subject": { "type": "string" },
+        "level": { "type": "string" },
+        "url": { "type": "string" },
+        "description": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["authorId", "title", "type", "subject", "level"]
+    },
+    "LessonNote": {
+      "title": "LessonNote",
+      "description": "AI generated lesson notes for students",
+      "type": "object",
+      "properties": {
+        "authorId": { "type": "string" },
+        "title": { "type": "string" },
+        "content": { "type": "string", "description": "Markdown content" },
+        "subject": { "type": "string" },
+        "level": { "type": "string" },
+        "summary": { 
+          "type": "array", 
+          "items": { "type": "string" } 
+        },
+        "questions": { 
+          "type": "array", 
+          "items": { "type": "string" } 
+        },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["authorId", "title", "content", "subject", "level"]
+    }
+  },
+  "firestore": {
+    "users/{userId}": {
+      "schema": "User",
+      "description": "Individual teacher profile"
+    },
+    "resources/{resourceId}": {
+      "schema": "Resource",
+      "description": "User uploaded resources"
+    },
+    "notes/{noteId}": {
+      "schema": "LessonNote",
+      "description": "Saved lesson notes"
+    }
+  }
+}
