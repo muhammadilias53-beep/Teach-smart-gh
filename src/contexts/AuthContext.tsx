@@ -41,14 +41,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     } catch (error) {
       console.error("Error fetching profile:", error);
-      // Fallback to guest profile on error to allow access
-      setProfile({
-        uid: 'guest',
-        email: auth.currentUser?.email || 'guest@teachsmart.gh',
-        displayName: auth.currentUser?.displayName || 'Guest Teacher',
-        subscriptionStatus: 'active',
-        trialStartDate: new Date()
-      } as any);
     }
   };
 
@@ -59,14 +51,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (user) {
           await fetchProfile(user.uid);
         } else {
-          // Provide a default guest profile for easy access
-          setProfile({
-            uid: 'guest',
-            email: 'guest@teachsmart.gh',
-            displayName: 'Guest Teacher',
-            subscriptionStatus: 'active',
-            trialStartDate: new Date()
-          } as any);
+          setProfile(null);
         }
       } catch (error) {
         console.error("Auth state change error:", error);

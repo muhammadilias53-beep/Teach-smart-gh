@@ -20,8 +20,9 @@ const AuthGuard = () => {
     );
   }
 
-  // We allow all users (including guests) to access the app
-  // Redirection to login is removed for "easy access" as requested.
+  if (!user) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
 
   const getStartDate = (d: any) => {
     if (!d) return new Date();
