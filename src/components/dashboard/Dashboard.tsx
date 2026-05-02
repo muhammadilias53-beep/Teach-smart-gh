@@ -266,15 +266,24 @@ const quickActions = [
               <div className="p-2.5 bg-amber-50 text-ghana-gold rounded-2xl group-hover:bg-ghana-gold group-hover:text-white transition-colors duration-500">
                 <Calendar size={18} />
               </div>
-              <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Trial Access</p>
+              <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                {profile?.uid === 'guest' ? 'Access Mode' : 'Trial Access'}
+              </p>
             </div>
             <div className="flex items-end justify-between">
-              <h3 className="text-4xl font-black text-slate-900 tracking-tighter">
-                <AnimatedCounter value={daysLeft} />
-                <span className="text-2xl ml-1">d</span>
-              </h3>
-              <div className="text-[10px] font-bold text-ghana-red bg-red-50 px-2 py-1 rounded-full uppercase tracking-tighter animate-pulse">
-                Days Left
+              {profile?.uid === 'guest' ? (
+                <h3 className="text-2xl font-black text-slate-900 tracking-tighter uppercase font-mono">Guest</h3>
+              ) : (
+                <h3 className="text-4xl font-black text-slate-900 tracking-tighter">
+                  <AnimatedCounter value={daysLeft} />
+                  <span className="text-2xl ml-1">d</span>
+                </h3>
+              )}
+              <div className={cn(
+                "text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-tighter",
+                profile?.uid === 'guest' ? "text-emerald-600 bg-emerald-50" : "text-ghana-red bg-red-50 animate-pulse"
+              )}>
+                {profile?.uid === 'guest' ? 'Unlimited' : 'Days Left'}
               </div>
             </div>
           </div>

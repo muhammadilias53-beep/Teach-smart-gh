@@ -13,16 +13,15 @@ const AuthGuard = () => {
     return (
       <div className="h-screen flex items-center justify-center bg-gray-50">
         <div className="flex flex-col items-center">
-          <div className="w-12 h-12 border-4 border-ghana-green border-t-ghana-gold rounded-full animate-spin mb-4" />
-          <p className="text-gray-500 font-medium animate-pulse">Loading TeachSmart...</p>
+          <div className="w-12 h-12 border-4 border-emerald-deep border-t-ghana-gold rounded-full animate-spin mb-4" />
+          <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 animate-pulse">Initializing TeachSmart...</p>
         </div>
       </div>
     );
   }
 
-  if (!user) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
-  }
+  // We allow all users (including guests) to access the app
+  // Redirection to login is removed for "easy access" as requested.
 
   const getStartDate = (d: any) => {
     if (!d) return new Date();

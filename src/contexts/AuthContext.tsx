@@ -46,7 +46,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (user) {
         await fetchProfile(user.uid);
       } else {
-        setProfile(null);
+        // Provide a default guest profile for easy access
+        setProfile({
+          uid: 'guest',
+          email: 'guest@teachsmart.gh',
+          displayName: 'Guest Teacher',
+          subscriptionStatus: 'active',
+          trialStartDate: new Date()
+        } as any);
       }
       setLoading(false);
     });

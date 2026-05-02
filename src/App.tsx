@@ -6,7 +6,6 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import AuthGuard from './components/auth/AuthGuard';
-import Login from './components/auth/Login';
 import Dashboard from './components/dashboard/Dashboard';
 import LessonPlanGenerator from './components/generators/LessonPlanGenerator';
 import ExamGenerator from './components/generators/ExamGenerator';
@@ -37,8 +36,6 @@ function App() {
       <BrowserRouter>
         <Toaster position="top-right" />
         <Routes>
-          <Route path="/login" element={<Login />} />
-          
           <Route element={<AuthGuard />}>
             <Route path="/" element={<Dashboard />} />
             <Route path="/ai" element={<Placeholder name="AI Assistant" />} />

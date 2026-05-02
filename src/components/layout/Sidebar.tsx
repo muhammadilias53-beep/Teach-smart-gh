@@ -87,20 +87,22 @@ const Sidebar = () => {
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-xs font-black text-slate-900 truncate uppercase tracking-tighter">
-                {profile?.displayName || 'Ghana Teacher'}
+                {profile?.uid === 'guest' ? 'Guest Teacher' : (profile?.displayName || 'Ghana Teacher')}
               </p>
               <p className="text-[10px] font-bold text-slate-500 truncate mt-0.5">
                 {profile?.subscriptionStatus || 'Basic'} Member
               </p>
             </div>
           </div>
-          <button
-            onClick={logout}
-            className="flex items-center justify-center gap-2 w-full py-3 bg-white text-rose-500 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-slate-100 hover:bg-rose-50 hover:text-rose-600 transition-all shadow-sm"
-          >
-            <LogOut size={12} />
-            <span>Sign Out</span>
-          </button>
+          {profile?.uid !== 'guest' && (
+            <button
+              onClick={logout}
+              className="flex items-center justify-center gap-2 w-full py-3 bg-white text-rose-500 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-slate-100 hover:bg-rose-50 hover:text-rose-600 transition-all shadow-sm"
+            >
+              <LogOut size={12} />
+              <span>Sign Out</span>
+            </button>
+          )}
         </div>
       </div>
     </div>
