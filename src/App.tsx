@@ -3,7 +3,7 @@
  * Version: 1.0.1
  */
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import AuthGuard from './components/auth/AuthGuard';
 import Login from './components/auth/Login';
@@ -34,7 +34,7 @@ import { Toaster } from 'react-hot-toast';
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
+      <Router>
         <Toaster position="top-right" />
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -56,7 +56,7 @@ function App() {
         </Routes>
         
         <GeminiAssistant />
-      </BrowserRouter>
+      </Router>
     </AuthProvider>
   );
 }
