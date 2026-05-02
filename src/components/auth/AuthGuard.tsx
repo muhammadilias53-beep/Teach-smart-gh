@@ -32,16 +32,18 @@ const AuthGuard = () => {
 
   // Trial/Subscription check
   const trialDays = profile ? differenceInDays(new Date(), getStartDate(profile.trialStartDate)) : 0;
-  const isTrialExpired = profile?.subscriptionStatus === 'trial' && trialDays > 3;
+  const isTrialExpired = profile?.subscriptionStatus === 'trial' && trialDays > 30;
   const isExpired = profile?.subscriptionStatus === 'expired' || (profile?.subscriptionEndDate && new Date(profile.subscriptionEndDate) < new Date());
   
   const needsPayment = (isTrialExpired || isExpired) && profile?.subscriptionStatus !== 'active';
 
-  // If subscription needed, redirect to billing unless already there
-  if (needsPayment && location.pathname !== '/billing') {
-    return <Navigate to="/billing" state={{ reason: 'expired' }} replace />;
-  }
+  // Allowed paths even if expired
+  const publicPaths = ['/billing', '/profile', '/', '/library'];
+  const isPublicPath = publicPaths.includes(location.pathname);
 
+  // We allow all navigation regardless of payment status to ensure sidebar responsiveness.
+  // Individual features can implement their own restriction UI if needed.
+  
   return (
     <div className="flex min-h-screen bg-gray-50">
       <Sidebar />

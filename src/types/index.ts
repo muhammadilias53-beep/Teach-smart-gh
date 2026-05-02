@@ -21,6 +21,8 @@ export interface UserProfile {
   lastPaymentId?: string;
   planType?: 'termly' | 'yearly' | 'lifetime';
   plan?: 'termly' | 'yearly' | 'lifetime';
+  locality?: string;
+  classSize?: string;
 }
 
 export interface LessonPlan {
@@ -80,6 +82,8 @@ export interface Resource {
   subject: string;
   level: string;
   strand?: string;
+  subStrand?: string;
+  contentCode?: string;
   type: 'link' | 'note' | 'file' | 'book';
   content: string;
   createdAt: any;

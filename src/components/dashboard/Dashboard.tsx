@@ -42,6 +42,8 @@ const Dashboard = () => {
     lessonPlans: 0,
     exams: 0,
     schemes: 0,
+    notes: 0,
+    packs: 0,
     total: 0
   });
   
@@ -52,7 +54,7 @@ const Dashboard = () => {
   };
 
   const trialDays = profile ? differenceInDays(new Date(), getStartDate(profile.trialStartDate)) : 0;
-  const daysLeft = Math.max(0, 3 - trialDays);
+  const daysLeft = Math.max(0, 30 - trialDays);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -61,46 +63,68 @@ const Dashboard = () => {
         const lpPath = 'lessonPlans';
         const exPath = 'exams';
         const scPath = 'schemes';
+        const ntPath = 'notes';
+        const pkPath = 'saved_resources';
 
         // Queries for recent docs
         const lpQ = query(
           collection(db, lpPath),
           where('authorId', '==', user.uid),
           orderBy('createdAt', 'desc'),
-          limit(3)
+          limit(5)
         );
         const exQ = query(
           collection(db, exPath),
           where('authorId', '==', user.uid),
           orderBy('createdAt', 'desc'),
-          limit(3)
+          limit(5)
         );
         const scQ = query(
           collection(db, scPath),
           where('authorId', '==', user.uid),
           orderBy('createdAt', 'desc'),
-          limit(3)
+          limit(5)
+        );
+        const ntQ = query(
+          collection(db, ntPath),
+          where('authorId', '==', user.uid),
+          orderBy('createdAt', 'desc'),
+          limit(5)
+        );
+        const pkQ = query(
+          collection(db, pkPath),
+          where('userId', '==', user.uid),
+          orderBy('createdAt', 'desc'),
+          limit(5)
         );
         
         // Count queries
         const totalLpQ = query(collection(db, lpPath), where('authorId', '==', user.uid));
         const totalExQ = query(collection(db, exPath), where('authorId', '==', user.uid));
         const totalScQ = query(collection(db, scPath), where('authorId', '==', user.uid));
+        const totalNtQ = query(collection(db, ntPath), where('authorId', '==', user.uid));
+        const totalPkQ = query(collection(db, pkPath), where('userId', '==', user.uid));
 
-        const [lpSnap, exSnap, scSnap, countLp, countEx, countSc] = await Promise.all([
+        const [lpSnap, exSnap, scSnap, ntSnap, pkSnap, countLp, countEx, countSc, countNt, countPk] = await Promise.all([
           getDocs(lpQ).catch(err => handleFirestoreError(err, OperationType.LIST, lpPath)),
           getDocs(exQ).catch(err => handleFirestoreError(err, OperationType.LIST, exPath)),
           getDocs(scQ).catch(err => handleFirestoreError(err, OperationType.LIST, scPath)),
+          getDocs(ntQ).catch(err => handleFirestoreError(err, OperationType.LIST, ntPath)),
+          getDocs(pkQ).catch(err => handleFirestoreError(err, OperationType.LIST, pkPath)),
           getCountFromServer(totalLpQ),
           getCountFromServer(totalExQ),
-          getCountFromServer(totalScQ)
+          getCountFromServer(totalScQ),
+          getCountFromServer(totalNtQ),
+          getCountFromServer(totalPkQ)
         ]);
         
-        if (lpSnap && exSnap && scSnap) {
+        if (lpSnap && exSnap && scSnap && ntSnap && pkSnap) {
           const docs = [
             ...lpSnap.docs.map(doc => ({ id: doc.id, ...doc.data(), type: 'Lesson Plan' })),
             ...exSnap.docs.map(doc => ({ id: doc.id, ...doc.data(), type: 'Exam' })),
-            ...scSnap.docs.map(doc => ({ id: doc.id, ...doc.data(), type: 'Scheme' }))
+            ...scSnap.docs.map(doc => ({ id: doc.id, ...doc.data(), type: 'Scheme' })),
+            ...ntSnap.docs.map(doc => ({ id: doc.id, ...doc.data(), type: 'Note' })),
+            ...pkSnap.docs.map(doc => ({ id: doc.id, ...doc.data(), type: 'Resource Pack' }))
           ].sort((a: any, b: any) => {
             const tA = a.createdAt?.toMillis?.() || 0;
             const tB = b.createdAt?.toMillis?.() || 0;
@@ -110,15 +134,19 @@ const Dashboard = () => {
           setRecentDocs(docs);
         }
 
-        if (countLp && countEx && countSc) {
+        if (countLp && countEx && countSc && countNt && countPk) {
           const lpCount = countLp.data().count;
           const exCount = countEx.data().count;
           const scCount = countSc.data().count;
+          const ntCount = countNt.data().count;
+          const pkCount = countPk.data().count;
           setStats({
             lessonPlans: lpCount,
             exams: exCount,
             schemes: scCount,
-            total: lpCount + exCount + scCount
+            notes: ntCount,
+            packs: pkCount,
+            total: lpCount + exCount + scCount + ntCount + pkCount
           });
         }
 
@@ -333,13 +361,13 @@ const quickActions = [
         <div className="absolute top-0 right-0 p-12 opacity-10">
           <Activity size={120} />
         </div>
-        <div className="relative z-10 grid md:grid-cols-3 gap-12">
+        <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           <div className="space-y-6">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center">
                 <FileText size={20} />
               </div>
-              <h3 className="font-black uppercase tracking-tight">Lesson Plans</h3>
+              <h3 className="font-black uppercase tracking-tight text-sm">Lesson Plans</h3>
             </div>
             <div className="space-y-2">
               <div className="flex justify-between text-xs font-bold text-slate-400">
@@ -362,7 +390,7 @@ const quickActions = [
               <div className="w-10 h-10 bg-ghana-gold rounded-xl flex items-center justify-center text-slate-900">
                 <Calendar size={20} />
               </div>
-              <h3 className="font-black uppercase tracking-tight">Schemes</h3>
+              <h3 className="font-black uppercase tracking-tight text-sm">Schemes</h3>
             </div>
             <div className="space-y-2">
               <div className="flex justify-between text-xs font-bold text-slate-400">
@@ -385,7 +413,7 @@ const quickActions = [
               <div className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center text-slate-900">
                 <PenTool size={20} />
               </div>
-              <h3 className="font-black uppercase tracking-tight">Exams</h3>
+              <h3 className="font-black uppercase tracking-tight text-sm">Exams</h3>
             </div>
             <div className="space-y-2">
               <div className="flex justify-between text-xs font-bold text-slate-400">
@@ -398,6 +426,29 @@ const quickActions = [
                   animate={{ width: `${Math.min(100, (stats.exams / 15) * 100)}%` }}
                   transition={{ duration: 1, ease: "easeOut" }}
                   className="h-full bg-white" 
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center text-white">
+                <BookOpen size={20} />
+              </div>
+              <h3 className="font-black uppercase tracking-tight text-sm">Lesson Notes</h3>
+            </div>
+            <div className="space-y-2">
+              <div className="flex justify-between text-xs font-bold text-slate-400">
+                <span>PROGRESS</span>
+                <span><AnimatedCounter value={stats.notes} />/20</span>
+              </div>
+              <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                <motion.div 
+                  initial={{ width: 0 }}
+                  animate={{ width: `${Math.min(100, (stats.notes / 20) * 100)}%` }}
+                  transition={{ duration: 1, ease: "easeOut" }}
+                  className="h-full bg-blue-500" 
                 />
               </div>
             </div>
@@ -536,6 +587,8 @@ const quickActions = [
                                 "px-2 py-1 rounded-md text-[10px] font-black uppercase",
                                 doc.type === 'Exam' ? "bg-purple-100 text-purple-700" : 
                                 doc.type === 'Scheme' ? "bg-orange-100 text-orange-700" :
+                                doc.type === 'Note' ? "bg-blue-100 text-blue-700" :
+                                doc.type === 'Resource Pack' ? "bg-indigo-100 text-indigo-700" :
                                 "bg-emerald-100 text-emerald-700"
                               )}>
                                 {doc.type === 'Scheme' ? 'Scheme of Learning' : doc.type}
@@ -592,6 +645,8 @@ const DocumentViewerModal = ({ doc, onClose }: { doc: any, onClose: () => void }
       content = `PHASE 1: STARTER\n${doc.phase1}\n\nPHASE 2: MAIN\n${doc.phase2}\n\nPHASE 3: PLENARY\n${doc.phase3}`;
     } else if (doc.type === 'Exam') {
       content = `QUESTIONS\n${doc.questions}\n\nMARKING SCHEME\n${doc.markingScheme}`;
+    } else if (doc.type === 'Note') {
+      content = `TOPIC: ${doc.title}\n\nCONTENT\n${doc.content}\n\nSUMMARY\n${doc.summary?.join('\n')}\n\nQUESTIONS\n${doc.questions?.join('\n')}`;
     } else {
       content = doc.content || "";
     }
@@ -701,6 +756,46 @@ const DocumentViewerModal = ({ doc, onClose }: { doc: any, onClose: () => void }
                     <SafeMarkdown>{doc.markingScheme}</SafeMarkdown>
                   </div>
                 </section>
+              </div>
+            ) : doc.type === 'Note' ? (
+              <div className="space-y-10">
+                <section>
+                  <h3 className="text-xs font-black text-blue-600 uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <span className="w-2 h-2 bg-blue-600 rounded-full" />
+                    Lesson Content
+                  </h3>
+                  <div className="markdown-body prose max-w-none">
+                    <SafeMarkdown>{doc.content}</SafeMarkdown>
+                  </div>
+                </section>
+                <div className="h-px bg-slate-100" />
+                {doc.summary && (
+                  <section>
+                    <h3 className="text-xs font-black text-ghana-gold uppercase tracking-widest mb-4 flex items-center gap-2">
+                      <span className="w-2 h-2 bg-ghana-gold rounded-full" />
+                      Key Summary
+                    </h3>
+                    <ul className="list-disc pl-5 space-y-2">
+                      {doc.summary.map((point: string, i: number) => (
+                        <li key={i} className="text-sm font-medium text-slate-600">{point}</li>
+                      ))}
+                    </ul>
+                  </section>
+                )}
+                <div className="h-px bg-slate-100" />
+                {doc.questions && (
+                  <section>
+                    <h3 className="text-xs font-black text-emerald-600 uppercase tracking-widest mb-4 flex items-center gap-2">
+                      <span className="w-2 h-2 bg-emerald-600 rounded-full" />
+                      Review Questions
+                    </h3>
+                    <ul className="list-decimal pl-5 space-y-3">
+                      {doc.questions.map((q: string, i: number) => (
+                        <li key={i} className="text-sm font-bold text-slate-700">{q}</li>
+                      ))}
+                    </ul>
+                  </section>
+                )}
               </div>
             ) : (
               <div className="markdown-body prose max-w-none">

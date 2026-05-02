@@ -31,52 +31,52 @@ import { useAuth } from '../../contexts/AuthContext';
 import { Resource } from '../../types';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../../lib/utils';
+import { subjects, levels, SUBJECT_STRANDS } from '../../constants';
 
-const subjects = ["English", "Mathematics", "Science", "Social Studies", "Computing", "Career Technology", "RME", "Creative Arts", "French", "Ghanaian Language", "Elective Mathematics", "Physics", "Chemistry", "Biology", "Economics", "Geography", "History", "Government", "CRS", "IRS", "Literature in English", "Financial Accounting", "Cost Accounting", "Business Management", "Agricultural Science", "Elective ICT", "Food & Nutrition", "Graphic Design"];
-const levels = ["KG", "Basic", "JHS", "SHS"];
+// Using constants from src/constants.ts
 
 const CURRICULUM_BOOKS: Record<string, { title: string, url: string, level: string }[]> = {
   "Mathematics": [
     { title: "KG Mathematics Curriculum", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/MATHEMATICS-KG.pdf", level: "KG" },
-    { title: "Mathematics Curriculum (B1-B6)", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/MATHEMATICS-LOWER-PRIMARY-B1-B3.pdf", level: "Basic" },
-    { title: "JHS Mathematics Curriculum (B7-B9)", url: "https://nacca.gov.gh/wp-content/uploads/2020/12/Mathematics-JHS-B7-B9.pdf", level: "JHS" },
-    { title: "SHS Core Mathematics (Elective Available)", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/CORE-MATHEMATICS-SHS.pdf", level: "SHS" }
+    { title: "Mathematics Curriculum (B1-B6)", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/MATHEMATICS-LOWER-PRIMARY-B1-B3.pdf", level: "Basic 1-6 (Primary)" },
+    { title: "Mathematics Curriculum (B7-B9)", url: "https://nacca.gov.gh/wp-content/uploads/2020/12/Mathematics-JHS-B7-B9.pdf", level: "Basic 7-9 (JHS)" },
+    { title: "Senior High Mathematics", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/CORE-MATHEMATICS-SHS.pdf", level: "Basic 10-12 (SHS)" }
   ],
   "English": [
     { title: "KG English Language", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/ENGLISH-KG.pdf", level: "KG" },
-    { title: "English Language Curriculum (B1-B6)", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/ENGLISH-LOWER-PRIMARY-B1-B3.pdf", level: "Basic" },
-    { title: "JHS English Language (B7-B9)", url: "https://nacca.gov.gh/wp-content/uploads/2020/12/English-Language-JHS-B7-B9.pdf", level: "JHS" },
-    { title: "SHS English Language", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/ENGLISH-LANGUAGE-SHS.pdf", level: "SHS" }
+    { title: "English Language Curriculum (B1-B6)", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/ENGLISH-LOWER-PRIMARY-B1-B3.pdf", level: "Basic 1-6 (Primary)" },
+    { title: "English Language Curriculum (B7-B9)", url: "https://nacca.gov.gh/wp-content/uploads/2020/12/English-Language-JHS-B7-B9.pdf", level: "Basic 7-9 (JHS)" },
+    { title: "Senior High English Language", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/ENGLISH-LANGUAGE-SHS.pdf", level: "Basic 10-12 (SHS)" }
   ],
   "Science": [
     { title: "KG Science", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/SCIENCE-KG.pdf", level: "KG" },
-    { title: "Science Curriculum (B1-B6)", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/SCIENCE-LOWER-PRIMARY-B1-B3.pdf", level: "Basic" },
-    { title: "JHS Science (B7-B9)", url: "https://nacca.gov.gh/wp-content/uploads/2020/12/Science-JHS-B7-B9.pdf", level: "JHS" },
-    { title: "SHS Integrated Science", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/INTEGRATED-SCIENCE-SHS.pdf", level: "SHS" }
+    { title: "Science Curriculum (B1-B6)", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/SCIENCE-LOWER-PRIMARY-B1-B3.pdf", level: "Basic 1-6 (Primary)" },
+    { title: "Science Curriculum (B7-B9)", url: "https://nacca.gov.gh/wp-content/uploads/2020/12/Science-JHS-B7-B9.pdf", level: "Basic 7-9 (JHS)" },
+    { title: "Senior High Integrated Science", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/INTEGRATED-SCIENCE-SHS.pdf", level: "Basic 10-12 (SHS)" }
   ],
   "Social Studies": [
-    { title: "Our World Our Heritage (B1-B6)", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/OWOH-LOWER-PRIMARY-B1-B3.pdf", level: "Basic" },
-    { title: "JHS Social Studies (B7-B9)", url: "https://nacca.gov.gh/wp-content/uploads/2020/12/Social-Studies-JHS-B7-B9.pdf", level: "JHS" },
-    { title: "SHS Social Studies", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/SOCIAL-STUDIES-SHS.pdf", level: "SHS" }
+    { title: "Our World Our Heritage (B1-B6)", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/OWOH-LOWER-PRIMARY-B1-B3.pdf", level: "Basic 1-6 (Primary)" },
+    { title: "Social Studies Curriculum (B7-B9)", url: "https://nacca.gov.gh/wp-content/uploads/2020/12/Social-Studies-JHS-B7-B9.pdf", level: "Basic 7-9 (JHS)" },
+    { title: "Senior High Social Studies", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/SOCIAL-STUDIES-SHS.pdf", level: "Basic 10-12 (SHS)" }
   ],
   "Computing": [
-    { title: "Computing Curriculum (B1-B6)", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/COMPUTING-LOWER-PRIMARY-B1-B3.pdf", level: "Basic" },
-    { title: "JHS Computing (B7-B9)", url: "https://nacca.gov.gh/wp-content/uploads/2020/12/Computing-JHS-B7-B9.pdf", level: "JHS" }
+    { title: "Computing Curriculum (B1-B6)", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/COMPUTING-LOWER-PRIMARY-B1-B3.pdf", level: "Basic 1-6 (Primary)" },
+    { title: "Computing Curriculum (B7-B9)", url: "https://nacca.gov.gh/wp-content/uploads/2020/12/Computing-JHS-B7-B9.pdf", level: "Basic 7-9 (JHS)" }
   ],
   "Career Technology": [
-    { title: "JHS Career Technology (B7-B9)", url: "https://nacca.gov.gh/wp-content/uploads/2020/12/Career-Technology-JHS-B7-B9.pdf", level: "JHS" }
+    { title: "Career Technology (B7-B9)", url: "https://nacca.gov.gh/wp-content/uploads/2020/12/Career-Technology-JHS-B7-B9.pdf", level: "Basic 7-9 (JHS)" }
   ],
   "RME": [
-    { title: "RME Curriculum (B1-B6)", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/RME-LOWER-PRIMARY-B1-B3.pdf", level: "Basic" },
-    { title: "JHS RME (B7-B9)", url: "https://nacca.gov.gh/wp-content/uploads/2020/12/RME-JHS-B7-B9.pdf", level: "JHS" }
+    { title: "RME Curriculum (B1-B6)", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/RME-LOWER-PRIMARY-B1-B3.pdf", level: "Basic 1-6 (Primary)" },
+    { title: "RME Curriculum (B7-B9)", url: "https://nacca.gov.gh/wp-content/uploads/2020/12/RME-JHS-B7-B9.pdf", level: "Basic 7-9 (JHS)" }
   ],
   "Creative Arts": [
-    { title: "Creative Arts Curriculum (B1-B6)", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/CREATIVE-ARTS-B1-B6.pdf", level: "Basic" },
-    { title: "JHS Creative Arts and Design (B7-B9)", url: "https://nacca.gov.gh/wp-content/uploads/2020/12/Creative-Arts-B7-B9.pdf", level: "JHS" }
+    { title: "Creative Arts and Design (B1-B6)", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/CREATIVE-ARTS-B1-B6.pdf", level: "Basic 1-6 (Primary)" },
+    { title: "Creative Arts and Design (B7-B9)", url: "https://nacca.gov.gh/wp-content/uploads/2020/12/Creative-Arts-B7-B9.pdf", level: "Basic 7-9 (JHS)" }
   ],
   "French": [
-    { title: "French Curriculum (B4-B6)", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/FRENCH-B4-B6.pdf", level: "Basic" },
-    { title: "JHS French (B7-B9)", url: "https://nacca.gov.gh/wp-content/uploads/2020/12/French-JHS-B7-B9.pdf", level: "JHS" }
+    { title: "French Curriculum (B4-B6)", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/FRENCH-B4-B6.pdf", level: "Basic 1-6 (Primary)" },
+    { title: "French Curriculum (B7-B9)", url: "https://nacca.gov.gh/wp-content/uploads/2020/12/French-JHS-B7-B9.pdf", level: "Basic 7-9 (JHS)" }
   ],
   "Ghanaian Language": [
     { title: "Ghanaian Language Curriculum (B1-B6)", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/GHANAIAN-LANGUAGE-B1-B3.pdf", level: "Basic" },
@@ -96,6 +96,39 @@ const CURRICULUM_BOOKS: Record<string, { title: string, url: string, level: stri
   ],
   "Economics": [
     { title: "SHS Economics", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/ECONOMICS-SHS.pdf", level: "SHS" }
+  ],
+  "Geography": [
+    { title: "SHS Geography", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/GEOGRAPHY-SHS.pdf", level: "SHS" }
+  ],
+  "History": [
+    { title: "SHS History", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/HISTORY-SHS.pdf", level: "SHS" }
+  ],
+  "Government": [
+    { title: "SHS Government", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/GOVERNMENT-SHS.pdf", level: "SHS" }
+  ],
+  "Literature in English": [
+    { title: "SHS Literature in English", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/LITERATURE-IN-ENGLISH-SHS.pdf", level: "SHS" }
+  ],
+  "Financial Accounting": [
+    { title: "SHS Financial Accounting", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/FINANCIAL-ACCOUNTING-SHS.pdf", level: "SHS" }
+  ],
+  "Cost Accounting": [
+    { title: "SHS Cost Accounting", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/COST-ACCOUNTING-SHS.pdf", level: "SHS" }
+  ],
+  "Business Management": [
+    { title: "SHS Business Management", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/BUSINESS-MANAGEMENT-SHS.pdf", level: "SHS" }
+  ],
+  "Agricultural Science": [
+    { title: "SHS Agricultural Science", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/AGRICULTURAL-SCIENCE-SHS.pdf", level: "SHS" }
+  ],
+  "Elective ICT": [
+    { title: "SHS Elective ICT", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/ELECTIVE-ICT-SHS.pdf", level: "SHS" }
+  ],
+  "CRS": [
+    { title: "SHS Christian Religious Studies", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/CRS-SHS.pdf", level: "SHS" }
+  ],
+  "IRS": [
+    { title: "SHS Islamic Religious Studies", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/IRS-SHS.pdf", level: "SHS" }
   ]
 };
 
@@ -107,7 +140,11 @@ export default function ContentLibrary() {
   const [search, setSearch] = useState('');
   const [selectedSubject, setSelectedSubject] = useState('All');
   const [selectedLevel, setSelectedLevel] = useState('All');
+  const [selectedSubStrand, setSelectedSubStrand] = useState('All');
+  const [selectedContentCode, setSelectedContentCode] = useState('All');
   const [showFilters, setShowFilters] = useState(false);
+  const [filterSubjectSearch, setFilterSubjectSearch] = useState('');
+  const [filterStrandSearch, setFilterStrandSearch] = useState('');
   const [filterType, setFilterType] = useState<'all' | 'official' | 'user'>('all');
   const [showAddModal, setShowAddModal] = useState(false);
   const [viewingResource, setViewingResource] = useState<Resource | null>(null);
@@ -121,6 +158,8 @@ export default function ContentLibrary() {
     subject: string;
     level: string;
     strand: string;
+    subStrand: string;
+    contentCode: string;
     type: 'link' | 'note' | 'file' | 'book';
     content: string;
   }>({
@@ -129,6 +168,8 @@ export default function ContentLibrary() {
     subject: subjects[0],
     level: levels[0],
     strand: '',
+    subStrand: '',
+    contentCode: '',
     type: 'link',
     content: ''
   });
@@ -193,6 +234,8 @@ export default function ContentLibrary() {
         subject: subjects[0],
         level: levels[0],
         strand: '',
+        subStrand: '',
+        contentCode: '',
         type: 'link',
         content: ''
       });
@@ -216,21 +259,66 @@ export default function ContentLibrary() {
     }
   };
 
+  const subStrandStats = resources
+    .filter(r => (selectedSubject === 'All' || r.subject === selectedSubject))
+    .reduce((acc, r) => {
+      if (r.subStrand) {
+        acc[r.subStrand] = (acc[r.subStrand] || 0) + 1;
+      }
+      return acc;
+    }, {} as Record<string, number>);
+
+  const availableSubStrands = Object.entries(subStrandStats)
+    .map(([name, count]) => ({ name, count }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+
+  const codeStats = resources
+    .filter(r => (selectedSubject === 'All' || r.subject === selectedSubject) && (selectedLevel === 'All' || r.level.includes(selectedLevel)))
+    .reduce((acc, r) => {
+      if (r.contentCode) {
+        acc[r.contentCode] = (acc[r.contentCode] || 0) + 1;
+      }
+      return acc;
+    }, {} as Record<string, number>);
+
+  const availableCodes = Object.entries(codeStats)
+    .map(([name, count]) => ({ name, count }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+
+  const subjectStats = resources.reduce((acc, r) => {
+    acc[r.subject] = (acc[r.subject] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+
+  const levelStats = resources.reduce((acc, r) => {
+    levels.forEach(l => {
+      if (r.level.includes(l)) {
+        acc[l] = (acc[l] || 0) + 1;
+      }
+    });
+    return acc;
+  }, {} as Record<string, number>);
+
   const filteredResources = resources.filter(res => {
     const searchLower = search.toLowerCase();
     const titleMatch = res.title?.toLowerCase().includes(searchLower);
     const descMatch = res.description?.toLowerCase().includes(searchLower);
-    const matchesSearch = !search || titleMatch || descMatch;
+    const strandSearchMatch = res.strand?.toLowerCase().includes(searchLower);
+    const subStrandSearchMatch = res.subStrand?.toLowerCase().includes(searchLower);
+    const codeSearchMatch = res.contentCode?.toLowerCase().includes(searchLower);
+    const matchesSearch = !search || titleMatch || descMatch || strandSearchMatch || subStrandSearchMatch || codeSearchMatch;
     
     const matchesSubject = selectedSubject === 'All' || res.subject === selectedSubject;
     const matchesLevel = selectedLevel === 'All' || res.level.includes(selectedLevel);
+    const matchesSubStrand = selectedSubStrand === 'All' || res.subStrand === selectedSubStrand;
+    const matchesCode = selectedContentCode === 'All' || res.contentCode === selectedContentCode;
     
     const matchesType = 
       filterType === 'all' ? true :
       filterType === 'official' ? res.authorId === 'system' :
       res.authorId !== 'system';
 
-    return matchesSearch && matchesSubject && matchesLevel && matchesType;
+    return matchesSearch && matchesSubject && matchesLevel && matchesType && matchesSubStrand && matchesCode;
   });
 
   const getIcon = (type: string, size = 18) => {
@@ -256,13 +344,21 @@ export default function ContentLibrary() {
             <h1 className="text-3xl font-black text-slate-900 tracking-tight">Resource Center</h1>
             <p className="text-slate-500 font-medium">Manage your personal materials and access official NaCCA documents.</p>
           </div>
-          <div className="flex items-center gap-3 bg-emerald-50 border border-emerald-100 px-5 py-3 rounded-2xl w-fit">
+          <div className="flex items-center gap-3 bg-emerald-50 border border-emerald-100 px-5 py-3 rounded-2xl w-fit group cursor-help relative">
             <div className="w-8 h-8 bg-emerald-600 text-white rounded-xl flex items-center justify-center shadow-lg shadow-emerald-600/20">
               <ShieldCheck size={18} />
             </div>
             <div>
-              <p className="text-[9px] font-black uppercase tracking-widest text-emerald-800">Compliance Status</p>
-              <p className="text-[9px] font-bold text-emerald-600 uppercase">NaCCA Standards V2.0 Synchronized</p>
+              <p className="text-[9px] font-black uppercase tracking-widest text-emerald-800">GES/NaCCA Compliance</p>
+              <p className="text-[9px] font-bold text-emerald-600 uppercase">SBC & CCP Standards V2.0 Active</p>
+            </div>
+            {/* Tooltip */}
+            <div className="absolute top-full mt-2 left-0 w-64 bg-slate-900 text-white p-4 rounded-2xl shadow-2xl opacity-0 group-hover:opacity-100 transition-opacity z-[60] pointer-events-none border border-slate-700">
+              <p className="text-[10px] font-bold text-ghana-gold uppercase mb-2">Compliance Certificate</p>
+              <p className="text-[10px] leading-relaxed text-slate-300">
+                This platform is synchronized with the National Council for Curriculum and Assessment (NaCCA) standards. 
+                All generated content follows the Standard-Based Curriculum (B1-B6) and Common Core Programme (B7-B10).
+              </p>
             </div>
           </div>
         </div>
@@ -299,120 +395,220 @@ export default function ContentLibrary() {
         <>
           {/* Search and Filters */}
           <div className="flex flex-col lg:flex-row gap-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
-          <input 
-            type="text" 
-            placeholder="Search your library..." 
-            className="w-full pl-14 pr-6 py-5 bg-white border border-slate-100 rounded-[2rem] shadow-sm focus:shadow-xl focus:border-emerald-200 outline-none transition-all font-medium"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
+            <div className="relative flex-1 group">
+              <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-500 transition-colors" size={20} />
+              <input 
+                type="text" 
+                placeholder="Search resources, topics, or NaCCA codes..." 
+                className="w-full pl-16 pr-8 py-5 bg-white border border-slate-100 rounded-[2rem] shadow-sm focus:shadow-xl focus:border-emerald-500 outline-none transition-all font-medium text-slate-600"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
 
-        <div className="relative">
-          <button 
-            onClick={() => setShowFilters(!showFilters)}
-            className={cn(
-              "h-full px-8 py-5 rounded-[2rem] border transition-all flex items-center gap-3 font-black uppercase tracking-widest text-[10px]",
-              showFilters || selectedSubject !== 'All' || selectedLevel !== 'All' || filterType !== 'all'
-                ? "bg-emerald-600 border-emerald-600 text-white shadow-lg"
-                : "bg-white border-slate-100 text-slate-500 hover:border-slate-200"
-            )}
-          >
-            <Filter size={18} />
-            Filter & Refine
-            {(selectedSubject !== 'All' || selectedLevel !== 'All' || filterType !== 'all') && (
-              <span className="w-2 h-2 bg-white rounded-full animate-pulse" />
-            )}
-          </button>
-
-          <AnimatePresence>
-            {showFilters && (
-              <motion.div 
-                initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                className="absolute right-0 top-full mt-4 w-[320px] md:w-[600px] bg-white rounded-[2.5rem] border border-slate-100 shadow-2xl z-50 p-8 grid grid-cols-1 md:grid-cols-2 gap-8"
-              >
-                <div className="space-y-4">
-                  <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Library Subject</h4>
-                  <div className="flex flex-wrap gap-2 max-h-[300px] overflow-y-auto pr-2 no-scrollbar">
-                    {['All', ...subjects].map(s => (
-                      <button
-                        key={s}
-                        onClick={() => setSelectedSubject(s)}
-                        className={cn(
-                          "px-4 py-2 rounded-xl text-[10px] font-black transition-all border",
-                          selectedSubject === s 
-                            ? "bg-emerald-500 border-emerald-500 text-white shadow-md shadow-emerald-500/20" 
-                            : "bg-white border-slate-100 text-slate-500 hover:border-emerald-200"
-                        )}
-                      >
-                        {s.toUpperCase()}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="space-y-8">
-                  <div className="space-y-4">
-                    <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Academic Level</h4>
-                    <select 
-                      className="w-full p-4 bg-slate-50 border-none rounded-2xl outline-none font-bold text-slate-700"
-                      value={selectedLevel}
-                      onChange={(e) => setSelectedLevel(e.target.value)}
-                    >
-                      <option value="All">All Levels</option>
-                      {levels.map(l => <option key={l} value={l}>{l.toUpperCase()}</option>)}
-                    </select>
-                  </div>
-
-                  <div className="space-y-4">
-                    <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Resource Type</h4>
-                    <div className="grid grid-cols-3 gap-2">
-                      {(['all', 'official', 'user'] as const).map(type => (
-                        <button
-                          key={type}
-                          onClick={() => setFilterType(type)}
-                          className={cn(
-                            "py-3 rounded-2xl text-[8px] font-black uppercase tracking-widest border transition-all",
-                            filterType === type 
-                              ? "bg-slate-900 border-slate-900 text-white" 
-                              : "bg-white border-slate-100 text-slate-400"
-                          )}
-                        >
-                          {type}
-                        </button>
-                      ))}
+            <div className="flex gap-4">
+              <div className="relative">
+                <button 
+                  onClick={() => setShowFilters(!showFilters)}
+                  className={cn(
+                    "h-full px-8 py-5 rounded-[2rem] border transition-all flex items-center gap-3 font-black uppercase tracking-widest text-[10px]",
+                    showFilters || selectedSubject !== 'All' || selectedLevel !== 'All' || selectedSubStrand !== 'All' || selectedContentCode !== 'All' || filterType !== 'all'
+                      ? "bg-slate-900 border-slate-900 text-white shadow-lg"
+                      : "bg-white border-slate-100 text-slate-500 hover:border-slate-200"
+                  )}
+                >
+                  <Filter size={18} />
+                  SBC/CCP Filters
+                  {(selectedSubject !== 'All' || selectedLevel !== 'All' || selectedSubStrand !== 'All' || selectedContentCode !== 'All' || filterType !== 'all') && (
+                    <div className="flex items-center gap-1 bg-emerald-500 px-2 py-0.5 rounded-full scale-90">
+                      <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
                     </div>
-                  </div>
-                  
-                  <div className="flex gap-3">
-                    <button 
-                      onClick={() => {
-                        setSelectedSubject('All');
-                        setSelectedLevel('All');
-                        setFilterType('all');
-                        setShowFilters(false);
-                      }}
-                      className="flex-1 py-4 bg-red-50 text-red-600 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-red-100 transition-colors"
+                  )}
+                </button>
+
+                <AnimatePresence>
+                  {showFilters && (
+                    <motion.div 
+                      initial={{ opacity: 0, y: 20, scale: 0.98 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 20, scale: 0.98 }}
+                      className="absolute right-0 top-full mt-4 w-[320px] md:w-[700px] bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_40px_80px_-16px_rgba(0,0,0,0.12)] z-50 overflow-hidden"
                     >
-                      Clear All
-                    </button>
-                    <button 
-                      onClick={() => setShowFilters(false)}
-                      className="flex-1 py-4 bg-emerald-600 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-600/20"
-                    >
-                      OK, Apply
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
+                      {/* Modal Header */}
+                      <div className="p-5 border-b border-slate-50 bg-slate-50/50 flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="w-9 h-9 bg-slate-900 text-white rounded-xl flex items-center justify-center shadow-lg">
+                            <Filter size={16} />
+                          </div>
+                          <div>
+                            <h3 className="text-xs font-black text-slate-900 uppercase tracking-widest">Filter Studio</h3>
+                            <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">Refine your library view</p>
+                          </div>
+                        </div>
+                        <button 
+                          onClick={() => {
+                            setSelectedSubject('All');
+                            setSelectedLevel('All');
+                            setSelectedSubStrand('All');
+                            setSelectedContentCode('All');
+                            setFilterType('all');
+                            setFilterSubjectSearch('');
+                            setFilterStrandSearch('');
+                          }}
+                          className="px-3 py-1.5 bg-white border border-slate-100 rounded-lg text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-red-500 hover:border-red-100 transition-all shadow-sm"
+                        >
+                          Clear All
+                        </button>
+                      </div>
+
+                      <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Primary Filters Column */}
+                        <div className="space-y-6">
+                          {/* Subject Section */}
+                          <div className="space-y-3">
+                            <div className="flex items-center gap-2">
+                              <Book size={14} className="text-emerald-500" />
+                              <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Subject Area</h4>
+                            </div>
+                            <div className="relative">
+                              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300" size={10} />
+                              <input 
+                                type="text"
+                                placeholder="Search subjects..."
+                                className="w-full pl-8 pr-3 py-2 bg-slate-50 border border-slate-100 rounded-xl text-[10px] outline-none focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all"
+                                value={filterSubjectSearch}
+                                onChange={(e) => setFilterSubjectSearch(e.target.value)}
+                              />
+                            </div>
+                            <div className="flex flex-wrap gap-1.5 max-h-[160px] overflow-y-auto pr-1 custom-scrollbar">
+                              {['All', ...subjects.filter(s => s.toLowerCase().includes(filterSubjectSearch.toLowerCase()))].map(s => (
+                                <button
+                                  key={s}
+                                  onClick={() => setSelectedSubject(s)}
+                                  className={cn(
+                                    "px-3 py-1.5 rounded-lg text-[9px] font-black transition-all border flex items-center gap-2",
+                                    selectedSubject === s 
+                                      ? "bg-emerald-500 border-emerald-500 text-white shadow-md shadow-emerald-500/20" 
+                                      : "bg-white border-slate-100 text-slate-500 hover:border-emerald-200"
+                                  )}
+                                >
+                                  {s.toUpperCase()}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Level Section */}
+                          <div className="space-y-3">
+                            <div className="flex items-center gap-2">
+                              <CheckCircle size={14} className="text-blue-500" />
+                              <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">GES Level</h4>
+                            </div>
+                            <div className="flex flex-wrap gap-1.5">
+                              {['All', ...levels].map(l => (
+                                <button
+                                  key={l}
+                                  onClick={() => setSelectedLevel(l)}
+                                  className={cn(
+                                    "px-3 py-1.5 rounded-lg text-[9px] font-black transition-all border",
+                                    selectedLevel === l 
+                                      ? "bg-slate-900 border-slate-900 text-white shadow-md" 
+                                      : "bg-white border-slate-100 text-slate-500 hover:border-slate-300"
+                                  )}
+                                >
+                                  {l.toUpperCase()}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Curriculum Column */}
+                        <div className="space-y-6 bg-slate-50/50 p-4 rounded-2xl border border-slate-100">
+                          <div className="flex items-center gap-2">
+                            <FolderOpen size={14} className="text-orange-500" />
+                            <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">SBC/CCP Tracking</h4>
+                          </div>
+
+                          {/* Sub-Strand Filter instead of Strand */}
+                          <div className="space-y-3">
+                            <label className="text-[8px] font-bold text-slate-400 uppercase tracking-widest block">NaCCA Sub-Strand</label>
+                            <select 
+                              value={selectedSubStrand}
+                              onChange={(e) => setSelectedSubStrand(e.target.value)}
+                              className="w-full p-2 bg-white border border-slate-200 rounded-lg text-[10px] font-bold outline-none focus:ring-2 focus:ring-orange-500/10 focus:border-orange-500 transition-all"
+                            >
+                              <option value="All">All Sub-Strands</option>
+                              {availableSubStrands.map(s => <option key={s.name} value={s.name}>{s.name} ({s.count})</option>)}
+                            </select>
+                          </div>
+
+                          {/* Code Filter (Simplified) */}
+                          <div className="space-y-3">
+                            <label className="text-[8px] font-bold text-slate-400 uppercase tracking-widest block">Indicator Code</label>
+                            <div className="flex flex-wrap gap-1.5 max-h-[100px] overflow-y-auto pr-1 custom-scrollbar">
+                              <button
+                                onClick={() => setSelectedContentCode('All')}
+                                className={cn(
+                                  "px-2 py-1 rounded-md text-[8px] font-mono border transition-all",
+                                  selectedContentCode === 'All' ? "bg-slate-800 text-white" : "bg-white text-slate-400"
+                                )}
+                              >
+                                ALL CODES
+                              </button>
+                              {availableCodes.map(c => (
+                                <button
+                                  key={c.name}
+                                  onClick={() => setSelectedContentCode(c.name)}
+                                  className={cn(
+                                    "px-2 py-1 rounded-md text-[8px] font-mono border transition-all",
+                                    selectedContentCode === c.name ? "bg-slate-800 text-white" : "bg-white text-slate-400 hover:border-slate-300"
+                                  )}
+                                >
+                                  {c.name}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Source Filter */}
+                          <div className="space-y-3 pt-2 border-t border-slate-100">
+                             <div className="grid grid-cols-2 gap-2">
+                                {(['official', 'user'] as const).map(type => (
+                                  <button
+                                    key={type}
+                                    onClick={() => setFilterType(filterType === type ? 'all' : type)}
+                                    className={cn(
+                                      "py-2 rounded-lg text-[8px] font-black uppercase tracking-widest border transition-all",
+                                      filterType === type 
+                                        ? "bg-slate-900 border-slate-900 text-white shadow-sm" 
+                                        : "bg-white border-slate-200 text-slate-400"
+                                    )}
+                                  >
+                                    {type}
+                                  </button>
+                                ))}
+                             </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Modal Footer */}
+                      <div className="p-4 bg-slate-50 border-t border-slate-100 flex justify-end">
+                        <button 
+                          onClick={() => setShowFilters(false)}
+                          className="px-6 py-3 bg-emerald-600 text-white rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-600/20 active:scale-95 flex items-center gap-2"
+                        >
+                          <CheckCircle size={14} />
+                          Apply Selection
+                        </button>
+                      </div>
+                    </motion.div>
             )}
           </AnimatePresence>
         </div>
       </div>
+    </div>
 
       {loading ? (
         <div className="flex flex-col items-center justify-center py-20 gap-4">
@@ -483,6 +679,21 @@ export default function ContentLibrary() {
                     <span className="px-2 py-0.5 bg-slate-100 text-slate-600 text-[10px] font-black uppercase tracking-widest rounded">
                       {resource.level}
                     </span>
+                    {resource.strand && (
+                      <span className="px-2 py-0.5 bg-blue-50 text-blue-600 text-[10px] font-black uppercase tracking-widest rounded">
+                        {resource.strand}
+                      </span>
+                    )}
+                    {resource.subStrand && (
+                      <span className="px-2 py-0.5 bg-indigo-50 text-indigo-600 text-[10px] font-black uppercase tracking-widest rounded">
+                        {resource.subStrand}
+                      </span>
+                    )}
+                    {resource.contentCode && (
+                      <span className="px-2 py-0.5 bg-slate-800 text-white text-[10px] font-mono tracking-wider rounded">
+                        {resource.contentCode}
+                      </span>
+                    )}
                   </div>
                   <h3 className="text-lg font-bold text-slate-900 mb-2 leading-tight">
                     {resource.title}
@@ -546,8 +757,20 @@ export default function ContentLibrary() {
     </>
   ) : (
         <div className="space-y-12">
+          {/* Curriculum Search */}
+          <div className="relative max-w-2xl mx-auto">
+            <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400" size={24} />
+            <input 
+              type="text" 
+              placeholder="Search curriculum documents..." 
+              className="w-full pl-16 pr-8 py-6 bg-white border border-slate-100 rounded-[2.5rem] shadow-xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 outline-none transition-all font-bold text-lg"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+
           {/* Level Filter for Curriculum */}
-          <div className="flex flex-wrap gap-2 pb-4 border-b border-slate-100">
+          <div className="flex flex-wrap gap-2 pb-4 border-b border-slate-100 justify-center">
             {['All', ...levels].map(level => (
               <button
                 key={level}
@@ -565,9 +788,14 @@ export default function ContentLibrary() {
           </div>
 
           {Object.entries(CURRICULUM_BOOKS).map(([subject, books]) => {
-            const filteredBooks = currLevelFilter === 'All' 
-              ? books 
-              : books.filter(b => b.level === currLevelFilter);
+            const searchLower = search.toLowerCase();
+            const filteredBooks = books.filter(b => {
+              const matchesLevel = currLevelFilter === 'All' || b.level === currLevelFilter;
+              const matchesSearch = !search || 
+                b.title.toLowerCase().includes(searchLower) || 
+                subject.toLowerCase().includes(searchLower);
+              return matchesLevel && matchesSearch;
+            });
 
             if (filteredBooks.length === 0) return null;
 
@@ -757,17 +985,64 @@ export default function ContentLibrary() {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="block text-xs font-black text-slate-400 uppercase tracking-widest">Resource Title</label>
-                <input 
-                  required
-                  type="text" 
-                  placeholder="e.g., Photosynthesis Video"
-                  value={newResource.title}
-                  onChange={(e) => setNewResource({...newResource, title: e.target.value})}
-                  className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none"
-                />
-              </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="block text-xs font-black text-slate-400 uppercase tracking-widest">Strand</label>
+                    {newResource.subject && SUBJECT_STRANDS[newResource.subject] ? (
+                      <select 
+                        required
+                        value={newResource.strand}
+                        onChange={(e) => setNewResource({...newResource, strand: e.target.value})}
+                        className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none"
+                      >
+                        <option value="">Select Strand...</option>
+                        {SUBJECT_STRANDS[newResource.subject].map(s => <option key={s} value={s}>{s}</option>)}
+                        <option value="Other">Other...</option>
+                      </select>
+                    ) : (
+                      <input 
+                        type="text" 
+                        placeholder="e.g. Diversity of Matter"
+                        value={newResource.strand}
+                        onChange={(e) => setNewResource({...newResource, strand: e.target.value})}
+                        className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none"
+                      />
+                    )}
+                  </div>
+                  <div className="space-y-2">
+                    <label className="block text-xs font-black text-slate-400 uppercase tracking-widest">Sub-Strand</label>
+                    <input 
+                      type="text" 
+                      placeholder="e.g. Living Things"
+                      value={newResource.subStrand}
+                      onChange={(e) => setNewResource({...newResource, subStrand: e.target.value})}
+                      className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block text-xs font-black text-slate-400 uppercase tracking-widest">SBC/CCP Code (Optional)</label>
+                  <input 
+                    type="text" 
+                    placeholder="e.g. B1.1.1.1.1"
+                    value={newResource.contentCode}
+                    onChange={(e) => setNewResource({...newResource, contentCode: e.target.value})}
+                    className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none font-mono"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block text-xs font-black text-slate-400 uppercase tracking-widest">Resource Title</label>
+                  <input 
+                    required
+                    type="text" 
+                    placeholder="e.g., Photosynthesis Video"
+                    value={newResource.title}
+                    onChange={(e) => setNewResource({...newResource, title: e.target.value})}
+                    className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none"
+                  />
+                </div>
 
               <div className="space-y-2">
                 <label className="block text-xs font-black text-slate-400 uppercase tracking-widest">Description (Optional)</label>

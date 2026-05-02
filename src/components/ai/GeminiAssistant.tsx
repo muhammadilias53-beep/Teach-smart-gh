@@ -51,7 +51,7 @@ const GeminiAssistant = () => {
         model,
         contents: [...history, { role: 'user', parts: [{ text: messageContent }]}],
         config: {
-            systemInstruction: "You are TeachSmart AI, a helpful assistant for Ghanaian teachers. You provide advice on NaCCA curriculum, lesson ideas, and teaching methods. Keep responses concise and practical. Use Ghanaian English nuances where appropriate."
+            systemInstruction: "You are TeachSmart AI, an expert educational consultant for Ghanaian teachers. You provide advice strictly aligned with the NaCCA Standard-Based Curriculum (SBC) and Common Core Programme (CCP). NOMENCLATURE: ALWAYS use the 'Basic' level format (e.g., B1-B12). NEVER use JHS or SHS alone without explaining they are Basic 7-9 or Basic 10-12. INDICATORS: Always emphasize the importance of using official NaCCA indicator codes in lesson planning. Keep responses concise and practical. Use Ghanaian English nuances where appropriate."
         }
       });
 

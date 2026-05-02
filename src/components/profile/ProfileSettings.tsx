@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { User, School, MapPin, Save, Shield, BadgeCheck, Loader2, Camera, Upload } from 'lucide-react';
+import { User, School, MapPin, Save, Shield, BadgeCheck, Loader2, Camera, Upload, BookOpen, GraduationCap, Users, Briefcase, Globe } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
@@ -9,13 +9,13 @@ import { updateProfile } from 'firebase/auth';
 import { auth } from '../../lib/firebase';
 import { toast } from 'react-hot-toast';
 
+import { levels } from '../../constants';
+
 const regions = [
   "Greater Accra", "Ashanti", "Central", "Western", "Eastern", 
   "Northern", "Upper East", "Upper West", "Volta", "Bono", 
   "Bono East", "Ahafo", "Savannah", "North East", "Oti", "Western North"
 ];
-
-const levels = ["KG", "Basic", "JHS", "SHS"];
 
 export default function ProfileSettings() {
   const { profile, user, refreshProfile } = useAuth();
@@ -30,6 +30,8 @@ export default function ProfileSettings() {
     district: profile?.district || '',
     town: profile?.town || '',
     level: profile?.level || '',
+    locality: profile?.locality || 'Urban',
+    classSize: profile?.classSize || '40',
     subjectsTaught: profile?.subjectsTaught?.join(', ') || '',
     teachingExperienceYears: profile?.teachingExperienceYears || ''
   });
@@ -193,7 +195,7 @@ export default function ProfileSettings() {
 
               <div className="space-y-2">
                 <label className="flex items-center gap-2 text-xs font-black text-slate-400 uppercase tracking-widest ml-1">
-                  Education Level
+                  <GraduationCap size={14} /> Education Level
                 </label>
                 <select 
                   required
@@ -204,6 +206,35 @@ export default function ProfileSettings() {
                   <option value="">Select Level</option>
                   {levels.map(l => <option key={l} value={l}>{l}</option>)}
                 </select>
+              </div>
+
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 text-xs font-black text-slate-400 uppercase tracking-widest ml-1">
+                  <Globe size={14} /> Locality Type
+                </label>
+                <select 
+                  required
+                  value={formData.locality}
+                  onChange={(e) => setFormData({...formData, locality: e.target.value})}
+                  className="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none font-bold text-slate-700 transition-all cursor-pointer appearance-none"
+                >
+                  <option value="Urban">Urban</option>
+                  <option value="Peri-Urban">Peri-Urban</option>
+                  <option value="Rural">Rural</option>
+                </select>
+              </div>
+
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 text-xs font-black text-slate-400 uppercase tracking-widest ml-1">
+                  <Users size={14} /> Default Class Size
+                </label>
+                <input 
+                  type="number"
+                  value={formData.classSize}
+                  onChange={(e) => setFormData({...formData, classSize: e.target.value})}
+                  className="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none font-bold text-slate-700 transition-all"
+                  placeholder="e.g. 40"
+                />
               </div>
 
               <div className="space-y-2">
@@ -236,7 +267,7 @@ export default function ProfileSettings() {
 
               <div className="space-y-2">
                 <label className="flex items-center gap-2 text-xs font-black text-slate-400 uppercase tracking-widest ml-1">
-                  Subjects Taught
+                  <BookOpen size={14} /> Subjects Taught
                 </label>
                 <input 
                   type="text"
@@ -245,11 +276,12 @@ export default function ProfileSettings() {
                   className="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none font-bold text-slate-700 transition-all"
                   placeholder="e.g. Mathematics, English, Science"
                 />
+                <p className="text-[10px] text-slate-400 font-medium ml-1 italic leading-none">List subjects separated by commas (e.g. English, Math, Science)</p>
               </div>
 
               <div className="space-y-2">
                 <label className="flex items-center gap-2 text-xs font-black text-slate-400 uppercase tracking-widest ml-1">
-                  Years of Teaching Experience
+                  <Briefcase size={14} /> Years of Teaching Experience
                 </label>
                 <input 
                   type="number"

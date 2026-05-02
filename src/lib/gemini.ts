@@ -5,8 +5,16 @@ const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY as string });
 export const generateLessonPlan = async (prompt: string, teacherInfo?: { school?: string, district?: string, town?: string, region?: string }) => {
   const model = "gemini-3-flash-preview";
   const systemInstruction = `
-    You are an expert Ghanaian teacher familiar with the NaCCA (National Council for Curriculum and Assessment) curriculum.
-    Generate a highly detailed lesson plan in the EXACT format required by the official Ghanaian teacher's lesson notebook.
+    You are an expert Ghanaian teacher and curriculum consultant strictly following the NaCCA (National Council for Curriculum and Assessment) Standard-Based Curriculum (SBC) and Common Core Programme (CCP).
+    Generate content that is 100% compliant with the latest Ghanaian educational standards as seen in official Strategic Schemes of Learning.
+    
+    NOMENCLATURE: ALWAYS use the "Basic" level format (e.g., B1-B6 for Primary, B7-B9 for Junior High, B10-B12 for Senior High). NEVER use JHS or SHS alone; always refer to them as Basic 7-9 or Basic 10-12.
+    INDICATORS: You MUST include and strictly follow the Indicator Code provided. Every activity must map back to these curriculum indicators.
+    
+    LESSON PLAN STRUCTURE (NaCCA CCP/SBC Standards):
+    - Phase 1: Starter (Preparing the brain for learning) - 10 mins. Focus on prior knowledge.
+    - Phase 2: Main (New Learning including assessment) - 40 mins. Step-by-step teaching and learning activities using various techniques (think-pair-share, group work, etc.).
+    - Phase 3: Plenary / Reflection - 10 mins. Summary and assessment.
     
     ${teacherInfo?.school ? `TEACHER CONTEXT:
     School: ${teacherInfo.school}
@@ -93,15 +101,17 @@ export const generateSchemeOfWork = async (subject: string, level: string, type:
   }
 
   const systemInstruction = `
-    You are a NaCCA Curriculum Expert. Generate an official ${type.toUpperCase()} SCHEME OF LEARNING for ${subject} (${level})${term && type === 'termly' ? ` specifically for TERM ${term}` : ''}.
+    You are a NaCCA Curriculum Expert. Generate an official ${type.toUpperCase()} STRATEGIC SCHEME OF LEARNING for ${subject} (${level})${term && type === 'termly' ? ` specifically for TERM ${term}` : ''}.
+    All content must align strictly with the latest Ghanaian National Curriculum (SBC/CCP) and NaCCA standards.
     
+    NOMENCLATURE: ALWAYS use the "Basic" level format (e.g., B1-B6 for Primary, B7-B9 for Junior High, B10-B12 for Senior High). NEVER use JHS or SHS alone; always refer to them as Basic 7-9 or Basic 10-12.
     ${formatInstructions}
     
     Rules:
     1. ONLY return the markdown table. No preambles.
     2. Ensure columns are correctly aligned.
-    3. Content must be rigorous and strictly aligned with the Ghanaian National Curriculum for the specified term.
-    4. Ensure the table is clearly readable.
+    3. Content must be rigorous and strictly aligned with the official NaCCA Scheme of Learning for the specified grade and term.
+    4. Ensure indicators include official codes (e.g., B7.1.3.1.1).
   `;
 
   const response = await ai.models.generateContent({
@@ -121,7 +131,11 @@ export const generateExam = async (
   teacherInfo?: { school?: string, region?: string, district?: string, town?: string }, 
   questionTypes?: string[],
   p1Settings?: { count: number, difficulty: string },
-  p2Settings?: { count: number, difficulty: string }
+  p2Settings?: { count: number, difficulty: string },
+  strand?: string,
+  subStrand?: string,
+  contentStandard?: string,
+  indicatorCode?: string
 ) => {
   const model = "gemini-3-flash-preview";
   
@@ -135,8 +149,12 @@ export const generateExam = async (
   const theoryToAnswer = theoryCount === 6 ? 4 : Math.ceil(theoryCount * 0.7);
 
   const systemInstruction = `
-    You are an expert examiner for the West African Examinations Council (WAEC), familiar with BECE and WASSCE standards in Ghana.
-    Generate a high-quality examination for ${subject} (${level}) based on the topics: ${topics}.
+    You are an expert examiner for the West African Examinations Council (WAEC), strictly adhering to NaCCA SBC/CCP and GES assessment standards for Ghana.
+    Generate a high-quality examination for ${subject} (${level}) based on the topics, strand, sub-strand, content standard, and indicator provided.
+    
+    CORE REQUIREMENTS:
+    1. ALIGNMENT: Content MUST be strictly based on the provided Strand, Sub-Strand, Content Standard (${contentStandard || 'N/A'}), Indicator (${indicatorCode || 'N/A'}), and Topics (${topics}). Every single question must be traceable to a NaCCA curriculum indicator.
+    2. NOMENCLATURE: ALWAYS use the "Basic" level format (e.g., B1-B6 for Primary, B7-B9 for Junior High, B10-B12 for Senior High). NEVER use JHS or SHS alone; always refer to them as Basic 7-9 or Basic 10-12.
     
     Overall Examination Difficulty: ${difficulty}
     ${questionTypes && questionTypes.length > 0 ? `Selected Question Types to include: ${questionTypes.join(', ')}` : ''}
@@ -191,7 +209,7 @@ export const generateExam = async (
 
   const response = await ai.models.generateContent({
     model,
-    contents: `Generate a full WAEC-style examination for ${subject} ${level} covering ${topics} at a ${difficulty} level.`,
+    contents: `Generate a full WAEC-style examination for ${subject} ${level} covering ${topics}${strand ? ` (Strand: ${strand})` : ''}${subStrand ? ` (Sub-Strand: ${subStrand})` : ''} at a ${difficulty} level.`,
     config: {
       systemInstruction,
       responseMimeType: "application/json",
@@ -206,17 +224,26 @@ export const generateNote = async (
   level: string,
   topic: string,
   objectives: string,
-  teacherInfo?: { school?: string, district?: string, region?: string }
+  teacherInfo?: { school?: string, district?: string, region?: string, town?: string, locality?: string },
+  differentiation?: string
 ) => {
   const model = "gemini-3-flash-preview";
   const systemInstruction = `
-    You are an expert Ghanaian teacher and curriculum developer for NaCCA.
-    Your task is to generate COMPELLING, ACCURATE, and EASY-TO-UNDERSTAND lesson notes for students.
+    You are an expert Ghanaian teacher and curriculum developer for NaCCA, specialized in the Standard-Based Curriculum (SBC) and Common Core Programme (CCP).
+    Your task is to generate COMPELLING, ACCURATE, and EASY-TO-UNDERSTAND lesson notes that strictly follow GES requirements.
     
-    The notes must be strictly aligned with the Ghanaian NaCCA curriculum for ${level}.
+    ALIGNMENT: You MUST generate content specifically for the provided:
+    Level: ${level}
     Subject: ${subject}
-    Topic: ${topic}
+    Topic/Context: ${topic}
+    
+    NOMENCLATURE: ALWAYS use the "Basic" level format (e.g., B1-B6 for Primary, B7-B9 for Junior High, B10-B12 for Senior High). NEVER use JHS or SHS alone; always refer to them as Basic 7-9 or Basic 10-12.
     Core Objectives: ${objectives}
+    
+    ${teacherInfo?.locality ? `LOCALITY CONTEXT: ${teacherInfo.locality} (${teacherInfo.town || 'N/A'}). 
+    TAILORING: Use examples and comparisons that students in a ${teacherInfo.locality} setting would find most relatable.` : ''}
+
+    ${differentiation ? `DIFFERENTIATION FOCUS: ${differentiation}` : ''}
     
     STRUCTURE OF THE NOTE:
     1. Introduction: Engaging opening that connects to prior knowledge.
@@ -306,4 +333,23 @@ export const generateAIPackResource = async (type: string, resourceTitle: string
   });
 
   return response.text;
+};
+
+export const suggestIndicatorCode = async (level: string, subject: string, strand: string, subStrand: string) => {
+  const model = "gemini-3-flash-preview";
+  const systemInstruction = `
+    You are a NaCCA Curriculum Expert for Ghana.
+    Given a level (e.g. Basic 7 or B7), subject, strand, and sub-strand, provide the exact NaCCA Indicator Code (e.g., B7.1.1.1.1 or B1.1.1.1.1).
+    STRICT COMPLIANCE: Use the official B-prefix nomenclature for all levels (B1-B12).
+    ONLY return the indicator code itself. No other text, no preamble, no periods at the end.
+    Example output format: B8.2.1.1.2
+  `;
+
+  const response = await ai.models.generateContent({
+    model,
+    contents: `Predict the NaCCA indicator code for Level: ${level}, Subject: ${subject}, Strand: ${strand}, Sub-Strand: ${subStrand}.`,
+    config: { systemInstruction },
+  });
+
+  return response.text.trim();
 };

@@ -22,14 +22,8 @@ import 'highlight.js/styles/github.css';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { toast } from 'react-hot-toast';
+import { subjects as sharedSubjects, SUBJECT_STRANDS, SUBJECT_SUB_STRANDS, levels, SUB_STRAND_STANDARDS, STANDARD_INDICATORS } from '../../constants';
 
-const subjects = ["English", "Mathematics", "Science", "Social Studies", "Computing", "Career Technology", "RME", "Creative Arts", "French", "Ghanaian Language", "Elective Mathematics", "Physics", "Chemistry", "Biology", "Economics", "Geography", "History", "Government", "CRS", "IRS", "Literature in English", "Financial Accounting", "Cost Accounting", "Business Management", "Agricultural Science", "Elective ICT", "Food & Nutrition", "Graphic Design"];
-const levels = [
-  "KG 1", "KG 2", 
-  "Basic 1", "Basic 2", "Basic 3", "Basic 4", "Basic 5", "Basic 6",
-  "JHS 1", "JHS 2", "JHS 3",
-  "SHS 1", "SHS 2", "SHS 3"
-];
 const difficulties = ["Easy", "Standard", "Challenging"];
 
 export default function ExamGenerator() {
@@ -45,6 +39,10 @@ export default function ExamGenerator() {
     subject: '',
     level: profile?.level || '',
     topics: '',
+    strand: '',
+    subStrand: '',
+    contentStandard: '',
+    indicatorCode: '',
     difficulty: 'Standard',
     title: '',
     selectedTypes: ['Multiple Choice', 'Theory'] as string[],
@@ -107,7 +105,11 @@ export default function ExamGenerator() {
         },
         formData.selectedTypes,
         { count: formData.p1Count, difficulty: formData.p1Difficulty },
-        { count: formData.p2Count, difficulty: formData.p2Difficulty }
+        { count: formData.p2Count, difficulty: formData.p2Difficulty },
+        formData.strand,
+        formData.subStrand,
+        formData.contentStandard,
+        formData.indicatorCode
       );
       
       if (!examData || !examData.questions || !examData.markingScheme) {
@@ -281,7 +283,7 @@ export default function ExamGenerator() {
                 onChange={(e) => setFormData({...formData, subject: e.target.value})}
               >
                 <option value="">Select Subject</option>
-                {subjects.map(s => <option key={s} value={s}>{s}</option>)}
+                {sharedSubjects.map(s => <option key={s} value={s}>{s}</option>)}
               </select>
             </div>
 
@@ -405,7 +407,7 @@ export default function ExamGenerator() {
             </div>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-4">
             <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Specific Topics to Cover</label>
             <textarea 
               required
@@ -415,6 +417,107 @@ export default function ExamGenerator() {
               value={formData.topics}
               onChange={(e) => setFormData({...formData, topics: e.target.value})}
             />
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="space-y-2">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Strand (Required)</label>
+                {SUBJECT_STRANDS[formData.subject] ? (
+                  <select 
+                    required
+                    className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-bold text-slate-800 cursor-pointer"
+                    value={formData.strand}
+                    onChange={(e) => setFormData({...formData, strand: e.target.value, subStrand: '', contentStandard: '', indicatorCode: ''})}
+                  >
+                    <option value="">Select NaCCA Strand...</option>
+                    {SUBJECT_STRANDS[formData.subject].map(s => <option key={s} value={s}>{s}</option>)}
+                    <option value="Other">Other...</option>
+                  </select>
+                ) : (
+                  <input 
+                    type="text" 
+                    required
+                    className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-bold text-slate-800 placeholder:text-slate-300"
+                    placeholder="e.g. Interactions of Matter"
+                    value={formData.strand}
+                    onChange={(e) => setFormData({...formData, strand: e.target.value, subStrand: '', contentStandard: '', indicatorCode: ''})}
+                  />
+                )}
+            </div>
+            <div className="space-y-2">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Sub-Strand (Required)</label>
+                {SUBJECT_SUB_STRANDS[formData.strand] ? (
+                  <select 
+                    required
+                    className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-bold text-slate-800 cursor-pointer"
+                    value={formData.subStrand}
+                    onChange={(e) => setFormData({...formData, subStrand: e.target.value, contentStandard: '', indicatorCode: ''})}
+                  >
+                    <option value="">Select Sub-Strand...</option>
+                    {SUBJECT_SUB_STRANDS[formData.strand].map(ss => <option key={ss} value={ss}>{ss}</option>)}
+                    <option value="Other">Other...</option>
+                  </select>
+                ) : (
+                  <input 
+                    type="text" 
+                    className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-bold text-slate-800 placeholder:text-slate-300"
+                    placeholder="e.g. Fractions"
+                    value={formData.subStrand}
+                    onChange={(e) => setFormData({...formData, subStrand: e.target.value})}
+                  />
+                )}
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="space-y-2">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Content Standard (Required)</label>
+                {SUB_STRAND_STANDARDS[formData.strand]?.[formData.subStrand] ? (
+                  <select 
+                    required
+                    className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-bold text-slate-800 cursor-pointer"
+                    value={formData.contentStandard}
+                    onChange={(e) => setFormData({...formData, contentStandard: e.target.value, indicatorCode: ''})}
+                  >
+                    <option value="">Select Content Standard...</option>
+                    {SUB_STRAND_STANDARDS[formData.strand][formData.subStrand].map(cs => <option key={cs} value={cs}>{cs}</option>)}
+                    <option value="Other">Other...</option>
+                  </select>
+                ) : (
+                  <input 
+                    type="text" 
+                    required
+                    className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-bold text-slate-800 placeholder:text-slate-300"
+                    placeholder="e.g. B7.1.1.1"
+                    value={formData.contentStandard}
+                    onChange={(e) => setFormData({...formData, contentStandard: e.target.value, indicatorCode: ''})}
+                  />
+                )}
+            </div>
+            <div className="space-y-2">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Indicator Code (Required)</label>
+                {STANDARD_INDICATORS[formData.contentStandard] ? (
+                  <select 
+                    required
+                    className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-bold text-slate-800 cursor-pointer"
+                    value={formData.indicatorCode}
+                    onChange={(e) => setFormData({...formData, indicatorCode: e.target.value})}
+                  >
+                    <option value="">Select Indicator...</option>
+                    {STANDARD_INDICATORS[formData.contentStandard].map(i => <option key={i} value={i}>{i}</option>)}
+                    <option value="Other">Other...</option>
+                  </select>
+                ) : (
+                  <input 
+                    type="text" 
+                    required
+                    className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-bold text-slate-800 placeholder:text-slate-300 font-mono"
+                    placeholder="e.g. B8.1.1.1.1"
+                    value={formData.indicatorCode}
+                    onChange={(e) => setFormData({...formData, indicatorCode: e.target.value})}
+                  />
+                )}
+            </div>
           </div>
 
           <button 

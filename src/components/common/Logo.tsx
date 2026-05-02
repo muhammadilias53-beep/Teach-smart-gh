@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { cn } from '../../lib/utils';
+import { CheckCircle } from 'lucide-react';
 
 interface LogoProps {
   className?: string;
@@ -118,6 +119,10 @@ export const Logo = ({ className, iconOnly = false, size = 'md' }: LogoProps) =>
                GHANA
              </span>
              <div className="h-[2px] w-6 bg-[#006B3F]" />
+          </div>
+          <div className="mt-2 flex items-center gap-1.5 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded-md w-fit">
+            <CheckCircle size={8} className="text-emerald-600 fill-current" />
+            <span className="text-[7px] font-black text-emerald-700 uppercase tracking-widest">GES/NaCCA CERTIFIED</span>
           </div>
           <span className="text-[8px] font-bold text-slate-500 uppercase tracking-tight mt-1 whitespace-nowrap">
             AI-Powered Teaching. Smarter Tomorrow.

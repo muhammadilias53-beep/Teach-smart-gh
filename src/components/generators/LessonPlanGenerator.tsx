@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Sparkles, Save, Download, RefreshCw, FileText, ChevronLeft, ChevronRight, CheckCircle, Users } from 'lucide-react';
-import { generateLessonPlan } from '../../lib/gemini';
+import { Sparkles, Save, Download, RefreshCw, FileText, ChevronLeft, ChevronRight, CheckCircle, Users, Wand2 } from 'lucide-react';
+import { generateLessonPlan, suggestIndicatorCode } from '../../lib/gemini';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../contexts/AuthContext';
@@ -10,15 +10,19 @@ import { SafeMarkdown } from '../common/SafeMarkdown';
 import 'highlight.js/styles/github.css';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { subjects, SUBJECT_STRANDS, SUBJECT_SUB_STRANDS, levels, SUB_STRAND_STANDARDS, STANDARD_INDICATORS } from '../../constants';
 
 const LessonPlanGenerator = () => {
   const { user, profile } = useAuth();
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
-    level: profile?.level || 'JHS 1',
+    level: profile?.level || 'Basic 7',
     subject: 'English',
-    topic: '',
+    strand: '',
+    subStrand: '',
+    contentStandard: '',
+    indicatorCode: '',
     duration: '60 minutes',
     classSize: '40',
     weekEnding: new Date().toISOString().split('T')[0],
@@ -29,13 +33,36 @@ const LessonPlanGenerator = () => {
   });
   const [result, setResult] = useState<any>(null);
   const [saving, setSaving] = useState(false);
+  const [isSuggestingCode, setIsSuggestingCode] = useState(false);
+
+  const handleSuggestCode = async () => {
+    if (!formData.strand || !formData.subStrand) {
+      alert("Please select a Strand and sub-Strand first.");
+      return;
+    }
+    setIsSuggestingCode(true);
+    try {
+      const code = await suggestIndicatorCode(formData.level, formData.subject, formData.strand, formData.subStrand);
+      setFormData(prev => ({ ...prev, indicatorCode: code }));
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsSuggestingCode(false);
+    }
+  };
 
   const handleGenerate = async () => {
-    if (!formData.topic) return;
+    if (!formData.strand || !formData.subStrand || !formData.contentStandard || !formData.indicatorCode) {
+      alert("Please ensure all curriculum fields (Strand, Sub-Strand, Content Standard, and Indicator) are filled.");
+      return;
+    }
     setLoading(true);
     try {
-      const prompt = `Generate a NaCCA-compliant lesson plan for ${formData.level} ${formData.subject}. 
-      Topic: ${formData.topic}. 
+      const prompt = `Generate a NaCCA-compliant lesson plan for ${formData.level} ${formData.subject} strictly following the Standard-Based Curriculum (SBC). 
+      Strand: ${formData.strand}.
+      Sub-Strand: ${formData.subStrand}.
+      Content Standard: ${formData.contentStandard}.
+      Indicator Code: ${formData.indicatorCode}.
       Duration: ${formData.duration}.
       Class Size: ${formData.classSize} learners.
       Week Ending: ${formData.weekEnding}.
@@ -110,7 +137,7 @@ const LessonPlanGenerator = () => {
     doc.text(`LEVEL: ${formData.level.toUpperCase()} | SUBJECT: ${formData.subject.toUpperCase()} | LOCALITY: ${formData.locality.toUpperCase()}`, 105, 48, { align: 'center' });
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
-    doc.text((result.title || formData.topic).toUpperCase(), 105, 56, { align: 'center' });
+    doc.text((result.title || formData.subStrand).toUpperCase(), 105, 56, { align: 'center' });
 
     const tableData = [
       ['Week Ending', result.weekEnding || formData.weekEnding],
@@ -190,7 +217,7 @@ const LessonPlanGenerator = () => {
       }
     });
 
-    doc.save(`LessonPlan_${formData.topic.replace(/\s+/g, '_')}.pdf`);
+    doc.save(`LessonPlan_${formData.subStrand.replace(/\s+/g, '_')}.pdf`);
   };
 
   return (
@@ -233,20 +260,7 @@ const LessonPlanGenerator = () => {
                   value={formData.level}
                   onChange={(e) => setFormData({...formData, level: e.target.value})}
                 >
-                  <option>KG 1</option>
-                  <option>KG 2</option>
-                  <option>Basic 1</option>
-                  <option>Basic 2</option>
-                  <option>Basic 3</option>
-                  <option>Basic 4</option>
-                  <option>Basic 5</option>
-                  <option>Basic 6</option>
-                  <option>JHS 1</option>
-                  <option>JHS 2</option>
-                  <option>JHS 3</option>
-                  <option>SHS 1</option>
-                  <option>SHS 2</option>
-                  <option>SHS 3</option>
+                  {levels.map(l => <option key={l}>{l}</option>)}
                 </select>
               </div>
               <div className="space-y-2">
@@ -344,7 +358,7 @@ const LessonPlanGenerator = () => {
             <div className="flex gap-4 mt-8">
               <button onClick={() => setStep(1)} className="px-6 py-3 rounded-xl border border-gray-200 font-bold hover:bg-gray-50">Back</button>
               <button onClick={() => setStep(3)} className="btn-primary flex-1 flex items-center justify-center gap-2">
-                Continue to Topic
+                Continue to Curriculum
                 <ChevronRight size={20} />
               </button>
             </div>
@@ -358,17 +372,120 @@ const LessonPlanGenerator = () => {
             exit={{ opacity: 0, x: -20 }}
             className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100"
           >
-             <h2 className="text-xl font-bold mb-6">Step 3: Lesson Topic & Guidance</h2>
+             <h2 className="text-xl font-bold mb-6">Step 3: Curriculum Focus & Codes</h2>
              <div className="space-y-6">
-                <div className="space-y-2">
-                    <label className="text-sm font-bold text-gray-500 uppercase">Lesson Topic</label>
-                    <textarea 
-                      className="input-field min-h-[120px]" 
-                      placeholder="What are you teaching today? (e.g. Fractions, Indirect Speech, Photosynthesis)"
-                      value={formData.topic}
-                      onChange={(e) => setFormData({...formData, topic: e.target.value})}
-                    />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                      <label className="text-sm font-bold text-gray-500 uppercase">Strand (Required)</label>
+                      {SUBJECT_STRANDS[formData.subject] ? (
+                        <select 
+                          required
+                          className="input-field" 
+                          value={formData.strand}
+                          onChange={(e) => setFormData({...formData, strand: e.target.value})}
+                        >
+                          <option value="">Select NaCCA Strand...</option>
+                          {SUBJECT_STRANDS[formData.subject].map(s => <option key={s} value={s}>{s}</option>)}
+                          <option value="Other">Other...</option>
+                        </select>
+                      ) : (
+                        <input 
+                          type="text" 
+                          required
+                          className="input-field" 
+                          placeholder="e.g. Numbers"
+                          value={formData.strand}
+                          onChange={(e) => setFormData({...formData, strand: e.target.value})}
+                        />
+                      )}
+                  </div>
+                  <div className="space-y-2">
+                      <label className="text-sm font-bold text-gray-500 uppercase">Sub-Strand (Required)</label>
+                      {SUBJECT_SUB_STRANDS[formData.strand] ? (
+                        <select 
+                          required
+                          className="input-field" 
+                          value={formData.subStrand}
+                          onChange={(e) => setFormData({...formData, subStrand: e.target.value, contentStandard: '', indicatorCode: ''})}
+                        >
+                          <option value="">Select Sub-Strand...</option>
+                          {SUBJECT_SUB_STRANDS[formData.strand].map(ss => <option key={ss} value={ss}>{ss}</option>)}
+                          <option value="Other">Other...</option>
+                        </select>
+                      ) : (
+                        <input 
+                          type="text" 
+                          required
+                          className="input-field" 
+                          placeholder="e.g. Fractions"
+                          value={formData.subStrand}
+                          onChange={(e) => setFormData({...formData, subStrand: e.target.value, contentStandard: '', indicatorCode: ''})}
+                        />
+                      )}
+                  </div>
+                  <div className="space-y-2">
+                      <label className="text-sm font-bold text-gray-500 uppercase">Content Standard (Required)</label>
+                      {SUB_STRAND_STANDARDS[formData.strand]?.[formData.subStrand] ? (
+                        <select 
+                          required
+                          className="input-field" 
+                          value={formData.contentStandard}
+                          onChange={(e) => setFormData({...formData, contentStandard: e.target.value, indicatorCode: ''})}
+                        >
+                          <option value="">Select Content Standard...</option>
+                          {SUB_STRAND_STANDARDS[formData.strand][formData.subStrand].map(cs => <option key={cs} value={cs}>{cs}</option>)}
+                          <option value="Other">Other...</option>
+                        </select>
+                      ) : (
+                        <input 
+                          type="text" 
+                          required
+                          className="input-field" 
+                          placeholder="e.g. B7.1.1.1"
+                          value={formData.contentStandard}
+                          onChange={(e) => setFormData({...formData, contentStandard: e.target.value, indicatorCode: ''})}
+                        />
+                      )}
+                  </div>
                 </div>
+
+                <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <label className="text-sm font-bold text-gray-500 uppercase">SBC/CCP Indicator Code (Required)</label>
+                      <button 
+                        type="button"
+                        onClick={handleSuggestCode}
+                        disabled={isSuggestingCode}
+                        className="text-[10px] font-black uppercase tracking-widest text-emerald-600 flex items-center gap-1 hover:text-emerald-700 disabled:opacity-50"
+                      >
+                         {isSuggestingCode ? <RefreshCw className="animate-spin" size={12} /> : <Wand2 size={12} />}
+                         Suggest Code
+                      </button>
+                    </div>
+                    {STANDARD_INDICATORS[formData.contentStandard] ? (
+                      <select 
+                        required
+                        className="input-field" 
+                        value={formData.indicatorCode}
+                        onChange={(e) => setFormData({...formData, indicatorCode: e.target.value})}
+                      >
+                        <option value="">Select Indicator...</option>
+                        {STANDARD_INDICATORS[formData.contentStandard].map(i => <option key={i} value={i}>{i}</option>)}
+                        <option value="Other">Other...</option>
+                      </select>
+                    ) : (
+                      <input 
+                        type="text" 
+                        required
+                        className="input-field font-mono" 
+                        placeholder="e.g. B6.1.2.1.1"
+                        value={formData.indicatorCode}
+                        onChange={(e) => setFormData({...formData, indicatorCode: e.target.value})}
+                      />
+                    )}
+                    <p className="text-[10px] text-slate-400 italic">Select from dropdown or enter the exact NaCCA code. Use "Suggest Code" if unsure.</p>
+                </div>
+
                 <div className="space-y-2">
                     <label className="text-sm font-bold text-gray-500 uppercase">Custom AI Guidance (Optional)</label>
                     <textarea 

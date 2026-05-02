@@ -23,14 +23,8 @@ import 'highlight.js/styles/github.css';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { toast } from 'react-hot-toast';
+import { subjects as sharedSubjects, levels } from '../../constants';
 
-const subjects = ["English", "Mathematics", "Science", "Social Studies", "Computing", "Career Technology", "RME", "Creative Arts", "French", "Ghanaian Language", "Elective Mathematics", "Physics", "Chemistry", "Biology", "Economics", "Geography", "History", "Government", "CRS", "IRS", "Literature in English", "Financial Accounting", "Cost Accounting", "Business Management", "Agricultural Science", "Elective ICT", "Food & Nutrition", "Graphic Design"];
-const levels = [
-  "KG 1", "KG 2", 
-  "Basic 1", "Basic 2", "Basic 3", "Basic 4", "Basic 5", "Basic 6",
-  "JHS 1", "JHS 2", "JHS 3",
-  "SHS 1", "SHS 2", "SHS 3"
-];
 const types = [
   { id: 'termly', label: 'Termly', icon: Calendar, desc: '12-week breakdown' },
   { id: 'yearly', label: 'Yearly', icon: Sparkles, desc: 'Full academic year' }
@@ -61,6 +55,21 @@ export default function SchemeGenerator() {
 
   const handleGenerate = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Client-side validation
+    if (!formData.subject) {
+      toast.error("Please select a Subject Area.");
+      return;
+    }
+    if (!formData.level) {
+      toast.error("Please select a Class/Level.");
+      return;
+    }
+    if (formData.type === 'termly' && !['1', '2', '3'].includes(formData.term)) {
+      toast.error("Please select a valid Academic Term (1, 2, or 3).");
+      return;
+    }
+
     setLoading(true);
     setLoadingStep(0);
     setResult(null);
@@ -116,7 +125,7 @@ export default function SchemeGenerator() {
     if (!result) return;
     const doc = new jsPDF('l', 'mm', 'a4'); // Landscape for tables
     const displayType = formData.type === 'yearly' ? 'YEARLY' : `TERM ${formData.term} - TERMLY`;
-    const mainTitle = `${displayType} SCHEME OF LEARNING`;
+    const mainTitle = `STRATEGIC ${displayType} SCHEME OF LEARNING`;
     
     doc.setFont("helvetica", "bold");
     doc.setFontSize(22);
@@ -229,7 +238,7 @@ export default function SchemeGenerator() {
                 onChange={(e) => setFormData({...formData, subject: e.target.value})}
               >
                 <option value="">Select Subject</option>
-                {subjects.map(s => <option key={s} value={s}>{s}</option>)}
+                {sharedSubjects.map(s => <option key={s} value={s}>{s}</option>)}
               </select>
             </div>
 

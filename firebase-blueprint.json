@@ -63,6 +63,24 @@
         "createdAt": { "type": "string", "format": "date-time" }
       },
       "required": ["authorId", "title", "content", "subject", "level"]
+    },
+    "SavedResource": {
+      "title": "SavedResource",
+      "description": "Premium packs or curated resources saved by user",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "resourceId": { "type": "string" },
+        "title": { "type": "string" },
+        "subject": { "type": "string" },
+        "level": { "type": "string" },
+        "type": { "type": "string" },
+        "content": { "type": "string" },
+        "price": { "type": "number" },
+        "purchaseDate": { "type": "string", "format": "date-time" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "resourceId", "title"]
     }
   },
   "firestore": {
@@ -77,6 +95,10 @@
     "notes/{noteId}": {
       "schema": "LessonNote",
       "description": "Saved lesson notes"
+    },
+    "saved_resources/{id}": {
+      "schema": "SavedResource",
+      "description": "Resources purchased or saved by user"
     }
   }
 }

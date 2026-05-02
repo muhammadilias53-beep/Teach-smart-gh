@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Sparkles, Save, Download, RefreshCw, FileText, ChevronRight, CheckCircle, BookOpen, Quote } from 'lucide-react';
-import { generateNote } from '../../lib/gemini';
+import { Sparkles, Save, Download, RefreshCw, FileText, ChevronRight, CheckCircle, BookOpen, Quote, MapPin, Wand2 } from 'lucide-react';
+import { generateNote, suggestIndicatorCode } from '../../lib/gemini';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../contexts/AuthContext';
@@ -10,37 +10,67 @@ import { SafeMarkdown } from '../common/SafeMarkdown';
 import 'highlight.js/styles/github.css';
 import jsPDF from 'jspdf';
 import { toast } from 'react-hot-toast';
+import { subjects, SUBJECT_STRANDS, SUBJECT_SUB_STRANDS, levels, SUB_STRAND_STANDARDS, STANDARD_INDICATORS } from '../../constants';
 
 const NoteGenerator = () => {
   const { user, profile } = useAuth();
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
-    level: profile?.level || 'JHS 1',
+    level: profile?.level || 'Basic 7',
     subject: 'Science',
-    topic: '',
+    strand: '',
+    subStrand: '',
+    contentStandard: '',
+    indicatorCode: '',
+    duration: '60 minutes',
+    locality: profile?.locality || 'Urban',
+    specificLocality: profile?.town || '',
+    differentiation: '',
     objectives: '',
   });
   const [result, setResult] = useState<any>(null);
   const [saving, setSaving] = useState(false);
+  const [isSuggestingCode, setIsSuggestingCode] = useState(false);
+
+  const handleSuggestCode = async () => {
+    if (!formData.strand || !formData.subStrand) {
+      toast.error("Please select a Strand and sub-Strand first.");
+      return;
+    }
+    setIsSuggestingCode(true);
+    try {
+      const code = await suggestIndicatorCode(formData.level, formData.subject, formData.strand, formData.subStrand);
+      setFormData(prev => ({ ...prev, indicatorCode: code }));
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to suggest code");
+    } finally {
+      setIsSuggestingCode(false);
+    }
+  };
 
   const handleGenerate = async () => {
-    if (!formData.topic) {
-      toast.error("Please enter a topic");
+    if (!formData.strand || !formData.subStrand || !formData.contentStandard || !formData.indicatorCode) {
+      toast.error("Please ensure all curriculum fields (Strand, Sub-Strand, Content Standard, and Indicator) are filled.");
       return;
     }
     setLoading(true);
     try {
+      const topicContext = `SBC Curriculum Focus - Strand: ${formData.strand}, Sub-Strand: ${formData.subStrand}, Content Standard: ${formData.contentStandard}, Indicator: ${formData.indicatorCode}`;
       const data = await generateNote(
         formData.subject,
         formData.level,
-        formData.topic,
+        topicContext,
         formData.objectives,
         { 
           school: profile?.school, 
           district: profile?.district,
-          region: profile?.region
-        }
+          region: profile?.region,
+          town: formData.specificLocality || profile?.town,
+          locality: formData.locality
+        },
+        formData.differentiation
       );
 
       setResult(data);
@@ -84,7 +114,7 @@ const NoteGenerator = () => {
     
     doc.setFontSize(16);
     doc.setTextColor(0, 0, 0);
-    doc.text(result.title.toUpperCase(), 105, 30, { align: 'center' });
+    doc.text((result.title || formData.subStrand).toUpperCase(), 105, 30, { align: 'center' });
     
     doc.setFontSize(10);
     doc.setTextColor(100, 100, 100);
@@ -132,7 +162,7 @@ const NoteGenerator = () => {
         doc.text(`Page ${i} of ${pageCount}`, 200, pageHeight - 5, { align: 'right' });
     }
 
-    doc.save(`${result.title.replace(/\s+/g, '_')}_Notes.pdf`);
+    doc.save(`${(result.title || formData.subStrand).replace(/\s+/g, '_')}_Notes.pdf`);
   };
 
   return (
@@ -184,7 +214,7 @@ const NoteGenerator = () => {
                   value={formData.level}
                   onChange={(e) => setFormData({...formData, level: e.target.value})}
                 >
-                  {["Basic 1", "Basic 2", "Basic 3", "Basic 4", "Basic 5", "Basic 6", "JHS 1", "JHS 2", "JHS 3", "SHS 1", "SHS 2", "SHS 3"].map(l => (
+                  {levels.map(l => (
                     <option key={l} value={l}>{l}</option>
                   ))}
                 </select>
@@ -196,16 +226,18 @@ const NoteGenerator = () => {
                   value={formData.subject}
                   onChange={(e) => setFormData({...formData, subject: e.target.value})}
                 >
-                  {["English", "Mathematics", "Science", "Social Studies", "Computing", "Our World Our Heritage", "RME", "Creative Arts", "French", "Ghanaian Language", "Elective Mathematics", "Physics", "Chemistry", "Biology", "Economics", "Geography", "History", "Government", "CRS", "IRS", "Literature in English", "Financial Accounting", "Cost Accounting", "Business Management", "Agricultural Science", "Elective ICT", "Food & Nutrition", "Graphic Design"].map(s => (
+                  {subjects.map(s => (
                     <option key={s} value={s}>{s}</option>
                   ))}
                 </select>
               </div>
             </div>
-            <button onClick={() => setStep(2)} className="btn-primary mt-8 flex items-center gap-2">
-              Continue
-              <ChevronRight size={20} />
-            </button>
+            <div className="flex gap-4 mt-8">
+              <button onClick={() => setStep(2)} className="btn-primary flex-1 flex items-center justify-center gap-2">
+                Next: Environment
+                <ChevronRight size={20} />
+              </button>
+            </div>
           </motion.div>
         )}
 
@@ -218,25 +250,190 @@ const NoteGenerator = () => {
           >
              <div className="flex items-center gap-4 mb-8">
                 <div className="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600">
+                    <MapPin size={24} />
+                </div>
+                <div>
+                    <h2 className="text-xl font-bold">Step 2: Environment & Differentiation</h2>
+                    <p className="text-sm text-slate-500">Tailor the note for your learners</p>
+                </div>
+            </div>
+
+             <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-gray-500 uppercase">Locality Type</label>
+                    <select 
+                      className="input-field"
+                      value={formData.locality}
+                      onChange={(e) => setFormData({...formData, locality: e.target.value})}
+                    >
+                      <option value="Urban">Urban (City Center)</option>
+                      <option value="Peri-Urban">Peri-Urban / Suburban</option>
+                      <option value="Rural">Rural (Limited Resources)</option>
+                    </select>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-gray-500 uppercase">Specific Town/Locality</label>
+                    <input 
+                      type="text"
+                      className="input-field"
+                      placeholder="e.g. Madina, Aburi, or Tepa"
+                      value={formData.specificLocality}
+                      onChange={(e) => setFormData({...formData, specificLocality: e.target.value})}
+                    />
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                    <label className="text-sm font-bold text-gray-500 uppercase">Differential Strategy Focus (Optional)</label>
+                    <textarea 
+                      className="input-field min-h-[100px]" 
+                      placeholder="e.g. Focus on visual learners, include simplified vocabulary for some, or extension tasks for others..."
+                      value={formData.differentiation}
+                      onChange={(e) => setFormData({...formData, differentiation: e.target.value})}
+                    />
+                </div>
+             </div>
+             
+             <div className="flex gap-4 mt-8">
+                <button onClick={() => setStep(1)} className="px-6 py-3 rounded-xl border border-gray-200 font-bold hover:bg-gray-50">Back</button>
+                <button onClick={() => setStep(3)} className="btn-primary flex-1 flex items-center justify-center gap-2">
+                  Next: Curriculum Details
+                  <ChevronRight size={20} />
+                </button>
+             </div>
+          </motion.div>
+        )}
+
+        {step === 3 && (
+          <motion.div 
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100"
+          >
+             <div className="flex items-center gap-4 mb-8">
+                <div className="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600">
                     <Sparkles size={24} />
                 </div>
                 <div>
-                    <h2 className="text-xl font-bold">Step 2: Topic & Objectives</h2>
+                    <h2 className="text-xl font-bold">Step 3: Curriculum & Objectives</h2>
                     <p className="text-sm text-slate-500">Define what students will learn</p>
                 </div>
             </div>
 
              <div className="space-y-6">
-                <div className="space-y-2">
-                    <label className="text-sm font-bold text-gray-500 uppercase">Lesson Topic</label>
-                    <input 
-                      type="text"
-                      className="input-field" 
-                      placeholder="e.g. Introduction to Ecosystems, Solving Multi-step Equations"
-                      value={formData.topic}
-                      onChange={(e) => setFormData({...formData, topic: e.target.value})}
-                    />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                      <label className="text-sm font-bold text-gray-500 uppercase">Strand (Required)</label>
+                      {SUBJECT_STRANDS[formData.subject] ? (
+                        <select 
+                          required
+                          className="input-field" 
+                          value={formData.strand}
+                          onChange={(e) => setFormData({...formData, strand: e.target.value})}
+                        >
+                          <option value="">Select NaCCA Strand...</option>
+                          {SUBJECT_STRANDS[formData.subject].map(s => <option key={s} value={s}>{s}</option>)}
+                          <option value="Other">Other...</option>
+                        </select>
+                      ) : (
+                        <input 
+                          type="text" 
+                          required
+                          className="input-field" 
+                          placeholder="e.g. Interactions of Matter"
+                          value={formData.strand}
+                          onChange={(e) => setFormData({...formData, strand: e.target.value})}
+                        />
+                      )}
+                  </div>
+                  <div className="space-y-2">
+                      <label className="text-sm font-bold text-gray-500 uppercase">Sub-Strand (Required)</label>
+                      {SUBJECT_SUB_STRANDS[formData.strand] ? (
+                        <select 
+                          required
+                          className="input-field" 
+                          value={formData.subStrand}
+                          onChange={(e) => setFormData({...formData, subStrand: e.target.value, contentStandard: '', indicatorCode: ''})}
+                        >
+                          <option value="">Select Sub-Strand...</option>
+                          {SUBJECT_SUB_STRANDS[formData.strand].map(ss => <option key={ss} value={ss}>{ss}</option>)}
+                          <option value="Other">Other...</option>
+                        </select>
+                      ) : (
+                        <input 
+                          type="text" 
+                          required
+                          className="input-field" 
+                          placeholder="e.g. Photosynthesis"
+                          value={formData.subStrand}
+                          onChange={(e) => setFormData({...formData, subStrand: e.target.value, contentStandard: '', indicatorCode: ''})}
+                        />
+                      )}
+                  </div>
+                  <div className="space-y-2">
+                      <label className="text-sm font-bold text-gray-500 uppercase">Content Standard (Required)</label>
+                      {SUB_STRAND_STANDARDS[formData.strand]?.[formData.subStrand] ? (
+                        <select 
+                          required
+                          className="input-field" 
+                          value={formData.contentStandard}
+                          onChange={(e) => setFormData({...formData, contentStandard: e.target.value, indicatorCode: ''})}
+                        >
+                          <option value="">Select Content Standard...</option>
+                          {SUB_STRAND_STANDARDS[formData.strand][formData.subStrand].map(cs => <option key={cs} value={cs}>{cs}</option>)}
+                          <option value="Other">Other...</option>
+                        </select>
+                      ) : (
+                        <input 
+                          type="text" 
+                          required
+                          className="input-field" 
+                          placeholder="e.g. B7.1.1.1"
+                          value={formData.contentStandard}
+                          onChange={(e) => setFormData({...formData, contentStandard: e.target.value, indicatorCode: ''})}
+                        />
+                      )}
+                  </div>
                 </div>
+
+                <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <label className="text-sm font-bold text-gray-500 uppercase">SBC/CCP Code (Required)</label>
+                      <button 
+                        type="button"
+                        onClick={handleSuggestCode}
+                        disabled={isSuggestingCode}
+                        className="text-[10px] font-black uppercase tracking-widest text-emerald-600 flex items-center gap-1 hover:text-emerald-700 disabled:opacity-50"
+                      >
+                         {isSuggestingCode ? <RefreshCw className="animate-spin" size={12} /> : <Wand2 size={12} />}
+                         Suggest Code
+                      </button>
+                    </div>
+                    {STANDARD_INDICATORS[formData.contentStandard] ? (
+                      <select 
+                        required
+                        className="input-field" 
+                        value={formData.indicatorCode}
+                        onChange={(e) => setFormData({...formData, indicatorCode: e.target.value})}
+                      >
+                        <option value="">Select Indicator...</option>
+                        {STANDARD_INDICATORS[formData.contentStandard].map(i => <option key={i} value={i}>{i}</option>)}
+                        <option value="Other">Other...</option>
+                      </select>
+                    ) : (
+                      <input 
+                        type="text" 
+                        required
+                        className="input-field font-mono" 
+                        placeholder="e.g. B8.1.1.1.1"
+                        value={formData.indicatorCode}
+                        onChange={(e) => setFormData({...formData, indicatorCode: e.target.value})}
+                      />
+                    )}
+                </div>
+
                 <div className="space-y-2">
                     <label className="text-sm font-bold text-gray-500 uppercase">Core Objectives (Optional)</label>
                     <textarea 
@@ -249,7 +446,7 @@ const NoteGenerator = () => {
                 </div>
              </div>
              <div className="flex gap-4 mt-8">
-                <button onClick={() => setStep(1)} className="px-6 py-3 rounded-xl border border-gray-200 font-bold hover:bg-gray-50">Back</button>
+                <button onClick={() => setStep(2)} className="px-6 py-3 rounded-xl border border-gray-200 font-bold hover:bg-gray-50">Back</button>
                 <button 
                   onClick={handleGenerate} 
                   disabled={loading}
