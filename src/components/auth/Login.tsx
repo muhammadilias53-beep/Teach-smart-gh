@@ -1,24 +1,58 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { auth } from '../../lib/firebase';
-import { signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import { 
+  signInWithPopup, 
+  GoogleAuthProvider, 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail
+} from 'firebase/auth';
 import { motion } from 'motion/react';
-import { GraduationCap, Mail, Lock, User, Chrome, Zap } from 'lucide-react';
+import { GraduationCap, Mail, Lock, User, Chrome, Zap, Info } from 'lucide-react';
 
 import { Logo } from '../common/Logo';
 
 const Login = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [info, setInfo] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      navigate('/');
+    }
+  }, [user, navigate]);
 
   const handleGoogleSignIn = async () => {
     try {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message.toUpperCase());
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    if (!email) {
+      setError('PLEASE ENTER YOUR EMAIL ADDRESS FIRST.');
+      return;
+    }
+    setLoading(true);
+    try {
+      await sendPasswordResetEmail(auth, email);
+      setInfo('PASSWORD RESET EMAIL SENT! PLEASE CHECK YOUR INBOX.');
+      setError('');
+    } catch (err: any) {
+      setError(err.message.toUpperCase());
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -26,6 +60,7 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setInfo('');
     try {
       if (isLogin) {
         await signInWithEmailAndPassword(auth, email, password);
@@ -33,7 +68,17 @@ const Login = () => {
         await createUserWithEmailAndPassword(auth, email, password);
       }
     } catch (err: any) {
-      setError(err.message);
+      console.error(err);
+      if (err.code === 'auth/email-already-in-use') {
+        setError('THIS EMAIL IS ALREADY REGISTERED. PLEASE LOG IN INSTEAD.');
+        setIsLogin(true);
+      } else if (err.code === 'auth/invalid-credential') {
+        setError('INVALID EMAIL OR PASSWORD. PLEASE CHECK YOUR DETAILS.');
+      } else if (err.code === 'auth/too-many-requests') {
+        setError('TOO MANY UNSUCCESSFUL ATTEMPTS. PLEASE TRY AGAIN LATER.');
+      } else {
+        setError(err.message.toUpperCase());
+      }
     } finally {
       setLoading(false);
     }
@@ -77,6 +122,17 @@ const Login = () => {
             </motion.div>
           )}
 
+          {info && (
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="mb-8 p-5 bg-emerald-50 text-emerald-600 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-emerald-100 flex items-center gap-4"
+            >
+              <Info size={16} />
+              {info}
+            </motion.div>
+          )}
+
           <div className="space-y-6">
             <button 
               onClick={handleGoogleSignIn}
@@ -115,9 +171,22 @@ const Login = () => {
                   className="input-field pl-16 py-5 rounded-2xl !bg-slate-50/50 text-[11px] font-black tracking-widest uppercase"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  required
+                  required={isLogin}
                 />
               </div>
+              
+              {isLogin && (
+                <div className="flex justify-end">
+                  <button 
+                    type="button"
+                    onClick={handleForgotPassword}
+                    className="text-[9px] font-black text-slate-400 hover:text-emerald-deep uppercase tracking-widest transition-colors"
+                  >
+                    Forgot Password?
+                  </button>
+                </div>
+              )}
+
               <button 
                 type="submit" 
                 className="btn-primary w-full py-5 rounded-2xl shadow-2xl shadow-emerald-900/20 mt-6 font-black uppercase text-[10px] tracking-[0.2em]"
@@ -132,7 +201,11 @@ const Login = () => {
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
               {isLogin ? "NEW TO TEACHSMART?" : "ALREADY A MEMBER?"}
               <button 
-                onClick={() => setIsLogin(!isLogin)}
+                onClick={() => {
+                  setIsLogin(!isLogin);
+                  setError('');
+                  setInfo('');
+                }}
                 className="ml-3 text-emerald-deep hover:text-ghana-gold transition-colors underline underline-offset-4"
               >
                 {isLogin ? "CREATE ACCOUNT" : "LOGIN HERE"}
