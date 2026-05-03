@@ -267,23 +267,16 @@ const quickActions = [
                 <Calendar size={18} />
               </div>
               <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-                {profile?.uid === 'guest' ? 'Access Mode' : 'Trial Access'}
+                Trial Access
               </p>
             </div>
             <div className="flex items-end justify-between">
-              {profile?.uid === 'guest' ? (
-                <h3 className="text-2xl font-black text-slate-900 tracking-tighter uppercase font-mono">Guest</h3>
-              ) : (
-                <h3 className="text-4xl font-black text-slate-900 tracking-tighter">
-                  <AnimatedCounter value={daysLeft} />
-                  <span className="text-2xl ml-1">d</span>
-                </h3>
-              )}
-              <div className={cn(
-                "text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-tighter",
-                profile?.uid === 'guest' ? "text-emerald-600 bg-emerald-50" : "text-ghana-red bg-red-50 animate-pulse"
-              )}>
-                {profile?.uid === 'guest' ? 'Unlimited' : 'Days Left'}
+              <h3 className="text-4xl font-black text-slate-900 tracking-tighter">
+                <AnimatedCounter value={daysLeft} />
+                <span className="text-2xl ml-1">d</span>
+              </h3>
+              <div className="text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-tighter text-ghana-red bg-red-50 animate-pulse">
+                Days Left
               </div>
             </div>
           </div>
