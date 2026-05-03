@@ -31,7 +31,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { Resource } from '../../types';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../../lib/utils';
-import { subjects, levels, SUBJECT_STRANDS } from '../../constants';
+import { subjects, levels, SUBJECT_STRANDS, SUBJECT_SUB_STRANDS } from '../../constants';
 
 // Using constants from src/constants.ts
 
@@ -140,8 +140,12 @@ export default function ContentLibrary() {
   const [search, setSearch] = useState('');
   const [selectedSubject, setSelectedSubject] = useState('All');
   const [selectedLevel, setSelectedLevel] = useState('All');
+  const [selectedStrand, setSelectedStrand] = useState('All');
+  const [selectedSubStrand, setSelectedSubStrand] = useState('All');
+  const [selectedContentCode, setSelectedContentCode] = useState('All');
   const [showFilters, setShowFilters] = useState(false);
   const [filterSubjectSearch, setFilterSubjectSearch] = useState('');
+  const [filterStrandSearch, setFilterStrandSearch] = useState('');
   const [filterType, setFilterType] = useState<'all' | 'official' | 'user'>('all');
   const [showAddModal, setShowAddModal] = useState(false);
   const [viewingResource, setViewingResource] = useState<Resource | null>(null);
@@ -154,6 +158,9 @@ export default function ContentLibrary() {
     description: string;
     subject: string;
     level: string;
+    strand: string;
+    subStrand: string;
+    contentCode: string;
     type: 'link' | 'note' | 'file' | 'book';
     content: string;
   }>({
@@ -161,6 +168,9 @@ export default function ContentLibrary() {
     description: '',
     subject: subjects[0],
     level: levels[0],
+    strand: '',
+    subStrand: '',
+    contentCode: '',
     type: 'link',
     content: ''
   });
@@ -224,6 +234,9 @@ export default function ContentLibrary() {
         description: '',
         subject: subjects[0],
         level: levels[0],
+        strand: '',
+        subStrand: '',
+        contentCode: '',
         type: 'link',
         content: ''
       });
@@ -295,13 +308,15 @@ export default function ContentLibrary() {
     
     const matchesSubject = selectedSubject === 'All' || res.subject === selectedSubject;
     const matchesLevel = selectedLevel === 'All' || (res.level && res.level.includes(selectedLevel));
+    const matchesStrand = selectedStrand === 'All' || res.strand === selectedStrand;
+    const matchesSubStrand = selectedSubStrand === 'All' || res.subStrand === selectedSubStrand;
     
     const matchesType = 
       filterType === 'all' ? true :
       filterType === 'official' ? res.authorId === 'system' :
       res.authorId !== 'system';
 
-    return matchesSearch && matchesSubject && matchesLevel && matchesType;
+    return matchesSearch && matchesSubject && matchesLevel && matchesType && matchesStrand && matchesSubStrand;
   });
 
   const getIcon = (type: string, size = 18) => {
@@ -445,8 +460,8 @@ export default function ContentLibrary() {
                       </div>
 
                       <div className="p-6 space-y-6">
-                        {/* Primary Filters Column */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Primary Filters Row */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                           {/* Subject Section */}
                           <div className="space-y-3">
                             <div className="flex items-center gap-2">
@@ -458,21 +473,25 @@ export default function ContentLibrary() {
                               <input 
                                 type="text"
                                 placeholder="Search subjects..."
-                                className="w-full pl-8 pr-3 py-2 bg-slate-50 border border-slate-100 rounded-xl text-[10px] outline-none focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all"
+                                className="w-full pl-8 pr-3 py-2 bg-slate-50 border border-slate-100 rounded-xl text-[10px] outline-none focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all font-bold"
                                 value={filterSubjectSearch}
                                 onChange={(e) => setFilterSubjectSearch(e.target.value)}
                               />
                             </div>
-                            <div className="flex flex-wrap gap-1.5 max-h-[160px] overflow-y-auto pr-1 custom-scrollbar">
+                            <div className="flex flex-wrap gap-1.5 max-h-[120px] overflow-y-auto pr-1 custom-scrollbar">
                               {['All', ...subjects.filter(s => s.toLowerCase().includes(filterSubjectSearch.toLowerCase()))].map(s => (
                                 <button
                                   key={s}
-                                  onClick={() => setSelectedSubject(s)}
+                                  onClick={() => {
+                                    setSelectedSubject(s);
+                                    setSelectedStrand('All');
+                                    setSelectedSubStrand('All');
+                                  }}
                                   className={cn(
                                     "px-3 py-1.5 rounded-lg text-[9px] font-black transition-all border flex items-center gap-2",
                                     selectedSubject === s 
                                       ? "bg-emerald-500 border-emerald-500 text-white shadow-md shadow-emerald-500/20" 
-                                      : "bg-white border-slate-100 text-slate-500 hover:border-emerald-200"
+                                      : "bg-white border-slate-100 text-slate-500 hover:border-emerald-200 shadow-sm"
                                   )}
                                 >
                                   {s.toUpperCase()}
@@ -481,53 +500,120 @@ export default function ContentLibrary() {
                             </div>
                           </div>
 
-                          <div className="space-y-6">
-                          {/* Level Section */}
+                          {/* Strand Section */}
+                          <div className="space-y-3">
+                            <div className="flex items-center gap-2">
+                              <Filter size={14} className="text-amber-500" />
+                              <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">NaCCA Strand</h4>
+                            </div>
+                            {selectedSubject !== 'All' && SUBJECT_STRANDS[selectedSubject] ? (
+                              <div className="flex flex-wrap gap-1.5 max-h-[160px] overflow-y-auto pr-1 custom-scrollbar">
+                                {['All', ...SUBJECT_STRANDS[selectedSubject]].map(strand => (
+                                  <button
+                                    key={strand}
+                                    onClick={() => {
+                                      setSelectedStrand(strand);
+                                      setSelectedSubStrand('All');
+                                    }}
+                                    className={cn(
+                                      "px-3 py-1.5 rounded-lg text-[9px] font-black transition-all border",
+                                      selectedStrand === strand 
+                                        ? "bg-amber-500 border-amber-500 text-white shadow-md" 
+                                        : "bg-white border-slate-100 text-slate-500 hover:border-amber-200 shadow-sm"
+                                    )}
+                                  >
+                                    {strand.toUpperCase()}
+                                  </button>
+                                ))}
+                              </div>
+                            ) : (
+                              <div className="p-4 bg-slate-50 rounded-2xl border border-dashed border-slate-200 text-center">
+                                <p className="text-[9px] font-bold text-slate-400 uppercase leading-relaxed">
+                                  {selectedSubject === 'All' ? "SELECT A SUBJECT FIRST" : "NO STRANDS DEFINED"}
+                                </p>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Sub-Strand Section */}
                           <div className="space-y-3">
                             <div className="flex items-center gap-2">
                               <CheckCircle size={14} className="text-blue-500" />
-                              <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">GES Level</h4>
+                              <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Sub-Strand</h4>
                             </div>
-                            <div className="flex flex-wrap gap-1.5">
-                              {['All', ...levels].map(l => (
-                                <button
-                                  key={l}
-                                  onClick={() => setSelectedLevel(l)}
-                                  className={cn(
-                                    "px-3 py-1.5 rounded-lg text-[9px] font-black transition-all border",
-                                    selectedLevel === l 
-                                      ? "bg-slate-900 border-slate-900 text-white shadow-md" 
-                                      : "bg-white border-slate-100 text-slate-500 hover:border-slate-300"
-                                  )}
-                                >
-                                  {l.toUpperCase()}
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-
-                          <div className="space-y-3 pt-4 border-t border-slate-100">
-                             <div className="flex items-center gap-2 mb-2">
-                               <ShieldCheck size={14} className="text-purple-500" />
-                               <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Source</h4>
-                             </div>
-                             <div className="grid grid-cols-2 gap-2">
-                                {(['official', 'user'] as const).map(type => (
+                            {selectedStrand !== 'All' && SUBJECT_SUB_STRANDS[selectedStrand] ? (
+                              <div className="flex flex-wrap gap-1.5 max-h-[160px] overflow-y-auto pr-1 custom-scrollbar">
+                                {['All', ...SUBJECT_SUB_STRANDS[selectedStrand]].map(ss => (
                                   <button
-                                    key={type}
-                                    onClick={() => setFilterType(filterType === type ? 'all' : type)}
+                                    key={ss}
+                                    onClick={() => setSelectedSubStrand(ss)}
                                     className={cn(
-                                      "py-2 rounded-lg text-[8px] font-black uppercase tracking-widest border transition-all",
-                                      filterType === type 
-                                        ? "bg-slate-900 border-slate-900 text-white shadow-sm" 
-                                        : "bg-white border-slate-200 text-slate-400"
+                                      "px-3 py-1.5 rounded-lg text-[9px] font-black transition-all border",
+                                      selectedSubStrand === ss 
+                                        ? "bg-blue-500 border-blue-500 text-white shadow-md" 
+                                        : "bg-white border-slate-100 text-slate-500 hover:border-blue-200 shadow-sm"
                                     )}
                                   >
-                                    {type}
+                                    {ss.toUpperCase()}
                                   </button>
                                 ))}
-                             </div>
+                              </div>
+                            ) : (
+                              <div className="p-4 bg-slate-50 rounded-2xl border border-dashed border-slate-200 text-center">
+                                <p className="text-[9px] font-bold text-slate-400 uppercase leading-relaxed">
+                                  {selectedStrand === 'All' ? "SELECT A STRAND FIRST" : "NO SUB-STRANDS"}
+                                </p>
+                              </div>
+                            )}
                           </div>
+
+                          <div className="space-y-6">
+                            {/* Level Section */}
+                            <div className="space-y-3">
+                              <div className="flex items-center gap-2">
+                                <Plus size={14} className="text-slate-500" />
+                                <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">GES Level</h4>
+                              </div>
+                              <div className="flex flex-wrap gap-1.5">
+                                {['All', ...levels].map(l => (
+                                  <button
+                                    key={l}
+                                    onClick={() => setSelectedLevel(l)}
+                                    className={cn(
+                                      "px-3 py-1.5 rounded-lg text-[9px] font-black transition-all border",
+                                      selectedLevel === l 
+                                        ? "bg-slate-900 border-slate-900 text-white shadow-md" 
+                                        : "bg-white border-slate-100 text-slate-500 hover:border-slate-300 shadow-sm"
+                                    )}
+                                  >
+                                    {l.toUpperCase()}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+
+                            <div className="space-y-3 pt-4 border-t border-slate-100">
+                               <div className="flex items-center gap-2 mb-2">
+                                 <ShieldCheck size={14} className="text-purple-500" />
+                                 <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Source</h4>
+                               </div>
+                               <div className="grid grid-cols-2 gap-2">
+                                  {(['official', 'user'] as const).map(type => (
+                                    <button
+                                      key={type}
+                                      onClick={() => setFilterType(filterType === type ? 'all' : type)}
+                                      className={cn(
+                                        "py-2 rounded-lg text-[8px] font-black uppercase tracking-widest border transition-all",
+                                        filterType === type 
+                                          ? "bg-slate-900 border-slate-900 text-white shadow-sm" 
+                                          : "bg-white border-slate-200 text-slate-400 hover:border-slate-300"
+                                      )}
+                                    >
+                                      {type}
+                                    </button>
+                                  ))}
+                               </div>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -618,6 +704,16 @@ export default function ContentLibrary() {
                     <span className="px-2 py-0.5 bg-slate-100 text-slate-600 text-[10px] font-black uppercase tracking-widest rounded">
                       {resource.level}
                     </span>
+                    {resource.strand && (
+                      <span className="px-2 py-0.5 bg-amber-50 text-amber-700 text-[9px] font-black uppercase tracking-widest rounded border border-amber-100">
+                        {resource.strand}
+                      </span>
+                    )}
+                    {resource.subStrand && (
+                      <span className="px-2 py-0.5 bg-blue-50 text-blue-700 text-[9px] font-black uppercase tracking-widest rounded border border-blue-100">
+                        {resource.subStrand}
+                      </span>
+                    )}
                   </div>
                   <h3 className="text-lg font-bold text-slate-900 mb-2 leading-tight">
                     {resource.title}
@@ -888,8 +984,8 @@ export default function ContentLibrary() {
                   <select 
                     required
                     value={newResource.subject}
-                    onChange={(e) => setNewResource({...newResource, subject: e.target.value})}
-                    className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none"
+                    onChange={(e) => setNewResource({...newResource, subject: e.target.value, strand: '', subStrand: '', contentCode: ''})}
+                    className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none font-bold"
                   >
                     <option value="">Select...</option>
                     {subjects.map(s => <option key={s} value={s}>{s}</option>)}
@@ -901,11 +997,56 @@ export default function ContentLibrary() {
                     required
                     value={newResource.level}
                     onChange={(e) => setNewResource({...newResource, level: e.target.value})}
-                    className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none"
+                    className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none font-bold"
                   >
                     <option value="">Select...</option>
                     {levels.map(l => <option key={l} value={l}>{l}</option>)}
                   </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="block text-xs font-black text-slate-400 uppercase tracking-widest">NaCCA Strand (Optional)</label>
+                  {SUBJECT_STRANDS[newResource.subject] ? (
+                    <select 
+                      value={newResource.strand}
+                      onChange={(e) => setNewResource({...newResource, strand: e.target.value, subStrand: '', contentCode: ''})}
+                      className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none font-bold"
+                    >
+                      <option value="">Select Strand...</option>
+                      {SUBJECT_STRANDS[newResource.subject].map(s => <option key={s} value={s}>{s}</option>)}
+                    </select>
+                  ) : (
+                    <input 
+                      type="text" 
+                      placeholder="e.g., Geometry"
+                      value={newResource.strand}
+                      onChange={(e) => setNewResource({...newResource, strand: e.target.value})}
+                      className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none font-bold"
+                    />
+                  )}
+                </div>
+                <div className="space-y-2">
+                  <label className="block text-xs font-black text-slate-400 uppercase tracking-widest">Sub-Strand (Optional)</label>
+                  {SUBJECT_SUB_STRANDS[newResource.strand] ? (
+                    <select 
+                      value={newResource.subStrand}
+                      onChange={(e) => setNewResource({...newResource, subStrand: e.target.value, contentCode: ''})}
+                      className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none font-bold"
+                    >
+                      <option value="">Select Sub-Strand...</option>
+                      {SUBJECT_SUB_STRANDS[newResource.strand].map(ss => <option key={ss} value={ss}>{ss}</option>)}
+                    </select>
+                  ) : (
+                    <input 
+                      type="text" 
+                      placeholder="e.g., Fractions"
+                      value={newResource.subStrand}
+                      onChange={(e) => setNewResource({...newResource, subStrand: e.target.value})}
+                      className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none font-bold"
+                    />
+                  )}
                 </div>
               </div>
 

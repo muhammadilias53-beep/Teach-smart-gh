@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Sparkles, Save, Download, RefreshCw, ChevronRight, CheckCircle, BookOpen, MapPin } from 'lucide-react';
+import { Sparkles, Save, Download, RefreshCw, ChevronRight, CheckCircle, BookOpen, MapPin, Quote } from 'lucide-react';
 import { generateNote } from '../../lib/gemini';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
