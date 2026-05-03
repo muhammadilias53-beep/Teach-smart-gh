@@ -108,7 +108,7 @@ const Billing = () => {
     }
 
     try {
-        const paystackKey = (import.meta as any).env.VITE_PAYSTACK_PUBLIC_KEY;
+        const paystackKey = (import.meta as any).env?.VITE_PAYSTACK_PUBLIC_KEY || (process.env as any).VITE_PAYSTACK_PUBLIC_KEY;
         
         if (!paystackKey) {
             console.error('Paystack Public Key is missing from environment variables');

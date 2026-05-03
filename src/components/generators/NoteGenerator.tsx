@@ -142,7 +142,9 @@ const NoteGenerator = () => {
         doc.text(`Page ${i} of ${pageCount}`, 200, pageHeight - 5, { align: 'right' });
     }
 
-    doc.save(`${(result.title || formData.lessonTopic).replace(/\s+/g, '_')}_Notes.pdf`);
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').replace('T', '_').slice(0, 19);
+    const filename = `${formData.subject}_${formData.level}_Notes_${timestamp}`.replace(/[\s\W]+/g, '_');
+    doc.save(`${filename}.pdf`);
   };
 
   return (

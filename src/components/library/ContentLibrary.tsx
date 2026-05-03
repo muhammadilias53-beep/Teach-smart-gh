@@ -450,7 +450,7 @@ export default function ContentLibrary() {
                       initial={{ opacity: 0, y: 20, scale: 0.95 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                      className="fixed md:absolute inset-x-4 md:inset-x-auto md:right-0 md:top-full mt-4 md:w-[700px] max-w-full md:max-w-[700px] bg-white rounded-2xl md:rounded-[2.5rem] border border-slate-100 shadow-[0_40px_80px_-16px_rgba(0,0,0,0.15)] z-[100] overflow-hidden top-[20%] md:top-unset"
+                      className="fixed md:absolute inset-x-4 md:inset-x-auto md:right-0 md:top-full mt-4 md:w-[700px] max-w-full md:max-w-[700px] bg-white rounded-2xl md:rounded-[2.5rem] border border-slate-100 shadow-[0_40px_80px_-16px_rgba(0,0,0,0.15)] z-[100] overflow-hidden top-[5%] md:top-unset"
                     >
                       {/* Modal Header */}
                       <div className="p-3 md:p-5 border-b border-slate-50 bg-slate-50/50 flex items-center justify-between">
@@ -484,7 +484,7 @@ export default function ContentLibrary() {
                         </div>
                       </div>
 
-                      <div className="p-4 md:p-6 space-y-4 md:space-y-6 max-h-[50vh] md:max-h-[70vh] overflow-y-auto custom-scrollbar no-scrollbar">
+                      <div className="p-4 md:p-6 space-y-4 md:space-y-6 max-h-[75vh] md:max-h-[70vh] overflow-y-auto custom-scrollbar no-scrollbar">
                         {/* Primary Filters Column */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                           {/* Subject Section */}

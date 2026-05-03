@@ -73,7 +73,7 @@ export const generateLessonPlan = async (prompt: string, teacherInfo?: { school?
   return parseAIResponse(response);
 };
 
-export const generateSchemeOfWork = async (subject: string, level: string, type: string, term?: string, options?: { includeLearningOutcomes?: boolean }) => {
+export const generateSchemeOfWork = async (subject: string, level: string, type: string, term?: string, options?: { includeLearningOutcomes?: boolean, customPrompt?: string }) => {
   const model = "gemini-3-flash-preview";
   
   let formatInstructions = "";
@@ -104,6 +104,8 @@ export const generateSchemeOfWork = async (subject: string, level: string, type:
     You are a NaCCA Curriculum Expert. Generate an official ${type.toUpperCase()} STRATEGIC SCHEME OF LEARNING for ${subject} (${level})${term && type === 'termly' ? ` specifically for TERM ${term}` : ''}.
     All content must align strictly with the latest Ghanaian National Curriculum (SBC/CCP) and NaCCA standards.
     
+    ${options?.customPrompt ? `SPECIFIC FOCUS: ${options.customPrompt}` : ''}
+
     NOMENCLATURE: ALWAYS use the "Basic" level format (e.g., B1-B6 for Primary, B7-B9 for Junior High, B10-B12 for Senior High). NEVER use JHS or SHS alone; always refer to them as Basic 7-9 or Basic 10-12.
     ${formatInstructions}
     
@@ -116,7 +118,7 @@ export const generateSchemeOfWork = async (subject: string, level: string, type:
 
   const response = await ai.models.generateContent({
     model,
-    contents: `Generate a ${type} scheme of learning table for ${subject} ${level}${term && type === 'termly' ? ` Term ${term}` : ''}.`,
+    contents: `Generate a ${type} scheme of learning table for ${subject} ${level}${term && type === 'termly' ? ` Term ${term}` : ''}.${options?.customPrompt ? ` ${options.customPrompt}` : ''}`,
     config: { systemInstruction },
   });
 

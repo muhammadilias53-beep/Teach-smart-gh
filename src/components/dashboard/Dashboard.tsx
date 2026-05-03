@@ -16,7 +16,6 @@ import { Logo } from '../common/Logo';
 import { SafeMarkdown } from '../common/SafeMarkdown';
 import { Download, X, ExternalLink } from 'lucide-react';
 import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
 
 const AnimatedCounter = ({ value, duration = 1.5 }: { value: number, duration?: number }) => {
   const [displayValue, setDisplayValue] = useState(0);

@@ -23,7 +23,7 @@ import 'highlight.js/styles/github.css';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { toast } from 'react-hot-toast';
-import { subjects as sharedSubjects, levels } from '../../constants';
+import { subjects as sharedSubjects, levels, CLASSES_BY_LEVEL, SUBJECT_STRANDS, SUBJECT_SUB_STRANDS } from '../../constants';
 
 const types = [
   { id: 'termly', label: 'Termly', icon: Calendar, desc: '12-week breakdown' },
@@ -39,7 +39,10 @@ export default function SchemeGenerator() {
   
   const [formData, setFormData] = useState({
     subject: '',
-    level: '',
+    level: 'JHS',
+    class: 'Basic 7',
+    strand: '',
+    subStrand: '',
     type: 'termly',
     term: '1',
     title: '',
@@ -81,12 +84,13 @@ export default function SchemeGenerator() {
     }, 3000);
 
     try {
+      const promptAddon = formData.strand ? ` Focus on Strand: ${formData.strand}${formData.subStrand ? `, Sub-Strand: ${formData.subStrand}` : ''}.` : '';
       const content = await generateSchemeOfWork(
         formData.subject,
-        formData.level,
+        formData.class,
         formData.type,
         formData.term,
-        { includeLearningOutcomes: formData.includeLearningOutcomes }
+        { includeLearningOutcomes: formData.includeLearningOutcomes, customPrompt: promptAddon }
       );
       setResult(content);
       toast.success("Scheme generated successfully!");
@@ -108,6 +112,7 @@ export default function SchemeGenerator() {
         title: formData.title || `${formData.subject} - ${formData.type === 'yearly' ? 'Yearly' : 'Termly'} Scheme of Learning`,
         subject: formData.subject,
         level: formData.level,
+        class: formData.class,
         type: formData.type,
         content: result,
         includeLearningOutcomes: formData.includeLearningOutcomes,
@@ -133,7 +138,8 @@ export default function SchemeGenerator() {
     
     doc.setFontSize(11);
     doc.setFont("helvetica", "normal");
-    doc.text(`Subject: ${formData.subject} | Level: ${formData.level} | Date: ${new Date().toLocaleDateString()}`, 148.5, 28, { align: 'center' });
+    const metaText = `Subject: ${formData.subject} | Class: ${formData.class} (${formData.level})${formData.strand ? ` | Strand: ${formData.strand}` : ''}${formData.subStrand ? ` | Sub-Strand: ${formData.subStrand}` : ''}`;
+    doc.text(metaText, 148.5, 28, { align: 'center' });
 
     // Parse markdown table to array for autoTable
     const lines = result.split('\n');
@@ -206,7 +212,9 @@ export default function SchemeGenerator() {
       doc.text(finalFooter, 20, footerY);
     }
     
-    doc.save(`${formData.subject}_${displayType}_Scheme_${formData.level.replace(/\s+/g, '_')}.pdf`);
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').replace('T', '_').slice(0, 19);
+    const filename = `${formData.subject}_${formData.level}_${formData.strand || 'General'}_Scheme_${formData.type}_${timestamp}`.replace(/[\s\W]+/g, '_');
+    doc.save(`${filename}.pdf`);
   };
 
   return (
@@ -228,7 +236,7 @@ export default function SchemeGenerator() {
         <div className="absolute top-0 right-0 w-64 h-64 bg-ghana-red/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 opacity-50 group-hover:opacity-100 transition-opacity" />
         
         <form onSubmit={handleGenerate} className="space-y-10 relative z-10">
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-3 gap-8">
             <div className="space-y-2">
               <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Subject Area</label>
               <select 
@@ -243,15 +251,55 @@ export default function SchemeGenerator() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Class/Level</label>
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Educational Stage</label>
               <select 
                 required
                 className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-ghana-red outline-none transition-all font-bold text-slate-700"
                 value={formData.level}
-                onChange={(e) => setFormData({...formData, level: e.target.value})}
+                onChange={(e) => setFormData({...formData, level: e.target.value, class: CLASSES_BY_LEVEL[e.target.value][0]})}
               >
-                <option value="">Select Level</option>
                 {levels.map(l => <option key={l} value={l}>{l}</option>)}
+              </select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Specific Class</label>
+              <select 
+                required
+                className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-ghana-red outline-none transition-all font-bold text-slate-700"
+                value={formData.class}
+                onChange={(e) => setFormData({...formData, class: e.target.value})}
+              >
+                {(CLASSES_BY_LEVEL[formData.level] || []).map(c => <option key={c} value={c}>{c}</option>)}
+              </select>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">NaCCA Strand (Required)</label>
+              <select 
+                required
+                className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-ghana-red outline-none transition-all font-bold text-slate-700"
+                value={formData.strand}
+                onChange={(e) => setFormData({...formData, strand: e.target.value, subStrand: ''})}
+              >
+                <option value="">Select Strand</option>
+                {(SUBJECT_STRANDS[formData.subject] || []).map(s => <option key={s} value={s}>{s}</option>)}
+                {!SUBJECT_STRANDS[formData.subject] && <option value="General">General/Curriculum Wide</option>}
+              </select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Sub-Strand (Optional)</label>
+              <select 
+                className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-ghana-red outline-none transition-all font-bold text-slate-700"
+                value={formData.subStrand}
+                onChange={(e) => setFormData({...formData, subStrand: e.target.value})}
+                disabled={!formData.strand}
+              >
+                <option value="">Select Sub-Strand (All)</option>
+                {(SUBJECT_SUB_STRANDS[formData.strand] || []).map(ss => <option key={ss} value={ss}>{ss}</option>)}
               </select>
             </div>
           </div>
@@ -397,7 +445,7 @@ export default function SchemeGenerator() {
                 <div>
                    <h3 className="font-black text-slate-900 uppercase tracking-tighter">Roadmap Preview</h3>
                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                     {formData.subject} • {formData.type === 'termly' ? `Term ${formData.term}` : 'Yearly'}
+                     {formData.subject} • {formData.class} ({formData.level}) • {formData.type === 'termly' ? `Term ${formData.term}` : 'Yearly'}
                    </p>
                 </div>
               </div>

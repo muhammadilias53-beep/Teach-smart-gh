@@ -32,6 +32,13 @@ export const subjects = [
 
 export const levels = ["KG", "Primary", "JHS", "SHS"];
 
+export const CLASSES_BY_LEVEL: Record<string, string[]> = {
+  "KG": ["KG 1", "KG 2"],
+  "Primary": ["Basic 1", "Basic 2", "Basic 3", "Basic 4", "Basic 5", "Basic 6"],
+  "JHS": ["Basic 7", "Basic 8", "Basic 9"],
+  "SHS": ["Basic 10", "Basic 11", "Basic 12"]
+};
+
 export const SUBJECT_STRANDS: Record<string, string[]> = {
   "Mathematics": ["Numbers", "Algebra", "Geometry and Measurement", "Data"],
   "Elective Mathematics": ["Algebra", "Trigonometry", "Calculus", "Coordinate Geometry", "Statics and Probability", "Vectors and Mechanics"],

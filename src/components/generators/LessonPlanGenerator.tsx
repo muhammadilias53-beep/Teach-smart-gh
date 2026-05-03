@@ -10,16 +10,20 @@ import { SafeMarkdown } from '../common/SafeMarkdown';
 import 'highlight.js/styles/github.css';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { subjects, levels } from '../../constants';
+import { subjects, levels, CLASSES_BY_LEVEL, SUBJECT_STRANDS, SUBJECT_SUB_STRANDS, SUB_STRAND_STANDARDS, STANDARD_INDICATORS } from '../../constants';
 
 const LessonPlanGenerator = () => {
   const { user, profile } = useAuth();
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
-    level: profile?.level || 'Basic 7',
+    level: 'JHS',
+    class: 'Basic 7',
     subject: 'English',
-    lessonTopic: '',
+    strand: '',
+    subStrand: '',
+    contentStandard: '',
+    indicator: '',
     mainObjective: '',
     duration: '60 minutes',
     classSize: '40',
@@ -32,15 +36,24 @@ const LessonPlanGenerator = () => {
   const [result, setResult] = useState<any>(null);
   const [saving, setSaving] = useState(false);
 
+  // Helper selectors from constants
+  const currentStrands = SUBJECT_STRANDS[formData.subject] || [];
+  const currentSubStrands = SUBJECT_SUB_STRANDS[formData.strand] || [];
+  const currentStandards = SUB_STRAND_STANDARDS[formData.strand]?.[formData.subStrand] || [];
+  const currentIndicators = STANDARD_INDICATORS[formData.contentStandard] || [];
+
   const handleGenerate = async () => {
-    if (!formData.lessonTopic || !formData.mainObjective) {
-      alert("Please provide at least a Lesson Topic and Main Objective.");
+    if (!formData.strand || !formData.subStrand || !formData.contentStandard || !formData.indicator || !formData.mainObjective) {
+      alert("Please provide all required fields: Strand, Sub-Strand, Content Standard, Indicator, and Main Objective.");
       return;
     }
     setLoading(true);
     try {
-      const prompt = `Generate a NaCCA-compliant lesson plan for ${formData.level} ${formData.subject} strictly following the Standard-Based Curriculum (SBC). 
-      Topic: ${formData.lessonTopic}.
+      const prompt = `Generate a NaCCA-compliant lesson plan for ${formData.class} (${formData.level}) ${formData.subject} strictly following the Standard-Based Curriculum (SBC). 
+      Strand: ${formData.strand}.
+      Sub-Strand: ${formData.subStrand}.
+      Content Standard: ${formData.contentStandard}.
+      Indicator: ${formData.indicator}.
       Main Objective: ${formData.mainObjective}.
       Duration: ${formData.duration}.
       Class Size: ${formData.classSize} learners.
@@ -77,9 +90,13 @@ const LessonPlanGenerator = () => {
         ...result,
         authorId: user.uid,
         level: formData.level,
+        class: formData.class,
         subject: formData.subject,
         locality: formData.locality,
-        lessonTopic: formData.lessonTopic,
+        strand: formData.strand,
+        subStrand: formData.subStrand,
+        contentStandard: formData.contentStandard,
+        indicator: formData.indicator,
         createdAt: serverTimestamp(),
       });
       alert('Lesson plan saved successfully!');
@@ -114,16 +131,19 @@ const LessonPlanGenerator = () => {
 
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(9);
-    doc.text(`LEVEL: ${formData.level.toUpperCase()} | SUBJECT: ${formData.subject.toUpperCase()} | LOCALITY: ${formData.locality.toUpperCase()}`, 105, 48, { align: 'center' });
+    doc.text(`CLASS: ${formData.class.toUpperCase()} (${formData.level}) | SUBJECT: ${formData.subject.toUpperCase()} | LOCALITY: ${formData.locality.toUpperCase()}`, 105, 48, { align: 'center' });
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
-    doc.text((result.title || formData.lessonTopic).toUpperCase(), 105, 56, { align: 'center' });
+    doc.text(`${formData.strand} - ${formData.subStrand}`.toUpperCase(), 105, 56, { align: 'center' });
 
     const tableData = [
       ['Week Ending', result.weekEnding || formData.weekEnding],
       ['Class Size', result.classSize || formData.classSize],
       ['Locality', formData.locality + (formData.specificLocality ? ` (${formData.specificLocality})` : '')],
-      ['Topic', formData.lessonTopic],
+      ['Strand', formData.strand],
+      ['Sub-Strand', formData.subStrand],
+      ['Content Standard', formData.contentStandard],
+      ['Indicator', formData.indicator],
       ['Primary Objective', formData.mainObjective || result.performanceIndicator],
       ['Core Competencies', result.coreCompetencies],
       ['Key Words', result.keyWords],
@@ -194,7 +214,9 @@ const LessonPlanGenerator = () => {
       }
     });
 
-    doc.save(`LessonPlan_${formData.lessonTopic.replace(/\s+/g, '_')}.pdf`);
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').replace('T', '_').slice(0, 19);
+    const filename = `${formData.subject}_${formData.strand}_${formData.subStrand}_LessonPlan_${timestamp}`.replace(/[\s\W]+/g, '_');
+    doc.save(`${filename}.pdf`);
   };
 
   return (
@@ -228,16 +250,26 @@ const LessonPlanGenerator = () => {
             exit={{ opacity: 0, x: -20 }}
             className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100"
           >
-            <h2 className="text-xl font-bold mb-6">Step 1: Basic Information</h2>
+            <h2 className="text-xl font-bold mb-6">Step 1: Academic Data</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <label className="text-sm font-bold text-gray-500 uppercase">Education Level</label>
+                <label className="text-sm font-bold text-gray-500 uppercase">Educational Stage</label>
                 <select 
                   className="input-field"
                   value={formData.level}
-                  onChange={(e) => setFormData({...formData, level: e.target.value})}
+                  onChange={(e) => setFormData({...formData, level: e.target.value, class: CLASSES_BY_LEVEL[e.target.value][0]})}
                 >
-                  {levels.map(l => <option key={l}>{l}</option>)}
+                  {levels.map(l => <option key={l} value={l}>{l}</option>)}
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-gray-500 uppercase">Specific Class (Basic/KG)</label>
+                <select 
+                  className="input-field"
+                  value={formData.class}
+                  onChange={(e) => setFormData({...formData, class: e.target.value})}
+                >
+                  {(CLASSES_BY_LEVEL[formData.level] || []).map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
               <div className="space-y-2">
@@ -245,7 +277,7 @@ const LessonPlanGenerator = () => {
                 <select 
                   className="input-field"
                   value={formData.subject}
-                  onChange={(e) => setFormData({...formData, subject: e.target.value})}
+                  onChange={(e) => setFormData({...formData, subject: e.target.value, strand: '', subStrand: '', contentStandard: '', indicator: ''})}
                 >
                   {subjects.map(s => (
                     <option key={s} value={s}>{s}</option>
@@ -349,36 +381,119 @@ const LessonPlanGenerator = () => {
             exit={{ opacity: 0, x: -20 }}
             className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100"
           >
-             <h2 className="text-xl font-bold mb-6">Step 3: Lesson Focus</h2>
+             <h2 className="text-xl font-bold mb-6">Step 3: Curriculum Calibration</h2>
              <div className="space-y-6">
-                <div className="space-y-2">
-                    <label className="text-sm font-bold text-gray-500 uppercase">Lesson Topic (Required)</label>
-                    <input 
-                      type="text" 
-                      required
-                      className="input-field" 
-                      placeholder="e.g. Addition of proper fractions"
-                      value={formData.lessonTopic}
-                      onChange={(e) => setFormData({...formData, lessonTopic: e.target.value})}
-                    />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                   <div className="space-y-2">
+                       <label className="text-sm font-bold text-gray-500 uppercase">NaCCA Strand (Required)</label>
+                       {currentStrands.length > 0 ? (
+                         <select 
+                           required
+                           className="input-field"
+                           value={formData.strand}
+                           onChange={(e) => setFormData({...formData, strand: e.target.value, subStrand: '', contentStandard: '', indicator: ''})}
+                         >
+                           <option value="">Select Strand...</option>
+                           {currentStrands.map(s => <option key={s} value={s}>{s}</option>)}
+                         </select>
+                       ) : (
+                         <input 
+                           type="text" 
+                           placeholder="Enter Strand (e.g. Geometry)"
+                           className="input-field"
+                           value={formData.strand}
+                           onChange={(e) => setFormData({...formData, strand: e.target.value})}
+                         />
+                       )}
+                   </div>
+                   <div className="space-y-2">
+                       <label className="text-sm font-bold text-gray-500 uppercase">Sub-Strand (Required)</label>
+                       {currentSubStrands.length > 0 ? (
+                         <select 
+                           required
+                           className="input-field"
+                           value={formData.subStrand}
+                           onChange={(e) => setFormData({...formData, subStrand: e.target.value, contentStandard: '', indicator: ''})}
+                         >
+                           <option value="">Select Sub-Strand...</option>
+                           {currentSubStrands.map(ss => <option key={ss} value={ss}>{ss}</option>)}
+                         </select>
+                       ) : (
+                         <input 
+                           type="text" 
+                           placeholder="Enter Sub-Strand (e.g. Fractions)"
+                           className="input-field"
+                           value={formData.subStrand}
+                           onChange={(e) => setFormData({...formData, subStrand: e.target.value})}
+                         />
+                       )}
+                   </div>
                 </div>
 
-                <div className="space-y-2">
-                    <label className="text-sm font-bold text-gray-500 uppercase">Main Learning Objective (Required)</label>
+                <div className="space-y-4 pt-4 border-t border-slate-50">
+                  <div className="space-y-2">
+                      <label className="text-sm font-bold text-gray-500 uppercase">Content Standard (Required)</label>
+                      {currentStandards.length > 0 ? (
+                        <select 
+                          required
+                          className="input-field"
+                          value={formData.contentStandard}
+                          onChange={(e) => setFormData({...formData, contentStandard: e.target.value, indicator: ''})}
+                        >
+                          <option value="">Select Content Standard...</option>
+                          {currentStandards.map(cs => <option key={cs} value={cs}>{cs}</option>)}
+                        </select>
+                      ) : (
+                        <input 
+                          type="text" 
+                          placeholder="e.g. B7.1.1.1: Count, read, and write..."
+                          className="input-field"
+                          value={formData.contentStandard}
+                          onChange={(e) => setFormData({...formData, contentStandard: e.target.value})}
+                        />
+                      )}
+                  </div>
+
+                  <div className="space-y-2">
+                      <label className="text-sm font-bold text-gray-500 uppercase">Indicator (Required)</label>
+                      {currentIndicators.length > 0 ? (
+                        <select 
+                          required
+                          className="input-field"
+                          value={formData.indicator}
+                          onChange={(e) => setFormData({...formData, indicator: e.target.value})}
+                        >
+                          <option value="">Select Indicator...</option>
+                          {currentIndicators.map(ind => <option key={ind} value={ind}>{ind}</option>)}
+                        </select>
+                      ) : (
+                        <input 
+                          type="text" 
+                          placeholder="e.g. B7.1.1.1.1: Use place value to count"
+                          className="input-field"
+                          value={formData.indicator}
+                          onChange={(e) => setFormData({...formData, indicator: e.target.value})}
+                        />
+                      )}
+                  </div>
+                </div>
+
+                <div className="space-y-2 pt-4 border-t border-slate-50">
+                    <label className="text-sm font-bold text-gray-500 uppercase tracking-tighter">Main Learning Objective (What should they learn?)</label>
                     <textarea 
                       required
                       className="input-field min-h-[100px]" 
-                      placeholder="What should learners be able to do? e.g. By the end of the lesson, learners will be able to add two proper fractions with same denominators."
+                      placeholder="e.g. By the end of the lesson, learners will be able to add two proper fractions with same denominators manually."
                       value={formData.mainObjective}
                       onChange={(e) => setFormData({...formData, mainObjective: e.target.value})}
                     />
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-sm font-bold text-gray-500 uppercase">Custom AI Guidance (Optional)</label>
+                    <label className="text-sm font-bold text-gray-400 uppercase text-[10px]">AI Customization Tool (Optional)</label>
                     <textarea 
-                      className="input-field min-h-[80px]" 
-                      placeholder="Any specific requests? e.g. Focus on cultural examples, include a quiz, etc."
+                      className="input-field min-h-[60px] text-sm" 
+                      placeholder="Special instructions? e.g. Focus on local market examples, include a 5-minute quiz."
                       value={formData.customGuidance}
                       onChange={(e) => setFormData({...formData, customGuidance: e.target.value})}
                     />
@@ -449,11 +564,13 @@ const LessonPlanGenerator = () => {
               <div className="text-center border-b pb-8">
                   <h2 className="text-3xl font-black text-emerald-deep mb-2">{result.title}</h2>
                   <div className="flex flex-wrap justify-center gap-4 text-xs font-bold text-slate-400 uppercase tracking-widest mt-4">
-                    <span>{formData.level}</span>
+                    <span>{formData.class} ({formData.level})</span>
                     <span className="w-1 h-1 bg-slate-300 rounded-full my-auto" />
                     <span>{formData.subject}</span>
                     <span className="w-1 h-1 bg-slate-300 rounded-full my-auto" />
-                    <span>Topic: {formData.lessonTopic}</span>
+                    <span>Strand: {formData.strand}</span>
+                    <span className="w-1 h-1 bg-slate-300 rounded-full my-auto" />
+                    <span>Sub-Strand: {formData.subStrand}</span>
                     <span className="w-1 h-1 bg-slate-300 rounded-full my-auto" />
                     <span>Week Ending: {result.weekEnding || formData.weekEnding}</span>
                     <span className="w-1 h-1 bg-slate-300 rounded-full my-auto" />
@@ -478,16 +595,12 @@ const LessonPlanGenerator = () => {
                       </section>
                     )}
                     <section>
-                      <h3 className="text-[10px] font-black text-emerald-deep uppercase tracking-widest mb-2">Indicator (Code)</h3>
-                      <div className="flex items-center gap-2">
-                        <span className="px-2 py-1 bg-emerald-100 text-emerald-700 rounded font-bold text-[10px]">{result.indicatorCode}</span>
-                      </div>
+                      <h3 className="text-[10px] font-black text-emerald-deep uppercase tracking-widest mb-2">Indicator (Selected)</h3>
+                      <p className="text-slate-700 text-sm leading-relaxed font-medium">{formData.indicator}</p>
                     </section>
                     <section>
-                      <h3 className="text-[10px] font-black text-emerald-deep uppercase tracking-widest mb-2">Content Standard (Code)</h3>
-                      <div className="flex items-center gap-2">
-                        <span className="px-2 py-1 bg-slate-100 text-slate-700 rounded font-bold text-[10px]">{result.contentStandardCode}</span>
-                      </div>
+                      <h3 className="text-[10px] font-black text-emerald-deep uppercase tracking-widest mb-2">Content Standard (Selected)</h3>
+                      <p className="text-slate-700 text-sm leading-relaxed font-medium">{formData.contentStandard}</p>
                     </section>
                  </div>
                  <div className="bg-slate-50 p-6 rounded-3xl space-y-6">

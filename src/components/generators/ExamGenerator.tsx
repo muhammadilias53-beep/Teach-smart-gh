@@ -20,7 +20,6 @@ import { cn } from '../../lib/utils';
 import { SafeMarkdown } from '../common/SafeMarkdown';
 import 'highlight.js/styles/github.css';
 import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
 import { toast } from 'react-hot-toast';
 import { subjects as sharedSubjects, levels } from '../../constants';
 
@@ -164,7 +163,8 @@ export default function ExamGenerator() {
     if (!result) return;
     const doc = new jsPDF();
     const title = type === 'exam' ? formData.title || 'Examination Paper' : `Marking Scheme: ${formData.title || 'Examination'}`;
-    const filename = `${formData.subject}_${formData.level}_${type === 'exam' ? 'Exam' : 'Marking'}_${new Date().toISOString().split('T')[0]}`;
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').replace('T', '_').slice(0, 19);
+    const filename = `${formData.subject}_${formData.level}_${type === 'exam' ? 'Exam' : 'Marking'}_${timestamp}`.replace(/[\s\W]+/g, '_');
     
     // Header
     doc.setFont("helvetica", "bold");
