@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Sparkles, Save, Download, RefreshCw, FileText, ChevronRight, CheckCircle, BookOpen, Quote, MapPin, Wand2 } from 'lucide-react';
-import { generateNote, suggestIndicatorCode } from '../../lib/gemini';
+import { Sparkles, Save, Download, RefreshCw, ChevronRight, CheckCircle, BookOpen, MapPin } from 'lucide-react';
+import { generateNote } from '../../lib/gemini';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../contexts/AuthContext';
@@ -10,7 +10,7 @@ import { SafeMarkdown } from '../common/SafeMarkdown';
 import 'highlight.js/styles/github.css';
 import jsPDF from 'jspdf';
 import { toast } from 'react-hot-toast';
-import { subjects, SUBJECT_STRANDS, SUBJECT_SUB_STRANDS, levels, SUB_STRAND_STANDARDS, STANDARD_INDICATORS } from '../../constants';
+import { subjects, levels } from '../../constants';
 
 const NoteGenerator = () => {
   const { user, profile } = useAuth();
@@ -19,10 +19,7 @@ const NoteGenerator = () => {
   const [formData, setFormData] = useState({
     level: profile?.level || 'Basic 7',
     subject: 'Science',
-    strand: '',
-    subStrand: '',
-    contentStandard: '',
-    indicatorCode: '',
+    lessonTopic: '',
     duration: '60 minutes',
     locality: profile?.locality || 'Urban',
     specificLocality: profile?.town || '',
@@ -31,33 +28,15 @@ const NoteGenerator = () => {
   });
   const [result, setResult] = useState<any>(null);
   const [saving, setSaving] = useState(false);
-  const [isSuggestingCode, setIsSuggestingCode] = useState(false);
-
-  const handleSuggestCode = async () => {
-    if (!formData.strand || !formData.subStrand) {
-      toast.error("Please select a Strand and sub-Strand first.");
-      return;
-    }
-    setIsSuggestingCode(true);
-    try {
-      const code = await suggestIndicatorCode(formData.level, formData.subject, formData.strand, formData.subStrand);
-      setFormData(prev => ({ ...prev, indicatorCode: code }));
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to suggest code");
-    } finally {
-      setIsSuggestingCode(false);
-    }
-  };
 
   const handleGenerate = async () => {
-    if (!formData.strand || !formData.subStrand || !formData.contentStandard || !formData.indicatorCode) {
-      toast.error("Please ensure all curriculum fields (Strand, Sub-Strand, Content Standard, and Indicator) are filled.");
+    if (!formData.lessonTopic || !formData.objectives) {
+      toast.error("Please ensure Topic and Objectives are filled.");
       return;
     }
     setLoading(true);
     try {
-      const topicContext = `SBC Curriculum Focus - Strand: ${formData.strand}, Sub-Strand: ${formData.subStrand}, Content Standard: ${formData.contentStandard}, Indicator: ${formData.indicatorCode}`;
+      const topicContext = `Lesson Topic: ${formData.lessonTopic}`;
       const data = await generateNote(
         formData.subject,
         formData.level,
@@ -93,6 +72,7 @@ const NoteGenerator = () => {
         authorId: user.uid,
         level: formData.level,
         subject: formData.subject,
+        lessonTopic: formData.lessonTopic,
         createdAt: serverTimestamp(),
       });
       toast.success('Notes saved to your cloud library!');
@@ -114,11 +94,11 @@ const NoteGenerator = () => {
     
     doc.setFontSize(16);
     doc.setTextColor(0, 0, 0);
-    doc.text((result.title || formData.subStrand).toUpperCase(), 105, 30, { align: 'center' });
+    doc.text((result.title || formData.lessonTopic).toUpperCase(), 105, 30, { align: 'center' });
     
     doc.setFontSize(10);
     doc.setTextColor(100, 100, 100);
-    doc.text(`Subject: ${formData.subject} | Level: ${formData.level}`, 105, 38, { align: 'center' });
+    doc.text(`Subject: ${formData.subject} | Level: ${formData.level} | Topic: ${formData.lessonTopic}`, 105, 38, { align: 'center' });
     
     doc.setLineWidth(0.5);
     doc.setDrawColor(255, 204, 0); // Ghana Gold
@@ -162,7 +142,7 @@ const NoteGenerator = () => {
         doc.text(`Page ${i} of ${pageCount}`, 200, pageHeight - 5, { align: 'right' });
     }
 
-    doc.save(`${(result.title || formData.subStrand).replace(/\s+/g, '_')}_Notes.pdf`);
+    doc.save(`${(result.title || formData.lessonTopic).replace(/\s+/g, '_')}_Notes.pdf`);
   };
 
   return (
@@ -296,9 +276,9 @@ const NoteGenerator = () => {
              </div>
              
              <div className="flex gap-4 mt-8">
-                <button onClick={() => setStep(1)} className="px-6 py-3 rounded-xl border border-gray-200 font-bold hover:bg-gray-50">Back</button>
+                <button onClick={() => setStep(1)} className="px-6 py-3 rounded-xl border border-gray-100 font-bold hover:bg-gray-50">Back</button>
                 <button onClick={() => setStep(3)} className="btn-primary flex-1 flex items-center justify-center gap-2">
-                  Next: Curriculum Details
+                  Next: Topic Details
                   <ChevronRight size={20} />
                 </button>
              </div>
@@ -317,134 +297,36 @@ const NoteGenerator = () => {
                     <Sparkles size={24} />
                 </div>
                 <div>
-                    <h2 className="text-xl font-bold">Step 3: Curriculum & Objectives</h2>
+                    <h2 className="text-xl font-bold">Step 3: Topic & Objectives</h2>
                     <p className="text-sm text-slate-500">Define what students will learn</p>
                 </div>
             </div>
 
              <div className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                      <label className="text-sm font-bold text-gray-500 uppercase">Strand (Required)</label>
-                      {SUBJECT_STRANDS[formData.subject] ? (
-                        <select 
-                          required
-                          className="input-field" 
-                          value={formData.strand}
-                          onChange={(e) => setFormData({...formData, strand: e.target.value})}
-                        >
-                          <option value="">Select NaCCA Strand...</option>
-                          {SUBJECT_STRANDS[formData.subject].map(s => <option key={s} value={s}>{s}</option>)}
-                          <option value="Other">Other...</option>
-                        </select>
-                      ) : (
-                        <input 
-                          type="text" 
-                          required
-                          className="input-field" 
-                          placeholder="e.g. Interactions of Matter"
-                          value={formData.strand}
-                          onChange={(e) => setFormData({...formData, strand: e.target.value})}
-                        />
-                      )}
-                  </div>
-                  <div className="space-y-2">
-                      <label className="text-sm font-bold text-gray-500 uppercase">Sub-Strand (Required)</label>
-                      {SUBJECT_SUB_STRANDS[formData.strand] ? (
-                        <select 
-                          required
-                          className="input-field" 
-                          value={formData.subStrand}
-                          onChange={(e) => setFormData({...formData, subStrand: e.target.value, contentStandard: '', indicatorCode: ''})}
-                        >
-                          <option value="">Select Sub-Strand...</option>
-                          {SUBJECT_SUB_STRANDS[formData.strand].map(ss => <option key={ss} value={ss}>{ss}</option>)}
-                          <option value="Other">Other...</option>
-                        </select>
-                      ) : (
-                        <input 
-                          type="text" 
-                          required
-                          className="input-field" 
-                          placeholder="e.g. Photosynthesis"
-                          value={formData.subStrand}
-                          onChange={(e) => setFormData({...formData, subStrand: e.target.value, contentStandard: '', indicatorCode: ''})}
-                        />
-                      )}
-                  </div>
-                  <div className="space-y-2">
-                      <label className="text-sm font-bold text-gray-500 uppercase">Content Standard (Required)</label>
-                      {SUB_STRAND_STANDARDS[formData.strand]?.[formData.subStrand] ? (
-                        <select 
-                          required
-                          className="input-field" 
-                          value={formData.contentStandard}
-                          onChange={(e) => setFormData({...formData, contentStandard: e.target.value, indicatorCode: ''})}
-                        >
-                          <option value="">Select Content Standard...</option>
-                          {SUB_STRAND_STANDARDS[formData.strand][formData.subStrand].map(cs => <option key={cs} value={cs}>{cs}</option>)}
-                          <option value="Other">Other...</option>
-                        </select>
-                      ) : (
-                        <input 
-                          type="text" 
-                          required
-                          className="input-field" 
-                          placeholder="e.g. B7.1.1.1"
-                          value={formData.contentStandard}
-                          onChange={(e) => setFormData({...formData, contentStandard: e.target.value, indicatorCode: ''})}
-                        />
-                      )}
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <label className="text-sm font-bold text-gray-500 uppercase">SBC/CCP Code (Required)</label>
-                      <button 
-                        type="button"
-                        onClick={handleSuggestCode}
-                        disabled={isSuggestingCode}
-                        className="text-[10px] font-black uppercase tracking-widest text-emerald-600 flex items-center gap-1 hover:text-emerald-700 disabled:opacity-50"
-                      >
-                         {isSuggestingCode ? <RefreshCw className="animate-spin" size={12} /> : <Wand2 size={12} />}
-                         Suggest Code
-                      </button>
-                    </div>
-                    {STANDARD_INDICATORS[formData.contentStandard] ? (
-                      <select 
-                        required
-                        className="input-field" 
-                        value={formData.indicatorCode}
-                        onChange={(e) => setFormData({...formData, indicatorCode: e.target.value})}
-                      >
-                        <option value="">Select Indicator...</option>
-                        {STANDARD_INDICATORS[formData.contentStandard].map(i => <option key={i} value={i}>{i}</option>)}
-                        <option value="Other">Other...</option>
-                      </select>
-                    ) : (
-                      <input 
-                        type="text" 
-                        required
-                        className="input-field font-mono" 
-                        placeholder="e.g. B8.1.1.1.1"
-                        value={formData.indicatorCode}
-                        onChange={(e) => setFormData({...formData, indicatorCode: e.target.value})}
-                      />
-                    )}
+                <div className="space-y-2">
+                    <label className="text-sm font-bold text-gray-500 uppercase">Lesson Topic (Required)</label>
+                    <input 
+                      type="text" 
+                      required
+                      className="input-field" 
+                      placeholder="e.g. Photosynthesis in Plants"
+                      value={formData.lessonTopic}
+                      onChange={(e) => setFormData({...formData, lessonTopic: e.target.value})}
+                    />
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-sm font-bold text-gray-500 uppercase">Core Objectives (Optional)</label>
+                    <label className="text-sm font-bold text-gray-500 uppercase">Learning Objectives (Required)</label>
                     <textarea 
+                      required
                       className="input-field min-h-[120px]" 
-                      placeholder="What should students be able to do by the end? e.g. Define an ecosystem, identify biotic factors..."
+                      placeholder="What should students know? e.g. Students will be able to define photosynthesis and identify the necessary elements (sunlight, water, CO2)."
                       value={formData.objectives}
                       onChange={(e) => setFormData({...formData, objectives: e.target.value})}
                     />
-                    <p className="text-[10px] text-slate-400 font-medium italic">Objectives help the AI tailor the content to your specific lesson goals.</p>
                 </div>
              </div>
+             
              <div className="flex gap-4 mt-8">
                 <button onClick={() => setStep(2)} className="px-6 py-3 rounded-xl border border-gray-200 font-bold hover:bg-gray-50">Back</button>
                 <button 
@@ -457,13 +339,13 @@ const NoteGenerator = () => {
                   ) : (
                     <Sparkles size={20} />
                   )}
-                  {loading ? "Crafting Student Notes..." : "Generate AI Notes"}
+                  {loading ? "Generating..." : "Generate Student Notes"}
                 </button>
              </div>
           </motion.div>
         )}
 
-        {step === 3 && result && (
+        {step === 4 && result && (
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}

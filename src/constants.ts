@@ -30,7 +30,7 @@ export const subjects = [
   "Graphic Design"
 ];
 
-export const levels = ["KG 1", "KG 2", "Basic 1", "Basic 2", "Basic 3", "Basic 4", "Basic 5", "Basic 6", "Basic 7", "Basic 8", "Basic 9", "Basic 10", "Basic 11", "Basic 12"];
+export const levels = ["KG", "Primary", "JHS", "SHS"];
 
 export const SUBJECT_STRANDS: Record<string, string[]> = {
   "Mathematics": ["Numbers", "Algebra", "Geometry and Measurement", "Data"],

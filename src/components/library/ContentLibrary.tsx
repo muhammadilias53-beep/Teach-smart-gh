@@ -140,11 +140,8 @@ export default function ContentLibrary() {
   const [search, setSearch] = useState('');
   const [selectedSubject, setSelectedSubject] = useState('All');
   const [selectedLevel, setSelectedLevel] = useState('All');
-  const [selectedSubStrand, setSelectedSubStrand] = useState('All');
-  const [selectedContentCode, setSelectedContentCode] = useState('All');
   const [showFilters, setShowFilters] = useState(false);
   const [filterSubjectSearch, setFilterSubjectSearch] = useState('');
-  const [filterStrandSearch, setFilterStrandSearch] = useState('');
   const [filterType, setFilterType] = useState<'all' | 'official' | 'user'>('all');
   const [showAddModal, setShowAddModal] = useState(false);
   const [viewingResource, setViewingResource] = useState<Resource | null>(null);
@@ -157,9 +154,6 @@ export default function ContentLibrary() {
     description: string;
     subject: string;
     level: string;
-    strand: string;
-    subStrand: string;
-    contentCode: string;
     type: 'link' | 'note' | 'file' | 'book';
     content: string;
   }>({
@@ -167,9 +161,6 @@ export default function ContentLibrary() {
     description: '',
     subject: subjects[0],
     level: levels[0],
-    strand: '',
-    subStrand: '',
-    contentCode: '',
     type: 'link',
     content: ''
   });
@@ -233,9 +224,6 @@ export default function ContentLibrary() {
         description: '',
         subject: subjects[0],
         level: levels[0],
-        strand: '',
-        subStrand: '',
-        contentCode: '',
         type: 'link',
         content: ''
       });
@@ -303,22 +291,17 @@ export default function ContentLibrary() {
     const searchLower = search.toLowerCase();
     const titleMatch = res.title?.toLowerCase().includes(searchLower);
     const descMatch = res.description?.toLowerCase().includes(searchLower);
-    const strandSearchMatch = res.strand?.toLowerCase().includes(searchLower);
-    const subStrandSearchMatch = res.subStrand?.toLowerCase().includes(searchLower);
-    const codeSearchMatch = res.contentCode?.toLowerCase().includes(searchLower);
-    const matchesSearch = !search || titleMatch || descMatch || strandSearchMatch || subStrandSearchMatch || codeSearchMatch;
+    const matchesSearch = !search || titleMatch || descMatch;
     
     const matchesSubject = selectedSubject === 'All' || res.subject === selectedSubject;
-    const matchesLevel = selectedLevel === 'All' || res.level.includes(selectedLevel);
-    const matchesSubStrand = selectedSubStrand === 'All' || res.subStrand === selectedSubStrand;
-    const matchesCode = selectedContentCode === 'All' || res.contentCode === selectedContentCode;
+    const matchesLevel = selectedLevel === 'All' || (res.level && res.level.includes(selectedLevel));
     
     const matchesType = 
       filterType === 'all' ? true :
       filterType === 'official' ? res.authorId === 'system' :
       res.authorId !== 'system';
 
-    return matchesSearch && matchesSubject && matchesLevel && matchesType && matchesSubStrand && matchesCode;
+    return matchesSearch && matchesSubject && matchesLevel && matchesType;
   });
 
   const getIcon = (type: string, size = 18) => {
@@ -418,8 +401,8 @@ export default function ContentLibrary() {
                   )}
                 >
                   <Filter size={18} />
-                  SBC/CCP Filters
-                  {(selectedSubject !== 'All' || selectedLevel !== 'All' || selectedSubStrand !== 'All' || selectedContentCode !== 'All' || filterType !== 'all') && (
+                  Filters
+                  {(selectedSubject !== 'All' || selectedLevel !== 'All' || filterType !== 'all') && (
                     <div className="flex items-center gap-1 bg-emerald-500 px-2 py-0.5 rounded-full scale-90">
                       <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
                     </div>
@@ -461,9 +444,9 @@ export default function ContentLibrary() {
                         </button>
                       </div>
 
-                      <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="p-6 space-y-6">
                         {/* Primary Filters Column */}
-                        <div className="space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           {/* Subject Section */}
                           <div className="space-y-3">
                             <div className="flex items-center gap-2">
@@ -498,6 +481,7 @@ export default function ContentLibrary() {
                             </div>
                           </div>
 
+                          <div className="space-y-6">
                           {/* Level Section */}
                           <div className="space-y-3">
                             <div className="flex items-center gap-2">
@@ -521,58 +505,12 @@ export default function ContentLibrary() {
                               ))}
                             </div>
                           </div>
-                        </div>
 
-                        {/* Curriculum Column */}
-                        <div className="space-y-6 bg-slate-50/50 p-4 rounded-2xl border border-slate-100">
-                          <div className="flex items-center gap-2">
-                            <FolderOpen size={14} className="text-orange-500" />
-                            <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">SBC/CCP Tracking</h4>
-                          </div>
-
-                          {/* Sub-Strand Filter instead of Strand */}
-                          <div className="space-y-3">
-                            <label className="text-[8px] font-bold text-slate-400 uppercase tracking-widest block">NaCCA Sub-Strand</label>
-                            <select 
-                              value={selectedSubStrand}
-                              onChange={(e) => setSelectedSubStrand(e.target.value)}
-                              className="w-full p-2 bg-white border border-slate-200 rounded-lg text-[10px] font-bold outline-none focus:ring-2 focus:ring-orange-500/10 focus:border-orange-500 transition-all"
-                            >
-                              <option value="All">All Sub-Strands</option>
-                              {availableSubStrands.map(s => <option key={s.name} value={s.name}>{s.name} ({s.count})</option>)}
-                            </select>
-                          </div>
-
-                          {/* Code Filter (Simplified) */}
-                          <div className="space-y-3">
-                            <label className="text-[8px] font-bold text-slate-400 uppercase tracking-widest block">Indicator Code</label>
-                            <div className="flex flex-wrap gap-1.5 max-h-[100px] overflow-y-auto pr-1 custom-scrollbar">
-                              <button
-                                onClick={() => setSelectedContentCode('All')}
-                                className={cn(
-                                  "px-2 py-1 rounded-md text-[8px] font-mono border transition-all",
-                                  selectedContentCode === 'All' ? "bg-slate-800 text-white" : "bg-white text-slate-400"
-                                )}
-                              >
-                                ALL CODES
-                              </button>
-                              {availableCodes.map(c => (
-                                <button
-                                  key={c.name}
-                                  onClick={() => setSelectedContentCode(c.name)}
-                                  className={cn(
-                                    "px-2 py-1 rounded-md text-[8px] font-mono border transition-all",
-                                    selectedContentCode === c.name ? "bg-slate-800 text-white" : "bg-white text-slate-400 hover:border-slate-300"
-                                  )}
-                                >
-                                  {c.name}
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-
-                          {/* Source Filter */}
-                          <div className="space-y-3 pt-2 border-t border-slate-100">
+                          <div className="space-y-3 pt-4 border-t border-slate-100">
+                             <div className="flex items-center gap-2 mb-2">
+                               <ShieldCheck size={14} className="text-purple-500" />
+                               <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Source</h4>
+                             </div>
                              <div className="grid grid-cols-2 gap-2">
                                 {(['official', 'user'] as const).map(type => (
                                   <button
@@ -589,6 +527,7 @@ export default function ContentLibrary() {
                                   </button>
                                 ))}
                              </div>
+                          </div>
                           </div>
                         </div>
                       </div>
@@ -679,21 +618,6 @@ export default function ContentLibrary() {
                     <span className="px-2 py-0.5 bg-slate-100 text-slate-600 text-[10px] font-black uppercase tracking-widest rounded">
                       {resource.level}
                     </span>
-                    {resource.strand && (
-                      <span className="px-2 py-0.5 bg-blue-50 text-blue-600 text-[10px] font-black uppercase tracking-widest rounded">
-                        {resource.strand}
-                      </span>
-                    )}
-                    {resource.subStrand && (
-                      <span className="px-2 py-0.5 bg-indigo-50 text-indigo-600 text-[10px] font-black uppercase tracking-widest rounded">
-                        {resource.subStrand}
-                      </span>
-                    )}
-                    {resource.contentCode && (
-                      <span className="px-2 py-0.5 bg-slate-800 text-white text-[10px] font-mono tracking-wider rounded">
-                        {resource.contentCode}
-                      </span>
-                    )}
                   </div>
                   <h3 className="text-lg font-bold text-slate-900 mb-2 leading-tight">
                     {resource.title}
@@ -985,64 +909,17 @@ export default function ContentLibrary() {
                 </div>
               </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label className="block text-xs font-black text-slate-400 uppercase tracking-widest">Strand</label>
-                    {newResource.subject && SUBJECT_STRANDS[newResource.subject] ? (
-                      <select 
-                        required
-                        value={newResource.strand}
-                        onChange={(e) => setNewResource({...newResource, strand: e.target.value})}
-                        className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none"
-                      >
-                        <option value="">Select Strand...</option>
-                        {SUBJECT_STRANDS[newResource.subject].map(s => <option key={s} value={s}>{s}</option>)}
-                        <option value="Other">Other...</option>
-                      </select>
-                    ) : (
-                      <input 
-                        type="text" 
-                        placeholder="e.g. Diversity of Matter"
-                        value={newResource.strand}
-                        onChange={(e) => setNewResource({...newResource, strand: e.target.value})}
-                        className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none"
-                      />
-                    )}
-                  </div>
-                  <div className="space-y-2">
-                    <label className="block text-xs font-black text-slate-400 uppercase tracking-widest">Sub-Strand</label>
-                    <input 
-                      type="text" 
-                      placeholder="e.g. Living Things"
-                      value={newResource.subStrand}
-                      onChange={(e) => setNewResource({...newResource, subStrand: e.target.value})}
-                      className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="block text-xs font-black text-slate-400 uppercase tracking-widest">SBC/CCP Code (Optional)</label>
-                  <input 
-                    type="text" 
-                    placeholder="e.g. B1.1.1.1.1"
-                    value={newResource.contentCode}
-                    onChange={(e) => setNewResource({...newResource, contentCode: e.target.value})}
-                    className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none font-mono"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="block text-xs font-black text-slate-400 uppercase tracking-widest">Resource Title</label>
-                  <input 
-                    required
-                    type="text" 
-                    placeholder="e.g., Photosynthesis Video"
-                    value={newResource.title}
-                    onChange={(e) => setNewResource({...newResource, title: e.target.value})}
-                    className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none"
-                  />
-                </div>
+              <div className="space-y-2">
+                <label className="block text-xs font-black text-slate-400 uppercase tracking-widest">Resource Title</label>
+                <input 
+                  required
+                  type="text" 
+                  placeholder="e.g., Photosynthesis Video"
+                  value={newResource.title}
+                  onChange={(e) => setNewResource({...newResource, title: e.target.value})}
+                  className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none"
+                />
+              </div>
 
               <div className="space-y-2">
                 <label className="block text-xs font-black text-slate-400 uppercase tracking-widest">Description (Optional)</label>
