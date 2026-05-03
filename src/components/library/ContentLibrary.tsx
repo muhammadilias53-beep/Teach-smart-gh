@@ -24,14 +24,52 @@ import {
   addDoc, 
   deleteDoc, 
   doc, 
-  serverTimestamp 
+  serverTimestamp,
+  getDocFromServer
 } from 'firebase/firestore';
-import { db } from '../../lib/firebase';
+import { db, auth } from '../../lib/firebase';
 import { useAuth } from '../../contexts/AuthContext';
 import { Resource } from '../../types';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../../lib/utils';
 import { subjects, levels, SUBJECT_STRANDS, SUBJECT_SUB_STRANDS } from '../../constants';
+
+enum OperationType {
+  CREATE = 'create',
+  UPDATE = 'update',
+  DELETE = 'delete',
+  LIST = 'list',
+  GET = 'get',
+  WRITE = 'write',
+}
+
+interface FirestoreErrorInfo {
+  error: string;
+  operationType: OperationType;
+  path: string | null;
+  authInfo: {
+    userId?: string | null;
+    email?: string | null;
+    emailVerified?: boolean | null;
+    isAnonymous?: boolean | null;
+  }
+}
+
+function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null) {
+  const errInfo: FirestoreErrorInfo = {
+    error: error instanceof Error ? error.message : String(error),
+    authInfo: {
+      userId: auth.currentUser?.uid,
+      email: auth.currentUser?.email,
+      emailVerified: auth.currentUser?.emailVerified,
+      isAnonymous: auth.currentUser?.isAnonymous,
+    },
+    operationType,
+    path
+  };
+  console.error('Firestore Error: ', JSON.stringify(errInfo));
+  throw new Error(JSON.stringify(errInfo));
+}
 
 // Using constants from src/constants.ts
 
@@ -176,6 +214,17 @@ export default function ContentLibrary() {
   });
 
   useEffect(() => {
+    async function testConnection() {
+      try {
+        await getDocFromServer(doc(db, 'system', 'connection'));
+      } catch (error) {
+        if (error instanceof Error && error.message.includes('the client is offline')) {
+          console.error("Please check your Firebase configuration.");
+        }
+      }
+    }
+    testConnection();
+
     if (!user) return;
 
     const q = query(
@@ -212,6 +261,8 @@ export default function ContentLibrary() {
 
       setResources([...allOfficialBooks, ...userData]);
       setLoading(false);
+    }, (error) => {
+      handleFirestoreError(error, OperationType.GET, 'resources');
     });
 
     return () => unsubscribe();
@@ -241,7 +292,7 @@ export default function ContentLibrary() {
         content: ''
       });
     } catch (error) {
-      console.error("Error adding resource:", error);
+      handleFirestoreError(error, OperationType.WRITE, 'resources');
     } finally {
       setSubmitting(false);
     }
@@ -256,7 +307,7 @@ export default function ContentLibrary() {
     try {
       await deleteDoc(doc(db, 'resources', id));
     } catch (error) {
-      console.error("Error deleting resource:", error);
+      handleFirestoreError(error, OperationType.DELETE, `resources/${id}`);
     }
   };
 
@@ -430,7 +481,7 @@ export default function ContentLibrary() {
                       initial={{ opacity: 0, y: 20, scale: 0.98 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 20, scale: 0.98 }}
-                      className="absolute right-0 top-full mt-4 w-[320px] md:w-[700px] bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_40px_80px_-16px_rgba(0,0,0,0.12)] z-50 overflow-hidden"
+                      className="absolute right-0 sm:right-auto sm:left-1/2 sm:-translate-x-1/2 lg:right-0 lg:left-auto lg:translate-x-0 top-full mt-4 w-[calc(100vw-2rem)] md:w-[700px] max-w-[700px] bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_40px_80px_-16px_rgba(0,0,0,0.12)] z-50 overflow-hidden"
                     >
                       {/* Modal Header */}
                       <div className="p-5 border-b border-slate-50 bg-slate-50/50 flex items-center justify-between">
@@ -459,7 +510,7 @@ export default function ContentLibrary() {
                         </button>
                       </div>
 
-                      <div className="p-6 space-y-6">
+                      <div className="p-6 space-y-6 max-h-[70vh] overflow-y-auto no-scrollbar">
                         {/* Primary Filters Row */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                           {/* Subject Section */}
@@ -766,7 +817,7 @@ export default function ContentLibrary() {
                     </button>
                   )}
                   <span className="text-[10px] text-slate-400 font-medium">
-                    {resource.id?.startsWith('official-') ? 'System Resource' : new Date(resource.createdAt?.toDate()).toLocaleDateString()}
+                    {resource.id?.startsWith('official-') ? 'System Resource' : (resource.createdAt?.toDate?.() ? resource.createdAt.toDate().toLocaleDateString() : 'Recently Added')}
                   </span>
                 </div>
               </motion.div>
