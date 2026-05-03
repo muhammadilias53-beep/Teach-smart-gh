@@ -14,12 +14,53 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+enum OperationType {
+  CREATE = 'create',
+  UPDATE = 'update',
+  DELETE = 'delete',
+  LIST = 'list',
+  GET = 'get',
+  WRITE = 'write',
+}
+
+interface FirestoreErrorInfo {
+  error: string;
+  operationType: OperationType;
+  path: string | null;
+  authInfo: {
+    userId?: string | null;
+    email?: string | null;
+    emailVerified?: boolean | null;
+    isAnonymous?: boolean | null;
+  }
+}
+
+function handleFirestoreError(error: any, operationType: OperationType, path: string | null) {
+  if (error?.code === 'permission-denied') {
+    const errInfo: FirestoreErrorInfo = {
+      error: error instanceof Error ? error.message : String(error),
+      authInfo: {
+        userId: auth.currentUser?.uid,
+        email: auth.currentUser?.email,
+        emailVerified: auth.currentUser?.emailVerified,
+        isAnonymous: auth.currentUser?.isAnonymous,
+      },
+      operationType,
+      path
+    }
+    console.error('Firestore Permission Error: ', JSON.stringify(errInfo));
+    throw new Error(JSON.stringify(errInfo));
+  }
+  throw error;
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
   const fetchProfile = async (uid: string) => {
+    const profilePath = `users/${uid}`;
     try {
       const docRef = doc(db, 'users', uid);
       const docSnap = await getDoc(docRef);
@@ -34,13 +75,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           trialStartDate: serverTimestamp(),
           subscriptionStatus: 'trial',
         };
-        await setDoc(docRef, newProfile);
-        // Fetch again to get the data (or just set local state)
+        try {
+          await setDoc(docRef, newProfile);
+        } catch (err) {
+          handleFirestoreError(err, OperationType.WRITE, profilePath);
+        }
+        
+        // Fetch again to get the data
         const freshSnap = await getDoc(docRef);
         setProfile(freshSnap.data() as UserProfile);
       }
     } catch (error) {
       console.error("Error fetching profile:", error);
+      if (error instanceof Error && error.message.includes('operationType')) {
+        // This is our transformed JSON error
+      } else {
+        handleFirestoreError(error, OperationType.GET, profilePath);
+      }
     }
   };
 

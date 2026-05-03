@@ -178,24 +178,36 @@ const quickActions = [
   ];
 
   return (
-    <div className="space-y-12 pb-20">
+    <div className="space-y-12">
       {/* Header Info Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between py-6 border-b border-slate-100 gap-4">
-        <div className="flex items-center gap-4 text-xs font-black uppercase tracking-widest text-slate-400">
-          <div className="flex items-center gap-2 px-3 py-1 bg-white rounded-full border border-slate-100 shadow-sm">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between py-6 border-b border-slate-100 gap-6">
+        <div className="flex flex-wrap items-center gap-3 text-[10px] font-black uppercase tracking-widest text-slate-400">
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-full border border-slate-100 shadow-sm shrink-0">
             <div className="w-2 h-2 rounded-full bg-emerald-light animate-pulse" />
             <span className="text-emerald-deep">{profile?.school || "Ghana Education Staff"}</span>
           </div>
-          <span className="w-1 h-1 bg-slate-300 rounded-full" />
-          <span>{profile?.level || "All Grades"}</span>
+          <span className="hidden sm:block w-1.5 h-1.5 bg-slate-200 rounded-full" />
+          <div className="px-3 py-1.5 bg-slate-50 rounded-full border border-slate-100 shrink-0">
+            <span>{profile?.level || "All Grades"}</span>
+          </div>
+          {profile?.subjectsTaught && profile.subjectsTaught.length > 0 && (
+            <>
+              <span className="hidden sm:block w-1.5 h-1.5 bg-slate-200 rounded-full" />
+              <div className="px-3 py-1.5 bg-indigo-50 text-indigo-500 rounded-full border border-indigo-100 shrink-0">
+                <span className="truncate max-w-[120px] inline-block align-middle">{profile.subjectsTaught.join(', ')}</span>
+              </div>
+            </>
+          )}
         </div>
-        <div className="flex items-center gap-2 px-4 py-1.5 bg-emerald-900 text-ghana-gold rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-emerald-900/10">
-          <ShieldCheck size={12} className="fill-current" />
-          <span>Policy Compliant Platform</span>
-        </div>
-        <div className="flex items-center gap-2 px-4 py-1.5 bg-white text-emerald-deep rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-md border border-slate-100">
-          <Zap size={12} className="fill-current text-ghana-gold underline" />
-          <span>Live NaCCA Sync Engine</span>
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex items-center gap-2 px-4 py-2 bg-emerald-900 text-ghana-gold rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-emerald-900/10">
+            <ShieldCheck size={12} className="fill-current shrink-0" />
+            <span className="whitespace-nowrap">Policy Compliant</span>
+          </div>
+          <div className="flex items-center gap-2 px-4 py-2 bg-white text-emerald-deep rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-md border border-slate-100">
+            <Zap size={12} className="text-ghana-gold shrink-0" />
+            <span className="whitespace-nowrap">Live NaCCA Sync</span>
+          </div>
         </div>
       </div>
 
@@ -216,11 +228,11 @@ const quickActions = [
               </div>
               <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Total Generated</p>
             </div>
-            <div className="flex items-end justify-between">
-              <h3 className="text-4xl font-black text-slate-900 tracking-tighter">
+            <div className="flex items-end justify-between gap-4">
+              <h3 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tighter shrink-0">
                 <AnimatedCounter value={stats.total} />
               </h3>
-              <div className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full uppercase tracking-tighter">
+              <div className="text-[9px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full uppercase tracking-tighter whitespace-nowrap">
                 Live Docs
               </div>
             </div>
@@ -243,10 +255,10 @@ const quickActions = [
               </div>
               <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Expertise Rank</p>
             </div>
-            <div className="flex items-end justify-between">
-              <div>
-                <h3 className={cn("text-lg font-black tracking-tight leading-none", mastery.color)}>{mastery.title}</h3>
-                <p className="text-[10px] font-bold text-slate-500 uppercase mt-1">Level {Math.floor(stats.total / 10) + 1}</p>
+            <div className="flex items-end justify-between gap-4">
+              <div className="min-w-0">
+                <h3 className={cn("text-base sm:text-lg font-black tracking-tight leading-none truncate", mastery.color)}>{mastery.title}</h3>
+                <p className="text-[9px] font-bold text-slate-500 uppercase mt-1">Level {Math.floor(stats.total / 10) + 1}</p>
               </div>
             </div>
           </div>
@@ -270,12 +282,12 @@ const quickActions = [
                 Trial Access
               </p>
             </div>
-            <div className="flex items-end justify-between">
-              <h3 className="text-4xl font-black text-slate-900 tracking-tighter">
+            <div className="flex items-end justify-between gap-4">
+              <h3 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tighter shrink-0">
                 <AnimatedCounter value={daysLeft} />
                 <span className="text-2xl ml-1">d</span>
               </h3>
-              <div className="text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-tighter text-ghana-red bg-red-50 animate-pulse">
+              <div className="text-[9px] font-bold px-2 py-1 rounded-full uppercase tracking-tighter text-ghana-red bg-red-50 animate-pulse whitespace-nowrap">
                 Days Left
               </div>
             </div>
@@ -299,12 +311,12 @@ const quickActions = [
               <p className="text-[10px] font-black uppercase tracking-widest text-emerald-text/60">Resource Power</p>
             </div>
             <div className="space-y-3">
-              <div className="flex justify-between items-baseline">
-                 <h3 className="text-2xl font-black text-white tracking-tight">
+              <div className="flex justify-between items-baseline gap-2">
+                 <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight shrink-0">
                    <AnimatedCounter value={Math.min(100, Math.round((stats.total / 50) * 100))} />
                    <span className="text-sm opacity-60 ml-0.5">%</span>
                  </h3>
-                 <span className="text-[9px] font-black text-ghana-gold uppercase tracking-widest">Efficiency</span>
+                 <span className="text-[8px] font-black text-ghana-gold uppercase tracking-widest whitespace-nowrap">Efficiency</span>
               </div>
               <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
                  <motion.div 
@@ -325,12 +337,13 @@ const quickActions = [
         <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-ghana-gold/10 rounded-full -translate-x-1/4 translate-y-1/4 blur-[120px] group-hover:opacity-30 transition-opacity duration-1000" />
         
         <div className="relative z-10 grid lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-6">
-            <h1 className="text-4xl lg:text-6xl font-black leading-[1.1] tracking-tighter">
-              Hello, <span className="text-ghana-gold">Teacher {profile?.displayName?.split(' ')[0] || user?.email?.split('@')[0]}</span>.
+          <div className="space-y-4">
+            <p className="text-ghana-gold font-black text-[10px] tracking-[0.4em] uppercase opacity-70">Professional Dashboard</p>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black leading-tight tracking-tighter">
+              Amaraaba Teacher, <span className="text-white underline decoration-ghana-gold decoration-4 underline-offset-8">{profile?.displayName?.split(' ')[0] || user?.email?.split('@')[0]}</span>.
             </h1>
-            <p className="text-emerald-text/70 max-w-sm text-lg font-medium leading-relaxed italic">
-              Your professional AI suite for NaCCA-aligned lesson plans, schemes, and official WAEC-standard exams.
+            <p className="text-emerald-text/70 max-w-sm text-base lg:text-lg font-medium leading-relaxed italic">
+              {profile?.school ? `Proud educator at ${profile.school}.` : "Empowering your classroom with NaCCA-aligned AI tools."}
             </p>
             <div className="flex flex-wrap gap-4 pt-4">
               <Link to="/lessons" className="btn-secondary group shadow-2xl shadow-ghana-gold/30">

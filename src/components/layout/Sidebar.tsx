@@ -89,7 +89,10 @@ const Sidebar = () => {
               <p className="text-xs font-black text-slate-900 truncate uppercase tracking-tighter">
                 {profile?.displayName || 'Ghana Teacher'}
               </p>
-              <p className="text-[10px] font-bold text-slate-500 truncate mt-0.5">
+              <p className="text-[9px] font-bold text-emerald-600 truncate uppercase tracking-tighter">
+                {profile?.school || "Ghana Education Staff"}
+              </p>
+              <p className="text-[10px] font-bold text-slate-400 truncate mt-0.5">
                 {profile?.subscriptionStatus || 'Basic'} Member
               </p>
             </div>

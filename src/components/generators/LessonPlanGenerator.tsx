@@ -221,7 +221,7 @@ const LessonPlanGenerator = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 pb-20">
+    <div className="max-w-4xl mx-auto space-y-8">
       <div className="flex items-center justify-between">
         <div>
            <h1 className="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">
@@ -520,7 +520,7 @@ const LessonPlanGenerator = () => {
             animate={{ opacity: 1, scale: 1 }}
             className="space-y-6"
           >
-            <div className="flex flex-col md:flex-row gap-4 sticky top-4 z-20 shadow-2xl p-4 bg-slate-900 rounded-[2rem] border border-white/10 ring-4 ring-slate-900/10">
+            <div className="flex flex-col md:flex-row gap-4 sticky top-20 lg:top-4 z-20 shadow-2xl p-4 bg-slate-900 rounded-[2rem] border border-white/10 ring-4 ring-slate-900/10">
               <div className="flex-1 flex items-center gap-3 px-4">
                 <div className="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center text-white">
                   <CheckCircle size={20} />

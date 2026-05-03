@@ -546,7 +546,7 @@ export default function ExamGenerator() {
             animate={{ opacity: 1, y: 0 }}
             className="space-y-8"
           >
-            <div className="flex flex-col md:flex-row items-center justify-between gap-6 p-6 bg-slate-900 rounded-[2.5rem] shadow-2xl border border-white/10 ring-8 ring-slate-900/5 sticky top-4 z-30">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6 p-6 bg-slate-900 rounded-[2.5rem] shadow-2xl border border-white/10 ring-8 ring-slate-900/5 sticky top-20 lg:top-4 z-30">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-emerald-500/20">
                   <CheckCircle size={24} />

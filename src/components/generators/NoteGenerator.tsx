@@ -166,7 +166,7 @@ const NoteGenerator = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 pb-20">
+    <div className="max-w-4xl mx-auto space-y-8">
       <div className="flex items-center justify-between">
         <div>
            <h1 className="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">
@@ -469,7 +469,7 @@ const NoteGenerator = () => {
             animate={{ opacity: 1, scale: 1 }}
             className="space-y-6"
           >
-            <div className="flex gap-4 sticky top-4 z-10 shadow-lg p-2 bg-white/50 backdrop-blur-md rounded-2xl border border-white/20">
+            <div className="flex gap-4 sticky top-20 lg:top-4 z-10 shadow-lg p-2 bg-white/50 backdrop-blur-md rounded-2xl border border-white/20">
               <button onClick={() => setStep(2)} className="px-4 py-2 bg-white border rounded-xl font-bold text-sm hover:bg-gray-50">Edit</button>
               <button 
                 onClick={handleSave} 

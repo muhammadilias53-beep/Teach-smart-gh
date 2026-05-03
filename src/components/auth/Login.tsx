@@ -1,34 +1,49 @@
 import React, { useState, useEffect } from 'react';
 import { auth } from '../../lib/firebase';
 import { useAuth } from '../../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   signInWithPopup, 
   GoogleAuthProvider, 
   signInWithEmailAndPassword, 
   createUserWithEmailAndPassword,
-  sendPasswordResetEmail
+  sendPasswordResetEmail,
+  updateProfile as firebaseUpdateProfile
 } from 'firebase/auth';
 import { motion } from 'motion/react';
-import { GraduationCap, Mail, Lock, User, Chrome, Zap, Info } from 'lucide-react';
+import { GraduationCap, Mail, Lock, User, Chrome, Zap, Info, Eye, EyeOff } from 'lucide-react';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../../lib/firebase';
+import { toast } from 'react-hot-toast';
 
 import { Logo } from '../common/Logo';
 
 const Login = () => {
   const { user } = useAuth();
+  const location = useLocation();
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [displayName, setDisplayName] = useState('');
+  const [school, setSchool] = useState('');
+  const [level, setLevel] = useState<string>('JHS');
+  const [subjectsTaught, setSubjectsTaught] = useState('');
   const [error, setError] = useState('');
   const [info, setInfo] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (user) {
-      navigate('/');
+      if (location.state?.from) {
+        navigate(location.state.from);
+      } else {
+        navigate('/');
+      }
     }
-  }, [user, navigate]);
+  }, [user, navigate, location]);
 
   const handleGoogleSignIn = async () => {
     try {
@@ -61,11 +76,48 @@ const Login = () => {
     setLoading(true);
     setError('');
     setInfo('');
+    
+    if (!isLogin) {
+      if (password !== confirmPassword) {
+        setError('PASSWORDS DO NOT MATCH. PLEASE TRY AGAIN.');
+        setLoading(false);
+        return;
+      }
+      if (password.length < 6) {
+        setError('PASSWORD MUST BE AT LEAST 6 CHARACTERS.');
+        setLoading(false);
+        return;
+      }
+    }
+
     try {
       if (isLogin) {
         await signInWithEmailAndPassword(auth, email, password);
+        toast.success('Welcome back, Teacher!');
       } else {
-        await createUserWithEmailAndPassword(auth, email, password);
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const { user: newUser } = userCredential;
+        
+        // Update Firebase Auth profile
+        await firebaseUpdateProfile(newUser, {
+          displayName: displayName || 'Teacher'
+        });
+
+        // Create personalized profile in Firestore
+        const newProfile: any = {
+          uid: newUser.uid,
+          email,
+          displayName: displayName || 'Teacher',
+          school: school || 'Ghana Education Service',
+          level: level,
+          subjectsTaught: subjectsTaught.split(',').map(s => s.trim()).filter(Boolean),
+          trialStartDate: serverTimestamp(),
+          subscriptionStatus: 'trial',
+          createdAt: serverTimestamp(),
+        };
+        
+        await setDoc(doc(db, 'users', newUser.uid), newProfile);
+        toast.success('Registration successful! Welcome to TeachSmart.');
       }
     } catch (err: any) {
       console.error(err);
@@ -85,98 +137,195 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-cream relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-[#F8F9FA] relative overflow-hidden font-sans">
       {/* Background Ornaments */}
-      <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-emerald-deep/5 rounded-full -translate-x-1/2 -translate-y-1/2 blur-[120px]" />
-      <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-ghana-gold/10 rounded-full translate-x-1/3 translate-y-1/3 blur-[140px]" />
+      <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-20">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-emerald-deep rounded-full blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-ghana-gold rounded-full blur-[140px]" />
+      </div>
       
       <motion.div 
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-lg bg-white rounded-[3rem] shadow-2xl shadow-slate-200/50 overflow-hidden relative border border-slate-100"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="w-full max-w-xl bg-white rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.1)] overflow-hidden relative border border-slate-100/50"
       >
-        <div className="p-12 text-center relative">
-          <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-ghana-red via-ghana-gold to-ghana-green" />
-          <div className="flex justify-center mb-10">
-            <Logo iconOnly size="lg" className="w-24 h-24 rounded-[2rem] -rotate-3 hover:rotate-0 transition-transform duration-500 shadow-2xl shadow-emerald-900/30" />
+        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-ghana-red via-ghana-gold to-ghana-green" />
+        
+        <div className="pt-12 pb-8 px-12 text-center">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-emerald-deep rounded-3xl shadow-xl shadow-emerald-900/20 mb-6 -rotate-3 hover:rotate-0 transition-transform duration-500">
+            <GraduationCap size={40} className="text-white" />
           </div>
-          <h1 className="text-4xl font-black text-slate-900 tracking-tighter uppercase leading-none">TeachSmart</h1>
-          <p className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.4em] mt-3">Ghana Education System</p>
-          <div className="mt-8 flex justify-center">
-             <p className="text-slate-400 text-sm font-medium italic max-w-xs leading-relaxed">
-               Empowering Ghanaian educators with professional AI generation tools aligned to the national curriculum.
-             </p>
-          </div>
+          <h1 className="text-4xl font-black text-slate-900 tracking-tighter uppercase leading-none mb-2">
+            TeachSmart
+          </h1>
+          <p className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.4em] mb-4">
+            Ghana Education System
+          </p>
+          <div className="h-px w-12 bg-slate-100 mx-auto mb-4" />
+          <p className="text-slate-500 text-sm font-medium italic max-w-xs mx-auto leading-relaxed">
+            {isLogin 
+              ? "Welcome back, educator. Access your professional teaching tools."
+              : "Join the future of Ghanaian education. Personalized for your classroom."}
+          </p>
         </div>
 
         <div className="px-12 pb-12">
           {error && (
             <motion.div 
-              initial={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
-              className="mb-8 p-5 bg-rose-50 text-rose-600 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-rose-100 flex items-center gap-4"
+              className="mb-6 p-4 bg-rose-50 border border-rose-100 rounded-2xl flex items-center gap-3"
             >
-              <div className="w-2 h-2 rounded-full bg-rose-600 animate-pulse" />
-              {error}
+              <div className="flex-shrink-0 w-8 h-8 bg-rose-100 rounded-full flex items-center justify-center">
+                <div className="w-1.5 h-1.5 rounded-full bg-rose-600 animate-pulse" />
+              </div>
+              <p className="text-[10px] font-black text-rose-600 uppercase tracking-widest leading-normal">
+                {error}
+              </p>
             </motion.div>
           )}
 
           {info && (
             <motion.div 
-              initial={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
-              className="mb-8 p-5 bg-emerald-50 text-emerald-600 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-emerald-100 flex items-center gap-4"
+              className="mb-6 p-4 bg-emerald-50 border border-emerald-100 rounded-2xl flex items-center gap-3"
             >
-              <Info size={16} />
-              {info}
+              <div className="flex-shrink-0 w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600">
+                <Info size={14} />
+              </div>
+              <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest leading-normal">
+                {info}
+              </p>
             </motion.div>
           )}
 
-          <div className="space-y-6">
+          <div className="space-y-4">
             <button 
               onClick={handleGoogleSignIn}
-              className="w-full flex items-center justify-center gap-4 px-8 py-5 bg-white border-2 border-slate-50 rounded-2xl font-black text-slate-700 hover:border-emerald-500/20 hover:bg-emerald-50/10 transition-all active:scale-95 shadow-sm text-xs uppercase tracking-widest"
+              className="w-full group flex items-center justify-center gap-4 px-8 py-4 bg-white border border-slate-200 rounded-2xl font-black text-slate-700 hover:border-emerald-500/30 hover:bg-emerald-50/5 transition-all shadow-sm text-xs uppercase tracking-widest"
             >
-              <div className="w-6 h-6 bg-white rounded-lg flex items-center justify-center shadow-sm border border-slate-100">
+              <div className="w-6 h-6 bg-white rounded-lg flex items-center justify-center shadow-sm border border-slate-100 group-hover:scale-110 transition-transform">
                 <Chrome size={16} className="text-emerald-deep" />
               </div>
-              Sign in with Google Account
+              Continue with Google Account
             </button>
 
-            <div className="relative py-6 text-center">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-slate-50" />
-              </div>
-              <span className="relative px-6 bg-white text-[9px] font-black text-slate-300 uppercase tracking-[0.3em]">Institutional Access</span>
+            <div className="relative py-4 text-center">
+              <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 border-t border-slate-100" />
+              <span className="relative px-6 bg-white text-[8px] font-black text-slate-400 uppercase tracking-[0.4em]">OR</span>
             </div>
 
             <form onSubmit={handleEmailAuth} className="space-y-4">
-              <div className="relative group">
-                <Mail className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-emerald-deep transition-colors" size={18} />
-                <input 
-                  type="email" 
-                  placeholder="EMAIL ADDRESS" 
-                  className="input-field pl-16 py-5 rounded-2xl !bg-slate-50/50 text-[11px] font-black tracking-widest uppercase"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="relative group">
-                <Lock className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-emerald-deep transition-colors" size={18} />
-                <input 
-                  type="password" 
-                  placeholder="SECURITY PASSWORD" 
-                  className="input-field pl-16 py-5 rounded-2xl !bg-slate-50/50 text-[11px] font-black tracking-widest uppercase"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required={isLogin}
-                />
+              <div className="grid grid-cols-1 gap-4">
+                {!isLogin && (
+                  <motion.div 
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    className="space-y-4"
+                  >
+                    <div className="relative">
+                      <User className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none" size={18} />
+                      <input 
+                        type="text" 
+                        placeholder="FULL NAME" 
+                        className="w-full pl-14 pr-6 py-4 bg-slate-50/50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-deep/20 focus:border-emerald-deep transition-all text-xs font-bold tracking-widest uppercase outline-none"
+                        value={displayName}
+                        onChange={(e) => setDisplayName(e.target.value)}
+                        required={!isLogin}
+                      />
+                    </div>
+                    <div className="relative">
+                      <GraduationCap className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none" size={18} />
+                      <input 
+                        type="text" 
+                        placeholder="SCHOOL NAME" 
+                        className="w-full pl-14 pr-6 py-4 bg-slate-50/50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-deep/20 focus:border-emerald-deep transition-all text-xs font-bold tracking-widest uppercase outline-none"
+                        value={school}
+                        onChange={(e) => setSchool(e.target.value)}
+                        required={!isLogin}
+                      />
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <select 
+                        className="w-full px-6 py-4 bg-slate-50/50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-deep/20 focus:border-emerald-deep transition-all text-xs font-bold tracking-widest uppercase outline-none h-[58px]"
+                        value={level}
+                        onChange={(e) => setLevel(e.target.value)}
+                      >
+                        <option value="KG">KINDERGARTEN</option>
+                        <option value="Primary">PRIMARY SCHOOL</option>
+                        <option value="JHS">JUNIOR HIGH (JHS)</option>
+                        <option value="SHS">SENIOR HIGH (SHS)</option>
+                      </select>
+                      <div className="relative">
+                        <Zap className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none" size={16} />
+                        <input 
+                          type="text" 
+                          placeholder="SUBJECTS" 
+                          className="w-full pl-12 pr-6 py-4 bg-slate-50/50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-deep/20 focus:border-emerald-deep transition-all text-xs font-bold tracking-widest uppercase outline-none"
+                          value={subjectsTaught}
+                          onChange={(e) => setSubjectsTaught(e.target.value)}
+                          required={!isLogin}
+                        />
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+
+                <div className="relative">
+                  <Mail className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none" size={18} />
+                  <input 
+                    type="email" 
+                    placeholder="EMAIL ADDRESS" 
+                    className="w-full pl-14 pr-6 py-4 bg-slate-50/50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-deep/20 focus:border-emerald-deep transition-all text-xs font-bold tracking-widest uppercase outline-none"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="relative">
+                    <Lock className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none" size={18} />
+                    <input 
+                      type={showPassword ? "text" : "password"} 
+                      placeholder="PASSWORD" 
+                      className="w-full pl-14 pr-12 py-4 bg-slate-50/50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-deep/20 focus:border-emerald-deep transition-all text-xs font-bold tracking-widest uppercase outline-none"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-emerald-deep transition-colors p-1"
+                    >
+                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
+                  </div>
+                  {!isLogin && (
+                    <motion.div 
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      className="relative"
+                    >
+                      <Lock className="absolute left-5 top-1/2 -translate-y-1/2 text-emerald-deep/30 pointer-events-none" size={18} />
+                      <input 
+                        type={showPassword ? "text" : "password"} 
+                        placeholder="CONFIRM" 
+                        className="w-full pl-14 pr-12 py-4 bg-emerald-50/5 border border-emerald-100/50 rounded-2xl focus:ring-2 focus:ring-emerald-deep/20 focus:border-emerald-deep transition-all text-xs font-bold tracking-widest uppercase outline-none"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        required={!isLogin}
+                      />
+                    </motion.div>
+                  )}
+                </div>
               </div>
               
               {isLogin && (
-                <div className="flex justify-end">
+                <div className="flex justify-end pr-2">
                   <button 
                     type="button"
                     onClick={handleForgotPassword}
@@ -189,34 +338,44 @@ const Login = () => {
 
               <button 
                 type="submit" 
-                className="btn-primary w-full py-5 rounded-2xl shadow-2xl shadow-emerald-900/20 mt-6 font-black uppercase text-[10px] tracking-[0.2em]"
+                className="btn-primary w-full py-5 rounded-[1.5rem] shadow-xl shadow-emerald-900/20 active:scale-[0.98] transition-all font-black uppercase text-[10px] tracking-[0.3em] mt-2 group"
                 disabled={loading}
               >
-                {loading ? "AUTHENTICATING..." : isLogin ? "ENTER DASHBOARD" : "REGISTER FACULTY"}
+                {loading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-white rounded-full animate-bounce" />
+                    <div className="w-1.5 h-1.5 bg-white rounded-full animate-bounce delay-75" />
+                    <div className="w-1.5 h-1.5 bg-white rounded-full animate-bounce delay-150" />
+                  </span>
+                ) : (
+                  <>
+                    {isLogin ? "Authenticate Account" : "Submit Registration"}
+                  </>
+                )}
               </button>
             </form>
           </div>
 
-          <div className="mt-12 text-center">
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
-              {isLogin ? "NEW TO TEACHSMART?" : "ALREADY A MEMBER?"}
+          <div className="mt-8 text-center">
+            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+              {isLogin ? "DON'T HAVE AN ACCOUNT?" : "ALREADY REGISTERED?"}
               <button 
                 onClick={() => {
                   setIsLogin(!isLogin);
                   setError('');
                   setInfo('');
                 }}
-                className="ml-3 text-emerald-deep hover:text-ghana-gold transition-colors underline underline-offset-4"
+                className="ml-3 text-emerald-deep hover:text-ghana-gold transition-colors font-black border-b-2 border-emerald-deep/20 pb-0.5"
               >
-                {isLogin ? "CREATE ACCOUNT" : "LOGIN HERE"}
+                {isLogin ? "CREATE PROFILE" : "SIGN IN NOW"}
               </button>
             </p>
           </div>
         </div>
         
-        <div className="py-6 bg-emerald-deep/5 text-center px-12">
-          <p className="text-[9px] font-black text-emerald-900/40 uppercase tracking-[0.4em] leading-relaxed">
-            Strictly for educational use only. Aligned with NaCCA & GES standards 🇬🇭
+        <div className="py-5 bg-gradient-to-b from-white to-slate-50 text-center px-12 border-t border-slate-100">
+          <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] leading-relaxed">
+            Personalized Professional Access System 🇬🇭
           </p>
         </div>
       </motion.div>

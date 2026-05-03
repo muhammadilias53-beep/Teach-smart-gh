@@ -9,8 +9,6 @@ import { updateProfile } from 'firebase/auth';
 import { auth } from '../../lib/firebase';
 import { toast } from 'react-hot-toast';
 
-import { levels } from '../../constants';
-
 const regions = [
   "Greater Accra", "Ashanti", "Central", "Western", "Eastern", 
   "Northern", "Upper East", "Upper West", "Volta", "Bono", 
@@ -86,8 +84,13 @@ export default function ProfileSettings() {
       await refreshProfile();
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error updating profile:", error);
+      if (error?.code === 'permission-denied') {
+        toast.error("You don't have permission to update this profile. Please ensure you are logged in correctly.");
+      } else {
+        toast.error("Failed to update profile. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
@@ -204,7 +207,10 @@ export default function ProfileSettings() {
                   className="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none font-bold text-slate-700 transition-all cursor-pointer appearance-none"
                 >
                   <option value="">Select Level</option>
-                  {levels.map(l => <option key={l} value={l}>{l}</option>)}
+                  <option value="KG">KINDERGARTEN</option>
+                  <option value="Primary">PRIMARY SCHOOL</option>
+                  <option value="JHS">JUNIOR HIGH (JHS)</option>
+                  <option value="SHS">SENIOR HIGH (SHS)</option>
                 </select>
               </div>
 
