@@ -10,6 +10,7 @@ import {
   Trash2, 
   Filter,
   Loader2,
+  X,
   FolderOpen,
   Book,
   CheckCircle,
@@ -32,7 +33,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { Resource } from '../../types';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../../lib/utils';
-import { subjects, levels, SUBJECT_STRANDS, SUBJECT_SUB_STRANDS } from '../../constants';
+import { subjects, levels } from '../../constants';
 
 enum OperationType {
   CREATE = 'create',
@@ -178,12 +179,8 @@ export default function ContentLibrary() {
   const [search, setSearch] = useState('');
   const [selectedSubject, setSelectedSubject] = useState('All');
   const [selectedLevel, setSelectedLevel] = useState('All');
-  const [selectedStrand, setSelectedStrand] = useState('All');
-  const [selectedSubStrand, setSelectedSubStrand] = useState('All');
-  const [selectedContentCode, setSelectedContentCode] = useState('All');
   const [showFilters, setShowFilters] = useState(false);
   const [filterSubjectSearch, setFilterSubjectSearch] = useState('');
-  const [filterStrandSearch, setFilterStrandSearch] = useState('');
   const [filterType, setFilterType] = useState<'all' | 'official' | 'user'>('all');
   const [showAddModal, setShowAddModal] = useState(false);
   const [viewingResource, setViewingResource] = useState<Resource | null>(null);
@@ -196,9 +193,6 @@ export default function ContentLibrary() {
     description: string;
     subject: string;
     level: string;
-    strand: string;
-    subStrand: string;
-    contentCode: string;
     type: 'link' | 'note' | 'file' | 'book';
     content: string;
   }>({
@@ -206,9 +200,6 @@ export default function ContentLibrary() {
     description: '',
     subject: subjects[0],
     level: levels[0],
-    strand: '',
-    subStrand: '',
-    contentCode: '',
     type: 'link',
     content: ''
   });
@@ -285,9 +276,6 @@ export default function ContentLibrary() {
         description: '',
         subject: subjects[0],
         level: levels[0],
-        strand: '',
-        subStrand: '',
-        contentCode: '',
         type: 'link',
         content: ''
       });
@@ -311,31 +299,6 @@ export default function ContentLibrary() {
     }
   };
 
-  const subStrandStats = resources
-    .filter(r => (selectedSubject === 'All' || r.subject === selectedSubject))
-    .reduce((acc, r) => {
-      if (r.subStrand) {
-        acc[r.subStrand] = (acc[r.subStrand] || 0) + 1;
-      }
-      return acc;
-    }, {} as Record<string, number>);
-
-  const availableSubStrands = Object.entries(subStrandStats)
-    .map(([name, count]) => ({ name, count }))
-    .sort((a, b) => a.name.localeCompare(b.name));
-
-  const codeStats = resources
-    .filter(r => (selectedSubject === 'All' || r.subject === selectedSubject) && (selectedLevel === 'All' || r.level.includes(selectedLevel)))
-    .reduce((acc, r) => {
-      if (r.contentCode) {
-        acc[r.contentCode] = (acc[r.contentCode] || 0) + 1;
-      }
-      return acc;
-    }, {} as Record<string, number>);
-
-  const availableCodes = Object.entries(codeStats)
-    .map(([name, count]) => ({ name, count }))
-    .sort((a, b) => a.name.localeCompare(b.name));
 
   const subjectStats = resources.reduce((acc, r) => {
     acc[r.subject] = (acc[r.subject] || 0) + 1;
@@ -359,15 +322,13 @@ export default function ContentLibrary() {
     
     const matchesSubject = selectedSubject === 'All' || res.subject === selectedSubject;
     const matchesLevel = selectedLevel === 'All' || (res.level && res.level.includes(selectedLevel));
-    const matchesStrand = selectedStrand === 'All' || res.strand === selectedStrand;
-    const matchesSubStrand = selectedSubStrand === 'All' || res.subStrand === selectedSubStrand;
     
     const matchesType = 
       filterType === 'all' ? true :
       filterType === 'official' ? res.authorId === 'system' :
       res.authorId !== 'system';
 
-    return matchesSearch && matchesSubject && matchesLevel && matchesType && matchesStrand && matchesSubStrand;
+    return matchesSearch && matchesSubject && matchesLevel && matchesType;
   });
 
   const getIcon = (type: string, size = 18) => {
@@ -461,7 +422,7 @@ export default function ContentLibrary() {
                   onClick={() => setShowFilters(!showFilters)}
                   className={cn(
                     "h-full px-8 py-5 rounded-[2rem] border transition-all flex items-center gap-3 font-black uppercase tracking-widest text-[10px]",
-                    showFilters || selectedSubject !== 'All' || selectedLevel !== 'All' || selectedSubStrand !== 'All' || selectedContentCode !== 'All' || filterType !== 'all'
+                    showFilters || selectedSubject !== 'All' || selectedLevel !== 'All' || filterType !== 'all'
                       ? "bg-slate-900 border-slate-900 text-white shadow-lg"
                       : "bg-white border-slate-100 text-slate-500 hover:border-slate-200"
                   )}
@@ -477,42 +438,55 @@ export default function ContentLibrary() {
 
                 <AnimatePresence>
                   {showFilters && (
-                    <motion.div 
-                      initial={{ opacity: 0, y: 20, scale: 0.98 }}
+                    <>
+                      <motion.div 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={() => setShowFilters(false)}
+                        className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[90] md:hidden"
+                      />
+                      <motion.div 
+                      initial={{ opacity: 0, y: 20, scale: 0.95 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 20, scale: 0.98 }}
-                      className="absolute right-0 sm:right-auto sm:left-1/2 sm:-translate-x-1/2 lg:right-0 lg:left-auto lg:translate-x-0 top-full mt-4 w-[calc(100vw-2rem)] md:w-[700px] max-w-[700px] bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_40px_80px_-16px_rgba(0,0,0,0.12)] z-50 overflow-hidden"
+                      exit={{ opacity: 0, y: 20, scale: 0.95 }}
+                      className="fixed md:absolute inset-x-4 md:inset-x-auto md:right-0 md:top-full mt-4 md:w-[700px] max-w-full md:max-w-[700px] bg-white rounded-2xl md:rounded-[2.5rem] border border-slate-100 shadow-[0_40px_80px_-16px_rgba(0,0,0,0.15)] z-[100] overflow-hidden top-[20%] md:top-unset"
                     >
                       {/* Modal Header */}
-                      <div className="p-5 border-b border-slate-50 bg-slate-50/50 flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 bg-slate-900 text-white rounded-xl flex items-center justify-center shadow-lg">
-                            <Filter size={16} />
+                      <div className="p-3 md:p-5 border-b border-slate-50 bg-slate-50/50 flex items-center justify-between">
+                        <div className="flex items-center gap-2 md:gap-3">
+                          <div className="w-7 h-7 md:w-9 md:h-9 bg-slate-900 text-white rounded-lg md:rounded-xl flex items-center justify-center shadow-lg">
+                            <Filter size={12} />
                           </div>
                           <div>
-                            <h3 className="text-xs font-black text-slate-900 uppercase tracking-widest">Filter Studio</h3>
-                            <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">Refine your library view</p>
+                            <h3 className="text-[9px] md:text-xs font-black text-slate-900 uppercase tracking-widest">Filter Studio</h3>
+                            <p className="text-[7px] md:text-[9px] text-slate-400 font-bold uppercase tracking-widest leading-none">Refine library</p>
                           </div>
                         </div>
-                        <button 
-                          onClick={() => {
-                            setSelectedSubject('All');
-                            setSelectedLevel('All');
-                            setSelectedSubStrand('All');
-                            setSelectedContentCode('All');
-                            setFilterType('all');
-                            setFilterSubjectSearch('');
-                            setFilterStrandSearch('');
-                          }}
-                          className="px-3 py-1.5 bg-white border border-slate-100 rounded-lg text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-red-500 hover:border-red-100 transition-all shadow-sm"
-                        >
-                          Clear All
-                        </button>
+                        <div className="flex items-center gap-2">
+                          <button 
+                            onClick={() => {
+                              setSelectedSubject('All');
+                              setSelectedLevel('All');
+                              setFilterType('all');
+                              setFilterSubjectSearch('');
+                            }}
+                            className="px-2 py-1 md:px-3 md:py-1.5 bg-white border border-slate-100 rounded-lg text-[8px] md:text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-red-500 hover:border-red-100 transition-all shadow-sm"
+                          >
+                            Reset
+                          </button>
+                          <button 
+                            onClick={() => setShowFilters(false)}
+                            className="md:hidden p-1.5 text-slate-400 hover:text-slate-600 transition-colors"
+                          >
+                            <X size={16} />
+                          </button>
+                        </div>
                       </div>
 
-                      <div className="p-6 space-y-6 max-h-[70vh] overflow-y-auto no-scrollbar">
-                        {/* Primary Filters Row */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                      <div className="p-4 md:p-6 space-y-4 md:space-y-6 max-h-[50vh] md:max-h-[70vh] overflow-y-auto custom-scrollbar no-scrollbar">
+                        {/* Primary Filters Column */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                           {/* Subject Section */}
                           <div className="space-y-3">
                             <div className="flex items-center gap-2">
@@ -529,15 +503,11 @@ export default function ContentLibrary() {
                                 onChange={(e) => setFilterSubjectSearch(e.target.value)}
                               />
                             </div>
-                            <div className="flex flex-wrap gap-1.5 max-h-[120px] overflow-y-auto pr-1 custom-scrollbar">
+                            <div className="flex flex-wrap gap-1.5 max-h-[160px] overflow-y-auto pr-1 custom-scrollbar">
                               {['All', ...subjects.filter(s => s.toLowerCase().includes(filterSubjectSearch.toLowerCase()))].map(s => (
                                 <button
                                   key={s}
-                                  onClick={() => {
-                                    setSelectedSubject(s);
-                                    setSelectedStrand('All');
-                                    setSelectedSubStrand('All');
-                                  }}
+                                  onClick={() => setSelectedSubject(s)}
                                   className={cn(
                                     "px-3 py-1.5 rounded-lg text-[9px] font-black transition-all border flex items-center gap-2",
                                     selectedSubject === s 
@@ -551,120 +521,53 @@ export default function ContentLibrary() {
                             </div>
                           </div>
 
-                          {/* Strand Section */}
-                          <div className="space-y-3">
-                            <div className="flex items-center gap-2">
-                              <Filter size={14} className="text-amber-500" />
-                              <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">NaCCA Strand</h4>
-                            </div>
-                            {selectedSubject !== 'All' && SUBJECT_STRANDS[selectedSubject] ? (
-                              <div className="flex flex-wrap gap-1.5 max-h-[160px] overflow-y-auto pr-1 custom-scrollbar">
-                                {['All', ...SUBJECT_STRANDS[selectedSubject]].map(strand => (
-                                  <button
-                                    key={strand}
-                                    onClick={() => {
-                                      setSelectedStrand(strand);
-                                      setSelectedSubStrand('All');
-                                    }}
-                                    className={cn(
-                                      "px-3 py-1.5 rounded-lg text-[9px] font-black transition-all border",
-                                      selectedStrand === strand 
-                                        ? "bg-amber-500 border-amber-500 text-white shadow-md" 
-                                        : "bg-white border-slate-100 text-slate-500 hover:border-amber-200 shadow-sm"
-                                    )}
-                                  >
-                                    {strand.toUpperCase()}
-                                  </button>
-                                ))}
-                              </div>
-                            ) : (
-                              <div className="p-4 bg-slate-50 rounded-2xl border border-dashed border-slate-200 text-center">
-                                <p className="text-[9px] font-bold text-slate-400 uppercase leading-relaxed">
-                                  {selectedSubject === 'All' ? "SELECT A SUBJECT FIRST" : "NO STRANDS DEFINED"}
-                                </p>
-                              </div>
-                            )}
-                          </div>
-
-                          {/* Sub-Strand Section */}
-                          <div className="space-y-3">
-                            <div className="flex items-center gap-2">
-                              <CheckCircle size={14} className="text-blue-500" />
-                              <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Sub-Strand</h4>
-                            </div>
-                            {selectedStrand !== 'All' && SUBJECT_SUB_STRANDS[selectedStrand] ? (
-                              <div className="flex flex-wrap gap-1.5 max-h-[160px] overflow-y-auto pr-1 custom-scrollbar">
-                                {['All', ...SUBJECT_SUB_STRANDS[selectedStrand]].map(ss => (
-                                  <button
-                                    key={ss}
-                                    onClick={() => setSelectedSubStrand(ss)}
-                                    className={cn(
-                                      "px-3 py-1.5 rounded-lg text-[9px] font-black transition-all border",
-                                      selectedSubStrand === ss 
-                                        ? "bg-blue-500 border-blue-500 text-white shadow-md" 
-                                        : "bg-white border-slate-100 text-slate-500 hover:border-blue-200 shadow-sm"
-                                    )}
-                                  >
-                                    {ss.toUpperCase()}
-                                  </button>
-                                ))}
-                              </div>
-                            ) : (
-                              <div className="p-4 bg-slate-50 rounded-2xl border border-dashed border-slate-200 text-center">
-                                <p className="text-[9px] font-bold text-slate-400 uppercase leading-relaxed">
-                                  {selectedStrand === 'All' ? "SELECT A STRAND FIRST" : "NO SUB-STRANDS"}
-                                </p>
-                              </div>
-                            )}
-                          </div>
-
                           <div className="space-y-6">
-                            {/* Level Section */}
-                            <div className="space-y-3">
-                              <div className="flex items-center gap-2">
-                                <Plus size={14} className="text-slate-500" />
-                                <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">GES Level</h4>
-                              </div>
-                              <div className="flex flex-wrap gap-1.5">
-                                {['All', ...levels].map(l => (
+                          {/* Level Section */}
+                          <div className="space-y-3">
+                            <div className="flex items-center gap-2">
+                              <Plus size={14} className="text-slate-500" />
+                              <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">GES Level</h4>
+                            </div>
+                            <div className="flex flex-wrap gap-1.5">
+                              {['All', ...levels].map(l => (
+                                <button
+                                  key={l}
+                                  onClick={() => setSelectedLevel(l)}
+                                  className={cn(
+                                    "px-3 py-1.5 rounded-lg text-[9px] font-black transition-all border",
+                                    selectedLevel === l 
+                                      ? "bg-slate-900 border-slate-900 text-white shadow-md" 
+                                      : "bg-white border-slate-100 text-slate-500 hover:border-slate-300 shadow-sm"
+                                  )}
+                                >
+                                  {l.toUpperCase()}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+
+                          <div className="space-y-3 pt-4 border-t border-slate-100">
+                             <div className="flex items-center gap-2 mb-2">
+                               <ShieldCheck size={14} className="text-purple-500" />
+                               <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Source</h4>
+                             </div>
+                             <div className="grid grid-cols-2 gap-2">
+                                {(['official', 'user'] as const).map(type => (
                                   <button
-                                    key={l}
-                                    onClick={() => setSelectedLevel(l)}
+                                    key={type}
+                                    onClick={() => setFilterType(filterType === type ? 'all' : type)}
                                     className={cn(
-                                      "px-3 py-1.5 rounded-lg text-[9px] font-black transition-all border",
-                                      selectedLevel === l 
-                                        ? "bg-slate-900 border-slate-900 text-white shadow-md" 
-                                        : "bg-white border-slate-100 text-slate-500 hover:border-slate-300 shadow-sm"
+                                      "py-2 rounded-lg text-[8px] font-black uppercase tracking-widest border transition-all",
+                                      filterType === type 
+                                        ? "bg-slate-900 border-slate-900 text-white shadow-sm" 
+                                        : "bg-white border-slate-200 text-slate-400 hover:border-slate-300"
                                     )}
                                   >
-                                    {l.toUpperCase()}
+                                    {type}
                                   </button>
                                 ))}
-                              </div>
-                            </div>
-
-                            <div className="space-y-3 pt-4 border-t border-slate-100">
-                               <div className="flex items-center gap-2 mb-2">
-                                 <ShieldCheck size={14} className="text-purple-500" />
-                                 <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Source</h4>
-                               </div>
-                               <div className="grid grid-cols-2 gap-2">
-                                  {(['official', 'user'] as const).map(type => (
-                                    <button
-                                      key={type}
-                                      onClick={() => setFilterType(filterType === type ? 'all' : type)}
-                                      className={cn(
-                                        "py-2 rounded-lg text-[8px] font-black uppercase tracking-widest border transition-all",
-                                        filterType === type 
-                                          ? "bg-slate-900 border-slate-900 text-white shadow-sm" 
-                                          : "bg-white border-slate-200 text-slate-400 hover:border-slate-300"
-                                      )}
-                                    >
-                                      {type}
-                                    </button>
-                                  ))}
-                               </div>
-                            </div>
+                             </div>
+                          </div>
                           </div>
                         </div>
                       </div>
@@ -680,8 +583,9 @@ export default function ContentLibrary() {
                         </button>
                       </div>
                     </motion.div>
-            )}
-          </AnimatePresence>
+                  </>
+                )}
+              </AnimatePresence>
         </div>
       </div>
     </div>
@@ -755,16 +659,6 @@ export default function ContentLibrary() {
                     <span className="px-2 py-0.5 bg-slate-100 text-slate-600 text-[10px] font-black uppercase tracking-widest rounded">
                       {resource.level}
                     </span>
-                    {resource.strand && (
-                      <span className="px-2 py-0.5 bg-amber-50 text-amber-700 text-[9px] font-black uppercase tracking-widest rounded border border-amber-100">
-                        {resource.strand}
-                      </span>
-                    )}
-                    {resource.subStrand && (
-                      <span className="px-2 py-0.5 bg-blue-50 text-blue-700 text-[9px] font-black uppercase tracking-widest rounded border border-blue-100">
-                        {resource.subStrand}
-                      </span>
-                    )}
                   </div>
                   <h3 className="text-lg font-bold text-slate-900 mb-2 leading-tight">
                     {resource.title}
@@ -1035,7 +929,7 @@ export default function ContentLibrary() {
                   <select 
                     required
                     value={newResource.subject}
-                    onChange={(e) => setNewResource({...newResource, subject: e.target.value, strand: '', subStrand: '', contentCode: ''})}
+                    onChange={(e) => setNewResource({...newResource, subject: e.target.value})}
                     className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none font-bold"
                   >
                     <option value="">Select...</option>
@@ -1056,50 +950,6 @@ export default function ContentLibrary() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="block text-xs font-black text-slate-400 uppercase tracking-widest">NaCCA Strand (Optional)</label>
-                  {SUBJECT_STRANDS[newResource.subject] ? (
-                    <select 
-                      value={newResource.strand}
-                      onChange={(e) => setNewResource({...newResource, strand: e.target.value, subStrand: '', contentCode: ''})}
-                      className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none font-bold"
-                    >
-                      <option value="">Select Strand...</option>
-                      {SUBJECT_STRANDS[newResource.subject].map(s => <option key={s} value={s}>{s}</option>)}
-                    </select>
-                  ) : (
-                    <input 
-                      type="text" 
-                      placeholder="e.g., Geometry"
-                      value={newResource.strand}
-                      onChange={(e) => setNewResource({...newResource, strand: e.target.value})}
-                      className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none font-bold"
-                    />
-                  )}
-                </div>
-                <div className="space-y-2">
-                  <label className="block text-xs font-black text-slate-400 uppercase tracking-widest">Sub-Strand (Optional)</label>
-                  {SUBJECT_SUB_STRANDS[newResource.strand] ? (
-                    <select 
-                      value={newResource.subStrand}
-                      onChange={(e) => setNewResource({...newResource, subStrand: e.target.value, contentCode: ''})}
-                      className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none font-bold"
-                    >
-                      <option value="">Select Sub-Strand...</option>
-                      {SUBJECT_SUB_STRANDS[newResource.strand].map(ss => <option key={ss} value={ss}>{ss}</option>)}
-                    </select>
-                  ) : (
-                    <input 
-                      type="text" 
-                      placeholder="e.g., Fractions"
-                      value={newResource.subStrand}
-                      onChange={(e) => setNewResource({...newResource, subStrand: e.target.value})}
-                      className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none font-bold"
-                    />
-                  )}
-                </div>
-              </div>
 
               <div className="space-y-2">
                 <label className="block text-xs font-black text-slate-400 uppercase tracking-widest">Resource Title</label>
