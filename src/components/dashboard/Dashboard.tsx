@@ -283,13 +283,24 @@ const quickActions = [
               </p>
             </div>
             <div className="flex items-end justify-between gap-4">
-              <h3 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tighter shrink-0">
-                <AnimatedCounter value={daysLeft} />
-                <span className="text-2xl ml-1">d</span>
-              </h3>
-              <div className="text-[9px] font-bold px-2 py-1 rounded-full uppercase tracking-tighter text-ghana-red bg-red-50 animate-pulse whitespace-nowrap">
-                Days Left
+              <div className="shrink-0">
+                <h3 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tighter">
+                  <AnimatedCounter value={daysLeft} />
+                  <span className="text-2xl ml-1">d</span>
+                </h3>
+                <div className="text-[9px] font-bold px-2 py-1 rounded-full uppercase tracking-tighter text-ghana-red bg-red-50 animate-pulse whitespace-nowrap mt-1">
+                  Days Left
+                </div>
               </div>
+              
+              {profile?.subscriptionStatus !== 'active' && (
+                <Link 
+                  to="/billing" 
+                  className="px-4 py-2 bg-emerald-deep text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-900 transition-all shadow-lg shadow-emerald-900/20 active:scale-95"
+                >
+                  Upgrade
+                </Link>
+              )}
             </div>
           </div>
         </motion.div>

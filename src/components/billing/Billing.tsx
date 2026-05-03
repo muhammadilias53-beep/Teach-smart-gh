@@ -9,16 +9,28 @@ import { toast } from 'react-hot-toast';
 // Paystack script loader helper
 const loadPaystack = () => {
     return new Promise((resolve) => {
+        if ((window as any).PaystackPop) {
+            resolve(true);
+            return;
+        }
+
         const script = document.createElement('script');
         script.src = 'https://js.paystack.co/v1/inline.js';
         script.id = 'paystack-script';
-        script.onload = () => resolve(true);
+        script.onload = () => {
+            if ((window as any).PaystackPop) {
+                resolve(true);
+            } else {
+                resolve(false);
+            }
+        };
         script.onerror = () => resolve(false);
-        if (!document.getElementById('paystack-script')) {
-            document.body.appendChild(script);
-        } else {
-            resolve(true);
+
+        const existingScript = document.getElementById('paystack-script');
+        if (existingScript) {
+            existingScript.remove();
         }
+        document.body.appendChild(script);
     });
 };
 
@@ -96,19 +108,43 @@ const Billing = () => {
     }
 
     try {
-        if (!(import.meta as any).env.VITE_PAYSTACK_PUBLIC_KEY) {
-           setError('Payment gateway is not currently configured. Please contact support.');
-           setProcessing(false);
-           return;
+        const paystackKey = (import.meta as any).env.VITE_PAYSTACK_PUBLIC_KEY;
+        
+        if (!paystackKey) {
+            console.error('Paystack Public Key is missing from environment variables');
+            setError('Payment gateway is not currently configured. Please contact support.');
+            setProcessing(false);
+            return;
         }
 
+        console.log('Initializing Paystack with:', {
+            email: user.email,
+            amount: Math.round(selectedPlan.price * 100),
+            currency: 'GHS'
+        });
+
         const handler = (window as any).PaystackPop.setup({
-            key: (import.meta as any).env.VITE_PAYSTACK_PUBLIC_KEY,
+            key: paystackKey,
             email: user.email,
             amount: Math.round(selectedPlan.price * 100),
             currency: 'GHS',
-            ref: 'TS-' + Math.floor((Math.random() * 1000000000) + 1),
+            ref: 'TS-' + Date.now() + Math.floor(Math.random() * 1000),
+            metadata: {
+                custom_fields: [
+                    {
+                        display_name: "UID",
+                        variable_name: "uid",
+                        value: user.uid
+                    },
+                    {
+                        display_name: "Plan",
+                        variable_name: "plan",
+                        value: selectedPlan.id
+                    }
+                ]
+            },
             callback: (response: any) => {
+                console.log('Paystack payment complete:', response);
                 setProcessing(true);
                 axios.post('/api/verify-payment', {
                   reference: response.reference,
@@ -134,15 +170,17 @@ const Billing = () => {
                 });
             },
             onClose: () => {
+                console.log('Paystack modal closed');
                 setProcessing(false);
             }
         });
 
+        console.log('Opening Paystack modal...');
         handler.openIframe();
-    } catch (err) {
+    } catch (err: any) {
         console.error('Paystack setup error:', err);
         setProcessing(false);
-        setError('Could not initialize payment gateway.');
+        setError(`Could not initialize payment gateway: ${err.message || 'Unknown error'}`);
     }
   };
 
