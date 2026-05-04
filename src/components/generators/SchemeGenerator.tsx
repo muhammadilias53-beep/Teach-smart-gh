@@ -23,7 +23,7 @@ import 'highlight.js/styles/github.css';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { toast } from 'react-hot-toast';
-import { subjects as sharedSubjects, levels, CLASSES_BY_LEVEL, SUBJECT_STRANDS, SUBJECT_SUB_STRANDS } from '../../constants';
+import { subjects as sharedSubjects, levels, CLASSES_BY_LEVEL } from '../../constants';
 
 const types = [
   { id: 'termly', label: 'Termly', icon: Calendar, desc: '12-week breakdown' },
@@ -41,8 +41,6 @@ export default function SchemeGenerator() {
     subject: '',
     level: 'JHS',
     class: 'Basic 7',
-    strand: '',
-    subStrand: '',
     type: 'termly',
     term: '1',
     title: '',
@@ -84,13 +82,12 @@ export default function SchemeGenerator() {
     }, 3000);
 
     try {
-      const promptAddon = formData.strand ? ` Focus on Strand: ${formData.strand}${formData.subStrand ? `, Sub-Strand: ${formData.subStrand}` : ''}.` : '';
       const content = await generateSchemeOfWork(
         formData.subject,
         formData.class,
         formData.type,
         formData.term,
-        { includeLearningOutcomes: formData.includeLearningOutcomes, customPrompt: promptAddon }
+        { includeLearningOutcomes: formData.includeLearningOutcomes }
       );
       setResult(content);
       toast.success("Scheme generated successfully!");
@@ -138,7 +135,7 @@ export default function SchemeGenerator() {
     
     doc.setFontSize(11);
     doc.setFont("helvetica", "normal");
-    const metaText = `Subject: ${formData.subject} | Class: ${formData.class} (${formData.level})${formData.strand ? ` | Strand: ${formData.strand}` : ''}${formData.subStrand ? ` | Sub-Strand: ${formData.subStrand}` : ''}`;
+    const metaText = `Subject: ${formData.subject} | Class: ${formData.class} (${formData.level})`;
     doc.text(metaText, 148.5, 28, { align: 'center' });
 
     // Parse markdown table to array for autoTable
@@ -213,7 +210,7 @@ export default function SchemeGenerator() {
     }
     
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-').replace('T', '_').slice(0, 19);
-    const filename = `${formData.subject}_${formData.level}_${formData.strand || 'General'}_Scheme_${formData.type}_${timestamp}`.replace(/[\s\W]+/g, '_');
+    const filename = `${formData.subject}_${formData.level}_Scheme_${formData.type}_${timestamp}`.replace(/[\s\W]+/g, '_');
     doc.save(`${filename}.pdf`);
   };
 
@@ -271,35 +268,6 @@ export default function SchemeGenerator() {
                 onChange={(e) => setFormData({...formData, class: e.target.value})}
               >
                 {(CLASSES_BY_LEVEL[formData.level] || []).map(c => <option key={c} value={c}>{c}</option>)}
-              </select>
-            </div>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="space-y-2">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">NaCCA Strand (Required)</label>
-              <select 
-                required
-                className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-ghana-red outline-none transition-all font-bold text-slate-700"
-                value={formData.strand}
-                onChange={(e) => setFormData({...formData, strand: e.target.value, subStrand: ''})}
-              >
-                <option value="">Select Strand</option>
-                {(SUBJECT_STRANDS[formData.subject] || []).map(s => <option key={s} value={s}>{s}</option>)}
-                {!SUBJECT_STRANDS[formData.subject] && <option value="General">General/Curriculum Wide</option>}
-              </select>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Sub-Strand (Optional)</label>
-              <select 
-                className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-ghana-red outline-none transition-all font-bold text-slate-700"
-                value={formData.subStrand}
-                onChange={(e) => setFormData({...formData, subStrand: e.target.value})}
-                disabled={!formData.strand}
-              >
-                <option value="">Select Sub-Strand (All)</option>
-                {(SUBJECT_SUB_STRANDS[formData.strand] || []).map(ss => <option key={ss} value={ss}>{ss}</option>)}
               </select>
             </div>
           </div>

@@ -1,7 +1,6 @@
 export const subjects = [
   "English", 
   "Mathematics", 
-  "Science", 
   "Integrated Science",
   "Social Studies", 
   "Computing", 
@@ -42,8 +41,7 @@ export const CLASSES_BY_LEVEL: Record<string, string[]> = {
 export const SUBJECT_STRANDS: Record<string, string[]> = {
   "Mathematics": ["Numbers", "Algebra", "Geometry and Measurement", "Data"],
   "Elective Mathematics": ["Algebra", "Trigonometry", "Calculus", "Coordinate Geometry", "Statics and Probability", "Vectors and Mechanics"],
-  "Science": ["Diversity of Matter", "Cycles", "Systems", "Energy", "Interactions of Matter"],
-  "Integrated Science": ["Diversity of Matter", "Cycles", "Systems", "Energy", "Interactions of Matter"],
+  "Integrated Science": ["Diversity of Matter", "Cycles", "Systems", "Forces and Energy", "Humans and the Environment"],
   "Physics": ["Mechanics", "Thermal Physics", "Waves", "Electricity and Magnetism", "Atomic and Nuclear Physics"],
   "Chemistry": ["Atomic Structure", "Chemical Bonding", "Physical Chemistry", "Inorganic Chemistry", "Organic Chemistry", "Chemistry and Environment"],
   "Biology": ["Cell Biology", "Genetics", "Physiology", "Ecology", "Plant Biology", "Diversity of Life"],
@@ -76,12 +74,12 @@ export const SUBJECT_SUB_STRANDS: Record<string, string[]> = {
   "Geometry and Measurement": ["Shapes and Space", "Measurement", "Geometric Reasoning", "Position and Transformation", "Trigonometry"],
   "Data": ["Data Collection and Presentation", "Data Analysis", "Probability"],
   
-  // Science
-  "Diversity of Matter": ["Living and Non-Living Things", "Materials", "Classification of Organisms", "Physical and Chemical Changes", "Atomic Structure", "The Periodic Table"],
-  "Cycles": ["Life Cycles of Animals", "Plant Life Cycles", "The Solar System", "Water and Rock Cycles", "Nitrogen and Carbon Cycles"],
-  "Systems": ["The Human Body Systems", "The Ecosystem", "Electrical Systems", "Mechanical Systems", "Agricultural Systems"],
-  "Energy": ["Forms and Sources of Energy", "Light and Sound", "Heat and Electricity", "Nuclear Energy", "Alternative Energy Sources"],
-  "Interactions of Matter": ["Forces and Motion", "Magnetism", "Soil and Atmosphere", "Environmental Issues", "Erosion and Conservation"],
+  // Integrated Science
+  "Diversity of Matter": ["Materials", "Living Cells"],
+  "Cycles": ["Earth Science", "Life Cycle of Organisms", "Crop Production", "Animal Production"],
+  "Systems": ["The Human Body Systems", "The Solar System", "Ecosystem", "Farming Systems"],
+  "Forces and Energy": ["Conversion and Conservation of Energy", "Electricity and Electronics", "Force and Motion", "Agricultural Tools"],
+  "Humans and the Environment": ["Waste Management", "Human Health", "Science and Industry", "Climate Change and Green Economy", "Understanding the Environment", "Soil as a Component of the Environment"],
   
   // English
   "Oral Language": ["Listening and Speaking", "Phonological Awareness", "Vocabulary and Oral Expressions", "Listening Comprehension"],

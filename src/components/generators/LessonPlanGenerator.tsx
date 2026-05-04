@@ -16,6 +16,9 @@ const LessonPlanGenerator = () => {
   const { user, profile } = useAuth();
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [result, setResult] = useState<any>(null);
+  const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState({
     level: 'JHS',
     class: 'Basic 7',
@@ -33,8 +36,46 @@ const LessonPlanGenerator = () => {
     differentiationStrategies: '',
     customGuidance: '',
   });
-  const [result, setResult] = useState<any>(null);
-  const [saving, setSaving] = useState(false);
+
+  const validateStep = (currentStep: number) => {
+    const newErrors: Record<string, string> = {};
+
+    if (currentStep === 1) {
+      if (!formData.level) newErrors.level = "Required";
+      if (!formData.class) newErrors.class = "Required";
+      if (!formData.subject) newErrors.subject = "Required";
+      if (!formData.classSize || parseInt(formData.classSize) <= 0) newErrors.classSize = "Invalid size";
+      if (!formData.weekEnding) newErrors.weekEnding = "Required";
+    }
+
+    if (currentStep === 2) {
+      if (!formData.locality) newErrors.locality = "Required";
+      if (!formData.duration) newErrors.duration = "Required";
+    }
+
+    if (currentStep === 3) {
+      if (!formData.strand) newErrors.strand = "Required";
+      if (!formData.subStrand) newErrors.subStrand = "Required";
+      if (!formData.contentStandard) newErrors.contentStandard = "Required";
+      if (!formData.indicator) newErrors.indicator = "Required";
+      if (!formData.mainObjective || formData.mainObjective.length < 10) {
+        newErrors.mainObjective = "Please provide a detailed objective (min 10 chars)";
+      }
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const nextStep = () => {
+    if (validateStep(step)) {
+      setStep(prev => prev + 1);
+    }
+  };
+
+  const prevStep = () => {
+    setStep(prev => prev - 1);
+  };
 
   // Helper selectors from constants
   const currentStrands = SUBJECT_STRANDS[formData.subject] || [];
@@ -43,10 +84,7 @@ const LessonPlanGenerator = () => {
   const currentIndicators = STANDARD_INDICATORS[formData.contentStandard] || [];
 
   const handleGenerate = async () => {
-    if (!formData.strand || !formData.subStrand || !formData.contentStandard || !formData.indicator || !formData.mainObjective) {
-      alert("Please provide all required fields: Strand, Sub-Strand, Content Standard, Indicator, and Main Objective.");
-      return;
-    }
+    if (!validateStep(3)) return;
     setLoading(true);
     try {
       const prompt = `Generate a NaCCA-compliant lesson plan for ${formData.class} (${formData.level}) ${formData.subject} strictly following the Standard-Based Curriculum (SBC). 
@@ -221,23 +259,44 @@ const LessonPlanGenerator = () => {
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
         <div>
            <h1 className="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">
              <div className="w-2 h-8 bg-ghana-gold rounded-full" />
-             Lesson Plan Generator
+             Lesson Plan Wizard
            </h1>
-           <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-2 ml-5">NaCCA Curriculum Assistant</p>
+           <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-2 ml-5">Standard-Based Curriculum assistant</p>
         </div>
-        <div className="flex gap-2">
-           {[1, 2, 3, 4].map((s) => (
-             <div 
-               key={s} 
-               className={cn(
-                 "w-8 h-2 rounded-full transition-all", 
-                 step >= s ? "bg-ghana-green" : "bg-gray-200"
-               )} 
-             />
+        
+        {/* Progress Tracker */}
+        <div className="flex items-center gap-4 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+           {[
+             { step: 1, label: 'Data', icon: FileText },
+             { step: 2, label: 'Context', icon: Users },
+             { step: 3, label: 'Curriculum', icon: Sparkles },
+             { step: 4, label: 'Review', icon: CheckCircle },
+           ].map((s, idx) => (
+             <React.Fragment key={s.step}>
+               <div className="flex flex-col items-center gap-1 group">
+                 <div className={cn(
+                   "w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300",
+                   step === s.step ? "bg-ghana-red text-white shadow-lg shadow-ghana-red/20 scale-110" : 
+                   step > s.step ? "bg-emerald-500 text-white" : "bg-slate-50 text-slate-300"
+                 )}>
+                   {step > s.step ? <CheckCircle size={18} /> : <s.icon size={18} />}
+                 </div>
+                 <span className={cn(
+                   "text-[9px] font-black uppercase tracking-tighter",
+                   step === s.step ? "text-ghana-red" : "text-slate-400"
+                 )}>{s.label}</span>
+               </div>
+               {idx < 3 && (
+                 <div className={cn(
+                   "w-8 h-0.5 rounded-full",
+                   step > s.step ? "bg-emerald-500" : "bg-slate-100"
+                 )} />
+               )}
+             </React.Fragment>
            ))}
         </div>
       </div>
@@ -255,27 +314,29 @@ const LessonPlanGenerator = () => {
               <div className="space-y-2">
                 <label className="text-sm font-bold text-gray-500 uppercase">Educational Stage</label>
                 <select 
-                  className="input-field"
+                  className={cn("input-field", errors.level && "border-red-400 ring-4 ring-red-50")}
                   value={formData.level}
                   onChange={(e) => setFormData({...formData, level: e.target.value, class: CLASSES_BY_LEVEL[e.target.value][0]})}
                 >
                   {levels.map(l => <option key={l} value={l}>{l}</option>)}
                 </select>
+                {errors.level && <p className="text-[10px] text-red-500 font-bold uppercase tracking-wider">{errors.level}</p>}
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-bold text-gray-500 uppercase">Specific Class (Basic/KG)</label>
                 <select 
-                  className="input-field"
+                  className={cn("input-field", errors.class && "border-red-400 ring-4 ring-red-50")}
                   value={formData.class}
                   onChange={(e) => setFormData({...formData, class: e.target.value})}
                 >
                   {(CLASSES_BY_LEVEL[formData.level] || []).map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
+                {errors.class && <p className="text-[10px] text-red-500 font-bold uppercase tracking-wider">{errors.class}</p>}
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-bold text-gray-500 uppercase">Subject</label>
+                <label className="text-sm font-bold text-gray-500 uppercase">Subject Area</label>
                 <select 
-                  className="input-field"
+                  className={cn("input-field", errors.subject && "border-red-400 ring-4 ring-red-50")}
                   value={formData.subject}
                   onChange={(e) => setFormData({...formData, subject: e.target.value, strand: '', subStrand: '', contentStandard: '', indicator: ''})}
                 >
@@ -283,30 +344,33 @@ const LessonPlanGenerator = () => {
                     <option key={s} value={s}>{s}</option>
                   ))}
                 </select>
+                {errors.subject && <p className="text-[10px] text-red-500 font-bold uppercase tracking-wider">{errors.subject}</p>}
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-bold text-gray-500 uppercase">Class Size</label>
                 <input 
                   type="number"
-                  className="input-field"
+                  className={cn("input-field", errors.classSize && "border-red-400 ring-4 ring-red-50")}
                   placeholder="Number of learners"
                   value={formData.classSize}
                   onChange={(e) => setFormData({...formData, classSize: e.target.value})}
                 />
+                {errors.classSize && <p className="text-[10px] text-red-500 font-bold uppercase tracking-wider">{errors.classSize}</p>}
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-bold text-gray-500 uppercase">Week Ending</label>
+                <label className="text-sm font-bold text-gray-500 uppercase">Week Ending Date</label>
                 <input 
                   type="date"
-                  className="input-field"
+                  className={cn("input-field", errors.weekEnding && "border-red-400 ring-4 ring-red-50")}
                   value={formData.weekEnding}
                   onChange={(e) => setFormData({...formData, weekEnding: e.target.value})}
                 />
+                {errors.weekEnding && <p className="text-[10px] text-red-500 font-bold uppercase tracking-wider">{errors.weekEnding}</p>}
               </div>
             </div>
-            <button onClick={() => setStep(2)} className="btn-primary mt-8 flex items-center gap-2">
-              Next Step
-              <ChevronRight size={20} />
+            <button onClick={nextStep} className="btn-primary mt-8 flex items-center gap-2 group">
+              Continue to Step 2
+              <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
             </button>
           </motion.div>
         )}
@@ -324,14 +388,15 @@ const LessonPlanGenerator = () => {
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-gray-500 uppercase">Locality Type</label>
                   <select 
-                    className="input-field"
+                    className={cn("input-field", errors.locality && "border-red-400 ring-4 ring-red-50")}
                     value={formData.locality}
                     onChange={(e) => setFormData({...formData, locality: e.target.value})}
                   >
                     <option value="Urban">Urban (City Center)</option>
-                    <option value="Per-Urban">Peri-Urban / Suburban</option>
+                    <option value="Peri-Urban">Peri-Urban / Suburban</option>
                     <option value="Rural">Rural (Limited Resources)</option>
                   </select>
+                  {errors.locality && <p className="text-[10px] text-red-500 font-bold uppercase tracking-wider">{errors.locality}</p>}
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-gray-500 uppercase">Specific Town/Locality</label>
@@ -345,30 +410,34 @@ const LessonPlanGenerator = () => {
                 </div>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-bold text-gray-500 uppercase">Duration</label>
+                <label className="text-sm font-bold text-gray-500 uppercase">Lesson Duration</label>
                 <input 
                   type="text" 
-                  className="input-field" 
+                  className={cn("input-field", errors.duration && "border-red-400 ring-4 ring-red-50")}
                   placeholder="e.g. 60 minutes"
                   value={formData.duration}
                   onChange={(e) => setFormData({...formData, duration: e.target.value})}
                 />
+                {errors.duration && <p className="text-[10px] text-red-500 font-bold uppercase tracking-wider">{errors.duration}</p>}
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-bold text-gray-500 uppercase">Differential Strategies</label>
+                <label className="text-sm font-bold text-gray-500 uppercase tracking-tighter italic text-slate-400">Additional Differentiation Context (Optional)</label>
                 <textarea 
                   className="input-field min-h-[80px]" 
-                  placeholder="How should we support different learners? (e.g. Group work, visual aids for some, extra challenges for others...)"
+                  placeholder="e.g. Include tasks for visually impaired learners, or specific grouping needs..."
                   value={formData.differentiationStrategies}
                   onChange={(e) => setFormData({...formData, differentiationStrategies: e.target.value})}
                 />
               </div>
             </div>
             <div className="flex gap-4 mt-8">
-              <button onClick={() => setStep(1)} className="px-6 py-3 rounded-xl border border-gray-200 font-bold hover:bg-gray-50">Back</button>
-              <button onClick={() => setStep(3)} className="btn-primary flex-1 flex items-center justify-center gap-2">
-                Continue to Lesson Details
-                <ChevronRight size={20} />
+              <button onClick={prevStep} className="px-6 py-3 rounded-xl border border-gray-200 font-bold hover:bg-gray-50 text-slate-500 flex items-center gap-2">
+                <ChevronLeft size={20} />
+                Back
+              </button>
+              <button onClick={nextStep} className="btn-primary flex-1 flex items-center justify-center gap-2 group">
+                Continue to Curriculum Tuning
+                <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
           </motion.div>
@@ -385,11 +454,10 @@ const LessonPlanGenerator = () => {
              <div className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                    <div className="space-y-2">
-                       <label className="text-sm font-bold text-gray-500 uppercase">NaCCA Strand (Required)</label>
+                       <label className="text-sm font-bold text-gray-500 uppercase">NaCCA Strand</label>
                        {currentStrands.length > 0 ? (
                          <select 
-                           required
-                           className="input-field"
+                           className={cn("input-field", errors.strand && "border-red-400 ring-4 ring-red-50")}
                            value={formData.strand}
                            onChange={(e) => setFormData({...formData, strand: e.target.value, subStrand: '', contentStandard: '', indicator: ''})}
                          >
@@ -400,18 +468,18 @@ const LessonPlanGenerator = () => {
                          <input 
                            type="text" 
                            placeholder="Enter Strand (e.g. Geometry)"
-                           className="input-field"
+                           className={cn("input-field", errors.strand && "border-red-400 ring-4 ring-red-50")}
                            value={formData.strand}
                            onChange={(e) => setFormData({...formData, strand: e.target.value})}
                          />
                        )}
+                       {errors.strand && <p className="text-[10px] text-red-500 font-bold uppercase tracking-wider">{errors.strand}</p>}
                    </div>
                    <div className="space-y-2">
-                       <label className="text-sm font-bold text-gray-500 uppercase">Sub-Strand (Required)</label>
+                       <label className="text-sm font-bold text-gray-500 uppercase">Sub-Strand</label>
                        {currentSubStrands.length > 0 ? (
                          <select 
-                           required
-                           className="input-field"
+                           className={cn("input-field", errors.subStrand && "border-red-400 ring-4 ring-red-50")}
                            value={formData.subStrand}
                            onChange={(e) => setFormData({...formData, subStrand: e.target.value, contentStandard: '', indicator: ''})}
                          >
@@ -422,21 +490,21 @@ const LessonPlanGenerator = () => {
                          <input 
                            type="text" 
                            placeholder="Enter Sub-Strand (e.g. Fractions)"
-                           className="input-field"
+                           className={cn("input-field", errors.subStrand && "border-red-400 ring-4 ring-red-50")}
                            value={formData.subStrand}
                            onChange={(e) => setFormData({...formData, subStrand: e.target.value})}
                          />
                        )}
+                       {errors.subStrand && <p className="text-[10px] text-red-500 font-bold uppercase tracking-wider">{errors.subStrand}</p>}
                    </div>
                 </div>
 
                 <div className="space-y-4 pt-4 border-t border-slate-50">
                   <div className="space-y-2">
-                      <label className="text-sm font-bold text-gray-500 uppercase">Content Standard (Required)</label>
+                      <label className="text-sm font-bold text-gray-500 uppercase">Content Standard</label>
                       {currentStandards.length > 0 ? (
                         <select 
-                          required
-                          className="input-field"
+                          className={cn("input-field", errors.contentStandard && "border-red-400 ring-4 ring-red-50")}
                           value={formData.contentStandard}
                           onChange={(e) => setFormData({...formData, contentStandard: e.target.value, indicator: ''})}
                         >
@@ -447,19 +515,19 @@ const LessonPlanGenerator = () => {
                         <input 
                           type="text" 
                           placeholder="e.g. B7.1.1.1: Count, read, and write..."
-                          className="input-field"
+                          className={cn("input-field", errors.contentStandard && "border-red-400 ring-4 ring-red-50")}
                           value={formData.contentStandard}
                           onChange={(e) => setFormData({...formData, contentStandard: e.target.value})}
                         />
                       )}
+                      {errors.contentStandard && <p className="text-[10px] text-red-500 font-bold uppercase tracking-wider">{errors.contentStandard}</p>}
                   </div>
 
                   <div className="space-y-2">
-                      <label className="text-sm font-bold text-gray-500 uppercase">Indicator (Required)</label>
+                      <label className="text-sm font-bold text-gray-500 uppercase">Indicator</label>
                       {currentIndicators.length > 0 ? (
                         <select 
-                          required
-                          className="input-field"
+                          className={cn("input-field", errors.indicator && "border-red-400 ring-4 ring-red-50")}
                           value={formData.indicator}
                           onChange={(e) => setFormData({...formData, indicator: e.target.value})}
                         >
@@ -470,27 +538,28 @@ const LessonPlanGenerator = () => {
                         <input 
                           type="text" 
                           placeholder="e.g. B7.1.1.1.1: Use place value to count"
-                          className="input-field"
+                          className={cn("input-field", errors.indicator && "border-red-400 ring-4 ring-red-50")}
                           value={formData.indicator}
                           onChange={(e) => setFormData({...formData, indicator: e.target.value})}
                         />
                       )}
+                      {errors.indicator && <p className="text-[10px] text-red-500 font-bold uppercase tracking-wider">{errors.indicator}</p>}
                   </div>
                 </div>
 
                 <div className="space-y-2 pt-4 border-t border-slate-50">
-                    <label className="text-sm font-bold text-gray-500 uppercase tracking-tighter">Main Learning Objective (What should they learn?)</label>
+                    <label className="text-sm font-bold text-gray-500 uppercase tracking-tighter">Main Learning Objective</label>
                     <textarea 
-                      required
-                      className="input-field min-h-[100px]" 
+                      className={cn("input-field min-h-[100px]", errors.mainObjective && "border-red-400 ring-4 ring-red-50")}
                       placeholder="e.g. By the end of the lesson, learners will be able to add two proper fractions with same denominators manually."
                       value={formData.mainObjective}
                       onChange={(e) => setFormData({...formData, mainObjective: e.target.value})}
                     />
+                    {errors.mainObjective && <p className="text-[10px] text-red-500 font-bold uppercase tracking-wider">{errors.mainObjective}</p>}
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-sm font-bold text-gray-400 uppercase text-[10px]">AI Customization Tool (Optional)</label>
+                    <label className="text-sm font-bold text-gray-400 uppercase text-[10px]">AI Guidance Overlay (Optional)</label>
                     <textarea 
                       className="input-field min-h-[60px] text-sm" 
                       placeholder="Special instructions? e.g. Focus on local market examples, include a 5-minute quiz."
@@ -500,18 +569,21 @@ const LessonPlanGenerator = () => {
                 </div>
              </div>
              <div className="flex gap-4 mt-8">
-                <button onClick={() => setStep(2)} className="px-6 py-3 rounded-xl border border-gray-200 font-bold hover:bg-gray-50">Back</button>
+                <button onClick={prevStep} className="px-6 py-3 rounded-xl border border-gray-200 font-bold hover:bg-gray-50 text-slate-500 flex items-center gap-2">
+                  <ChevronLeft size={20} />
+                  Back
+                </button>
                 <button 
                   onClick={handleGenerate} 
                   disabled={loading}
-                  className="btn-primary flex-1 flex items-center justify-center gap-2"
+                  className="btn-primary flex-1 flex items-center justify-center gap-2 shadow-lg shadow-ghana-red/20 active:scale-95 transition-all"
                 >
                   {loading ? (
                     <RefreshCw className="animate-spin" size={20} />
                   ) : (
                     <Sparkles size={20} />
                   )}
-                  {loading ? "Generating..." : "Generate Lesson Plan"}
+                  {loading ? "Crafting Lesson Plan..." : "Generate Final Plan"}
                 </button>
              </div>
           </motion.div>
