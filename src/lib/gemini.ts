@@ -80,8 +80,7 @@ export const generateSchemeOfWork = async (
   term?: string, 
   options?: { 
     includeLearningOutcomes?: boolean, 
-    customPrompt?: string,
-    yearlySchemeContext?: string 
+    customPrompt?: string
   }
 ) => {
   const model = "gemini-3-flash-preview";
@@ -109,16 +108,13 @@ export const generateSchemeOfWork = async (
     formatInstructions = `
       STRICT CURRICULUM REQUIREMENT:
       1. This termly scheme MUST be a detailed, week-by-week decomposition of the official yearly roadmap for ${subject} ${level}.
-      ${options?.yearlySchemeContext ? `2. USE THE PROVIDED MASTER ROADMAP: You MUST strictly follow the week-by-week content distribution for ${termLabel} as defined in the following Yearly Scheme context:
-      --- YEARLY SCHEME CONTEXT START ---
-      ${options.yearlySchemeContext}
-      --- YEARLY SCHEME CONTEXT END ---` : '2. Ensure that ALL sub-strands systematically assigned to ${termLabel} are covered in depth.'}
+      2. Ensure that ALL sub-strands systematically assigned to ${termLabel} are covered in depth.
       3. Follow the logical progression of content standards as defined in the NaCCA curriculum.
 
       Format the entire scheme as ONE SINGLE Markdown Table for ${termLabel}.
       Headers MUST be:
-      | WEEK | CONTENT STANDARDS | INDICATOR | ${options?.includeLearningOutcomes ? 'LEARNING OUTCOMES |' : ''} RESOURCES |
-      | :--- | :--- | :--- | :--- | ${options?.includeLearningOutcomes ? ':--- |' : ''} :--- |
+      | WEEK | STRAND | SUB-STRAND | CONTENT STANDARDS | INDICATOR | ${options?.includeLearningOutcomes ? 'LEARNING OUTCOMES |' : ''} RESOURCES |
+      | :--- | :--- | :--- | :--- | :--- | ${options?.includeLearningOutcomes ? ':--- |' : ''} :--- |
       
       Include exactly one row per week (Week 1 to Week 12).
     `;
@@ -129,7 +125,6 @@ export const generateSchemeOfWork = async (
     All content must align strictly with the latest Ghanaian National Curriculum (SBC/CCP) and NaCCA standards.
     
     ${options?.customPrompt ? `SPECIFIC FOCUS: ${options.customPrompt}` : ''}
-    ${options?.yearlySchemeContext ? `MANDATORY CONSTRAINT: Use the provided Yearly Scheme context to determine exactly which topics belong to each week of the term.` : ''}
 
     NOMENCLATURE: ALWAYS use the "Basic" level format (e.g., B1-B6 for Primary, B7-B9 for Junior High, B10-B12 for Senior High). NEVER use JHS or SHS alone; always refer to them as Basic 7-9 or Basic 10-12.
     ${formatInstructions}

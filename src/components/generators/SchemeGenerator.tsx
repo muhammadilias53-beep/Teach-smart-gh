@@ -84,39 +84,13 @@ export default function SchemeGenerator() {
     }, 3000);
 
     try {
-      let yearlySchemeContext = undefined;
-
-      // REQUIREMENT: Termly must follow Yearly
-      if (formData.type === 'termly') {
-        const q = query(
-          collection(db, 'schemes'),
-          where('subject', '==', formData.subject),
-          where('class', '==', formData.class),
-          where('level', '==', formData.level),
-          where('type', '==', 'yearly'),
-          orderBy('createdAt', 'desc'),
-          limit(1)
-        );
-        
-        const querySnapshot = await getDocs(q);
-        if (querySnapshot.empty) {
-          toast.error(`No Yearly Scheme found for ${formData.subject} (${formData.class}). Please generate the Yearly Scheme first.`, { duration: 6000 });
-          clearInterval(stepInterval);
-          setLoading(false);
-          return;
-        }
-        
-        yearlySchemeContext = querySnapshot.docs[0].data().content;
-      }
-
       const content = await generateSchemeOfWork(
         formData.subject,
         formData.class,
         formData.type,
         formData.term,
         { 
-          includeLearningOutcomes: formData.includeLearningOutcomes,
-          yearlySchemeContext 
+          includeLearningOutcomes: formData.includeLearningOutcomes
         }
       );
       setResult(content);
@@ -347,25 +321,34 @@ export default function SchemeGenerator() {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
-                className="space-y-4 overflow-hidden"
+                className="space-y-6 overflow-hidden"
               >
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 text-center block">Select Academic Term</label>
-                <div className="flex justify-center gap-4">
-                  {['1', '2', '3'].map((term) => (
-                    <button
-                      key={term}
-                      type="button"
-                      onClick={() => setFormData({...formData, term})}
-                      className={cn(
-                        "w-16 h-16 rounded-full border-2 font-black transition-all flex items-center justify-center",
-                        formData.term === term
-                          ? "bg-ghana-red border-ghana-red text-white shadow-lg"
-                          : "bg-white border-slate-100 text-slate-400 hover:border-ghana-red/50"
-                      )}
-                    >
-                      T{term}
-                    </button>
-                  ))}
+                <div className="space-y-4">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 text-center block">Select Academic Term</label>
+                  <div className="flex justify-center gap-4">
+                    {['1', '2', '3'].map((term) => (
+                      <button
+                        key={term}
+                        type="button"
+                        onClick={() => setFormData({...formData, term})}
+                        className={cn(
+                          "w-16 h-16 rounded-full border-2 font-black transition-all flex items-center justify-center",
+                          formData.term === term
+                            ? "bg-ghana-red border-ghana-red text-white shadow-lg"
+                            : "bg-white border-slate-100 text-slate-400 hover:border-ghana-red/50"
+                        )}
+                      >
+                        T{term}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 justify-center text-slate-400 text-center px-4 bg-slate-50 p-4 rounded-2xl">
+                  <AlertCircle size={12} className="shrink-0 text-ghana-red" />
+                  <p className="text-[10px] font-bold uppercase tracking-widest leading-relaxed">
+                    Note: The roadmap will be generated based on the official NaCCA curriculum standards.
+                  </p>
                 </div>
               </motion.div>
             )}
