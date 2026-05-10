@@ -17,6 +17,8 @@ export interface UserProfile {
   trialStartDate: string;
   subscriptionStatus: SubscriptionStatus;
   subscriptionEndDate?: string;
+  onboardingComplete?: boolean;
+  lastGenerationAt?: any;
   photoURL?: string;
   lastPaymentId?: string;
   planType?: 'termly' | 'yearly' | 'lifetime';

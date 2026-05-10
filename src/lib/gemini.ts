@@ -73,28 +73,52 @@ export const generateLessonPlan = async (prompt: string, teacherInfo?: { school?
   return parseAIResponse(response);
 };
 
-export const generateSchemeOfWork = async (subject: string, level: string, type: string, term?: string, options?: { includeLearningOutcomes?: boolean, customPrompt?: string }) => {
+export const generateSchemeOfWork = async (
+  subject: string, 
+  level: string, 
+  type: string, 
+  term?: string, 
+  options?: { 
+    includeLearningOutcomes?: boolean, 
+    customPrompt?: string,
+    yearlySchemeContext?: string 
+  }
+) => {
   const model = "gemini-3-flash-preview";
   
   let formatInstructions = "";
   if (type === 'yearly') {
     formatInstructions = `
-      STRICT REQUIREMENT: Format the entire scheme as ONE SINGLE Markdown Table. 
+      STRICT CURRICULUM REQUIREMENT: 
+      1. This document serves as the MASTER ROADMAP for the entire academic year.
+      2. SYSTEMATIC DISTRIBUTION: You MUST systematically distribute ALL strands and sub-strands from the NaCCA curriculum across Term 1, Term 2, and Term 3.
+      3. FULL COVERAGE: By the end of Term 3, 100% of the curriculum for ${subject} ${level} MUST be exhausted. No sub-strand should be left out.
+      4. PROGRESSION: Ensure a logical transition of content from Term 1 through to Term 3.
+      
+      Format the entire scheme as ONE SINGLE Markdown Table.
       Headers MUST be:
-      | WEEK | TERM 1 (SUB STRANDS) | TERM 2 (SUB STRANDS) | TERM 3 (SUB STRANDS) | ${options?.includeLearningOutcomes ? 'LEARNING OUTCOMES |' : ''}
+      | WEEK | TERM 1 | TERM 2 | TERM 3 | ${options?.includeLearningOutcomes ? 'LEARNING OUTCOMES |' : ''}
       | :--- | :--- | :--- | :--- | ${options?.includeLearningOutcomes ? ':--- |' : ''}
       
-      Include exactly one row per week.
+      Include exactly one row per week (Week 1 to Week 12). Each term column should contain the specific SUB-STRANDS and Key Topics to be taught that week.
       At the end of the document, include the footer:
       Vetted by: ................................ Signature: ................................ Date: ................................
     `;
   } else if (type === 'termly') {
     const termLabel = term ? `TERM ${term}` : 'a specific term';
     formatInstructions = `
-      STRICT REQUIREMENT: Format the entire scheme as ONE SINGLE Markdown Table for ${termLabel}.
+      STRICT CURRICULUM REQUIREMENT:
+      1. This termly scheme MUST be a detailed, week-by-week decomposition of the official yearly roadmap for ${subject} ${level}.
+      ${options?.yearlySchemeContext ? `2. USE THE PROVIDED MASTER ROADMAP: You MUST strictly follow the week-by-week content distribution for ${termLabel} as defined in the following Yearly Scheme context:
+      --- YEARLY SCHEME CONTEXT START ---
+      ${options.yearlySchemeContext}
+      --- YEARLY SCHEME CONTEXT END ---` : '2. Ensure that ALL sub-strands systematically assigned to ${termLabel} are covered in depth.'}
+      3. Follow the logical progression of content standards as defined in the NaCCA curriculum.
+
+      Format the entire scheme as ONE SINGLE Markdown Table for ${termLabel}.
       Headers MUST be:
-      | WEEK | STRAND | SUB-STRAND | CONTENT STANDARDS | INDICATOR | ${options?.includeLearningOutcomes ? 'LEARNING OUTCOMES |' : ''} RESOURCES |
-      | :--- | :--- | :--- | :--- | :--- | ${options?.includeLearningOutcomes ? ':--- |' : ''} :--- |
+      | WEEK | CONTENT STANDARDS | INDICATOR | ${options?.includeLearningOutcomes ? 'LEARNING OUTCOMES |' : ''} RESOURCES |
+      | :--- | :--- | :--- | :--- | ${options?.includeLearningOutcomes ? ':--- |' : ''} :--- |
       
       Include exactly one row per week (Week 1 to Week 12).
     `;
@@ -105,6 +129,7 @@ export const generateSchemeOfWork = async (subject: string, level: string, type:
     All content must align strictly with the latest Ghanaian National Curriculum (SBC/CCP) and NaCCA standards.
     
     ${options?.customPrompt ? `SPECIFIC FOCUS: ${options.customPrompt}` : ''}
+    ${options?.yearlySchemeContext ? `MANDATORY CONSTRAINT: Use the provided Yearly Scheme context to determine exactly which topics belong to each week of the term.` : ''}
 
     NOMENCLATURE: ALWAYS use the "Basic" level format (e.g., B1-B6 for Primary, B7-B9 for Junior High, B10-B12 for Senior High). NEVER use JHS or SHS alone; always refer to them as Basic 7-9 or Basic 10-12.
     ${formatInstructions}

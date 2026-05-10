@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { CreditCard, CheckCircle2, Zap, AlertCircle, Loader2, ShieldCheck, ArrowRight, X, Sparkles } from 'lucide-react';
+import { CreditCard, CheckCircle2, Zap, AlertCircle, Loader2, ShieldCheck, ArrowRight, X, Sparkles, Mail } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { cn } from '../../lib/utils';
 import axios from 'axios';
@@ -35,7 +35,7 @@ const loadPaystack = () => {
 };
 
 interface Plan {
-  id: 'termly' | 'yearly' | 'lifetime';
+  id: 'quick_pass' | 'termly' | 'yearly' | 'lifetime';
   name: string;
   price: number;
   duration: string;
@@ -45,6 +45,19 @@ interface Plan {
 }
 
 const PLANS: Plan[] = [
+  {
+    id: 'quick_pass',
+    name: '5-Hour Quick Pass',
+    price: 15,
+    duration: '5 hours access',
+    description: 'Urgent task? Get full access to all AI generators for 5 hours straight.',
+    features: [
+      '5 Hours Unrestricted Access',
+      'NaCCA SBC AI Engine',
+      'All Generators Enabled',
+      'Downloadable Resources'
+    ]
+  },
   {
     id: 'termly',
     name: 'Termly Access',
@@ -95,8 +108,25 @@ const Billing = () => {
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const initiatePayment = async () => {
-    if (!user || !profile || !selectedPlan) return;
+  const [emailToUse, setEmailToUse] = useState('');
+
+  useEffect(() => {
+    if (user?.email) {
+      setEmailToUse(user.email);
+    } else if (profile?.email) {
+      setEmailToUse(profile.email);
+    }
+  }, [user, profile]);
+
+  const initiatePayment = async (planToPay?: Plan | { id: string, name: string, price: number }) => {
+    const activePlan = planToPay || selectedPlan;
+    if (!user || !profile || !activePlan) return;
+
+    if (!emailToUse || !emailToUse.includes('@')) {
+        setError('A valid email address is required for subscription. Please provide one.');
+        return;
+    }
+
     setProcessing(true);
     setError('');
 
@@ -108,7 +138,8 @@ const Billing = () => {
     }
 
     try {
-        const paystackKey = (import.meta as any).env?.VITE_PAYSTACK_PUBLIC_KEY || (process.env as any).VITE_PAYSTACK_PUBLIC_KEY;
+        // @ts-ignore
+        const paystackKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY;
         
         if (!paystackKey) {
             console.error('Paystack Public Key is missing from environment variables');
@@ -117,16 +148,10 @@ const Billing = () => {
             return;
         }
 
-        console.log('Initializing Paystack with:', {
-            email: user.email,
-            amount: Math.round(selectedPlan.price * 100),
-            currency: 'GHS'
-        });
-
         const handler = (window as any).PaystackPop.setup({
             key: paystackKey,
-            email: user.email,
-            amount: Math.round(selectedPlan.price * 100),
+            email: emailToUse,
+            amount: Math.round(activePlan.price * 100),
             currency: 'GHS',
             ref: 'TS-' + Date.now() + Math.floor(Math.random() * 1000),
             metadata: {
@@ -139,43 +164,46 @@ const Billing = () => {
                     {
                         display_name: "Plan",
                         variable_name: "plan",
-                        value: selectedPlan.id
+                        value: activePlan.id
                     }
                 ]
             },
             callback: (response: any) => {
-                console.log('Paystack payment complete:', response);
                 setProcessing(true);
+                toast.loading("Verifying payment automatically...", { id: "payment-verify" });
                 axios.post('/api/verify-payment', {
                   reference: response.reference,
                   uid: user.uid,
-                  plan: selectedPlan.id
+                  plan: activePlan.id
                 }).then((verifyRes) => {
+                    toast.dismiss("payment-verify");
                     if (verifyRes.data.status) {
                         refreshProfile().then(() => {
                             setShowConfirm(false);
                             setSelectedPlan(null);
-                            toast.success('Subscription activated! Welcome to the Elite family.', {
-                              duration: 6000,
-                              icon: '🚀'
-                            });
+                            const isCredits = activePlan.id === 'credits';
+                            toast.success(
+                              isCredits ? '5 Credits added to your account!' : 'Subscription activated! Welcome to the Elite family.', 
+                              {
+                                duration: 6000,
+                                icon: isCredits ? '💫' : '🚀'
+                              }
+                            );
                         });
                     }
                 }).catch((err) => {
                     console.error('Verification error:', err);
-                    setError('Payment verification failed. Please contact support via WhatsApp.');
+                    setError('Payment verification failed. Please contact support.');
                     toast.error('Payment verification failed.');
                 }).finally(() => {
                     setProcessing(false);
                 });
             },
             onClose: () => {
-                console.log('Paystack modal closed');
                 setProcessing(false);
             }
         });
 
-        console.log('Opening Paystack modal...');
         handler.openIframe();
     } catch (err: any) {
         console.error('Paystack setup error:', err);
@@ -186,7 +214,7 @@ const Billing = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-12 lg:py-20">
-      {/* Header Section */}
+      {/* ... prev header ... */}
       <div className="mb-20">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
@@ -262,8 +290,10 @@ const Billing = () => {
           </div>
         </div>
 
-        {/* Pricing Grid */}
-        <div className="lg:col-span-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* Pricing Grid */}
+      <div className="lg:col-span-8">
+        <h2 className="text-2xl font-black text-slate-900 mb-10 text-center tracking-tighter uppercase">Subscription Plans</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
           {PLANS.map((plan, idx) => (
             <motion.div
               key={plan.id}
@@ -273,7 +303,7 @@ const Billing = () => {
               className={cn(
                 "relative p-10 rounded-[3rem] border transition-all duration-300 flex flex-col",
                 plan.recommended 
-                  ? "bg-white border-emerald- deep ring-2 ring-emerald-deep/5 shadow-2xl shadow-emerald-900/10" 
+                  ? "bg-white border-emerald-deep ring-2 ring-emerald-deep/5 shadow-2xl shadow-emerald-900/10" 
                   : "bg-white border-slate-100 hover:border-slate-300"
               )}
             >
@@ -325,6 +355,11 @@ const Billing = () => {
             </motion.div>
           ))}
         </div>
+
+        <div className="max-w-3xl mx-auto">
+          {/* Credits Pack removed */}
+        </div>
+      </div>
       </div>
 
       {/* Confirmation Modal */}
@@ -363,6 +398,20 @@ const Billing = () => {
                 </div>
 
                 <div className="bg-slate-50 rounded-3xl p-8 mb-10 border border-slate-100">
+                  <div className="mb-6">
+                    <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Subscription Email</p>
+                    <div className="relative">
+                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" size={16} />
+                        <input 
+                            type="email"
+                            placeholder="YOUR EMAIL ACCOUNT"
+                            value={emailToUse}
+                            onChange={(e) => setEmailToUse(e.target.value)}
+                            className="w-full bg-white border border-slate-200 rounded-xl py-3 pl-12 pr-4 text-xs font-bold tracking-widest uppercase focus:ring-2 focus:ring-emerald-deep/20 focus:border-emerald-deep transition-all outline-none"
+                        />
+                    </div>
+                  </div>
+
                   <div className="flex justify-between items-center mb-6 pb-6 border-b border-slate-200">
                     <div>
                       <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Plan</p>
@@ -400,7 +449,7 @@ const Billing = () => {
 
                 <div className="space-y-4">
                   <button
-                    onClick={initiatePayment}
+                    onClick={() => initiatePayment()}
                     disabled={processing}
                     className="w-full py-5 bg-emerald-deep text-white rounded-2xl font-black text-lg flex items-center justify-center gap-4 shadow-xl shadow-emerald-900/20 hover:bg-emerald-900 disabled:opacity-50 disabled:cursor-not-allowed"
                   >

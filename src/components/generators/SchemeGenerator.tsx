@@ -13,9 +13,10 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { generateSchemeOfWork } from '../../lib/gemini';
 import { db } from '../../lib/firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, query, where, getDocs, limit, orderBy } from 'firebase/firestore';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../../lib/utils';
 import { SafeMarkdown } from '../common/SafeMarkdown';
@@ -23,7 +24,7 @@ import 'highlight.js/styles/github.css';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { toast } from 'react-hot-toast';
-import { subjects as sharedSubjects, levels, CLASSES_BY_LEVEL } from '../../constants';
+import { subjects as sharedSubjects, levels, CLASSES_BY_LEVEL, SUBJECT_STRANDS, SUBJECT_SUB_STRANDS } from '../../constants';
 
 const types = [
   { id: 'termly', label: 'Termly', icon: Calendar, desc: '12-week breakdown' },
@@ -32,6 +33,7 @@ const types = [
 
 export default function SchemeGenerator() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [loadingStep, setLoadingStep] = useState(0);
   const [result, setResult] = useState<string | null>(null);
@@ -82,12 +84,40 @@ export default function SchemeGenerator() {
     }, 3000);
 
     try {
+      let yearlySchemeContext = undefined;
+
+      // REQUIREMENT: Termly must follow Yearly
+      if (formData.type === 'termly') {
+        const q = query(
+          collection(db, 'schemes'),
+          where('subject', '==', formData.subject),
+          where('class', '==', formData.class),
+          where('level', '==', formData.level),
+          where('type', '==', 'yearly'),
+          orderBy('createdAt', 'desc'),
+          limit(1)
+        );
+        
+        const querySnapshot = await getDocs(q);
+        if (querySnapshot.empty) {
+          toast.error(`No Yearly Scheme found for ${formData.subject} (${formData.class}). Please generate the Yearly Scheme first.`, { duration: 6000 });
+          clearInterval(stepInterval);
+          setLoading(false);
+          return;
+        }
+        
+        yearlySchemeContext = querySnapshot.docs[0].data().content;
+      }
+
       const content = await generateSchemeOfWork(
         formData.subject,
         formData.class,
         formData.type,
         formData.term,
-        { includeLearningOutcomes: formData.includeLearningOutcomes }
+        { 
+          includeLearningOutcomes: formData.includeLearningOutcomes,
+          yearlySchemeContext 
+        }
       );
       setResult(content);
       toast.success("Scheme generated successfully!");
@@ -129,14 +159,28 @@ export default function SchemeGenerator() {
     const displayType = formData.type === 'yearly' ? 'YEARLY' : `TERM ${formData.term} - TERMLY`;
     const mainTitle = `STRATEGIC ${displayType} SCHEME OF LEARNING`;
     
+    // Custom Header Branding
+    doc.setFillColor(0, 28, 61); // TeachSmart Deep Blue
+    doc.rect(0, 0, 297, 30, 'F');
+    
+    doc.setTextColor(255, 255, 255);
     doc.setFont("helvetica", "bold");
     doc.setFontSize(22);
-    doc.text(mainTitle, 148.5, 20, { align: 'center' });
+    doc.text(mainTitle, 148.5, 15, { align: 'center' });
     
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.text('OFFICIAL NaCCA CURRICULUM COMPLIANT SCHEME OF LEARNING', 148.5, 22, { align: 'center' });
+    
+    doc.setDrawColor(252, 209, 22); // Ghana Gold
+    doc.setLineWidth(0.8);
+    doc.line(60, 26, 237, 26);
+
+    doc.setTextColor(0, 0, 0);
     doc.setFontSize(11);
     doc.setFont("helvetica", "normal");
-    const metaText = `Subject: ${formData.subject} | Class: ${formData.class} (${formData.level})`;
-    doc.text(metaText, 148.5, 28, { align: 'center' });
+    const metaText = `Subject: ${formData.subject.toUpperCase()} | Class: ${formData.class.toUpperCase()} (${formData.level.toUpperCase()})`;
+    doc.text(metaText, 148.5, 40, { align: 'center' });
 
     // Parse markdown table to array for autoTable
     const lines = result.split('\n');
@@ -166,7 +210,7 @@ export default function SchemeGenerator() {
       autoTable(doc, {
         head: [headers],
         body: tableData,
-        startY: 35,
+        startY: 50,
         theme: 'grid',
         styles: { fontSize: 8, cellPadding: 3, valign: 'middle' },
         headStyles: { fillColor: [30, 41, 59], textColor: 255, fontStyle: 'bold', halign: 'center' },

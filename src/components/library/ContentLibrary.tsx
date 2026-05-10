@@ -14,7 +14,8 @@ import {
   FolderOpen,
   Book,
   CheckCircle,
-  ShieldCheck
+  ShieldCheck,
+  Star
 } from 'lucide-react';
 import { 
   collection, 
@@ -23,6 +24,7 @@ import {
   orderBy, 
   onSnapshot, 
   addDoc, 
+  setDoc,
   deleteDoc, 
   doc, 
   serverTimestamp,
@@ -34,6 +36,8 @@ import { Resource } from '../../types';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../../lib/utils';
 import { subjects, levels } from '../../constants';
+import { toast } from 'react-hot-toast';
+import { ConfirmationModal } from '../common/ConfirmationModal';
 
 enum OperationType {
   CREATE = 'create',
@@ -121,6 +125,14 @@ const CURRICULUM_BOOKS: Record<string, { title: string, url: string, level: stri
     { title: "Ghanaian Language Curriculum (B1-B6)", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/GHANAIAN-LANGUAGE-B1-B3.pdf", level: "Basic" },
     { title: "JHS Ghanaian Language (B7-B9)", url: "https://nacca.gov.gh/wp-content/uploads/2020/12/Ghanaian-Language-JHS-B7-B9.pdf", level: "JHS" }
   ],
+  "History": [
+    { title: "Primary History Curriculum (B1-B6)", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/HISTORY-B1-B6.pdf", level: "Primary" },
+    { title: "SHS History", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/HISTORY-SHS.pdf", level: "SHS" }
+  ],
+  "Physical Education": [
+    { title: "PE and Health Curriculum (B1-B6)", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/PE-B1-B6.pdf", level: "Primary" },
+    { title: "PE and Health Curriculum (B7-B9)", url: "https://nacca.gov.gh/wp-content/uploads/2020/12/PE-JHS-B7-B9.pdf", level: "JHS" }
+  ],
   "Elective Mathematics": [
     { title: "SHS Elective Mathematics", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/ELECTIVE-MATHEMATICS-SHS.pdf", level: "SHS" }
   ],
@@ -138,9 +150,6 @@ const CURRICULUM_BOOKS: Record<string, { title: string, url: string, level: stri
   ],
   "Geography": [
     { title: "SHS Geography", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/GEOGRAPHY-SHS.pdf", level: "SHS" }
-  ],
-  "History": [
-    { title: "SHS History", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/HISTORY-SHS.pdf", level: "SHS" }
   ],
   "Government": [
     { title: "SHS Government", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/GOVERNMENT-SHS.pdf", level: "SHS" }
@@ -168,6 +177,39 @@ const CURRICULUM_BOOKS: Record<string, { title: string, url: string, level: stri
   ],
   "IRS": [
     { title: "SHS Islamic Religious Studies", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/IRS-SHS.pdf", level: "SHS" }
+  ],
+  "Food & Nutrition": [
+    { title: "SHS Food and Nutrition", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/FOOD-AND-NUTRITION-SHS.pdf", level: "SHS" }
+  ],
+  "Graphic Design": [
+    { title: "SHS Graphic Design", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/GRAPHIC-DESIGN-SHS.pdf", level: "SHS" }
+  ],
+  "Management in Living": [
+    { title: "SHS Management in Living", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/MANAGEMENT-IN-LIVING-SHS.pdf", level: "SHS" }
+  ],
+  "Clothing & Textiles": [
+    { title: "SHS Clothing and Textiles", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/CLOTHING-AND-TEXTILES-SHS.pdf", level: "SHS" }
+  ],
+  "Technical Drawing": [
+    { title: "SHS Technical Drawing", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/TECHNICAL-DRAWING-SHS.pdf", level: "SHS" }
+  ],
+  "Applied Electricity": [
+    { title: "SHS Applied Electricity", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/APPLIED-ELECTRICITY-SHS.pdf", level: "SHS" }
+  ],
+  "Resource Packs": [
+    { title: "SBC Training Manual (KG-P6)", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/Training-Manual-Primary-Final.pdf", level: "KG-P6" },
+    { title: "CCP Training Manual (B7-B10)", url: "https://nacca.gov.gh/wp-content/uploads/2020/07/CCP-MANUAL-FINAL.pdf", level: "B7-B10" },
+    { title: "Mathematics Resource Pack", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/MATHEMATICS-RESOURCE-PACK.pdf", level: "Basic" },
+    { title: "Science Resource Pack", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/SCIENCE-RESOURCE-PACK.pdf", level: "Basic" },
+    { title: "English Resource Pack", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/ENGLISH-RESOURCE-PACK.pdf", level: "Basic" }
+  ],
+  "Important Links": [
+    { title: "NaCCA Official Website", url: "https://nacca.gov.gh/", level: "All" },
+    { title: "NTC Portal (Teacher Licensing)", url: "https://ntc.gov.gh/", level: "All" },
+    { title: "WAEC Ghana Official", url: "https://www.waecgh.org/", level: "All" },
+    { title: "GES Promotional Portal", url: "https://gespromotions.gov.gh/", level: "All" },
+    { title: "GoG Payslip Portal", url: "https://www.gogpayslip.com/", level: "All" },
+    { title: "West African Examinations Council", url: "https://www.waecgh.org/results", level: "All" }
   ]
 };
 
@@ -186,6 +228,9 @@ export default function ContentLibrary() {
   const [viewingResource, setViewingResource] = useState<Resource | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [currLevelFilter, setCurrLevelFilter] = useState('All');
+  const [favorites, setFavorites] = useState<string[]>([]);
+  const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
+  const [resourceToDelete, setResourceToDelete] = useState<string | null>(null);
 
   // Form state
   const [newResource, setNewResource] = useState<{
@@ -230,24 +275,22 @@ export default function ContentLibrary() {
         ...doc.data()
       })) as Resource[];
 
-      // Generate all official books
+      // Generate all official books from the curriculum data
       const allOfficialBooks: Resource[] = [];
-      subjects.forEach(subj => {
-        if (CURRICULUM_BOOKS[subj]) {
-          CURRICULUM_BOOKS[subj].forEach(book => {
-            allOfficialBooks.push({
-              id: `official-${subj}-${book.title}`,
-              authorId: 'system',
-              title: book.title,
-              description: `Official NaCCA Curriculum document for ${subj} (${book.level}).`,
-              subject: subj,
-              level: book.level,
-              type: 'book',
-              content: book.url,
-              createdAt: { toDate: () => new Date() }
-            });
+      Object.keys(CURRICULUM_BOOKS).forEach(subj => {
+        CURRICULUM_BOOKS[subj].forEach(book => {
+          allOfficialBooks.push({
+            id: `official-${subj}-${book.title}`,
+            authorId: 'system',
+            title: book.title,
+            description: `Official NaCCA Curriculum document for ${subj} (${book.level}).`,
+            subject: subj,
+            level: book.level,
+            type: 'book',
+            content: book.url,
+            createdAt: { toDate: () => new Date() }
           });
-        }
+        });
       });
 
       setResources([...allOfficialBooks, ...userData]);
@@ -256,8 +299,50 @@ export default function ContentLibrary() {
       handleFirestoreError(error, OperationType.GET, 'resources');
     });
 
-    return () => unsubscribe();
+    // Fetch favorites
+    const favsQuery = query(
+      collection(db, 'saved_resources'),
+      where('userId', '==', user.uid)
+    );
+    const unsubscribeFavs = onSnapshot(favsQuery, (snapshot) => {
+      setFavorites(snapshot.docs.map(doc => doc.data().resourceId));
+    }, (error) => {
+      handleFirestoreError(error, OperationType.GET, 'saved_resources');
+    });
+
+    return () => {
+      unsubscribe();
+      unsubscribeFavs();
+    };
   }, [user]);
+
+  const toggleFavorite = async (resource: Resource) => {
+    if (!user || !resource.id) return;
+    
+    const isFav = favorites.includes(resource.id);
+    const favId = `${user.uid}_${resource.id.replace(/[\s/]+/g, '_')}`;
+
+    try {
+      if (isFav) {
+        await deleteDoc(doc(db, 'saved_resources', favId));
+        toast.success('Removed from favorites');
+      } else {
+        await setDoc(doc(db, 'saved_resources', favId), {
+          userId: user.uid,
+          resourceId: resource.id,
+          title: resource.title,
+          subject: resource.subject,
+          level: resource.level,
+          type: resource.type,
+          content: resource.content,
+          createdAt: serverTimestamp()
+        });
+        toast.success('Added to favorites');
+      }
+    } catch (error) {
+      handleFirestoreError(error, OperationType.WRITE, 'saved_resources');
+    }
+  };
 
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -288,12 +373,12 @@ export default function ContentLibrary() {
 
   const handleDelete = async (id: string) => {
     if (id.startsWith('official-')) {
-      alert("Official resources cannot be deleted.");
+      toast.error("Official resources cannot be deleted.");
       return;
     }
-    if (!confirm("Are you sure you want to delete this resource?")) return;
     try {
       await deleteDoc(doc(db, 'resources', id));
+      toast.success('Resource deleted successfully');
     } catch (error) {
       handleFirestoreError(error, OperationType.DELETE, `resources/${id}`);
     }
@@ -328,7 +413,9 @@ export default function ContentLibrary() {
       filterType === 'official' ? res.authorId === 'system' :
       res.authorId !== 'system';
 
-    return matchesSearch && matchesSubject && matchesLevel && matchesType;
+    const matchesFavorites = !showOnlyFavorites || (res.id && favorites.includes(res.id));
+
+    return matchesSearch && matchesSubject && matchesLevel && matchesType && matchesFavorites;
   });
 
   const getIcon = (type: string, size = 18) => {
@@ -341,9 +428,28 @@ export default function ContentLibrary() {
     }
   };
 
+  const handleFileDownload = async (url: string, filename: string) => {
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error('Download failed:', error);
+      // Fallback to opening in new tab
+      window.open(url, '_blank');
+    }
+  };
+
   const isPdf = (url: string) => {
     if (!url) return false;
-    return url.toLowerCase().endsWith('.pdf') || url.toLowerCase().includes('.pdf?') || url.includes('nacca.gov.gh/wp-content/uploads');
+    return url.toLowerCase().includes('.pdf') || url.includes('nacca.gov.gh') || url.includes('firebase-storage');
   };
 
   return (
@@ -372,18 +478,34 @@ export default function ContentLibrary() {
             </div>
           </div>
         </div>
-        <div className="flex bg-slate-100 p-1.5 rounded-[2rem] self-start md:self-center">
+          <div className="flex bg-slate-100 p-1.5 rounded-[2rem] self-start md:self-center">
           <button 
             onClick={() => setActiveTab('library')}
             className={cn(
-              "px-6 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-all",
+              "px-6 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2",
               activeTab === 'library' ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700"
             )}
           >
             My Library
           </button>
           <button 
-            onClick={() => setActiveTab('curriculum')}
+            onClick={() => {
+              setActiveTab('library');
+              setShowOnlyFavorites(!showOnlyFavorites);
+            }}
+            className={cn(
+              "px-6 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2",
+              showOnlyFavorites ? "bg-amber-500 text-white shadow-lg shadow-amber-500/20" : "text-slate-500 hover:text-slate-700"
+            )}
+          >
+            <Star size={14} fill={showOnlyFavorites ? "currentColor" : "none"} />
+            Saved
+          </button>
+          <button 
+            onClick={() => {
+              setActiveTab('curriculum');
+              setShowOnlyFavorites(false);
+            }}
             className={cn(
               "px-6 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-all",
               activeTab === 'curriculum' ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700"
@@ -632,15 +754,28 @@ export default function ContentLibrary() {
                   </div>
                 )}
                 <div className="flex justify-between items-start mb-4">
-                  <div className={cn(
-                    "p-3 rounded-2xl transition-colors",
-                    resource.authorId === 'system' ? "bg-purple-100" : "bg-slate-50 group-hover:bg-emerald-50"
-                  )}>
-                    {getIcon(resource.type)}
+                  <div className="flex items-center gap-3">
+                    <div className={cn(
+                      "p-3 rounded-2xl transition-colors",
+                      resource.authorId === 'system' ? "bg-purple-100" : "bg-slate-50 group-hover:bg-emerald-50"
+                    )}>
+                      {getIcon(resource.type)}
+                    </div>
+                    <button 
+                      onClick={() => toggleFavorite(resource)}
+                      className={cn(
+                        "p-3 rounded-2xl transition-all shadow-sm active:scale-90",
+                        favorites.includes(resource.id!) 
+                          ? "bg-amber-500 text-white shadow-amber-500/20" 
+                          : "bg-white border border-slate-100 text-slate-400 hover:text-amber-500"
+                      )}
+                    >
+                      <Star size={18} fill={favorites.includes(resource.id!) ? "currentColor" : "none"} />
+                    </button>
                   </div>
                   {resource.authorId !== 'system' && (
                     <button 
-                      onClick={() => resource.id && handleDelete(resource.id)}
+                      onClick={() => resource.id && setResourceToDelete(resource.id)}
                       className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
                     >
                       <Trash2 size={18} />
@@ -692,15 +827,13 @@ export default function ContentLibrary() {
                         <FileText size={14} />
                       </button>
                       <div className="w-1 h-1 bg-slate-200 rounded-full" />
-                      <a 
-                        href={resource.content}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <button 
+                        onClick={() => handleFileDownload(resource.content, `${resource.title.replace(/\s+/g, '_')}.pdf`)}
                         className="text-amber-600 text-sm font-bold hover:underline flex items-center gap-2"
                       >
                         Download
                         <Download size={14} />
-                      </a>
+                      </button>
                     </div>
                   ) : (
                     <button 
@@ -807,7 +940,11 @@ export default function ContentLibrary() {
                               {book.title}
                             </h3>
                             <p className="text-slate-500 text-sm mt-2 font-medium">
-                              Official government curriculum framework for {subject} {book.level === 'Basic' ? 'Primary' : book.level} education.
+                              {subject === 'Important Links' 
+                                ? `Direct access to important educational portals and government resources.`
+                                : subject === 'Resource Packs'
+                                ? `Teaching guidelines and training materials for ${book.level} implementation.`
+                                : `Official government curriculum framework for ${subject} ${book.level === 'Basic' ? 'Primary' : book.level} education.`}
                             </p>
                           </div>
 
@@ -852,15 +989,13 @@ export default function ContentLibrary() {
                             <ExternalLink size={14} />
                             View Online
                           </button>
-                          <a 
-                            href={book.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                          <button 
+                            onClick={() => handleFileDownload(book.url, `${book.title.replace(/\s+/g, '_')}.pdf`)}
                             className="w-full md:w-44 py-4 bg-emerald-50 text-emerald-700 border-2 border-emerald-100 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-100 hover:border-emerald-200 transition-all flex items-center justify-center gap-2 shadow-sm"
                           >
                             <Download size={14} />
                             Download
-                          </a>
+                          </button>
                         </div>
                       </div>
                     </motion.div>
@@ -1021,17 +1156,25 @@ export default function ContentLibrary() {
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                {isPdf(viewingResource.content) && (
-                  <a 
-                    href={viewingResource.content}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hidden md:flex items-center gap-2 px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg shadow-emerald-500/20"
-                  >
-                    <Download size={16} />
-                    Download File
-                  </a>
-                )}
+                <button 
+                  onClick={() => {
+                    if (isPdf(viewingResource.content)) {
+                      handleFileDownload(viewingResource.content, `${viewingResource.title.replace(/\s+/g, '_')}.pdf`);
+                    } else {
+                      const element = document.createElement("a");
+                      const file = new Blob([viewingResource.content], {type: 'text/plain'});
+                      element.href = URL.createObjectURL(file);
+                      element.download = `${viewingResource.title.replace(/\s+/g, '_')}_TeachSmart.txt`;
+                      document.body.appendChild(element);
+                      element.click();
+                      document.body.removeChild(element);
+                    }
+                  }}
+                  className="hidden md:flex items-center gap-2 px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg shadow-emerald-500/20"
+                >
+                  <Download size={16} />
+                  Download
+                </button>
                 <button 
                   onClick={() => setViewingResource(null)}
                   className="w-12 h-12 flex items-center justify-center hover:bg-white/10 rounded-full transition-colors border border-white/10"
@@ -1097,15 +1240,13 @@ export default function ContentLibrary() {
                           </p>
 
                           <div className="space-y-3">
-                            <a 
-                              href={viewingResource.content}
-                              target="_blank"
-                              rel="noopener noreferrer"
+                            <button 
+                              onClick={() => handleFileDownload(viewingResource.content, `${viewingResource.title.replace(/\s+/g, '_')}.pdf`)}
                               className="w-full flex items-center justify-center gap-3 py-5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all shadow-xl shadow-emerald-500/30 group"
                             >
                               <Download size={20} className="group-hover:translate-y-1 transition-transform" />
                               Download Document Now
-                            </a>
+                            </button>
                             <p className="text-[9px] text-center text-slate-500 font-bold uppercase tracking-wider">Estimated File Size: ~2.4 MB</p>
                           </div>
                         </div>
@@ -1148,13 +1289,59 @@ export default function ContentLibrary() {
                       <div className="px-3 py-1 bg-slate-100 text-slate-600 font-bold rounded-lg text-[10px] uppercase tracking-widest">
                         {viewingResource.level}
                       </div>
+                      <div className="px-3 py-1 bg-slate-100 text-slate-600 font-bold rounded-lg text-[10px] uppercase tracking-widest flex items-center gap-1">
+                        {getIcon(viewingResource.type, 12)}
+                        {viewingResource.type}
+                      </div>
                     </div>
 
-                    <div className="bg-white p-12 rounded-[3rem] border border-slate-100 shadow-sm relative overflow-hidden">
+                    <div className="bg-white p-12 rounded-[3rem] border border-slate-100 shadow-sm relative overflow-hidden flex flex-col items-center justify-center min-h-[300px]">
                        <div className="absolute top-0 right-0 w-32 h-32 bg-slate-50 rounded-full blur-3xl -translate-y-12 translate-x-12" />
-                       <div className="relative z-10 prose prose-sm max-w-none text-slate-800 whitespace-pre-wrap leading-loose font-medium">
-                        {viewingResource.content}
-                      </div>
+                       
+                       {viewingResource.type === 'file' ? (
+                         <div className="flex flex-col items-center gap-6 text-center">
+                            <div className="w-24 h-24 bg-slate-50 text-slate-300 rounded-3xl flex items-center justify-center border-2 border-dashed border-slate-200">
+                              <FileText size={48} />
+                            </div>
+                            <div>
+                              <h4 className="text-xl font-black text-slate-900 mb-2">Binary File Resource</h4>
+                              <p className="text-slate-500 text-sm max-w-xs mx-auto">
+                                This file type cannot be previewed directly. Please use the download option to access the content.
+                              </p>
+                            </div>
+                            <button 
+                              onClick={() => {
+                                if (isPdf(viewingResource.content)) {
+                                  handleFileDownload(viewingResource.content, `${viewingResource.title.replace(/\s+/g, '_')}.pdf`);
+                                } else {
+                                  const element = document.createElement("a");
+                                  const file = new Blob([viewingResource.content], {type: 'text/plain'});
+                                  element.href = URL.createObjectURL(file);
+                                  element.download = `${viewingResource.title.replace(/\s+/g, '_')}_TeachSmart.txt`;
+                                  document.body.appendChild(element);
+                                  element.click();
+                                  document.body.removeChild(element);
+                                }
+                              }}
+                              className="px-8 py-4 bg-emerald-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-600/20 flex items-center gap-2"
+                            >
+                              <Download size={16} />
+                              Download {viewingResource.type === 'file' ? 'File' : 'Resource'}
+                            </button>
+                         </div>
+                       ) : viewingResource.type === 'note' ? (
+                         <div className="relative z-10 w-full prose prose-sm max-w-none text-slate-800 whitespace-pre-wrap leading-loose font-medium bg-amber-50/30 p-8 rounded-2xl border border-amber-100/50">
+                            <div className="flex items-center gap-2 mb-4 text-amber-600 border-b border-amber-100 pb-4">
+                              <StickyNote size={18} />
+                              <span className="text-[10px] font-black uppercase tracking-widest">Teacher's Note Content</span>
+                            </div>
+                            {viewingResource.content}
+                         </div>
+                       ) : (
+                         <div className="relative z-10 w-full prose prose-sm max-w-none text-slate-800 whitespace-pre-wrap leading-loose font-medium">
+                            {viewingResource.content}
+                         </div>
+                       )}
                     </div>
                   </div>
                 )}
@@ -1182,6 +1369,14 @@ export default function ContentLibrary() {
           </motion.div>
         </div>
       )}
+      <ConfirmationModal 
+        isOpen={!!resourceToDelete}
+        onClose={() => setResourceToDelete(null)}
+        onConfirm={() => resourceToDelete && handleDelete(resourceToDelete)}
+        title="Delete Resource?"
+        message="This action cannot be undone. This resource will be permanently removed from your library."
+        confirmLabel="Delete"
+      />
     </div>
   );
 }

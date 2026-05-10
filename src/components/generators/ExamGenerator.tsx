@@ -12,6 +12,7 @@ import {
   X
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { generateExam } from '../../lib/gemini';
 import { db } from '../../lib/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
@@ -27,6 +28,7 @@ const difficulties = ["Easy", "Standard", "Challenging"];
 
 export default function ExamGenerator() {
   const { user, profile } = useAuth();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<{ questions: string; markingScheme: string } | null>(null);
   const [saved, setSaved] = useState(false);
@@ -82,6 +84,7 @@ export default function ExamGenerator() {
 
   const handleGenerate = async (e: React.FormEvent) => {
     e.preventDefault();
+
     setLoading(true);
     setResult(null);
     setSaved(false);
@@ -166,38 +169,53 @@ export default function ExamGenerator() {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-').replace('T', '_').slice(0, 19);
     const filename = `${formData.subject}_${formData.level}_${type === 'exam' ? 'Exam' : 'Marking'}_${timestamp}`.replace(/[\s\W]+/g, '_');
     
-    // Header
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(18);
-    doc.text(title.toUpperCase(), 105, 20, { align: 'center' });
+    // Header Branding
+    doc.setFillColor(0, 28, 61); // TeachSmart Deep Blue
+    doc.rect(0, 0, 210, 40, 'F');
+    
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(22);
+    doc.setFont('helvetica', 'bold');
+    doc.text('TEACHSMART GHANA', 105, 18, { align: 'center' });
+    
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text('OFFICIAL NaCCA CURRICULUM COMPLIANT ASSESSMENT', 105, 26, { align: 'center' });
+    
+    doc.setDrawColor(252, 209, 22); // Ghana Gold
+    doc.setLineWidth(1);
+    doc.line(40, 32, 170, 32);
+
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text(title.toUpperCase(), 105, 55, { align: 'center' });
     
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
-    doc.text(`Subject: ${formData.subject}`, 20, 30);
-    doc.text(`Level: ${formData.level}`, 20, 35);
-    doc.text(`Difficulty: ${formData.difficulty}`, 190, 30, { align: 'right' });
-    doc.text(`Date: ${new Date().toLocaleDateString()}`, 190, 35, { align: 'right' });
+    doc.text(`SUBJECT: ${formData.subject.toUpperCase()} | LEVEL: ${formData.level.toUpperCase()} | DIFFICULTY: ${formData.difficulty.toUpperCase()}`, 105, 62, { align: 'center' });
     
     doc.setLineWidth(0.5);
-    doc.line(20, 40, 190, 40);
+    doc.setDrawColor(230, 230, 230);
+    doc.line(20, 68, 190, 68);
 
     const content = type === 'exam' ? result.questions : result.markingScheme;
     
     // Content with basic page wrapping
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(11);
-    const splitText = doc.splitTextToSize(content, 170);
+    doc.setFontSize(10.5);
+    const splitText = doc.splitTextToSize(content.replace(/[#*]/g, ''), 175);
     
-    let cursorY = 50;
+    let cursorY = 78;
     const pageHeight = doc.internal.pageSize.height;
     
     splitText.forEach((line: string) => {
-      if (cursorY > pageHeight - 20) {
+      if (cursorY > pageHeight - 35) {
         doc.addPage();
-        cursorY = 20;
+        cursorY = 25;
       }
       doc.text(line, 20, cursorY);
-      cursorY += 7;
+      cursorY += 6.5;
     });
 
     // Footer
@@ -224,8 +242,9 @@ export default function ExamGenerator() {
         });
 
         doc.setFont('helvetica', 'bold');
-        doc.setTextColor(0, 107, 63); // Green
-        doc.text('TEACHSMART GHANA • AI-POWERED NaCCA COMPLIANT TOOLS', 10, pageHeight - 5);
+        doc.setTextColor(0, 107, 63); // Ghana Green
+        doc.setFontSize(8);
+        doc.text('TEACHSMART GHANA • AI-POWERED NaCCA COMPLIANT TOOLS', 105, pageHeight - 5, { align: 'center' });
         
         doc.setTextColor(150);
         doc.setFont('helvetica', 'normal');

@@ -5,6 +5,7 @@ import { generateNote } from '../../lib/gemini';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { cn } from '../../lib/utils';
 import { SafeMarkdown } from '../common/SafeMarkdown';
 import 'highlight.js/styles/github.css';
@@ -14,6 +15,7 @@ import { subjects, levels } from '../../constants';
 
 const NoteGenerator = () => {
   const { user, profile } = useAuth();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -34,6 +36,7 @@ const NoteGenerator = () => {
       toast.error("Please ensure Topic and Objectives are filled.");
       return;
     }
+
     setLoading(true);
     try {
       const topicContext = `Lesson Topic: ${formData.lessonTopic}`;
@@ -53,7 +56,7 @@ const NoteGenerator = () => {
       );
 
       setResult(data);
-      setStep(3);
+      setStep(4);
       toast.success("Lesson notes generated!");
     } catch (err) {
       console.error(err);
@@ -88,36 +91,64 @@ const NoteGenerator = () => {
     if (!result) return;
     const doc = new jsPDF();
     
-    doc.setFontSize(22);
-    doc.setTextColor(0, 107, 63); // Ghana Green
-    doc.text('TEACHSMART GHANA', 105, 20, { align: 'center' });
+    // Header Branding
+    doc.setFillColor(0, 28, 61); // TeachSmart Deep Blue
+    doc.rect(0, 0, 210, 40, 'F');
     
-    doc.setFontSize(16);
-    doc.setTextColor(0, 0, 0);
-    doc.text((result.title || formData.lessonTopic).toUpperCase(), 105, 30, { align: 'center' });
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(22);
+    doc.setFont('helvetica', 'bold');
+    doc.text('TEACHSMART GHANA', 105, 18, { align: 'center' });
     
     doc.setFontSize(10);
-    doc.setTextColor(100, 100, 100);
-    doc.text(`Subject: ${formData.subject} | Level: ${formData.level} | Topic: ${formData.lessonTopic}`, 105, 38, { align: 'center' });
+    doc.setFont('helvetica', 'normal');
+    doc.text('OFFICIAL NaCCA CURRICULUM COMPLIANT LESSON NOTES', 105, 26, { align: 'center' });
+    
+    doc.setDrawColor(252, 209, 22); // Ghana Gold
+    doc.setLineWidth(1);
+    doc.line(40, 32, 170, 32);
+
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text((result.title || formData.lessonTopic).toUpperCase(), 105, 55, { align: 'center' });
+    
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`SUBJECT: ${formData.subject.toUpperCase()} | LEVEL: ${formData.level.toUpperCase()} | TOPIC: ${formData.lessonTopic.toUpperCase()}`, 105, 62, { align: 'center' });
     
     doc.setLineWidth(0.5);
-    doc.setDrawColor(255, 204, 0); // Ghana Gold
-    doc.line(20, 42, 190, 42);
+    doc.setDrawColor(230, 230, 230);
+    doc.line(20, 68, 190, 68);
 
-    const splitText = doc.splitTextToSize(result.content.replace(/[#*]/g, ''), 170);
     doc.setFontSize(11);
     doc.setTextColor(50, 50, 50);
-    doc.text(splitText, 20, 52);
-
-    const pageCount = (doc.internal as any).getNumberOfPages();
+    
+    const content = result.content.replace(/[#*]/g, '');
+    const splitText = doc.splitTextToSize(content, 175);
+    
+    let cursorY = 78;
     const pageHeight = doc.internal.pageSize.height;
     
+    splitText.forEach((line: string) => {
+        if (cursorY > pageHeight - 35) {
+            doc.addPage();
+            cursorY = 25;
+        }
+        doc.text(line, 20, cursorY);
+        cursorY += 6.5;
+    });
+
+    const pageCount = (doc.internal as any).getNumberOfPages();
     for(let i = 1; i <= pageCount; i++) {
         doc.setPage(i);
+        
+        // Footer Line
         doc.setDrawColor(200, 200, 200);
         doc.setLineWidth(0.5);
         doc.line(10, pageHeight - 20, 200, pageHeight - 20);
 
+        // Compliance Footer
         doc.setFontSize(7);
         doc.setTextColor(100);
         doc.setFont('helvetica', 'italic');
@@ -134,8 +165,9 @@ const NoteGenerator = () => {
         });
 
         doc.setFont('helvetica', 'bold');
-        doc.setTextColor(0, 107, 63); // Green
-        doc.text('TEACHSMART GHANA • AI-POWERED NaCCA COMPLIANT TOOLS', 10, pageHeight - 5);
+        doc.setTextColor(0, 107, 63); // Ghana Green
+        doc.setFontSize(8);
+        doc.text('TEACHSMART GHANA • AI-POWERED NaCCA COMPLIANT TOOLS', 105, pageHeight - 5, { align: 'center' });
         
         doc.setTextColor(150);
         doc.setFont('helvetica', 'normal');

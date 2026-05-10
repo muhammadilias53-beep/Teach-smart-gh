@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { MessageSquare, Send, X, Bot, User, Loader2, Mic, RotateCcw } from 'lucide-react';
+import { MessageSquare, Send, X, Bot, User, Loader2, Mic, RotateCcw, Lock } from 'lucide-react';
 import { GoogleGenAI } from "@google/genai";
 import { cn } from '../../lib/utils';
 import { SafeMarkdown } from '../common/SafeMarkdown';
 import 'highlight.js/styles/github.css';
 import { toast } from 'react-hot-toast';
+import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const GeminiAssistant = () => {
+  const { canGenerate } = useAuth();
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<{role: 'user' | 'assistant', content: string}[]>(() => {
     const saved = localStorage.getItem('teachsmart_chat_history');
@@ -35,6 +39,12 @@ const GeminiAssistant = () => {
   };
 
   const handleSend = async (customText?: string) => {
+    if (!canGenerate()) {
+      toast.error("Upgrade to active subscription to use AI assistant");
+      navigate('/billing');
+      return;
+    }
+
     const messageContent = customText || input;
     if (!messageContent.trim() || loading) return;
 
@@ -161,6 +171,23 @@ const GeminiAssistant = () => {
                     </div>
                  </div>
                ))}
+               {!canGenerate() && messages.length > 0 && (
+                  <div className="p-6 bg-ghana-red/5 border border-ghana-red/20 rounded-2xl flex flex-col items-center text-center gap-3 mt-4">
+                     <div className="w-10 h-10 bg-ghana-red/10 rounded-full flex items-center justify-center text-ghana-red">
+                        <Lock size={18} />
+                     </div>
+                     <div>
+                        <p className="text-xs font-bold text-slate-900">Access Restricted</p>
+                        <p className="text-[10px] text-slate-500 mt-1">Upgrade your plan to unlock unlimited AI consulting.</p>
+                     </div>
+                     <button 
+                       onClick={() => navigate('/billing')}
+                       className="w-full py-2 bg-ghana-red text-white rounded-lg text-[10px] font-black uppercase tracking-widest"
+                     >
+                        Upgrade Now
+                     </button>
+                  </div>
+               )}
                {loading && (
                  <div className="flex flex-col gap-2 items-start">
                     <div className="bg-white/5 p-4 rounded-xl rounded-tl-none flex items-center gap-3 border border-white/5">

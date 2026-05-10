@@ -108,12 +108,6 @@ service cloud.firestore {
       allow update, delete: if (isSignedIn() && existing().authorId == request.auth.uid) || isAdmin();
     }
 
-    match /exams/{id} {
-      allow list, get: if isSignedIn() && (resource.data.authorId == request.auth.uid || isAdmin());
-      allow create: if isVerified() && incoming().authorId == request.auth.uid;
-      allow update, delete: if (isSignedIn() && existing().authorId == request.auth.uid) || isAdmin();
-    }
-
     match /schemes/{id} {
       allow list, get: if isSignedIn() && (resource.data.authorId == request.auth.uid || isAdmin());
       allow create: if isVerified() && incoming().authorId == request.auth.uid;

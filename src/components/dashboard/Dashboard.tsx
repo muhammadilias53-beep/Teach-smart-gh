@@ -14,8 +14,10 @@ import { db } from '../../lib/firebase';
 import { handleFirestoreError, OperationType } from '../../lib/firestore-errors';
 import { Logo } from '../common/Logo';
 import { SafeMarkdown } from '../common/SafeMarkdown';
-import { Download, X, ExternalLink } from 'lucide-react';
+import { toast } from 'react-hot-toast';
+import { Download, X, ExternalLink, Mail, Loader2, Send } from 'lucide-react';
 import jsPDF from 'jspdf';
+import { AdminNotificationPanel } from './AdminNotificationPanel';
 
 const AnimatedCounter = ({ value, duration = 1.5 }: { value: number, duration?: number }) => {
   const [displayValue, setDisplayValue] = useState(0);
@@ -52,6 +54,7 @@ const Dashboard = () => {
     return new Date(d);
   };
 
+  const isAdmin = user?.email === 'muhammadilias53@gmail.com';
   const trialDays = profile ? differenceInDays(new Date(), getStartDate(profile.trialStartDate)) : 0;
   const daysLeft = Math.max(0, 30 - trialDays);
 
@@ -104,50 +107,51 @@ const Dashboard = () => {
         const totalNtQ = query(collection(db, ntPath), where('authorId', '==', user.uid));
         const totalPkQ = query(collection(db, pkPath), where('userId', '==', user.uid));
 
-        const [lpSnap, exSnap, scSnap, ntSnap, pkSnap, countLp, countEx, countSc, countNt, countPk] = await Promise.all([
-          getDocs(lpQ).catch(err => handleFirestoreError(err, OperationType.LIST, lpPath)),
-          getDocs(exQ).catch(err => handleFirestoreError(err, OperationType.LIST, exPath)),
-          getDocs(scQ).catch(err => handleFirestoreError(err, OperationType.LIST, scPath)),
-          getDocs(ntQ).catch(err => handleFirestoreError(err, OperationType.LIST, ntPath)),
-          getDocs(pkQ).catch(err => handleFirestoreError(err, OperationType.LIST, pkPath)),
-          getCountFromServer(totalLpQ),
-          getCountFromServer(totalExQ),
-          getCountFromServer(totalScQ),
-          getCountFromServer(totalNtQ),
-          getCountFromServer(totalPkQ)
+        const results = await Promise.all([
+          getDocs(lpQ).catch(err => { console.warn("LP fetch failed", err); return null; }),
+          getDocs(exQ).catch(err => { console.warn("EX fetch failed", err); return null; }),
+          getDocs(scQ).catch(err => { console.warn("SC fetch failed", err); return null; }),
+          getDocs(ntQ).catch(err => { console.warn("NT fetch failed", err); return null; }),
+          getDocs(pkQ).catch(err => { console.warn("PK fetch failed", err); return null; }),
+          getCountFromServer(totalLpQ).catch(() => null),
+          getCountFromServer(totalExQ).catch(() => null),
+          getCountFromServer(totalScQ).catch(() => null),
+          getCountFromServer(totalNtQ).catch(() => null),
+          getCountFromServer(totalPkQ).catch(() => null)
         ]);
+
+        const [lpSnap, exSnap, scSnap, ntSnap, pkSnap, countLp, countEx, countSc, countNt, countPk] = results;
         
-        if (lpSnap && exSnap && scSnap && ntSnap && pkSnap) {
-          const docs = [
-            ...lpSnap.docs.map(doc => ({ id: doc.id, ...doc.data(), type: 'Lesson Plan' })),
-            ...exSnap.docs.map(doc => ({ id: doc.id, ...doc.data(), type: 'Exam' })),
-            ...scSnap.docs.map(doc => ({ id: doc.id, ...doc.data(), type: 'Scheme' })),
-            ...ntSnap.docs.map(doc => ({ id: doc.id, ...doc.data(), type: 'Note' })),
-            ...pkSnap.docs.map(doc => ({ id: doc.id, ...doc.data(), type: 'Resource Pack' }))
-          ].sort((a: any, b: any) => {
+        const docs: any[] = [];
+        if (lpSnap) docs.push(...lpSnap.docs.map(doc => ({ id: doc.id, ...doc.data(), type: 'Lesson Plan' })));
+        if (exSnap) docs.push(...exSnap.docs.map(doc => ({ id: doc.id, ...doc.data(), type: 'Exam' })));
+        if (scSnap) docs.push(...scSnap.docs.map(doc => ({ id: doc.id, ...doc.data(), type: 'Scheme' })));
+        if (ntSnap) docs.push(...ntSnap.docs.map(doc => ({ id: doc.id, ...doc.data(), type: 'Note' })));
+        if (pkSnap) docs.push(...pkSnap.docs.map(doc => ({ id: doc.id, ...doc.data(), type: 'Resource Pack' })));
+
+        if (docs.length > 0) {
+          docs.sort((a, b) => {
             const tA = a.createdAt?.toMillis?.() || 0;
             const tB = b.createdAt?.toMillis?.() || 0;
             return tB - tA;
-          }).slice(0, 5);
-
-          setRecentDocs(docs);
-        }
-
-        if (countLp && countEx && countSc && countNt && countPk) {
-          const lpCount = countLp.data().count;
-          const exCount = countEx.data().count;
-          const scCount = countSc.data().count;
-          const ntCount = countNt.data().count;
-          const pkCount = countPk.data().count;
-          setStats({
-            lessonPlans: lpCount,
-            exams: exCount,
-            schemes: scCount,
-            notes: ntCount,
-            packs: pkCount,
-            total: lpCount + exCount + scCount + ntCount + pkCount
           });
+          setRecentDocs(docs.slice(0, 5));
         }
+
+        const lpCount = countLp?.data().count || 0;
+        const exCount = countEx?.data().count || 0;
+        const scCount = countSc?.data().count || 0;
+        const ntCount = countNt?.data().count || 0;
+        const pkCount = countPk?.data().count || 0;
+        
+        setStats({
+          lessonPlans: lpCount,
+          exams: exCount,
+          schemes: scCount,
+          notes: ntCount,
+          packs: pkCount,
+          total: lpCount + exCount + scCount + ntCount + pkCount
+        });
 
       } catch (err) {
         console.error("Error fetching dashboard data:", err);
@@ -167,8 +171,35 @@ const Dashboard = () => {
   };
 
   const mastery = getMasteryLevel(stats.total);
+  const [showEmailOverlay, setShowEmailOverlay] = useState(false);
+  const [emailInput, setEmailInput] = useState('');
+  const { updateProfileEmail } = useAuth();
+  const [savingEmail, setSavingEmail] = useState(false);
 
-const quickActions = [
+  useEffect(() => {
+    if (profile && !profile.email && !loadingDocs) {
+      setShowEmailOverlay(true);
+    }
+  }, [profile, loadingDocs]);
+
+  const handleSaveEmail = async () => {
+    if (!emailInput || !emailInput.includes('@')) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
+    setSavingEmail(true);
+    try {
+      await updateProfileEmail(emailInput);
+      setShowEmailOverlay(false);
+      toast.success("Email account associated successfully!");
+    } catch (err) {
+      toast.error("Failed to save email. Please try again.");
+    } finally {
+      setSavingEmail(false);
+    }
+  };
+
+  const quickActions = [
     { icon: FileText, label: 'New Lesson Plan', path: '/lessons', color: 'bg-emerald-500', bg: 'bg-emerald-50' },
     { icon: Calendar, label: 'Scheme of Work', path: '/schemes', color: 'bg-ghana-gold', bg: 'bg-amber-50' },
     { icon: PenTool, label: 'Create Exam', path: '/exams', color: 'bg-slate-900', bg: 'bg-slate-100' },
@@ -209,6 +240,34 @@ const quickActions = [
           </div>
         </div>
       </div>
+
+      <AdminNotificationPanel />
+
+      {/* Admin Oversight */}
+      {user?.email === 'muhammadilias53@gmail.com' && (
+        <motion.div 
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="bg-emerald-deep/5 border-2 border-emerald-deep/20 rounded-[3rem] p-8 -mt-6 mb-12 flex flex-col md:flex-row items-center justify-between gap-6"
+        >
+          <div className="flex items-center gap-6">
+            <div className="w-16 h-16 bg-emerald-deep text-white rounded-[1.5rem] flex items-center justify-center shadow-lg shadow-emerald-900/20">
+              <ShieldCheck size={32} />
+            </div>
+            <div>
+              <h2 className="text-xl font-black text-slate-900 uppercase tracking-tight">Professional Oversight</h2>
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Management Access for Ministry Administrator</p>
+            </div>
+          </div>
+          <Link 
+            to="/admin" 
+            className="group flex items-center gap-4 bg-slate-900 text-white px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-black transition-all active:scale-95 shadow-xl shadow-slate-900/10"
+          >
+            Enter Command Center
+            <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+          </Link>
+        </motion.div>
+      )}
 
       {/* Stats Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -278,21 +337,24 @@ const quickActions = [
                 <Calendar size={18} />
               </div>
               <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-                Trial Access
+                {isAdmin ? 'Access Status' : 'Trial Access'}
               </p>
             </div>
             <div className="flex items-end justify-between gap-4">
               <div className="shrink-0">
                 <h3 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tighter">
-                  <AnimatedCounter value={daysLeft} />
-                  <span className="text-2xl ml-1">d</span>
+                  {isAdmin ? '∞' : <AnimatedCounter value={daysLeft} />}
+                  {!isAdmin && <span className="text-2xl ml-1">d</span>}
                 </h3>
-                <div className="text-[9px] font-bold px-2 py-1 rounded-full uppercase tracking-tighter text-ghana-red bg-red-50 animate-pulse whitespace-nowrap mt-1">
-                  Days Left
+                <div className={cn(
+                  "text-[9px] font-bold px-2 py-1 rounded-full uppercase tracking-tighter whitespace-nowrap mt-1",
+                  isAdmin ? "text-emerald-600 bg-emerald-50" : "text-ghana-red bg-red-50 animate-pulse"
+                )}>
+                  {isAdmin ? 'Lifetime Holder' : 'Days Left'}
                 </div>
               </div>
               
-              {profile?.subscriptionStatus !== 'active' && (
+              {!isAdmin && profile?.subscriptionStatus !== 'active' && (
                 <Link 
                   to="/billing" 
                   className="px-4 py-2 bg-emerald-deep text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-900 transition-all shadow-lg shadow-emerald-900/20 active:scale-95"
@@ -311,30 +373,25 @@ const quickActions = [
           className="group bg-emerald-deep p-6 rounded-[2rem] border border-emerald-800 shadow-sm hover:shadow-xl hover:shadow-emerald-900/20 transition-all duration-500 overflow-hidden relative"
         >
           <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-            <Zap size={80} className="text-white" />
+            <ShieldCheck size={80} className="text-white" />
           </div>
           <div className="relative z-10">
             <div className="flex items-center gap-3 mb-4">
-              <div className="p-2.5 bg-white/10 text-white rounded-2xl group-hover:bg-white group-hover:text-emerald-deep transition-colors duration-500">
-                <Heart size={18} />
+              <div className="p-2.5 bg-white/10 text-white rounded-2xl group-hover:bg-ghana-gold group-hover:text-slate-900 transition-colors duration-500">
+                <ShieldCheck size={18} />
               </div>
-              <p className="text-[10px] font-black uppercase tracking-widest text-emerald-text/60">Resource Power</p>
+              <p className="text-[10px] font-black uppercase tracking-widest text-emerald-text/60">
+                Trust & Verification
+              </p>
             </div>
-            <div className="space-y-3">
-              <div className="flex justify-between items-baseline gap-2">
-                 <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight shrink-0">
-                   <AnimatedCounter value={Math.min(100, Math.round((stats.total / 50) * 100))} />
-                   <span className="text-sm opacity-60 ml-0.5">%</span>
-                 </h3>
-                 <span className="text-[8px] font-black text-ghana-gold uppercase tracking-widest whitespace-nowrap">Efficiency</span>
-              </div>
-              <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
-                 <motion.div 
-                   initial={{ width: 0 }}
-                   animate={{ width: `${Math.min(100, (stats.total / 50) * 100)}%` }}
-                   transition={{ duration: 1.5, ease: "easeOut" }}
-                   className="h-full bg-ghana-gold" 
-                 />
+            <div className="flex items-end justify-between gap-4">
+              <div className="shrink-0">
+                <h3 className="text-3xl sm:text-4xl font-black text-white tracking-tighter">
+                  Verified
+                </h3>
+                <div className="text-[9px] font-bold px-2 py-1 rounded-full uppercase tracking-tighter text-ghana-gold bg-white/10 mt-1">
+                  NaCCA Compliant Profile
+                </div>
               </div>
             </div>
           </div>
@@ -647,6 +704,53 @@ const quickActions = [
       </div>
       <AnimatePresence>
         {viewingDoc && <DocumentViewerModal doc={viewingDoc} onClose={() => setViewingDoc(null)} />}
+        {showEmailOverlay && (
+          <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-slate-900/90 backdrop-blur-md">
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="bg-white w-full max-w-md rounded-[3.5rem] shadow-2xl overflow-hidden p-12 text-center relative border-4 border-ghana-gold/20"
+            >
+              <div className="inline-flex items-center justify-center w-24 h-24 bg-emerald-50 text-emerald-deep rounded-[2rem] mb-10 shadow-xl shadow-emerald-500/10 ring-8 ring-emerald-50/50">
+                <Mail size={40} />
+              </div>
+              
+              <h2 className="text-3xl font-black text-slate-900 tracking-tightest mb-4 leading-tight">PROFESSIONAL IDENTITY</h2>
+              <p className="text-slate-500 font-medium mb-10 text-sm leading-relaxed uppercase tracking-widest">
+                Please provide your official email account to sync your professional documents and activate your subscription.
+              </p>
+
+              <div className="space-y-6">
+                <div className="relative">
+                  <Mail className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none" size={20} />
+                  <input 
+                    type="email" 
+                    placeholder="YOUR EMAIL ACCOUNT" 
+                    className="w-full pl-16 pr-8 py-5 bg-slate-50 border border-slate-100 rounded-[1.5rem] focus:ring-4 focus:ring-emerald-deep/10 focus:border-emerald-deep transition-all text-xs font-black tracking-[0.2em] outline-none"
+                    value={emailInput}
+                    onChange={(e) => setEmailInput(e.target.value)}
+                  />
+                </div>
+                
+                <button 
+                  onClick={handleSaveEmail}
+                  disabled={savingEmail}
+                  className="btn-primary w-full py-6 rounded-[1.5rem] shadow-2xl shadow-emerald-900/20 active:scale-[0.98] transition-all font-black uppercase text-[10px] tracking-[0.4em] flex items-center justify-center gap-3 overflow-hidden"
+                >
+                  {savingEmail ? (
+                    <Loader2 className="animate-spin" size={18} />
+                  ) : (
+                    <>SAVE PROFESSIONAL EMAIL <ArrowRight size={16} /></>
+                  )}
+                </button>
+                
+                <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest pt-4">
+                  Ghana Education System • NaCCA Compliant
+                </p>
+              </div>
+            </motion.div>
+          </div>
+        )}
       </AnimatePresence>
     </div>
   );
@@ -659,37 +763,67 @@ const DocumentViewerModal = ({ doc, onClose }: { doc: any, onClose: () => void }
     const pdf = new jsPDF();
     const title = doc.title || 'Document';
     
-    pdf.setFontSize(20);
-    pdf.text(title.toUpperCase(), 105, 20, { align: 'center' });
+    // Header Branding
+    pdf.setFillColor(0, 28, 61); // TeachSmart Deep Blue
+    pdf.rect(0, 0, 210, 40, 'F');
+    
+    pdf.setTextColor(255, 255, 255);
+    pdf.setFontSize(22);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text('TEACHSMART GHANA', 105, 18, { align: 'center' });
     
     pdf.setFontSize(10);
-    pdf.text(`Type: ${doc.type} | Subject: ${doc.subject} | Level: ${doc.level}`, 105, 30, { align: 'center' });
+    pdf.setFont('helvetica', 'normal');
+    pdf.text('OFFICIAL NaCCA CURRICULUM COMPLIANT DOCUMENT', 105, 26, { align: 'center' });
+    
+    pdf.setDrawColor(252, 209, 22); // Ghana Gold
+    pdf.setLineWidth(1);
+    pdf.line(40, 32, 170, 32);
+
+    pdf.setTextColor(0, 0, 0);
+    pdf.setFontSize(14);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text(title.toUpperCase(), 105, 55, { align: 'center' });
+    
+    pdf.setFontSize(10);
+    pdf.setFont('helvetica', 'normal');
+    pdf.text(`CATEGORY: ${doc.type} | SUBJECT: ${doc.subject} | LEVEL: ${doc.level}`, 105, 62, { align: 'center' });
     
     let content = "";
     if (doc.type === 'Lesson Plan') {
-      content = `PHASE 1: STARTER\n${doc.phase1}\n\nPHASE 2: MAIN\n${doc.phase2}\n\nPHASE 3: PLENARY\n${doc.phase3}`;
+      content = `PHASE 1: STARTER\n-----------------\n${doc.phase1}\n\nPHASE 2: MAIN\n-----------------\n${doc.phase2}\n\nPHASE 3: PLENARY\n-----------------\n${doc.phase3}`;
     } else if (doc.type === 'Exam') {
-      content = `QUESTIONS\n${doc.questions}\n\nMARKING SCHEME\n${doc.markingScheme}`;
+      content = `QUESTIONS\n-----------------\n${doc.questions}\n\nMARKING SCHEME\n-----------------\n${doc.markingScheme}`;
     } else if (doc.type === 'Note') {
-      content = `TOPIC: ${doc.title}\n\nCONTENT\n${doc.content}\n\nSUMMARY\n${doc.summary?.join('\n')}\n\nQUESTIONS\n${doc.questions?.join('\n')}`;
+      content = `TOPIC: ${doc.title}\n\nCONTENT\n-----------------\n${doc.content}\n\nSUMMARY\n-----------------\n${doc.summary?.join('\n')}\n\nQUESTIONS\n-----------------\n${doc.questions?.join('\n')}`;
     } else {
       content = doc.content || "";
     }
 
+    pdf.setFontSize(10);
     const splitText = pdf.splitTextToSize(content, 170);
-    let cursorY = 40;
+    let cursorY = 75;
     const pageHeight = pdf.internal.pageSize.height;
 
     splitText.forEach((line: string) => {
-      if (cursorY > pageHeight - 20) {
+      if (cursorY > pageHeight - 30) {
         pdf.addPage();
-        cursorY = 20;
+        cursorY = 25;
       }
       pdf.text(line, 20, cursorY);
-      cursorY += 7;
+      cursorY += 6;
     });
 
-    pdf.save(`${title.replace(/\s+/g, '_')}.pdf`);
+    // Footer on last page
+    const finalPageHeight = pdf.internal.pageSize.height;
+    pdf.setDrawColor(200, 200, 200);
+    pdf.setLineWidth(0.5);
+    pdf.line(10, finalPageHeight - 20, 200, finalPageHeight - 20);
+    pdf.setFontSize(8);
+    pdf.setTextColor(100);
+    pdf.text('Generated by TeachSmart Ghana - Powered by AI for NaCCA Curriculum Alignment', 105, finalPageHeight - 15, { align: 'center' });
+
+    pdf.save(`${title.replace(/\s+/g, '_')}_TeachSmart.pdf`);
   };
 
   return (

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MessageSquare, FileText, Calendar, BookOpen, PenTool, CheckCircle, Menu, X, LogOut, LayoutDashboard, CreditCard, Zap, User, Package, Library, ShieldCheck } from 'lucide-react';
+import { MessageSquare, FileText, Calendar, BookOpen, PenTool, CheckCircle, Menu, X, LogOut, LayoutDashboard, CreditCard, Zap, User, Package, Library, ShieldCheck, Bell, Shield } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '../../lib/utils';
@@ -7,12 +7,17 @@ import { motion, AnimatePresence } from 'motion/react';
 
 import { Logo } from '../common/Logo';
 import { ComplianceModal } from '../common/ComplianceModal';
+import { ConfirmationModal } from '../common/ConfirmationModal';
+import { NotificationCenter } from './NotificationCenter';
 
 const Sidebar = () => {
-  const { profile, logout } = useAuth();
+  const { profile, logout, isTrialActive, user } = useAuth();
   const location = useLocation();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [showCompliance, setShowCompliance] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+
+  const isAdmin = user?.email === 'muhammadilias53@gmail.com';
 
   const menuItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
@@ -25,18 +30,24 @@ const Sidebar = () => {
     { icon: PenTool, label: 'Exams & Tests', path: '/exams' },
     { icon: CreditCard, label: 'Subscription', path: '/billing' },
     { icon: User, label: 'Profile Settings', path: '/profile' },
+    { icon: Shield, label: 'Admin Command', path: '/admin', adminOnly: true },
   ];
 
   const SidebarContent = () => (
     <div className="flex flex-col h-full py-8">
       {/* Header */}
-      <div className="px-6 mb-10">
+      <div className="px-6 mb-10 flex items-center justify-between">
         <Logo />
+        <div className="hidden lg:block">
+          <NotificationCenter />
+        </div>
       </div>
 
       {/* Navigation */}
       <nav className="flex-1 px-4 space-y-1.5 custom-scrollbar overflow-y-auto">
         {menuItems.map((item) => {
+          if (item.adminOnly && !isAdmin) return null;
+          
           const isActive = location.pathname === item.path;
           return (
             <Link
@@ -74,32 +85,35 @@ const Sidebar = () => {
         </button>
       </div>
 
-      {/* Profile Info */}
       <div className="px-4 mt-auto pt-8 border-t border-slate-100">
-        <div className="bg-slate-100/50 p-4 rounded-[2rem] flex flex-col gap-4">
+        <div className="bg-white p-5 rounded-[2.5rem] border border-slate-100 flex flex-col gap-4 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-ghana-gold/20 flex items-center justify-center text-emerald-deep font-black shadow-inner border border-white overflow-hidden">
-              {profile?.photoURL && profile.photoURL !== "" ? (
-                <img src={profile.photoURL || null} alt={profile.displayName || 'User'} className="w-full h-full object-cover" />
-              ) : (
-                profile?.displayName?.[0] || 'T'
-              )}
-            </div>
+            <Link to="/profile" className="relative group">
+              <div className="w-12 h-12 rounded-2xl bg-ghana-gold/20 flex items-center justify-center text-emerald-deep font-black shadow-inner border border-white overflow-hidden group-hover:scale-105 transition-transform">
+                {profile?.photoURL && profile.photoURL !== "" ? (
+                  <img src={profile.photoURL || null} alt={profile.displayName || 'User'} className="w-full h-full object-cover" />
+                ) : (
+                  profile?.displayName?.[0] || 'T'
+                )}
+              </div>
+            </Link>
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-black text-slate-900 truncate uppercase tracking-tighter">
+              <p className="text-xs font-black text-slate-900 truncate uppercase tracking-tighter leading-none mb-1">
                 {profile?.displayName || 'Ghana Teacher'}
               </p>
-              <p className="text-[9px] font-bold text-emerald-600 truncate uppercase tracking-tighter">
-                {profile?.school || "Ghana Education Staff"}
-              </p>
-              <p className="text-[10px] font-bold text-slate-400 truncate mt-0.5">
-                {profile?.subscriptionStatus || 'Basic'} Member
-              </p>
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">
+                  Account Status
+                </span>
+                <span className="text-[10px] font-black text-ghana-gold uppercase tracking-tighter flex items-center gap-1">
+                   {profile?.subscriptionStatus === 'active' ? 'ELITE PRO' : 'TRIAL ACCESS'}
+                </span>
+              </div>
             </div>
           </div>
           <button
-            onClick={logout}
-            className="flex items-center justify-center gap-2 w-full py-3 bg-white text-rose-500 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-slate-100 hover:bg-rose-50 hover:text-rose-600 transition-all shadow-sm"
+            onClick={() => setShowLogoutConfirm(true)}
+            className="flex items-center justify-center gap-2 w-full py-3 bg-slate-50 text-slate-400 rounded-2xl text-[9px] font-black uppercase tracking-widest border border-slate-100 hover:bg-rose-50 hover:text-rose-500 hover:border-rose-100 transition-all"
           >
             <LogOut size={12} />
             <span>Sign Out</span>
@@ -123,12 +137,15 @@ const Sidebar = () => {
           )}
           <span className="font-black text-slate-900 text-sm uppercase tracking-tighter">TeachSmart</span>
         </div>
-        <button 
-          onClick={() => setIsMobileOpen(true)}
-          className="p-2.5 bg-slate-100 rounded-xl text-slate-900"
-        >
-          <Menu size={20} />
-        </button>
+        <div className="flex items-center gap-2">
+          <NotificationCenter />
+          <button 
+            onClick={() => setIsMobileOpen(true)}
+            className="p-2.5 bg-slate-100 rounded-xl text-slate-900"
+          >
+            <Menu size={20} />
+          </button>
+        </div>
       </header>
 
       {/* Desktop Sidebar */}
@@ -166,6 +183,15 @@ const Sidebar = () => {
         )}
       </AnimatePresence>
       <ComplianceModal isOpen={showCompliance} onClose={() => setShowCompliance(false)} />
+      <ConfirmationModal 
+        isOpen={showLogoutConfirm}
+        onClose={() => setShowLogoutConfirm(false)}
+        onConfirm={logout}
+        title="Sign Out?"
+        message="Are you sure you want to log out? You'll need to sign back in to access your teaching resources."
+        confirmLabel="Sign Out"
+        variant="danger"
+      />
     </>
   );
 };

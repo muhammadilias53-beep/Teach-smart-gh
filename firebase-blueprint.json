@@ -81,12 +81,45 @@
         "createdAt": { "type": "string", "format": "date-time" }
       },
       "required": ["userId", "resourceId", "title"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "Real-time alerts for teachers regarding curriculum, resources, or events",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Owner of the notification or 'all' for broadcast" },
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "type": { "type": "string", "enum": ["update", "resource", "event", "system"] },
+        "read": { "type": "boolean" },
+        "link": { "type": "string", "description": "Optional internal or external link" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "title", "message", "type", "createdAt"]
+    },
+    "NewsHistory": {
+      "title": "NewsHistory",
+      "description": "Log of automatically pulled and broadcasted news items",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "url": { "type": "string" },
+        "processedAt": { "type": "string", "format": "date-time" }
+      }
     }
   },
   "firestore": {
     "users/{userId}": {
       "schema": "User",
       "description": "Individual teacher profile"
+    },
+    "notifications/{notificationId}": {
+      "schema": "Notification",
+      "description": "Broadcasts and personalized alerts"
+    },
+    "news_history/{id}": {
+      "schema": "NewsHistory",
+      "description": "Registry of broadcasted education news to avoid duplicates"
     },
     "resources/{resourceId}": {
       "schema": "Resource",

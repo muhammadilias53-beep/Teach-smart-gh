@@ -2,6 +2,8 @@ import React from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import Sidebar from '../layout/Sidebar';
+import { EduPulseBanner } from '../layout/EduPulseBanner';
+import { Onboarding } from '../profile/Onboarding';
 import { motion } from 'motion/react';
 import { differenceInDays } from 'date-fns';
 
@@ -24,6 +26,11 @@ const AuthGuard = () => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
+  // Force onboarding if not complete
+  if (profile && !profile.onboardingComplete) {
+    return <Onboarding />;
+  }
+
   const getStartDate = (d: any) => {
     if (!d) return new Date();
     if (typeof d?.toDate === 'function') return d.toDate();
@@ -32,7 +39,7 @@ const AuthGuard = () => {
 
   // Trial/Subscription check
   const trialDays = profile ? differenceInDays(new Date(), getStartDate(profile.trialStartDate)) : 0;
-  const isTrialExpired = profile?.subscriptionStatus === 'trial' && trialDays > 30;
+  const isTrialExpired = profile?.subscriptionStatus === 'trial' && trialDays > 7;
   const isExpired = profile?.subscriptionStatus === 'expired' || (profile?.subscriptionEndDate && new Date(profile.subscriptionEndDate) < new Date());
   
   const needsPayment = (isTrialExpired || isExpired) && profile?.subscriptionStatus !== 'active';
@@ -46,6 +53,7 @@ const AuthGuard = () => {
   
   return (
     <div className="flex min-h-screen bg-gray-50">
+      <EduPulseBanner />
       <Sidebar />
       <main className="flex-1 lg:ml-72 pt-24 lg:pt-10 overflow-x-hidden min-w-0">
         <div className="max-w-7xl mx-auto px-4 lg:px-12 pb-20">

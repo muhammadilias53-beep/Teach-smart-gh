@@ -17,6 +17,7 @@ import ContentLibrary from './components/library/ContentLibrary';
 import SchemeGenerator from './components/generators/SchemeGenerator';
 import ProfileSettings from './components/profile/ProfileSettings';
 import ResourcePacks from './components/packs/ResourcePacks';
+import AdminCommandCenter from './components/admin/AdminCommandCenter';
 
 // Generic placeholder for other features
 const Placeholder = ({ name }: { name: string }) => (
@@ -50,6 +51,7 @@ function App() {
             <Route path="/exams" element={<ExamGenerator />} />
             <Route path="/billing" element={<Billing />} />
             <Route path="/profile" element={<ProfileSettings />} />
+            <Route path="/admin" element={<AdminCommandCenter />} />
           </Route>
           
           <Route path="*" element={<Navigate to="/" replace />} />

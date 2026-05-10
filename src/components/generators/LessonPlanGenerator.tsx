@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { Sparkles, Save, Download, RefreshCw, FileText, ChevronLeft, ChevronRight, CheckCircle, Users } from 'lucide-react';
 import { generateLessonPlan } from '../../lib/gemini';
@@ -14,6 +15,7 @@ import { subjects, levels, CLASSES_BY_LEVEL, SUBJECT_STRANDS, SUBJECT_SUB_STRAND
 
 const LessonPlanGenerator = () => {
   const { user, profile } = useAuth();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -85,6 +87,7 @@ const LessonPlanGenerator = () => {
 
   const handleGenerate = async () => {
     if (!validateStep(3)) return;
+
     setLoading(true);
     try {
       const prompt = `Generate a NaCCA-compliant lesson plan for ${formData.class} (${formData.level}) ${formData.subject} strictly following the Standard-Based Curriculum (SBC). 
@@ -102,7 +105,7 @@ const LessonPlanGenerator = () => {
       
       DIFFERENTIATION INSTRUCTION: ${formData.differentiationStrategies || 'Plan for diverse learning needs including struggling and advanced learners.'}
       
-      ${formData.customGuidance ? `Additional Guidance: ${formData.customGuidance}` : ''}`;
+      ${formData.customGuidance ? `Custom Guidance for AI: ${formData.customGuidance}` : ''}`;
       
       const data = await generateLessonPlan(prompt, { 
         school: profile?.school, 
@@ -110,6 +113,7 @@ const LessonPlanGenerator = () => {
         town: formData.specificLocality || profile?.town,
         region: profile?.region
       });
+      
       setResult(data);
       setStep(4);
     } catch (err) {
@@ -559,10 +563,10 @@ const LessonPlanGenerator = () => {
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-sm font-bold text-gray-400 uppercase text-[10px]">AI Guidance Overlay (Optional)</label>
+                    <label className="text-sm font-bold text-gray-400 uppercase text-[10px]">Custom Guidance (Optional)</label>
                     <textarea 
-                      className="input-field min-h-[60px] text-sm" 
-                      placeholder="Special instructions? e.g. Focus on local market examples, include a 5-minute quiz."
+                      className="input-field min-h-[80px] text-sm" 
+                      placeholder="e.g., Focus on inclusive learning for special needs students, or prioritize hands-on experiments from the local environment."
                       value={formData.customGuidance}
                       onChange={(e) => setFormData({...formData, customGuidance: e.target.value})}
                     />
