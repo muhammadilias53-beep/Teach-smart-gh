@@ -46,26 +46,45 @@ const Login = () => {
   }, [user, navigate, location]);
 
   const handleGoogleSignIn = async () => {
+    setLoading(true);
+    setError('');
+    setInfo('');
     try {
       const provider = new GoogleAuthProvider();
+      // Inform users about the popup in case it's blocked or hidden
+      toast.loading('Opening Google login popup...', { id: 'google-login' });
       await signInWithPopup(auth, provider);
+      toast.success('Logged in successfully!', { id: 'google-login' });
     } catch (err: any) {
-      setError(err.message.toUpperCase());
+      console.error("Google Auth error:", err);
+      toast.dismiss('google-login');
+      if (err.code === 'auth/popup-closed-by-user') {
+        setError('THE LOGIN POPUP WAS CLOSED BEFORE COMPLETION.');
+      } else if (err.code === 'auth/popup-blocked') {
+        setError('THE POPUP WAS BLOCKED BY YOUR BROWSER. PLEASE ENABLE POPUPS FOR THIS SITE.');
+      } else {
+        setError(err.message.toUpperCase());
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleForgotPassword = async () => {
     if (!email) {
       setError('PLEASE ENTER YOUR EMAIL ADDRESS FIRST.');
+      toast.error('Email address required');
       return;
     }
     setLoading(true);
     try {
       await sendPasswordResetEmail(auth, email);
       setInfo('PASSWORD RESET EMAIL SENT! PLEASE CHECK YOUR INBOX.');
+      toast.success('Reset email sent');
       setError('');
     } catch (err: any) {
       setError(err.message.toUpperCase());
+      toast.error('Failed to send reset email');
     } finally {
       setLoading(false);
     }
@@ -92,9 +111,11 @@ const Login = () => {
 
     try {
       if (isLogin) {
+        toast.loading('Authenticating credentials...', { id: 'auth-toast' });
         await signInWithEmailAndPassword(auth, email, password);
-        toast.success('Welcome back, Teacher!');
+        toast.success('Welcome back, Teacher!', { id: 'auth-toast' });
       } else {
+        toast.loading('Creating professional profile...', { id: 'auth-toast' });
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const { user: newUser } = userCredential;
         
@@ -117,10 +138,11 @@ const Login = () => {
         };
         
         await setDoc(doc(db, 'users', newUser.uid), newProfile);
-        toast.success('Registration successful! Welcome to TeachSmart.');
+        toast.success('Registration successful! Welcome to TeachSmart.', { id: 'auth-toast' });
       }
     } catch (err: any) {
       console.error(err);
+      toast.dismiss('auth-toast');
       if (err.code === 'auth/email-already-in-use') {
         setError('THIS EMAIL IS ALREADY REGISTERED. PLEASE LOG IN INSTEAD.');
         setIsLogin(true);
@@ -324,8 +346,20 @@ const Login = () => {
                 </div>
               </div>
               
-              {isLogin && (
-                <div className="flex justify-end pr-2">
+              <div className="flex justify-between items-center px-2 mb-2">
+                <button 
+                  type="button"
+                  onClick={() => {
+                    setIsLogin(!isLogin);
+                    setError('');
+                    setInfo('');
+                  }}
+                  className="text-[9px] font-black text-emerald-600 hover:text-ghana-gold uppercase tracking-widest transition-colors"
+                >
+                  {isLogin ? "CREATE NEW ACCOUNT" : "BACK TO LOGIN"}
+                </button>
+                
+                {isLogin && (
                   <button 
                     type="button"
                     onClick={handleForgotPassword}
@@ -333,8 +367,8 @@ const Login = () => {
                   >
                     Forgot Password?
                   </button>
-                </div>
-              )}
+                )}
+              </div>
 
               <button 
                 type="submit" 
