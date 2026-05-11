@@ -8,7 +8,7 @@ import { motion } from 'motion/react';
 import { differenceInDays } from 'date-fns';
 
 const AuthGuard = () => {
-  const { user, profile, loading } = useAuth();
+  const { user, profile, loading, isTrialActive, getTrialDaysLeft, canGenerate } = useAuth();
   const location = useLocation();
   const [tookTooLong, setTookTooLong] = React.useState(false);
 
@@ -66,30 +66,25 @@ const AuthGuard = () => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // Force onboarding if not complete
-  if (profile && !profile.onboardingComplete) {
+  // Force onboarding if not complete (Skip for anonymous/guest users)
+  if (!user.isAnonymous && profile && !profile.onboardingComplete) {
     return <Onboarding />;
   }
 
-  const getStartDate = (d: any) => {
-    if (!d) return new Date();
-    if (typeof d?.toDate === 'function') return d.toDate();
-    return new Date(d);
-  };
-
-  // Trial/Subscription check
-  const trialDays = profile ? differenceInDays(new Date(), getStartDate(profile.trialStartDate)) : 0;
-  const isTrialExpired = profile?.subscriptionStatus === 'trial' && trialDays > 7;
-  const isExpired = profile?.subscriptionStatus === 'expired' || (profile?.subscriptionEndDate && new Date(profile.subscriptionEndDate) < new Date());
+  // Use centralized access logic
+  const hasAccess = canGenerate();
+  const activeTrial = isTrialActive();
   
-  const needsPayment = (isTrialExpired || isExpired) && profile?.subscriptionStatus !== 'active';
-
-  // Allowed paths even if expired
-  const publicPaths = ['/billing', '/profile', '/', '/library'];
+  // Allowed paths even if expired or trial over
+  const publicPaths = ['/billing', '/profile', '/', '/library', '/login'];
   const isPublicPath = publicPaths.includes(location.pathname);
 
-  // We allow all navigation regardless of payment status to ensure sidebar responsiveness.
-  // Individual features can implement their own restriction UI if needed.
+  // If trial is over and no active plan, redirect to billing for restricted pages
+  // We allow access even if !hasAccess if the user is on a public path
+  if (!hasAccess && !isPublicPath && user) {
+    console.warn(`[AuthGuard] Access denied to ${location.pathname}. No active trial or subscription.`);
+    return <Navigate to="/billing" replace />;
+  }
   
   return (
     <div className="flex min-h-screen bg-gray-50">

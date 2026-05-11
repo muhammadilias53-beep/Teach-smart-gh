@@ -23,7 +23,8 @@ const AnimatedCounter = ({ value, duration = 1.5 }: { value: number, duration?: 
   const [displayValue, setDisplayValue] = useState(0);
 
   useEffect(() => {
-    const controls = animate(0, value, {
+    const safeValue = isNaN(value) ? 0 : value;
+    const controls = animate(0, safeValue, {
       duration: duration,
       onUpdate: (latest) => setDisplayValue(Math.floor(latest)),
       ease: "easeOut"
@@ -35,7 +36,7 @@ const AnimatedCounter = ({ value, duration = 1.5 }: { value: number, duration?: 
 };
 
 const Dashboard = () => {
-  const { profile, user } = useAuth();
+  const { profile, user, getTrialDaysLeft } = useAuth();
   const [recentDocs, setRecentDocs] = useState<any[]>([]);
   const [loadingDocs, setLoadingDocs] = useState(true);
   const [viewingDoc, setViewingDoc] = useState<any>(null);
@@ -55,8 +56,7 @@ const Dashboard = () => {
   };
 
   const isAdmin = user?.email === 'muhammadilias53@gmail.com';
-  const trialDays = profile ? differenceInDays(new Date(), getStartDate(profile.trialStartDate)) : 0;
-  const daysLeft = Math.max(0, 30 - trialDays);
+  const daysLeft = getTrialDaysLeft();
 
   useEffect(() => {
     const fetchData = async () => {

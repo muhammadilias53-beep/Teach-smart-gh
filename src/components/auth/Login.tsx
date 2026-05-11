@@ -7,11 +7,12 @@ import {
   GoogleAuthProvider, 
   signInWithEmailAndPassword, 
   createUserWithEmailAndPassword,
+  signInAnonymously,
   sendPasswordResetEmail,
   updateProfile as firebaseUpdateProfile
 } from 'firebase/auth';
 import { motion } from 'motion/react';
-import { GraduationCap, Mail, Lock, User, Chrome, Zap, Info, Eye, EyeOff } from 'lucide-react';
+import { GraduationCap, Mail, Lock, User, Chrome, Zap, Info, Eye, EyeOff, FastForward } from 'lucide-react';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { toast } from 'react-hot-toast';
@@ -44,6 +45,22 @@ const Login = () => {
       }
     }
   }, [user, navigate, location]);
+
+  const handleGuestSignIn = async () => {
+    setLoading(true);
+    setError('');
+    toast.loading('Accessing platform as guest...', { id: 'guest-login' });
+    try {
+      await signInAnonymously(auth);
+      toast.success('Welcome! You are exploring as a guest.', { id: 'guest-login' });
+    } catch (err: any) {
+      console.error("Guest Auth error:", err);
+      setError(err.message.toUpperCase());
+      toast.error('Failed to enter as guest', { id: 'guest-login' });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleGoogleSignIn = async () => {
     setLoading(true);
@@ -224,15 +241,25 @@ const Login = () => {
           )}
 
           <div className="space-y-4">
-            <button 
-              onClick={handleGoogleSignIn}
-              className="w-full group flex items-center justify-center gap-4 px-8 py-4 bg-white border border-slate-200 rounded-2xl font-black text-slate-700 hover:border-emerald-500/30 hover:bg-emerald-50/5 transition-all shadow-sm text-xs uppercase tracking-widest"
-            >
-              <div className="w-6 h-6 bg-white rounded-lg flex items-center justify-center shadow-sm border border-slate-100 group-hover:scale-110 transition-transform">
-                <Chrome size={16} className="text-emerald-deep" />
-              </div>
-              Continue with Google Account
-            </button>
+            <div className="space-y-3">
+              <button 
+                onClick={handleGoogleSignIn}
+                className="w-full group flex items-center justify-center gap-4 px-8 py-4 bg-white border border-slate-200 rounded-2xl font-black text-slate-700 hover:border-emerald-500/30 hover:bg-emerald-50/5 transition-all shadow-sm text-xs uppercase tracking-widest"
+              >
+                <div className="w-6 h-6 bg-white rounded-lg flex items-center justify-center shadow-sm border border-slate-100 group-hover:scale-110 transition-transform">
+                  <Chrome size={16} className="text-emerald-deep" />
+                </div>
+                Continue with Google Account
+              </button>
+
+              <button 
+                onClick={handleGuestSignIn}
+                className="w-full group flex items-center justify-center gap-4 px-8 py-4 bg-emerald-deep text-white rounded-2xl font-black hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-900/10 text-xs uppercase tracking-widest"
+              >
+                <FastForward size={18} className="group-hover:translate-x-1 transition-transform" />
+                Explore as Guest (No Sign-in)
+              </button>
+            </div>
 
             <div className="relative py-4 text-center">
               <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 border-t border-slate-100" />

@@ -12,6 +12,7 @@ interface AuthContextType {
   refreshProfile: () => Promise<void>;
   canGenerate: () => boolean;
   isTrialActive: () => boolean;
+  getTrialDaysLeft: () => number;
   completeOnboarding: (data: Partial<UserProfile>) => Promise<void>;
   updateProfileEmail: (email: string) => Promise<void>;
 }
@@ -74,21 +75,49 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const TRIAL_RESET_DATE = new Date('2026-05-11T00:00:00Z');
+  const TRIAL_DURATION_DAYS = 14;
+
   const isTrialActive = () => {
-    if (!profile || profile.subscriptionStatus !== 'trial') return false;
-    const startDate = profile.trialStartDate ? new Date(profile.trialStartDate) : new Date();
+    return getTrialDaysLeft() > 0;
+  };
+
+  const getTrialDaysLeft = () => {
+    if (!profile) return 0;
+    
+    // Helper to get date from various formats (string, timestamp, or null)
+    const getSafeDate = (d: any) => {
+      if (!d) return new Date();
+      if (typeof d?.toDate === 'function') return d.toDate();
+      const date = new Date(d);
+      return isNaN(date.getTime()) ? new Date() : date;
+    };
+
+    let startDate = getSafeDate(profile.trialStartDate);
+    
+    if (startDate < TRIAL_RESET_DATE) {
+      startDate = TRIAL_RESET_DATE;
+    }
+    
     const now = new Date();
-    const diffDays = Math.ceil((now.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
-    return diffDays <= 15; // 15-day trial
+    const diffTime = now.getTime() - startDate.getTime();
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    
+    const remaining = TRIAL_DURATION_DAYS - diffDays;
+    return isNaN(remaining) ? 0 : Math.max(0, remaining);
   };
 
   const isAdmin = user?.email === 'muhammadilias53@gmail.com';
 
   const canGenerate = () => {
     if (isAdmin) return true;
+    
+    // Full access during the 14-day period regardless of status (Restarted for all)
+    if (isTrialActive()) return true;
+    
     if (!profile) return false;
     
-    // Check if subscription has an end date and if it's expired
+    // Check if subscription is active after trial period
     if (profile.subscriptionStatus === 'active') {
       const subEndDate: any = profile.subscriptionEndDate;
       if (!subEndDate) return true; // Lifetime/Null end date
@@ -156,13 +185,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               setProfile(data);
             } else {
               // Initialize new user profile if it doesn't exist
+              const isAnonymous = user.isAnonymous;
               const newProfile: any = {
                 uid: user.uid,
                 email: user.email || '',
-                displayName: user.displayName || 'Teacher',
+                displayName: user.displayName || (isAnonymous ? 'Guest Teacher' : 'Teacher'),
                 trialStartDate: new Date().toISOString(),
                 subscriptionStatus: 'trial',
-                onboardingComplete: false,
+                onboardingComplete: isAnonymous ? true : false, // Seamless access for guests
+                isAnonymous: isAnonymous,
                 createdAt: serverTimestamp(),
                 lastLoginAt: serverTimestamp(),
               };
@@ -213,7 +244,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   return (
     <AuthContext.Provider value={{ 
       user, profile, loading, logout, refreshProfile, 
-      canGenerate, isTrialActive,
+      canGenerate, isTrialActive, getTrialDaysLeft,
       completeOnboarding, updateProfileEmail
     }}>
       {children}

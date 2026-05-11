@@ -18,15 +18,13 @@ service cloud.firestore {
 
     function isVerified() {
       return isSignedIn() && (
-        request.auth.token.get('email_verified', false) == true ||
-        request.auth.token.get('email', '') == 'muhammadilias53@gmail.com'
+        request.auth.token.email_verified == true || 
+        request.auth.token.email == 'muhammadilias53@gmail.com'
       );
     }
 
     function isAdmin() {
-      return isSignedIn() && (
-        request.auth.token.get('email', '') == 'muhammadilias53@gmail.com'
-      );
+      return isSignedIn() && request.auth.token.email == 'muhammadilias53@gmail.com';
     }
 
     function isValidId(id) {
@@ -41,28 +39,24 @@ service cloud.firestore {
     // 1. Users - Profiles
     match /users/{userId} {
       function isValidUser(data) {
-        return data.uid == userId &&
-               data.email is string && data.email.size() <= 256 &&
-               data.displayName is string && data.displayName.size() <= 100 &&
-               data.subscriptionStatus in ['trial', 'active', 'expired'];
+        return (data.uid == userId || !('uid' in data)) &&
+               (data.email is string || !('email' in data)) &&
+               (data.displayName is string || !('displayName' in data));
       }
 
-      // Explicitly allow GET for the owner with a guard against null userId
       allow get: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+      allow list: if isAdmin();
       
-      // Allow create only if they match their UID and use a valid schema
-      allow create: if isOwner(userId) && isValidUser(incoming());
+      allow create: if isSignedIn() && request.auth.uid == userId;
       
-      allow update: if (isOwner(userId) || isAdmin()) && (
-        // Profile settings - can't change subscriptionStatus directly
+      allow update: if (isSignedIn() && request.auth.uid == userId || isAdmin()) && (
         incoming().diff(existing()).affectedKeys().hasOnly([
           'displayName', 'school', 'region', 'district', 'town', 
           'level', 'subjectsTaught', 'teachingExperienceYears', 
           'photoURL', 'updatedAt', 'onboardingComplete', 'email',
-          'subjects', 'locality', 'classSize'
-        ]) ||
-        // Admin overrides
-        isAdmin()
+          'subjects', 'locality', 'classSize', 'trialStartDate',
+          'lastLoginAt', 'isAnonymous'
+        ]) || isAdmin()
       );
       allow delete: if isAdmin();
     }
@@ -97,12 +91,6 @@ service cloud.firestore {
     }
 
     match /lessonPlans/{id} {
-      allow list, get: if isSignedIn() && (resource.data.authorId == request.auth.uid || isAdmin());
-      allow create: if isVerified() && incoming().authorId == request.auth.uid;
-      allow update, delete: if (isSignedIn() && existing().authorId == request.auth.uid) || isAdmin();
-    }
-
-    match /exams/{id} {
       allow list, get: if isSignedIn() && (resource.data.authorId == request.auth.uid || isAdmin());
       allow create: if isVerified() && incoming().authorId == request.auth.uid;
       allow update, delete: if (isSignedIn() && existing().authorId == request.auth.uid) || isAdmin();
