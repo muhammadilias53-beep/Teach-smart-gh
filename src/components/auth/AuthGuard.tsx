@@ -8,7 +8,7 @@ import { motion } from 'motion/react';
 import { differenceInDays } from 'date-fns';
 
 const AuthGuard = () => {
-  const { user, profile, loading, isTrialActive, getTrialDaysLeft, canGenerate } = useAuth();
+  const { user, profile, loading, isTrialActive, getTrialDaysLeft } = useAuth();
   const location = useLocation();
   const [tookTooLong, setTookTooLong] = React.useState(false);
 
@@ -66,25 +66,42 @@ const AuthGuard = () => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
+  // If user is logged in, but profile isn't loaded yet, keep loading
+  if (!profile) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-gray-50 p-6">
+        <div className="flex flex-col items-center text-center max-w-sm">
+          <div className="w-12 h-12 border-4 border-emerald-deep border-t-ghana-gold rounded-full animate-spin mb-4" />
+          <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+            Fetching Profile...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   // Force onboarding if not complete (Skip for anonymous/guest users)
-  if (!user.isAnonymous && profile && !profile.onboardingComplete) {
+  // Robust check: A profile is complete if the flag is true, OR if they have the minimum required fields
+  const hasEssentials = profile.school && profile.level && (profile.subjectsTaught?.length || profile.subjects?.length);
+  const isProfileComplete = profile.onboardingComplete === true || !!hasEssentials;
+
+  if (!user.isAnonymous && !isProfileComplete) {
     return <Onboarding />;
   }
 
-  // Use centralized access logic
-  const hasAccess = canGenerate();
+  // Trial/Subscription check using centralized logic
   const activeTrial = isTrialActive();
+  const daysLeft = getTrialDaysLeft();
+  const isExpired = profile?.subscriptionStatus === 'expired' || (profile?.subscriptionEndDate && new Date(profile.subscriptionEndDate) < new Date());
   
-  // Allowed paths even if expired or trial over
-  const publicPaths = ['/billing', '/profile', '/', '/library', '/login'];
+  const needsPayment = !activeTrial && isExpired && profile?.subscriptionStatus !== 'active';
+
+  // Allowed paths even if expired
+  const publicPaths = ['/billing', '/profile', '/', '/library'];
   const isPublicPath = publicPaths.includes(location.pathname);
 
-  // If trial is over and no active plan, redirect to billing for restricted pages
-  // We allow access even if !hasAccess if the user is on a public path
-  if (!hasAccess && !isPublicPath && user) {
-    console.warn(`[AuthGuard] Access denied to ${location.pathname}. No active trial or subscription.`);
-    return <Navigate to="/billing" replace />;
-  }
+  // We allow all navigation regardless of payment status to ensure sidebar responsiveness.
+  // Individual features can implement their own restriction UI if needed.
   
   return (
     <div className="flex min-h-screen bg-gray-50">

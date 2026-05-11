@@ -171,33 +171,6 @@ const Dashboard = () => {
   };
 
   const mastery = getMasteryLevel(stats.total);
-  const [showEmailOverlay, setShowEmailOverlay] = useState(false);
-  const [emailInput, setEmailInput] = useState('');
-  const { updateProfileEmail } = useAuth();
-  const [savingEmail, setSavingEmail] = useState(false);
-
-  useEffect(() => {
-    if (profile && !profile.email && !loadingDocs) {
-      setShowEmailOverlay(true);
-    }
-  }, [profile, loadingDocs]);
-
-  const handleSaveEmail = async () => {
-    if (!emailInput || !emailInput.includes('@')) {
-      toast.error("Please enter a valid email address.");
-      return;
-    }
-    setSavingEmail(true);
-    try {
-      await updateProfileEmail(emailInput);
-      setShowEmailOverlay(false);
-      toast.success("Email account associated successfully!");
-    } catch (err) {
-      toast.error("Failed to save email. Please try again.");
-    } finally {
-      setSavingEmail(false);
-    }
-  };
 
   const quickActions = [
     { icon: FileText, label: 'New Lesson Plan', path: '/lessons', color: 'bg-emerald-500', bg: 'bg-emerald-50' },
@@ -704,53 +677,6 @@ const Dashboard = () => {
       </div>
       <AnimatePresence>
         {viewingDoc && <DocumentViewerModal doc={viewingDoc} onClose={() => setViewingDoc(null)} />}
-        {showEmailOverlay && (
-          <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-slate-900/90 backdrop-blur-md">
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              className="bg-white w-full max-w-md rounded-[3.5rem] shadow-2xl overflow-hidden p-12 text-center relative border-4 border-ghana-gold/20"
-            >
-              <div className="inline-flex items-center justify-center w-24 h-24 bg-emerald-50 text-emerald-deep rounded-[2rem] mb-10 shadow-xl shadow-emerald-500/10 ring-8 ring-emerald-50/50">
-                <Mail size={40} />
-              </div>
-              
-              <h2 className="text-3xl font-black text-slate-900 tracking-tightest mb-4 leading-tight">PROFESSIONAL IDENTITY</h2>
-              <p className="text-slate-500 font-medium mb-10 text-sm leading-relaxed uppercase tracking-widest">
-                Please provide your official email account to sync your professional documents and activate your subscription.
-              </p>
-
-              <div className="space-y-6">
-                <div className="relative">
-                  <Mail className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none" size={20} />
-                  <input 
-                    type="email" 
-                    placeholder="YOUR EMAIL ACCOUNT" 
-                    className="w-full pl-16 pr-8 py-5 bg-slate-50 border border-slate-100 rounded-[1.5rem] focus:ring-4 focus:ring-emerald-deep/10 focus:border-emerald-deep transition-all text-xs font-black tracking-[0.2em] outline-none"
-                    value={emailInput}
-                    onChange={(e) => setEmailInput(e.target.value)}
-                  />
-                </div>
-                
-                <button 
-                  onClick={handleSaveEmail}
-                  disabled={savingEmail}
-                  className="btn-primary w-full py-6 rounded-[1.5rem] shadow-2xl shadow-emerald-900/20 active:scale-[0.98] transition-all font-black uppercase text-[10px] tracking-[0.4em] flex items-center justify-center gap-3 overflow-hidden"
-                >
-                  {savingEmail ? (
-                    <Loader2 className="animate-spin" size={18} />
-                  ) : (
-                    <>SAVE PROFESSIONAL EMAIL <ArrowRight size={16} /></>
-                  )}
-                </button>
-                
-                <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest pt-4">
-                  Ghana Education System • NaCCA Compliant
-                </p>
-              </div>
-            </motion.div>
-          </div>
-        )}
       </AnimatePresence>
     </div>
   );

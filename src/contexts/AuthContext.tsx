@@ -141,6 +141,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!user) return;
     const profilePath = `users/${user.uid}`;
     try {
+      // Optimistic update
+      if (profile) {
+        setProfile({ ...profile, ...data, onboardingComplete: true });
+      }
+      
       await setDoc(doc(db, 'users', user.uid), {
         ...data,
         onboardingComplete: true,
@@ -169,6 +174,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       console.log(`[Auth] State changed: ${user ? 'User logged in (' + user.uid + ')' : 'No user session'}`);
+      
+      // Clean up previous profile listener if it exists
+      if (profileUnsubscribe) {
+        profileUnsubscribe();
+        profileUnsubscribe = null;
+      }
+
       try {
         setUser(user);
         if (user) {
@@ -182,6 +194,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               if (!data.email && user.email) {
                 await setDoc(docRef, { email: user.email }, { merge: true });
               }
+              
+              // Auto-fix: If they have school/level but onboardingComplete is missing, sync it
+              if (!data.onboardingComplete && data.school && data.level) {
+                await setDoc(docRef, { onboardingComplete: true }, { merge: true });
+                data.onboardingComplete = true;
+              }
+
+              // Reset trial for all existing accounts as requested (one-time reset)
+              if (!data.trialResetApril2024Applied) {
+                await setDoc(docRef, { 
+                  trialStartDate: new Date().toISOString(),
+                  subscriptionStatus: 'trial',
+                  trialResetApril2024Applied: true 
+                }, { merge: true });
+              }
+              
               setProfile(data);
             } else {
               // Initialize new user profile if it doesn't exist
@@ -199,6 +227,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               };
               try {
                 await setDoc(docRef, newProfile);
+                setProfile(newProfile); // Set profile immediately to avoid race condition in AuthGuard
               } catch (err) {
                 console.error("Error creating initial profile:", err);
               }

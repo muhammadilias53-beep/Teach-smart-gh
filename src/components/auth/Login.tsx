@@ -55,8 +55,13 @@ const Login = () => {
       toast.success('Welcome! You are exploring as a guest.', { id: 'guest-login' });
     } catch (err: any) {
       console.error("Guest Auth error:", err);
-      setError(err.message.toUpperCase());
-      toast.error('Failed to enter as guest', { id: 'guest-login' });
+      if (err.code === 'auth/admin-restricted-operation') {
+        setError('GUEST ACCESS IS CURRENTLY DISABLED. PLEASE CONTACT ADMIN OR SIGN IN WITH GOOGLE.');
+        toast.error('Guest access is disabled in Firebase Console', { id: 'guest-login', duration: 6000 });
+      } else {
+        setError(err.message.toUpperCase());
+        toast.error('Failed to enter as guest', { id: 'guest-login' });
+      }
     } finally {
       setLoading(false);
     }
@@ -151,6 +156,7 @@ const Login = () => {
           subjectsTaught: subjectsTaught.split(',').map(s => s.trim()).filter(Boolean),
           trialStartDate: serverTimestamp(),
           subscriptionStatus: 'trial',
+          onboardingComplete: true, // Mark as complete since they filled it during registration
           createdAt: serverTimestamp(),
         };
         

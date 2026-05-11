@@ -109,16 +109,6 @@ const Sidebar = () => {
                    {user?.isAnonymous ? 'GUEST ACCESS' : (profile?.subscriptionStatus === 'active' ? 'ELITE PRO' : 'TRIAL ACCESS')}
                 </span>
               </div>
-              {!profile?.subscriptionStatus || profile?.subscriptionStatus === 'trial' ? (
-                <div className="flex items-center justify-between">
-                  <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">
-                    Time Remaining
-                  </span>
-                  <span className="text-[9px] font-black text-emerald-deep uppercase tracking-tighter">
-                   {Math.ceil(useAuth().getTrialDaysLeft())} Days Left
-                  </span>
-                </div>
-              ) : null}
               {user?.isAnonymous && (
                 <Link to="/login" className="block text-[8px] font-black text-emerald-600 hover:text-ghana-gold uppercase tracking-widest mt-1 animate-pulse">
                   Upgrade to Professional →

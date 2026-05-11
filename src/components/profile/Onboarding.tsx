@@ -39,12 +39,24 @@ export const Onboarding = () => {
     
     setSubmitting(true);
     try {
-      await completeOnboarding(formData);
+      // Map mainSubject to the subjectsTaught array expected by the profile
+      const updateData = {
+        displayName: formData.displayName,
+        school: formData.school,
+        region: formData.region,
+        town: formData.town,
+        level: formData.level,
+        subjectsTaught: [formData.mainSubject],
+        onboardingComplete: true
+      };
+      
+      await completeOnboarding(updateData);
       toast.success("Welcome aboard! Your professional workspace is ready.", {
         icon: '🚀',
         duration: 5000
       });
     } catch (error) {
+      console.error("Onboarding completion error:", error);
       toast.error("Failed to complete setup. Please try again.");
     } finally {
       setSubmitting(false);

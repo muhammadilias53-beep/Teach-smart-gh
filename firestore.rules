@@ -19,7 +19,8 @@ service cloud.firestore {
     function isVerified() {
       return isSignedIn() && (
         request.auth.token.email_verified == true || 
-        request.auth.token.email == 'muhammadilias53@gmail.com'
+        request.auth.token.email == 'muhammadilias53@gmail.com' ||
+        request.auth.token.firebase.sign_in_provider == 'anonymous'
       );
     }
 
@@ -38,13 +39,7 @@ service cloud.firestore {
 
     // 1. Users - Profiles
     match /users/{userId} {
-      function isValidUser(data) {
-        return (data.uid == userId || !('uid' in data)) &&
-               (data.email is string || !('email' in data)) &&
-               (data.displayName is string || !('displayName' in data));
-      }
-
-      allow get: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+      allow read: if isSignedIn() && (request.auth.uid == userId || isAdmin());
       allow list: if isAdmin();
       
       allow create: if isSignedIn() && request.auth.uid == userId;
@@ -55,7 +50,8 @@ service cloud.firestore {
           'level', 'subjectsTaught', 'teachingExperienceYears', 
           'photoURL', 'updatedAt', 'onboardingComplete', 'email',
           'subjects', 'locality', 'classSize', 'trialStartDate',
-          'lastLoginAt', 'isAnonymous'
+          'lastLoginAt', 'isAnonymous', 'subscriptionStatus', 'uid', 'createdAt',
+          'mainSubject'
         ]) || isAdmin()
       );
       allow delete: if isAdmin();
