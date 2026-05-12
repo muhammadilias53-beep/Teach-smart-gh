@@ -11,7 +11,19 @@ import { SafeMarkdown } from '../common/SafeMarkdown';
 import 'highlight.js/styles/github.css';
 import jsPDF from 'jspdf';
 import { toast } from 'react-hot-toast';
-import { subjects, levels } from '../../constants';
+import { 
+  subjects, 
+  levels,
+  SUBJECT_STRANDS,
+  SUBJECT_SUB_STRANDS,
+  STANDARD_INDICATORS,
+  SCIENCE_B7_LESSON_FRAMES,
+  SCIENCE_B8_LESSON_FRAMES,
+  SCIENCE_B9_LESSON_FRAMES,
+  MATH_B7_LESSON_FRAMES,
+  ENGLISH_B7_LESSON_FRAMES,
+  FRENCH_B4_B6_LESSON_FRAMES
+} from '../../constants';
 
 const NoteGenerator = () => {
   const { user, profile } = useAuth();
@@ -21,6 +33,9 @@ const NoteGenerator = () => {
   const [formData, setFormData] = useState({
     level: profile?.level || 'Basic 7',
     subject: 'Science',
+    strand: '',
+    subStrand: '',
+    indicator: '',
     lessonTopic: '',
     duration: '60 minutes',
     locality: profile?.locality || 'Urban',
@@ -28,8 +43,14 @@ const NoteGenerator = () => {
     differentiation: '',
     objectives: '',
   });
+
   const [result, setResult] = useState<any>(null);
   const [saving, setSaving] = useState(false);
+
+  // Selectors
+  const currentStrands = SUBJECT_STRANDS[formData.subject] || [];
+  const currentSubStrands = SUBJECT_SUB_STRANDS[formData.strand] || [];
+  const currentIndicators = STANDARD_INDICATORS[formData.subStrand] || []; // Note: in constants it's standard -> indicators, but some might be grouped
 
   const handleGenerate = async () => {
     if (!formData.lessonTopic || !formData.objectives) {
@@ -39,7 +60,28 @@ const NoteGenerator = () => {
 
     setLoading(true);
     try {
-      const topicContext = `Lesson Topic: ${formData.lessonTopic}`;
+      // Frame lookup
+      const indicatorId = formData.indicator.split(':')[0].trim();
+      let frameDetails = "";
+      const allFrames = {
+        ...SCIENCE_B7_LESSON_FRAMES,
+        ...SCIENCE_B8_LESSON_FRAMES,
+        ...SCIENCE_B9_LESSON_FRAMES,
+        ...MATH_B7_LESSON_FRAMES,
+        ...ENGLISH_B7_LESSON_FRAMES,
+        ...FRENCH_B4_B6_LESSON_FRAMES
+      };
+      const foundFrame = allFrames[indicatorId];
+      if (foundFrame) {
+        frameDetails = `
+        LESSON FRAME CONTEXT:
+        - Approved Topic: ${foundFrame.topic}
+        - Key Activities/Themes: ${foundFrame.activities.join(', ')}
+        - Core Keywords: ${foundFrame.keyWords.join(', ')}
+        `;
+      }
+
+      const topicContext = `Indicator: ${formData.indicator}. Strand: ${formData.strand}. Topic: ${formData.lessonTopic}. ${frameDetails}`;
       const data = await generateNote(
         formData.subject,
         formData.level,
@@ -337,6 +379,43 @@ const NoteGenerator = () => {
             </div>
 
              <div className="space-y-6">
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-gray-500 uppercase">Strand</label>
+                    <select 
+                      className="input-field"
+                      value={formData.strand}
+                      onChange={(e) => setFormData({...formData, strand: e.target.value, subStrand: '', indicator: ''})}
+                    >
+                      <option value="">Select Strand</option>
+                      {currentStrands.map(s => <option key={s} value={s}>{s}</option>)}
+                    </select>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-gray-500 uppercase">Sub-Strand</label>
+                    <select 
+                      className="input-field"
+                      value={formData.subStrand}
+                      onChange={(e) => setFormData({...formData, subStrand: e.target.value, indicator: ''})}
+                    >
+                      <option value="">Select Sub-Strand</option>
+                      {currentSubStrands.map(ss => <option key={ss} value={ss}>{ss}</option>)}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-gray-500 uppercase">Indicator</label>
+                  <select 
+                    className="input-field"
+                    value={formData.indicator}
+                    onChange={(e) => setFormData({...formData, indicator: e.target.value})}
+                  >
+                    <option value="">Select Indicator</option>
+                    {currentIndicators.map(i => <option key={i} value={i}>{i}</option>)}
+                  </select>
+                </div>
+
                 <div className="space-y-2">
                     <label className="text-sm font-bold text-gray-500 uppercase">Lesson Topic (Required)</label>
                     <input 

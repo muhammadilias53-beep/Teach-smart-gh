@@ -34,10 +34,14 @@ import {
   subjects, 
   MATH_B7_LESSON_FRAMES, 
   SCIENCE_B7_LESSON_FRAMES,
+  SCIENCE_B8_LESSON_FRAMES,
+  SCIENCE_B9_LESSON_FRAMES,
+  ENGLISH_B7_LESSON_FRAMES,
+  FRENCH_B4_B6_LESSON_FRAMES,
   PEDAGOGICAL_PHASES
 } from '../../constants';
 
-type PackType = 'teacher' | 'student' | 'b7_frames';
+type PackType = 'teacher' | 'student' | 'jhs_frames';
 
 interface ResourceAction {
   title: string;
@@ -51,6 +55,7 @@ interface ResourceAction {
 export default function ResourcePacks() {
   const [activeTab, setActiveTab] = useState<PackType>('teacher');
   const [selectedFrameSubject, setSelectedFrameSubject] = useState('Mathematics');
+  const [selectedGrade, setSelectedGrade] = useState('B7');
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedContent, setGeneratedContent] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
@@ -360,43 +365,88 @@ export default function ResourcePacks() {
           <span>Students Pack</span>
         </button>
         <button
-          onClick={() => setActiveTab('b7_frames')}
+          onClick={() => setActiveTab('jhs_frames')}
           className={cn(
             "flex items-center gap-2 px-8 py-3.5 rounded-xl text-sm font-black uppercase tracking-widest transition-all",
-            activeTab === 'b7_frames' 
+            activeTab === 'jhs_frames' 
               ? "bg-white text-emerald-deep shadow-lg text-slate-900 border border-emerald-deep/10" 
               : "text-slate-500 hover:text-slate-700 hover:bg-slate-50"
           )}
         >
           <BookOpen size={18} />
-          <span>B7 Lesson Frames</span>
+          <span>JHS Lesson Frames</span>
         </button>
       </div>
 
-      {activeTab === 'b7_frames' && (
-        <div className="mb-12 flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
-          {['Mathematics', 'Science'].map(sub => (
-            <button
-              key={sub}
-              onClick={() => setSelectedFrameSubject(sub)}
-              className={cn(
-                "px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all whitespace-nowrap",
-                selectedFrameSubject === sub 
-                  ? "bg-slate-900 text-white shadow-xl scale-105" 
-                  : "bg-white text-slate-400 border border-slate-100 hover:border-slate-200"
-              )}
-            >
-              {sub}
-            </button>
-          ))}
+      {activeTab === 'jhs_frames' && (
+        <div className="mb-12 space-y-6">
+          <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
+            {['Mathematics', 'Science', 'English', 'French'].map(sub => (
+              <button
+                key={sub}
+                onClick={() => {
+                  setSelectedFrameSubject(sub);
+                  // Reset grade if Mathematics or English selected as we only have B7 for now
+                  if (sub === 'Mathematics' || sub === 'English') {
+                    setSelectedGrade('B7');
+                  } else if (sub === 'French') {
+                    setSelectedGrade('B4');
+                  }
+                }}
+                className={cn(
+                  "px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all whitespace-nowrap",
+                  selectedFrameSubject === sub 
+                    ? "bg-slate-900 text-white shadow-xl scale-105" 
+                    : "bg-white text-slate-400 border border-slate-100 hover:border-slate-200"
+                )}
+              >
+                {sub}
+              </button>
+            ))}
+          </div>
+          
+          <div className="flex gap-2">
+            {(selectedFrameSubject === 'French' ? ['B4', 'B5', 'B6'] : ['B7', 'B8', 'B9']).map(grade => (
+              <button
+                key={grade}
+                onClick={() => setSelectedGrade(grade)}
+                disabled={(selectedFrameSubject === 'Mathematics' || selectedFrameSubject === 'English') && grade !== 'B7'}
+                className={cn(
+                  "px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all",
+                  selectedGrade === grade 
+                    ? "bg-ghana-red text-white shadow-md" 
+                    : "bg-slate-100 text-slate-400 hover:bg-slate-200 disabled:opacity-30 disabled:cursor-not-allowed"
+                )}
+              >
+                {grade}
+              </button>
+            ))}
+          </div>
         </div>
       )}
 
       {/* Content */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <AnimatePresence mode="wait">
-          {activeTab === 'b7_frames' ? (
-            Object.entries(selectedFrameSubject === 'Mathematics' ? MATH_B7_LESSON_FRAMES : SCIENCE_B7_LESSON_FRAMES).map(([id, frame]: [string, any], idx) => (
+          {activeTab === 'jhs_frames' ? (
+            Object.entries(
+              selectedFrameSubject === 'Mathematics' 
+                ? MATH_B7_LESSON_FRAMES 
+                : selectedFrameSubject === 'English'
+                  ? ENGLISH_B7_LESSON_FRAMES
+                  : selectedFrameSubject === 'French'
+                    ? FRENCH_B4_B6_LESSON_FRAMES
+                    : selectedGrade === 'B7' 
+                      ? SCIENCE_B7_LESSON_FRAMES 
+                      : selectedGrade === 'B8' 
+                        ? SCIENCE_B8_LESSON_FRAMES 
+                        : SCIENCE_B9_LESSON_FRAMES
+            ).filter(([id]) => {
+              if (selectedFrameSubject === 'French') {
+                return id.startsWith(selectedGrade);
+              }
+              return true;
+            }).map(([id, frame]: [string, any], idx) => (
               <motion.div
                 key={id}
                 initial={{ opacity: 0, y: 20 }}

@@ -25,6 +25,7 @@ export interface UserProfile {
   plan?: 'termly' | 'yearly' | 'lifetime';
   locality?: string;
   classSize?: string;
+  trialResetApril2024Applied?: boolean;
 }
 
 export interface LessonPlan {

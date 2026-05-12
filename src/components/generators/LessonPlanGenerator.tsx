@@ -11,7 +11,22 @@ import { SafeMarkdown } from '../common/SafeMarkdown';
 import 'highlight.js/styles/github.css';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { subjects, levels, CLASSES_BY_LEVEL, SUBJECT_STRANDS, SUBJECT_SUB_STRANDS, SUB_STRAND_STANDARDS, STANDARD_INDICATORS } from '../../constants';
+import { 
+  subjects, 
+  levels, 
+  CLASSES_BY_LEVEL, 
+  SUBJECT_STRANDS, 
+  SUBJECT_SUB_STRANDS, 
+  SUB_STRAND_STANDARDS, 
+  STANDARD_INDICATORS,
+  SCIENCE_B7_LESSON_FRAMES,
+  SCIENCE_B8_LESSON_FRAMES,
+  SCIENCE_B9_LESSON_FRAMES,
+  MATH_B7_LESSON_FRAMES,
+  ENGLISH_B7_LESSON_FRAMES,
+  ENGLISH_B1_B6_LESSON_FRAMES,
+  FRENCH_B4_B6_LESSON_FRAMES
+} from '../../constants';
 
 const LessonPlanGenerator = () => {
   const { user, profile } = useAuth();
@@ -90,6 +105,31 @@ const LessonPlanGenerator = () => {
 
     setLoading(true);
     try {
+      // Find potential curriculum frame for additional guidance
+      const indicatorId = formData.indicator.split(':')[0].trim();
+      let frameDetails = "";
+      
+      const allFrames = {
+        ...SCIENCE_B7_LESSON_FRAMES,
+        ...SCIENCE_B8_LESSON_FRAMES,
+        ...SCIENCE_B9_LESSON_FRAMES,
+        ...MATH_B7_LESSON_FRAMES,
+        ...ENGLISH_B7_LESSON_FRAMES,
+        ...ENGLISH_B1_B6_LESSON_FRAMES,
+        ...FRENCH_B4_B6_LESSON_FRAMES
+      };
+
+      const foundFrame = allFrames[indicatorId];
+      if (foundFrame) {
+        frameDetails = `
+        LESSON FRAME CONTEXT (From Official Document):
+        - Approved Topic: ${foundFrame.topic}
+        - Key Activities to Include: ${foundFrame.activities.join(', ')}
+        - Mandatory Key Words: ${foundFrame.keyWords.join(', ')}
+        - Suggested TLRs: ${foundFrame.resources.join(', ')}
+        `;
+      }
+
       const prompt = `Generate a NaCCA-compliant lesson plan for ${formData.class} (${formData.level}) ${formData.subject} strictly following the Standard-Based Curriculum (SBC). 
       Strand: ${formData.strand}.
       Sub-Strand: ${formData.subStrand}.
@@ -101,6 +141,8 @@ const LessonPlanGenerator = () => {
       Week Ending: ${formData.weekEnding}.
       Locality: ${formData.locality} (${formData.specificLocality}). 
       
+      ${frameDetails}
+
       TAILORING INSTRUCTION: Consider the resources typically available in a ${formData.locality} setting in Ghana. If ${formData.locality} is Rural, suggest low-cost, locally available teaching and learning materials.
       
       DIFFERENTIATION INSTRUCTION: ${formData.differentiationStrategies || 'Plan for diverse learning needs including struggling and advanced learners.'}
