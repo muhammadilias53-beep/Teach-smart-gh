@@ -26,7 +26,10 @@ export const subjects = [
   "Agricultural Science", 
   "Elective ICT", 
   "Food & Nutrition", 
-  "Graphic Design"
+  "Graphic Design",
+  "Integrated Curriculum (KG)",
+  "Our World Our People",
+  "Physical Education"
 ];
 
 export const levels = ["KG", "Primary", "JHS", "SHS"];
@@ -68,12 +71,16 @@ export const SUBJECT_STRANDS: Record<string, string[]> = {
   "Cost Accounting": ["Introduction to Cost Accounting", "Elements of Costing", "Materials Costing", "Labour and Overhead Costing", "Job and Batch Costing"],
   "Business Management": ["Nature of Management", "Functional Areas of Management", "Legal Environment of Business"],
   "French": ["L'Identité", "Parler de son Environnement", "Exprimer ses Goûts et ses Préférences", "Les Activités"],
-  "Ghanaian Language": ["Customs and Institutions", "Listening and Speaking (GL)", "Reading (GL)", "Language and Usage", "Composition Writing", "Literature (GL)"],
+  "Ghanaian Language": ["Oral Language (GL)", "Reading (GL)", "Writing (GL)", "Writing Conventions and Usage (GL)", "Extensive Reading (GL)", "Composition Writing", "Customs and Institutions", "Literature (GL)"],
   "Agricultural Science": ["Introduction to Agriculture", "Soil Science", "Crop Science", "Animal Science", "Agricultural Economics and Extension"],
   "Elective ICT": ["Information Systems", "Computer Architecture", "Networking and Data Communications", "Software Development", "Web and Multimedia Development"],
   "CRS": ["Biblical Studies", "History of the Church", "Ethics and Moral Life"],
   "IRS": ["Al-Quran", "Al-Hadith", "Al-Fiqh", "Islamic History"],
-  "Literature in English": ["Introduction to Literature", "African Prose", "Non-African Prose", "African Poetry", "Non-African Poetry", "Drama"]
+  "Literature in English": ["Introduction to Literature", "African Prose", "Non-African Prose", "African Poetry", "Non-African Poetry", "Drama"],
+  "Integrated Curriculum (KG)": ["All About Me", "My Family", "Values and Beliefs", "My Local Community", "My Nation Ghana", "All Around Us", "My Global Community"],
+  "Our World Our People": ["All About Us", "All Around Us", "Our Beliefs and Values", "Our Nation Ghana", "My Global Community"],
+  "Physical Education": ["Motor Skill and Movement Patterns", "Movement Concepts, Principles and Strategies", "Physical Fitness", "Physical Fitness Concepts, Principles and Strategies", "Values and Psycho-social Concepts, Principles and Strategies"],
+  "RME": ["God, His Creation and Attributes", "Religious Practices and their Moral Implications", "Religious Leaders", "The Family and the Community", "The Family, Authority and Obedience", "Religious Leaders and Personalities", "Ethics and Moral Life", "Religion and Economic Life"]
 };
 
 export const SUBJECT_SUB_STRANDS: Record<string, string[]> = {
@@ -83,8 +90,22 @@ export const SUBJECT_SUB_STRANDS: Record<string, string[]> = {
   "Geometry and Measurement": ["Shapes and Space", "Measurement", "Position and Transformation"],
   "Handling Data": ["Data", "Chance or Probability"],
   
-  // Science
-  "Diversity of Matter": ["Materials", "Living Cells"],
+  // Our World Our People
+  "All About Us": ["Nature of God", "Myself", "My Family and the Community", "Home and School"],
+  "All Around Us OWOP": ["The Environment and the Weather", "Plants and Animals", "Map Making and Land Marks", "Population and Settlement"],
+  "Our Beliefs and Values": ["Worship", "Festivals", "Basic Human Rights", "Being a Leader"],
+  "Our Nation Ghana": ["Being a Citizen", "Authority and Power", "Responsible use of Resources", "Farming in Ghana"],
+  "My Global Community OWOP": ["Our Neighbouring Countries", "Introduction to Computing", "Sources of Information", "Technology in Communication"],
+  
+  // Physical Education
+  "Motor Skill and Movement Patterns": ["Locomotor movements", "Manipulative Skills", "Rhythmic Skills"],
+  "Movement Concepts, Principles and Strategies": ["Space awareness", "Dynamics", "Relationships", "Body management", "Strategies"],
+  "Physical Fitness": ["Aerobic Capacity", "Strength", "Endurance", "Flexibility", "Body Composition"],
+  "Physical Fitness Concepts, Principles and Strategies": ["Fitness Programmes", "Healthy Diet", "Safety and injury", "Substances"],
+  "Values and Psycho-social Concepts, Principles and Strategies": ["Self-responsibility", "Social Interaction", "Group Dynamics", "Critical thinking"],
+  
+  // Agricultural Science
+  "Introduction to Agriculture": ["Agric. as a Subject", "Agriculture and National Development"],
   "Cycles": ["Earth Science", "Life Cycle of Organisms", "Crop Production", "Animal Production"],
   "Systems": ["The Human Body System", "The Solar System", "Ecosystem", "Farming Systems"],
   "Forces and Energy": ["Energy", "Electricity and Electronics", "Conversion and Conservation of Energy", "Force and Motion", "Agricultural Tools"],
@@ -163,19 +184,23 @@ export const SUBJECT_SUB_STRANDS: Record<string, string[]> = {
   "Designing and Making of Artefacts/Products": ["Communicating Designs", "Designing", "Planning for making Artefacts/Products", "Making Artefacts from Compliant, Resistant Materials and Food Ingredients"],
   "Entrepreneurial Skills": ["Career Pathways and Career Opportunities", "Establishing and Managing a Small Business Enterprise"],
   // RME
-  "God, His Creation and Attributes": ["God, His Nature and Attributes", "The Creation Stories", "The Purpose and Usefulness of God's Creation"],
-  "Religious Practices": ["Worship", "Religious Songs and Recitations", "Rites of Passage", "Religious Festivals"],
-  "The Family and the Community": ["Family Systems", "Authority and Obedience", "Religion and Social Cohesion"],
-  "Religious Leaders and Personalities": ["Religious Leaders", "Prophets and Caliphs", "Women in Religion"],
+  "God, His Creation and Attributes": ["God the Creator", "The Environment", "Purpose of God's Creation", "God, His Nature and Attributes", "The Creation Stories", "The Purpose and Usefulness of God's Creation"],
+  "Religious Practices and their Moral Implications": ["Religious Worship in the Three Major Religions in Ghana", "Religious Festivals in the Three Major Religions in Ghana", "Worship", "Religious Songs and Recitations", "Rites of Passage", "Religious Festivals"],
+  "Religious Leaders": ["Birth of the Leaders of the three Major Religions in Ghana", "Early Life of the Leaders of the three Major Religions", "The Call of the Leaders of the Three Major Religions", "Ministry and latter Lives of Leaders of the Three Major Religions in Ghana"],
+  "The Family and the Community": ["Roles and Relationships", "Personal Safety in the Community", "Family Systems", "Religion and Social Cohesion"],
+  "The Family, Authority and Obedience": ["Authority and Obedience", "Roles, Relationships in the Family and Character Formation"],
+  "Religious Leaders and Personalities": ["Religious Leaders JHS", "Prophets and Caliphs", "Women in Religion"],
   "Ethics and Moral Life": ["Manners and Decency", "Substance Abuse", "Moral Teachings", "Reward, Punishment and Repentance"],
   "Religion and Economic Life": ["Work and Entrepreneurship", "Money", "Bribery and Corruption", "Time and Leisure"],
 
   // Ghanaian Language
+  "Oral Language (GL)": ["Songs", "Rhymes", "Poems", "Story Telling", "Dramatisation and Role Play", "Conversation", "Talking about Oneself, Family, People and Places", "Listening Comprehension", "Asking and Answering Questions", "Giving and Following Commands/ Instructions", "Presentation"],
+  "Reading (GL)": ["Pre-Reading Activities", "Print Concept", "Phonological and Phonemic Awareness", "Phonics (Letter and Sound Knowledge)", "Vocabulary (Sight and Content Vocabulary)", "Comprehension", "Silent Reading", "Fluency"],
+  "Writing (GL)": ["Penmanship/Handwriting", "Writing Letters-Small and Capital Letters", "Writing Simple Words /Names of People and Places", "Writing/Copying Simple Sentences with Correct Spacing"],
+  "Writing Conventions and Usage (GL)": ["Integrating Grammar in Written Language (Capitalisation)", "Integrating Grammar in Written Language (Punctuation)", "Integrating Grammar in Written Language (Use of Action Words)", "Integrating Grammar in Written Language (Use of Qualifying Words)", "Integrating Grammar in Written Language (Use of Postpositions)", "Integrating Grammar in Written Language (Use of Simple and Compound Sentences)", "Integrating Grammar in Written Language (Spelling)", "Integrating Grammar in Written Language (Use of Conjunctions)"],
+  "Extensive Reading (GL)": ["Building the Love and Culture of Reading in Learners", "Read Aloud with Children", "Reading Texts, Poems, Narratives and Short Stories and Respond to them"],
   "Customs and Institutions": ["Rites of Passage", "Naming Systems", "The Clan System", "Chieftaincy"],
-  "Listening and Speaking (GL)": ["Conversation/Everyday discourse", "Listening Comprehension", "Speech sounds", "Tone", "Vocabulary development", "Presentation"],
-  "Reading (GL)": ["Reading", "Translation"],
-  "Language and Usage": ["Sentence", "Integrating grammar (nouns, pronouns, adjectives)", "Integrating grammar (verbs, adverbs, conjunctions, postpositions/prepositions)", "Vocabulary (spelling and punctuations)"],
-  "Composition Writing": ["Structure and organise ideas in composition writing"],
+  "Composition Writing": ["Creative/Free Writing", "Narrative Writing", "Descriptive Writing", "Persuasive Writing", "Argumentative Writing", "Informative/Academic Writing", "Extra-Curricular Writing"],
   "Literature (GL)": ["Oral and written literature"],
 
   // French
@@ -188,29 +213,75 @@ export const SUBJECT_SUB_STRANDS: Record<string, string[]> = {
 
   // Chemistry
   "Atomic Structure": ["Subatomic Particles", "Electron Configuration"],
-  "Chemical Bonding": ["Ionic Bonding", "Covalent Bonding", "Metallic Bonding"]
+  "Chemical Bonding": ["Ionic Bonding", "Covalent Bonding", "Metallic Bonding"],
+  
+  // KG Integrated
+  "All About Me": ["I am a wonderful and unique creation", "The parts of the human body and their functions", "Caring for the parts of my body", "Keeping my body healthy by eating good food and taking my vaccination", "My environment and my Health", "Protecting ourselves from home and road accidents"],
+  "My Family": ["Type and members of my family", "Origin and History of my Family", "Family Celebrations and Festivals", "My school family-rules and regulations"],
+  "Values and Beliefs": ["Our Family Values", "My Cultural Values", "Our religious values", "Our beliefs"],
+  "My Local Community": ["Knowing the special places in my community", "Knowing the important people/occupation in my community", "Knowing the special leaders in our community and country"],
+  "My Nation Ghana": ["History and celebration of Ghana's Independence"],
+  "All Around Us": ["Living and non-living things", "Living things: Animals (Domestic and wild)", "Water", "Air", "Plants", "Gardening", "Light - Day and Night", "Changing weather conditions"],
+  "My Global Community": ["Connecting and communicating with the global community"]
 };
 
 export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
   "Number": {
-    "Number and Numeration Systems": ["B7.1.1.1: Demonstrate understanding and the use of place value", "B8.1.1.1: Use place value for expressing quantities in standard form", "B9.1.1.1: Apply the understanding of place value in solving real life problems"],
-    "Number Operations": ["B7.1.2.1: Apply mental mathematics strategies", "B8.1.2.1: Apply mental mathematics strategies", "B9.1.2.1: Apply mental mathematics and properties"],
-    "Fractions, Decimals and Percentages": ["B7.1.3.1: Simplify, compare and order a mixture of positive fractions", "B8.1.3.1: Apply the understanding of operation on fractions", "B9.1.3.1: Apply the understanding of operations on fractions"],
-    "Number: Ratios and Proportion": ["B7.1.4.1: Demonstrate an understanding of the concept of ratios", "B8.1.4.1: Demonstrate an understanding of ratio, rate and proportions", "B9.1.4.1: Apply the understanding of ratio, rate and proportions"]
+    "Number and Numeration Systems": ["B1.1.1.1: Describe numbers 0 to 100", "B2.1.1.1: Count and estimate 0 to 1000", "B3.1.1.1: Count and estimate 0 to 10,000", "B4.1.1.1: Multi-digit whole numerals to 100,000", "B4.1.1.2: Roman numerals up to XXX (30)", "B5.1.1.1: Multi-digit numerals up to 1,000,000", "B5.1.1.2: Roman numerals up to C (100)", "B6.1.1.1: Multi-digit numerals up to 1 billion", "B7.1.1.1: Demonstrate understanding and the use of place value", "B8.1.1.1: Use place value for expressing quantities in standard form", "B9.1.1.1: Apply the understanding of place value in solving real life problems"],
+    "Number Operations": ["B1.1.2.1: Conceptual addition and subtraction", "B2.1.2.1: Sums up to 100", "B3.1.2.1: Sums up to 1000", "B4.1.2.1: Recall multiplication up to 12x12", "B5.1.2.1: Mental math strategies for multiplication", "B6.1.2.1: Basic multiplication facts to 144", "B7.1.2.1: Apply mental mathematics strategies", "B8.1.2.1: Apply mental mathematics strategies", "B9.1.2.1: Apply mental mathematics and properties"],
+    "Fractions, Decimals and Percentages": ["B1.1.3.1: Understanding halves", "B2.1.3.1: Halves and fourths", "B3.1.3.1: Unit fractions and multiples", "B4.1.3.1: Equivalent and improper fractions", "B4.1.4.1: Decimals (tenths and hundredths)", "B4.1.5.1: Understanding percent", "B5.1.3.1: Strategies for multiplying fractions", "B6.1.3.1: Comparing mixture of common, dec and percent", "B7.1.3.1: Simplify, compare and order a mixture of positive fractions", "B8.1.3.1: Apply the understanding of operation on fractions", "B9.1.3.1: Apply the understanding of operations on fractions"],
+    "Number: Ratios and Proportion": ["B6.1.4.1: Concept of ratios", "B6.1.4.2: Proportional reasoning", "B7.1.4.1: Demonstrate an understanding of the concept of ratios", "B8.1.4.1: Demonstrate an understanding of ratio, rate and proportions", "B9.1.4.1: Apply the understanding of ratio, rate and proportions"]
   },
   "Algebra": {
-    "Patterns and Relationships": ["B7.2.1.1: Derive the rule for a set of points of a relation", "B8.2.1.1: Determine the gradient of the line", "B9.2.1.1: Construct tables of values for pairs of linear relations"],
-    "Algebraic Expressions": ["B7.2.2.1: Simplify algebraic expressions", "B8.2.2.1: Solve problems involving algebraic expressions", "B9.2.2.1: Demonstrate an understanding of change of subject"],
-    "Variables and Equations": ["B7.2.3.1: Demonstrate an understanding of linear equations", "B8.2.3.1: Demonstrate an understanding of linear inequalities", "B9.2.3.1: Demonstrate understanding of single variable linear inequalities"]
+    "Patterns and Relationships": ["B1.2.1.1: Repeating patterns", "B2.2.1.1: Increasing and decreasing patterns", "B3.2.1.1: Complex numerical patterns", "B4.2.1.1: Understanding patterns in tables/charts", "B5.2.1.1: Pattern rules and predictions", "B6.2.1.1: Algebraic rules for linear patterns", "B7.2.1.1: Derive the rule for a set of points of a relation", "B8.2.1.1: Determine the gradient of the line", "B9.2.1.1: Construct tables of values for pairs of linear relations"],
+    "Algebraic Expressions": ["B5.2.2.1: Basic algebraic expressions", "B6.2.2.1: Simplify and evaluate expressions", "B7.2.2.1: Simplify algebraic expressions", "B8.2.2.1: Solve problems involving algebraic expressions", "B9.2.2.1: Demonstrate an understanding of change of subject"],
+    "Variables and Equations": ["B4.2.2.1: Expressing word problems as equations", "B5.2.3.1: One-step equations with whole number coefficients", "B6.2.3.1: Single-variable one-step equations", "B7.2.3.1: Demonstrate an understanding of linear equations", "B8.2.3.1: Demonstrate an understanding of linear inequalities", "B9.2.3.1: Demonstrate understanding of single variable linear inequalities"]
   },
   "Geometry and Measurement": {
-    "Shapes and Space": ["B7.3.1.1: Demonstrate understanding of angles", "B8.3.1.1: Relationship between parallel lines and alternate angles", "B9.3.1.1: Apply properties of angles at a point"],
-    "Measurement": ["B7.3.2.1: Find the perimeter of plane shapes", "B8.3.2.1: Apply Pythagoras theorem", "B9.3.2.1: Determine the surface area of prisms"],
-    "Position and Transformation": ["B7.3.3.1: Perform a single transformation (reflection and translation)", "B8.3.3.1: Perform a single transformation (rotation)", "B9.3.3.1: Perform an enlargement on a geometrical shape"]
+    "Shapes and Space": ["B1.3.1.1: Attributes of 2D and 3D shapes", "B2.3.1.1: Describe and analyse 2D/3D objects", "B3.3.1.1: Irregular polygons", "B4.3.1.1: Lines of symmetry", "B5.3.1.1: Sort quadrilaterals by attributes", "B6.3.1.1: Understanding prisms", "B7.3.1.1: Demonstrate understanding of angles", "B8.3.1.1: Relationship between parallel lines and alternate angles", "B9.3.1.1: Apply properties of angles at a point"],
+    "Measurement": ["B1.3.3.1: Non-standard units", "B2.3.3.1: Comparison logic", "B3.3.3.1: Metres and centimetres", "B4.3.3.1: Perimeter and Area concept", "B5.3.2.1: Surface area of 2D shapes", "B5.3.3.3: Understanding angles", "B5.3.2.2: Volume of common 3D shapes", "B7.3.2.1: Find the perimeter of plane shapes", "B8.3.2.1: Apply Pythagoras theorem", "B9.3.2.1: Determine the surface area of prisms"],
+    "Position and Transformation": ["B4.3.2.1: Cardinal points", "B5.3.4.1: Motion in space", "B6.3.3.5: Advanced cardinal points (NE, NW...)", "B7.3.3.1: Perform a single transformation (reflection and translation)", "B8.3.3.1: Perform a single transformation (rotation)", "B9.3.3.1: Perform an enlargement on a geometrical shape"]
   },
   "Handling Data": {
-    "Data": ["B7.4.1.1: Select, justify, and use appropriate methods to collect data", "B8.4.1.1: Construct and interpret frequency tables", "B9.4.1.1: Construct and interpret frequency tables and histogram"],
-    "Chance or Probability": ["B7.4.2.1: Identify the sample space for a probability experiment", "B8.4.2.1: Identify the sample space for a probability experiment (independent events)", "B9.4.2.1: Identify the sample space for a probability experiment (dependent events)"]
+    "Data": ["B1.4.1.1: Organise data in 3 categories", "B2.4.1.1: Tallies and pictographs", "B3.4.1.1: Concrete graphs", "B4.4.1.1: Many-to-one correspondence", "B5.4.1.1: First-hand and second-hand data", "B6.4.1.1: Line graphs", "B6.4.1.2: Data collection techniques", "B7.4.1.1: Select, justify, and use appropriate methods to collect data", "B8.4.1.1: Construct and interpret frequency tables", "B9.4.1.1: Construct and interpret frequency tables and histogram"],
+    "Chance or Probability": ["B5.4.2.1: Likelihood of outcomes", "B6.4.2.2: Theoretical and experimental probability", "B7.4.2.1: Identify the sample space for a probability experiment", "B8.4.2.1: Identify the sample space for a probability experiment (independent events)", "B9.4.2.1: Identify the sample space for a probability experiment (dependent events)"]
+  },
+  "Motor Skill and Movement Patterns": {
+    "Locomotor movements": ["B1.1.1.1: Travel over/under objects", "B2.1.1.1: Travel in zigzag pathways", "B3.1.1.1: Change direction quickly", "B4.1.1.1: Slow vs fast movement", "B5.1.2.1: Walk on straight line edges", "B6.1.1.1: Cooperative movement games"],
+    "Manipulative Skills": ["B1.1.3.1: Roll a ball stationary", "B2.1.10.1: Dribbling with hand", "B3.1.10.1: Dribbling around obstacles", "B4.1.6.1: Strike a bounce ball", "B5.1.6.1: Strike dropping ball", "B6.1.10.1: Dribbling under guard"]
+  },
+  "Physical Fitness": {
+    "Strength and Endurance": ["B1.3.2.3: Perform push-ups", "B2.3.2.3: Abdominal curls", "B3.3.2.3: Continuous step-ups", "B4.3.1.3: 15-min brisk walk", "B5.3.1.3: 10-min jogging", "B6.3.1.3: 8-min running test"]
+  },
+  "All About Us": {
+    "Nature of God": ["B1.1.1.1: Nature of God", "B2.1.1.1: Attributes of God", "B3.1.1.1: Purpose of God's creation", "B4.1.1.1: Uniqueness of human creation", "B5.1.1.1: Man as God's representative", "B6.1.1.1: God's attributes in mankind"],
+    "Myself": ["B1.1.2.1: Myself", "B4.1.2.1: Self-awareness and harmony", "B5.1.2.1: Changes during adolescence", "B6.1.2.1: Challenges of adolescence"],
+    "My Family and the Community": ["B1.1.3.1: My Family and Community", "B4.1.3.1: Commitment to family", "B5.1.3.1: Family roles and gender equity", "B6.1.3.1: Responsible family membership"],
+    "Home and School": ["B1.1.4.1: Home and School", "B4.1.4.1: Work as a civic duty", "B5.1.4.1: Peer pressure and social life", "B6.1.4.1: Food safety and table manners"]
+  },
+  "All Around Us OWOP": {
+    "The Environment and the Weather": ["B1.2.1.1: Environment and Weather", "B4.2.1.1: Environmental safety", "B5.2.1.1: Greenhouse effect and climate change", "B6.2.1.1: Reforestation and tree planting"],
+    "Plants and Animals": ["B2.2.2.1: Plants and Animals", "B4.2.2.1: Interdependence of living things", "B5.2.2.1: Animal housing and care", "B6.2.2.1: Use of animal waste"],
+    "Map Making and Land Marks": ["B3.2.3.1: Map Making and Land Marks", "B4.2.3.1: Mapping the school", "B5.2.3.1: Major landmarks in Ghana", "B6.2.3.1: Map of Ghana (Regions/Capitals)"],
+    "Population and Settlement": ["B3.2.4.1: Population and Settlement", "B4.2.4.1: Settlement patterns in Ghana", "B5.2.4.1: Features of rural and urban areas", "B6.2.4.1: Internal migration"]
+  },
+  "Our Beliefs and Values": {
+    "Worship": ["B1.3.1.1: Worship", "B4.3.1.1: Obedience through worship", "B5.3.1.1: Moral lessons from sacred texts", "B6.3.1.1: Importance of prayer"],
+    "Festivals": ["B2.3.2.1: Festivals", "B4.3.2.1: Significance of Ghanaian festivals", "B5.3.2.1: Cultural practices in festivals", "B6.3.2.1: Settle disputes during festivals"],
+    "Basic Human Rights": ["B3.3.3.1: Basic Human Rights", "B4.3.3.1: Fundamental rights of a child", "B5.3.3.1: Respecting rights in the family", "B6.3.3.1: Sources of help for rights abuse"],
+    "Being a Leader": ["B3.3.4.1: Being a Leader", "B4.3.4.1: Leadership skills", "B5.3.4.1: Ministry of religious leaders", "B6.3.4.1: Latter lives of leaders"]
+  },
+  "Our Nation Ghana": {
+    "Being a Citizen": ["B1.4.1.1: Being a Citizen", "B4.4.1.1: Etiquette and manners", "B5.4.1.1: Effective citizenship attitudes", "B6.4.1.1: Peaceful living and conflict"],
+    "Authority and Power": ["B2.4.2.1: Authority and Power", "B4.4.2.1: Respect for authority", "B5.4.2.1: Responsible adulthood", "B6.4.2.1: Democratic governance features"],
+    "Responsible use of Resources": ["B3.4.3.1: Responsible use of Resources", "B4.4.3.1: Responsible use of water", "B5.4.3.1: Safe water bodies", "B6.4.3.1: Protecting water resources"],
+    "Farming in Ghana": ["B3.4.4.1: Farming in Ghana", "B4.4.4.1: Gardening and nursing seeds", "B5.4.4.1: Transplanting techniques", "B6.4.4.1: Job opportunities in agriculture"]
+  },
+  "My Global Community OWOP": {
+    "Our Neighbouring Countries": ["B1.5.1.1: Our Neighbouring Countries", "B4.5.1.1: Cultural exchanges with neighbours", "B5.5.1.1: Economic exchanges with neighbours", "B6.5.1.1: Cooperation with other nations"],
+    "Introduction to Computing": ["B2.5.2.1: Introduction to Computing", "B5.5.1.2: Earth's rotation and revolution", "B6.5.1.2: Effects of climate change"],
+    "Sources of Information": ["B3.5.3.1: Sources of Information"],
+    "Technology in Communication": ["B3.5.4.1: Technology in Communication"]
   },
   "Environment": {
     "Environmental Issues": [
@@ -563,9 +634,15 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
     "The Clan System": ["B7.1.3.1: Features of the clan system", "B8.1.3.1: Importance and threats to the clan system", "B9.1.3.1: Factors that militate against the clan system"],
     "Chieftaincy": ["B7.1.4.1: Selection and enstoolment of chiefs", "B8.1.4.1: Destoolment of chiefs", "B9.1.4.1: Traditional governing structure"]
   },
-  "Listening and Speaking (GL)": {
+  "Oral Language (GL)": {
     "Conversation/Everyday discourse": ["B7.1.1.1: Use of appropriate register", "B8.1.1.1: Narrating daily activities", "B9.1.1.1: Spontaneous social interaction"],
-    "Listening Comprehension": ["B7.2.2.1: extended listening", "B8.2.2.1: level-appropriate dialogue", "B9.2.2.1: natural level-appropriate interactions"]
+    "Listening Comprehension": ["B7.2.2.1: extended listening", "B8.2.2.1: level-appropriate dialogue", "B9.2.2.1: natural level-appropriate interactions"],
+    "Songs": ["B1.1.1.1: Demonstrate knowledge of a song by saying the words heard", "B2.1.1.1: Demonstrate an understanding of types of work and play songs", "B3.1.1.1: Demonstrate an understanding of some selected songs", "B4.1.1.1: Exhibit knowledge of traditional and occupational songs", "B5.1.1.1: Show an understanding of cradle songs/lullaby", "B6.1.1.1: Investigate some traditional dances and their songs"],
+    "Rhymes": ["B1.1.2.1: Demonstrate an understanding of words in a rhyme", "B2.1.2.1: Demonstrate knowledge of some selected rhymes", "B3.1.2.1: Show an understanding of some rhymes"],
+    "Poems": ["B3.1.3.1: Demonstrate knowledge of poem recitation", "B4.1.3.1: Demonstrate knowledge and understanding of selected poems", "B5.1.3.1: Demonstrate knowledge and understanding of selected poems", "B6.1.3.1: Demonstrate knowledge and understanding of selected poems"],
+    "Story Telling": ["B1.1.4.1: Exhibit knowledge of listening and retelling simple stories", "B2.1.4.1: Exhibit knowledge of listening to and retelling simple stories", "B3.1.4.1: Exhibit knowledge of listening to and reading simple stories", "B4.1.4.1: Demonstrate knowledge on the structure and features of folktales", "B5.1.4.1: Demonstrate knowledge on the structure and features of folktales", "B6.1.4.1: Demonstrate an understanding and comparison of folktales to stories"],
+    "Conversation": ["B1.1.6.1: Demonstrate knowledge and understanding of greetings", "B2.1.6.1: Exhibit knowledge of greeting and responding appropriately", "B3.1.6.1: Exhibit an understanding of appropriate non-formal forms of greeting", "B4.1.6.1: Talk about personal experiences and that of others", "B5.1.6.1: Name and discuss some basic items used at home and in school", "B6.1.6.1: Exhibit knowledge of the names of some towns, cities and villages in Ghana"],
+    "Presentation": ["B1.1.11.1: Demonstrate knowledge of the days of the week", "B2.1.11.1: Demonstrate knowledge on the days of the week and time", "B3.1.11.1: Demonstrate knowledge on the days of the week and minutes", "B4.1.11.1: Demonstrate knowledge and understanding of the names and sequence of days", "B6.1.11.1: Demonstrate knowledge on the need for safety measures in the environment"]
   },
   "Language and Usage": {
     "Integrating grammar (nouns, pronouns, adjectives)": ["B7.4.2.1: Basic forms", "B8.4.2.1: Abstract/Concrete", "B9.4.2.1: Singular/Plural"],
@@ -573,10 +650,21 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
   },
   "Reading (GL)": {
     "Reading": ["B7.3.1.1: Reading and summarizing", "B8.3.1.1: Extended texts", "B9.3.1.1: Recall points and rewrite"],
-    "Translation": ["B7.3.2.1: Translating words/phrases", "B8.3.2.1: Translating sentences", "B9.3.2.1: Decoding and translating"]
+    "Translation": ["B7.3.2.1: Translating words/phrases", "B8.3.2.1: Translating sentences", "B9.3.2.1: Decoding and translating"],
+    "Pre-Reading Activities": ["B1.2.1.1: Recognise and talk about objects at home and school"],
+    "Print Concept": ["B1.2.2.1: Demonstrate knowledge on handling print materials"],
+    "Phonological and Phonemic Awareness": ["B1.2.3.1: Demonstrate knowledge on hearing/recognising sounds", "B2.2.3.1: Demonstrate knowledge of hearing/differentiating sounds", "B3.2.3.1: Demonstrate knowledge of listening/recognising sounds"],
+    "Phonics (Letter and Sound Knowledge)": ["B1.2.4.1: Show an understanding of connecting sounds to letters", "B2.2.4.1: Show an understanding of connecting sounds to letters", "B3.2.4.1: Show an understanding of connecting sounds to letters", "B4.2.4.1: Demonstrate knowledge in listening and pronouncing words", "B5.2.4.1: Demonstrate the ability to listen to and pronounce words", "B6.2.4.1: Demonstrate the ability to listen and pronounce words"],
+    "Vocabulary (Sight and Content Vocabulary)": ["B4.2.5.1: Show an understanding of, recognise and read about things", "B5.2.5.1: Show an understanding of recognising and reading about things", "B6.2.5.1: Show an ability to recognise and read about things"],
+    "Comprehension": ["B4.2.6.1: Exhibit knowledge of answering questions based on texts presented", "B5.2.6.1: Exhibit knowledge of answering questions based on texts presented", "B6.2.6.1: Exhibit the ability to answer questions based on texts presented"],
+    "Silent Reading": ["B4.2.7.1: Demonstrate knowledge on reading for comprehension", "B5.2.7.1: Demonstrate knowledge on reading for comprehension", "B6.2.7.1: Demonstrate knowledge on reading for comprehension"],
+    "Fluency": ["B4.2.8.1: Exhibit knowledge by reading with minimal mistakes", "B5.2.8.1: Exhibit the ability to read longer texts", "B6.2.8.1: Exhibit knowledge by reading with minimal mistakes"],
+    "Summarising": ["B4.2.9.1: Show an understanding of how main ideas are extracted", "B5.2.9.1: Show an understanding of how main ideas are extracted", "B6.2.9.1: Show an understanding of how main ideas from a text are extracted"]
   },
   "Composition Writing": {
-    "Structure and organise ideas in composition writing": ["B7.5.1.1: Paragraph features", "B8.5.1.1: Coherent essays", "B9.5.1.1: Extended texts and linking"]
+    "Structure and organise ideas in composition writing": ["B7.5.1.1: Paragraph features", "B8.5.1.1: Coherent essays", "B9.5.1.1: Extended texts and linking"],
+    "Narrative Writing": ["B4.4.1.1: Show an understanding in using punctuation marks appropriately", "B5.4.1.1: Comprehend and use punctuation marks", "B6.4.1.1: Show an understanding of writing a narrative composition"],
+    "Creative/ Free Writing": ["B4.4.2.1: Show an understanding of composing short simple stories", "B5.4.2.1: Show an understanding of creating and writing longer stories", "B6.4.2.1: Show an understanding of writing good imaginative and real stories"]
   },
   "Listening and Speaking": {
     "Greetings and Introductions": ["B7.1.1.1: Greet and introduce oneself in French"],
@@ -586,38 +674,10 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
   "Literature (GL)": {
     "Oral and written literature": ["B7.6.1.1: Components of literature", "B8.6.1.1: Proverbs and idioms", "B9.6.1.1: Drum/horn language"]
   },
-  "God, His Creation and Attributes": {
-    "God, His Nature and Attributes": ["B7.1.1.1: Explain the nature of God seen through His attributes"],
-    "The Creation Stories": ["B8.1.1.1: Outline and explain moral lessons in creation stories"],
-    "The Purpose and Usefulness of God's Creation": ["B9.1.1.1: Describe purpose of God's creation"]
-  },
-  "Religious Practices": {
-    "Worship": ["B7.2.1.1: Explain how worship is performed"],
-    "Religious Songs and Recitations": ["B7.2.2.1: Analyse moral values in songs"],
-    "Rites of Passage": ["B8.2.1.1: Explain rites of passage"],
-    "Religious Festivals": ["B9.2.1.1: Understand religious festivals"]
-  },
-  "The Family and the Community": {
-    "Family Systems": ["B7.3.1.1: Identify and explain importance of family systems"],
-    "Authority and Obedience": ["B8.3.1.1: Identify and explain importance of obeying authority"],
-    "Religion and Social Cohesion": ["B9.3.1.1: Ways people can co-exist peacefully"]
-  },
-  "Religious Leaders and Personalities": {
-    "Religious Leaders": ["B7.4.1.1: Early life and call of religious leaders"],
-    "Prophets and Caliphs": ["B8.4.1.1: Moral lessons from prophets and caliphs"],
-    "Women in Religion": ["B9.4.1.1: Leadership role of women"]
-  },
-  "Ethics and Moral Life": {
-    "Manners and Decency": ["B7.5.1.1: Develop good manners and apply them"],
-    "Substance Abuse": ["B7.5.2.1: Need to stay away from substance abuse"],
-    "Moral Teachings": ["B8.5.1.1: Moral teachings from scripture and oral traditions"],
-    "Reward, Punishment and Repentance": ["B9.5.1.1: Good deeds and punishment"]
-  },
-  "Religion and Economic Life": {
-    "Work and Entrepreneurship": ["B7.6.1.1: Cultivate hard work and entrepreneurship"],
-    "Money": ["B8.6.1.1: Plan the wise use of money"],
-    "Bribery and Corruption": ["B8.6.2.1: Avoid bribery and corruption"],
-    "Time and Leisure": ["B9.6.1.1: Managing time profitably"]
+  "Extensive Reading (GL)": {
+    "Building the Love and Culture of Reading in Learners": ["B4.6.1.1: Exhibit knowledge of reading long stories", "B5.6.1.1: Exhibit the ability to read other materials", "B6.6.1.1: Exhibit knowledge of understanding and appreciating magazines"],
+    "Read Aloud with Children": ["B4.6.2.1: Exhibit knowledge of reading long stories with correct tone", "B5.6.2.1: Exhibit knowledge in reading sentences/paragraphs aloud", "B6.6.2.1: Exhibit knowledge of reading dialogue and long passages"],
+    "Reading short stories and respond to them": ["B4.6.3.1: Demonstrate knowledge on reading materials", "B5.6.3.1: Demonstrate knowledge in reading materials", "B6.6.3.1: Demonstrate knowledge on reading materials other than reader"]
   },
   "Visual Arts": {
     "Thinking and exploring ideas": ["B1-B6.1.1.1: Demonstrate understanding of how to generate own ideas for artistic expressions on the people, based on their history and culture, the environment and the topical local/national/global issues"],
@@ -817,6 +877,104 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
     "Compréhension Écrite": ["B4.3.1.3: Lire sur les goûts", "B5.3.1.3: Lire sur les goûts", "B6.3.1.3: Lire sur les goûts"],
     "Production Écrite": ["B4.3.1.4: Écrire sur ses goûts", "B5.3.1.4: Écrire sur ses goûts", "B6.3.1.4: Écrire sur ses goûts"]
   },
+  
+  // Ghanaian Language B1-B3
+  "Writing (GL)": {
+    "Penmanship/Handwriting": ["B1.3.1.1: Make given patterns and objects", "B2.3.1.1: Understand how to copy sentences clearly", "B3.3.1.1: Write and practise saying letters or words", "B4.3.1.1: Exhibit knowledge of the use of full stops, commas and question marks", "B5.3.1.1: Exhibit knowledge in the use of full stops, commas and question marks", "B6.3.1.1: Write sentences clearly and correctly"],
+    "Writing Simple Words /Names of People and Places": ["B1.3.3.1: Show an understanding of combining strokes", "B2.3.3.2.1: Show understanding of items in the environment", "B3.3.3.1: Write simple words/names of people and places"]
+  },
+  "Writing Conventions and Usage (GL)": {
+    "Integrating Grammar in Written Language (Capitalisation)": ["B1.5.1.1: Exhibit knowledge of writing capital letters", "B2.5.1.1: Exhibit knowledge of using capital letters", "B3.5.1.1: Exhibit knowledge of using capital letters appropriately", "B4.5.1.1: Exhibit knowledge of using capital letters appropriately", "B5.5.1.1: Show an understanding in the use of capital letters", "B6.5.1.1: Exhibit knowledge of using capital letters appropriately"],
+    "Integrating Grammar in Written Language (Action Words)": ["B1.5.3.1: Show an understanding of writing action words", "B2.5.3.1: Show an understanding of writing action words", "B3.5.3.1: Demonstrate knowledge on recognition of action words", "B4.5.3.1: Demonstrate knowledge on recognition and use of action words", "B5.5.3.1: Demonstrate knowledge on use of action words appropriately", "B6.5.3.1: Demonstrate knowledge on the appropriate use of action words"],
+    "Integrating Grammar in Written Language (Conjunctions)": ["B4.5.8.1: Apply the knowledge of conjunctions in writing", "B5.5.8.1: Apply the knowledge on the use of conjunctions", "B6.5.8.1: Apply the knowledge of conjunctions in writing"]
+  },
+  "All About Me": {
+    "I am a wonderful and unique creation": ["K1.1.1.1: Demonstrate understanding that all learners are wonderful and have unique body features", "K2.1.1.1: Demonstrate understanding that all learners are wonderful and unique"],
+    "The parts of the human body and their functions": ["K1.1.2.1: Demonstrate understanding of appropriate names of parts of the body and their functions", "K2.1.2.1: Demonstrate knowledge of appropriate names of parts of internal body and their functions"],
+    "Caring for the parts of my body": ["K1.1.3.1: Demonstrate understanding of the importance of personal hygiene", "K2.1.3.1: Demonstrate understanding of personal hygiene and care of human body"],
+    "Keeping my body healthy by eating good food and taking my vaccination": ["K1.1.4.1: Demonstrate understanding that eating good food and vaccinations keep us healthy", "K2.1.4.1: Demonstrate understanding of keeping our bodies healthy"],
+    "My environment and my Health": ["K1.1.5.1: Demonstrate understanding of keeping home and school environment clean", "K2.1.5.1: Demonstrate understanding of the environment and how to keep it safe"],
+    "Protecting ourselves from home and road accidents": ["K1.1.6.1: Demonstrate understanding of measures to take to keep safe", "K2.1.6.1: Demonstrate understanding of how to be safe and identify strangers"]
+  },
+  "My Family": {
+    "Type and members of my family": ["K1.2.1.1: Demonstrate understanding of importance, roles and responsibilities of family members", "K2.2.1.1: Demonstrate understanding of the rights, roles and responsibilities of family members"],
+    "Origin and History of my Family": ["K1.2.2.1: Demonstrate knowledge of the origin and history of our families", "K2.2.2.1: Demonstrate understanding of origin and history of our families"],
+    "Family Celebrations and Festivals": ["K1.2.3.1: Demonstrate knowledge of celebrations and festivals", "K2.2.3.1: Demonstrate understanding of importance of activities in festivals"],
+    "My school family-rules and regulations": ["K1.2.4.1: Demonstrate understanding of rules and regulations of school", "K2.2.4.1: Demonstrate understanding of rules and regulations for learners and teachers"]
+  },
+  "Values and Beliefs": {
+    "Our Family Values": ["K1.3.1.1: Demonstrate understanding of good manners families value", "K2.3.1.1: Demonstrate understanding of personal value in relation to likes/dislikes"],
+    "My Cultural Values": ["K1.3.2.1: Talk about important cultural values and good manners", "K2.3.2.1: Demonstrate understanding of virtues and behaviour patterns community values"],
+    "Our religious values": ["K1.3.3.1: Demonstrate understanding of religious and moral values", "K2.3.3.1: Demonstrate understanding of values and virtues we need to exhibit"],
+    "Our beliefs": ["K1.3.4.1: Demonstrate understanding of and relating well with people of different beliefs", "K2.3.4.1: Demonstrate understanding of relating well with people with different beliefs"]
+  },
+  "My Local Community": {
+    "Knowing the special places in my community": ["K1.4.1.1: Demonstrate understanding of special places in our local communities", "K2.4.1.1: Demonstrate understanding of special places in our local community"],
+    "Knowing the important people/occupation in my community": ["K1.4.2.1: Demonstrate knowledge of people in the community and their occupation", "K2.4.2.1: Demonstrate understanding of knowing important people/occupation"],
+    "Knowing the special leaders in our community and country": ["K1.4.3.1: Demonstrate understanding of special leaders and their roles", "K2.4.3.1: Demonstrate understanding and knowledge of special leaders"]
+  },
+  "My Nation Ghana": {
+    "History and celebration of Ghana's Independence": ["K1.5.1.1: Demonstrate knowledge of history and independence of Ghana", "K2.5.1.1: Demonstrate understanding of history and celebrations of Ghana"]
+  },
+  "All Around Us": {
+    "Living and non-living things": ["K1.6.1.1: Demonstrate understanding of living and non-living things", "K2.6.1.1: Demonstrate understanding of why things are living/non-living"],
+    "Living things: Animals (Domestic and wild)": ["K1.6.2.1: Demonstrate understanding of domestic and wild animals", "K2.6.2.1: Demonstrate understanding of domestic and wild animals"],
+    "Water": ["K1.6.3.1: Demonstrate understanding of sources of water and its uses", "K2.6.3.1: Demonstrate understanding that water is an important natural resource"],
+    "Air": ["K1.6.4.1: Demonstrate understanding of the presence of air and its importance", "K2.6.4.1: Demonstrate understanding that air is all around us"],
+    "Plants": ["K1.6.5.1: Demonstrate understanding of parts of plants and their functions", "K2.6.6.1: Demonstrate understanding of how plants grow"],
+    "Gardening": ["K1.6.7.1: Demonstrate understanding of types of soil", "K2.6.7.1: Demonstrate understanding of types of soil we find around us"],
+    "Light - Day and Night": ["K1.6.8.1: Demonstrate understanding of sources of light for day and night", "K2.6.8.1: Demonstrate understanding of sources of light"],
+    "Changing weather conditions": ["K1.6.9.1: Demonstrate understanding of changing weather conditions and seasons", "K2.6.9.1: Demonstrate understanding of positive and negative effects of weather"]
+  },
+  "God, His Creation and Attributes": {
+    "God the Creator": ["B1.1.1.1: Explain who the Creator is", "B2.1.1.1: Demonstrate an appreciation of God's creation", "B3.1.1.1: Differentiate between God's creation and those made by man", "B4.1.1.1: Demonstrate an understanding of the attributes of God", "B5.1.1.1: Explain that God created human beings in His own image", "B6.1.1.1: Describe the nature of God through His attributes"],
+    "The Environment": ["B2.1.2.1: Discuss our responsibilities towards the environment", "B3.1.2.1: Explain why we must care for the environment", "B4.1.2.1: Discuss the benefits of the environment", "B5.1.2.1: Describe ways to care for the environment", "B6.1.2.1: Discuss ways of protecting the environment"],
+    "Purpose of God's Creation": ["B3.1.3.1: List some of the purposes for which God created things"],
+    "God, His Nature and Attributes": ["B7.1.1.1: Explain the nature of God seen through His attributes"],
+    "The Creation Stories": ["B8.1.1.1: Outline and explain moral lessons in creation stories"],
+    "The Purpose and Usefulness of God's Creation": ["B9.1.1.1: Describe purpose of God's creation"]
+  },
+  "Religious Practices and their Moral Implications": {
+    "Religious Worship in the Three Major Religions in Ghana": ["B1.2.1.1: Explain the meaning of worship", "B2.2.1.1: Recognise the things used in worship in the three major religions", "B4.2.1.1: Explain what constitutes worship in the three major religions", "B5.2.1.1: Mention types of prayer in the three major religions"],
+    "Religious Festivals in the Three Major Religions in Ghana": ["B6.2.1.1: Mention the types and the importance of festivals"],
+    "Worship": ["B7.2.1.1: Explain how worship is performed"],
+    "Religious Songs and Recitations": ["B3.2.1.1: Recite his / her religious songs and prayers", "B7.2.2.1: Analyse moral values in songs"],
+    "Rites of Passage": ["B8.2.1.1: Explain rites of passage"],
+    "Religious Festivals": ["B9.2.1.1: Understand religious festivals"]
+  },
+  "Religious Leaders": {
+    "Birth of the Leaders of the three Major Religions in Ghana": ["B2.3.1.1: State the names and the places of birth of the divine leaders"],
+    "Early Life of the Leaders of the three Major Religions": ["B1.3.1.1: Reveal common stages in the lives of Leaders", "B3.3.1.1: Narrate the events that took place during the early lives of religious leaders"],
+    "The Call of the Leaders of the Three Major Religions": ["B4.3.1.1: Narrate the early life and call of the leaders"],
+    "Ministry and latter Lives of Leaders of the Three Major Religions in Ghana": ["B5.3.1.1: Describe the ministry and the latter lives of the leaders"]
+  },
+  "The Family and the Community": {
+    "Roles and Relationships": ["B3.5.1.1: Discuss the roles of the individual in the family and in the community", "B6.5.1.1: Describe the roles of family members"],
+    "Personal Safety in the Community": ["B1.4.1.1: Explain the Importance of keeping safety in the community"],
+    "Family Systems": ["B7.3.1.1: Identify and explain importance of family systems"],
+    "Religion and Social Cohesion": ["B9.3.1.1: Ways people can co-exist peacefully"]
+  },
+  "The Family, Authority and Obedience": {
+    "Authority and Obedience": ["B1.5.1.1: Explain the need to obey authority", "B4.5.1.1: Examine the need for authority and obedience", "B5.5.1.1: Discuss the importance of being obedient to authority"],
+    "Roles, Relationships in the Family and Character Formation": ["B2.5.1.1: Demonstrate how to relate with family members"]
+  },
+  "Religious Leaders and Personalities": {
+    "Religious Leaders JHS": ["B7.4.1.1: Early life and call of religious leaders"],
+    "Prophets and Caliphs": ["B8.4.1.1: Moral lessons from prophets and caliphs"],
+    "Women in Religion": ["B9.4.1.1: Leadership role of women"]
+  },
+  "Ethics and Moral Life": {
+    "Manners and Decency": ["B7.5.1.1: Develop good manners and apply them"],
+    "Substance Abuse": ["B7.5.2.1: Need to stay away from substance abuse"],
+    "Moral Teachings": ["B8.5.1.1: Moral teachings from scripture and oral traditions"],
+    "Reward, Punishment and Repentance": ["B9.5.1.1: Good deeds and punishment"]
+  },
+  "Religion and Economic Life": {
+    "Work and Entrepreneurship": ["B7.6.1.1: Cultivate hard work and entrepreneurship"],
+    "Money": ["B8.6.1.1: Plan the wise use of money"],
+    "Bribery and Corruption": ["B8.6.2.1: Avoid bribery and corruption"],
+    "Time and Leisure": ["B9.6.1.1: Managing time profitably"]
+  }
 };
 
 export const STANDARD_INDICATORS: Record<string, string[]> = {
@@ -883,6 +1041,23 @@ export const STANDARD_INDICATORS: Record<string, string[]> = {
   "B4.4.2.1: Write clearly using joined letters": ["B4.4.2.1.1: Write clearly using joined letters of consistent size", "B4.4.2.1.2: Use simple sentences clearly and correctly"],
   "B5.4.2.1: Copy sentences clearly in joint script": ["B5.4.2.1.1: Copy sentences clearly in joint script maintaining legible handwriting", "B5.4.2.1.2: Write compound sentences clearly and correctly"],
   "B6.4.2.1: Write with a legible, fluent and personal style": ["B6.4.2.1.1: Write with a legible, fluent and personal handwriting style", "B6.4.2.1.2: Write complex sentences clearly and correctly"],
+
+  // Ghanaian Language B1-B3 Indicators
+  "B1.1.1.1: Demonstrate knowledge of a song by saying the words heard": ["B1.1.1.1.1: Sing familiar songs of more than six lines and recognise place names"],
+  "B1.1.6.1: Demonstrate knowledge and understanding of greetings": ["B1.1.6.1.1: Recognise the various categories of people to greet", "B1.1.6.1.2: Discuss the correct terms for the various categories of people"],
+  "B2.1.1.1: Demonstrate an understanding of types of work and play songs": ["B2.1.1.1.1: Sing work and play songs and discuss their importance", "B2.1.1.1.2: Relate types of play songs to everyday activities"],
+  "B2.1.6.1: Exhibit knowledge of greeting and responding appropriately": ["B2.1.6.1.1: Discuss occasions to greet and talk about importance", "B2.1.6.1.2: Discuss greetings associated with different occasions"],
+  "B3.1.2.1: Show an understanding of some rhymes": ["B3.1.2.1.1: Recognise rhyming words", "B3.1.2.1.2: Produce own rhyming words"],
+  "B3.5.7.1: Exhibit knowledge of recognising and spelling words correctly": ["B3.5.7.1.1: Write four and five letter words correctly", "B3.5.7.1.2: Write five and six letter words correctly"],
+  "B1.2.4.1: Show an understanding of connecting sounds to letters": ["B1.2.4.1.1: Blend sounds to produce syllables", "B1.2.4.1.2: Blend syllables to produce simple words"],
+  "B2.2.4.1: Show an understanding of connecting sounds to letters": ["B2.2.4.1.1: Blend syllables to produce simple words", "B2.2.4.1.2: Use alphabetic knowledge to decode words"],
+  "B3.2.4.1: Show an understanding of connecting sounds to letters": ["B3.2.4.1.1: Use alphabetic awareness to decode words", "B3.2.4.1.2: Use alphabetic awareness to decode compound words"],
+  "B4.1.1.1: Exhibit knowledge of traditional and occupational songs": ["B4.1.1.1.1: Sing and discuss songs connected to traditional occupations"],
+  "B5.1.1.1: Show an understanding of cradle songs/lullaby": ["B5.1.1.1.1: Sing cradle songs/lullaby with focus on importance"],
+  "B6.1.1.1: Investigate some traditional dances and their songs": ["B6.1.1.1.1: Sing traditional songs used for traditional dances", "B6.1.1.1.2: Discuss importance and moral lessons of songs/dances"],
+  "B4.3.1.1: Exhibit knowledge of the use of full stops, commas and question marks": ["B4.3.1.1.1: Recognise full stops at end of sentences", "B4.3.1.1.2: Recognise comma usage for pauses", "B4.3.1.1.3: Recognise question marks at end of questions"],
+  "B5.3.1.1: Exhibit knowledge in the use of full stops, commas and question marks": ["B5.3.1.1.1: Recognise full stops for sentences/initials", "B5.3.1.1.3: Recognise colon usage for lists", "B5.3.1.1.4: Recognise quotation marks for speech"],
+  "B6.3.1.1: Write sentences clearly and correctly": ["B6.3.1.1.1: Pay attention to ascending/descending letters", "B6.3.1.1.2: Write sentences using joint scripts"],
 
   // English - Grammar Usage at Word and Phrase Levels
   "B4.3.1.1: Identify and use nouns to identify people, animals, events and objects": ["B4.3.1.1.1: Identify and use nouns in sentences", "B4.3.1.1.2: Differentiate between common and proper nouns", "B4.3.1.1.3: Use collective and abstract nouns"],
@@ -1827,7 +2002,365 @@ export const STANDARD_INDICATORS: Record<string, string[]> = {
   "B5.4.2.2: Demander et donner l'heure oralement": ["B5.4.2.2.1: Se renseigner sur l'heure d'un rendez-vous"],
   "B4.4.7.1: Écouter et comprendre les professions": ["B4.4.7.1.1: Écouter un document audiovisuel sur les métiers"],
   "B4.4.7.2: Parler des professions oralement": ["B4.4.7.2.1: Poser et répondre à des questions sur les métiers de la famille", "B4.4.7.2.2: Dire la profession que l'on veut exercer"],
- };
+  
+  // KG Integrated Curriculum Indicators
+  // Theme 1: All About Me - KG 1
+  "K1.1.1.1: Demonstrate understanding that all learners are wonderful and have unique body features": [
+    "K1.1.1.1.1: Identify and talk in simple sentences, about the features of our body that make us unique",
+    "K1.1.1.1.2: Sing an action song that helps learners name the parts of the body and point to them",
+    "K1.1.1.1.3: Recognize and talk about the different parts of book",
+    "K1.1.1.1.4: Use new and positive expressions/vocabulary related to the parts of the body"
+  ],
+  "K1.1.2.1: Demonstrate understanding of appropriate names of parts of the body and their functions": [
+    "K1.1.2.1.1: Identify and name parts of the human body and state their functions",
+    "K1.1.2.1.2: Identify and talk about the special parts of the body (the five senses) and what they do"
+  ],
+  "K1.1.3.1: Demonstrate understanding of the importance of personal hygiene": [
+    "K1.1.3.1.1: Identify and talk about how to keep our bodies clean (Personal Hygiene)",
+    "K1.1.3.1.2: Demonstrate the correct way of washing hands with soap under running water"
+  ],
+
+  // Theme 1: All About Me - KG 2
+  "K2.1.1.1: Demonstrate understanding that all learners are wonderful and unique": [
+    "K2.1.1.1.1: Identify and describe in simple sentences (using home language), the wonderful features of our body that make us special and unique",
+    "K2.1.1.1.2: Recognize and describe the different parts of book",
+    "K2.1.1.1.3: Use positive words learnt from the Shared reading related to parts of the body"
+  ],
+  "K2.1.2.1: Demonstrate knowledge of appropriate names of parts of internal body and their functions": [
+    "K2.1.2.1.1: Name parts of the human body and state their functions (including heart, stomach etc)",
+    "K2.1.2.1.2: Identify and talk about the special parts of the body (the five senses) and state their functions"
+  ],
+  
+  // Theme 2: My Family - KG 1
+  "K1.2.1.1: Demonstrate understanding of importance, roles and responsibilities of family members": [
+    "K1.2.1.1.1: Identify and talk about members of their families using simple sentences",
+    "K1.2.1.1.2: Recite a rhyme/sing a song about the family and talk about the roles of members"
+  ],
+  // Math B1-B3
+  "B1.1.1.1: Describe numbers 0 to 100": ["B1.1.1.1.1: Count by 1s, 2s and 10s forward and backward between 0 and 100", "B1.1.1.1.4: Represent number of objects with written numerals 0-100"],
+  "B2.1.1.1.4: Understanding place value to 100": ["B2.1.1.1.4.1: Explain the meaning of each digit in a 2-digit number using bundles of 10s"],
+  "B3.1.2.5: Multiplication up to 5x5": ["B3.1.2.5.1: Represent and explain multiplication using equal groupings", "B3.1.2.5.2: Represent and explain multiplication using rectangular arrays"],
+  "B1.3.1.1: Attributes of 2D and 3D shapes": ["B1.3.1.1.1: Distinguish between attributes that define a shape and attributes that do not"],
+  "B3.3.3.1: Metres and centimetres": ["B3.3.3.1.1: Model and describe the relationship between metre and centimetre (100cm = 1m)"],
+  // Mathematics B4
+  "B4.1.1.1: Multi-digit whole numerals to 100,000": ["B4.1.1.1.1: Model number quantities, place value for multi-digit using graph sheets up to 100,000", "B4.1.1.1.2: Read and write numbers in figures and in words up to 100,000"],
+  "B4.1.1.2: Roman numerals up to XXX (30)": ["B4.1.1.2.1: Develop an understanding of Roman Numeral system up to XXX (30)"],
+  "B4.1.1.3: Factors, multiples and squared numbers": ["B4.1.1.3.1: Determine set of factors of a given number up to 50", "B4.1.1.3.2: Determine the highest common factor (HCF) of any two whole numbers between 1 and 50"],
+  "B4.1.3.1: Equivalent and improper fractions": ["B4.1.3.1.1: Generate unit fractions and locate a unit fraction on a number line", "B4.1.3.1.4: Recognise fractions that are greater than one (improper fractions)"],
+  "B4.3.3.1: Perimeter and Area concept": ["B4.3.3.1.2: Measure and record perimeter for regular and irregular shapes in cm and m", "B4.3.3.2.1: Recognise that area is measured in square units"],
+  "B4.4.1.1: Many-to-one correspondence": ["B4.4.1.1.2: Use an understanding of many-to-one correspondence to display or construct graphs"],
+
+  // Mathematics B5
+  "B5.1.1.1: Multi-digit numerals up to 1,000,000": ["B5.1.1.1.1: Model number quantities up to 1,000,000 using graph sheets and multi-base block"],
+  "B5.1.2.4: Divide 3-digit numbers by 1-digit number efficiently": ["B5.1.2.4.1: Divide 3-digit numbers by 1-digit number efficiently using long division"],
+  "B5.1.4.1: Decimals (tenths and hundredths)": ["B5.1.4.1.1: Describe and represent decimals (up to the thousandths) concretely, pictorially, and symbolically"],
+  "B5.3.3.3: Understanding angles": ["B5.3.3.3.2: Measure given angles with a protractor and classify them (right, acute, obtuse)"],
+  "B5.4.1.1: First-hand and second-hand data": ["B5.4.1.1.1: Explain the difference between first-hand and second-hand data"],
+
+  // Mathematics B6
+  "B6.1.1.1: Multi-digit numerals up to 1 billion": ["B6.1.1.1.1: Model number quantities up to 1,000,000,000 using graph sheets and multi-base block"],
+  "B6.1.3.1: Comparing mixture of common, dec and percent": ["B6.1.3.1.2: Add and subtract unlike and mixed fractions"],
+  "B6.1.4.1: Concept of ratios": ["B6.1.4.1.1: Use concrete models and pictorial representations to explain a ratio as a concept"],
+  "B6.3.3.5: Advanced cardinal points (NE, NW...)": ["B6.3.3.5.1: Tell the position and motion of objects in space using 8 cardinal points"],
+  "B6.4.2.2: Theoretical and experimental probability": ["B6.4.2.2.1: List the possible outcomes and determine theoretical probability for an experiment"],
+
+  // Our World Our People B1-B3
+  "B1.1.1.1: Nature of God": ["B1.1.1.1.1: Examine our relationship with the Creator"],
+  "B3.1.1.1: Purpose of God's creation": ["B3.1.1.1.1: Examine the purpose of God's creation of human beings"],
+  "B1.2.1.1: Environment and Weather": ["B1.2.1.1.1: Explore the uses of things in the environment"],
+  "B2.2.2.1: Plants and Animals": ["B2.2.2.1.1: Explore the important plants in the community", "B2.2.2.1.2: Explore the important animals in the community"],
+  "B3.2.1.1: Use of land and water": ["B3.2.1.1.1: Explain problems with the use of land and water"],
+  "B3.3.3.1: Basic Human Rights": ["B3.3.3.1.1: Describe ways of claiming one's rights"],
+  "B1.5.1.1: Our Neighbouring Countries": ["B1.5.1.1.1: Mention Ghana's Neighbours"],
+
+  // Our World Our People B4-B6
+  "B4.1.1.1: Uniqueness of human creation": ["B4.1.1.1.1: Explain how special each individual is in relation to others"],
+  "B4.2.1.1: Environmental safety": ["B4.2.1.1.1: Explain ways of making the environment safe (sanitation, tree planting)"],
+  "B5.1.2.1: Changes during adolescence": ["B5.1.2.1.1: Describe physical and emotional changes that occur during adolescence"],
+  "B5.4.2.2: Democratic governance": ["B5.4.2.2.1: Explain and appreciate the importance of democratic governance in school"],
+  "B6.1.2.2: Personal hygiene during adolescence": ["B6.1.2.2.1: Explain how to maintain personal hygiene during adolescence"],
+  "B6.4.6.1: Job opportunities in agriculture": ["B6.4.6.1.1: Describe the agricultural value chain and the job opportunities within it"],
+  "B4.3.2.1: Significance of Ghanaian festivals": ["B4.3.2.1.1: Identify and describe celebrations and positive traditions"],
+  "B5.2.1.1: Greenhouse effect and climate change": ["B5.2.1.1.1: Record human activities that cause concentration of greenhouse gases"],
+  "B6.2.3.1: Map of Ghana (Regions/Capitals)": ["B6.2.3.1.1: Identify the political regions and capitals on a map of Ghana"],
+  "B6.5.1.2: Effects of climate change": ["B6.5.1.2.1: Investigate the effects of climate change on the environment"],
+
+  // Physical Education
+  "B1.1.1.1: Travel over/under objects": ["B1.1.1.1.1: Travel over, under, in front of and behind objects"],
+  "B2.1.1.1: Travel in zigzag pathways": ["B2.1.1.1.1: Move in straight, curved and zigzag pathways"],
+  "B3.1.10.1: Dribbling around obstacles": ["B3.1.10.1.13: Hand-dribble a ball continuously while moving around obstacles"],
+  "B4.1.6.1: Strike a bounce ball": ["B4.1.6.1.6: Strike a bounce ball with the hands and feet"],
+  "B5.3.1.3: 10-min jogging": ["B5.3.1.3.1: Perform 10 minutes jogging with music"],
+  "B6.4.1.4: Physical fitness plan": ["B6.4.1.4.1: Develop a one-day personal physical fitness plan"],
+
+  // RME B1-B6
+  "B1.1.1.1: Explain who the Creator is": ["B1.1.1.1.1: Explore God's Creation", "B1.1.1.1.2: Mention names of things God created", "B1.1.1.1.3: Examine some attributes of God"],
+  "B2.1.1.1: Demonstrate an appreciation of God's creation": ["B2.1.1.1.1: Demonstrate appreciation of God's creation", "B2.1.1.1.2: Show care for God's creation"],
+  "B3.1.1.1: Differentiate between God's creation and those made by man": ["B3.1.1.1.1: Differentiate between natural and man-made things"],
+  "B4.1.1.1: Demonstrate an understanding of the attributes of God": ["B4.1.1.1.1: Demonstrate understanding of attributes of God"],
+  "B5.1.1.1: Explain that God created human beings in His own image": ["B5.1.1.1.1: Explain man created in God's image"],
+  "B6.1.1.1: Describe the nature of God through His attributes": ["B6.1.1.1.1: Describe nature of God through attributes"],
+  "B2.1.2.1: Discuss our responsibilities towards the environment": ["B2.1.2.1.1: Discuss roles in caring for the environment", "B2.1.2.1.2: Identify types of things in the environment"],
+  "B3.1.2.1: Explain why we must care for the environment": ["B3.1.2.1.1: Explain why we must care for the environment"],
+  "B4.1.2.1: Discuss the benefits of the environment": ["B4.1.2.1.1: Discuss benefits of the environment"],
+  "B5.1.2.1: Describe ways to care for the environment": ["B5.1.2.1.1: Describe ways to care for the environment"],
+  "B6.1.2.1: Discuss ways of protecting the environment": ["B6.1.2.1.1: Discuss ways of protecting environment"],
+  "B3.1.3.1: List some of the purposes for which God created things": ["B3.1.3.1.1: List purposes of God's creation"],
+  "B1.2.1.1: Explain the meaning of worship": ["B1.2.1.1.1: Explain the meaning of worship", "B1.2.1.1.2: State the importance of worship"],
+  "B2.2.1.1: Recognise the things used in worship in the three major religions": ["B2.2.1.1.1: Recognise things used in worship"],
+  "B4.2.1.1: Explain what constitutes worship in the three major religions": ["B4.2.1.1.1: Explain what constitutes worship"],
+  "B5.2.1.1: Mention types of prayer in the three major religions": ["B5.2.1.1.1: Mention types of prayer"],
+  "B6.2.1.1: Mention the types and the importance of festivals": ["B6.2.1.1.1: Mention types and importance of festivals"],
+  "B3.2.1.1: Recite his / her religious songs and prayers": ["B3.2.1.1.1: Recite his/her religious songs and prayers"],
+  "B2.3.1.1: State the names and the places of birth of the divine leaders": ["B2.3.1.1.1: State names and places of birth of divine leaders"],
+  "B1.3.1.1: Reveal common stages in the lives of Leaders": ["B1.3.1.1.1: Reveal common stages in the lives of religious leaders"],
+  "B3.3.1.1: Narrate the events that took place during the early lives of religious leaders": ["B3.3.1.1.1: Narrate events from early lives of leaders"],
+  "B4.3.1.1: Narrate the early life and call of the leaders": ["B4.3.1.1.1: Narrate early life and call of leaders"],
+  "B5.3.1.1: Describe the ministry and the latter lives of the leaders": ["B5.3.1.1.1: Describe ministry and latter lives of leaders"],
+  "B3.5.1.1: Discuss the roles of the individual in the family and in the community": ["B3.5.1.1.1: Discuss roles of individuals in family and community"],
+  "B6.5.1.1: Describe the roles of family members": ["B6.5.1.1.1: Describe roles of family members"],
+  "B1.4.1.1: Explain the Importance of keeping safety in the community": ["B1.4.1.1.1: Explain importance of safety in the community"],
+  "B1.5.1.1: Explain the need to obey authority": ["B1.5.1.1.1: Explain the need to obey authority"],
+  "B4.5.1.1: Examine the need for authority and obedience": ["B4.5.1.1.1: Examine need for authority and obedience"],
+  "B5.5.1.1: Discuss the importance of being obedient to authority": ["B5.5.1.1.1: Discuss importance of obedience"],
+  "B2.5.1.1: Demonstrate how to relate with family members": ["B2.5.1.1.1: Demonstrate how to relate with family members"],
+};
+
+export const PE_LESSON_FRAMES: Record<string, any> = {
+  "B1.1.1.1.1": {
+    topic: "Moving Over and Under Obstacles",
+    keyWords: ["Over", "Under", "Obstacles", "Locomotor"],
+    activities: [
+      "Set up cones and bars as hurdles",
+      "Teacher demonstrates crawling 'under' and jumping 'over'",
+      "Learner practice at their own pace in a circuit",
+      "Game: 'Bridge and River' - some learners act as bridges (under) and some as stones (over)"
+    ],
+    resources: ["Cones", "Poles/Hurdles", "Mats"]
+  },
+  "B3.1.10.1.13": {
+    topic: "Hand Dribbling with Agility",
+    keyWords: ["Dribbling", "Control", "Hand-eye Coordination"],
+    activities: [
+      "Practice bouncing the ball stationary first",
+      "Dribble through a line of 5 cones using one hand",
+      "Change hands (left/right) at each cone",
+      "Relay race: Dribbling around obstacles back to the team"
+    ],
+    resources: ["Handballs/Basketballs", "Skittles/Cones"]
+  },
+  "B5.3.1.3.1": {
+    topic: "Aerobic Capacity: Jogging to Rhythm",
+    keyWords: ["Jogging", "Pulse", "Endurance", "Rhythm"],
+    activities: [
+      "Choose a local upbeat song",
+      "Learners jog in a circle following the tempo of the music",
+      "Monitor breathing and encourage steady pace for 10 minutes",
+      "Group stretch and cool down after the music stops"
+    ],
+    resources: ["Bluetooth speaker", "Local music playlists", "Stopwatch"]
+  }
+};
+
+export const OWOP_B4_B6_LESSON_FRAMES: Record<string, any> = {
+  "B4.1.1.1.1": {
+    topic: "The Uniqueness of Mankind",
+    keyWords: ["Unique", "Aspirations", "Talent", "Special"],
+    activities: [
+      "Learners identify ways they are different from classmates (height, mass, skills)",
+      "Role-play: Demonstrate a gift/talent they have that others may not",
+      "Draft a poster titled 'I am Special' listing their unique qualities"
+    ],
+    resources: ["Mirror", "Paper/Markers", "Success stories of Ghanaians"]
+  },
+  "B5.1.2.1.1": {
+    topic: "Adolescent Changes",
+    keyWords: ["Adolescence", "Puberty", "Physical", "Emotional"],
+    activities: [
+      "Group discussion (boys/girls separate then together) on body changes",
+      "Teacher explains hormones and emotional shifts (shyness, excitement)",
+      "Match-the-change game: Primary cards with adolescent outcomes"
+    ],
+    resources: ["Body change charts", "Guest health worker", "Video clips"]
+  },
+  "B5.4.2.2.1": {
+    topic: "Introduction to Democracy",
+    keyWords: ["Democracy", "Election", "Accountability", "Leadership"],
+    activities: [
+      "Organize a mock class election for a project leader",
+      "Discuss the features of democracy: transparency, voting, majority rule",
+      "Watch a video of a Ghanaian parliamentary session"
+    ],
+    resources: ["Ballot box", "Ghanaian Constitution (simplified)", "News clips"]
+  },
+  "B6.4.6.1.1": {
+    topic: "Agribusiness and Job Opportunities",
+    keyWords: ["Value Chain", "Processing", "Logistics", "Revenue"],
+    activities: [
+      "Draw a flow-map from Cocoa Farm to Chocolate Bar",
+      "List jobs at each stage: Farmer, Driver, Factory worker, Marketer",
+      "Debate: 'Is farming better than white-collar jobs?'"
+    ],
+    resources: ["Career brochures", "Food samples", "Local farmer interview"]
+  },
+  "B4.3.2.1.1": {
+    topic: "Ghanaian Festivals and Heritage",
+    keyWords: ["Aboakyer", "Homowo", "Eid", "Heritage"],
+    activities: [
+      "Identify festivals celebrated in the local community",
+      "Role-play the arrival of chiefs at a durbar",
+      "Write a short essay on why festivals are important for unity"
+    ],
+    resources: ["Festival pictures", "Traditional items (kente, beads)", "Videos"]
+  },
+  "B5.2.1.1.1": {
+    topic: "Greenhouse Gases and Human Activity",
+    keyWords: ["Greenhouse", "Carbon Dioxide", "Emission", "Global Warming"],
+    activities: [
+      "Brainstorm human activities that produce smoke (vehicles, bush burning)",
+      "Diagram: How greenhouse gases trap heat in the atmosphere",
+      "Survey: Group walk to find signs of smoke emission in the community"
+    ],
+    resources: ["Diagrams", "Local environment", "Fact sheets"]
+  },
+  "B6.2.3.1.1": {
+    topic: "Political Regions of Ghana",
+    keyWords: ["Regions", "Capitals", "Administrative", "Boundary"],
+    activities: [
+      "Locate the 16 regions on a political map of Ghana",
+      "Memory game: Matching regions to their administrative capitals",
+      "Colouring project: Shading regions correctly on a blank map"
+    ],
+    resources: ["Blank maps", "Wall map of Ghana", "Puzzle games"]
+  }
+};
+
+export const MATH_B1_B3_LESSON_FRAMES: Record<string, any> = {
+  "B1.1.1.1.1": {
+    topic: "Counting in 1s, 2s and 10s",
+    keyWords: ["Counting", "Forward", "Backward", "Sequence"],
+    activities: [
+      "Learners count sticks or stones in 1s up to 50",
+      "Game: 'Skip and Jump' - counting in 2s while jumping in the yard",
+      "Use bundles of 10 to practice counting in tens",
+      "Identify missing numbers in a sequence on the board"
+    ],
+    resources: ["Stones", "Bundles of sticks", "100-number chart"]
+  },
+  "B2.1.1.1.4.1": {
+    topic: "Place Value: Tens and Ones",
+    keyWords: ["Tens", "Ones", "Digit", "Value"],
+    activities: [
+      "Use base-ten blocks (flats and units) to represent numbers like 42",
+      "Decompose numbers: 57 = 5 tens and 2 ones",
+      "Interactive: Learners move units to the 'Tens' house when they reach 10",
+      "Writing numbers in expanded form: 40 + 8 = 48"
+    ],
+    resources: ["Base-ten blocks", "Place value mats", "Number cards"]
+  },
+  "B3.1.2.5.1": {
+    topic: "Intro to Multiplication: Equal Groups",
+    keyWords: ["Groups", "Multiplier", "Product", "Total"],
+    activities: [
+      "Arrange 12 bottle caps into 3 groups of 4",
+      "Link grouping to addition: 4 + 4 + 4 = 12",
+      "Learner drawing: 'Draw 5 trees with 2 mangoes on each'",
+      "Introduce the 'x' symbol as shorthand for 'groups of'"
+    ],
+    resources: ["Bottle caps", "Drawing sheets", "Multiplication chart"]
+  }
+};
+
+export const MATH_B4_B6_LESSON_FRAMES: Record<string, any> = {
+  "B4.1.1.2.1": {
+    topic: "Introduction to Roman Numerals (1-30)",
+    keyWords: ["Roman Numerals", "I, V, X", "Symbols", "Conversion"],
+    activities: [
+      "Show a clock with Roman Numerals and discuss the symbols",
+      "Teacher demonstrates symbols: I=1, V=5, X=10",
+      "Game: Call out a number and learners form the Roman symbol with their fingers or sticks",
+      "Match word cards of Hindu-Arabic numbers to Roman cards"
+    ],
+    resources: ["Roman Numeral chart", "Matches/Sticks", "Clock face"]
+  },
+  "B4.1.2.5.1": {
+    topic: "Division as Repeated Subtraction",
+    keyWords: ["Division", "Subtraction", "Quotient", "Efficient"],
+    activities: [
+      "Use 25 straws and take groups of 5 away until none are left",
+      "Model the long division frame on the board",
+      "Practice dividing 2-digit numbers by 1-digit (e.g., 48 ÷ 4)",
+      "Peer teaching: One learner explains the 'Big 7' method to another"
+    ],
+    resources: ["Straws", "Division frames", "Worksheets"]
+  },
+  "B5.3.3.3.2": {
+    topic: "Measuring Angles with a Protractor",
+    keyWords: ["Protractor", "Degrees", "Acute", "Obtuse", "Right Angle"],
+    activities: [
+      "Demonstrate how to align the midpoint of the protractor with the vertex",
+      "Learners draw various 'V' shapes and measure the opening in degrees",
+      "Sort measured angles into Acute (< 90), Obtuse (> 90), and Right (90)",
+      "Treasure Hunt: Find angles in the classroom (e.g., door hinge) and measure them"
+    ],
+    resources: ["Protractors", "Rulers", "Angle charts"]
+  },
+  "B6.1.3.1.2": {
+    topic: "Adding Mixed Fractions",
+    keyWords: ["Mixed Fractions", "Improper", "LCD", "Denominator"],
+    activities: [
+      "Use folded paper circles to show 1 1/2 + 2 1/2",
+      "Convert mixed fractions to improper fractions (2 1/3 = 7/3)",
+      "Find the Lowest Common Denominator (LCD) for unlike fractions",
+      "Solve real-life problems: 'Add 2 1/2 bags of cement to 1 1/4 bags'"
+    ],
+    resources: ["Fraction circles", "Grid paper", "Fraction wall"]
+  },
+  "B6.1.4.1.1": {
+    topic: "Understanding Ratios",
+    keyWords: ["Ratio", "Comparison", "Proportion", "Simplest Form"],
+    activities: [
+      "Compare quantities of items: 4 red pens to 2 blue pens (4:2)",
+      "Simplify ratios by dividing by HCF (4:2 = 2:1)",
+      "Model with area: 'Shape A is 1/4 the size of Shape B'",
+      "Recipe scaling: '3 cups of water to 1 cup of rice'"
+    ],
+    resources: ["Pens/Stones", "Measuring cups", "Area blocks"]
+  }
+};
+
+export const OWOP_B1_B3_LESSON_FRAMES: Record<string, any> = {
+  "B1.1.1.1.1": {
+    topic: "Our Relationship with the Creator",
+    keyWords: ["God", "Creator", "Creation", "Faith"],
+    activities: [
+      "Learners talk about God's creation using pictures and real things from the environment",
+      "Retell the creation story through role-play",
+      "Draw and colour animals, trees, and stars as part of God's creation"
+    ],
+    resources: ["Pictures", "Drawing sheets", "Environment"]
+  },
+  "B2.2.2.1.1": {
+    topic: "Important Plants in our Community",
+    keyWords: ["Plants", "Crops", "Cocoa", "Food"],
+    activities: [
+      "Nature walk to observe and talk about different plants in the environment",
+      "Identify uses of plants (food, medicine, shade)",
+      "Draw and label a plant found in the community"
+    ],
+    resources: ["Garden", "Plant samples", "Crayons"]
+  },
+  "B3.2.1.1.1": {
+    topic: "Problems with Use of Land and Water",
+    keyWords: ["Pollution", "Degradation", "Land", "Water"],
+    activities: [
+      "Discuss activities like Galamsey and bush burning through pictures",
+      "Trip to observe a local water body (if safe)",
+      "Brainstorm ways to protect our land and water sources"
+    ],
+    resources: ["Videos/Photos of illegal mining", "Local environment"]
+  }
+};
 
 export const PEDAGOGICAL_PHASES = {
   starter: {
@@ -2212,5 +2745,223 @@ export const FRENCH_B4_B6_LESSON_FRAMES: Record<string, any> = {
       "Practice dictation of phone numbers in French"
     ],
     resources: ["Biographies of heroes", "Mock phone/sim cards", "Passport templates"]
+  }
+};
+
+export const GHANAIAN_LANGUAGE_B1_B3_LESSON_FRAMES: Record<string, any> = {
+  "B1.1.1.1": {
+    topic: "Songs: Singing Familiar Songs and Recognising Place Names",
+    keyWords: ["Akom", "Fontomfrom", "Language", "Melody", "Place names"],
+    activities: [
+      "Use a recorder to play some popular songs in the community",
+      "Ask learners to sing popular songs and dance with gestures",
+      "Lead learners to mention names of people and animals heard in the songs",
+      "Discuss the meaning of the songs with learners"
+    ],
+    resources: ["Audio recorder", "Musical instruments", "Song books", "Flashcards"]
+  },
+  "B1.1.6.1": {
+    topic: "Conversation: Greetings and Appropriate Address Terms",
+    keyWords: ["Anopa Akye", "Maakye", "Elders", "Peers", "Respect"],
+    activities: [
+      "Discuss different categories of people in the community (elders, peers, etc.)",
+      "Demonstrate appropriate greetings for each category using correct terms",
+      "Role-play greetings in various settings (morning at home, arriving at school)",
+      "Practice using address terms like 'Papa', 'Maame', 'Nana'"
+    ],
+    resources: ["Role-play cards", "Pictures of community members", "Videos of social greetings"]
+  },
+  "B2.1.1.1": {
+    topic: "Work and Play Songs",
+    keyWords: ["Occupations", "Fatigue", "Unity", "Rhythm", "Boredom"],
+    activities: [
+      "Revise traditional occupations and their associated work songs (fishing, farming)",
+      "Teach a new play song and demonstrate how the accompanying game is performed",
+      "Discuss the importance of work songs in reducing fatigue and improving productivity",
+      "Perform a moonlight play in groups while singing"
+    ],
+    resources: ["Pictures of people at work", "Playground equipment", "Drums/Percussion"]
+  },
+  "B3.1.2.1": {
+    topic: "Rhymes: Recognising and Producing Rhyming Words",
+    keyWords: ["Rhyme", "Sound patterns", "Couplet", "Poetry", "Verse"],
+    activities: [
+      "Read aloud a familiar rhyme and let learners identify words that sound the same",
+      "Model how to write a simple two-line rhyme",
+      "Encourage learners to produce their own rhyming words for given objects",
+      "Play a 'Rhyme Chain' game where each learner adds a word that rhymes with the previous one"
+    ],
+    resources: ["Rhyme books", "Word cards", "Chart with rhyming words"]
+  },
+  "B3.5.7.1": {
+    topic: "Spelling: Four, Five, and Six Letter Words",
+    keyWords: ["Spelling", "Consonant", "Vowel", "Syllable", "Accuracy"],
+    activities: [
+      "Practice spelling four and five letter words using flashcards",
+      "Engage in a spelling bee competition among groups",
+      "Write lists of six-letter words related to common objects in the environment",
+      "Use target words in simple sentences to demonstrate meaning"
+    ],
+    resources: ["Letter cards", "Sand trays", "Chalkboard", "Exercise books"]
+  },
+  "B4.1.1.1": {
+    topic: "Traditional and Occupational Songs",
+    keyWords: ["Occupations", "Lyrics", "Melody", "Rhythm", "Context"],
+    activities: [
+      "Sing a familiar traditional song with the class",
+      "Watch a video of a traditional song being performed",
+      "Discuss the lyrics and the specific occupation it relates to",
+      "Identify the importance of these songs in the workplace"
+    ],
+    resources: ["Video of traditional dance", "Audio recorder", "Song texts"]
+  },
+  "B4.3.1.1": {
+    topic: "Punctuation: Full Stops, Commas and Question Marks",
+    keyWords: ["Punctuation", "Sentence structure", "Pause", "Clarity", "Tone"],
+    activities: [
+      "Identify punctuation marks in a given paragraph",
+      "Practice placing full stops at the end of complete thoughts",
+      "Use commas to separate items in a list",
+      "Convert statements into questions using appropriate marks"
+    ],
+    resources: ["Punctuation charts", "Worksheets", "Flashcards"]
+  },
+  "B5.1.1.1": {
+    topic: "Cradle Songs and Lullabies",
+    keyWords: ["Lullaby", "Cradle", "Soothing", "Role-play", "Rhythm"],
+    activities: [
+      "Listen to recordings of traditional lullabies",
+      "Discuss the soothing nature and purpose of cradle songs",
+      "Role-play a mother or caretaker singing to a child",
+      "Analyze the lyrics for common themes of love and protection"
+    ],
+    resources: ["Audio recordings of lullabies", "Dolls for role-play", "Lyrics sheets"]
+  },
+  "B6.1.1.1": {
+    topic: "Investigating Traditional Dances and Songs",
+    keyWords: ["Traditional dance", "Investigation", "Heritage", "Performance", "Rhythm"],
+    activities: [
+      "Research a specific traditional dance from a chosen region in Ghana",
+      "Perform the corresponding songs using the correct rhythms",
+      "Demonstrate basic dance steps associated with the songs",
+      "Discuss the cultural significance and history of the dance"
+    ],
+    resources: ["Drums", "Traditional costumes (props)", "Videos of cultural festivals"]
+  },
+  "B6.3.1.1": {
+    topic: "Writing Sentences: Joint Scripts and Capitalisation",
+    keyWords: ["Handwriting", "Joint script", "Capitalisation", "Legibility", "Fluency"],
+    activities: [
+      "Practice writing sentences using joint/cursive handwriting",
+      "Focus on the correct formation of ascending and descending letters",
+      "Apply rules of capitalisation for proper nouns and sentence beginnings",
+      "Peer-review writing for legibility and accuracy"
+    ],
+    resources: ["Joint script templates", "Writing guides", "Specially ruled exercise books"]
+  }
+};
+
+export const KG_INTEGRATED_LESSON_FRAMES: Record<string, any> = {
+  "K1.1.1.1": {
+    topic: "I am a wonderful and unique creation",
+    keyWords: ["Unique", "Wonderful", "Body parts", "Special"],
+    activities: [
+      "Guide learners to look at each other and talk about their unique features (height, skin colour, etc.)",
+      "Sing action songs about parts of the body",
+      "Learners draw and colour a picture of themselves",
+      "Identify parts of a book (front, back, spine)"
+    ],
+    resources: ["Mirror", "Crayons", "Charts of body parts", "Big Books"]
+  },
+  "K2.1.1.1": {
+    topic: "I am a wonderful and unique creation (Review and Extend)",
+    keyWords: ["Unique", "Special", "Features", "Confidence"],
+    activities: [
+      "Think-Pair-Share: Talk about what makes each member of the pair special",
+      "Draw and label simple parts of the body",
+      "Shared reading of a story about a unique child",
+      "Practice using positive words to describe oneself"
+    ],
+    resources: ["Story books", "Drawing sheets", "Word cards", "Mirror"]
+  },
+  "K1.2.1.1": {
+    topic: "My Family Members and Roles",
+    keyWords: ["Father", "Mother", "Siblings", "Love", "Roles"],
+    activities: [
+      "Mention names of family members",
+      "Role-play family activities (cooking, cleaning, etc.)",
+      "Sing songs about the family",
+      "Discuss the importance of helping at home"
+    ],
+    resources: ["Family pictures", "Dolls", "Role-play props"]
+  }
+};
+
+export const RME_LESSON_FRAMES: Record<string, any> = {
+  "B1.1.1.1.1": {
+    topic: "Exploring God's Creation",
+    keyWords: ["Creation", "Environment", "Living things", "Non-living things"],
+    activities: [
+      "Go on a nature walk around the school compound",
+      "Identify and mention names of things seen (trees, birds, stones)",
+      "Draw one thing that God has created",
+      "Sing songs that praise God for His creation"
+    ],
+    resources: ["Nature", "Drawing books", "Pencils", "Crayons"]
+  },
+  "B2.1.2.1.1": {
+    topic: "Caring for the Environment",
+    keyWords: ["Stewardship", "Responsibility", "Sanitation", "Hygiene"],
+    activities: [
+      "Discuss why we need to keep our surroundings clean",
+      "Demonstrate proper waste disposal techniques",
+      "Participate in a clean-up exercise in the classroom",
+      "Create posters about protecting the environment"
+    ],
+    resources: ["Brooms", "Dustbins", "Poster sheets", "Markers"]
+  },
+  "B3.1.3.1.1": {
+    topic: "Purpose of God's Creation",
+    keyWords: ["Purpose", "Utility", "Benefits", "Environment"],
+    activities: [
+      "Identify various things God created in the community",
+      "Discuss the uses of some specific things (e.g., water for drinking, trees for shade)",
+      "Draw something God created and write one use for it",
+      "Role-play how humans benefit from God's creation"
+    ],
+    resources: ["Pictures of creation", "Worksheets", "Coloured pencils"]
+  },
+  "B4.3.1.1.1": {
+    topic: "Early Life and Call of religious leaders",
+    keyWords: ["Call", "Prophecy", "Vision", "Enlightenment", "Leaders"],
+    activities: [
+      "Watch a video about the early life of a religious leader (e.g. Jesus, Muhammad)",
+      "Role-play the scenes of the 'Call' of a chosen leader",
+      "Discuss the qualities demonstrated by these leaders during their childhood",
+      "Identify common themes in the calls of the different leaders"
+    ],
+    resources: ["Video clips", "Costumes for role-play", "Storybooks"]
+  },
+  "B5.3.1.1.1": {
+    topic: "Ministry and latter lives of religions leaders",
+    keyWords: ["Ministry", "Service", "Teachings", "Legacy", "Sacrifice"],
+    activities: [
+      "Discuss the major teachings of a specific religious leader",
+      "Identify the key miracles or signficant events in their ministry",
+      "Narrate the events leading to the latter lives of the leaders",
+      "Make a group presentation on the moral lessons from their lives"
+    ],
+    resources: ["Flashcards", "Chart with timeline of leaders", "Relevant scriptures"]
+  },
+  "B6.2.1.1.1": {
+    topic: "Types and Importance of Religious Festivals",
+    keyWords: ["Eid", "Easter", "Christmas", "Hogbetsotso", "Celebration"],
+    activities: [
+      "List different religious festivals celebrated in Ghana",
+      "Describe how one specific festival is celebrated",
+      "Discuss why people celebrate these festivals (thanksgiving, remembrance)",
+      "Design a greeting card for a chosen religious festival"
+    ],
+    resources: ["Festival pictures", "Cardboard", "Coloured pencils", "Glue"]
   }
 };

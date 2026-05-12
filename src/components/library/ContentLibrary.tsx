@@ -97,10 +97,13 @@ const CURRICULUM_BOOKS: Record<string, { title: string, url: string, level: stri
     { title: "Science Curriculum (B7-B9)", url: "https://nacca.gov.gh/wp-content/uploads/2020/12/Science-JHS-B7-B9.pdf", level: "Basic 7-9 (JHS)" },
     { title: "Senior High Integrated Science", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/INTEGRATED-SCIENCE-SHS.pdf", level: "Basic 10-12 (SHS)" }
   ],
-  "Social Studies": [
-    { title: "Our World Our Heritage (B1-B6)", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/OWOH-LOWER-PRIMARY-B1-B3.pdf", level: "Basic 1-6 (Primary)" },
-    { title: "Social Studies Curriculum (B7-B9)", url: "https://nacca.gov.gh/wp-content/uploads/2020/12/Social-Studies-JHS-B7-B9.pdf", level: "Basic 7-9 (JHS)" },
-    { title: "Senior High Social Studies", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/SOCIAL-STUDIES-SHS.pdf", level: "Basic 10-12 (SHS)" }
+  "Our World Our People": [
+    { title: "Our World Our People (B1-B3)", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/OUR-WORLD-AND-OUR-PEOPLE-LOWER-PRIMARY-B1-B3.pdf", level: "Basic 1-3 (Primary)" },
+    { title: "Our World Our People (B4-B6)", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/OUR-WORLD-AND-OUR-PEOPLE-UPPER-PRIMARY-B4-B6.pdf", level: "Basic 4-6 (Primary)" }
+  ],
+  "Physical Education": [
+    { title: "Physical Education Curriculum (B1-B6)", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/PE-LP-B1-B6.pdf", level: "Basic 1-6 (Primary)" },
+    { title: "PE and Health Curriculum (B7-B9)", url: "https://nacca.gov.gh/wp-content/uploads/2020/12/PE-JHS-B7-B9.pdf", level: "JHS" }
   ],
   "Computing": [
     { title: "Computing Curriculum (B1-B6)", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/COMPUTING-LOWER-PRIMARY-B1-B3.pdf", level: "Basic 1-6 (Primary)" },
@@ -128,10 +131,6 @@ const CURRICULUM_BOOKS: Record<string, { title: string, url: string, level: stri
   "History": [
     { title: "Primary History Curriculum (B1-B6)", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/HISTORY-B1-B6.pdf", level: "Primary" },
     { title: "SHS History", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/HISTORY-SHS.pdf", level: "SHS" }
-  ],
-  "Physical Education": [
-    { title: "PE and Health Curriculum (B1-B6)", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/PE-B1-B6.pdf", level: "Primary" },
-    { title: "PE and Health Curriculum (B7-B9)", url: "https://nacca.gov.gh/wp-content/uploads/2020/12/PE-JHS-B7-B9.pdf", level: "JHS" }
   ],
   "Elective Mathematics": [
     { title: "SHS Elective Mathematics", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/ELECTIVE-MATHEMATICS-SHS.pdf", level: "SHS" }
@@ -252,7 +251,7 @@ export default function ContentLibrary() {
   useEffect(() => {
     async function testConnection() {
       try {
-        await getDocFromServer(doc(db, 'system', 'connection'));
+        await getDocFromServer(doc(db, 'test', 'connection'));
       } catch (error) {
         if (error instanceof Error && error.message.includes('the client is offline')) {
           console.error("Please check your Firebase configuration.");

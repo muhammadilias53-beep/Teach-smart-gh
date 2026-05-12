@@ -15,6 +15,11 @@ export const generateLessonPlan = async (prompt: string, teacherInfo?: { school?
     STRAND PARITY & DISTRIBUTION: When generating schemes or multi-term content, ensure that each Strand of a subject is represented in every term. A bit of every strand should be taught in every term (Term 1, 2, and 3) to ensure continuous engagement.
     
     SUBJECT-SPECIFIC COMPLIANCE:
+    - Integrated Curriculum (KG): Follow a thematic and play-based approach. The curriculum is integrated across Language and Literacy, Numeracy, Our World and Our People, and Creative Arts. Focus on the 7 core themes (All About Me, My Family, Values and Beliefs, My Local Community, My Nation Ghana, All Around Us, My Global Community). Activity descriptions must be detailed and play-centered.
+    - Mathematics (B1-B6): Use concrete manipulatives for B1-B3. For B4-B6, transition to more abstract modeling but maintain practical examples (e.g., area from grid paper, division as repeated subtraction). Emphasize Roman Numerals, factors/HCF/LCM, and fractions/decimals/percent.
+    - Our World Our People (B1-B6): Focus on civic responsibility, environmental awareness, and moral values. Activity descriptions should encourage community interaction and personal reflection. Use real-life scenarios related to Ghana's culture and environment.
+    - Physical Education (B1-B6): Focus on motor skills, physical fitness, and teamwork. Activity descriptions must include safety instructions, specific movement cues (e.g., 'eyes on the ball'), and step-by-step drills appropriate for the field or playground. Emphasize teamwork and fair play.
+    - Ghanaian Language (B1-B3 & B4-B6): Follow the specific NaCCA strands (Oral Language, Reading, Writing, etc.). For B1-B3, focus on foundational literacy and phonological awareness. For B4-B6, move towards composition, customs, and literature. Always include the official NaCCA Indicator codes.
     - French: Prioritize the four basic communicative skills (Listening, Speaking, Reading, Writing). Use the task-based approach. All French text outputs should include the French expression followed by the English translation in parentheses for Basic levels.
     - History: Use narrative and inquiry-based approaches. Focus on sources of evidence.
     - English: Integrate Listening, Speaking, Reading, Writing, and Grammar.
@@ -22,7 +27,7 @@ export const generateLessonPlan = async (prompt: string, teacherInfo?: { school?
     - Science: Emphasize "Diversity of Matter" as the first strand.
     - Computing: Prioritize practical application and digital safety.
     
-    NOMENCLATURE: ALWAYS use the "Basic" level format (e.g., B1-B6 for Primary, B7-B9 for Junior High, B10-B12 for Senior High). NEVER use JHS or SHS alone; always refer to them as Basic 7-9 or Basic 10-12.
+    NOMENCLATURE: ALWAYS use the "Basic" level format (e.g., B1-B6 for Primary, B7-B9 for Junior High, B10-B12 for Senior High). NEVER use JHS or SHS alone; always refer to them as Basic 7-9 or Basic 10-12. For Kindergarten, use KG1 and KG2.
     INDICATORS: You MUST include and strictly follow the Indicator Code provided. Every activity must map back to these curriculum indicators.
     
     LESSON PLAN STRUCTURE (NaCCA CCP/SBC Standards):
@@ -103,18 +108,18 @@ export const generateSchemeOfWork = async (
   if (type === 'yearly') {
     formatInstructions = `
       STRICT CURRICULUM REQUIREMENT: 
-      1. This document serves as the MASTER ROADMAP for the entire academic year.
-      2. SYSTEMATIC DISTRIBUTION: You MUST systematically distribute ALL strands and sub-strands from the NaCCA curriculum across Term 1, Term 2, and Term 3.
-      3. STRAND PARITY: You MUST ensure that a bit of EACH Strand (e.g., in Science all 5 strands: Diversity of Matter, Cycles, Systems, Forces and Energy, Humans and the Environment) is represented and taught in EVERY term (Term 1, Term 2, and Term 3).
-      4. FULL COVERAGE: By the end of Term 3, 100% of the curriculum for ${subject} ${level} MUST be exhausted. No sub-strand should be left out.
-      5. PROGRESSION: Ensure a logical transition of content from Term 1 through to Term 3.
+      1. This document serves as the MASTER STRATEGIC ROADMAP for the entire academic year.
+      2. PERSPECTIVE: Act as a highly experienced Ghana Education Service (GES) curriculum expert.
+      3. SYSTEMATIC DISTRIBUTION: You MUST systematically distribute ALL strands and sub-strands from the NaCCA curriculum across Term 1, Term 2, and Term 3.
+      4. STRAND PARITY: You MUST ensure that a bit of EACH Strand is represented and taught in EVERY term (Term 1, Term 2, and Term 3) to ensure continuous engagement and reinforcement.
+      5. FULL COVERAGE: By the end of Term 3, 100% of the curriculum for ${subject} ${level} MUST be exhausted. No sub-strand should be left out.
       
       Format the entire scheme as ONE SINGLE Markdown Table.
       Headers MUST be:
-      | WEEK | TERM 1 | TERM 2 | TERM 3 | ${options?.includeLearningOutcomes ? 'LEARNING OUTCOMES |' : ''}
-      | :--- | :--- | :--- | :--- | ${options?.includeLearningOutcomes ? ':--- |' : ''}
+      | Week | Term 1 Topics | Term 2 Topics | Term 3 Topics | Key Performance Indicators |
+      | :--- | :--- | :--- | :--- | :--- |
       
-      Include exactly one row per week (Week 1 to Week 12). Each term column should contain the specific SUB-STRANDS and Key Topics to be taught that week.
+      Include exactly one row per week (Week 1 to Week 12).
       At the end of the document, include the footer:
       Vetted by: ................................ Signature: ................................ Date: ................................
     `;
@@ -123,15 +128,17 @@ export const generateSchemeOfWork = async (
     formatInstructions = `
       STRICT CURRICULUM REQUIREMENT:
       1. This termly scheme MUST be a detailed, week-by-week decomposition of the official yearly roadmap for ${subject} ${level}.
-      2. Ensure that ALL sub-strands systematically assigned to ${termLabel} are covered in depth.
-      3. Follow the logical progression of content standards as defined in the NaCCA curriculum.
+      2. PERSPECTIVE: Act as a highly experienced Ghana Education Service (GES) curriculum expert and NaCCA instructional planning specialist.
+      3. Follow the official NaCCA curriculum exactly. Use only approved strands, sub-strands, content standards, indicators, and exemplars.
+      4. Arrange content progressively from simple to complex.
+      5. Include learner-centered and competency-based activities in the "Teaching & Learning Activities" column.
 
       Format the entire scheme as ONE SINGLE Markdown Table for ${termLabel}.
-      Headers MUST be:
-      | WEEK | STRAND | SUB-STRAND | CONTENT STANDARDS | INDICATOR | ${options?.includeLearningOutcomes ? 'LEARNING OUTCOMES |' : ''} RESOURCES |
-      | :--- | :--- | :--- | :--- | :--- | ${options?.includeLearningOutcomes ? ':--- |' : ''} :--- |
+      Headers MUST be EXACTLY:
+      | Week/Period | Strand | Sub-Strand | Content Standard | Indicator(s) | Lesson Topic | Teaching & Learning Activities | Core Competencies | Assessment | TLRs | References |
+      | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
       
-      Include exactly one row per week (Week 1 to Week 12).
+      Include exactly one row per week (Week 1 to Week 12). Include revision and assessment weeks where appropriate (typically Week 11/12).
     `;
   }
 
@@ -144,6 +151,11 @@ export const generateSchemeOfWork = async (
     STRAND PARITY & DISTRIBUTION: When generating schemes, ensure that each Strand of a subject is represented in every term. A bit of every strand should be taught in every term (Term 1, 2, and 3) to ensure continuous engagement. By the end of Term 3, 100% of the curriculum MUST be exhausted.
     
     SUBJECT-SPECIFIC COMPLIANCE:
+    - Integrated Curriculum (KG): Follow a thematic and play-based approach. The curriculum is integrated across Language and Literacy, Numeracy, Our World and Our People, and Creative Arts. Focus on the 7 core themes (All About Me, My Family, Values and Beliefs, My Local Community, My Nation Ghana, All Around Us, My Global Community). Activity descriptions must be detailed and play-centered. Use appropriate NaCCA KG Indicator codes (e.g. K1.1.1.1.1).
+    - Mathematics (B1-B6): Ensure logical progression from concrete to abstract. Cover all 4 strands (Number, Algebra, Geometry, Data) across all 3 terms. For B4-B6, introduce more complex operations like multi-digit division and ratio.
+    - Our World Our People (B1-B6): Cover all themes (All About Me, All Around Us, Our Beliefs and Values, Our Nation Ghana, My Global Community) across the termly scheme.
+    - Physical Education (B1-B6): Distribute physical fitness, movement patterns, and value-based strategies across the term. Ensure a mix of individual drills and team-based activities.
+    - Ghanaian Language (B1-B3 & B4-B6): Follow the specific NaCCA strands (Oral Language, Reading, Writing, Composition Writing, Customs and Institutions, Literature). For B1-B3, focus on foundational literacy, penmanship, and oral traditions. For B4-B6, emphasize composition, advanced grammar, and cultural institutions. Always use the official NaCCA codes (e.g. B4.1.1.1.1).
     - French: Prioritize the four basic communicative skills (Listening, Speaking, Reading, Writing). Use the task-based approach. All French text outputs should include the French expression followed by the English translation in parentheses for Basic levels.
     - History: Use narrative and inquiry-based approaches. Focus on sources of evidence.
     - English: Integrate Listening, Speaking, Reading, Writing, and Grammar.

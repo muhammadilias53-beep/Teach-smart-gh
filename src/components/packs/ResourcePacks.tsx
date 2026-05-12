@@ -38,6 +38,7 @@ import {
   SCIENCE_B9_LESSON_FRAMES,
   ENGLISH_B7_LESSON_FRAMES,
   FRENCH_B4_B6_LESSON_FRAMES,
+  GHANAIAN_LANGUAGE_B1_B3_LESSON_FRAMES,
   PEDAGOGICAL_PHASES
 } from '../../constants';
 
@@ -381,7 +382,7 @@ export default function ResourcePacks() {
       {activeTab === 'jhs_frames' && (
         <div className="mb-12 space-y-6">
           <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
-            {['Mathematics', 'Science', 'English', 'French'].map(sub => (
+            {['Mathematics', 'Science', 'English', 'French', 'Ghanaian Language'].map(sub => (
               <button
                 key={sub}
                 onClick={() => {
@@ -391,6 +392,8 @@ export default function ResourcePacks() {
                     setSelectedGrade('B7');
                   } else if (sub === 'French') {
                     setSelectedGrade('B4');
+                  } else if (sub === 'Ghanaian Language') {
+                    setSelectedGrade('B1');
                   }
                 }}
                 className={cn(
@@ -406,7 +409,7 @@ export default function ResourcePacks() {
           </div>
           
           <div className="flex gap-2">
-            {(selectedFrameSubject === 'French' ? ['B4', 'B5', 'B6'] : ['B7', 'B8', 'B9']).map(grade => (
+            {(selectedFrameSubject === 'French' ? ['B4', 'B5', 'B6'] : (selectedFrameSubject === 'Ghanaian Language' ? ['B1', 'B2', 'B3', 'B4', 'B5', 'B6'] : ['B7', 'B8', 'B9'])).map(grade => (
               <button
                 key={grade}
                 onClick={() => setSelectedGrade(grade)}
@@ -436,13 +439,15 @@ export default function ResourcePacks() {
                   ? ENGLISH_B7_LESSON_FRAMES
                   : selectedFrameSubject === 'French'
                     ? FRENCH_B4_B6_LESSON_FRAMES
-                    : selectedGrade === 'B7' 
-                      ? SCIENCE_B7_LESSON_FRAMES 
-                      : selectedGrade === 'B8' 
-                        ? SCIENCE_B8_LESSON_FRAMES 
-                        : SCIENCE_B9_LESSON_FRAMES
+                    : selectedFrameSubject === 'Ghanaian Language'
+                      ? GHANAIAN_LANGUAGE_B1_B3_LESSON_FRAMES
+                      : selectedGrade === 'B7' 
+                        ? SCIENCE_B7_LESSON_FRAMES 
+                        : selectedGrade === 'B8' 
+                          ? SCIENCE_B8_LESSON_FRAMES 
+                          : SCIENCE_B9_LESSON_FRAMES
             ).filter(([id]) => {
-              if (selectedFrameSubject === 'French') {
+              if (selectedFrameSubject === 'French' || selectedFrameSubject === 'Ghanaian Language') {
                 return id.startsWith(selectedGrade);
               }
               return true;

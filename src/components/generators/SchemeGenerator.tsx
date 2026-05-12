@@ -31,6 +31,13 @@ const types = [
   { id: 'yearly', label: 'Yearly', icon: Sparkles, desc: 'Full academic year' }
 ];
 
+const subjectsByLevel: Record<string, string[]> = {
+  "KG": ["Integrated Curriculum (KG)"],
+  "Primary": ["English", "Mathematics", "Science", "Social Studies", "Computing", "RME", "Creative Arts", "Ghanaian Language", "French", "History"],
+  "JHS": ["English", "Mathematics", "Science", "Social Studies", "Computing", "RME", "Creative Arts", "Ghanaian Language", "French", "Career Technology"],
+  "SHS": ["English", "Mathematics", "Science", "Social Studies", "Elective Mathematics", "Physics", "Chemistry", "Biology", "Economics", "Geography", "History", "Government", "CRS", "IRS", "Literature in English", "Financial Accounting", "Cost Accounting", "Business Management", "Agricultural Science", "Elective ICT", "Food & Nutrition", "Graphic Design"]
+};
+
 export default function SchemeGenerator() {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -261,7 +268,7 @@ export default function SchemeGenerator() {
                 onChange={(e) => setFormData({...formData, subject: e.target.value})}
               >
                 <option value="">Select Subject</option>
-                {sharedSubjects.map(s => <option key={s} value={s}>{s}</option>)}
+                {formData.level && (subjectsByLevel[formData.level] || []).map(s => <option key={s} value={s}>{s}</option>)}
               </select>
             </div>
 

@@ -12,18 +12,86 @@
         "region": { "type": "string" },
         "district": { "type": "string" },
         "town": { "type": "string" },
+        "locality": { "type": "string" },
         "level": { "type": "string" },
+        "classSize": { "type": "string" },
+        "mainSubject": { "type": "string" },
+        "subjects": { 
+          "type": "array", 
+          "items": { "type": "string" } 
+        },
         "subjectsTaught": { 
           "type": "array", 
           "items": { "type": "string" } 
         },
         "teachingExperienceYears": { "type": "number" },
         "subscriptionStatus": { "type": "string" },
+        "subscriptionEndDate": { "type": "string", "format": "date-time" },
         "trialStartDate": { "type": "string", "format": "date-time" },
+        "trialResetApril2024Applied": { "type": "boolean" },
+        "onboardingComplete": { "type": "boolean" },
+        "isAnonymous": { "type": "boolean" },
         "photoURL": { "type": "string", "description": "Base64 encoded profile picture" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "lastLoginAt": { "type": "string", "format": "date-time" },
         "updatedAt": { "type": "string", "format": "date-time" }
       },
       "required": ["uid", "email", "displayName"]
+    },
+    "LessonPlan": {
+      "title": "LessonPlan",
+      "description": "NaCCA compliant lesson plan",
+      "type": "object",
+      "properties": {
+        "authorId": { "type": "string" },
+        "title": { "type": "string" },
+        "subject": { "type": "string" },
+        "level": { "type": "string" },
+        "class": { "type": "string" },
+        "strand": { "type": "string" },
+        "subStrand": { "type": "string" },
+        "contentStandard": { "type": "string" },
+        "indicator": { "type": "string" },
+        "performanceIndicator": { "type": "string" },
+        "coreCompetencies": { "type": "string" },
+        "keyWords": { "type": "string" },
+        "tlrs": { "type": "string" },
+        "references": { "type": "string" },
+        "phase1": { "type": "string" },
+        "phase2": { "type": "string" },
+        "phase3": { "type": "string" },
+        "locality": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Exam": {
+      "title": "Exam",
+      "description": "Generated examination paper and marking scheme",
+      "type": "object",
+      "properties": {
+        "authorId": { "type": "string" },
+        "title": { "type": "string" },
+        "subject": { "type": "string" },
+        "level": { "type": "string" },
+        "term": { "type": "string" },
+        "questions": { "type": "string" },
+        "markingScheme": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Scheme": {
+      "title": "Scheme",
+      "description": "Termly scheme of work",
+      "type": "object",
+      "properties": {
+        "authorId": { "type": "string" },
+        "title": { "type": "string" },
+        "subject": { "type": "string" },
+        "level": { "type": "string" },
+        "term": { "type": "string" },
+        "content": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
     },
     "Resource": {
       "title": "Resource",
@@ -112,6 +180,18 @@
     "users/{userId}": {
       "schema": "User",
       "description": "Individual teacher profile"
+    },
+    "lessonPlans/{id}": {
+      "schema": "LessonPlan",
+      "description": "Generated lesson plans"
+    },
+    "exams/{id}": {
+      "schema": "Exam",
+      "description": "Generated examination papers"
+    },
+    "schemes/{id}": {
+      "schema": "Scheme",
+      "description": "Generated schemes of work"
     },
     "notifications/{notificationId}": {
       "schema": "Notification",
