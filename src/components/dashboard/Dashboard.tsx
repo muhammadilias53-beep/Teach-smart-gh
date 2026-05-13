@@ -36,7 +36,7 @@ const AnimatedCounter = ({ value, duration = 1.5 }: { value: number, duration?: 
 };
 
 const Dashboard = () => {
-  const { profile, user, getTrialDaysLeft } = useAuth();
+  const { profile, user, getTrialDaysLeft, daysLeft } = useAuth();
   const [recentDocs, setRecentDocs] = useState<any[]>([]);
   const [loadingDocs, setLoadingDocs] = useState(true);
   const [viewingDoc, setViewingDoc] = useState<any>(null);
@@ -56,7 +56,6 @@ const Dashboard = () => {
   };
 
   const isAdmin = user?.email === 'muhammadilias53@gmail.com';
-  const daysLeft = getTrialDaysLeft();
 
   useEffect(() => {
     const fetchData = async () => {

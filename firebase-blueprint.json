@@ -29,6 +29,7 @@
         "subscriptionEndDate": { "type": "string", "format": "date-time" },
         "trialStartDate": { "type": "string", "format": "date-time" },
         "trialResetApril2024Applied": { "type": "boolean" },
+        "trialResetMay2026Applied": { "type": "boolean" },
         "onboardingComplete": { "type": "boolean" },
         "isAnonymous": { "type": "boolean" },
         "photoURL": { "type": "string", "description": "Base64 encoded profile picture" },

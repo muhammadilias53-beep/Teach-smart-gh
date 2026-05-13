@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged, User, signOut } from 'firebase/auth';
 import { doc, getDoc, setDoc, serverTimestamp, onSnapshot } from 'firebase/firestore';
+import { differenceInCalendarDays } from 'date-fns';
 import { auth, db } from '../lib/firebase';
 import { UserProfile } from '../types';
 
@@ -13,6 +14,7 @@ interface AuthContextType {
   canGenerate: () => boolean;
   isTrialActive: () => boolean;
   getTrialDaysLeft: () => number;
+  daysLeft: number;
   completeOnboarding: (data: Partial<UserProfile>) => Promise<void>;
   updateProfileEmail: (email: string) => Promise<void>;
 }
@@ -74,6 +76,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [daysLeft, setDaysLeft] = useState<number>(0);
 
   const TRIAL_RESET_DATE = new Date('2026-05-11T00:00:00Z');
   const TRIAL_DURATION_DAYS = 14;
@@ -95,17 +98,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     let startDate = getSafeDate(profile.trialStartDate);
     
-    if (startDate < TRIAL_RESET_DATE) {
+    // For universal reset, we ensure everyone uses the reset date as the start
+    // if their actual start date was before or shortly after the reset.
+    if (startDate <= TRIAL_RESET_DATE || !profile.trialResetMay2026Applied) {
       startDate = TRIAL_RESET_DATE;
     }
     
     const now = new Date();
-    const diffTime = now.getTime() - startDate.getTime();
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    const diffDays = differenceInCalendarDays(now, startDate);
     
     const remaining = TRIAL_DURATION_DAYS - diffDays;
     return isNaN(remaining) ? 0 : Math.max(0, remaining);
   };
+
+  // Auto-update daysLeft every midnight
+  useEffect(() => {
+    const updateCountdown = () => {
+      setDaysLeft(getTrialDaysLeft());
+    };
+
+    updateCountdown();
+
+    // Calculate time until next midnight
+    const now = new Date();
+    const midnight = new Date(now);
+    midnight.setHours(24, 0, 0, 0);
+    const msToMidnight = midnight.getTime() - now.getTime();
+
+    const timer = setTimeout(() => {
+      updateCountdown();
+      // Setup interval for subsequent midnights
+      const interval = setInterval(updateCountdown, 24 * 60 * 60 * 1000);
+      return () => clearInterval(interval);
+    }, msToMidnight);
+
+    return () => clearTimeout(timer);
+  }, [profile]);
 
   const isAdmin = user?.email === 'muhammadilias53@gmail.com';
 
@@ -113,6 +141,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (isAdmin) return true;
     
     // Full access during the 14-day period regardless of status (Restarted for all)
+    // We check if trial is active first
     if (isTrialActive()) return true;
     
     if (!profile) return false;
@@ -127,11 +156,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         : new Date(subEndDate);
       
       return new Date() < endDate;
-    }
-    
-    // Free access during trial period
-    if (profile.subscriptionStatus === 'trial') {
-      return isTrialActive();
     }
     
     return false;
@@ -201,12 +225,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 data.onboardingComplete = true;
               }
 
-              // Reset trial for all existing accounts as requested (one-time reset)
-              if (!data.trialResetApril2024Applied) {
+              // Reset trial for all existing accounts as requested (one-time reset for May 2026)
+              if (!data.trialResetMay2026Applied) {
                 await setDoc(docRef, { 
-                  trialStartDate: new Date().toISOString(),
+                  trialStartDate: TRIAL_RESET_DATE.toISOString(),
                   subscriptionStatus: 'trial',
-                  trialResetApril2024Applied: true 
+                  trialResetMay2026Applied: true 
                 }, { merge: true });
               }
               
@@ -218,16 +242,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 uid: user.uid,
                 email: user.email || '',
                 displayName: user.displayName || (isAnonymous ? 'Guest Teacher' : 'Teacher'),
-                trialStartDate: new Date().toISOString(),
+                trialStartDate: TRIAL_RESET_DATE.toISOString(), // Start from reset date for all
                 subscriptionStatus: 'trial',
-                onboardingComplete: isAnonymous ? true : false, // Seamless access for guests
+                trialResetMay2026Applied: true,
+                onboardingComplete: isAnonymous ? true : false, 
                 isAnonymous: isAnonymous,
                 createdAt: serverTimestamp(),
                 lastLoginAt: serverTimestamp(),
               };
               try {
                 await setDoc(docRef, newProfile);
-                setProfile(newProfile); // Set profile immediately to avoid race condition in AuthGuard
+                setProfile(newProfile); 
               } catch (err) {
                 console.error("Error creating initial profile:", err);
               }
@@ -273,7 +298,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   return (
     <AuthContext.Provider value={{ 
       user, profile, loading, logout, refreshProfile, 
-      canGenerate, isTrialActive, getTrialDaysLeft,
+      canGenerate, isTrialActive, getTrialDaysLeft, daysLeft,
       completeOnboarding, updateProfileEmail
     }}>
       {children}

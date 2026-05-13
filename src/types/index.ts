@@ -26,6 +26,7 @@ export interface UserProfile {
   locality?: string;
   classSize?: string;
   trialResetApril2024Applied?: boolean;
+  trialResetMay2026Applied?: boolean;
 }
 
 export interface LessonPlan {

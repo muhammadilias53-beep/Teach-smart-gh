@@ -8,7 +8,7 @@ import { motion } from 'motion/react';
 import { differenceInDays } from 'date-fns';
 
 const AuthGuard = () => {
-  const { user, profile, loading, isTrialActive, getTrialDaysLeft } = useAuth();
+  const { user, profile, loading, isTrialActive, daysLeft } = useAuth();
   const location = useLocation();
   const [tookTooLong, setTookTooLong] = React.useState(false);
 
@@ -91,7 +91,6 @@ const AuthGuard = () => {
 
   // Trial/Subscription check using centralized logic
   const activeTrial = isTrialActive();
-  const daysLeft = getTrialDaysLeft();
   const isExpired = profile?.subscriptionStatus === 'expired' || (profile?.subscriptionEndDate && new Date(profile.subscriptionEndDate) < new Date());
   
   const needsPayment = !activeTrial && isExpired && profile?.subscriptionStatus !== 'active';
