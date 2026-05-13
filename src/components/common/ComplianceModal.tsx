@@ -53,10 +53,11 @@ export const ComplianceModal = ({ isOpen, onClose }: ComplianceModalProps) => {
               </p>
               <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {[
-                  'B1-B10 Indicators Alignment',
+                  'B1-B12 Indicators Alignment',
                   'Core Competency Integration',
                   'Common Core Program (CCP) Support',
-                  'Inclusive Education Guidelines'
+                  'Inclusive Education Guidelines',
+                  'SBC & CCP 2024/2025 Sync'
                 ].map((item) => (
                   <li key={item} className="flex items-center gap-2 text-xs font-bold text-slate-700 bg-slate-50 p-3 rounded-xl border border-slate-100">
                     <CheckCircle size={14} className="text-emerald-500" />

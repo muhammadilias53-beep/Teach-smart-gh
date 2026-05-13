@@ -104,35 +104,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       startDate = TRIAL_RESET_DATE;
     }
     
+    // Use UTC for day calculation to ensure everyone in Ghana sees the same countdown
     const now = new Date();
-    const diffDays = differenceInCalendarDays(now, startDate);
+    const nowUTC = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+    const startUTC = Date.UTC(startDate.getUTCFullYear(), startDate.getUTCMonth(), startDate.getUTCDate());
+    
+    const msInDay = 24 * 60 * 60 * 1000;
+    const diffDays = Math.floor((nowUTC - startUTC) / msInDay);
     
     const remaining = TRIAL_DURATION_DAYS - diffDays;
     return isNaN(remaining) ? 0 : Math.max(0, remaining);
   };
 
-  // Auto-update daysLeft every midnight
+  // Auto-update daysLeft every minute to catch day changes reliably
   useEffect(() => {
     const updateCountdown = () => {
-      setDaysLeft(getTrialDaysLeft());
+      const remaining = getTrialDaysLeft();
+      setDaysLeft(remaining);
     };
 
     updateCountdown();
+    
+    // Use a more frequent check (every minute) to handle day transitions and tab being left open
+    const interval = setInterval(updateCountdown, 60000); 
 
-    // Calculate time until next midnight
-    const now = new Date();
-    const midnight = new Date(now);
-    midnight.setHours(24, 0, 0, 0);
-    const msToMidnight = midnight.getTime() - now.getTime();
-
-    const timer = setTimeout(() => {
-      updateCountdown();
-      // Setup interval for subsequent midnights
-      const interval = setInterval(updateCountdown, 24 * 60 * 60 * 1000);
-      return () => clearInterval(interval);
-    }, msToMidnight);
-
-    return () => clearTimeout(timer);
+    return () => clearInterval(interval);
   }, [profile]);
 
   const isAdmin = user?.email === 'muhammadilias53@gmail.com';

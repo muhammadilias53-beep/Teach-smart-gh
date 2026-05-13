@@ -380,6 +380,12 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
   },
   "Diversity of Matter": {
     "Materials": [
+      "B1.1.1.1: Identify different materials in the environment",
+      "B2.1.1.1: Describe materials based on their physical properties",
+      "B3.1.1.1: Distinguish between various materials and their uses",
+      "B4.1.1.1: Classify solids, liquids and gases",
+      "B5.1.1.1: Investigate the properties of matter",
+      "B6.1.1.1: Describe the changes of state of matter",
       "B7.1.1.1: Recognise materials as important resources for providing human needs",
       "B7.1.1.2: Understand the periodic table as different elements made up of metals, non-metals and noble gases arranged in an order",
       "B8.1.1.1: Identify types of mixtures by name and characteristics",
@@ -388,6 +394,12 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B9.1.1.2: Demonstrate knowledge of atomic bonding in the formation of chemical compounds"
     ],
     "Living Cells": [
+      "B1.1.2.1: Identify parts of the human body",
+      "B2.1.2.1: Explain the functions of the sense organs",
+      "B3.1.2.1: Describe how we grow and change",
+      "B4.1.2.1: Explain the parts of a flowering plant",
+      "B5.1.2.1: Describe the life cycle of a flowering plant",
+      "B6.1.2.1: Explain the structure of the human heart",
       "B7.1.2.1: Demonstrate understanding of the structure of organisms and functions of cells in living systems",
       "B8.1.2.1: Demonstrate an understanding of the types of cells and their structure in relation to different organisms",
       "B9.1.2.1: Demonstrate knowledge of specialist cells of dicotyledonous plants and humans, their formation and functions"
@@ -395,6 +407,12 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
   },
   "Forces and Energy": {
     "Energy": [
+      "B1.4.1.1: Identify different sources of light and heat in the home",
+      "B2.4.1.1: Demonstrate how light travels",
+      "B3.4.1.1: Identify simple sources of energy",
+      "B4.4.1.1: Identify renewable and non-renewable energy sources",
+      "B5.4.1.1: Demonstrate the conversion of energy",
+      "B6.4.1.1: Explain the conservation of energy",
       "B7.4.1.1: Demonstrate an understanding of forms of energy and their daily applications",
       "B7.4.1.2: Demonstrate an understanding of the concept of heat transfer and its applications in life",
       "B7.4.1.3: Demonstrate understanding of characteristics of light, such as travelling in a straight line, reflection, refraction and dispersion",
@@ -434,12 +452,24 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
   },
   "Humans and the Environment": {
     "Waste Management": [
+      "B1.5.1.1: Identify different types of waste in the home and school",
+      "B2.5.1.1: Describe ways of managing waste in the school",
+      "B3.5.1.1: Explain the importance of keeping the environment clean",
+      "B4.5.1.1: Identify ways of disposing of liquid waste",
+      "B5.5.1.1: Explain the concept of the 3Rs (Reduce, Reuse, Recycle)",
+      "B6.5.1.1: Demonstrate how to prepare compost from organic waste",
       "B7.5.1.1: Exhibit knowledge and skill of scientific basis for management practices of types of waste in the environment",
       "B8.5.1.1: Demonstrate knowledge of waste management systems and apply it in an environment",
       "B9.5.1.1: Demonstrate an understanding of the scientific ways of waste management",
       "B9.5.1.2: Demonstrate an understanding of the impact of waste on an environment, innovative waste management technologies"
     ],
     "Human Health": [
+      "B1.5.2.1: Identify common diseases in the community",
+      "B2.5.2.1: Discuss how to prevent common diseases like malaria",
+      "B3.5.2.1: Explain the importance of personal hygiene",
+      "B4.5.2.1: Identify common skin diseases and their prevention",
+      "B5.5.2.1: Discuss the importance of immunization",
+      "B6.5.2.1: Explain the causes and effects of waterborne diseases",
       "B7.5.2.1: Demonstrate knowledge of common deficiency diseases of humans, their causes, symptoms, effects and prevention",
       "B7.5.2.2: Demonstrate knowledge of the nature of selected viral diseases of humans, their causes, symptoms, effects and management",
       "B8.5.2.1: Demonstrate knowledge of common communicable diseases, such as Hepatitis, of humans, causes, symptoms, effects and their prevention",
@@ -470,6 +500,12 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
   },
   "Systems": {
     "The Human Body System": [
+      "B1.3.1.1: Identify the external parts of the human body",
+      "B2.3.1.1: Explain the functions of the five senses",
+      "B3.3.1.1: Describe the digestive system in humans (intro)",
+      "B4.3.1.1: Identify the parts of the respiratory system",
+      "B5.3.1.1: Explain how the human body system works together",
+      "B6.3.1.1: Describe the nervous system functions",
       "B7.3.1.1: Show an understanding of the concept of food, and the process of digestion and appreciate its importance in humans",
       "B8.3.1.1: Demonstrate knowledge of parts of mammalian tooth and the functions of the different types of teeth",
       "B9.3.1.1: Demonstrate understanding of the blood circulatory system, health problems associated with the system"
@@ -492,6 +528,12 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
   },
   "Cycles": {
     "Earth Science": [
+      "B1.2.1.1: Observe and group changes in weather",
+      "B2.2.1.1: Identify the sun as the main source of light and heat",
+      "B3.2.1.1: Describe the movement of the earth",
+      "B4.2.1.1: Identify the main sources of water in the community",
+      "B5.2.1.1: Explain the stages of the water cycle",
+      "B6.2.1.1: Discuss the importance of the atmosphere",
       "B7.2.1.1: Recognise that the water cycle is an example of repeated patterns of change in nature and understand how it occurs",
       "B8.2.1.1: Demonstrate understanding of the process of Carbon cycle as an example of repeated pattern of change in nature",
       "B9.2.1.1: Demonstrate an understanding of the Nitrogen cycle as a repeated pattern of change in nature"
@@ -1210,6 +1252,54 @@ export const STANDARD_INDICATORS: Record<string, string[]> = {
   "B9.3.2.1: Determine the surface area of prisms": ["B9.3.2.1.1: Identify cuboids and triangular prisms", "B9.3.2.1.2: Use net of a cuboid to determine surface area"],
   
   // Science - Diversity of Matter
+  "B1.1.1.1: Identify different materials in the environment": [
+    "B1.1.1.1.1: Observe and name different materials in the classroom",
+    "B1.1.1.1.2: Group materials based on their colour and size"
+  ],
+  "B2.1.1.1: Describe materials based on their physical properties": [
+    "B2.1.1.1.1: Describe textures of different materials (rough, smooth)",
+    "B2.1.1.1.2: Classify materials as hard or soft"
+  ],
+  "B3.1.1.1: Distinguish between various materials and their uses": [
+    "B3.1.1.1.1: Identify materials used to make common objects",
+    "B3.1.1.1.2: Discuss why certain materials are used for specific purposes"
+  ],
+  "B4.1.1.1: Classify solids, liquids and gases": [
+    "B4.1.1.1.1: State physical properties of solids, liquids and gases",
+    "B4.1.1.1.2: Group substances into the three states of matter"
+  ],
+  "B5.1.1.1: Investigate the properties of matter": [
+    "B5.1.1.1.1: Demonstrate that matter has weight and occupies space",
+    "B5.1.1.1.2: Research on the internal structure of matter (atoms and molecules)"
+  ],
+  "B6.1.1.1: Describe the changes of state of matter": [
+    "B6.1.1.1.1: Explain the processes of melting and freezing",
+    "B6.1.1.1.2: Demonstrate evaporation and condensation"
+  ],
+  "B1.1.2.1: Identify parts of the human body": [
+    "B1.1.2.1.1: Mention names of external parts of the body",
+    "B1.1.2.1.2: Point to specific body parts when named"
+  ],
+  "B2.1.2.1: Explain the functions of the sense organs": [
+    "B2.1.2.1.1: Identify the five sense organs",
+    "B2.1.2.1.2: Describe the function of each sense organ"
+  ],
+  "B3.1.2.1: Describe how we grow and change": [
+    "B3.1.2.1.1: Compare physical features as one grows",
+    "B3.1.2.1.2: Identify things that help us grow healthy"
+  ],
+  "B4.1.2.1: Explain the parts of a flowering plant": [
+    "B4.1.2.1.1: Label the parts of a flowering plant",
+    "B4.1.2.1.2: State the functions of the roots, stem and leaves"
+  ],
+  "B5.1.2.1: Describe the life cycle of a flowering plant": [
+    "B5.1.2.1.1: Sequence the stages in the life cycle of a plant",
+    "B5.1.2.1.2: Discuss the conditions necessary for germination"
+  ],
+  "B6.1.2.1: Explain the structure of the human heart": [
+    "B6.1.2.1.1: Identify the main parts of the heart",
+    "B6.1.2.1.2: Discuss the function of the heart in the body"
+  ],
   "B7.1.1.1: Recognise materials as important resources for providing human needs": [
     "B7.1.1.1.1: Classify materials into liquids, solids and gases",
     "B7.1.1.1.2: Discuss the importance of liquids in the life of humans",
@@ -1249,6 +1339,30 @@ export const STANDARD_INDICATORS: Record<string, string[]> = {
   ],
 
   // Science - Cycles
+  "B1.2.1.1: Observe and group changes in weather": [
+    "B1.2.1.1.1: Describe the daily weather (sunny, rainy, cloudy)",
+    "B1.2.1.1.2: Discuss how weather affects what we wear"
+  ],
+  "B2.2.1.1: Identify the sun as the main source of light and heat": [
+    "B2.2.1.1.1: Discuss the benefits of sunlight to plants and humans",
+    "B2.2.1.1.2: Observe the shadows at different times of the day"
+  ],
+  "B3.2.1.1: Describe the movement of the earth": [
+    "B3.2.1.1.1: Demonstrate day and night using a globe and torch",
+    "B3.2.1.1.2: Explain why we have day and night"
+  ],
+  "B4.2.1.1: Identify the main sources of water in the community": [
+    "B4.2.1.1.1: List sources like rivers, wells and rain",
+    "B4.2.1.1.2: Discuss the uses of water in the community"
+  ],
+  "B5.2.1.1: Explain the stages of the water cycle": [
+    "B5.2.1.1.1: Define evaporation and condensation",
+    "B5.2.1.1.2: Illustrate the water cycle with a diagram"
+  ],
+  "B6.2.1.1: Discuss the importance of the atmosphere": [
+    "B6.2.1.1.1: Identify the gases found in the air",
+    "B6.2.1.1.2: Explain the importance of air to living things"
+  ],
   "B7.2.1.1: Recognise that the water cycle is an example of repeated patterns of change in nature and understand how it occurs": [
     "B7.2.1.1.1: Explain how the water cycle occurs as a repeated pattern in nature",
     "B7.2.1.1.2: Describe the importance of the water cycle in nature"
@@ -1315,6 +1429,30 @@ export const STANDARD_INDICATORS: Record<string, string[]> = {
   ],
 
   // Science - Systems
+  "B1.3.1.1: Identify the external parts of the human body": [
+    "B1.3.1.1.1: Point and name head, hands, legs and torso",
+    "B1.3.1.1.2: State the functions of the hands and legs"
+  ],
+  "B2.3.1.1: Explain the functions of the five senses": [
+    "B2.3.1.1.1: Name the five sense organs",
+    "B2.3.1.1.2: Match each sense organ to its function"
+  ],
+  "B3.3.1.1: Describe the digestive system in humans (intro)": [
+    "B3.3.1.1.1: Identify the mouth and stomach as parts of digestion",
+    "B3.3.1.1.2: Discuss the importance of chewing food"
+  ],
+  "B4.3.1.1: Identify the parts of the respiratory system": [
+    "B4.3.1.1.1: Name the nose, windpipe and lungs",
+    "B4.3.1.1.2: Explain the process of breathing (inhaling and exhaling)"
+  ],
+  "B5.3.1.1: Explain how the human body system works together": [
+    "B5.3.1.1.1: Discuss how different systems support each other",
+    "B5.3.1.1.2: Identify things that keep the body systems healthy"
+  ],
+  "B6.3.1.1: Describe the nervous system functions": [
+    "B6.3.1.1.1: Identify the brain and spinal cord",
+    "B6.3.1.1.2: Discuss how the brain controls body actions"
+  ],
   "B7.3.1.1: Show an understanding of the concept of food, and the process of digestion and appreciate its importance in humans": [
     "B7.3.1.1.1: Explain the concept of food and the need for humans to eat",
     "B7.3.1.1.2: Examine what happens to food at the stages of digestion in humans",
@@ -1364,6 +1502,30 @@ export const STANDARD_INDICATORS: Record<string, string[]> = {
   ],
 
   // Science - Forces and Energy
+  "B1.4.1.1: Identify different sources of light and heat in the home": [
+    "B1.4.1.1.1: Identify sources of light (sun, bulb, candle)",
+    "B1.4.1.1.2: Identify sources of heat (sun, coal pot, stove)"
+  ],
+  "B2.4.1.1: Demonstrate how light travels": [
+    "B2.4.1.1.1: Show that light travels in a straight line using simple objects",
+    "B2.4.1.1.2: Discuss the importance of light for seeing"
+  ],
+  "B3.4.1.1: Identify simple sources of energy": [
+    "B3.4.1.1.1: Identify food as a source of energy for humans",
+    "B3.4.1.1.2: Mention other simple sources like batteries and sun"
+  ],
+  "B4.4.1.1: Identify renewable and non-renewable energy sources": [
+    "B4.4.1.1.1: Define renewable and non-renewable energy",
+    "B4.4.1.1.2: Give examples of each type of energy source"
+  ],
+  "B5.4.1.1: Demonstrate the conversion of energy": [
+    "B5.4.1.1.1: Explain the conversion of electrical energy to light and heat",
+    "B5.4.1.1.2: Show conversion of chemical energy to kinetic energy"
+  ],
+  "B6.4.1.1: Explain the conservation of energy": [
+    "B6.4.1.1.1: State the law of conservation of energy",
+    "B6.4.1.1.2: Identify ways to prevent energy wastage"
+  ],
   "B7.4.1.1: Demonstrate an understanding of forms of energy and their daily applications": [
     "B7.4.1.1.1: Identify the various forms of energy and show how they are related",
     "B7.4.1.1.2: Explain daily applications of forms of energy"
@@ -1471,6 +1633,54 @@ export const STANDARD_INDICATORS: Record<string, string[]> = {
   ],
 
   // Science - Humans and the Environment
+  "B1.5.1.1: Identify different types of waste in the home and school": [
+    "B1.5.1.1.1: List examples of solid waste (paper, plastic)",
+    "B1.5.1.1.2: Identify liquid waste like soapy water"
+  ],
+  "B2.5.1.1: Describe ways of managing waste in the school": [
+    "B2.5.1.1.1: Discuss the importance of putting waste in dustbins",
+    "B2.5.1.1.2: Identify things that can be reused"
+  ],
+  "B3.5.1.1: Explain the importance of keeping the environment clean": [
+    "B3.5.1.1.1: Discuss the effects of dirty environment on health",
+    "B3.5.1.1.2: Demonstrate how to clean the school yard"
+  ],
+  "B4.5.1.1: Identify ways of disposing of liquid waste": [
+    "B4.5.1.1.1: Describe safe ways of pouring away dirty water",
+    "B4.5.1.1.2: Discuss the dangers of stagnant water"
+  ],
+  "B5.5.1.1: Explain the concept of the 3Rs (Reduce, Reuse, Recycle)": [
+    "B5.5.1.1.1: Define Reduce, Reuse and Recycle",
+    "B5.5.1.1.2: Identify materials that can be recycled"
+  ],
+  "B6.5.1.1: Demonstrate how to prepare compost from organic waste": [
+    "B6.5.1.1.1: Identify materials suitable for composting",
+    "B6.5.1.1.2: Explain the stages of making compost"
+  ],
+  "B1.5.2.1: Identify common diseases in the community": [
+    "B1.5.2.1.1: Name common ailments like cold and stomach ache",
+    "B1.5.2.1.2: Discuss how people get sick"
+  ],
+  "B2.5.2.1: Discuss how to prevent common diseases like malaria": [
+    "B2.5.2.1.1: Identify the mosquito as the cause of malaria",
+    "B2.5.2.1.2: Suggest ways to avoid mosquito bites"
+  ],
+  "B3.5.2.1: Explain the importance of personal hygiene": [
+    "B3.5.2.1.1: Discuss why we wash our hands with soap",
+    "B3.5.2.1.2: Demonstrate correct hand washing steps"
+  ],
+  "B4.5.2.1: Identify common skin diseases and their prevention": [
+    "B4.5.2.1.1: Name skin problems like rashes and ringworm",
+    "B4.5.2.1.2: Discuss how to keep the skin healthy"
+  ],
+  "B5.5.2.1: Discuss the importance of immunization": [
+    "B5.5.2.1.1: Explain what vaccines are and how they help",
+    "B5.5.2.1.2: Mention some diseases that can be prevented by vaccines"
+  ],
+  "B6.5.2.1: Explain the causes and effects of waterborne diseases": [
+    "B6.5.2.1.1: Identify cholera and typhoid as waterborne diseases",
+    "B6.5.2.1.2: Discuss how to treat water to make it safe for drinking"
+  ],
   "B7.5.1.1: Exhibit knowledge and skill of scientific basis for management practices of types of waste in the environment": [
     "B7.5.1.1.1: Apply information from research on good management practices of waste to make the environment clean"
   ],
