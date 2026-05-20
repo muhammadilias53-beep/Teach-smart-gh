@@ -102,11 +102,76 @@ const LessonPlanGenerator = () => {
     setStep(prev => prev - 1);
   };
 
+  // Helpers for context-aware lookup and fallbacks
+  const getSubjectStrands = (subj: string, lvl: string) => {
+    if (subj === 'English' && lvl === 'JHS') {
+      return ["Oral Language", "Reading", "Grammar Usage", "Writing", "Literature"];
+    }
+    if (subj === 'Ghanaian Language' && lvl === 'JHS') {
+      return ["Customs and Institutions", "Listening and Speaking", "Reading", "Language and Usage", "Composition Writing", "Literature"];
+    }
+    return SUBJECT_STRANDS[subj] || [];
+  };
+
+  const getLookupStrand = (subject: string, strand: string) => {
+    if (subject === 'Our World Our People') {
+      if (strand === 'All Around Us') return 'All Around Us OWOP';
+      if (strand === 'My Global Community') return 'My Global Community OWOP';
+    }
+    if (subject === 'English' && formData.level === 'JHS') {
+      return `${strand} JHS`;
+    }
+    if (subject === 'Ghanaian Language' && formData.level === 'JHS') {
+      if (strand === 'Listening and Speaking') return "Oral Language (GL)";
+      if (strand === 'Reading') return "Reading (GL)";
+      if (strand === 'Language and Usage') return "Language and Usage";
+      if (strand === 'Literature') return "Literature (GL)";
+    }
+    return strand;
+  };
+
+  const getSubjectSubStrands = (subj: string, strand: string, lvl: string) => {
+    if (subj === 'Ghanaian Language' && lvl === 'JHS') {
+      if (strand === 'Listening and Speaking') {
+        return ["Conversation/Everyday discourse", "Listening Comprehension"];
+      }
+      if (strand === 'Reading') {
+        return ["Reading", "Translation"];
+      }
+      if (strand === 'Language and Usage') {
+        return ["Integrating grammar (nouns, pronouns, adjectives)", "Integrating grammar (verbs, adverbs, conjunctions, postpositions/prepositions)"];
+      }
+      if (strand === 'Composition Writing') {
+        return ["Structure and organise ideas in composition writing"];
+      }
+      if (strand === 'Literature') {
+        return ["Oral and written literature"];
+      }
+      if (strand === 'Customs and Institutions') {
+        return ["Rites of Passage", "Naming Systems", "The Clan System", "Chieftaincy"];
+      }
+    }
+    const lookupStrand = getLookupStrand(subj, strand);
+    return SUBJECT_SUB_STRANDS[lookupStrand] || [];
+  };
+
+  const getFallbackIndicators = (standard: string): string[] => {
+    if (!standard) return [];
+    const parts = standard.split(':');
+    if (parts.length > 1) {
+      const code = parts[0].trim();
+      const text = parts.slice(1).join(':').trim();
+      return [`${code}.1: Demonstrate and apply dynamic knowledge of: ${text}`];
+    }
+    return [`${standard}.1: Practice and discuss this core content standard.`];
+  };
+
   // Helper selectors from constants
-  const currentStrands = SUBJECT_STRANDS[formData.subject] || [];
-  const currentSubStrands = SUBJECT_SUB_STRANDS[formData.strand] || [];
-  const currentStandards = SUB_STRAND_STANDARDS[formData.strand]?.[formData.subStrand] || [];
-  const currentIndicators = STANDARD_INDICATORS[formData.contentStandard] || [];
+  const currentStrands = getSubjectStrands(formData.subject, formData.level);
+  const lookupStrand = getLookupStrand(formData.subject, formData.strand);
+  const currentSubStrands = getSubjectSubStrands(formData.subject, formData.strand, formData.level);
+  const currentStandards = (SUB_STRAND_STANDARDS[lookupStrand]?.[formData.subStrand] || SUB_STRAND_STANDARDS[formData.strand]?.[formData.subStrand]) || [];
+  const currentIndicators = STANDARD_INDICATORS[formData.contentStandard] || getFallbackIndicators(formData.contentStandard);
 
   const handleGenerate = async () => {
     if (!validateStep(3)) return;

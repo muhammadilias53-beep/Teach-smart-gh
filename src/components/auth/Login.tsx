@@ -38,12 +38,10 @@ const Login = () => {
 
   useEffect(() => {
     if (user) {
-      const destination = location.state?.from?.pathname || location.state?.from || '/';
-      // Prevent redirect loops if the 'from' state points back to login
-      if (destination === '/login') {
-        navigate('/');
+      if (location.state?.from) {
+        navigate(location.state.from);
       } else {
-        navigate(destination);
+        navigate('/');
       }
     }
   }, [user, navigate, location]);

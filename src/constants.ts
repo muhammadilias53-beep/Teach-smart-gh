@@ -66,6 +66,7 @@ export const SUBJECT_STRANDS: Record<string, string[]> = {
     "Internet and Social Media", 
     "Health and Safety in Using ICT Tools"
   ],
+  "Career Technology": ["Health and Safety", "Materials for Production", "Tools, Equipment and Processes", "Technology", "Designing and Making of Artefacts/Products", "Entrepreneurial Skills"],
   "Creative Arts": ["Visual Arts", "Performing Arts"],
   "Financial Accounting": ["Financial Statements", "Partnership Accounts", "Company Accounts", "Cost Accounting Basics"],
   "Cost Accounting": ["Introduction to Cost Accounting", "Elements of Costing", "Materials Costing", "Labour and Overhead Costing", "Job and Batch Costing"],
@@ -104,8 +105,9 @@ export const SUBJECT_SUB_STRANDS: Record<string, string[]> = {
   "Physical Fitness Concepts, Principles and Strategies": ["Fitness Programmes", "Healthy Diet", "Safety and injury", "Substances"],
   "Values and Psycho-social Concepts, Principles and Strategies": ["Self-responsibility", "Social Interaction", "Group Dynamics", "Critical thinking"],
   
-  // Agricultural Science
+  // Science / Agricultural Science
   "Introduction to Agriculture": ["Agric. as a Subject", "Agriculture and National Development"],
+  "Diversity of Matter": ["Materials", "Living Cells"],
   "Cycles": ["Earth Science", "Life Cycle of Organisms", "Crop Production", "Animal Production"],
   "Systems": ["The Human Body System", "The Solar System", "Ecosystem", "Farming Systems"],
   "Forces and Energy": ["Energy", "Electricity and Electronics", "Conversion and Conservation of Energy", "Force and Motion", "Agricultural Tools"],
@@ -118,6 +120,13 @@ export const SUBJECT_SUB_STRANDS: Record<string, string[]> = {
   "Writing": ["Pre-writing Activities", "Penmanship/Handwriting", "Writing Letters", "Labeling Items", "Writing Simple Words and Sentences", "Paragraph Development", "Controlled Writing", "Guided Composition", "Writing as a Process", "Narrative Writing", "Creative/Free Writing", "Descriptive Writing", "Persuasive/Argumentative Writing", "Informative/Academic Writing", "Letter Writing"],
   "Writing Conventions and Grammar Usage": ["Capitalization", "Punctuation", "Naming Words", "Action Words", "Qualifying Words", "Simple Prepositions", "Conjunctions", "Sentences", "Spelling"],
   "Extensive Reading": ["Building the Love and Culture of Reading"],
+  
+  // English JHS Sub-Strands
+  "Oral Language JHS": ["Conversation/Everyday Discourse", "Listening Comprehension", "English Sounds"],
+  "Reading JHS": ["Comprehension", "Summarising"],
+  "Grammar Usage JHS": ["Grammar", "Punctuation and Capitalisation", "Vocabulary"],
+  "Writing JHS": ["Production and Distribution of Writing", "Text Types and Purposes", "Building and Presenting Knowledge"],
+  "Literature JHS": ["Narrative, Drama and Poetry"],
   
   // History
   "History as a Subject": ["Why and how we study history", "The learner’s own history", "Family History", "Community History"],
@@ -250,8 +259,32 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
     "Locomotor movements": ["B1.1.1.1: Travel over/under objects", "B2.1.1.1: Travel in zigzag pathways", "B3.1.1.1: Change direction quickly", "B4.1.1.1: Slow vs fast movement", "B5.1.2.1: Walk on straight line edges", "B6.1.1.1: Cooperative movement games"],
     "Manipulative Skills": ["B1.1.3.1: Roll a ball stationary", "B2.1.10.1: Dribbling with hand", "B3.1.10.1: Dribbling around obstacles", "B4.1.6.1: Strike a bounce ball", "B5.1.6.1: Strike dropping ball", "B6.1.10.1: Dribbling under guard"]
   },
+  "Movement Concepts, Principles and Strategies": {
+    "Space awareness": ["B7.2.1.1: Demonstrate awareness of body and space constraints", "B8.2.1.1: Apply spatial positioning in offensive and defensive plays", "B9.2.1.1: Create movement sequences maximizing spatial coverage"],
+    "Dynamics": ["B7.2.2.1: Discuss how forces act on moving bodies", "B8.2.2.1: Analyse the effects of speed and flow changes in movement patterns", "B9.2.2.1: Manipulate speed, force, and flow to improve skill execution"],
+    "Relationships": ["B7.2.3.1: Work cooperatively in pairs or small groups during physical drills", "B8.2.3.1: Coordinate movement plans with teammates in a tactical space", "B9.2.3.1: Match movements to opponent tactics in real-time play"],
+    "Body management": ["B7.2.4.1: Control balance during complex locomotion changes", "B8.2.4.1: Demonstrate body alignment and posture stability under pressure", "B9.2.4.1: Design creative routines requiring advanced body control"],
+    "Strategies": ["B7.2.5.1: Formulate personal fitness plans based on movement concepts", "B8.2.5.1: Apply team play tactics in cooperative physical games", "B9.2.5.1: Evaluate and adapt strategies mid-performance to solve game problems"]
+  },
   "Physical Fitness": {
-    "Strength and Endurance": ["B1.3.2.3: Perform push-ups", "B2.3.2.3: Abdominal curls", "B3.3.2.3: Continuous step-ups", "B4.3.1.3: 15-min brisk walk", "B5.3.1.3: 10-min jogging", "B6.3.1.3: 8-min running test"]
+    "Aerobic Capacity": ["B7.3.1.1: Cardiovascular fitness and running test", "B8.3.1.1: Cardiovascular-respiratory fitness endurance tests", "B9.3.1.1: Evaluate fitness levels through standardized testing"],
+    "Strength": ["B1.3.2.3: Perform push-ups", "B2.3.2.3: Abdominal curls", "B3.3.2.3: Continuous step-ups"],
+    "Endurance": ["B4.3.1.3: 15-min brisk walk", "B5.3.1.3: 10-min jogging", "B6.3.1.3: 8-min running test"],
+    "Strength and Endurance": ["B1.3.2.3: Perform push-ups", "B2.3.2.3: Abdominal curls", "B3.3.2.3: Continuous step-ups", "B4.3.1.3: 15-min brisk walk", "B5.3.1.3: 10-min jogging", "B6.3.1.3: 8-min running test"],
+    "Flexibility": ["B7.3.4.1: Perform joint mobility exercises", "B8.3.4.1: Demonstrate flexibility through dynamic stretching", "B9.3.4.1: Implement core flexibility sequences"],
+    "Body Composition": ["B7.3.5.1: Analyse body mass index", "B8.3.5.1: Track changes in body fat ratios", "B9.3.5.1: Maintain balanced body type profiles"]
+  },
+  "Physical Fitness Concepts, Principles and Strategies": {
+    "Fitness Programmes": ["B7.3.1.2: Research standard exercise routines", "B8.3.1.2: Design localized personal fitness schedules", "B9.3.1.2: Execute and adjust multi-week fitness programmes"],
+    "Healthy Diet": ["B7.3.2.2: Establish links between nutritional choices and training outcomes", "B8.3.2.2: Plan appropriate food charts to sustain physical development", "B9.3.2.2: Evaluate diets and metabolic rates for various sports profiles"],
+    "Safety and injury": ["B7.3.3.2: Explain warm-up and cool-down significance", "B8.3.3.2: Implement basic field-level first-aid procedures", "B9.3.3.2: Prevent common exercise-related injuries through proper form"],
+    "Substances": ["B7.3.4.2: Discuss negative outcomes of substance misuse on stamina", "B8.3.4.2: Investigate legal and physical penalties of sports doping", "B9.3.4.2: Promote healthy lifestyle alternatives to performance enhancement drugs"]
+  },
+  "Values and Psycho-social Concepts, Principles and Strategies": {
+    "Self-responsibility": ["B7.5.1.1: Demonstrate personal commitment to physical safety and goals", "B8.5.1.1: Set realistic physical development targets independently", "B9.5.1.1: Critique personal growth records and take responsibility for improvement"],
+    "Social Interaction": ["B7.5.2.1: Promote respect and teamwork standards during field games", "B8.5.2.1: Manage conflicting views productively during cooperative work", "B9.5.2.1: Model inclusive and positive feedback strategies in group drills"],
+    "Group Dynamics": ["B7.5.3.1: Distribute roles fairly during team competitive events", "B8.5.3.1: Facilitate shared team strategies to optimize performance", "B9.5.3.1: Resolve structural team division problems constructively"],
+    "Critical thinking": ["B7.5.4.1: Discuss how spatial logic informs effective movement selection", "B8.5.4.1: Analyse tactical choices made by opposing parties in real games", "B9.5.4.1: Invent creative solutions to tactical problems faced in performance tasks"]
   },
   "All About Us": {
     "Nature of God": ["B1.1.1.1: Nature of God", "B2.1.1.1: Attributes of God", "B3.1.1.1: Purpose of God's creation", "B4.1.1.1: Uniqueness of human creation", "B5.1.1.1: Man as God's representative", "B6.1.1.1: God's attributes in mankind"],
@@ -790,15 +823,65 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
     "Health and safety in using ICT tools": ["B4-B6.7.1.1: Demonstrate the application of Health and safety measures, in using ICT tools"]
   },
   "Oral Language": {
+    "Conversation/Everyday Discourse": [
+      "B7.1.1.1: Demonstrate use of appropriate language orally in specific situations",
+      "B8.1.1.1: Demonstrate use of appropriate language orally in specific situations",
+      "B9.1.1.1: Demonstrate the use of appropriate language orally in specific situations"
+    ],
+    "Listening Comprehension": [
+      "B7.1.2.1: Demonstrate the ability to listen to extended reading and identify key information",
+      "B8.1.2.1: Demonstrate the ability to listen to extended reading and identify key information",
+      "B9.1.2.1: Demonstrate the ability to listen to extended reading and identify key information"
+    ],
+    "English Sounds": [
+      "B7.1.3.1: Articulate English speech sounds to develop confidence and skills in listening and speaking",
+      "B8.1.3.1: Articulate English speech sounds to develop confidence and skills in listening and speaking",
+      "B9.1.3.1: Articulate English speech sounds to develop confidence and skills in listening and speaking"
+    ],
     "Songs": ["B1.1.1.1: Listen to and sing familiar songs", "B2.1.1.1: Interpret familiar songs", "B3.1.1.1: Talk about the benefits of songs", "B4.1.1.1: Listen attentively to songs and sing them", "B5.1.1.1: Explain the central messages in songs", "B6.1.1.1: Relate the central messages in songs to personal experiences"],
     "Story Telling": ["B1.1.3.1: Listen to stories and identify characters", "B2.1.4.1: Identify characters in a story", "B3.1.4.1: Respond to and ask questions based on stories", "B4.1.4.1: Retell stories sequentially", "B5.1.4.1: Demonstrate understanding of lessons in stories", "B6.1.4.1: Make connections between texts or stories and personal experiences"],
     "Conversation": ["B1.1.6.1: Use appropriate greetings", "B2.1.6.1: Use certain culturally acceptable language", "B3.1.6.1: Use appropriate greetings for special occasions", "B4.1.6.1: Describe/talk about objects, events, dates and time", "B5.1.6.1: Describe/talk about names of regions/places", "B6.1.6.1: Describe/talk about objects/personalities/events"]
   },
   "Reading": {
-    "Phonics": ["B1.2.2.1: Identify the alphabet in order", "B2.2.2.1: Blend syllables to produce words", "B3.2.2.1: Understand the relationship between spelling and sounds", "B4.2.2.1: Match sounds to their corresponding letter patterns", "B5.2.2.1: Apply common phonic generalisations", "B6.2.2.1: Read words with specific ending sounds"],
-    "Comprehension": ["B1.2.7.1: Use self-correction strategies", "B2.2.7.1: Understand and analyse texts read", "B3.2.7.1: Use self-correction strategies to make meaning", "B4.2.7.1: Construct meaning from texts read", "B5.2.7.1: Use pre-reading and while-reading strategies", "B6.2.7.1: Use prior knowledge to adjust comprehension"]
+    "Comprehension": [
+      "B1.2.7.1: Use self-correction strategies", "B2.2.7.1: Understand and analyse texts read", "B3.2.7.1: Use self-correction strategies to make meaning", "B4.2.7.1: Construct meaning from texts read", "B5.2.7.1: Use pre-reading and while-reading strategies", "B6.2.7.1: Use prior knowledge to adjust comprehension",
+      "B7.2.1.1: Demonstrate increasing confidence and enjoyment in independent reading",
+      "B7.2.1.2: Read, comprehend and interpret texts",
+      "B8.2.1.1: Demonstrate increasing confidence and enjoyment in independent reading",
+      "B8.2.1.2: Read, comprehend, interpret texts",
+      "B9.2.1.1: Demonstrate increasing confidence and enjoyment in independent reading",
+      "B9.2.1.2: Read, comprehend, and analyse varieties of texts"
+    ],
+    "Summarising": [
+      "B7.2.2.1: Demonstrate an understanding in summarising",
+      "B7.2.2.2: Demonstrate understanding of textual evidence that supports a writing piece",
+      "B8.2.2.1: Cite the textual evidence that supports an analysis of a text to determine the central idea and provide an objective summary",
+      "B9.2.2.1: Cite the textual evidence that supports an analysis of what the text says, determining the central idea of a text and provide an objective summary"
+    ],
+    "Phonics": ["B1.2.2.1: Identify the alphabet in order", "B2.2.2.1: Blend syllables to produce words", "B3.2.2.1: Understand the relationship between spelling and sounds", "B4.2.2.1: Match sounds to their corresponding letter patterns", "B5.2.2.1: Apply common phonic generalisations", "B6.2.2.1: Read words with specific ending sounds"]
   },
   "Writing": {
+    "Production and Distribution of Writing": [
+      "B7.4.1.1: Develop, organise and express ideas coherently and cohesively in writing",
+      "B7.4.1.2: Create different paragraphs on a given topic",
+      "B8.4.1.1: Develop, organise and express ideas coherently and cohesively in writing",
+      "B8.4.1.2: Create different paragraphs within a composition on a given topic",
+      "B9.4.1.1: Develop, organise and express ideas coherently and cohesively in writing",
+      "B9.4.1.2: Create different paragraphs a given topic"
+    ],
+    "Text Types and Purposes": [
+      "B7.4.2.1: Develop, organise and express ideas coherently and cohesively in writing for a variety of purposes",
+      "B7.4.2.2: Apply writing skills to specific life situations",
+      "B8.4.2.1: Use a process approach to compose descriptive, narrative/ imaginative, informational, persuasive and argumentative texts",
+      "B8.4.2.2: Apply writing skills to specific life situations",
+      "B9.4.2.1: Use a process approach to compose descriptive, narrative/ imaginative, informational and persuasive, argumentative texts",
+      "B9.4.2.2: Apply writing skills to specific life situations"
+    ],
+    "Building and Presenting Knowledge": [
+      "B7.4.3.1: Research to build and present knowledge",
+      "B8.4.3.1: Research to build and present knowledge",
+      "B9.4.3.1: Research to build and present knowledge"
+    ],
     "Penmanship/Handwriting": ["B1.4.2.1: Copy and write letters of the alphabet correctly", "B2.4.2.1: Copy and rewrite sentences correctly", "B3.4.2.1: Copy short paragraphs clearly", "B4.4.2.1: Write clearly using joined letters", "B5.4.2.1: Copy sentences clearly in joint script", "B6.4.2.1: Write with a legible, fluent and personal style"],
     "Narrative Writing": ["B1.4.10.1: Write about oneself", "B2.4.10.1: Narrate situations and express feelings", "B3.4.10.1: Add more details to a story structure", "B4.4.10.1: Write real or imagined experiences", "B5.4.10.1: Create settings, characters and plots", "B6.4.10.1: Use linking words for cohesion"]
   },
@@ -821,6 +904,41 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
   },
   "Extensive Reading": {
     "Building the Love and Culture of Reading": ["B1.6.1.1: Read a variety of age-appropriate books", "B4.6.1.1: Read and present summaries", "B6.6.1.1: Read and critique a variety of books"]
+  },
+  "Grammar Usage": {
+    "Grammar": [
+      "B7.3.1.1: Apply the knowledge of word classes and their functions in Communication",
+      "B7.3.1.2: Demonstrate command of structural and functional use of sentences",
+      "B7.3.1.4: Apply knowledge of clauses in communication",
+      "B7.3.1.5: Demonstrate understanding of the use of conditional tenses in communication",
+      "B7.3.1.6: Demonstrate mastery of use of active and passive voice",
+      "B7.3.1.7: Show understanding and use of question tags in communication",
+      "B8.3.1.1: Apply the knowledge of word classes and their functions in Communication",
+      "B8.3.1.5: Demonstrate command of the use of reported speech",
+      "B8.3.1.6: Show understanding and use of question tags in communication",
+      "B9.3.1.1: Apply the knowledge of phrases and clauses and their functions in Communication",
+      "B9.3.1.2: Demonstrate understanding of the use of conditional tenses in communication",
+      "B9.3.1.3: Demonstrate command of structural and functional use of sentences",
+      "B9.3.1.4: Demonstrate mastery of the use of active and passive voice"
+    ],
+    "Punctuation and Capitalisation": [
+      "B7.3.2.1: Demonstrate use and mastery of capitalisation and punctuation in communication",
+      "B8.3.2.1: Demonstrate mastery of capitalisation and punctuation in communication",
+      "B9.3.2.1: Demonstrate mastery of capitalisation and punctuation in communication"
+    ],
+    "Vocabulary": [
+      "B7.3.3.1: Demonstrate appropriate use of vocabulary in communication",
+      "B7.3.4.1: Demonstrate understanding of use of aesthetic language to enrich communication",
+      "B8.3.3.1: Demonstrate appropriate use of vocabulary in communication",
+      "B9.3.3.1: Demonstrate appropriate use of vocabulary and spelling conventions in communication"
+    ]
+  },
+  "Literature": {
+    "Narrative, Drama and Poetry": [
+      "B7.5.1.1: Demonstrate understanding of how various elements of literary genres contribute to meaning",
+      "B8.5.1.1: Demonstrate understanding of how various elements of literary genres contribute to meaning",
+      "B9.5.1.1: Demonstrate understanding of how various elements of literary genres contribute to meaning"
+    ]
   },
   "History as a Subject": {
     "Why and how we study history": ["B1.1.1.1: History as part of everyday life", "B4.1.1.1: Importance of studying history", "B4.1.1.2: Sources for writing history"],
@@ -859,65 +977,193 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
   },
 
   // French
-  "Saluer et prendre congé": {
-    "Compréhension Orale": ["B4.1.1.1: Écouter et comprendre des salutations", "B5.1.1.1: Écouter et comprendre des salutations", "B6.1.1.1: Écouter et comprendre des salutations"],
-    "Production Orale": ["B4.1.1.2: Saluer et répondre oralement", "B5.1.1.2: Saluer et répondre oralement", "B6.1.1.2: Saluer et répondre oralement"],
-    "Compréhension Écrite": ["B4.1.1.3: Lire et comprendre des salutations", "B5.1.1.3: Lire et comprendre des salutations", "B6.1.1.3: Lire et comprendre des salutations"],
-    "Production Écrite": ["B4.1.1.4: Écrire des mots de salutation", "B5.1.1.4: Écrire des mots de salutation", "B6.1.1.4: Écrire des mots de salutation"]
+  "L'Identité": {
+    "Saluer et prendre congé": [
+      "B4.1.1.1: Écouter et comprendre des salutations",
+      "B4.1.1.2: Saluer et répondre oralement",
+      "B4.1.1.3: Lire et comprendre des salutations",
+      "B4.1.1.4: Écrire des mots de salutation",
+      "B5.1.1.1: Écouter et comprendre des salutations",
+      "B5.1.1.2: Saluer et répondre oralement",
+      "B5.1.1.3: Lire et comprendre des salutations",
+      "B5.1.1.4: Écrire des mots de salutation",
+      "B6.1.1.1: Écouter et comprendre des salutations",
+      "B6.1.1.2: Saluer et répondre oralement",
+      "B6.1.1.3: Lire et comprendre des salutations",
+      "B6.1.1.4: Écrire des mots de salutation"
+    ],
+    "Se présenter": [
+      "B4.1.2.1: Écouter et comprendre des présentations",
+      "B4.1.2.2: Se présenter oralement",
+      "B4.1.2.3: Lire et comprendre des présentations",
+      "B4.1.2.4: Se présenter par écrit",
+      "B5.1.2.1: Écouter et comprendre des présentations",
+      "B5.1.2.2: Se présenter oralement",
+      "B5.1.2.3: Lire et comprendre des présentations",
+      "B5.1.2.4: Se présenter par écrit",
+      "B6.1.2.1: Écouter et comprendre des présentations",
+      "B6.1.2.2: Se présenter oralement",
+      "B6.1.2.3: Lire et comprendre des présentations",
+      "B6.1.2.4: Se présenter par écrit"
+    ],
+    "Présenter quelqu'un": [
+      "B4.1.3.1: Écouter et comprendre la présentation de quelqu'un",
+      "B4.1.3.2: Présenter quelqu'un oralement",
+      "B4.1.3.3: Lire et comprendre la présentation de quelqu'un",
+      "B4.1.3.4: Présenter quelqu'un par écrit",
+      "B5.1.3.1: Écouter et comprendre la présentation de quelqu'un",
+      "B5.1.3.2: Présenter quelqu'un oralement",
+      "B5.1.3.3: Lire et comprendre la présentation de quelqu'un",
+      "B5.1.3.4: Présenter quelqu'un par écrit",
+      "B6.1.3.1: Écouter et comprendre la présentation de quelqu'un",
+      "B6.1.3.2: Présenter quelqu'un oralement",
+      "B6.1.3.3: Lire et comprendre la présentation de quelqu'un",
+      "B6.1.3.4: Présenter quelqu'un par écrit"
+    ],
+    "Décrire quelqu'un": [
+      "B4.1.4.1: Écouter et comprendre la description de quelqu'un",
+      "B4.1.4.2: Décrire quelqu'un oralement",
+      "B4.1.4.3: Lire et comprendre la description de quelqu'un",
+      "B4.1.4.4: Décrire quelqu'un par écrit",
+      "B5.1.4.1: Écouter et comprendre la description de quelqu'un",
+      "B5.1.4.2: Décrire quelqu'un oralement",
+      "B5.1.4.3: Lire et comprendre la description de quelqu'un",
+      "B5.1.4.4: Décrire quelqu'un par écrit",
+      "B6.1.4.1: Écouter et comprendre la description de quelqu'un",
+      "B6.1.4.2: Décrire quelqu'un oralement",
+      "B6.1.4.3: Lire et comprendre la description de quelqu'un",
+      "B6.1.4.4: Décrire quelqu'un par écrit"
+    ],
+    "Décrire la famille et les liens familiaux": [
+      "B7.1.1.1: Describe family members and relationships"
+    ]
   },
-  "Se présenter": {
-    "Compréhension Orale": ["B4.1.2.1: Écouter et comprendre des présentations", "B5.1.2.1: Écouter et comprendre des présentations", "B6.1.2.1: Écouter et comprendre des présentations"],
-    "Production Orale": ["B4.1.2.2: Se présenter oralement", "B5.1.2.2: Se présenter oralement", "B6.1.2.2: Se présenter oralement"],
-    "Compréhension Écrite": ["B4.1.2.3: Lire et comprendre des présentations", "B5.1.2.3: Lire et comprendre des présentations", "B6.1.2.3: Lire et comprendre des présentations"],
-    "Production Écrite": ["B4.1.2.4: Se présenter par écrit", "B5.1.2.4: Se présenter par écrit", "B6.1.2.4: Se présenter par écrit"]
+  "Parler de son Environnement": {
+    "Parler de sa maison": [
+      "B7.2.1.1: Describe different rooms and parts of a house in French"
+    ],
+    "Parler de son école": [
+      "B4.2.2.1: Écouter et comprendre l'environnement scolaire",
+      "B4.2.2.2: Parler de l'école oralement",
+      "B4.2.2.3: Lire sur l'école",
+      "B4.2.2.4: Écrire sur l'école",
+      "B5.2.2.1: Écouter et comprendre l'environnement scolaire",
+      "B5.2.2.2: Parler de l'école oralement",
+      "B5.2.2.3: Lire sur l'école",
+      "B5.2.2.4: Écrire sur l'école",
+      "B6.2.2.1: Écouter et comprendre l'environnement scolaire",
+      "B6.2.2.2: Parler de l'école oralement",
+      "B6.2.2.3: Lire sur l'école",
+      "B6.2.2.4: Écrire sur l'école"
+    ]
   },
-  "Présenter quelqu'un": {
-    "Compréhension Orale": ["B4.1.3.1: Écouter et comprendre la présentation de quelqu'un", "B5.1.3.1: Écouter et comprendre la présentation de quelqu'un", "B6.1.3.1: Écouter et comprendre la présentation de quelqu'un"],
-    "Production Orale": ["B4.1.3.2: Présenter quelqu'un oralement", "B5.1.3.2: Présenter quelqu'un oralement", "B6.1.3.2: Présenter quelqu'un oralement"],
-    "Compréhension Écrite": ["B4.1.3.3: Lire et comprendre la présentation de quelqu'un", "B5.1.3.3: Lire et comprendre la présentation de quelqu'un", "B6.1.3.3: Lire et comprendre la présentation de quelqu'un"],
-    "Production Écrite": ["B4.1.3.4: Présenter quelqu'un par écrit", "B5.1.3.4: Présenter quelqu'un par écrit", "B6.1.3.4: Présenter quelqu'un par écrit"]
+  "Exprimer ses Goûts et ses Préférences": {
+    "Dire ce que l’on aime": [
+      "B4.3.1.1: Écouter et comprendre les goûts",
+      "B4.3.1.2: Exprimer ses goûts oralement",
+      "B4.3.1.3: Lire sur les goûts",
+      "B4.3.1.4: Écrire sur ses goûts",
+      "B5.3.1.1: Écouter et comprendre les goûts",
+      "B5.3.1.2: Exprimer ses goûts oralement",
+      "B5.3.1.3: Lire sur les goûts",
+      "B5.3.1.4: Écrire sur ses goûts",
+      "B6.3.1.1: Écouter et comprendre les goûts",
+      "B6.3.1.2: Exprimer ses goûts oralement",
+      "B6.3.1.3: Lire sur les goûts",
+      "B6.3.1.4: Écrire sur ses goûts"
+    ],
+    "Dire ce que l'on aime": [
+      "B4.3.1.1: Écouter et comprendre les goûts",
+      "B4.3.1.2: Exprimer ses goûts oralement",
+      "B4.3.1.3: Lire sur les goûts",
+      "B4.3.1.4: Écrire sur ses goûts",
+      "B5.3.1.1: Écouter et comprendre les goûts",
+      "B5.3.1.2: Exprimer ses goûts oralement",
+      "B5.3.1.3: Lire sur les goûts",
+      "B5.3.1.4: Écrire sur ses goûts",
+      "B6.3.1.1: Écouter et comprendre les goûts",
+      "B6.3.1.2: Exprimer ses goûts oralement",
+      "B6.3.1.3: Lire sur les goûts",
+      "B6.3.1.4: Écrire sur ses goûts"
+    ],
+    "Dire ce que l’on n’aime pas": [
+      "B7.3.1.1: Express dislikes in French"
+    ],
+    "Dire ce que l'on n'aime pas": [
+      "B7.3.1.1: Express dislikes in French"
+    ]
   },
-  "Décrire quelqu'un": {
-    "Compréhension Orale": ["B4.1.4.1: Écouter et comprendre la description de quelqu'un", "B5.1.4.1: Écouter et comprendre la description de quelqu'un", "B6.1.4.1: Écouter et comprendre la description de quelqu'un"],
-    "Production Orale": ["B4.1.4.2: Décrire quelqu'un oralement", "B5.1.4.2: Décrire quelqu'un oralement", "B6.1.4.2: Décrire quelqu'un oralement"],
-    "Compréhension Écrite": ["B4.1.4.3: Lire et comprendre la description de quelqu'un", "B5.1.4.3: Lire et comprendre la description de quelqu'un", "B6.1.4.3: Lire et comprendre la description de quelqu'un"],
-    "Production Écrite": ["B4.1.4.4: Décrire quelqu'un par écrit", "B5.1.4.4: Décrire quelqu'un par écrit", "B6.1.4.4: Décrire quelqu'un par écrit"]
-  },
-  "Compter et faire des calculs simples": {
-    "Compréhension Orale": ["B4.4.1.1: Écouter et comprendre les nombres", "B5.4.1.1: Écouter et comprendre les nombres", "B6.4.1.1: Écouter et comprendre les nombres"],
-    "Production Orale": ["B4.4.1.2: Compter à haute voix", "B5.4.1.2: Compter à haute voix", "B6.4.1.2: Compter à haute voix"],
-    "Compréhension Écrite": ["B4.4.1.3: Lire les nombres", "B5.4.1.3: Lire les nombres", "B6.4.1.3: Lire les nombres"],
-    "Production Écrite": ["B4.4.1.4: Écrire les nombres et faire des calculs", "B5.4.1.4: Écrire les nombres et faire des calculs", "B6.4.1.4: Écrire les nombres et faire des calculs"]
-  },
-  "Demander et donner l'heure": {
-    "Compréhension Orale": ["B4.4.2.1: Écouter et comprendre l'heure", "B5.4.2.1: Écouter et comprendre l'heure", "B6.4.2.1: Écouter et comprendre l'heure"],
-    "Production Orale": ["B4.4.2.2: Demander et donner l'heure oralement", "B5.4.2.2: Demander et donner l'heure oralement", "B6.4.2.2: Demander et donner l'heure oralement"],
-    "Compréhension Écrite": ["B4.4.2.3: Lire l'heure", "B5.4.2.3: Lire l'heure", "B6.4.2.3: Lire l'heure"],
-    "Production Écrite": ["B4.4.2.4: Écrire l'heure", "B5.4.2.4: Écrire l'heure", "B6.4.2.4: Écrire l'heure"]
-  },
-  "Parler des jours de la semaine": {
-    "Compréhension Orale": ["B4.4.3.1: Écouter et comprendre les jours", "B5.4.3.1: Écouter et comprendre les jours", "B6.4.3.1: Écouter et comprendre les jours"],
-    "Production Orale": ["B4.4.3.2: Parler des jours oralement", "B5.4.3.2: Parler des jours oralement", "B6.4.3.2: Parler des jours oralement"],
-    "Compréhension Écrite": ["B4.4.3.3: Lire les jours", "B5.4.3.3: Lire les jours", "B6.4.3.3: Lire les jours"],
-    "Production Écrite": ["B4.4.3.4: Écrire les jours", "B5.4.3.4: Écrire les jours", "B6.4.3.4: Écrire les jours"]
-  },
-  "Identifier les professions et les métiers": {
-    "Compréhension Orale": ["B4.4.7.1: Écouter et comprendre les professions", "B5.4.7.1: Écouter et comprendre les professions", "B6.4.7.1: Écouter et comprendre les professions"],
-    "Production Orale": ["B4.4.7.2: Parler des professions oralement", "B5.4.7.2: Parler des professions oralement", "B6.4.7.2: Parler des professions oralement"],
-    "Compréhension Écrite": ["B4.4.7.3: Lire les professions", "B5.4.7.3: Lire les professions", "B6.4.7.3: Lire les professions"],
-    "Production Écrite": ["B4.4.7.4: Écrire les professions", "B5.4.7.4: Écrire les professions", "B6.4.7.4: Écrire les professions"]
-  },
-  "Parler de son école": {
-    "Compréhension Orale": ["B4.2.2.1: Écouter et comprendre l'environnement scolaire", "B5.2.2.1: Écouter et comprendre l'environnement scolaire", "B6.2.2.1: Écouter et comprendre l'environnement scolaire"],
-    "Production Orale": ["B4.2.2.2: Parler de l'école oralement", "B5.2.2.2: Parler de l'école oralement", "B6.2.2.2: Parler de l'école oralement"],
-    "Compréhension Écrite": ["B4.2.2.3: Lire sur l'école", "B5.2.2.3: Lire sur l'école", "B6.2.2.3: Lire sur l'école"],
-    "Production Écrite": ["B4.2.2.4: Écrire sur l'école", "B5.2.2.4: Écrire sur l'école", "B6.2.2.4: Écrire sur l'école"]
-  },
-  "Dire ce que l’on aime": {
-    "Compréhension Orale": ["B4.3.1.1: Écouter et comprendre les goûts", "B5.3.1.1: Écouter et comprendre les goûts", "B6.3.1.1: Écouter et comprendre les goûts"],
-    "Production Orale": ["B4.3.1.2: Exprimer ses goûts oralement", "B5.3.1.2: Exprimer ses goûts oralement", "B6.3.1.2: Exprimer ses goûts oralement"],
-    "Compréhension Écrite": ["B4.3.1.3: Lire sur les goûts", "B5.3.1.3: Lire sur les goûts", "B6.3.1.3: Lire sur les goûts"],
-    "Production Écrite": ["B4.3.1.4: Écrire sur ses goûts", "B5.3.1.4: Écrire sur ses goûts", "B6.3.1.4: Écrire sur ses goûts"]
+  "Les Activités": {
+    "Compter et faire des calculs simples": [
+      "B4.4.1.1: Écouter et comprendre les nombres",
+      "B4.4.1.2: Compter à haute voix",
+      "B4.4.1.3: Lire les nombres",
+      "B4.4.1.4: Écrire les nombres et faire des calculs",
+      "B5.4.1.1: Écouter et comprendre les nombres",
+      "B5.4.1.2: Compter à haute voix",
+      "B5.4.1.3: Lire les nombres",
+      "B5.4.1.4: Écrire les nombres et faire des calculs",
+      "B6.4.1.1: Écouter et comprendre les nombres",
+      "B6.4.1.2: Compter à haute voix",
+      "B6.4.1.3: Lire les nombres",
+      "B6.4.1.4: Écrire les nombres et faire des calculs"
+    ],
+    "Demander et donner l’heure": [
+      "B4.4.2.1: Écouter et comprendre l'heure",
+      "B4.4.2.2: Demander et donner l'heure oralement",
+      "B4.4.2.3: Lire l'heure",
+      "B4.4.2.4: Écrire l'heure",
+      "B5.4.2.1: Écouter et comprendre l'heure",
+      "B5.4.2.2: Demander et donner l'heure oralement",
+      "B5.4.2.3: Lire l'heure",
+      "B5.4.2.4: Écrire l'heure",
+      "B6.4.2.1: Écouter et comprendre l'heure",
+      "B6.4.2.2: Demander et donner l'heure oralement",
+      "B6.4.2.3: Lire l'heure",
+      "B6.4.2.4: Écrire l'heure"
+    ],
+    "Demander et donner l'heure": [
+      "B4.4.2.1: Écouter et comprendre l'heure",
+      "B4.4.2.2: Demander et donner l'heure oralement",
+      "B4.4.2.3: Lire l'heure",
+      "B4.4.2.4: Écrire l'heure",
+      "B5.4.2.1: Écouter et comprendre l'heure",
+      "B5.4.2.2: Demander et donner l'heure oralement",
+      "B5.4.2.3: Lire l'heure",
+      "B5.4.2.4: Écrire l'heure",
+      "B6.4.2.1: Écouter et comprendre l'heure",
+      "B6.4.2.2: Demander et donner l'heure oralement",
+      "B6.4.2.3: Lire l'heure",
+      "B6.4.2.4: Écrire l'heure"
+    ],
+    "Parler des jours de la semaine": [
+      "B4.4.3.1: Écouter et comprendre les jours",
+      "B4.4.3.2: Parler des jours oralement",
+      "B4.4.3.3: Lire les jours",
+      "B4.4.3.4: Écrire les jours",
+      "B5.4.3.1: Écouter et comprendre les jours",
+      "B5.4.3.2: Parler des jours oralement",
+      "B5.4.3.3: Lire les jours",
+      "B5.4.3.4: Écrire les days",
+      "B6.4.3.1: Écouter et comprendre les jours",
+      "B6.4.3.2: Parler des jours oralement",
+      "B6.4.3.3: Lire les jours",
+      "B6.4.3.4: Écrire les jours"
+    ],
+    "Identifier les professions et les métiers": [
+      "B4.4.7.1: Écouter et comprendre les professions",
+      "B4.4.7.2: Parler des professions oralement",
+      "B4.4.7.3: Lire les professions",
+      "B4.4.7.4: Écrire les professions",
+      "B5.4.7.1: Écouter et comprendre les professions",
+      "B5.4.7.2: Parler des professions oralement",
+      "B5.4.7.3: Lire les professions",
+      "B5.4.7.4: Écrire les professions",
+      "B6.4.7.1: Écouter et comprendre les professions",
+      "B6.4.7.2: Parler des professions oralement",
+      "B6.4.7.3: Lire les professions",
+      "B6.4.7.4: Écrire les professions"
+    ]
   },
   
   // Ghanaian Language B1-B3

@@ -429,7 +429,9 @@ export default function ContentLibrary() {
 
   const handleFileDownload = async (url: string, filename: string) => {
     try {
+      toast.loading("Initiating document download...", { id: "download-status", duration: 1500 });
       const response = await fetch(url);
+      if (!response.ok) throw new Error("Network response was not ok");
       const blob = await response.blob();
       const blobUrl = URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -439,10 +441,21 @@ export default function ContentLibrary() {
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(blobUrl);
+      toast.success("Download started successfully!", { id: "download-status" });
     } catch (error) {
-      console.error('Download failed:', error);
-      // Fallback to opening in new tab
-      window.open(url, '_blank');
+      console.warn('Direct fetch download failed (CORS or network). Redirecting securely...', error);
+      toast.success("Opening official document in a safe new tab...", { id: "download-status" });
+      
+      // Highly robust fallback using DOM anchor element cross-origin navigation
+      // This bypasses sandboxed iframe window.open limitations in AI Studio
+      const link = document.createElement('a');
+      link.href = url;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      link.download = filename; // fallback in browsers that support it
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
   };
 
@@ -1169,7 +1182,7 @@ export default function ContentLibrary() {
                       document.body.removeChild(element);
                     }
                   }}
-                  className="hidden md:flex items-center gap-2 px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg shadow-emerald-500/20"
+                  className="flex items-center gap-1 md:gap-2 px-3 py-2 md:px-6 md:py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all shadow-lg shadow-emerald-500/20"
                 >
                   <Download size={16} />
                   Download

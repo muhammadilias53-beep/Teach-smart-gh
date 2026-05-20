@@ -192,8 +192,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     let profileUnsubscribe: (() => void) | null = null;
 
-    const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
-      console.log(`[Auth] State changed: ${authUser ? 'User logged in (' + authUser.uid + ')' : 'No user session'}`);
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      console.log(`[Auth] State changed: ${user ? 'User logged in (' + user.uid + ')' : 'No user session'}`);
       
       // Clean up previous profile listener if it exists
       if (profileUnsubscribe) {
@@ -201,81 +201,71 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         profileUnsubscribe = null;
       }
 
-      setUser(authUser);
-      
-      if (!authUser) {
-        setProfile(null);
-        setLoading(false);
-        return;
-      }
-
-      // We have a user, start loading profile
-      setLoading(true);
-
       try {
-        const docRef = doc(db, 'users', authUser.uid);
-        
-        // Use onSnapshot for real-time updates and better offline support
-        profileUnsubscribe = onSnapshot(docRef, async (docSnap) => {
-          if (docSnap.exists()) {
-            const data = docSnap.data() as UserProfile;
-            
-            // Sync email if missing
-            if (!data.email && authUser.email) {
-              await setDoc(docRef, { email: authUser.email }, { merge: true });
-            }
-            
-            // Auto-fix onboarding complete
-            if (!data.onboardingComplete && data.school && data.level) {
-              await setDoc(docRef, { onboardingComplete: true }, { merge: true });
-              data.onboardingComplete = true;
-            }
+        setUser(user);
+        if (user) {
+          const docRef = doc(db, 'users', user.uid);
+          
+          // Use onSnapshot for real-time updates and better offline support
+          profileUnsubscribe = onSnapshot(docRef, async (docSnap) => {
+            if (docSnap.exists()) {
+              const data = docSnap.data() as UserProfile;
+              // If email is missing in profile but exists in user auth, sync it
+              if (!data.email && user.email) {
+                await setDoc(docRef, { email: user.email }, { merge: true });
+              }
+              
+              // Auto-fix: If they have school/level but onboardingComplete is missing, sync it
+              if (!data.onboardingComplete && data.school && data.level) {
+                await setDoc(docRef, { onboardingComplete: true }, { merge: true });
+                data.onboardingComplete = true;
+              }
 
-            // Reset trial for all existing accounts as requested (one-time reset for May 2026)
-            if (!data.trialResetMay2026Applied) {
-              try {
+              // Reset trial for all existing accounts as requested (one-time reset for May 2026)
+              if (!data.trialResetMay2026Applied) {
                 await setDoc(docRef, { 
                   trialStartDate: TRIAL_RESET_DATE.toISOString(),
                   subscriptionStatus: 'trial',
                   trialResetMay2026Applied: true 
                 }, { merge: true });
-              } catch (resetErr) {
-                console.error("Error applying trial reset:", resetErr);
+              }
+              
+              setProfile(data);
+            } else {
+              // Initialize new user profile if it doesn't exist
+              const isAnonymous = user.isAnonymous;
+              const newProfile: any = {
+                uid: user.uid,
+                email: user.email || '',
+                displayName: user.displayName || (isAnonymous ? 'Guest Teacher' : 'Teacher'),
+                trialStartDate: TRIAL_RESET_DATE.toISOString(), // Start from reset date for all
+                subscriptionStatus: 'trial',
+                trialResetMay2026Applied: true,
+                onboardingComplete: isAnonymous ? true : false, 
+                isAnonymous: isAnonymous,
+                createdAt: serverTimestamp(),
+                lastLoginAt: serverTimestamp(),
+              };
+              try {
+                await setDoc(docRef, newProfile);
+                setProfile(newProfile); 
+              } catch (err) {
+                console.error("Error creating initial profile:", err);
               }
             }
-            
-            setProfile(data);
-          } else {
-            // Initialize new user profile if it doesn't exist
-            const isAnonymous = authUser.isAnonymous;
-            const newProfile: any = {
-              uid: authUser.uid,
-              email: authUser.email || '',
-              displayName: authUser.displayName || (isAnonymous ? 'Guest Teacher' : 'Teacher'),
-              trialStartDate: TRIAL_RESET_DATE.toISOString(),
-              subscriptionStatus: 'trial',
-              trialResetMay2026Applied: true,
-              onboardingComplete: isAnonymous ? true : false, 
-              isAnonymous: isAnonymous,
-              createdAt: serverTimestamp(),
-              lastLoginAt: serverTimestamp(),
-            };
-            try {
-              await setDoc(docRef, newProfile);
-              setProfile(newProfile); 
-            } catch (err) {
-              console.error("Error creating initial profile:", err);
+            setLoading(false);
+          }, (error) => {
+            console.error("Profile snapshot error:", error);
+            const isOffline = error instanceof Error && (error.message.includes('offline') || error.message.includes('unavailable'));
+            if (!isOffline) {
+              handleFirestoreError(error, OperationType.GET, `users/${user.uid}`, user);
             }
-          }
+            setLoading(false);
+          });
+        } else {
+          setProfile(null);
           setLoading(false);
-        }, (error) => {
-          console.error("Profile snapshot error:", error);
-          const isOffline = error instanceof Error && (error.message.includes('offline') || error.message.includes('unavailable'));
-          if (!isOffline) {
-            handleFirestoreError(error, OperationType.GET, `users/${authUser.uid}`, authUser);
-          }
-          setLoading(false);
-        });
+        }
       } catch (error) {
         console.error("Auth state change error:", error);
         setLoading(false);

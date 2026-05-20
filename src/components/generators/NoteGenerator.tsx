@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Sparkles, Save, Download, RefreshCw, ChevronRight, CheckCircle, BookOpen, MapPin, Quote } from 'lucide-react';
+import { Sparkles, Save, Download, RefreshCw, ChevronRight, ChevronLeft, CheckCircle, BookOpen, MapPin, Quote } from 'lucide-react';
 import { generateNote } from '../../lib/gemini';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
@@ -14,8 +14,10 @@ import { toast } from 'react-hot-toast';
 import { 
   subjects, 
   levels,
+  CLASSES_BY_LEVEL,
   SUBJECT_STRANDS,
   SUBJECT_SUB_STRANDS,
+  SUB_STRAND_STANDARDS,
   STANDARD_INDICATORS,
   SCIENCE_B7_LESSON_FRAMES,
   SCIENCE_B8_LESSON_FRAMES,
@@ -25,32 +27,319 @@ import {
   FRENCH_B4_B6_LESSON_FRAMES
 } from '../../constants';
 
+const COMPETENCIES = [
+  { code: "CP", label: "Critical Thinking and Problem Solving" },
+  { code: "CI", label: "Creativity and Innovation" },
+  { code: "CC", label: "Communication and Collaboration" },
+  { code: "CG", label: "Cultural Identity and Global Citizenship" },
+  { code: "PL", label: "Personal Development and Leadership" },
+  { code: "DL", label: "Digital Literacy" }
+];
+
 const NoteGenerator = () => {
   const { user, profile } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState({
-    level: profile?.level || 'Basic 7',
-    subject: 'Science',
-    strand: '',
-    subStrand: '',
-    indicator: '',
-    lessonTopic: '',
-    duration: '60 minutes',
-    locality: profile?.locality || 'Urban',
-    specificLocality: profile?.town || '',
-    differentiation: '',
-    objectives: '',
+  const [selectedCompetencies, setSelectedCompetencies] = useState<string[]>(["CP", "CC"]);
+
+  // Helpers for context-aware lookup and fallbacks
+  const getSubjectStrands = (subj: string, lvl: string) => {
+    if (subj === 'English' && lvl === 'JHS') {
+      return ["Oral Language", "Reading", "Grammar Usage", "Writing", "Literature"];
+    }
+    if (subj === 'Ghanaian Language' && lvl === 'JHS') {
+      return ["Customs and Institutions", "Listening and Speaking", "Reading", "Language and Usage", "Composition Writing", "Literature"];
+    }
+    return SUBJECT_STRANDS[subj] || [];
+  };
+
+  const getLookupStrand = (subject: string, strand: string, level?: string) => {
+    const currentLevel = level || (typeof formData !== 'undefined' ? formData?.level : 'JHS');
+    if (subject === 'Our World Our People') {
+      if (strand === 'All Around Us') return 'All Around Us OWOP';
+      if (strand === 'My Global Community') return 'My Global Community OWOP';
+    }
+    if (subject === 'English' && currentLevel === 'JHS') {
+      return `${strand} JHS`;
+    }
+    if (subject === 'Ghanaian Language' && currentLevel === 'JHS') {
+      if (strand === 'Listening and Speaking') return "Oral Language (GL)";
+      if (strand === 'Reading') return "Reading (GL)";
+      if (strand === 'Language and Usage') return "Language and Usage";
+      if (strand === 'Literature') return "Literature (GL)";
+    }
+    return strand;
+  };
+
+  const getSubjectSubStrands = (subj: string, strand: string, lvl: string) => {
+    if (subj === 'Ghanaian Language' && lvl === 'JHS') {
+      if (strand === 'Listening and Speaking') {
+        return ["Conversation/Everyday discourse", "Listening Comprehension"];
+      }
+      if (strand === 'Reading') {
+        return ["Reading", "Translation"];
+      }
+      if (strand === 'Language and Usage') {
+        return ["Integrating grammar (nouns, pronouns, adjectives)", "Integrating grammar (verbs, adverbs, conjunctions, postpositions/prepositions)"];
+      }
+      if (strand === 'Composition Writing') {
+        return ["Structure and organise ideas in composition writing"];
+      }
+      if (strand === 'Literature') {
+        return ["Oral and written literature"];
+      }
+      if (strand === 'Customs and Institutions') {
+        return ["Rites of Passage", "Naming Systems", "The Clan System", "Chieftaincy"];
+      }
+    }
+    const lookupStrand = getLookupStrand(subj, strand, lvl);
+    return SUBJECT_SUB_STRANDS[lookupStrand] || [];
+  };
+
+  const getFallbackIndicators = (standard: string): string[] => {
+    if (!standard) return [];
+    const parts = standard.split(':');
+    if (parts.length > 1) {
+      const code = parts[0].trim();
+      const text = parts.slice(1).join(':').trim();
+      return [`${code}.1: Demonstrate and apply dynamic knowledge of: ${text}`];
+    }
+    return [`${standard}.1: Practice and discuss this core content standard.`];
+  };
+  
+  const [formData, setFormData] = useState(() => {
+    const initialLevel = 'JHS';
+    const initialClass = 'Basic 7';
+    const initialSubject = 'Science';
+    const initialStrands = SUBJECT_STRANDS[initialSubject] || [];
+    const initialStrand = initialStrands[0] || '';
+    const lookupStrand = getLookupStrand(initialSubject, initialStrand, initialLevel);
+    const initialSubStrands = getSubjectSubStrands(initialSubject, initialStrand, initialLevel);
+    const initialSubStrand = initialSubStrands[0] || '';
+    const initialStandards = (SUB_STRAND_STANDARDS[lookupStrand]?.[initialSubStrand] || SUB_STRAND_STANDARDS[initialStrand]?.[initialSubStrand]) || [];
+    const initialStandard = initialStandards[0] || '';
+    const initialIndicators = STANDARD_INDICATORS[initialStandard] || getFallbackIndicators(initialStandard);
+    const initialIndicator = initialIndicators[0] || '';
+
+    return {
+      level: initialLevel,
+      class: initialClass,
+      subject: initialSubject,
+      strand: initialStrand,
+      subStrand: initialSubStrand,
+      contentStandard: initialStandard,
+      indicator: initialIndicator,
+      coreCompetencies: 'Critical Thinking and Problem Solving (CP), Communication and Collaboration (CC)',
+      week: 'Week 1',
+      duration: '60 minutes',
+      term: 'Term 1',
+      academicYear: '2025/2026',
+      lessonTopic: '',
+      locality: profile?.locality || 'Urban',
+      specificLocality: profile?.town || '',
+      differentiation: '',
+      objectives: '',
+    };
   });
 
   const [result, setResult] = useState<any>(null);
   const [saving, setSaving] = useState(false);
 
+  // Helper to find pre-defined lesson frames
+  const getActiveFrame = () => {
+    const indicatorId = formData.indicator.split(':')[0].trim();
+    const standardId = formData.contentStandard.split(':')[0].trim();
+    
+    const allFrames: Record<string, any> = {
+      ...SCIENCE_B7_LESSON_FRAMES,
+      ...SCIENCE_B8_LESSON_FRAMES,
+      ...SCIENCE_B9_LESSON_FRAMES,
+      ...MATH_B7_LESSON_FRAMES,
+      ...ENGLISH_B7_LESSON_FRAMES,
+      ...FRENCH_B4_B6_LESSON_FRAMES
+    };
+    
+    return allFrames[indicatorId] || allFrames[standardId] || null;
+  };
+
   // Selectors
-  const currentStrands = SUBJECT_STRANDS[formData.subject] || [];
-  const currentSubStrands = SUBJECT_SUB_STRANDS[formData.strand] || [];
-  const currentIndicators = STANDARD_INDICATORS[formData.subStrand] || []; // Note: in constants it's standard -> indicators, but some might be grouped
+  const currentClasses = CLASSES_BY_LEVEL[formData.level] || [];
+  const currentStrands = getSubjectStrands(formData.subject, formData.level);
+  const lookupStrand = getLookupStrand(formData.subject, formData.strand);
+  const currentSubStrands = getSubjectSubStrands(formData.subject, formData.strand, formData.level);
+  const currentStandards = (SUB_STRAND_STANDARDS[lookupStrand]?.[formData.subStrand] || SUB_STRAND_STANDARDS[formData.strand]?.[formData.subStrand]) || [];
+  const currentIndicators = STANDARD_INDICATORS[formData.contentStandard] || getFallbackIndicators(formData.contentStandard);
+
+  // Cascading Dropdown Selectors
+  const handleLevelChange = (newLevel: string) => {
+    const matchedClasses = CLASSES_BY_LEVEL[newLevel] || [];
+    const firstClass = matchedClasses[0] || '';
+    
+    let nextSubject = formData.subject;
+    if (newLevel === 'KG') {
+      nextSubject = 'Integrated Curriculum (KG)';
+    } else if (formData.subject === 'Integrated Curriculum (KG)') {
+      nextSubject = 'Science';
+    }
+
+    const nextStrands = getSubjectStrands(nextSubject, newLevel);
+    const nextStrand = nextStrands[0] || '';
+    const lookupNextStrand = getLookupStrand(nextSubject, nextStrand, newLevel);
+
+    const nextSubStrands = getSubjectSubStrands(nextSubject, nextStrand, newLevel);
+    const nextSubStrand = nextSubStrands[0] || '';
+
+    const nextStandards = (SUB_STRAND_STANDARDS[lookupNextStrand]?.[nextSubStrand] || SUB_STRAND_STANDARDS[nextStrand]?.[nextSubStrand]) || [];
+    const nextStandard = nextStandards[0] || '';
+
+    const nextIndicators = STANDARD_INDICATORS[nextStandard] || getFallbackIndicators(nextStandard);
+    const nextIndicator = nextIndicators[0] || '';
+
+    setFormData(prev => ({
+      ...prev,
+      level: newLevel,
+      class: firstClass,
+      subject: nextSubject,
+      strand: nextStrand,
+      subStrand: nextSubStrand,
+      contentStandard: nextStandard,
+      indicator: nextIndicator,
+      lessonTopic: '',
+      objectives: ''
+    }));
+  };
+
+  const handleClassChange = (newClass: string) => {
+    setFormData(prev => ({ ...prev, class: newClass }));
+  };
+
+  const handleSubjectChange = (newSubject: string) => {
+    const nextStrands = getSubjectStrands(newSubject, formData.level);
+    const nextStrand = nextStrands[0] || '';
+    const lookupNextStrand = getLookupStrand(newSubject, nextStrand, formData.level);
+
+    const nextSubStrands = getSubjectSubStrands(newSubject, nextStrand, formData.level);
+    const nextSubStrand = nextSubStrands[0] || '';
+
+    const nextStandards = (SUB_STRAND_STANDARDS[lookupNextStrand]?.[nextSubStrand] || SUB_STRAND_STANDARDS[nextStrand]?.[nextSubStrand]) || [];
+    const nextStandard = nextStandards[0] || '';
+
+    const nextIndicators = STANDARD_INDICATORS[nextStandard] || getFallbackIndicators(nextStandard);
+    const nextIndicator = nextIndicators[0] || '';
+
+    setFormData(prev => ({
+      ...prev,
+      subject: newSubject,
+      strand: nextStrand,
+      subStrand: nextSubStrand,
+      contentStandard: nextStandard,
+      indicator: nextIndicator,
+      lessonTopic: '',
+      objectives: ''
+    }));
+  };
+
+  const handleStrandChange = (newStrand: string) => {
+    const lookupNewStrand = getLookupStrand(formData.subject, newStrand);
+    const nextSubStrands = getSubjectSubStrands(formData.subject, newStrand, formData.level);
+    const nextSubStrand = nextSubStrands[0] || '';
+
+    const nextStandards = (SUB_STRAND_STANDARDS[lookupNewStrand]?.[nextSubStrand] || SUB_STRAND_STANDARDS[newStrand]?.[nextSubStrand]) || [];
+    const nextStandard = nextStandards[0] || '';
+
+    const nextIndicators = STANDARD_INDICATORS[nextStandard] || getFallbackIndicators(nextStandard);
+    const nextIndicator = nextIndicators[0] || '';
+
+    setFormData(prev => ({
+      ...prev,
+      strand: newStrand,
+      subStrand: nextSubStrand,
+      contentStandard: nextStandard,
+      indicator: nextIndicator,
+      lessonTopic: '',
+      objectives: ''
+    }));
+  };
+
+  const handleSubStrandChange = (newSubStrand: string) => {
+    const lookupCurrentStrand = getLookupStrand(formData.subject, formData.strand);
+    const nextStandards = (SUB_STRAND_STANDARDS[lookupCurrentStrand]?.[newSubStrand] || SUB_STRAND_STANDARDS[formData.strand]?.[newSubStrand]) || [];
+    const nextStandard = nextStandards[0] || '';
+
+    const nextIndicators = STANDARD_INDICATORS[nextStandard] || getFallbackIndicators(nextStandard);
+    const nextIndicator = nextIndicators[0] || '';
+
+    setFormData(prev => ({
+      ...prev,
+      subStrand: newSubStrand,
+      contentStandard: nextStandard,
+      indicator: nextIndicator,
+      lessonTopic: '',
+      objectives: ''
+    }));
+  };
+
+  const handleContentStandardChange = (newStandard: string) => {
+    const nextIndicators = STANDARD_INDICATORS[newStandard] || getFallbackIndicators(newStandard);
+    const nextIndicator = nextIndicators[0] || '';
+
+    setFormData(prev => ({
+      ...prev,
+      contentStandard: newStandard,
+      indicator: nextIndicator,
+      lessonTopic: '',
+      objectives: ''
+    }));
+  };
+
+  const handleIndicatorChange = (newIndicator: string) => {
+    setFormData(prev => ({
+      ...prev,
+      indicator: newIndicator,
+      lessonTopic: '',
+      objectives: ''
+    }));
+  };
+
+  // Auto-population effect when Curriculum selects change
+  React.useEffect(() => {
+    const activeFrame = getActiveFrame();
+    if (activeFrame) {
+      setFormData(prev => {
+        const hasNoTopic = !prev.lessonTopic || prev.lessonTopic.trim() === '';
+        const hasNoObjectives = !prev.objectives || prev.objectives.trim() === '';
+        
+        return {
+          ...prev,
+          lessonTopic: hasNoTopic ? activeFrame.topic : prev.lessonTopic,
+          objectives: hasNoObjectives 
+            ? `By the end of the lesson, the learner will be able to:\n1. State what is meant by the key concepts: ${activeFrame.keyWords?.slice(0, 3).join(', ')}.\n2. Participate in practical activities including: ${activeFrame.activities?.[0] || 'active group class tasks'}.\n3. Answer oral review questions and write short evaluation exercises.`
+            : prev.objectives
+        };
+      });
+    }
+  }, [formData.contentStandard, formData.indicator]);
+
+  const handleCompetencyChange = (code: string) => {
+    let next: string[];
+    if (selectedCompetencies.includes(code)) {
+      next = selectedCompetencies.filter(c => c !== code);
+    } else {
+      next = [...selectedCompetencies, code];
+    }
+    setSelectedCompetencies(next);
+    
+    const competencyStrings = next.map(c => {
+      const comp = COMPETENCIES.find(comp => comp.code === c);
+      return comp ? `${comp.label} (${comp.code})` : '';
+    }).filter(Boolean);
+    
+    setFormData(prev => ({
+      ...prev,
+      coreCompetencies: competencyStrings.join(', ')
+    }));
+  };
 
   const handleGenerate = async () => {
     if (!formData.lessonTopic || !formData.objectives) {
@@ -60,46 +349,20 @@ const NoteGenerator = () => {
 
     setLoading(true);
     try {
-      // Frame lookup
-      const indicatorId = formData.indicator.split(':')[0].trim();
-      let frameDetails = "";
-      const allFrames = {
-        ...SCIENCE_B7_LESSON_FRAMES,
-        ...SCIENCE_B8_LESSON_FRAMES,
-        ...SCIENCE_B9_LESSON_FRAMES,
-        ...MATH_B7_LESSON_FRAMES,
-        ...ENGLISH_B7_LESSON_FRAMES,
-        ...FRENCH_B4_B6_LESSON_FRAMES
-      };
-      const foundFrame = allFrames[indicatorId];
-      if (foundFrame) {
-        frameDetails = `
-        LESSON FRAME CONTEXT:
-        - Approved Topic: ${foundFrame.topic}
-        - Key Activities/Themes: ${foundFrame.activities.join(', ')}
-        - Core Keywords: ${foundFrame.keyWords.join(', ')}
-        `;
-      }
-
-      const topicContext = `Indicator: ${formData.indicator}. Strand: ${formData.strand}. Topic: ${formData.lessonTopic}. ${frameDetails}`;
       const data = await generateNote(
-        formData.subject,
-        formData.level,
-        topicContext,
-        formData.objectives,
+        formData,
         { 
           school: profile?.school, 
           district: profile?.district,
           region: profile?.region,
           town: formData.specificLocality || profile?.town,
           locality: formData.locality
-        },
-        formData.differentiation
+        }
       );
 
       setResult(data);
       setStep(4);
-      toast.success("Lesson notes generated!");
+      toast.success("Lesson notes generated successfully!");
     } catch (err) {
       console.error(err);
       toast.error("Failed to generate notes. Please try again.");
@@ -116,6 +379,7 @@ const NoteGenerator = () => {
         ...result,
         authorId: user.uid,
         level: formData.level,
+        class: formData.class,
         subject: formData.subject,
         lessonTopic: formData.lessonTopic,
         createdAt: serverTimestamp(),
@@ -133,53 +397,230 @@ const NoteGenerator = () => {
     if (!result) return;
     const doc = new jsPDF();
     
-    // Header Branding
-    doc.setFillColor(0, 28, 61); // TeachSmart Deep Blue
-    doc.rect(0, 0, 210, 40, 'F');
-    
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(22);
-    doc.setFont('helvetica', 'bold');
-    doc.text('TEACHSMART GHANA', 105, 18, { align: 'center' });
-    
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
-    doc.text('OFFICIAL NaCCA CURRICULUM COMPLIANT LESSON NOTES', 105, 26, { align: 'center' });
-    
-    doc.setDrawColor(252, 209, 22); // Ghana Gold
-    doc.setLineWidth(1);
-    doc.line(40, 32, 170, 32);
-
-    doc.setTextColor(0, 0, 0);
-    doc.setFontSize(14);
-    doc.setFont('helvetica', 'bold');
-    doc.text((result.title || formData.lessonTopic).toUpperCase(), 105, 55, { align: 'center' });
-    
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
-    doc.text(`SUBJECT: ${formData.subject.toUpperCase()} | LEVEL: ${formData.level.toUpperCase()} | TOPIC: ${formData.lessonTopic.toUpperCase()}`, 105, 62, { align: 'center' });
-    
-    doc.setLineWidth(0.5);
-    doc.setDrawColor(230, 230, 230);
-    doc.line(20, 68, 190, 68);
-
-    doc.setFontSize(11);
-    doc.setTextColor(50, 50, 50);
-    
-    const content = result.content.replace(/[#*]/g, '');
-    const splitText = doc.splitTextToSize(content, 175);
-    
-    let cursorY = 78;
+    const marginX = 20;
+    let cursorY = 70;
     const pageHeight = doc.internal.pageSize.height;
-    
-    splitText.forEach((line: string) => {
-        if (cursorY > pageHeight - 35) {
-            doc.addPage();
-            cursorY = 25;
+    const pageWidth = doc.internal.pageSize.width;
+    const maxContentY = pageHeight - 32;
+
+    const addNewPage = () => {
+      doc.addPage();
+      cursorY = 25;
+    };
+
+    // Header cover banner on Page 1
+    const drawPage1Header = () => {
+      doc.setFillColor(0, 28, 61); // TeachSmart Deep Blue
+      doc.rect(0, 0, 210, 36, 'F');
+      
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(20);
+      doc.setFont('helvetica', 'bold');
+      doc.text('TEACHSMART GHANA', 105, 15, { align: 'center' });
+      
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'normal');
+      doc.text('OFFICIAL NaCCA CURRICULUM COMPLIANT LESSON NOTES', 105, 23, { align: 'center' });
+      
+      doc.setDrawColor(252, 209, 22); // Ghana Gold
+      doc.setLineWidth(1);
+      doc.line(30, 29, 180, 29);
+
+      // Metadata Title Block
+      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(13);
+      doc.setFont('helvetica', 'bold');
+      const docTitle = (result.title || formData.lessonTopic || 'LESSON NOTES').toUpperCase();
+      doc.text(docTitle, 105, 48, { align: 'center' });
+      
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`SUBJECT: ${formData.subject.toUpperCase()} | LEVEL: ${formData.level.toUpperCase()} | TOPIC: ${formData.lessonTopic.toUpperCase()}`, 105, 55, { align: 'center' });
+      
+      doc.setLineWidth(0.5);
+      doc.setDrawColor(220, 220, 220);
+      doc.line(20, 60, 190, 60);
+    };
+
+    drawPage1Header();
+    cursorY = 70;
+
+    const renderParagraph = (textLine: string, x: number, isList: boolean, prefixStr: string) => {
+      const rawParts = textLine.split('**');
+      const words: { text: string; bold: boolean }[] = [];
+      
+      for (let j = 0; j < rawParts.length; j++) {
+        const textSegment = rawParts[j];
+        if (textSegment === '' && j === 0) continue;
+        const isBold = j % 2 !== 0;
+        
+        const segWords = textSegment.split(' ');
+        segWords.forEach((word, idx) => {
+          if (word === '') {
+            words.push({ text: ' ', bold: isBold });
+            return;
+          }
+          
+          words.push({ text: word, bold: isBold });
+          if (idx < segWords.length - 1) {
+            words.push({ text: ' ', bold: isBold });
+          }
+        });
+      }
+      
+      if (words.length === 0) return;
+      
+      // Clean up consecutive spaces
+      const cleanWords: typeof words = [];
+      words.forEach(w => {
+        if (w.text === ' ') {
+          if (cleanWords.length > 0 && cleanWords[cleanWords.length - 1].text === ' ') {
+            return;
+          }
         }
-        doc.text(line, 20, cursorY);
+        cleanWords.push(w);
+      });
+      
+      const allowedWidth = pageWidth - x - marginX;
+      let currentLineWords: typeof cleanWords = [];
+      let currentLineWidth = 0;
+      
+      if (isList && prefixStr) {
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(10);
+        doc.setTextColor(0, 28, 61);
+        doc.text(prefixStr, x - 5, cursorY);
+      }
+      
+      const printLineOfWords = (lineW: typeof cleanWords) => {
+        let currentX = x;
+        if (lineW.length > 0 && lineW[0].text === ' ') {
+          lineW.shift();
+        }
+        lineW.forEach(w => {
+          doc.setFont('helvetica', w.bold ? 'bold' : 'normal');
+          doc.setFontSize(10);
+          doc.setTextColor(w.bold ? 0 : 50);
+          doc.text(w.text, currentX, cursorY);
+          currentX += doc.getTextWidth(w.text);
+        });
         cursorY += 6.5;
-    });
+      };
+      
+      for (let k = 0; k < cleanWords.length; k++) {
+        const wObj = cleanWords[k];
+        doc.setFont('helvetica', wObj.bold ? 'bold' : 'normal');
+        doc.setFontSize(10);
+        const wWidth = doc.getTextWidth(wObj.text);
+        
+        if (currentLineWidth + wWidth > allowedWidth) {
+          if (cursorY > maxContentY) {
+            addNewPage();
+          }
+          printLineOfWords(currentLineWords);
+          if (wObj.text === ' ') {
+            currentLineWords = [];
+            currentLineWidth = 0;
+          } else {
+            currentLineWords = [wObj];
+            currentLineWidth = wWidth;
+          }
+        } else {
+          currentLineWords.push(wObj);
+          currentLineWidth += wWidth;
+        }
+      }
+      
+      if (currentLineWords.length > 0) {
+        if (cursorY > maxContentY) {
+          addNewPage();
+        }
+        printLineOfWords(currentLineWords);
+      }
+      cursorY += 1.5;
+    };
+
+    const lines = result.content.split('\n');
+    for (let i = 0; i < lines.length; i++) {
+      const origLine = lines[i];
+      const line = origLine.trim();
+      
+      if (line === '') {
+        cursorY += 4;
+        continue;
+      }
+      
+      if (cursorY > maxContentY) {
+        addNewPage();
+      }
+      
+      // Headers
+      if (line.startsWith('# ')) {
+        const text = line.substring(2).trim();
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(13);
+        doc.setTextColor(0, 28, 61);
+        cursorY += 4;
+        doc.text(text, marginX, cursorY);
+        cursorY += 8;
+        continue;
+      } else if (line.startsWith('## ')) {
+        const text = line.substring(3).trim();
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(11);
+        doc.setTextColor(0, 28, 61);
+        cursorY += 3;
+        doc.text(text, marginX, cursorY);
+        cursorY += 7;
+        continue;
+      } else if (line.startsWith('### ')) {
+        const text = line.substring(4).trim();
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(10);
+        doc.setTextColor(50, 50, 50);
+        cursorY += 2;
+        doc.text(text, marginX, cursorY);
+        cursorY += 6;
+        continue;
+      }
+      
+      // Horizontal dividers
+      if (line === '---' || line === '***' || line === '___') {
+        doc.setLineWidth(0.5);
+        doc.setDrawColor(220, 220, 220);
+        doc.line(marginX, cursorY + 2, pageWidth - marginX, cursorY + 2);
+        cursorY += 8;
+        continue;
+      }
+      
+      // Lists (bullets or numbered)
+      let isList = false;
+      let prefixStr = '';
+      let rawText = origLine; // Preserve hierarchy spaces if any
+      
+      const trimmedLeft = origLine.trimStart();
+      const currentIndent = origLine.length - trimmedLeft.length;
+      let xOffset = marginX + (currentIndent * 1.5);
+      
+      if (trimmedLeft.startsWith('* ') || trimmedLeft.startsWith('- ') || trimmedLeft.startsWith('• ')) {
+        isList = true;
+        prefixStr = '-';
+        rawText = trimmedLeft.substring(2).trim();
+        xOffset += 5;
+      } else {
+        const numMatch = trimmedLeft.match(/^(\d+\.)\s+/);
+        if (numMatch) {
+          isList = true;
+          prefixStr = numMatch[1];
+          rawText = trimmedLeft.substring(numMatch[0].length).trim();
+          xOffset += 6;
+        } else {
+          rawText = trimmedLeft;
+        }
+      }
+      
+      renderParagraph(rawText, xOffset, isList, prefixStr);
+    }
 
     const pageCount = (doc.internal as any).getNumberOfPages();
     for(let i = 1; i <= pageCount; i++) {
@@ -187,7 +628,7 @@ const NoteGenerator = () => {
         
         // Footer Line
         doc.setDrawColor(200, 200, 200);
-        doc.setLineWidth(0.5);
+         doc.setLineWidth(0.5);
         doc.line(10, pageHeight - 20, 200, pageHeight - 20);
 
         // Compliance Footer
@@ -195,7 +636,7 @@ const NoteGenerator = () => {
         doc.setTextColor(100);
         doc.setFont('helvetica', 'italic');
         const complianceMsg = [
-          'NaCCA COMPLIANCE NOTE: These lesson notes are based on the Standard-Based Curriculum (SBC) framework as mandated by the National Council for Curriculum and Assessment (NaCCA) Ghana.',
+          'CA COMPLIANCE NOTE: These lesson notes are based on the Standard-Based Curriculum (SBC) framework as mandated by the National Council for Curriculum and Assessment (NaCCA) Ghana.',
           'Teachers are encouraged to adapt the content to suit their learner\'s diverse needs while maintaining core competency targets and SBC learning indicators.',
           'Verification of specific indicators against official NaCCA curriculum handbooks is strongly recommended for classroom fidelity.'
         ];
@@ -257,41 +698,110 @@ const NoteGenerator = () => {
                     <BookOpen size={24} />
                 </div>
                 <div>
-                    <h2 className="text-xl font-bold">Step 1: Class Information</h2>
-                    <p className="text-sm text-slate-500">Pick the right level and subject for students</p>
+                    <h2 className="text-xl font-bold">Step 1: Academic & Period Data</h2>
+                    <p className="text-sm text-slate-500">Pick the level, subject, and time settings for the note</p>
                 </div>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <label className="text-sm font-bold text-gray-500 uppercase">Education Level</label>
+                <label className="text-sm font-bold text-gray-500 uppercase">Education Stage</label>
                 <select 
                   className="input-field"
                   value={formData.level}
-                  onChange={(e) => setFormData({...formData, level: e.target.value})}
+                  onChange={(e) => handleLevelChange(e.target.value)}
                 >
                   {levels.map(l => (
                     <option key={l} value={l}>{l}</option>
                   ))}
                 </select>
               </div>
+
               <div className="space-y-2">
-                <label className="text-sm font-bold text-gray-500 uppercase">Subject</label>
+                <label className="text-sm font-bold text-gray-500 uppercase">Specific Class/Form</label>
+                <select 
+                  className="input-field"
+                  value={formData.class}
+                  onChange={(e) => handleClassChange(e.target.value)}
+                >
+                  {currentClasses.map(c => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-gray-500 uppercase">Subject Area</label>
                 <select 
                   className="input-field"
                   value={formData.subject}
-                  onChange={(e) => setFormData({...formData, subject: e.target.value})}
+                  onChange={(e) => handleSubjectChange(e.target.value)}
                 >
                   {subjects.map(s => (
                     <option key={s} value={s}>{s}</option>
                   ))}
                 </select>
               </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-gray-500 uppercase">Term</label>
+                <select 
+                  className="input-field"
+                  value={formData.term}
+                  onChange={(e) => setFormData({...formData, term: e.target.value})}
+                >
+                  <option value="Term 1">Term 1</option>
+                  <option value="Term 2">Term 2</option>
+                  <option value="Term 3">Term 3</option>
+                </select>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-gray-500 uppercase">Week/Period</label>
+                <select 
+                  className="input-field"
+                  value={formData.week}
+                  onChange={(e) => setFormData({...formData, week: e.target.value})}
+                >
+                  {Array.from({ length: 12 }, (_, i) => `Week ${i + 1}`).map(w => (
+                    <option key={w} value={w}>{w}</option>
+                  ))}
+                  <option value="Revision Week">Revision Week</option>
+                  <option value="Exams Week">Exams Week</option>
+                </select>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-gray-500 uppercase">Academic Year</label>
+                <input 
+                  type="text" 
+                  className="input-field"
+                  placeholder="e.g. 2025/2026"
+                  value={formData.academicYear}
+                  onChange={(e) => setFormData({...formData, academicYear: e.target.value})}
+                />
+              </div>
+
+              <div className="space-y-2 md:col-span-2">
+                <label className="text-sm font-bold text-gray-500 uppercase">Duration</label>
+                <select 
+                  className="input-field"
+                  value={formData.duration}
+                  onChange={(e) => setFormData({...formData, duration: e.target.value})}
+                >
+                  <option value="30 minutes">30 minutes</option>
+                  <option value="45 minutes">45 minutes</option>
+                  <option value="60 minutes">60 minutes</option>
+                  <option value="90 minutes">90 minutes</option>
+                  <option value="120 minutes">120 minutes</option>
+                </select>
+              </div>
             </div>
+            
             <div className="flex gap-4 mt-8">
-              <button onClick={() => setStep(2)} className="btn-primary flex-1 flex items-center justify-center gap-2">
-                Next: Environment
-                <ChevronRight size={20} />
+              <button onClick={() => setStep(2)} className="btn-primary flex-1 flex items-center justify-center gap-2 group">
+                Next: Environment & Competencies
+                <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
           </motion.div>
@@ -309,8 +819,8 @@ const NoteGenerator = () => {
                     <MapPin size={24} />
                 </div>
                 <div>
-                    <h2 className="text-xl font-bold">Step 2: Environment & Differentiation</h2>
-                    <p className="text-sm text-slate-500">Tailor the note for your learners</p>
+                    <h2 className="text-xl font-bold">Step 2: Environment, Competencies & Differentiation</h2>
+                    <p className="text-sm text-slate-500">Tailor the environmental setting and NaCCA competency indicators</p>
                 </div>
             </div>
 
@@ -339,11 +849,45 @@ const NoteGenerator = () => {
                     />
                   </div>
                 </div>
+
+                <div className="space-y-3 border-t border-gray-50 pt-4">
+                  <label className="text-sm font-black text-slate-700 uppercase block tracking-wider">NaCCA Core Competencies</label>
+                  <p className="text-xs text-slate-400">Select the applicable competencies for this lesson indicator:</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {COMPETENCIES.map((comp) => {
+                      const isChecked = selectedCompetencies.includes(comp.code);
+                      return (
+                        <button
+                          type="button"
+                          key={comp.code}
+                          onClick={() => handleCompetencyChange(comp.code)}
+                          className={cn(
+                            "flex items-start gap-3 p-3 rounded-2xl border text-left transition-all",
+                            isChecked 
+                              ? "bg-emerald-50/50 border-emerald-500/30 text-emerald-950 font-medium" 
+                              : "bg-white border-gray-100 text-slate-500 hover:bg-gray-50"
+                          )}
+                        >
+                          <div className={cn(
+                            "w-5 h-5 rounded-md border flex items-center justify-center text-[10px] font-black flex-shrink-0 mt-0.5",
+                            isChecked ? "bg-ghana-green border-ghana-green text-white" : "border-gray-200 text-transparent bg-white"
+                          )}>
+                            ✓
+                          </div>
+                          <div>
+                            <p className="text-xs font-black text-slate-800">{comp.code}</p>
+                            <p className="text-[11px] text-slate-500 font-medium tracking-tight leading-3">{comp.label}</p>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
                 
-                <div className="space-y-2">
+                <div className="space-y-2 border-t border-gray-50 pt-4">
                     <label className="text-sm font-bold text-gray-500 uppercase">Differential Strategy Focus (Optional)</label>
                     <textarea 
-                      className="input-field min-h-[100px]" 
+                      className="input-field min-h-[80px]" 
                       placeholder="e.g. Focus on visual learners, include simplified vocabulary for some, or extension tasks for others..."
                       value={formData.differentiation}
                       onChange={(e) => setFormData({...formData, differentiation: e.target.value})}
@@ -352,10 +896,13 @@ const NoteGenerator = () => {
              </div>
              
              <div className="flex gap-4 mt-8">
-                <button onClick={() => setStep(1)} className="px-6 py-3 rounded-xl border border-gray-100 font-bold hover:bg-gray-50">Back</button>
-                <button onClick={() => setStep(3)} className="btn-primary flex-1 flex items-center justify-center gap-2">
-                  Next: Topic Details
-                  <ChevronRight size={20} />
+                <button onClick={() => setStep(1)} className="px-6 py-3 rounded-xl border border-gray-100 font-bold hover:bg-gray-50 flex items-center gap-2">
+                  <ChevronLeft size={20} />
+                  Back
+                </button>
+                <button onClick={() => setStep(3)} className="btn-primary flex-1 flex items-center justify-center gap-2 group">
+                  Next: Curriculum Details
+                  <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
                 </button>
              </div>
           </motion.div>
@@ -373,8 +920,8 @@ const NoteGenerator = () => {
                     <Sparkles size={24} />
                 </div>
                 <div>
-                    <h2 className="text-xl font-bold">Step 3: Topic & Objectives</h2>
-                    <p className="text-sm text-slate-500">Define what students will learn</p>
+                    <h2 className="text-xl font-bold">Step 3: Curriculum & Objectives</h2>
+                    <p className="text-sm text-slate-500">Define what students will learn based strictly on the NaCCA Standard-Based Syllabus</p>
                 </div>
             </div>
 
@@ -385,7 +932,7 @@ const NoteGenerator = () => {
                     <select 
                       className="input-field"
                       value={formData.strand}
-                      onChange={(e) => setFormData({...formData, strand: e.target.value, subStrand: '', indicator: ''})}
+                      onChange={(e) => handleStrandChange(e.target.value)}
                     >
                       <option value="">Select Strand</option>
                       {currentStrands.map(s => <option key={s} value={s}>{s}</option>)}
@@ -396,7 +943,7 @@ const NoteGenerator = () => {
                     <select 
                       className="input-field"
                       value={formData.subStrand}
-                      onChange={(e) => setFormData({...formData, subStrand: e.target.value, indicator: ''})}
+                      onChange={(e) => handleSubStrandChange(e.target.value)}
                     >
                       <option value="">Select Sub-Strand</option>
                       {currentSubStrands.map(ss => <option key={ss} value={ss}>{ss}</option>)}
@@ -404,16 +951,30 @@ const NoteGenerator = () => {
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-gray-500 uppercase">Indicator</label>
-                  <select 
-                    className="input-field"
-                    value={formData.indicator}
-                    onChange={(e) => setFormData({...formData, indicator: e.target.value})}
-                  >
-                    <option value="">Select Indicator</option>
-                    {currentIndicators.map(i => <option key={i} value={i}>{i}</option>)}
-                  </select>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-gray-500 uppercase">Content Standard</label>
+                    <select 
+                      className="input-field"
+                      value={formData.contentStandard}
+                      onChange={(e) => handleContentStandardChange(e.target.value)}
+                    >
+                      <option value="">Select Content Standard</option>
+                      {currentStandards.map(cs => <option key={cs} value={cs}>{cs}</option>)}
+                    </select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-gray-500 uppercase">Indicator</label>
+                    <select 
+                      className="input-field"
+                      value={formData.indicator}
+                      onChange={(e) => handleIndicatorChange(e.target.value)}
+                    >
+                      <option value="">Select Indicator</option>
+                      {currentIndicators.map(i => <option key={i} value={i}>{i}</option>)}
+                    </select>
+                  </div>
                 </div>
 
                 <div className="space-y-2">
@@ -422,26 +983,65 @@ const NoteGenerator = () => {
                       type="text" 
                       required
                       className="input-field" 
-                      placeholder="e.g. Photosynthesis in Plants"
+                      placeholder="e.g. Introduction to Elements"
                       value={formData.lessonTopic}
                       onChange={(e) => setFormData({...formData, lessonTopic: e.target.value})}
                     />
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-sm font-bold text-gray-500 uppercase">Learning Objectives (Required)</label>
+                    <div className="flex justify-between items-center">
+                      <label className="text-sm font-bold text-gray-500 uppercase">Learning Objectives (Required)</label>
+                      {getActiveFrame() && (
+                        <button 
+                          type="button"
+                          onClick={() => {
+                            const activeFrame = getActiveFrame();
+                            if (activeFrame) {
+                              setFormData(prev => ({
+                                ...prev,
+                                lessonTopic: activeFrame.topic,
+                                objectives: `By the end of the lesson, the learner will be able to:\n1. State what is meant by the key concepts: ${activeFrame.keyWords?.slice(0, 3).join(', ')}.\n2. Participate in practical activities including: ${activeFrame.activities?.[0] || 'active group class tasks'}.\n3. Answer oral review questions and write short evaluation exercises.`
+                              }));
+                              toast.success("Auto-populated from NaCCA resource framework!");
+                            }
+                          }}
+                          className="text-[10px] bg-emerald-50 text-emerald-700 font-extrabold px-2 py-0.5 rounded-md hover:bg-emerald-100 uppercase tracking-wider"
+                        >
+                          Reset to NaCCA Standard
+                        </button>
+                      )}
+                    </div>
                     <textarea 
                       required
-                      className="input-field min-h-[120px]" 
-                      placeholder="What should students know? e.g. Students will be able to define photosynthesis and identify the necessary elements (sunlight, water, CO2)."
+                      className="input-field min-h-[100px]" 
+                      placeholder="e.g. By the end of the lesson, learners will be able to define an element and identify the first 10 elements on the periodic table."
                       value={formData.objectives}
                       onChange={(e) => setFormData({...formData, objectives: e.target.value})}
                     />
                 </div>
+
+                {getActiveFrame()?.resources && (
+                  <div className="bg-emerald-50/50 border border-emerald-500/10 p-4 rounded-2xl mt-2">
+                    <p className="text-xs font-black text-emerald-800 uppercase tracking-wider mb-2 flex items-center gap-2">
+                      🎒 Recommended TLMs (Locally Available)
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {getActiveFrame().resources.map((item: string, idx: number) => (
+                        <span key={idx} className="bg-emerald-100/60 text-emerald-900 border border-emerald-200/40 text-[10px] px-2.5 py-1 rounded-full font-bold">
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
              </div>
              
              <div className="flex gap-4 mt-8">
-                <button onClick={() => setStep(2)} className="px-6 py-3 rounded-xl border border-gray-200 font-bold hover:bg-gray-50">Back</button>
+                <button onClick={() => setStep(2)} className="px-6 py-3 rounded-xl border border-gray-200 font-bold hover:bg-gray-50 flex items-center gap-2">
+                  <ChevronLeft size={20} />
+                  Back
+                 </button>
                 <button 
                   onClick={handleGenerate} 
                   disabled={loading}
@@ -452,7 +1052,7 @@ const NoteGenerator = () => {
                   ) : (
                     <Sparkles size={20} />
                   )}
-                  {loading ? "Generating..." : "Generate Student Notes"}
+                  {loading ? "Generating Note..." : "Generate Lesson Note"}
                 </button>
              </div>
           </motion.div>

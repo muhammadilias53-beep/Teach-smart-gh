@@ -19,13 +19,14 @@ export const generateLessonPlan = async (prompt: string, teacherInfo?: { school?
     - Mathematics (B1-B6): Use concrete manipulatives for B1-B3. For B4-B6, transition to more abstract modeling but maintain practical examples (e.g., area from grid paper, division as repeated subtraction). Emphasize Roman Numerals, factors/HCF/LCM, and fractions/decimals/percent.
     - Our World Our People (B1-B6): Focus on civic responsibility, environmental awareness, and moral values. Activity descriptions should encourage community interaction and personal reflection. Use real-life scenarios related to Ghana's culture and environment.
     - Physical Education (B1-B6): Focus on motor skills, physical fitness, and teamwork. Activity descriptions must include safety instructions, specific movement cues (e.g., 'eyes on the ball'), and step-by-step drills appropriate for the field or playground. Emphasize teamwork and fair play.
-    - Ghanaian Language (B1-B3 & B4-B6): Follow the specific NaCCA strands (Oral Language, Reading, Writing, etc.). For B1-B3, focus on foundational literacy and phonological awareness. For B4-B6, move towards composition, customs, and literature. Always include the official NaCCA Indicator codes.
+    - Ghanaian Language (B1-B3, B4-B6 & B7-B9): Follow the specific NaCCA strands (Oral Language/Listening and Speaking, Reading, Writing/Language and Usage, Composition Writing, Customs and Institutions, Literature). For B1-B3, focus on foundational literacy and phonological awareness. For B4-B6, move towards composition, customs, and literature. For B7-B9 (JHS), structure lesson content and assessment around the 6 official JHS strands, teaching childhood, puberty, and marriage rites of passage, naming systems, traditional chieftaincy structure, syllables, speech tones, and drum/horn language. Always include the official NaCCA Indicator codes.
     - French: Prioritize the four basic communicative skills (Listening, Speaking, Reading, Writing). Use the task-based approach. All French text outputs should include the French expression followed by the English translation in parentheses for Basic levels.
     - History: Use narrative and inquiry-based approaches. Focus on sources of evidence.
     - English: Integrate Listening, Speaking, Reading, Writing, and Grammar.
     - Creative Arts: Balance "Thinking and Exploring" with "Planning and Making".
     - Science: Emphasize "Diversity of Matter" as the first strand.
     - Computing: Prioritize practical application and digital safety.
+    - Career Technology: Implement the NaCCA "Head, Heart, and Hands (3-H) Therapy" model, focusing primarily on practical skills, craftsmanship, and safety. Specify double-periods (100 continues minutes) for practical sessions where appropriate. Standardise lesson plans around local, accessible Ghanaian resources: compliant materials (paper, cardboard, fabric), resistant materials (wood, metal, plastic, clay/laterite), or local food commodities. For tools and processes, enforce safety routines (PPEs, safe handling of sharp-edged tools). Emphasize freehand sketching (2-D and 3-D), design briefs, and evaluation spanning: Concept/Ideas, Planning/Preparation, Process, Product/Artefact, and Presentation.
     
     NOMENCLATURE: ALWAYS use the "Basic" level format (e.g., B1-B6 for Primary, B7-B9 for Junior High, B10-B12 for Senior High). NEVER use JHS or SHS alone; always refer to them as Basic 7-9 or Basic 10-12. For Kindergarten, use KG1 and KG2.
     INDICATORS: You MUST include and strictly follow the Indicator Code provided. Every activity must map back to these curriculum indicators.
@@ -155,13 +156,14 @@ export const generateSchemeOfWork = async (
     - Mathematics (B1-B6): Ensure logical progression from concrete to abstract. Cover all 4 strands (Number, Algebra, Geometry, Data) across all 3 terms. For B4-B6, introduce more complex operations like multi-digit division and ratio.
     - Our World Our People (B1-B6): Cover all themes (All About Me, All Around Us, Our Beliefs and Values, Our Nation Ghana, My Global Community) across the termly scheme.
     - Physical Education (B1-B6): Distribute physical fitness, movement patterns, and value-based strategies across the term. Ensure a mix of individual drills and team-based activities.
-    - Ghanaian Language (B1-B3 & B4-B6): Follow the specific NaCCA strands (Oral Language, Reading, Writing, Composition Writing, Customs and Institutions, Literature). For B1-B3, focus on foundational literacy, penmanship, and oral traditions. For B4-B6, emphasize composition, advanced grammar, and cultural institutions. Always use the official NaCCA codes (e.g. B4.1.1.1.1).
+    - Ghanaian Language (B1-B3, B4-B6 & B7-B9): Follow the specific NaCCA strands (Oral Language/Listening and Speaking, Reading, Writing/Language and Usage, Composition Writing, Customs and Institutions, Literature). For B1-B3, focus on foundational literacy, penmanship, and oral traditions. For B4-B6, emphasize composition, advanced grammar, and cultural institutions. For B7-B9 (JHS), structure schemes of learning around the 6 official JHS strands, distributing childhood, puberty, and marriage rites of passage, naming systems, traditional chieftaincy structure, syllables, speech tones, and drum/horn language across the termly schedule. Always use the official NaCCA codes (e.g. B7.1.1.1.1).
     - French: Prioritize the four basic communicative skills (Listening, Speaking, Reading, Writing). Use the task-based approach. All French text outputs should include the French expression followed by the English translation in parentheses for Basic levels.
     - History: Use narrative and inquiry-based approaches. Focus on sources of evidence.
     - English: Integrate Listening, Speaking, Reading, Writing, and Grammar.
     - Creative Arts: Balance "Thinking and Exploring" with "Planning and Making".
     - Science: Emphasize "Diversity of Matter" as the first strand.
     - Computing: Prioritize practical application and digital safety.
+    - Career Technology: Implement the NaCCA "Head, Heart, and Hands (3-H) Therapy" model, focusing primarily on practical skills, craftsmanship, and safety. Specify double-periods (100 continues minutes) for practical sessions where appropriate. Standardise Schemes around local, accessible Ghanaian resources: compliant materials (paper, cardboard, fabric), resistant materials (wood, metal, plastic, clay/laterite), or local food commodities. For tools and processes, enforce safety routines (PPEs, safe handling of sharp-edged tools). Emphasize freehand sketching (2-D and 3-D), design briefs, and evaluation spanning: Concept/Ideas, Planning/Preparation, Process, Product/Artefact, and Presentation.
     
     ${options?.customPrompt ? `SPECIFIC FOCUS: ${options.customPrompt}` : ''}
 
@@ -223,6 +225,7 @@ export const generateExam = async (
        - Creative Arts: Balance "Thinking and Exploring" with "Planning and Making".
        - Science: Emphasize "Diversity of Matter" as the first strand.
        - Computing: Prioritize practical application and digital safety.
+       - Career Technology: Ensure that exam questions assess both theoretical understanding (e.g. materials sorting, safety precautions, measuring accuracy) and core practical workflows (freehand sketching, stitching/cooking steps, joining methods using tools). Use locally relevant Ghanaian examples and raw materials found in the JHS CCP environment.
     4. NOMENCLATURE: ALWAYS use the "Basic" level format (e.g., B1-B6 for Primary, B7-B9 for Junior High, B10-B12 for Senior High). NEVER use JHS or SHS alone; always refer to them as Basic 7-9 or Basic 10-12.
     
     Overall Examination Difficulty: ${difficulty}
@@ -289,66 +292,132 @@ export const generateExam = async (
 };
 
 export const generateNote = async (
-  subject: string,
-  level: string,
-  topic: string,
-  objectives: string,
-  teacherInfo?: { school?: string, district?: string, region?: string, town?: string, locality?: string },
-  differentiation?: string
+  formData: {
+    level: string;
+    class: string;
+    subject: string;
+    strand: string;
+    subStrand: string;
+    contentStandard: string;
+    indicator: string;
+    coreCompetencies: string;
+    week: string;
+    duration: string;
+    term: string;
+    academicYear: string;
+    lessonTopic: string;
+    objectives: string;
+    locality: string;
+    specificLocality?: string;
+    differentiation?: string;
+  },
+  teacherInfo?: { school?: string, district?: string, region?: string, town?: string, locality?: string }
 ) => {
-  const model = "gemini-3-flash-preview";
+  const model = "gemini-3.5-flash";
   const systemInstruction = `
-    You are an expert Ghanaian teacher and curriculum developer for NaCCA, specialized in the Standard-Based Curriculum (SBC) and Common Core Programme (CCP) for 2024/2025.
-    Your task is to generate COMPELLING, ACCURATE, and EASY-TO-UNDERSTAND lesson notes that strictly follow GES requirements.
-    
-    SOURCE OF TRUTH: If the prompt provides specific "LESSON FRAME" details or keywords, you MUST incorporate them as the core pillars of the note.
-    
-    CURRICULUM INTEGRITY: You MUST maintain the EXACT names of the Strand and Sub-Strand provided in the topic/context. Do NOT summarize or rephrase them. Specifically for Science, the strand "Diversity of Matter" must be used instead of "All Around Us".
-    
-    SUBJECT-SPECIFIC COMPLIANCE:
-    - French: Prioritize the four basic communicative skills (Listening, Speaking, Reading, Writing). Use the task-based approach. All French text outputs should include the French expression followed by the English translation in parentheses for Basic levels.
-    - History: Use narrative and inquiry-based approaches. Focus on sources of evidence.
-    - English: Integrate Listening, Speaking, Reading, Writing, and Grammar.
-    - Creative Arts: Balance "Thinking and Exploring" with "Planning and Making".
-    - Science: Emphasize "Diversity of Matter" as the first strand.
-    - Computing: Prioritize practical application and digital safety.
-    
-    ALIGNMENT: You MUST generate content specifically for the provided:
-    Level: ${level}
-    Subject: ${subject}
-    Topic/Context: ${topic}
-    
-    NOMENCLATURE: ALWAYS use the "Basic" level format (e.g., B1-B6 for Primary, B7-B9 for Junior High, B10-B12 for Senior High). NEVER use JHS or SHS alone; always refer to them as Basic 7-9 or Basic 10-12.
-    Core Objectives: ${objectives}
-    
-    ${teacherInfo?.locality ? `LOCALITY CONTEXT: ${teacherInfo.locality} (${teacherInfo.town || 'N/A'}). 
-    TAILORING: Use examples and comparisons that students in a ${teacherInfo.locality} setting would find most relatable.` : ''}
+You are an expert Ghanaian educational AI, acting as an instructional designer mapped directly to the official National Council for Curriculum and Assessment (NaCCA) reference documents.
 
-    ${differentiation ? `DIFFERENTIATION FOCUS: ${differentiation}` : ''}
-    
-    STRUCTURE OF THE NOTE:
-    1. Introduction: Engaging opening that connects to prior knowledge.
-    2. Key Concepts: Clear definitions and explanations.
-    3. Detailed Body: Break down the topic into sub-headings. Use bullet points for readability.
-    4. Examples: Relatable Ghanaian examples (e.g., local currencies, landmarks, cultural practices if applicable).
-    5. Summary: 3-5 key takeaways.
-    6. Review Questions: 5 questions to test understanding (Objectives and Theory).
-    
-    FORMATTING:
-    - Use Markdown for the content.
-    - Use bold text for key terms.
-    - Response MUST be a JSON object:
-    {
-      "title": "Topic Title",
-      "content": "The full lesson note in Markdown",
-      "summary": ["Point 1", "Point 2", "..."],
-      "questions": ["Q1", "Q2", "..."]
-    }
+Your primary responsibility is to act as an instructional designer mapped directly to the official NaCCA curriculum documents. When generating the note, identify the specific Subject, Strand, Sub-strand, and Indicator provided below, and extract the true learning bounds, standard objectives, and exemplars. Do not hallucinate or invent curriculum requirements outside of the official standards.
+
+YOUR ROLE:
+Generate comprehensive, classroom-ready student reference notes formatted beautifully in clean, highly structured, print-ready Markdown.
+
+========================================
+INPUT DATA PROVIDED BY SYSTEM
+=============================
+- Education Level: ${formData.level}
+- Class/Form: ${formData.class}
+- Subject/Learning Area: ${formData.subject}
+- Strand: ${formData.strand}
+- Sub-Strand: ${formData.subStrand}
+- Content Standard: ${formData.contentStandard}
+- Indicator(s): ${formData.indicator}
+- Core Competencies: ${formData.coreCompetencies}
+- Week: ${formData.week}
+- Duration: ${formData.duration}
+- Term: ${formData.term}
+- Academic Year: ${formData.academicYear}
+- Lesson Topic: ${formData.lessonTopic}
+- Lesson Objectives: ${formData.objectives}
+- Locality Setting: ${formData.locality} setting ${formData.specificLocality ? `(${formData.specificLocality})` : ''}
+${formData.differentiation ? `- Differentiation Strategy: ${formData.differentiation}` : ''}
+${teacherInfo?.school ? `- School Name: ${teacherInfo.school}` : ''}
+${teacherInfo?.district ? `- District Name: ${teacherInfo.district}` : ''}
+${teacherInfo?.region ? `- Region Name: ${teacherInfo.region}` : ''}
+
+========================================
+STRICT GENERATION RULES
+=======================
+1. NEVER invent curriculum content outside the provided data.
+2. NEVER change or rewrite official indicators or standards.
+3. Generate notes suitable for the exact class level selected.
+4. Keep explanations simple, practical, and highly-teachable.
+5. Ensure all core references, keywords, goals, and assessments are highly legible and formatted with horizontal lines or spacing so they are completely print-ready.
+6. For Career Technology notes, always incorporate the "Head, Heart, and Hands (3-H)" pedagogy, using Ghanaian context references and strict safety instructions.
+7. For Ghanaian Language notes, conform exactly to the 6 official JHS strands and implement native cultural systems (rites of passage, naming systems, traditional chieftaincy).
+
+========================================
+GENERATE NOTES USING THIS EXACT STRUCTURE
+=========================================
+The returned "content" must be in beautifully written Markdown that strictly contains the following sections matching this layout:
+
+---
+
+# LESSON BANNER 
+Output the Subject, Level, and Indicator Code boldly at the very top.
+(Example: **SUBJECT**: Science | **LEVEL**: JHS | **INDICATOR CODE**: B7.3.1.1)
+
+---
+
+# STUDENT LEARNING GOAL
+Convert the official NaCCA indicator text into a clear, friendly "What you will learn today" objective.
+
+---
+
+# KEYWORDS BOX
+Identify 3 to 5 crucial terminology words found within this specific curriculum indicator/exemplar and provide simple, classroom-accurate, and student-friendly definitions. Always format this as a clean bulleted list or a neat table.
+
+---
+
+# CORE REFERENCE NOTES
+Deeply explain the topic using the specific concepts outlined in the curriculum document's exemplars. Use highly descriptive subheadings, short paragraphs, and bold text for critical concepts. Use bulleted lists wherever processes, types, or characteristics are explained to ensure students can easily copy or read them at home.
+
+---
+
+# GHANAIAN CONTEXT INTEGRATION
+Actively reference the local examples, applications, or cultural analogies mentioned in the NaCCA curriculum document for this indicator (e.g., local everyday materials, regional applications, agricultural settings, or community scenarios).
+
+---
+
+# QUICK CHECK
+A 2-sentence summary of the absolute core takeaway of the lesson that students can memorize.
+
+---
+
+# CLASSROOM ASSESSMENT QUESTIONS
+Provide 3 distinct, high-quality evaluation questions (a mix of recall and application) that perfectly match the depth required by the selected indicator.
+
+---
+
+========================================
+RESPONSE FORMAT
+================
+You MUST return a JSON object with this exact structure:
+{
+  "title": "Topic Title",
+  "content": "The full lesson note in Markdown formatted with the EXACT 7-part structure specified in the 'GENERATE NOTES USING THIS EXACT STRUCTURE' section. Use neat separators (---) between the sections to make it completely print-ready.",
+  "summary": [
+    "A list of 3-5 concise, direct key takeaways of the lesson for student review"
+  ],
+  "questions": [
+    "The 3 assessment questions generated in the Classroom Assessment Questions section as individual strings"
+  ]
+}
   `;
 
   const response = await ai.models.generateContent({
     model,
-    contents: `Generate a detailed student note for ${topic} (${level}) in ${subject}.`,
+    contents: `Generate a lesson note for level ${formData.class} in ${formData.subject} for the topic "${formData.lessonTopic}".`,
     config: {
       systemInstruction,
       responseMimeType: "application/json",
