@@ -10,6 +10,7 @@ import { cn } from '../../lib/utils';
 import { SafeMarkdown } from '../common/SafeMarkdown';
 import 'highlight.js/styles/github.css';
 import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import { toast } from 'react-hot-toast';
 import { 
   subjects, 
@@ -135,7 +136,6 @@ const NoteGenerator = () => {
       duration: '60 minutes',
       term: 'Term 1',
       academicYear: '2025/2026',
-      lessonTopic: '',
       locality: profile?.locality || 'Urban',
       specificLocality: profile?.town || '',
       differentiation: '',
@@ -205,7 +205,6 @@ const NoteGenerator = () => {
       subStrand: nextSubStrand,
       contentStandard: nextStandard,
       indicator: nextIndicator,
-      lessonTopic: '',
       objectives: ''
     }));
   };
@@ -235,7 +234,6 @@ const NoteGenerator = () => {
       subStrand: nextSubStrand,
       contentStandard: nextStandard,
       indicator: nextIndicator,
-      lessonTopic: '',
       objectives: ''
     }));
   };
@@ -257,7 +255,6 @@ const NoteGenerator = () => {
       subStrand: nextSubStrand,
       contentStandard: nextStandard,
       indicator: nextIndicator,
-      lessonTopic: '',
       objectives: ''
     }));
   };
@@ -275,7 +272,6 @@ const NoteGenerator = () => {
       subStrand: newSubStrand,
       contentStandard: nextStandard,
       indicator: nextIndicator,
-      lessonTopic: '',
       objectives: ''
     }));
   };
@@ -288,7 +284,6 @@ const NoteGenerator = () => {
       ...prev,
       contentStandard: newStandard,
       indicator: nextIndicator,
-      lessonTopic: '',
       objectives: ''
     }));
   };
@@ -297,7 +292,6 @@ const NoteGenerator = () => {
     setFormData(prev => ({
       ...prev,
       indicator: newIndicator,
-      lessonTopic: '',
       objectives: ''
     }));
   };
@@ -307,12 +301,10 @@ const NoteGenerator = () => {
     const activeFrame = getActiveFrame();
     if (activeFrame) {
       setFormData(prev => {
-        const hasNoTopic = !prev.lessonTopic || prev.lessonTopic.trim() === '';
         const hasNoObjectives = !prev.objectives || prev.objectives.trim() === '';
         
         return {
           ...prev,
-          lessonTopic: hasNoTopic ? activeFrame.topic : prev.lessonTopic,
           objectives: hasNoObjectives 
             ? `By the end of the lesson, the learner will be able to:\n1. State what is meant by the key concepts: ${activeFrame.keyWords?.slice(0, 3).join(', ')}.\n2. Participate in practical activities including: ${activeFrame.activities?.[0] || 'active group class tasks'}.\n3. Answer oral review questions and write short evaluation exercises.`
             : prev.objectives
@@ -342,8 +334,8 @@ const NoteGenerator = () => {
   };
 
   const handleGenerate = async () => {
-    if (!formData.lessonTopic || !formData.objectives) {
-      toast.error("Please ensure Topic and Objectives are filled.");
+    if (!formData.objectives) {
+      toast.error("Please ensure Objectives are filled.");
       return;
     }
 
@@ -381,7 +373,6 @@ const NoteGenerator = () => {
         level: formData.level,
         class: formData.class,
         subject: formData.subject,
-        lessonTopic: formData.lessonTopic,
         createdAt: serverTimestamp(),
       });
       toast.success('Notes saved to your cloud library!');
@@ -428,14 +419,22 @@ const NoteGenerator = () => {
 
       // Metadata Title Block
       doc.setTextColor(0, 0, 0);
-      doc.setFontSize(13);
+      doc.setFontSize(12);
       doc.setFont('helvetica', 'bold');
-      const docTitle = (result.title || formData.lessonTopic || 'LESSON NOTES').toUpperCase();
-      doc.text(docTitle, 105, 48, { align: 'center' });
+      const docTitle = (result.title || 'LESSON NOTES').toUpperCase();
+      doc.text(docTitle, 105, 45, { align: 'center' });
       
-      doc.setFontSize(9);
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(40, 40, 40);
+      doc.text(`SUBJECT: ${formData.subject.toUpperCase()} | LEVEL: ${formData.level.toUpperCase()} | CLASS: ${formData.class.toUpperCase()}`, 105, 51, { align: 'center' });
+      
       doc.setFont('helvetica', 'normal');
-      doc.text(`SUBJECT: ${formData.subject.toUpperCase()} | LEVEL: ${formData.level.toUpperCase()} | TOPIC: ${formData.lessonTopic.toUpperCase()}`, 105, 55, { align: 'center' });
+      doc.setFontSize(7.5);
+      doc.setTextColor(80, 80, 80);
+      const metadataLine2 = `STRAND: ${formData.strand.toUpperCase()} | SUB-STRAND: ${formData.subStrand.toUpperCase()}`;
+      const splitMeta = doc.splitTextToSize(metadataLine2, 170);
+      doc.text(splitMeta[0] || '', 105, 56, { align: 'center' });
       
       doc.setLineWidth(0.5);
       doc.setDrawColor(220, 220, 220);
@@ -443,7 +442,7 @@ const NoteGenerator = () => {
     };
 
     drawPage1Header();
-    cursorY = 70;
+    cursorY = 66;
 
     const renderParagraph = (textLine: string, x: number, isList: boolean, prefixStr: string) => {
       const rawParts = textLine.split('**');
@@ -541,12 +540,59 @@ const NoteGenerator = () => {
     };
 
     const lines = result.content.split('\n');
-    for (let i = 0; i < lines.length; i++) {
+    let i = 0;
+    while (i < lines.length) {
       const origLine = lines[i];
       const line = origLine.trim();
       
       if (line === '') {
         cursorY += 4;
+        i++;
+        continue;
+      }
+      
+      // Render Markdown Tables using autoTable
+      if (line.startsWith('|')) {
+        const tableLines: string[] = [];
+        while (i < lines.length && lines[i].trim().startsWith('|')) {
+          tableLines.push(lines[i].trim());
+          i++;
+        }
+        
+        if (tableLines.length > 0) {
+          let headers: string[] = [];
+          const bodyRows: string[][] = [];
+          
+          tableLines.forEach((tLine, tIdx) => {
+            const row = tLine.split('|').filter((_, colIdx, arr) => colIdx > 0 && colIdx < arr.length - 1).map(c => c.trim());
+            if (row.length > 0) {
+              if (tIdx === 0) {
+                headers = row;
+              } else if (!tLine.includes('---')) {
+                bodyRows.push(row);
+              }
+            }
+          });
+          
+          if (headers.length > 0 || bodyRows.length > 0) {
+            if (cursorY + 15 > maxContentY) {
+              addNewPage();
+            }
+            
+            autoTable(doc, {
+              head: headers.length > 0 ? [headers] : [],
+              body: bodyRows,
+              startY: cursorY + 2,
+              theme: 'grid',
+              styles: { fontSize: 8, cellPadding: 3, valign: 'middle' },
+              headStyles: { fillColor: [0, 28, 61], textColor: 255, fontStyle: 'bold', halign: 'center' },
+              alternateRowStyles: { fillColor: [248, 250, 252] },
+              margin: { left: marginX, right: marginX },
+            });
+            
+            cursorY = (doc as any).lastAutoTable.finalY + 6;
+          }
+        }
         continue;
       }
       
@@ -563,6 +609,7 @@ const NoteGenerator = () => {
         cursorY += 4;
         doc.text(text, marginX, cursorY);
         cursorY += 8;
+        i++;
         continue;
       } else if (line.startsWith('## ')) {
         const text = line.substring(3).trim();
@@ -572,6 +619,7 @@ const NoteGenerator = () => {
         cursorY += 3;
         doc.text(text, marginX, cursorY);
         cursorY += 7;
+        i++;
         continue;
       } else if (line.startsWith('### ')) {
         const text = line.substring(4).trim();
@@ -581,6 +629,7 @@ const NoteGenerator = () => {
         cursorY += 2;
         doc.text(text, marginX, cursorY);
         cursorY += 6;
+        i++;
         continue;
       }
       
@@ -590,6 +639,7 @@ const NoteGenerator = () => {
         doc.setDrawColor(220, 220, 220);
         doc.line(marginX, cursorY + 2, pageWidth - marginX, cursorY + 2);
         cursorY += 8;
+        i++;
         continue;
       }
       
@@ -620,6 +670,7 @@ const NoteGenerator = () => {
       }
       
       renderParagraph(rawText, xOffset, isList, prefixStr);
+      i++;
     }
 
     const pageCount = (doc.internal as any).getNumberOfPages();
@@ -978,18 +1029,6 @@ const NoteGenerator = () => {
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-sm font-bold text-gray-500 uppercase">Lesson Topic (Required)</label>
-                    <input 
-                      type="text" 
-                      required
-                      className="input-field" 
-                      placeholder="e.g. Introduction to Elements"
-                      value={formData.lessonTopic}
-                      onChange={(e) => setFormData({...formData, lessonTopic: e.target.value})}
-                    />
-                </div>
-
-                <div className="space-y-2">
                     <div className="flex justify-between items-center">
                       <label className="text-sm font-bold text-gray-500 uppercase">Learning Objectives (Required)</label>
                       {getActiveFrame() && (
@@ -1000,7 +1039,6 @@ const NoteGenerator = () => {
                             if (activeFrame) {
                               setFormData(prev => ({
                                 ...prev,
-                                lessonTopic: activeFrame.topic,
                                 objectives: `By the end of the lesson, the learner will be able to:\n1. State what is meant by the key concepts: ${activeFrame.keyWords?.slice(0, 3).join(', ')}.\n2. Participate in practical activities including: ${activeFrame.activities?.[0] || 'active group class tasks'}.\n3. Answer oral review questions and write short evaluation exercises.`
                               }));
                               toast.success("Auto-populated from NaCCA resource framework!");
@@ -1080,14 +1118,17 @@ const NoteGenerator = () => {
               </button>
             </div>
 
-            <div className="bg-white p-8 lg:p-12 rounded-[2.5rem] shadow-sm border border-gray-100 space-y-12 ghana-border relative overflow-hidden">
+            <div className="bg-white p-6 lg:p-10 rounded-3xl shadow-sm border border-gray-100 space-y-6 ghana-border relative overflow-hidden">
               <div className="absolute top-0 left-0 w-2 h-full bg-ghana-gold" />
               
-              <div className="border-b pb-8">
-                  <h2 className="text-4xl font-black text-slate-900 mb-4">{result.title}</h2>
-                  <div className="flex flex-wrap gap-4 text-xs font-bold text-emerald-600 uppercase tracking-widest">
-                    <span className="bg-emerald-50 px-3 py-1 rounded-full">{formData.level}</span>
-                    <span className="bg-emerald-50 px-3 py-1 rounded-full">{formData.subject}</span>
+              <div className="border-b pb-4">
+                  <h2 className="text-2xl lg:text-3xl font-black text-slate-900 mb-3">{result.title}</h2>
+                  <div className="flex flex-wrap gap-2 text-[10px] font-black uppercase tracking-wider">
+                    <span className="bg-slate-100 text-slate-800 px-2.5 py-1 rounded-md">LEVEL: {formData.level}</span>
+                    <span className="bg-emerald-100/40 text-emerald-800 px-2.5 py-1 rounded-md">CLASS: {formData.class}</span>
+                    <span className="bg-ghana-gold/10 text-slate-900 px-2.5 py-1 rounded-md">SUBJECT: {formData.subject}</span>
+                    <span className="bg-indigo-50 text-indigo-800 px-2.5 py-1 rounded-md max-w-xs truncate">STRAND: {formData.strand}</span>
+                    <span className="bg-slate-100 text-slate-700 px-2.5 py-1 rounded-md max-w-sm truncate">SUB-STRAND: {formData.subStrand}</span>
                   </div>
               </div>
 

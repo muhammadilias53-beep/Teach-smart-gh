@@ -461,7 +461,102 @@ export default function ContentLibrary() {
 
   const isPdf = (url: string) => {
     if (!url) return false;
-    return url.toLowerCase().includes('.pdf') || url.includes('nacca.gov.gh') || url.includes('firebase-storage');
+    const lower = url.trim().toLowerCase();
+    return lower.includes('.pdf') || 
+           lower.includes('nacca.gov.gh') || 
+           lower.includes('firebase-storage') ||
+           lower.startsWith('data:application/pdf') ||
+           url.startsWith('%PDF-');
+  };
+
+  const isUrl = (content: string) => {
+    if (!content) return false;
+    const trimmed = content.trim();
+    return trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('www.');
+  };
+
+  const handleResourceDownload = (resource: Resource) => {
+    const content = resource.content;
+    const title = resource.title || 'Resource';
+    const cleanTitle = title.replace(/\s+/g, '_');
+
+    if (isUrl(content)) {
+      if (isPdf(content)) {
+        // It's a hosted PDF URL
+        handleFileDownload(content, `${cleanTitle}.pdf`);
+      } else {
+        // It's a normal web link, open it in a new tab!
+        toast.success("Opening resource link in a new tab...", { id: "download-status" });
+        const link = document.createElement('a');
+        link.href = content;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    } else {
+      // It is NOT a direct URL (i.e. raw text, markdown, or inline file content)
+      try {
+        toast.loading("Preparing download...", { id: "download-status", duration: 1000 });
+        
+        // Check for base64 encoded PDF
+        const isBase64Pdf = content.startsWith('data:application/pdf') || content.startsWith('JVBERi0');
+        
+        if (isBase64Pdf) {
+          let blob: Blob;
+          if (content.startsWith('data:application/pdf')) {
+            const arr = content.split(',');
+            const mime = arr[0].match(/:(.*?);/)?.[1] || 'application/pdf';
+            const bstr = atob(arr[1]);
+            let n = bstr.length;
+            const u8arr = new Uint8Array(n);
+            while (n--) {
+              u8arr[n] = bstr.charCodeAt(n);
+            }
+            blob = new Blob([u8arr], { type: mime });
+          } else {
+            const bstr = atob(content);
+            let n = bstr.length;
+            const u8arr = new Uint8Array(n);
+            while (n--) {
+              u8arr[n] = bstr.charCodeAt(n);
+            }
+            blob = new Blob([u8arr], { type: 'application/pdf' });
+          }
+          
+          const blobUrl = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = blobUrl;
+          link.download = `${cleanTitle}.pdf`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(blobUrl);
+          toast.success("PDF Downloaded successfully!", { id: "download-status" });
+        } else {
+          // Normal raw notes / text markdown download
+          const isMD = resource.type === 'note' || content.includes('#') || content.includes('- ');
+          const fileExtension = isMD ? 'md' : 'txt';
+          const mimeType = isMD ? 'text/markdown' : 'text/plain';
+          
+          const file = new Blob([content], { type: `${mimeType};charset=utf-8` });
+          const blobUrl = URL.createObjectURL(file);
+          
+          const link = document.createElement('a');
+          link.href = blobUrl;
+          link.download = `${cleanTitle}_TeachSmart.${fileExtension}`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(blobUrl);
+          toast.success(`Document downloaded as ${fileExtension.toUpperCase()} successfully!`, { id: "download-status" });
+        }
+      } catch (error) {
+        console.error("Resource download failed:", error);
+        toast.error("Failed to generate download.", { id: "download-status" });
+      }
+    }
   };
 
   return (
@@ -816,17 +911,14 @@ export default function ContentLibrary() {
                 </div>
 
                 <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-                  {(resource.type === 'link' || resource.type === 'book') && !isPdf(resource.content) ? (
+                  {isUrl(resource.content) && !isPdf(resource.content) ? (
                     <a 
                       href={resource.content} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className={cn(
-                        "text-sm font-bold flex items-center gap-2 hover:underline",
-                        resource.type === 'book' ? "text-purple-700" : "text-emerald-600"
-                      )}
+                      className="text-sm font-bold flex items-center gap-2 text-emerald-600 hover:text-emerald-700 hover:underline"
                     >
-                      {resource.type === 'book' ? 'Open Book' : 'Visit Link'}
+                      Visit Link
                       <ExternalLink size={14} />
                     </a>
                   ) : isPdf(resource.content) ? (
@@ -840,7 +932,7 @@ export default function ContentLibrary() {
                       </button>
                       <div className="w-1 h-1 bg-slate-200 rounded-full" />
                       <button 
-                        onClick={() => handleFileDownload(resource.content, `${resource.title.replace(/\s+/g, '_')}.pdf`)}
+                        onClick={() => handleResourceDownload(resource)}
                         className="text-amber-600 text-sm font-bold hover:underline flex items-center gap-2"
                       >
                         Download
@@ -848,12 +940,22 @@ export default function ContentLibrary() {
                       </button>
                     </div>
                   ) : (
-                    <button 
-                      onClick={() => setViewingResource(resource)}
-                      className="text-emerald-600 text-sm font-bold hover:underline flex items-center gap-2"
-                    >
-                      View Details
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button 
+                        onClick={() => setViewingResource(resource)}
+                        className="text-emerald-600 text-sm font-bold hover:underline flex items-center gap-2"
+                      >
+                        View Details
+                      </button>
+                      <div className="w-1 h-1 bg-slate-200 rounded-full" />
+                      <button 
+                        onClick={() => handleResourceDownload(resource)}
+                        className="text-amber-600 text-sm font-bold hover:underline flex items-center gap-2"
+                      >
+                        Download
+                        <Download size={14} />
+                      </button>
+                    </div>
                   )}
                   <span className="text-[10px] text-slate-400 font-medium">
                     {resource.id?.startsWith('official-') ? 'System Resource' : (resource.createdAt?.toDate?.() ? resource.createdAt.toDate().toLocaleDateString() : 'Recently Added')}
@@ -1169,23 +1271,20 @@ export default function ContentLibrary() {
               </div>
               <div className="flex items-center gap-3">
                 <button 
-                  onClick={() => {
-                    if (isPdf(viewingResource.content)) {
-                      handleFileDownload(viewingResource.content, `${viewingResource.title.replace(/\s+/g, '_')}.pdf`);
-                    } else {
-                      const element = document.createElement("a");
-                      const file = new Blob([viewingResource.content], {type: 'text/plain'});
-                      element.href = URL.createObjectURL(file);
-                      element.download = `${viewingResource.title.replace(/\s+/g, '_')}_TeachSmart.txt`;
-                      document.body.appendChild(element);
-                      element.click();
-                      document.body.removeChild(element);
-                    }
-                  }}
+                  onClick={() => handleResourceDownload(viewingResource)}
                   className="flex items-center gap-1 md:gap-2 px-3 py-2 md:px-6 md:py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all shadow-lg shadow-emerald-500/20"
                 >
-                  <Download size={16} />
-                  Download
+                  {isUrl(viewingResource.content) && !isPdf(viewingResource.content) ? (
+                    <>
+                      <ExternalLink size={16} />
+                      Open Link
+                    </>
+                  ) : (
+                    <>
+                      <Download size={16} />
+                      Download
+                    </>
+                  )}
                 </button>
                 <button 
                   onClick={() => setViewingResource(null)}
@@ -1310,35 +1409,42 @@ export default function ContentLibrary() {
                     <div className="bg-white p-12 rounded-[3rem] border border-slate-100 shadow-sm relative overflow-hidden flex flex-col items-center justify-center min-h-[300px]">
                        <div className="absolute top-0 right-0 w-32 h-32 bg-slate-50 rounded-full blur-3xl -translate-y-12 translate-x-12" />
                        
-                       {viewingResource.type === 'file' ? (
-                         <div className="flex flex-col items-center gap-6 text-center">
+                       {isUrl(viewingResource.content) ? (
+                         <div className="flex flex-col items-center gap-6 text-center w-full">
+                            <div className="w-24 h-24 bg-emerald-50 text-emerald-600 rounded-3xl flex items-center justify-center border-2 border-dashed border-emerald-100">
+                              <LinkIcon size={48} />
+                            </div>
+                            <div>
+                              <h4 className="text-xl font-black text-slate-900 mb-2">Web Link Resource</h4>
+                              <p className="text-slate-500 text-sm max-w-sm mx-auto">
+                                This resource is an external web page or document. You can visit the official URL in a safe new tab.
+                              </p>
+                            </div>
+                            <button 
+                              onClick={() => handleResourceDownload(viewingResource)}
+                              className="px-8 py-4 bg-emerald-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-600/20 flex items-center gap-2"
+                            >
+                              <ExternalLink size={16} />
+                              Open Link in New Tab
+                            </button>
+                         </div>
+                       ) : viewingResource.type === 'file' ? (
+                         <div className="flex flex-col items-center gap-6 text-center w-full">
                             <div className="w-24 h-24 bg-slate-50 text-slate-300 rounded-3xl flex items-center justify-center border-2 border-dashed border-slate-200">
                               <FileText size={48} />
                             </div>
                             <div>
                               <h4 className="text-xl font-black text-slate-900 mb-2">Binary File Resource</h4>
-                              <p className="text-slate-500 text-sm max-w-xs mx-auto">
-                                This file type cannot be previewed directly. Please use the download option to access the content.
+                              <p className="text-slate-500 text-sm max-w-xs mx-auto font-medium mb-2">
+                                This file structure is stored offline. Please download below to open and access the full content.
                               </p>
                             </div>
                             <button 
-                              onClick={() => {
-                                if (isPdf(viewingResource.content)) {
-                                  handleFileDownload(viewingResource.content, `${viewingResource.title.replace(/\s+/g, '_')}.pdf`);
-                                } else {
-                                  const element = document.createElement("a");
-                                  const file = new Blob([viewingResource.content], {type: 'text/plain'});
-                                  element.href = URL.createObjectURL(file);
-                                  element.download = `${viewingResource.title.replace(/\s+/g, '_')}_TeachSmart.txt`;
-                                  document.body.appendChild(element);
-                                  element.click();
-                                  document.body.removeChild(element);
-                                }
-                              }}
+                              onClick={() => handleResourceDownload(viewingResource)}
                               className="px-8 py-4 bg-emerald-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-600/20 flex items-center gap-2"
                             >
                               <Download size={16} />
-                              Download {viewingResource.type === 'file' ? 'File' : 'Resource'}
+                              Download File Document
                             </button>
                          </div>
                        ) : viewingResource.type === 'note' ? (

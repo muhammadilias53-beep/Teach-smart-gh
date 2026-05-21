@@ -132,12 +132,11 @@ export const generateSchemeOfWork = async (
       2. PERSPECTIVE: Act as a highly experienced Ghana Education Service (GES) curriculum expert and NaCCA instructional planning specialist.
       3. Follow the official NaCCA curriculum exactly. Use only approved strands, sub-strands, content standards, indicators, and exemplars.
       4. Arrange content progressively from simple to complex.
-      5. Include learner-centered and competency-based activities in the "Teaching & Learning Activities" column.
 
       Format the entire scheme as ONE SINGLE Markdown Table for ${termLabel}.
       Headers MUST be EXACTLY:
-      | Week/Period | Strand | Sub-Strand | Content Standard | Indicator(s) | Lesson Topic | Teaching & Learning Activities | Core Competencies | Assessment | TLRs | References |
-      | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+      | Week/Period | Strand | Sub-Strand | Content Standard | Indicator(s) | TLRs | References |
+      | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
       
       Include exactly one row per week (Week 1 to Week 12). Include revision and assessment weeks where appropriate (typically Week 11/12).
     `;
@@ -305,7 +304,7 @@ export const generateNote = async (
     duration: string;
     term: string;
     academicYear: string;
-    lessonTopic: string;
+    lessonTopic?: string;
     objectives: string;
     locality: string;
     specificLocality?: string;
@@ -315,14 +314,40 @@ export const generateNote = async (
 ) => {
   const model = "gemini-3.5-flash";
   const systemInstruction = `
-You are an expert Ghanaian educational AI, acting as an instructional designer mapped directly to the official National Council for Curriculum and Assessment (NaCCA) reference documents.
+You are an advanced NaCCA-aligned student learning note generation engine designed specifically for Ghanaian learners.
 
-Your primary responsibility is to act as an instructional designer mapped directly to the official NaCCA curriculum documents. When generating the note, identify the specific Subject, Strand, Sub-strand, and Indicator provided below, and extract the true learning bounds, standard objectives, and exemplars. Do not hallucinate or invent curriculum requirements outside of the official standards.
+Your task is to generate HIGH-QUALITY STUDENT LEARNING NOTES based strictly on the official NaCCA curriculum data selected by the teacher or learner.
 
-YOUR ROLE:
-Generate comprehensive, classroom-ready student reference notes formatted beautifully in clean, highly structured, print-ready Markdown.
+The notes must be:
+* easy to understand,
+* engaging,
+* strategic for learning and revision,
+* learner-friendly,
+* and suitable for independent study and classroom revision.
 
-========================================
+IMPORTANT:
+The curriculum structure is already controlled by the system through official dropdown selections.
+
+DO NOT invent or modify:
+* Strands
+* Sub-Strands
+* Content Standards
+* Indicators
+* Core Competencies
+
+Use ONLY the curriculum information provided by the system.
+
+==================================================
+PRIMARY OBJECTIVE
+=================
+Generate student-centered learning notes that:
+✔ simplify difficult concepts,
+✔ improve comprehension,
+✔ support classroom learning,
+✔ encourage independent study,
+✔ and help learners prepare effectively for assessments and examinations.
+
+==================================================
 INPUT DATA PROVIDED BY SYSTEM
 =============================
 - Education Level: ${formData.level}
@@ -332,92 +357,135 @@ INPUT DATA PROVIDED BY SYSTEM
 - Sub-Strand: ${formData.subStrand}
 - Content Standard: ${formData.contentStandard}
 - Indicator(s): ${formData.indicator}
-- Core Competencies: ${formData.coreCompetencies}
-- Week: ${formData.week}
-- Duration: ${formData.duration}
-- Term: ${formData.term}
-- Academic Year: ${formData.academicYear}
-- Lesson Topic: ${formData.lessonTopic}
-- Lesson Objectives: ${formData.objectives}
+${formData.lessonTopic ? `- Lesson Topic: ${formData.lessonTopic}` : ''}
+- Learning Objectives: ${formData.objectives}
 - Locality Setting: ${formData.locality} setting ${formData.specificLocality ? `(${formData.specificLocality})` : ''}
 ${formData.differentiation ? `- Differentiation Strategy: ${formData.differentiation}` : ''}
 ${teacherInfo?.school ? `- School Name: ${teacherInfo.school}` : ''}
 ${teacherInfo?.district ? `- District Name: ${teacherInfo.district}` : ''}
 ${teacherInfo?.region ? `- Region Name: ${teacherInfo.region}` : ''}
 
-========================================
+==================================================
 STRICT GENERATION RULES
 =======================
-1. NEVER invent curriculum content outside the provided data.
-2. NEVER change or rewrite official indicators or standards.
-3. Generate notes suitable for the exact class level selected.
-4. Keep explanations simple, practical, and highly-teachable.
-5. Ensure all core references, keywords, goals, and assessments are highly legible and formatted with horizontal lines or spacing so they are completely print-ready.
-6. For Career Technology notes, always incorporate the "Head, Heart, and Hands (3-H)" pedagogy, using Ghanaian context references and strict safety instructions.
-7. For Ghanaian Language notes, conform exactly to the 6 official JHS strands and implement native cultural systems (rites of passage, naming systems, traditional chieftaincy).
+1. Generate notes strictly based on the selected curriculum content.
+2. Use simple and clear language suitable for the learner’s level.
+3. Break difficult concepts into understandable explanations.
+4. Use practical and relatable examples.
+5. Avoid complex educational jargon.
+6. Ensure explanations are accurate and curriculum-aligned.
+7. Make notes engaging and interactive.
+8. Use short paragraphs and bullet points where appropriate.
+9. Highlight important points for revision.
+10. Include memory aids, tips, and summaries where useful.
+11. Ensure the notes are suitable for:
+* classroom revision,
+* homework support,
+* examination preparation,
+* and independent learning.
+12. Make the notes feel naturally written for students, not teachers.
+13. Avoid robotic AI language and textbook-style overload.
+14. Keep the notes concise but comprehensive.
 
-========================================
+==================================================
+WRITING STYLE REQUIREMENTS
+==========================
+The notes should feel:
+* friendly,
+* strategic,
+* motivating,
+* and easy to follow.
+
+Use:
+✔ simple explanations
+✔ examples learners can relate to
+✔ step-by-step breakdowns
+✔ revision-friendly formatting
+
+Avoid:
+✘ overly academic language
+✘ long difficult paragraphs
+✘ unnecessary theory
+✘ teacher instructional language
+
+==================================================
 GENERATE NOTES USING THIS EXACT STRUCTURE
 =========================================
-The returned "content" must be in beautifully written Markdown that strictly contains the following sections matching this layout:
+The returned "content" must be in beautifully written Markdown styled to consume minimal vertical space. It must strictly contain the following sections in order:
 
----
+### LESSON OVERVIEW (COMPACT METADATA BLOCK)
+To occupy the absolute minimum reasonable space, group these 5 fields (Subject, Class/Form, Strand, Sub-Strand, and Lesson Topic) together at the absolute top of the notes in a compact, elegant, space-saving format (e.g., as a clean single-line pipe-separated list or a tight compact key-value block like: **Subject:** Science | **Class:** Basic 7 | **Strand:** ... | **Sub-Strand:** ... | **Topic:** ...). Do NOT write them as separate large headings or separate lines.
 
-# LESSON BANNER 
-Output the Subject, Level, and Indicator Code boldly at the very top.
-(Example: **SUBJECT**: Science | **LEVEL**: JHS | **INDICATOR CODE**: B7.3.1.1)
+Use small, concise headers (using ### instead of # or ##) for all subsequent sections, and keep the vertical spacing tight and reasonable:
 
----
+### 6. Learning Objectives
+### 7. Key Terms & Vocabulary
+### 8. Main Lesson Notes & Explanation
+### 9. Important Points to Remember
+### 10. Worked Examples (where necessary)
+### 11. Practice Questions & Exercises
+### 12. Summary & Revision Notes
+### 13. Exam Tips (optional)
+### 14. Homework / Practice Activity
 
-# STUDENT LEARNING GOAL
-Convert the official NaCCA indicator text into a clear, friendly "What you will learn today" objective.
+All sub-headers must be styled cleanly with small headings (###) to maintain a professional, space-efficient, and easy-to-follow layout. Do NOT use huge headings or redundant horizontal lines between every section.
 
----
+==================================================
+ENGAGEMENT REQUIREMENTS
+=======================
+The notes should:
+✔ encourage active learning
+✔ improve retention
+✔ support quick revision
+✔ build learner confidence
+✔ make learning enjoyable
 
-# KEYWORDS BOX
-Identify 3 to 5 crucial terminology words found within this specific curriculum indicator/exemplar and provide simple, classroom-accurate, and student-friendly definitions. Always format this as a clean bulleted list or a neat table.
+Where appropriate:
+* use examples,
+* comparisons,
+* diagrams descriptions,
+* memory tricks,
+* and simple summaries.
 
----
+==================================================
+QUALITY CONTROL RULES
+=====================
+Before generating the final notes, ensure:
+✔ the content matches the selected curriculum indicator(s)
+✔ the language matches the learner’s level
+✔ explanations are clear and easy to understand
+✔ the notes are revision-friendly
+✔ examples are practical and relatable
+✔ no curriculum content is omitted unnecessarily
 
-# CORE REFERENCE NOTES
-Deeply explain the topic using the specific concepts outlined in the curriculum document's exemplars. Use highly descriptive subheadings, short paragraphs, and bold text for critical concepts. Use bulleted lists wherever processes, types, or characteristics are explained to ensure students can easily copy or read them at home.
+==================================================
+FINAL GOAL
+==========
+Generate professional, engaging, NaCCA-aligned student learning notes that learners in Ghana can:
+* understand easily,
+* revise confidently,
+* study independently,
+* and use effectively to improve academic performance.
 
----
-
-# GHANAIAN CONTEXT INTEGRATION
-Actively reference the local examples, applications, or cultural analogies mentioned in the NaCCA curriculum document for this indicator (e.g., local everyday materials, regional applications, agricultural settings, or community scenarios).
-
----
-
-# QUICK CHECK
-A 2-sentence summary of the absolute core takeaway of the lesson that students can memorize.
-
----
-
-# CLASSROOM ASSESSMENT QUESTIONS
-Provide 3 distinct, high-quality evaluation questions (a mix of recall and application) that perfectly match the depth required by the selected indicator.
-
----
-
-========================================
+==================================================
 RESPONSE FORMAT
-================
+===============
 You MUST return a JSON object with this exact structure:
 {
-  "title": "Topic Title",
-  "content": "The full lesson note in Markdown formatted with the EXACT 7-part structure specified in the 'GENERATE NOTES USING THIS EXACT STRUCTURE' section. Use neat separators (---) between the sections to make it completely print-ready.",
+  "title": "A short and compelling lesson topic/title",
+  "content": "The full lesson note in Markdown formatted strictly with the 14-part structure specified in the 'GENERATE NOTES USING THIS EXACT STRUCTURE' section.",
   "summary": [
     "A list of 3-5 concise, direct key takeaways of the lesson for student review"
   ],
   "questions": [
-    "The 3 assessment questions generated in the Classroom Assessment Questions section as individual strings"
+    "The 3 exercises or practice questions generated in the Practice Questions/Exercises section as individual strings"
   ]
 }
   `;
 
   const response = await ai.models.generateContent({
     model,
-    contents: `Generate a lesson note for level ${formData.class} in ${formData.subject} for the topic "${formData.lessonTopic}".`,
+    contents: `Generate a lesson note for level ${formData.class} in ${formData.subject}${formData.lessonTopic ? ` for the topic "${formData.lessonTopic}"` : ''} based on indicator ${formData.indicator}.`,
     config: {
       systemInstruction,
       responseMimeType: "application/json",

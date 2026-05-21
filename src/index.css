@@ -102,39 +102,39 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .markdown-body h1 {
-  @apply text-3xl font-black mb-8 border-b-2 border-slate-900 pb-4 tracking-tighter uppercase;
+  @apply text-xl font-black mb-4 border-b pb-2 tracking-tighter uppercase;
 }
 
 .markdown-body h2 {
-  @apply text-xl font-bold mt-12 mb-4 text-slate-800 tracking-tight border-l-4 border-emerald-500 pl-4 bg-emerald-50/30 py-2;
+  @apply text-base font-bold mt-5 mb-2.5 text-slate-800 tracking-tight border-l-2 border-emerald-500 pl-3 bg-emerald-50/20 py-1;
 }
 
 .markdown-body h3 {
-  @apply text-lg font-bold mt-8 mb-3 text-slate-700 tracking-tight;
+  @apply text-sm font-bold mt-4 mb-2 text-slate-700 tracking-tight;
 }
 
 .markdown-body p {
-  @apply mb-6 text-slate-600 leading-relaxed;
+  @apply mb-3 text-slate-600 leading-relaxed text-sm;
 }
 
 .markdown-body ul, .markdown-body ol {
-  @apply my-6 space-y-2 ml-6;
+  @apply my-3 space-y-1 ml-5 text-sm;
 }
 
 .markdown-body li {
-  @apply text-slate-600 leading-relaxed;
+  @apply text-slate-600 leading-relaxed text-sm;
 }
 
 .markdown-body table {
-  @apply w-full border-collapse my-8 overflow-hidden rounded-2xl border border-slate-200 shadow-sm;
+  @apply w-full border-collapse my-4 overflow-hidden rounded-xl border border-slate-200 shadow-sm;
 }
 
 .markdown-body th {
-  @apply bg-slate-50 text-slate-900 font-black text-xs uppercase tracking-wider p-4 text-left border-b border-slate-200;
+  @apply bg-slate-50 text-slate-900 font-extrabold text-[11px] uppercase tracking-wider p-2.5 text-left border-b border-slate-200;
 }
 
 .markdown-body td {
-  @apply p-4 text-sm text-slate-600 border-b border-slate-100;
+  @apply p-2.5 text-xs text-slate-600 border-b border-slate-100;
 }
 
 .markdown-body tr:last-child td {
@@ -142,11 +142,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .markdown-body code {
-  @apply bg-slate-100 text-emerald-deep px-1.5 py-0.5 rounded font-mono text-[0.9em] border border-slate-200;
+  @apply bg-slate-100 text-emerald-deep px-1.5 py-0.5 rounded font-mono text-[0.85em] border border-slate-200;
 }
 
 .markdown-body pre {
-  @apply bg-slate-900 text-slate-50 p-6 rounded-2xl my-6 overflow-x-auto shadow-inner;
+  @apply bg-slate-900 text-slate-50 p-4 rounded-xl my-4 overflow-x-auto shadow-inner;
 }
 
 .markdown-body pre code {
