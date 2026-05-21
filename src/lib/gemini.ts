@@ -470,6 +470,10 @@ Generate professional, engaging, NaCCA-aligned student learning notes that learn
 ==================================================
 RESPONSE FORMAT
 ===============
+CRITICAL JSON FORMATTING RULES:
+1. Because you are returning a JSON object, any double quotes (") inside the markdown string in the "content" field MUST be properly escaped as \" or replaced with single quotes (') to prevent JSON parsing errors. DO NOT output unescaped double quotes anywhere inside string values.
+2. Ensure the JSON is completely valid, clean, and properly escaped.
+
 You MUST return a JSON object with this exact structure:
 {
   "title": "A short and compelling lesson topic/title",
@@ -506,21 +510,133 @@ function parseAIResponse(response: any) {
     throw new Error("Empty response from AI");
   }
 
+  const trimmedText = text.trim();
   try {
     // Try direct parse first
-    return JSON.parse(text.trim());
+    return JSON.parse(trimmedText);
   } catch (e) {
     // Attempt to extract anything between the first { and last }
-    const start = text.indexOf('{');
-    const end = text.lastIndexOf('}');
+    const startIdx = trimmedText.indexOf('{');
+    const endIdx = trimmedText.lastIndexOf('}');
     
-    if (start !== -1 && end !== -1 && end > start) {
-      const potentialJSON = text.substring(start, end + 1);
+    if (startIdx !== -1 && endIdx !== -1 && endIdx > startIdx) {
+      const potentialJSON = trimmedText.substring(startIdx, endIdx + 1);
       try {
         return JSON.parse(potentialJSON);
       } catch (innerE) {
-        console.error("Failed to parse extracted JSON block:", potentialJSON);
-        throw e; // Throw original error for better context
+        console.warn("Standard JSON parse failed on JSON block, attempting structural extraction...", innerE);
+        
+        try {
+          // Extract Title
+          let title = "";
+          const titleStartMatch = potentialJSON.match(/"title"\s*:\s*"/);
+          const contentStartMatch = potentialJSON.match(/"content"\s*:\s*"/);
+          if (titleStartMatch && titleStartMatch.index !== undefined && contentStartMatch && contentStartMatch.index !== undefined) {
+            const start = titleStartMatch.index + titleStartMatch[0].length;
+            const endPartSlice = potentialJSON.substring(start, contentStartMatch.index);
+            let titleValStr = endPartSlice.trim();
+            if (titleValStr.endsWith(',')) {
+              titleValStr = titleValStr.slice(0, -1).trim();
+            }
+            if (titleValStr.endsWith('"')) {
+              titleValStr = titleValStr.slice(0, -1);
+            }
+            title = titleValStr;
+          }
+
+          // Extract Content
+          let content = "";
+          if (contentStartMatch && contentStartMatch.index !== undefined) {
+            const start = contentStartMatch.index + contentStartMatch[0].length;
+            const summaryStartMatch = potentialJSON.match(/"summary"\s*:\s*\[/);
+            if (summaryStartMatch && summaryStartMatch.index !== undefined) {
+              const endPartSlice = potentialJSON.substring(start, summaryStartMatch.index);
+              let contentValStr = endPartSlice.trim();
+              if (contentValStr.endsWith(',')) {
+                contentValStr = contentValStr.slice(0, -1).trim();
+              }
+              if (contentValStr.endsWith('"')) {
+                contentValStr = contentValStr.slice(0, -1);
+              }
+              content = contentValStr;
+            }
+          }
+
+          // Extract Summary
+          let summary: string[] = [];
+          const summaryStartMatch = potentialJSON.match(/"summary"\s*:\s*\[/);
+          const questionsStartMatch = potentialJSON.match(/"questions"\s*:\s*\[/);
+          if (summaryStartMatch && summaryStartMatch.index !== undefined && questionsStartMatch && questionsStartMatch.index !== undefined) {
+            const start = summaryStartMatch.index + summaryStartMatch[0].length;
+            const endPartSlice = potentialJSON.substring(start, questionsStartMatch.index);
+            let arrayValStr = endPartSlice.trim();
+            if (arrayValStr.endsWith(',')) {
+              arrayValStr = arrayValStr.slice(0, -1).trim();
+            }
+            if (arrayValStr.endsWith(']')) {
+              arrayValStr = arrayValStr.slice(0, -1).trim();
+            }
+            
+            const arrayStr = "[" + arrayValStr + "]";
+            try {
+              summary = JSON.parse(arrayStr);
+            } catch (_) {
+              // regex fallback
+              const items = arrayValStr.match(/"([^"\\]|\\.)*"/g);
+              if (items) {
+                summary = items.map(item => item.substring(1, item.length - 1));
+              }
+            }
+          }
+
+          // Extract Questions
+          let questions: string[] = [];
+          if (questionsStartMatch && questionsStartMatch.index !== undefined) {
+            const start = questionsStartMatch.index + questionsStartMatch[0].length;
+            const endPartSlice = potentialJSON.substring(start);
+            let arrayValStr = endPartSlice.trim();
+            // remove ending curly and array brackets
+            if (arrayValStr.endsWith('}')) {
+              arrayValStr = arrayValStr.slice(0, -1).trim();
+            }
+            if (arrayValStr.endsWith(']')) {
+              arrayValStr = arrayValStr.slice(0, -1).trim();
+            }
+            
+            const arrayStr = "[" + arrayValStr + "]";
+            try {
+              questions = JSON.parse(arrayStr);
+            } catch (_) {
+              // regex fallback
+              const items = arrayValStr.match(/"([^"\\]|\\.)*"/g);
+              if (items) {
+                questions = items.map(item => item.substring(1, item.length - 1));
+              }
+            }
+          }
+
+          // Common unescaping helper
+          const unescape = (str: string) => {
+            return str
+              .replace(/\\"/g, '"')
+              .replace(/\\n/g, '\n')
+              .replace(/\\t/g, '\t')
+              .replace(/\\\\/g, '\\');
+          };
+
+          if (title || content) {
+            return {
+              title: unescape(title).trim(),
+              content: unescape(content).trim(),
+              summary: summary.map(s => typeof s === 'string' ? unescape(s).trim() : s),
+              questions: questions.map(q => typeof q === 'string' ? unescape(q).trim() : q)
+            };
+          }
+        } catch (recoveryError) {
+          console.error("Recovery extraction failed:", recoveryError);
+        }
+        
+        throw e; // Throw original parse error if structural recovery fails completely
       }
     }
     
