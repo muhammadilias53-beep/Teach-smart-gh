@@ -13,6 +13,7 @@ import ExamGenerator from './components/generators/ExamGenerator';
 import NoteGenerator from './components/generators/NoteGenerator';
 import Billing from './components/billing/Billing';
 import GeminiAssistant from './components/ai/GeminiAssistant';
+import AITutorPage from './components/ai/AITutorPage';
 import ContentLibrary from './components/library/ContentLibrary';
 import SchemeGenerator from './components/generators/SchemeGenerator';
 import ProfileSettings from './components/profile/ProfileSettings';
@@ -42,7 +43,7 @@ function App() {
           
           <Route element={<AuthGuard />}>
             <Route path="/" element={<Dashboard />} />
-            <Route path="/ai" element={<Placeholder name="AI Assistant" />} />
+            <Route path="/ai" element={<AITutorPage />} />
             <Route path="/lessons" element={<LessonPlanGenerator />} />
             <Route path="/notes" element={<NoteGenerator />} />
             <Route path="/schemes" element={<SchemeGenerator />} />

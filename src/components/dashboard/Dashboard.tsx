@@ -390,7 +390,7 @@ const Dashboard = () => {
                 <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
               </Link>
               <Link to="/ai" className="btn-ghost backdrop-blur-md">
-                Chat with Assistant
+                Consult AI Tutor
               </Link>
             </div>
           </div>

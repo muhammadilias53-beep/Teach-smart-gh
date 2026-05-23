@@ -91,4 +91,8 @@ export interface Resource {
   type: 'link' | 'note' | 'file' | 'book';
   content: string;
   createdAt: any;
+  resourceCategory?: 'Lesson Notes' | 'Student Notes' | 'Scheme of Learning' | 'Exam Questions' | 'Marking Scheme' | 'Worksheet' | 'TLM' | 'AI Teaching Visual' | 'Curriculum PDF' | 'Saved Resource' | 'Download History' | 'Bookmark' | string;
+  term?: string;
+  topic?: string;
+  downloadHistory?: boolean;
 }

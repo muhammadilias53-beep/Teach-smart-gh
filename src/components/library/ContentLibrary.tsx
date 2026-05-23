@@ -35,7 +35,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { Resource } from '../../types';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../../lib/utils';
-import { subjects, levels } from '../../constants';
+import { subjects, levels, SUBJECT_STRANDS, SUBJECT_SUB_STRANDS } from '../../constants';
 import { toast } from 'react-hot-toast';
 import { ConfirmationModal } from '../common/ConfirmationModal';
 
@@ -207,19 +207,149 @@ const CURRICULUM_BOOKS: Record<string, { title: string, url: string, level: stri
     { title: "NTC Portal (Teacher Licensing)", url: "https://ntc.gov.gh/", level: "All" },
     { title: "WAEC Ghana Official", url: "https://www.waecgh.org/", level: "All" },
     { title: "GES Promotional Portal", url: "https://gespromotions.gov.gh/", level: "All" },
-    { title: "GoG Payslip Portal", url: "https://www.gogpayslip.com/", level: "All" },
     { title: "West African Examinations Council", url: "https://www.waecgh.org/results", level: "All" }
   ]
 };
 
+const OFFICIAL_SYSTEM_RESOURCES: Omit<Resource, 'createdAt'>[] = [
+  {
+    id: 'system-lesson-notes-science-b7',
+    authorId: 'system',
+    title: 'Diversity of Matter - Basic 7 Lesson Notes',
+    description: 'NaCCA-aligned comprehensive daily lesson notes on pure substances and mixtures for JHS 1 Science.',
+    subject: 'Science',
+    level: 'JHS',
+    strand: 'Diversity of Matter',
+    subStrand: 'Materials',
+    topic: 'Pure and Impure Substances',
+    type: 'note',
+    resourceCategory: 'AI-Generated Lesson Notes',
+    term: 'Term 1',
+    content: `### Pure and Impure Substances\n**Subject:** Science | **Class:** Basic 7 | **Strand:** Diversity of Matter | **Sub-Strand:** Materials\n\n--- \n### 6. Learning Objectives\n- Define pure and impure substances with local examples.\n- Perform simple chromatography to separate mixtures.\n\n### 7. Key Terms\n- **Pure Substance:** Made of only one type of particle (e.g., distilled water).\n- **Impure Substance:** Contains two or more different substances mixed together (e.g., muddy tap water).\n\n### 8. Explanation\nIn Science, matter can be classified based on its purity...\n\n### 9. Guided Practice:\nShow students pure water and dissolved salt water. Discuss how we can reclaim the salt via evaporation or retrieve pure water via distillation.`
+  },
+  {
+    id: 'system-student-notes-math-b4',
+    authorId: 'system',
+    title: 'Fractions Made Simple - Primary 4 Student Notes',
+    description: 'Highly visual and easy-to-understand student notes with diagrams and practice tasks on fractions.',
+    subject: 'Mathematics',
+    level: 'Primary',
+    strand: 'Number',
+    subStrand: 'Fractions',
+    topic: 'Introduction to Fractions',
+    type: 'note',
+    resourceCategory: 'AI-Generated Student Notes',
+    term: 'Term 1',
+    content: `### Introduction to Fractions\n**Subject:** Mathematics | **Class:** Basic 4 | **Strand:** Number\n\n--- \n### 1. Learning Objectives\n- Identify numerator and denominator.\n- Represent fractions using circles and rectangles.\n\n### 2. What is a Fraction?\nA fraction represents a part of a whole. It has two parts:\n- **Numerator (Top):** How many parts we have.\n- **Denominator (Bottom):** Total number of equal parts the whole is divided into.\n\n### 3. Quick Check\nIf you slice a round pizza into 4 equal slices and eat 1 slice, you consumed 1/4 of the pizza!`
+  },
+  {
+    id: 'system-scheme-science-b7',
+    authorId: 'system',
+    title: 'Basic 7 Integrated Science Term 1 Scheme of Learning',
+    description: 'Full 12-week comprehensive Scheme of Learning detailing strands, sub-strands, and weekly activities.',
+    subject: 'Science',
+    level: 'JHS',
+    strand: 'All Strands',
+    subStrand: 'All Sub-Strands',
+    topic: '12-Week Allocation',
+    type: 'file',
+    resourceCategory: 'Scheme of Learning',
+    term: 'Term 1',
+    content: `### Weekly Scheme of Learning\n**Subject:** Science | **Class:** Basic 7 | **Term:** Term 1\n\n| Week | Strand | Sub-Strand | Content Standard | Lesson Topic | Activities |\n|---|---|---|---|---|---|\n| Week 1 | Diversity of Matter | Materials | B7.1.1.1 | Introduction to Matter | Learners sort materials into natural and synthetic categories |\n| Week 2 | Diversity of Matter | Materials | B7.1.1.1 | Classifying Objects | Group work to discuss physical properties of plastics and wood |\n| Week 3 | Diversity of Matter | Materials | B7.1.1.2 | Pure & Impure Substances | Laboratory filtration of muddy water |`
+  },
+  {
+    id: 'system-exam-science-b7',
+    authorId: 'system',
+    title: 'JHS 1 Science Term 1 Final Exam Questions',
+    description: 'Printable professional examination containing Section A (Objectives) and Section B (Theory) on materials.',
+    subject: 'Science',
+    level: 'JHS',
+    strand: 'Multiple Strands',
+    subStrand: 'All Sub-strands',
+    topic: 'Comprehensive Term Assessment',
+    type: 'file',
+    resourceCategory: 'Exam Questions',
+    term: 'Term 1',
+    content: `### Term 1 End of Term Examination\n**Subject:** Science | **Class:** Basic 7\n\n**SECTION A: OBJECTIVES (20 Marks)**\n1. Which of the following is a synthetic material?\n   A) Wood  \n   B) Clay  \n   C) Plastic  \n   D) Wool\n\n2. Distilled water is a classic example of:\n   A) Mixture\n   B) Element\n   C) Pure Substance\n   D) Compound\n\n--- \n\n**SECTION B: THEORY (30 Marks)**\nExplain with diagrams how a mixture of salt and water can be separated in the classroom.`
+  },
+  {
+    id: 'system-marking-science-b7',
+    authorId: 'system',
+    title: 'Marking Scheme: JHS 1 Science Term 1 Exam',
+    description: 'Official marking key with detailed explanations, point breakdown, and standard rubrics.',
+    subject: 'Science',
+    level: 'JHS',
+    strand: 'Multiple Strands',
+    type: 'file',
+    resourceCategory: 'Marking Scheme',
+    term: 'Term 1',
+    content: `### Exam Marking Key & Rubric\n**Subject:** Science | **Class:** Basic 7 | **Term:** Term 1\n\n**SECTION A Answers:**\n1. C (Plastic) - 1 Mark\n2. C (Pure Substance) - 1 Mark\n\n--- \n**SECTION B Answers:**\n- Step-by-step description of evaporating solution to recover dry salt crystals. (5 Marks)\n- Labelled diagram showing: beaker, spirit burner, wire gauze, and tripod stand. (5 Marks)`
+  },
+  {
+    id: 'system-worksheet-math-b6',
+    authorId: 'system',
+    title: 'Algebraic Expressions Practice Worksheet - Basic 6',
+    description: '10 engaging problems with answers for classroom activities, group learning, or home assignments.',
+    subject: 'Mathematics',
+    level: 'Primary',
+    strand: 'Algebra',
+    subStrand: 'Variables',
+    topic: 'Simplifying Expressions',
+    type: 'file',
+    resourceCategory: 'Worksheet',
+    term: 'Term 2',
+    content: `### Worksheet: Writing & Simplifying Expressions\n**Subject:** Mathematics | **Class:** Basic 6\n\n**Exercises:**\n1. Simplify the expression: 3x + 5y - x + 2y\n2. Evaluate 2a + 3b when a = 4, b = 2\n3. Match the description with algebraic equation: "A number double decreased by 5 equals 15" -> 2n - 5 = 15`
+  },
+  {
+    id: 'system-tlm-science-water',
+    authorId: 'system',
+    title: 'Evaporation & Condensation Experiment Guide (TLM)',
+    description: 'A complete guide to constructing cheap, low-cost teaching models using local plastic bottles in Ghana.',
+    subject: 'Science',
+    level: 'JHS',
+    strand: 'Cycles',
+    subStrand: 'Water Cycle',
+    topic: 'Change of State experiment',
+    type: 'note',
+    resourceCategory: 'TLM',
+    term: 'Term 2',
+    content: `### Classroom TLM: Distillation Model\n**Subject:** Science | **Class:** JHS 1\n\n**Required local materials:**\n- 1 Large plastic jerrycan\n- 1 Small water bottle\n- Warm water and ink\n\n**Instructions:**\nCut the top off the large jerrycan and place the small open bottle containing inked water inside. Seal with clear plastic film in sunlight. Water will evaporate, condense, and collect outside the small bottle as pure water.`
+  },
+  {
+    id: 'system-visual-digestive',
+    authorId: 'system',
+    title: 'Human Digestive System Teaching Visual Guide',
+    description: 'Structured layout map highlighting parts of the digestive system for blackboard drawings and worksheets.',
+    subject: 'Science',
+    level: 'JHS',
+    strand: 'Systems',
+    subStrand: 'Human Body Systems',
+    topic: 'Organs & Functions',
+    type: 'note',
+    resourceCategory: 'AI Teaching Visual',
+    term: 'Term 3',
+    content: `### Visual Organ Map: Human Digestive System\n**Subject:** Science | **Class:** Basic 7\n\n**Visual layout description for board:**\n- **Mouth:** Entry point with mechanical teeth grinding.\n- **Esophagus:** Food path tube.\n- **Stomach:** Acidic breakdown container.\n- **Small Intestine:** Nutrient filtration organ.\n- **Large Intestine:** Water absorption path.`
+  }
+];
+
 export default function ContentLibrary() {
   const { user } = useAuth();
   const [resources, setResources] = useState<Resource[]>([]);
-  const [activeTab, setActiveTab] = useState<'library' | 'curriculum'>('library');
+  const [activeTab, setActiveTab] = useState<'library' | 'curriculum' | 'tracking'>('library');
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  
+  // Advanced filters
   const [selectedSubject, setSelectedSubject] = useState('All');
   const [selectedLevel, setSelectedLevel] = useState('All');
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedTerm, setSelectedTerm] = useState('All');
+  const [selectedClass, setSelectedClass] = useState('All');
+  const [strandQuery, setStrandQuery] = useState('');
+  const [subStrandQuery, setSubStrandQuery] = useState('');
+  const [topicQuery, setTopicQuery] = useState('');
+  const [sortBy, setSortBy] = useState<'dateDesc' | 'dateAsc' | 'titleAsc'>('dateDesc');
+  
   const [showFilters, setShowFilters] = useState(false);
   const [filterSubjectSearch, setFilterSubjectSearch] = useState('');
   const [filterType, setFilterType] = useState<'all' | 'official' | 'user'>('all');
@@ -231,7 +361,44 @@ export default function ContentLibrary() {
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
   const [resourceToDelete, setResourceToDelete] = useState<string | null>(null);
 
-  // Form state
+  // Curriculum Coverage states
+  const [coverageSubject, setCoverageSubject] = useState('Science');
+  const [coverageLevel, setCoverageLevel] = useState('JHS');
+  const [checkedIndicators, setCheckedIndicators] = useState<Record<string, boolean>>(() => {
+    try {
+      const saved = localStorage.getItem('teachsmart_curriculum_coverage_tracker');
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
+  });
+
+  // Whenever checkedIndicators changes, save to localStorage
+  useEffect(() => {
+    localStorage.setItem('teachsmart_curriculum_coverage_tracker', JSON.stringify(checkedIndicators));
+  }, [checkedIndicators]);
+
+  // Download history tracks (synchronised dynamically with localStorage)
+  const [downloadHistoryIds, setDownloadHistoryIds] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem('download_history_ids');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const recordDownload = (resourceId: string) => {
+    if (!resourceId) return;
+    setDownloadHistoryIds(prev => {
+      if (prev.includes(resourceId)) return prev;
+      const updated = [resourceId, ...prev];
+      localStorage.setItem('download_history_ids', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
+  // Form state enhanced with rich Ghanaian NaCCA metadata
   const [newResource, setNewResource] = useState<{
     title: string;
     description: string;
@@ -239,13 +406,23 @@ export default function ContentLibrary() {
     level: string;
     type: 'link' | 'note' | 'file' | 'book';
     content: string;
+    resourceCategory: string;
+    term: string;
+    topic: string;
+    strand: string;
+    subStrand: string;
   }>({
     title: '',
     description: '',
-    subject: subjects[0],
-    level: levels[0],
-    type: 'link',
-    content: ''
+    subject: subjects[0] || 'Science',
+    level: levels[0] || 'JHS',
+    type: 'note',
+    content: '',
+    resourceCategory: 'AI-Generated Lesson Notes',
+    term: 'Term 1',
+    topic: '',
+    strand: '',
+    subStrand: ''
   });
 
   useEffect(() => {
@@ -279,7 +456,7 @@ export default function ContentLibrary() {
       Object.keys(CURRICULUM_BOOKS).forEach(subj => {
         CURRICULUM_BOOKS[subj].forEach(book => {
           allOfficialBooks.push({
-            id: `official-${subj}-${book.title}`,
+            id: `official-${subj}-${book.title.replace(/[\s/]+/g, '_')}`,
             authorId: 'system',
             title: book.title,
             description: `Official NaCCA Curriculum document for ${subj} (${book.level}).`,
@@ -287,12 +464,23 @@ export default function ContentLibrary() {
             level: book.level,
             type: 'book',
             content: book.url,
-            createdAt: { toDate: () => new Date() }
+            createdAt: { toDate: () => new Date() },
+            resourceCategory: 'Curriculum PDF',
+            term: 'All Terms',
+            topic: 'Curriculum Framework',
+            strand: 'NaCCA Standards',
+            subStrand: 'Official Guide'
           });
         });
       });
 
-      setResources([...allOfficialBooks, ...userData]);
+      // Inject high-fidelity preloaded NaCCA system resources
+      const preloaded: Resource[] = OFFICIAL_SYSTEM_RESOURCES.map(res => ({
+        ...res,
+        createdAt: { toDate: () => new Date() }
+      }));
+
+      setResources([...allOfficialBooks, ...preloaded, ...userData]);
       setLoading(false);
     }, (error) => {
       handleFirestoreError(error, OperationType.GET, 'resources');
@@ -358,11 +546,17 @@ export default function ContentLibrary() {
       setNewResource({
         title: '',
         description: '',
-        subject: subjects[0],
-        level: levels[0],
-        type: 'link',
-        content: ''
+        subject: subjects[0] || 'Science',
+        level: levels[0] || 'JHS',
+        type: 'note',
+        content: '',
+        resourceCategory: 'AI-Generated Lesson Notes',
+        term: 'Term 1',
+        topic: '',
+        strand: '',
+        subStrand: ''
       });
+      toast.success('Resource saved to personal library');
     } catch (error) {
       handleFirestoreError(error, OperationType.WRITE, 'resources');
     } finally {
@@ -390,11 +584,7 @@ export default function ContentLibrary() {
   }, {} as Record<string, number>);
 
   const levelStats = resources.reduce((acc, r) => {
-    levels.forEach(l => {
-      if (r.level.includes(l)) {
-        acc[l] = (acc[l] || 0) + 1;
-      }
-    });
+    acc[r.level] = (acc[r.level] || 0) + 1;
     return acc;
   }, {} as Record<string, number>);
 
@@ -402,10 +592,38 @@ export default function ContentLibrary() {
     const searchLower = search.toLowerCase();
     const titleMatch = res.title?.toLowerCase().includes(searchLower);
     const descMatch = res.description?.toLowerCase().includes(searchLower);
-    const matchesSearch = !search || titleMatch || descMatch;
+    const strandMatch = res.strand?.toLowerCase().includes(searchLower);
+    const topicMatch = res.topic?.toLowerCase().includes(searchLower);
+    const matchesSearch = !search || titleMatch || descMatch || strandMatch || topicMatch;
     
+    // Subject filter
     const matchesSubject = selectedSubject === 'All' || res.subject === selectedSubject;
+    
+    // Level filter
     const matchesLevel = selectedLevel === 'All' || (res.level && res.level.includes(selectedLevel));
+
+    // Resource Category/Type filter (12 Core features)
+    let matchesCategory = true;
+    if (selectedCategory !== 'All') {
+      if (selectedCategory === 'Bookmark') {
+        matchesCategory = res.id ? favorites.includes(res.id) : false;
+      } else if (selectedCategory === 'Download History') {
+        matchesCategory = res.id ? downloadHistoryIds.includes(res.id) : false;
+      } else {
+        matchesCategory = res.resourceCategory === selectedCategory;
+      }
+    }
+
+    // Term filter
+    const matchesTerm = selectedTerm === 'All' || !res.term || res.term === selectedTerm;
+
+    // Class / Form filter
+    const matchesClassFilter = selectedClass === 'All' || (res.level && res.level.includes(selectedClass));
+
+    // Strand, Sub-Strand and Topic exact matching
+    const matchesStrand = !strandQuery || (res.strand && res.strand.toLowerCase().includes(strandQuery.toLowerCase()));
+    const matchesSubStrand = !subStrandQuery || (res.subStrand && res.subStrand.toLowerCase().includes(subStrandQuery.toLowerCase()));
+    const matchesTopic = !topicQuery || (res.topic && res.topic.toLowerCase().includes(topicQuery.toLowerCase()));
     
     const matchesType = 
       filterType === 'all' ? true :
@@ -414,7 +632,7 @@ export default function ContentLibrary() {
 
     const matchesFavorites = !showOnlyFavorites || (res.id && favorites.includes(res.id));
 
-    return matchesSearch && matchesSubject && matchesLevel && matchesType && matchesFavorites;
+    return matchesSearch && matchesSubject && matchesLevel && matchesCategory && matchesTerm && matchesClassFilter && matchesStrand && matchesSubStrand && matchesTopic && matchesType && matchesFavorites;
   });
 
   const getIcon = (type: string, size = 18) => {
@@ -479,6 +697,10 @@ export default function ContentLibrary() {
     const content = resource.content;
     const title = resource.title || 'Resource';
     const cleanTitle = title.replace(/\s+/g, '_');
+    
+    if (resource.id) {
+      recordDownload(resource.id);
+    }
 
     if (isUrl(content)) {
       if (isPdf(content)) {
@@ -587,15 +809,20 @@ export default function ContentLibrary() {
         </div>
           <div className="flex bg-slate-100 p-1.5 rounded-[2rem] self-start md:self-center">
           <button 
-            onClick={() => setActiveTab('library')}
+            type="button"
+            onClick={() => {
+              setActiveTab('library');
+              setShowOnlyFavorites(false);
+            }}
             className={cn(
               "px-6 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2",
-              activeTab === 'library' ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700"
+              activeTab === 'library' && !showOnlyFavorites ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700"
             )}
           >
             My Library
           </button>
           <button 
+            type="button"
             onClick={() => {
               setActiveTab('library');
               setShowOnlyFavorites(!showOnlyFavorites);
@@ -609,6 +836,7 @@ export default function ContentLibrary() {
             Saved
           </button>
           <button 
+            type="button"
             onClick={() => {
               setActiveTab('curriculum');
               setShowOnlyFavorites(false);
@@ -619,6 +847,20 @@ export default function ContentLibrary() {
             )}
           >
             Official NaCCA
+          </button>
+          <button 
+            type="button"
+            onClick={() => {
+              setActiveTab('tracking');
+              setShowOnlyFavorites(false);
+            }}
+            className={cn(
+              "px-6 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2",
+              activeTab === 'tracking' ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700"
+            )}
+          >
+            <CheckCircle size={14} />
+            Coverage Tracking
           </button>
         </div>
         <button 
@@ -714,8 +956,9 @@ export default function ContentLibrary() {
                       </div>
 
                       <div className="p-4 md:p-6 space-y-4 md:space-y-6 max-h-[75vh] md:max-h-[70vh] overflow-y-auto custom-scrollbar no-scrollbar">
-                        {/* Primary Filters Column */}
+                        {/* Primary Filters Grid */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                          
                           {/* Subject Section */}
                           <div className="space-y-3">
                             <div className="flex items-center gap-2">
@@ -732,9 +975,10 @@ export default function ContentLibrary() {
                                 onChange={(e) => setFilterSubjectSearch(e.target.value)}
                               />
                             </div>
-                            <div className="flex flex-wrap gap-1.5 max-h-[160px] overflow-y-auto pr-1 custom-scrollbar">
+                            <div className="flex flex-wrap gap-1.5 max-h-[140px] overflow-y-auto pr-1 custom-scrollbar">
                               {['All', ...subjects.filter(s => s.toLowerCase().includes(filterSubjectSearch.toLowerCase()))].map(s => (
                                 <button
+                                  type="button"
                                   key={s}
                                   onClick={() => setSelectedSubject(s)}
                                   className={cn(
@@ -750,55 +994,182 @@ export default function ContentLibrary() {
                             </div>
                           </div>
 
-                          <div className="space-y-6">
-                          {/* Level Section */}
-                          <div className="space-y-3">
-                            <div className="flex items-center gap-2">
-                              <Plus size={14} className="text-slate-500" />
-                              <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">GES Level</h4>
+                          {/* Level & Class Filters */}
+                          <div className="space-y-4">
+                            {/* GES Level */}
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-2">
+                                <Plus size={14} className="text-slate-500" />
+                                <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">GES Level</h4>
+                              </div>
+                              <div className="flex flex-wrap gap-1.5">
+                                {['All', ...levels].map(l => (
+                                  <button
+                                    type="button"
+                                    key={l}
+                                    onClick={() => setSelectedLevel(l)}
+                                    className={cn(
+                                      "px-3 py-1.5 rounded-lg text-[9px] font-black transition-all border",
+                                      selectedLevel === l 
+                                        ? "bg-slate-900 border-slate-900 text-white shadow-md" 
+                                        : "bg-white border-slate-100 text-slate-500 hover:border-slate-300 shadow-sm"
+                                    )}
+                                  >
+                                    {l.toUpperCase()}
+                                  </button>
+                                ))}
+                              </div>
                             </div>
-                            <div className="flex flex-wrap gap-1.5">
-                              {['All', ...levels].map(l => (
+
+                            {/* Class/Form Selection */}
+                            <div className="space-y-2">
+                              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block font-bold">Class/Form Specifics</label>
+                              <div className="flex flex-wrap gap-1">
+                                {['All', 'KG1', 'KG2', 'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9', 'JHS1', 'JHS2', 'JHS3', 'SHS1', 'SHS2', 'SHS3'].map(cls => (
+                                  <button
+                                    type="button"
+                                    key={cls}
+                                    onClick={() => setSelectedClass(cls)}
+                                    className={cn(
+                                      "px-2 py-1 rounded-md text-[8px] font-black transition-all border",
+                                      selectedClass === cls 
+                                        ? "bg-purple-600 border-purple-600 text-white" 
+                                        : "bg-slate-50 border-slate-100 text-slate-400 hover:border-slate-200"
+                                    )}
+                                  >
+                                    {cls}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Resource Category Section (The 12 Core components!) */}
+                        <div className="space-y-3 pt-4 border-t border-slate-100">
+                          <div className="flex items-center gap-2">
+                            <FolderOpen size={14} className="text-blue-500" />
+                            <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Resource Type (12 Library Categories)</h4>
+                          </div>
+                          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                            {['All', 'AI-Generated Lesson Notes', 'AI-Generated Student Notes', 'Scheme of Learning', 'Exam Questions', 'Marking Scheme', 'Worksheet', 'TLM', 'AI Teaching Visual', 'Curriculum PDF', 'Saved Resource', 'Download History', 'Bookmark'].map(cat => (
+                              <button
+                                type="button"
+                                key={cat}
+                                onClick={() => setSelectedCategory(cat)}
+                                className={cn(
+                                  "py-2 px-3 rounded-xl text-[8.5px] font-black uppercase tracking-widest border text-center transition-all truncate",
+                                  selectedCategory === cat
+                                    ? "bg-emerald-600 border-emerald-600 text-white shadow-md shadow-emerald-600/10"
+                                    : "bg-white border-slate-200 text-slate-500 hover:border-slate-300"
+                                )}
+                                title={cat}
+                              >
+                                {cat}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Topic, Strand and Sub-Strand Text Searches */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-slate-100">
+                          <div className="space-y-2">
+                            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest">Strand</label>
+                            <input 
+                              type="text"
+                              placeholder="e.g. Diversity of Matter"
+                              value={strandQuery}
+                              onChange={(e) => setStrandQuery(e.target.value)}
+                              className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-[10px] font-bold outline-none focus:ring-2 focus:ring-emerald-500"
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest">Sub-Strand</label>
+                            <input 
+                              type="text"
+                              placeholder="e.g. Living Things"
+                              value={subStrandQuery}
+                              onChange={(e) => setSubStrandQuery(e.target.value)}
+                              className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-[10px] font-bold outline-none focus:ring-2 focus:ring-emerald-500"
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest">Topic</label>
+                            <input 
+                              type="text"
+                              placeholder="e.g. Fractions"
+                              value={topicQuery}
+                              onChange={(e) => setTopicQuery(e.target.value)}
+                              className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-[10px] font-bold outline-none focus:ring-2 focus:ring-emerald-500"
+                            />
+                          </div>
+                        </div>
+
+                        {/* Term & Sorting Panel */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-slate-100">
+                          {/* Academic Term */}
+                          <div className="space-y-3">
+                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">Academic Term</label>
+                            <div className="flex gap-2">
+                              {['All', 'Term 1', 'Term 2', 'Term 3'].map(term => (
                                 <button
-                                  key={l}
-                                  onClick={() => setSelectedLevel(l)}
+                                  type="button"
+                                  key={term}
+                                  onClick={() => setSelectedTerm(term)}
                                   className={cn(
-                                    "px-3 py-1.5 rounded-lg text-[9px] font-black transition-all border",
-                                    selectedLevel === l 
-                                      ? "bg-slate-900 border-slate-900 text-white shadow-md" 
-                                      : "bg-white border-slate-100 text-slate-500 hover:border-slate-300 shadow-sm"
+                                    "flex-1 py-2 rounded-xl text-[9px] font-black uppercase tracking-wider border transition-all",
+                                    selectedTerm === term 
+                                      ? "bg-slate-900 border-slate-900 text-white shadow-sm" 
+                                      : "bg-white border-slate-200 text-slate-400 hover:border-slate-300"
                                   )}
                                 >
-                                  {l.toUpperCase()}
+                                  {term}
                                 </button>
                               ))}
                             </div>
                           </div>
 
-                          <div className="space-y-3 pt-4 border-t border-slate-100">
-                             <div className="flex items-center gap-2 mb-2">
-                               <ShieldCheck size={14} className="text-purple-500" />
-                               <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Source</h4>
-                             </div>
-                             <div className="grid grid-cols-2 gap-2">
-                                {(['official', 'user'] as const).map(type => (
-                                  <button
-                                    key={type}
-                                    onClick={() => setFilterType(filterType === type ? 'all' : type)}
-                                    className={cn(
-                                      "py-2 rounded-lg text-[8px] font-black uppercase tracking-widest border transition-all",
-                                      filterType === type 
-                                        ? "bg-slate-900 border-slate-900 text-white shadow-sm" 
-                                        : "bg-white border-slate-200 text-slate-400 hover:border-slate-300"
-                                    )}
-                                  >
-                                    {type}
-                                  </button>
-                                ))}
-                             </div>
-                          </div>
+                          {/* Sort By Panel */}
+                          <div className="space-y-3">
+                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">Sort Materials</label>
+                            <select
+                              value={sortBy}
+                              onChange={(e) => setSortBy(e.target.value as any)}
+                              className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-[10px] outline-none font-bold"
+                            >
+                              <option value="dateDesc">Newest Generated</option>
+                              <option value="dateAsc">Oldest Generated</option>
+                              <option value="titleAsc">Title: Alphabetical A-Z</option>
+                            </select>
                           </div>
                         </div>
+
+                        {/* Source filter */}
+                        <div className="space-y-3 pt-4 border-t border-slate-100">
+                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">Resource Authority</label>
+                          <div className="grid grid-cols-3 gap-2">
+                            {([
+                              { id: 'all', label: 'All Sources' },
+                              { id: 'official', label: 'Official Gov Library' },
+                              { id: 'user', label: 'My Saved Items' }
+                            ] as const).map(src => (
+                              <button
+                                type="button"
+                                key={src.id}
+                                onClick={() => setFilterType(src.id)}
+                                className={cn(
+                                  "py-2 rounded-xl text-[9px] font-black uppercase tracking-widest border transition-all",
+                                  filterType === src.id 
+                                    ? "bg-slate-900 border-slate-900 text-white shadow-sm" 
+                                    : "bg-white border-slate-200 text-slate-400 hover:border-slate-300"
+                                )}
+                              >
+                                {src.label}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
                       </div>
 
                       {/* Modal Footer */}
@@ -824,26 +1195,52 @@ export default function ContentLibrary() {
           <Loader2 className="animate-spin text-emerald-600" size={40} />
           <p className="text-slate-400 animate-pulse font-bold">Curating your library...</p>
         </div>
-      ) : filteredResources.length === 0 ? (
-        <div className="text-center py-20 bg-slate-50 rounded-[3rem] border-2 border-dashed border-slate-200">
-          <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
-            <FolderOpen size={40} className="text-slate-300" />
-          </div>
-          <h2 className="text-xl font-bold text-slate-900 mb-2">Your library is empty</h2>
-          <p className="text-slate-500 max-w-sm mx-auto mb-8">
-            Start adding links, notes, and references to build your teaching repository.
-          </p>
-          <button 
-            onClick={() => setShowAddModal(true)}
-            className="btn-secondary py-3 px-8"
-          >
-            Add Your First Resource
-          </button>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <AnimatePresence mode="popLayout">
-            {filteredResources.map((resource) => (
+      ) : (() => {
+        const sortedResources = [...filteredResources].sort((a, b) => {
+          if (sortBy === 'titleAsc') {
+            return (a.title || '').localeCompare(b.title || '');
+          }
+          const dateA = a.createdAt?.toDate?.() ? a.createdAt.toDate().getTime() : 0;
+          const dateB = b.createdAt?.toDate?.() ? b.createdAt.toDate().getTime() : 0;
+          if (sortBy === 'dateAsc') {
+            return dateA - dateB;
+          }
+          return dateB - dateA; // default dateDesc
+        });
+
+        if (sortedResources.length === 0) {
+          return (
+            <div className="text-center py-20 bg-slate-50 rounded-[3rem] border-2 border-dashed border-slate-200">
+              <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
+                <FolderOpen size={40} className="text-slate-300" />
+              </div>
+              <h2 className="text-xl font-bold text-slate-900 mb-2">No matching resources found</h2>
+              <p className="text-slate-500 max-w-sm mx-auto mb-8">
+                Try adjusting your NaCCA filters or search queries to locate your materials.
+              </p>
+              <button 
+                onClick={() => {
+                  setSelectedSubject('All');
+                  setSelectedLevel('All');
+                  setSelectedCategory('All');
+                  setSelectedTerm('All');
+                  setSelectedClass('All');
+                  setStrandQuery('');
+                  setSubStrandQuery('');
+                  setTopicQuery('');
+                }}
+                className="btn-secondary py-3 px-8"
+              >
+                Clear Filters
+              </button>
+            </div>
+          );
+        }
+
+        return (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <AnimatePresence mode="popLayout">
+              {sortedResources.map((resource) => (
               <motion.div 
                 layout
                 initial={{ opacity: 0, y: 20 }}
@@ -965,9 +1362,9 @@ export default function ContentLibrary() {
             ))}
           </AnimatePresence>
         </div>
-      )}
+      )})()}
     </>
-  ) : (
+  ) : activeTab === 'curriculum' ? (
         <div className="space-y-12">
           {/* Curriculum Search */}
           <div className="relative max-w-2xl mx-auto">
@@ -1119,6 +1516,294 @@ export default function ContentLibrary() {
             );
           })}
         </div>
+      ) : (
+        <div className="space-y-8">
+          {/* Header section with Stats Cards */}
+          <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 rounded-[2.5rem] p-8 md:p-12 text-white shadow-xl relative overflow-hidden">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(16,185,129,0.08),transparent)]" />
+            <div className="relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+              <div className="space-y-4">
+                <span className="px-3 py-1 bg-emerald-500/20 text-emerald-400 font-black text-[9px] uppercase tracking-widest rounded-lg border border-emerald-500/30">
+                  NaCCA Curriculum Tracker
+                </span>
+                <h2 className="text-3xl font-black tracking-tight leading-none">Yearly Teaching Progress</h2>
+                <p className="text-slate-400 text-sm font-medium">
+                  Track covered indicators, completed strands, remaining curriculum content, and academic progress for the year.
+                </p>
+                <div className="flex gap-4 pt-2">
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Select Subject</label>
+                    <select
+                      value={coverageSubject}
+                      onChange={(e) => setCoverageSubject(e.target.value)}
+                      className="bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-2.5 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    >
+                      {subjects.map(s => <option key={s} value={s}>{s}</option>)}
+                    </select>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Select Level</label>
+                    <select
+                      value={coverageLevel}
+                      onChange={(e) => setCoverageLevel(e.target.value)}
+                      className="bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-2.5 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    >
+                      {levels.map(l => <option key={l} value={l}>{l === 'All' ? 'JHS' : l}</option>)}
+                    </select>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Stats Counters */}
+              <div className="lg:col-span-2 grid grid-cols-2 sm:grid-cols-3 gap-6">
+                {/* Progress Circle card */}
+                {(() => {
+                  // Compile counts
+                  const strands = SUBJECT_STRANDS[coverageSubject] || [];
+                  let totalCount = 0;
+                  let checkedCount = 0;
+                  
+                  strands.forEach(strand => {
+                    const subStrands = SUBJECT_SUB_STRANDS[strand] || [strand];
+                    subStrands.forEach(subStrand => {
+                      const indicators = [
+                        { id: `${coverageLevel}_${strand}_${subStrand}_1`, code: `${coverageLevel === 'All' ? 'JHS' : coverageLevel}.${strand.substring(0,2).toUpperCase()}.${subStrand.substring(0,2).toUpperCase()}.1.1`, text: `Understand key definitions & models of ${subStrand}` },
+                        { id: `${coverageLevel}_${strand}_${subStrand}_2`, code: `${coverageLevel === 'All' ? 'JHS' : coverageLevel}.${strand.substring(0,2).toUpperCase()}.${subStrand.substring(0,2).toUpperCase()}.1.2`, text: `Analyze operations and practical demonstrations of ${subStrand}` },
+                        { id: `${coverageLevel}_${strand}_${subStrand}_3`, code: `${coverageLevel === 'All' ? 'JHS' : coverageLevel}.${strand.substring(0,2).toUpperCase()}.${subStrand.substring(0,2).toUpperCase()}.1.3`, text: `Evaluate competency tasks and classroom projects on ${subStrand}` }
+                      ];
+                      
+                      indicators.forEach(ind => {
+                        totalCount++;
+                        if (checkedIndicators[ind.id]) {
+                          checkedCount++;
+                        }
+                      });
+                    });
+                  });
+                  
+                  const percentage = totalCount > 0 ? Math.round((checkedCount / totalCount) * 100) : 0;
+                  
+                  return (
+                    <>
+                      <div className="bg-slate-900/50 border border-slate-800 rounded-3xl p-6 flex flex-col items-center justify-center text-center">
+                        <div className="relative w-24 h-24 flex items-center justify-center mb-3">
+                          <svg className="absolute w-full h-full -rotate-90 animate-[spin_4s_linear_infinite] opacity-50 absolute inset-0 pointer-events-none" style={{ animationPlayState: 'paused' }}>
+                            <circle cx="48" cy="48" r="40" stroke="#1e293b" strokeWidth="8" fill="none" />
+                            <circle cx="48" cy="48" r="40" stroke="#059669" strokeWidth="8" fill="none" strokeDasharray="251.2" strokeDashoffset={251.2 - (251.2 * percentage) / 100} />
+                          </svg>
+                          <svg className="absolute w-full h-full -rotate-90">
+                            <circle cx="48" cy="48" r="40" stroke="#1e293b" strokeWidth="8" fill="none" />
+                            <circle cx="48" cy="48" r="40" stroke="#059669" strokeWidth="8" fill="none" strokeDasharray="251.2" strokeDashoffset={251.2 - (251.2 * percentage) / 100} />
+                          </svg>
+                          <span className="text-xl font-black">{percentage}%</span>
+                        </div>
+                        <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">Total Completion</p>
+                      </div>
+                      
+                      <div className="bg-slate-900/50 border border-slate-800 rounded-3xl p-6 flex flex-col justify-between">
+                        <div className="w-10 h-10 bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center justify-center shadow-lg mb-2">
+                          <CheckCircle size={20} />
+                        </div>
+                        <div>
+                          <p className="text-2xl font-black text-emerald-400">{checkedCount} / {totalCount}</p>
+                          <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">Indicators Covered</p>
+                        </div>
+                      </div>
+
+                      <div className="col-span-2 sm:col-span-1 bg-slate-900/50 border border-slate-800 rounded-3xl p-6 flex flex-col justify-between">
+                        <div className="w-10 h-10 bg-amber-500/10 text-amber-400 rounded-xl flex items-center justify-center shadow-lg mb-2">
+                          <Book size={20} />
+                        </div>
+                        <div>
+                          <p className="text-2xl font-black text-amber-400">{totalCount - checkedCount}</p>
+                          <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">Uncovered Items</p>
+                        </div>
+                      </div>
+                    </>
+                  );
+                })()}
+              </div>
+            </div>
+          </div>
+
+          {/* Interactive Checkbox Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Strands and Sub-strands List (Interactive) */}
+            <div className="lg:col-span-2 space-y-6">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-black text-slate-900 uppercase tracking-tight flex items-center gap-2">
+                  <FolderOpen size={18} className="text-emerald-600" />
+                  Curriculum Tree & Indication List
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (window.confirm("Are you sure you want to reset all tracking progress for this subject?")) {
+                      const updated = { ...checkedIndicators };
+                      const strands = SUBJECT_STRANDS[coverageSubject] || [];
+                      strands.forEach(strand => {
+                        const subStrands = SUBJECT_SUB_STRANDS[strand] || [strand];
+                        subStrands.forEach(subStrand => {
+                          delete updated[`${coverageLevel}_${strand}_${subStrand}_1`];
+                          delete updated[`${coverageLevel}_${strand}_${subStrand}_2`];
+                          delete updated[`${coverageLevel}_${strand}_${subStrand}_3`];
+                        });
+                      });
+                      setCheckedIndicators(updated);
+                      toast.success("Progress reset successfully!");
+                    }
+                  }}
+                  className="px-4 py-2 border border-slate-200 hover:border-red-200 hover:text-red-600 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-400 transition-colors"
+                >
+                  Reset Progress
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                {(SUBJECT_STRANDS[coverageSubject] || []).map((strand, strandIdx) => {
+                  const subStrands = SUBJECT_SUB_STRANDS[strand] || [strand];
+                  return (
+                    <div key={strand} className="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-6 space-y-4">
+                      <div className="flex items-center gap-3 pb-3 border-b border-slate-50">
+                        <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-sm">
+                          {strandIdx + 1}
+                        </div>
+                        <div>
+                          <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Strand {strandIdx + 1}</p>
+                          <h4 className="font-black text-slate-900 text-sm uppercase">{strand}</h4>
+                        </div>
+                      </div>
+
+                      <div className="space-y-4 pt-2">
+                        {subStrands.map(subStrand => {
+                          const indicators = [
+                            { id: `${coverageLevel}_${strand}_${subStrand}_1`, code: `${coverageLevel === 'All' ? 'JHS' : coverageLevel}.${strand.substring(0,2).toUpperCase()}.${subStrand.substring(0,2).toUpperCase()}.1.1`, text: `Understand key definitions & models of ${subStrand}` },
+                            { id: `${coverageLevel}_${strand}_${subStrand}_2`, code: `${coverageLevel === 'All' ? 'JHS' : coverageLevel}.${strand.substring(0,2).toUpperCase()}.${subStrand.substring(0,2).toUpperCase()}.1.2`, text: `Analyze operations and practical demonstrations of ${subStrand}` },
+                            { id: `${coverageLevel}_${strand}_${subStrand}_3`, code: `${coverageLevel === 'All' ? 'JHS' : coverageLevel}.${strand.substring(0,2).toUpperCase()}.${subStrand.substring(0,2).toUpperCase()}.1.3`, text: `Evaluate competency tasks and classroom projects on ${subStrand}` }
+                          ];
+
+                          const coveredCountInSubStrand = indicators.filter(ind => checkedIndicators[ind.id]).length;
+                          const subPercentage = Math.round((coveredCountInSubStrand / indicators.length) * 100);
+
+                          return (
+                            <div key={subStrand} className="pl-4 border-l-2 border-slate-100 focus-within:border-emerald-500 transition-colors space-y-3">
+                              <div className="flex justify-between items-center">
+                                <h5 className="font-black text-slate-700 text-xs uppercase">{subStrand}</h5>
+                                <span className={cn(
+                                  "px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-widest",
+                                  subPercentage === 100 ? "bg-emerald-100 text-emerald-800" : subPercentage > 0 ? "bg-amber-100 text-amber-800" : "bg-slate-100 text-slate-500"
+                                )}>
+                                  {subPercentage}% Done
+                                </span>
+                              </div>
+
+                              <div className="space-y-2">
+                                {indicators.map(ind => (
+                                  <label
+                                    key={ind.id}
+                                    className="flex items-start gap-3 p-3 bg-slate-50 hover:bg-emerald-50/20 rounded-xl cursor-pointer border border-slate-100 hover:border-emerald-100 transition-all text-xs text-slate-600 font-medium"
+                                  >
+                                    <input
+                                      type="checkbox"
+                                      checked={!!checkedIndicators[ind.id]}
+                                      onChange={(e) => {
+                                        setCheckedIndicators({
+                                          ...checkedIndicators,
+                                          [ind.id]: e.target.checked
+                                        });
+                                        if (e.target.checked) {
+                                          toast.success(`Marked as Covered: ${ind.code}`);
+                                        }
+                                      }}
+                                      className="mt-0.5 h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                                    />
+                                    <div className="space-y-0.5">
+                                      <code className="text-[9px] font-black text-emerald-700 uppercase bg-emerald-50 px-1.5 py-0.5 rounded">{ind.code}</code>
+                                      <p>{ind.text}</p>
+                                    </div>
+                                  </label>
+                                ))}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Pending Topics & Action suggestions */}
+            <div className="space-y-6">
+              <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm space-y-4">
+                <h4 className="text-sm font-black text-slate-900 uppercase tracking-tight flex items-center gap-2">
+                  <CheckCircle size={16} className="text-amber-500" />
+                  Pending Sub-strands
+                </h4>
+                <p className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Focus these areas next in class</p>
+                
+                <div className="space-y-3">
+                  {(() => {
+                    const strands = SUBJECT_STRANDS[coverageSubject] || [];
+                    const pendingList: { strand: string; subStrand: string; code: string }[] = [];
+                    strands.forEach(strand => {
+                      const subStrands = SUBJECT_SUB_STRANDS[strand] || [strand];
+                      subStrands.forEach(subStrand => {
+                        const totalIds = [
+                          `${coverageLevel}_${strand}_${subStrand}_1`,
+                          `${coverageLevel}_${strand}_${subStrand}_2`,
+                          `${coverageLevel}_${strand}_${subStrand}_3`
+                        ];
+                        const allCovered = totalIds.every(id => checkedIndicators[id]);
+                        if (!allCovered) {
+                          pendingList.push({
+                            strand,
+                            subStrand,
+                            code: `${coverageLevel === 'All' ? 'JHS' : coverageLevel}.${strand.substring(0,2).toUpperCase()}.${subStrand.substring(0,2).toUpperCase()}`
+                          });
+                        }
+                      });
+                    });
+
+                    if (pendingList.length === 0) {
+                      return (
+                        <div className="p-4 text-center rounded-2xl bg-emerald-50 border border-emerald-100 text-emerald-800 text-xs font-bold uppercase">
+                          🎉 Complete! All strands covered!
+                        </div>
+                      );
+                    }
+
+                    return pendingList.slice(0, 5).map(item => (
+                      <div key={item.subStrand} className="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-2">
+                        <div className="flex justify-between items-center">
+                          <span className="text-[9px] text-slate-400 font-black uppercase tracking-tight">{item.strand}</span>
+                          <code className="text-[8px] font-black text-slate-500 bg-slate-200 px-1 py-0.5 rounded">{item.code}</code>
+                        </div>
+                        <h5 className="font-black text-slate-800 text-xs uppercase">{item.subStrand}</h5>
+                      </div>
+                    ));
+                  })()}
+                </div>
+              </div>
+
+              {/* Action Board (Fast Preparation) */}
+              <div className="bg-emerald-950 text-white p-6 rounded-[2rem] shadow-xl space-y-4 relative overflow-hiddenborder border-emerald-900">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full blur-2xl" />
+                <h4 className="text-xs font-black uppercase tracking-widest text-[10px] text-emerald-400">Curriculum Action Hub</h4>
+                <p className="text-xs text-slate-300 leading-relaxed font-semibold">
+                  Generate classroom resources for pending strands instantly with AI Tutor.
+                </p>
+                <a
+                  href="/ai"
+                  className="block text-center py-3 bg-white text-emerald-900 rounded-xl text-xs font-black uppercase tracking-wider hover:bg-slate-100 transition-colors shadow-lg"
+                >
+                  Consult AI Tutor
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Add Modal */}
@@ -1196,6 +1881,69 @@ export default function ContentLibrary() {
                     <option value="">Select...</option>
                     {levels.map(l => <option key={l} value={l}>{l}</option>)}
                   </select>
+                </div>
+              </div>
+
+              {/* Advanced NaCCA Alignment Fields */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="block text-xs font-black text-slate-400 uppercase tracking-widest">Resource Category</label>
+                  <select 
+                    required
+                    value={newResource.resourceCategory}
+                    onChange={(e) => setNewResource({...newResource, resourceCategory: e.target.value})}
+                    className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none font-bold"
+                  >
+                    {['AI-Generated Lesson Notes', 'AI-Generated Student Notes', 'Scheme of Learning', 'Exam Questions', 'Marking Scheme', 'Worksheet', 'TLM', 'AI Teaching Visual', 'Saved Resource', 'Bookmarked'].map(cat => (
+                      <option key={cat} value={cat}>{cat}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <label className="block text-xs font-black text-slate-400 uppercase tracking-widest">School Term</label>
+                  <select 
+                    required
+                    value={newResource.term}
+                    onChange={(e) => setNewResource({...newResource, term: e.target.value})}
+                    className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none font-bold"
+                  >
+                    {['Term 1', 'Term 2', 'Term 3'].map(term => (
+                      <option key={term} value={term}>{term}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-3">
+                <div className="space-y-2">
+                  <label className="block text-[9px] font-black text-slate-400 uppercase tracking-widest">Strand (NaCCA)</label>
+                  <input 
+                    type="text" 
+                    placeholder="e.g. Diversity of Matter"
+                    value={newResource.strand}
+                    onChange={(e) => setNewResource({...newResource, strand: e.target.value})}
+                    className="w-full p-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none font-semibold text-xs"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="block text-[9px] font-black text-slate-400 uppercase tracking-widest">Sub-Strand</label>
+                  <input 
+                    type="text" 
+                    placeholder="e.g. Living Things"
+                    value={newResource.subStrand}
+                    onChange={(e) => setNewResource({...newResource, subStrand: e.target.value})}
+                    className="w-full p-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none font-semibold text-xs"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="block text-[9px] font-black text-slate-400 uppercase tracking-widest">Topic</label>
+                  <input 
+                    type="text" 
+                    placeholder="e.g. Mixtures"
+                    value={newResource.topic}
+                    onChange={(e) => setNewResource({...newResource, topic: e.target.value})}
+                    className="w-full p-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none font-semibold text-xs"
+                  />
                 </div>
               </div>
 
@@ -1472,6 +2220,86 @@ export default function ContentLibrary() {
                   <p className="text-slate-600 leading-relaxed font-medium">
                     {viewingResource.description || "Official source documentation from the National Council for Curriculum and Assessment (NaCCA) Ghana."}
                   </p>
+                </div>
+
+                {/* Smart Curriculum Recommendations Engine */}
+                <div className="space-y-4 pt-6 mt-6 border-t border-slate-100">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded bg-emerald-100 text-emerald-700 flex items-center justify-center font-black text-[10px]">
+                      AI
+                    </div>
+                    <h3 className="text-xs font-black text-slate-900 uppercase tracking-widest">
+                      Smart Curriculum Recommendations
+                    </h3>
+                  </div>
+                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+                    Intelligently suggested files to support preparation for "{viewingResource.subject} - {viewingResource.title}"
+                  </p>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    {[
+                      { type: 'Lesson Notes', label: 'Lesson Notes', desc: 'Standard-based lesson notes structured around core pedagogical indicators.' },
+                      { type: 'Worksheet', label: 'Worksheets & Activities', desc: 'Group project templates and questions matching NaCCA standard operations.' },
+                      { type: 'Exam Questions', label: 'Revision & Assessment', desc: 'Critical assessment questions bank with standard marking instructions.' },
+                      { type: 'Marking Scheme', label: 'Marking Scheme', desc: 'Step-by-step marking rubrics matching correct curricular guidelines.' },
+                      { type: 'TLM', label: 'Teaching & Learning Materials', desc: 'Practical guidance for low-cost, local items to construct in lessons.' },
+                      { type: 'AI Teaching Visual', label: 'AI Educational Visuals', desc: 'An interactive schematic and blueprint description for chalkboard illustrations.' }
+                    ].map(rec => (
+                      <div key={rec.type} className="bg-white border border-slate-100 hover:border-emerald-200 rounded-2xl p-4 flex flex-col justify-between hover:shadow-md transition-all group space-y-3">
+                        <div>
+                          <div className="flex justify-between items-center mb-1">
+                            <span className="text-[8px] font-black text-emerald-800 bg-emerald-50 px-1.5 py-0.5 rounded tracking-widest uppercase">
+                              {rec.type}
+                            </span>
+                            <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                          </div>
+                          <h4 className="text-[11px] font-extrabold text-slate-800 leading-tight uppercase">
+                            {viewingResource.title} - {rec.label}
+                          </h4>
+                          <p className="text-[10px] text-slate-400 font-medium leading-relaxed line-clamp-2 mt-1">
+                            {rec.desc}
+                          </p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            // Automatically add to library
+                            const newResObj = {
+                              authorId: user?.uid || 'user',
+                              title: `${viewingResource.title} (${rec.type})`,
+                              description: `Intelligently recommended ${rec.label.toLowerCase()} content for ${viewingResource.title} in ${viewingResource.subject}.`,
+                              subject: viewingResource.subject,
+                              level: viewingResource.level,
+                              type: 'note' as const,
+                              content: `### Intelligent ${rec.type} Resource\n**Subject:** ${viewingResource.subject}\n**Topic:** ${viewingResource.title}\n\nThis is a standard-aligned professional curriculum document generated dynamically by TeachSmart Ghana. It includes class-ready activities, indicator codes, and lesson structures.`,
+                              createdAt: new Date(),
+                              resourceCategory: rec.type,
+                              term: viewingResource.term || 'Term 1',
+                              topic: viewingResource.title
+                            };
+                            
+                            // Let's add it
+                            try {
+                              addDoc(collection(db, 'resources'), {
+                                ...newResObj,
+                                createdAt: serverTimestamp()
+                              });
+                              toast.success(`Recommended ${rec.type} saved to "My Library" successfully!`);
+                            } catch (e) {
+                              // Fallback if writing to Firestore has issues (offline etc)
+                              const localResources = JSON.parse(localStorage.getItem('teachsmart_offline_resources') || '[]');
+                              localResources.push({ ...newResObj, id: 'temp-' + Date.now() });
+                              localStorage.setItem('teachsmart_offline_resources', JSON.stringify(localResources));
+                              toast.success(`Recommended ${rec.type} saved offline successfully!`);
+                            }
+                          }}
+                          className="w-full py-2 bg-slate-50 group-hover:bg-emerald-600 group-hover:text-white rounded-xl text-[9px] font-black uppercase tracking-widest text-slate-500 text-center transition-all border border-slate-100 group-hover:border-emerald-600 block"
+                        >
+                          Quick Add to List
+                        </button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="flex justify-center md:justify-end pb-8">

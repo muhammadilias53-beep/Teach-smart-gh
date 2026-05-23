@@ -21,7 +21,7 @@ const Sidebar = () => {
 
   const menuItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
-    { icon: MessageSquare, label: 'AI Assistant', path: '/ai' },
+    { icon: MessageSquare, label: 'AI Tutor', path: '/ai' },
     { icon: FileText, label: 'Lesson Plans', path: '/lessons' },
     { icon: BookOpen, label: 'Lesson Notes', path: '/notes' },
     { icon: Calendar, label: 'Schemes of Work', path: '/schemes' },
