@@ -610,7 +610,7 @@ const Dashboard = () => {
           </div>
         </div>
         <a
-          href={`https://wa.me/${((import.meta as any).env.VITE_ADMIN_WHATSAPP || "233543825902").replace(/[^0-9]/g, '')}?text=${encodeURIComponent("Hello TeachSmart Admin, I have a support request/complaint regarding the TeachSmart Ghana application:")}`}
+          href={`https://wa.me/${((import.meta as any).env.VITE_ADMIN_WHATSAPP || "233556231544").replace(/[^0-9]/g, '')}?text=${encodeURIComponent("Hello TeachSmart Admin, I have a support request/complaint regarding the TeachSmart Ghana application:")}`}
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center justify-center gap-2 px-6 py-3.5 bg-emerald-900 text-white hover:bg-emerald-800 transition-all rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-emerald-900/15"

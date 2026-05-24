@@ -19,7 +19,7 @@ const Sidebar = () => {
 
   const isAdmin = user?.email === 'muhammadilias53@gmail.com';
 
-  const whatsappNumber = (import.meta as any).env.VITE_ADMIN_WHATSAPP || "233543825902";
+  const whatsappNumber = (import.meta as any).env.VITE_ADMIN_WHATSAPP || "233556231544";
   const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent("Hello TeachSmart Admin, I have a question/complaint regarding TeachSmart Ghana:")}`;
 
   const menuItems = [
