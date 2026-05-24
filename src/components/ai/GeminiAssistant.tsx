@@ -8,22 +8,38 @@ import 'highlight.js/styles/github.css';
 import { toast } from 'react-hot-toast';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { safeLocalStorage, safeSessionStorage } from '../../lib/storage';
+
+const DEFAULT_GEMINI_MSG = [
+  { role: 'assistant' as const, content: "Hello! I am AI Tutor, your advanced GES teaching support assistant and NaCCA curriculum teaching coach. How can I guide you with your subject matter, teaching delivery, or lesson preparation today?" }
+];
 
 const GeminiAssistant = () => {
   const { canGenerate } = useAuth();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<{role: 'user' | 'assistant', content: string}[]>(() => {
-    const saved = localStorage.getItem('teachsmart_chat_history');
-    return saved ? JSON.parse(saved) : [
-      { role: 'assistant', content: "Hello! I am AI Tutor, your advanced GES teaching support assistant and NaCCA curriculum teaching coach. How can I guide you with your subject matter, teaching delivery, or lesson preparation today?" }
-    ];
+    try {
+      const saved = safeLocalStorage.getItem('teachsmart_chat_history');
+      return saved ? JSON.parse(saved) : DEFAULT_GEMINI_MSG;
+    } catch {
+      return DEFAULT_GEMINI_MSG;
+    }
   });
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const requestSessionIdRef = React.useRef<number>(0);
 
   React.useEffect(() => {
-    localStorage.setItem('teachsmart_chat_history', JSON.stringify(messages));
+    try {
+      if (messages.length <= 1) {
+        safeLocalStorage.removeItem('teachsmart_chat_history');
+      } else {
+        safeLocalStorage.setItem('teachsmart_chat_history', JSON.stringify(messages));
+      }
+    } catch (e) {
+      console.error('Failed to save chat history', e);
+    }
   }, [messages]);
 
   const quickPrompts = [
@@ -33,9 +49,22 @@ const GeminiAssistant = () => {
   ];
 
   const clearChat = () => {
-    const defaultMsg = [{ role: 'assistant' as const, content: "Chat cleared! How can I help you now?" }];
-    setMessages(defaultMsg);
-    localStorage.removeItem('teachsmart_chat_history');
+    if (window.confirm("Are you sure you want to perform a hard-reset of the session cache and clear all chat history?")) {
+      // 1. Invalidate any active asynchronously processing requests
+      requestSessionIdRef.current += 1;
+      setLoading(false);
+      
+      // 2. Perform hard-reset of localStorage & sessionStorage keys
+      safeLocalStorage.removeItem('teachsmart_chat_history');
+      safeLocalStorage.removeItem('teachsmart_aitutor_history_v2');
+      safeSessionStorage.clear();
+      
+      // 3. Reset visual inputs & states
+      setInput('');
+      setMessages(DEFAULT_GEMINI_MSG);
+      
+      toast.success("Session cache and chat history successfully hard-reset!");
+    }
   };
 
   const handleSend = async (customText?: string) => {
@@ -47,6 +76,8 @@ const GeminiAssistant = () => {
 
     const messageContent = customText || input;
     if (!messageContent.trim() || loading) return;
+
+    const currentSessionId = ++requestSessionIdRef.current;
 
     setInput('');
     setMessages(prev => [...prev, { role: 'user', content: messageContent }]);
@@ -225,12 +256,21 @@ Transform the sidebar assistant into a powerful AI Tutor that acts as a trusted 
         }
       });
 
+      if (currentSessionId !== requestSessionIdRef.current) {
+        return;
+      }
+
       setMessages(prev => [...prev, { role: 'assistant', content: response.text || 'Sorry, I encountered an error.' }]);
     } catch (err) {
+      if (currentSessionId !== requestSessionIdRef.current) {
+        return;
+      }
       console.error(err);
       setMessages(prev => [...prev, { role: 'assistant', content: "I'm having trouble connecting to the brain right now. Try again later!" }]);
     } finally {
-      setLoading(false);
+      if (currentSessionId === requestSessionIdRef.current) {
+        setLoading(false);
+      }
     }
   };
 

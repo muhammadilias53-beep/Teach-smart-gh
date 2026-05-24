@@ -615,6 +615,7 @@ const Dashboard = () => {
           rel="noopener noreferrer"
           className="flex items-center justify-center gap-2 px-6 py-3.5 bg-emerald-900 text-white hover:bg-emerald-800 transition-all rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-emerald-900/15"
           id="dashboard-contact-admin-btn"
+          aria-label="Contact TeachSmart Admin via WhatsApp for support and complaints"
         >
           <span>Contact Admin on WhatsApp</span>
           <ArrowRight size={14} />

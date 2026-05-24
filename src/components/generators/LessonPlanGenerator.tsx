@@ -62,6 +62,26 @@ const LessonPlanGenerator = () => {
     customGuidance: '',
   });
 
+  // Automatically use the indicator as the main learning objective when selected
+  React.useEffect(() => {
+    if (formData.indicator) {
+      const parts = formData.indicator.split(':');
+      const text = parts.length > 1 ? parts.slice(1).join(':').trim() : formData.indicator.trim();
+      if (text) {
+        const formattedText = text.charAt(0).toUpperCase() + text.slice(1);
+        setFormData(prev => ({
+          ...prev,
+          mainObjective: `By the end of the lesson, the learner will be able to: ${formattedText}`
+        }));
+      }
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        mainObjective: ''
+      }));
+    }
+  }, [formData.indicator]);
+
   const validateStep = (currentStep: number) => {
     const newErrors: Record<string, string> = {};
 

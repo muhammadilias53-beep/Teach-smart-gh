@@ -296,22 +296,25 @@ const NoteGenerator = () => {
     }));
   };
 
-  // Auto-population effect when Curriculum selects change
+  // Auto-population effect when Curriculum selects change to use the indicator as the primary learning objective
   React.useEffect(() => {
-    const activeFrame = getActiveFrame();
-    if (activeFrame) {
-      setFormData(prev => {
-        const hasNoObjectives = !prev.objectives || prev.objectives.trim() === '';
-        
-        return {
+    if (formData.indicator) {
+      const parts = formData.indicator.split(':');
+      const text = parts.length > 1 ? parts.slice(1).join(':').trim() : formData.indicator.trim();
+      if (text) {
+        const formattedText = text.charAt(0).toUpperCase() + text.slice(1);
+        setFormData(prev => ({
           ...prev,
-          objectives: hasNoObjectives 
-            ? `By the end of the lesson, the learner will be able to:\n1. State what is meant by the key concepts: ${activeFrame.keyWords?.slice(0, 3).join(', ')}.\n2. Participate in practical activities including: ${activeFrame.activities?.[0] || 'active group class tasks'}.\n3. Answer oral review questions and write short evaluation exercises.`
-            : prev.objectives
-        };
-      });
+          objectives: `By the end of the lesson, the learner will be able to: ${formattedText}`
+        }));
+      }
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        objectives: ''
+      }));
     }
-  }, [formData.contentStandard, formData.indicator]);
+  }, [formData.indicator]);
 
   const handleCompetencyChange = (code: string) => {
     let next: string[];

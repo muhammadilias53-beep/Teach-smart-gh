@@ -12,11 +12,19 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { SafeMarkdown } from '../common/SafeMarkdown';
+import { safeLocalStorage, safeSessionStorage } from '../../lib/storage';
 
 interface Message {
   role: 'user' | 'assistant';
   content: string;
 }
+
+const DEFAULT_AITUTOR_MSG: Message[] = [
+  { 
+    role: 'assistant', 
+    content: `### Pioneer of Quality Learning! 🇬🇭\n\nI am your **AI Tutor**, a dedicated Ghana Education Service (GES) educational companion and NaCCA instructional planning coach.\n\nI am fully equipped with the official standard-based curriculum guidelines to assist you with:\n1. **Subject Matter Support** — break down any difficult concept.\n2. **Modern Methodology** — design learner-centered activities using realistic local resources.\n3. **Practical Lesson Delivery** — draft active lesson transitions & assessments.\n\nSelect your class details on the right pane or key in your questions below to start our coaching session!` 
+  }
+];
 
 export default function AITutorPage() {
   const { canGenerate, profile } = useAuth();
@@ -56,26 +64,26 @@ export default function AITutorPage() {
   // Chat History
   const [messages, setMessages] = useState<Message[]>(() => {
     try {
-      const saved = localStorage.getItem('teachsmart_aitutor_history_v2');
-      return saved ? JSON.parse(saved) : [
-        { 
-          role: 'assistant', 
-          content: `### Pioneer of Quality Learning! 🇬🇭\n\nI am your **AI Tutor**, a dedicated Ghana Education Service (GES) educational companion and NaCCA instructional planning coach.\n\nI am fully equipped with the official standard-based curriculum guidelines to assist you with:\n1. **Subject Matter Support** — break down any difficult concept.\n2. **Modern Methodology** — design learner-centered activities using realistic local resources.\n3. **Practical Lesson Delivery** — draft active lesson transitions & assessments.\n\nSelect your class details on the right pane or key in your questions below to start our coaching session!` 
-        }
-      ];
+      const saved = safeLocalStorage.getItem('teachsmart_aitutor_history_v2');
+      return saved ? JSON.parse(saved) : DEFAULT_AITUTOR_MSG;
     } catch {
-      return [];
+      return DEFAULT_AITUTOR_MSG;
     }
   });
 
   const [inputMessage, setInputMessage] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const requestSessionIdRef = useRef<number>(0);
 
   // Synchronize history
   useEffect(() => {
     try {
-      localStorage.setItem('teachsmart_aitutor_history_v2', JSON.stringify(messages));
+      if (messages.length <= 1) {
+        safeLocalStorage.removeItem('teachsmart_aitutor_history_v2');
+      } else {
+        safeLocalStorage.setItem('teachsmart_aitutor_history_v2', JSON.stringify(messages));
+      }
     } catch (e) {
       console.error('Failed to save chat history', e);
     }
@@ -95,6 +103,8 @@ export default function AITutorPage() {
 
     const textToSend = (customText || inputMessage).trim();
     if (!textToSend || loading) return;
+
+    const currentSessionId = ++requestSessionIdRef.current;
 
     setInputMessage('');
     setMessages(prev => [...prev, { role: 'user', content: textToSend }]);
@@ -174,10 +184,17 @@ Feel supportive, expert, encouraging and close to the Ghanaian context. Include 
         }
       });
 
+      if (currentSessionId !== requestSessionIdRef.current) {
+        return;
+      }
+
       const reply = response.text || "I was unable to complete this query. Please try again.";
       setMessages(prev => [...prev, { role: 'assistant', content: reply }]);
 
     } catch (err: any) {
+      if (currentSessionId !== requestSessionIdRef.current) {
+        return;
+      }
       console.error('Gemini error:', err);
       setMessages(prev => [...prev, { 
         role: 'assistant', 
@@ -185,20 +202,29 @@ Feel supportive, expert, encouraging and close to the Ghanaian context. Include 
       }]);
       toast.error("Failed to fetch response. Please try again.");
     } finally {
-      setLoading(false);
+      if (currentSessionId === requestSessionIdRef.current) {
+        setLoading(false);
+      }
     }
   };
 
   const clearChatHistory = () => {
-    if (window.confirm("Are you sure you want to clear your conversation history with AI Tutor?")) {
-      setMessages([
-        { 
-          role: 'assistant', 
-          content: "Chat history cleared! Welcome back to our GES curriculum coaching suite. Select parameters or type below." 
-        }
-      ]);
-      localStorage.removeItem('teachsmart_aitutor_history_v2');
-      toast.success("History successfully cleared!");
+    if (window.confirm("Are you sure you want to perform a hard-reset of the session cache and clear all chat history?")) {
+      // 1. Invalidate any active asynchronously processing requests
+      requestSessionIdRef.current += 1;
+      setLoading(false);
+      
+      // 2. Perform hard-reset of localStorage & sessionStorage keys
+      safeLocalStorage.removeItem('teachsmart_aitutor_history_v2');
+      safeLocalStorage.removeItem('teachsmart_chat_history');
+      safeSessionStorage.clear();
+      
+      // 3. Reset all visual inputs & states
+      setInputMessage('');
+      setTopic('');
+      setMessages(DEFAULT_AITUTOR_MSG);
+      
+      toast.success("Session cache and chat history successfully hard-reset!");
     }
   };
 
@@ -283,9 +309,10 @@ Explain exactly how I can preemptively address and correct them during my instru
             type="button"
             onClick={clearChatHistory}
             className="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 hover:border-red-200 hover:text-red-600 text-slate-600 rounded-xl text-xs font-bold shadow-sm transition-all"
+            title="Perform a hard reset to completely clear raw data and caches"
           >
             <RotateCcw size={14} />
-            Clear Session History
+            Clear All (Hard Reset)
           </button>
         </div>
       </div>

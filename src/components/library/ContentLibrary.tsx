@@ -38,6 +38,7 @@ import { cn } from '../../lib/utils';
 import { subjects, levels, SUBJECT_STRANDS, SUBJECT_SUB_STRANDS } from '../../constants';
 import { toast } from 'react-hot-toast';
 import { ConfirmationModal } from '../common/ConfirmationModal';
+import { safeLocalStorage } from '../../lib/storage';
 
 enum OperationType {
   CREATE = 'create',
@@ -366,7 +367,7 @@ export default function ContentLibrary() {
   const [coverageLevel, setCoverageLevel] = useState('JHS');
   const [checkedIndicators, setCheckedIndicators] = useState<Record<string, boolean>>(() => {
     try {
-      const saved = localStorage.getItem('teachsmart_curriculum_coverage_tracker');
+      const saved = safeLocalStorage.getItem('teachsmart_curriculum_coverage_tracker');
       return saved ? JSON.parse(saved) : {};
     } catch {
       return {};
@@ -375,13 +376,17 @@ export default function ContentLibrary() {
 
   // Whenever checkedIndicators changes, save to localStorage
   useEffect(() => {
-    localStorage.setItem('teachsmart_curriculum_coverage_tracker', JSON.stringify(checkedIndicators));
+    try {
+      safeLocalStorage.setItem('teachsmart_curriculum_coverage_tracker', JSON.stringify(checkedIndicators));
+    } catch (e) {
+      console.error(e);
+    }
   }, [checkedIndicators]);
 
   // Download history tracks (synchronised dynamically with localStorage)
   const [downloadHistoryIds, setDownloadHistoryIds] = useState<string[]>(() => {
     try {
-      const saved = localStorage.getItem('download_history_ids');
+      const saved = safeLocalStorage.getItem('download_history_ids');
       return saved ? JSON.parse(saved) : [];
     } catch {
       return [];
@@ -393,7 +398,11 @@ export default function ContentLibrary() {
     setDownloadHistoryIds(prev => {
       if (prev.includes(resourceId)) return prev;
       const updated = [resourceId, ...prev];
-      localStorage.setItem('download_history_ids', JSON.stringify(updated));
+      try {
+        safeLocalStorage.setItem('download_history_ids', JSON.stringify(updated));
+      } catch (e) {
+        console.error(e);
+      }
       return updated;
     });
   };
@@ -2287,9 +2296,9 @@ export default function ContentLibrary() {
                               toast.success(`Recommended ${rec.type} saved to "My Library" successfully!`);
                             } catch (e) {
                               // Fallback if writing to Firestore has issues (offline etc)
-                              const localResources = JSON.parse(localStorage.getItem('teachsmart_offline_resources') || '[]');
+                              const localResources = JSON.parse(safeLocalStorage.getItem('teachsmart_offline_resources') || '[]');
                               localResources.push({ ...newResObj, id: 'temp-' + Date.now() });
-                              localStorage.setItem('teachsmart_offline_resources', JSON.stringify(localResources));
+                              safeLocalStorage.setItem('teachsmart_offline_resources', JSON.stringify(localResources));
                               toast.success(`Recommended ${rec.type} saved offline successfully!`);
                             }
                           }}

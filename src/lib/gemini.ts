@@ -12,6 +12,8 @@ export const generateLessonPlan = async (prompt: string, teacherInfo?: { school?
     
     CURRICULUM INTEGRITY: You MUST maintain the EXACT names of Strands and Sub-strands provided in the prompt. Do NOT summarize or rephrase them. Use the official codes and titles exactly as they appear in the data provided. Specifically for Science, ensure the strand formerly known as "All Around Us" is always referred to as "Diversity of Matter".
     
+    LESSON OBJECTIVE RULE: You MUST automatically use the selected NaCCA Indicator as the main, primary, and sole Learning Objective of the lesson when generating. Ensure the performance indicator/learning objective is formulated as: 'By the end of the lesson, the learner will be able to: [indicator text].' Do not invent or add secondary goals.
+    
     STRAND PARITY & DISTRIBUTION: When generating schemes or multi-term content, ensure that each Strand of a subject is represented in every term. A bit of every strand should be taught in every term (Term 1, 2, and 3) to ensure continuous engagement.
     
     SUBJECT-SPECIFIC COMPLIANCE:
@@ -368,7 +370,7 @@ ${teacherInfo?.region ? `- Region Name: ${teacherInfo.region}` : ''}
 ==================================================
 STRICT GENERATION RULES
 =======================
-1. Generate notes strictly based on the selected curriculum content.
+1. Generate notes strictly based on the selected curriculum content. Automatically use the selected Indicator as the core learning objective. The learning objectives section inside the notes MUST strictly match and be formulated directly from the selected Indicator (phrased as "By the end of the lesson, the learner will be able to: [Indicator text]").
 2. Use simple and clear language suitable for the learner’s level.
 3. Break difficult concepts into understandable explanations.
 4. Use practical and relatable examples.

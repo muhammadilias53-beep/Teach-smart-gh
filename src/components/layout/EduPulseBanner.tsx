@@ -5,6 +5,7 @@ import { collection, query, where, onSnapshot, orderBy, limit } from 'firebase/f
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../contexts/AuthContext';
 import { cn } from '../../lib/utils';
+import { safeLocalStorage } from '../../lib/storage';
 
 interface Notification {
   id: string;
@@ -41,7 +42,7 @@ export const EduPulseBanner = () => {
         const createdAt = data.createdAt;
         const alertTime = createdAt?.toMillis ? createdAt.toMillis() : Date.now();
         const isFresh = (Date.now() - alertTime) < 604800000; // 7 days (ensure visibility in dev/production)
-        const isDismissed = localStorage.getItem(`dismissed_alert_${doc.id}`) || dismissedSession.includes(doc.id);
+        const isDismissed = safeLocalStorage.getItem(`dismissed_alert_${doc.id}`) || dismissedSession.includes(doc.id);
         
         if (isFresh && !isDismissed) {
           setLatestAlert({ id: doc.id, ...data });
@@ -62,7 +63,7 @@ export const EduPulseBanner = () => {
       const timer = setTimeout(() => {
         setIsVisible(false);
         // Persist the auto-hide as a dismissal so it doesn't reappear until next 7 days
-        localStorage.setItem(`dismissed_alert_${latestAlert.id}`, 'true');
+        safeLocalStorage.setItem(`dismissed_alert_${latestAlert.id}`, 'true');
         setDismissedSession(prev => [...prev, latestAlert.id]);
       }, 20000); // 20 seconds auto-hide
       return () => clearTimeout(timer);
@@ -71,7 +72,7 @@ export const EduPulseBanner = () => {
 
   const handleDismiss = () => {
     if (latestAlert) {
-      localStorage.setItem(`dismissed_alert_${latestAlert.id}`, 'true');
+      safeLocalStorage.setItem(`dismissed_alert_${latestAlert.id}`, 'true');
       setDismissedSession(prev => [...prev, latestAlert.id]);
       setIsVisible(false);
       setLatestAlert(null);
