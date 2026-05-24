@@ -3,7 +3,7 @@ import { motion, animate, AnimatePresence } from 'motion/react';
 import { 
   FileText, Calendar, PenTool, BookOpen, ArrowRight, Zap, 
   Trophy, Package, Activity, Target, Award, TrendingUp, Clock, 
-  ShieldCheck, Heart, CheckCircle
+  ShieldCheck, Heart, CheckCircle, MessageSquare
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
@@ -596,6 +596,29 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Help & Customer Support Section */}
+      <section className="bg-emerald-50/60 rounded-[3rem] p-8 md:p-10 border border-emerald-100/50 flex flex-col md:flex-row items-center justify-between gap-6" id="dashboard-support-section">
+        <div className="flex items-center gap-5">
+          <div className="w-14 h-14 bg-emerald-700 text-white rounded-2xl flex items-center justify-center font-black shadow-md shadow-emerald-900/10 shrink-0">
+            <MessageSquare size={24} />
+          </div>
+          <div>
+            <h3 className="text-lg font-black text-slate-900 uppercase tracking-tight">Need Help or Have a Complaint?</h3>
+            <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mt-1">Get in touch directly with the Admin Team on WhatsApp to launch any complaint or question</p>
+          </div>
+        </div>
+        <a
+          href={`https://wa.me/${((import.meta as any).env.VITE_ADMIN_WHATSAPP || "233543825902").replace(/[^0-9]/g, '')}?text=${encodeURIComponent("Hello TeachSmart Admin, I have a support request/complaint regarding the TeachSmart Ghana application:")}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center gap-2 px-6 py-3.5 bg-emerald-900 text-white hover:bg-emerald-800 transition-all rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-emerald-900/15"
+          id="dashboard-contact-admin-btn"
+        >
+          <span>Contact Admin on WhatsApp</span>
+          <ArrowRight size={14} />
+        </a>
       </section>
 
       {/* Main Preview Work Area */}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MessageSquare, FileText, Calendar, BookOpen, PenTool, CheckCircle, Menu, X, LogOut, LayoutDashboard, CreditCard, Zap, User, Package, Library, ShieldCheck, Bell, Shield } from 'lucide-react';
+import { MessageSquare, MessageCircle, FileText, Calendar, BookOpen, PenTool, CheckCircle, Menu, X, LogOut, LayoutDashboard, CreditCard, Zap, User, Package, Library, ShieldCheck, Bell, Shield } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '../../lib/utils';
@@ -18,6 +18,9 @@ const Sidebar = () => {
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   const isAdmin = user?.email === 'muhammadilias53@gmail.com';
+
+  const whatsappNumber = (import.meta as any).env.VITE_ADMIN_WHATSAPP || "233543825902";
+  const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent("Hello TeachSmart Admin, I have a question/complaint regarding TeachSmart Ghana:")}`;
 
   const menuItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
@@ -75,7 +78,7 @@ const Sidebar = () => {
       </nav>
 
       {/* Compliance Link */}
-      <div className="px-4 mb-4">
+      <div className="px-4 mb-2">
         <button
           onClick={() => setShowCompliance(true)}
           className="flex items-center gap-3 w-full px-4 py-3 bg-emerald-50 text-emerald-700 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-emerald-100 hover:bg-emerald-100 transition-all group"
@@ -83,6 +86,20 @@ const Sidebar = () => {
           <ShieldCheck size={14} className="group-hover:rotate-12 transition-transform" />
           <span>Curriculum Compliance</span>
         </button>
+      </div>
+
+      {/* Contact Admin / WhatsApp Link */}
+      <div className="px-4 mb-4" id="sidebar-contact-admin-container">
+        <a
+          id="sidebar-contact-admin-link"
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-3 w-full px-4 py-3 bg-green-50/70 text-green-800 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-green-100 hover:bg-green-100/80 transition-all group shadow-sm"
+        >
+          <MessageCircle size={14} className="group-hover:rotate-12 transition-transform text-green-600" />
+          <span>Contact Admin</span>
+        </a>
       </div>
 
       <div className="px-4 mt-auto pt-8 border-t border-slate-100">
