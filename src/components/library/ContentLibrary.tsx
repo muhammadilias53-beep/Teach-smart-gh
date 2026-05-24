@@ -35,10 +35,11 @@ import { useAuth } from '../../contexts/AuthContext';
 import { Resource } from '../../types';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../../lib/utils';
-import { subjects, levels, SUBJECT_STRANDS, SUBJECT_SUB_STRANDS } from '../../constants';
+import { subjects, levels, CLASSES_BY_LEVEL, SUBJECT_STRANDS, SUBJECT_SUB_STRANDS } from '../../constants';
 import { toast } from 'react-hot-toast';
 import { ConfirmationModal } from '../common/ConfirmationModal';
 import { safeLocalStorage } from '../../lib/storage';
+import { Link } from 'react-router-dom';
 
 enum OperationType {
   CREATE = 'create',
@@ -333,6 +334,127 @@ const OFFICIAL_SYSTEM_RESOURCES: Omit<Resource, 'createdAt'>[] = [
   }
 ];
 
+interface SchemeParseResult {
+  id: string;
+  strand: string;
+  subStrand: string;
+  indicatorCode: string;
+  indicatorText: string;
+  lessonTopic: string;
+  week: string;
+  term: string;
+}
+
+const getTermForSubStrand = (strand: string, subStrand: string): string => {
+  const sum = (strand || '').length + (subStrand || '').length;
+  const rem = sum % 3;
+  if (rem === 0) return 'Term 1';
+  if (rem === 1) return 'Term 2';
+  return 'Term 3';
+};
+
+function parseSchemeMarkdown(content: string): SchemeParseResult[] {
+  if (!content) return [];
+  const lines = content.split('\n');
+  let currentStrand = 'General';
+  let currentSubStrand = 'General';
+  let currentTerm = 'Term 1';
+  const results: SchemeParseResult[] = [];
+  
+  let inTable = false;
+  let headers: string[] = [];
+  
+  for (let line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed) continue;
+    
+    // Check if line indicates a Term
+    const termHeadMatch = trimmed.match(/###?\s*(Term\s*[1-3])/i);
+    if (termHeadMatch && termHeadMatch[1]) {
+      const tNum = termHeadMatch[1].replace(/[^0-9]/g, '');
+      currentTerm = `Term ${tNum}`;
+    }
+    
+    if (trimmed.startsWith('|')) {
+      const parts = trimmed.split('|').map(p => p.trim()).filter((_p, i, arr) => i > 0 && i < arr.length - 1);
+      
+      // Separator line
+      if (parts.every(p => p.startsWith('-') || p === '')) {
+        continue;
+      }
+      
+      const lowerParts = parts.map(p => p.toLowerCase());
+      // Header line identification
+      if (lowerParts.includes('week') || lowerParts.includes('strand') || lowerParts.includes('sub-strand') || lowerParts.includes('sub strand') || lowerParts.includes('substrand') || lowerParts.includes('indicator') || lowerParts.includes('lesson topic') || lowerParts.includes('topic') || lowerParts.includes('subject matter')) {
+        headers = lowerParts;
+        inTable = true;
+        continue;
+      }
+      
+      if (inTable && parts.length > 0 && headers.length > 0) {
+        const getColumnVal = (keywords: string[]) => {
+          const idx = headers.findIndex(h => keywords.some(k => h.includes(k)));
+          return idx !== -1 && idx < parts.length ? parts[idx] : '';
+        };
+        
+        const week = getColumnVal(['week', 'period']) || `Row ${results.length + 1}`;
+        const strand = getColumnVal(['strand']) || '';
+        const subStrand = getColumnVal(['sub-strand', 'sub strand', 'substrand']) || '';
+        const contentStandard = getColumnVal(['content standard', 'standard', 'code']) || '';
+        const indicator = getColumnVal(['indicator']) || '';
+        const topic = getColumnVal(['topic', 'lesson', 'subject matter']) || '';
+        
+        if (strand) currentStrand = strand;
+        if (subStrand) currentSubStrand = subStrand;
+        
+        let rowTerm = currentTerm;
+        if (week.toLowerCase().includes('term 2') || week.toLowerCase().includes('t2')) {
+          rowTerm = 'Term 2';
+        } else if (week.toLowerCase().includes('term 3') || week.toLowerCase().includes('t3')) {
+          rowTerm = 'Term 3';
+        } else if (week.toLowerCase().includes('term 1') || week.toLowerCase().includes('t1')) {
+          rowTerm = 'Term 1';
+        } else {
+          // Check numerical week values as fallback for full year
+          const weekNumMatch = week.match(/\d+/);
+          if (weekNumMatch) {
+            const wNum = parseInt(weekNumMatch[0], 10);
+            if (wNum > 12 && wNum <= 24) {
+              rowTerm = 'Term 2';
+            } else if (wNum > 24) {
+              rowTerm = 'Term 3';
+            }
+          }
+        }
+        
+        const indicatorText = indicator || topic || `Lesson Indicator for ${currentSubStrand}`;
+        const indicatorCode = contentStandard || `${currentStrand.substring(0,2).toUpperCase()}.${currentSubStrand.substring(0,2).toUpperCase()}.${results.length + 1}`;
+        
+        results.push({
+          id: `sch_${results.length}`,
+          strand: currentStrand,
+          subStrand: currentSubStrand,
+          indicatorCode,
+          indicatorText,
+          lessonTopic: topic || 'General Topic',
+          week,
+          term: rowTerm
+        });
+      }
+    } else {
+      const strandMatch = trimmed.match(/^###?\s*(?:Strand\s*\d*\s*:?)\s*(.*)/i);
+      if (strandMatch && strandMatch[1]) {
+        currentStrand = strandMatch[1].trim();
+      }
+      const subStrandMatch = trimmed.match(/^####?\s*(?:Sub-Strand\s*\d*\s*:?)\s*(.*)/i);
+      if (subStrandMatch && subStrandMatch[1]) {
+        currentSubStrand = subStrandMatch[1].trim();
+      }
+    }
+  }
+  return results;
+}
+
 export default function ContentLibrary() {
   const { user } = useAuth();
   const [resources, setResources] = useState<Resource[]>([]);
@@ -365,6 +487,10 @@ export default function ContentLibrary() {
   // Curriculum Coverage states
   const [coverageSubject, setCoverageSubject] = useState('Science');
   const [coverageLevel, setCoverageLevel] = useState('JHS');
+  const [coverageClass, setCoverageClass] = useState('All');
+  const [coverageTerm, setCoverageTerm] = useState('All');
+  const [selectedSchemeId, setSelectedSchemeId] = useState<string>('default-blueprint');
+  const [userSchemes, setUserSchemes] = useState<any[]>([]);
   const [checkedIndicators, setCheckedIndicators] = useState<Record<string, boolean>>(() => {
     try {
       const saved = safeLocalStorage.getItem('teachsmart_curriculum_coverage_tracker');
@@ -435,12 +561,18 @@ export default function ContentLibrary() {
   });
 
   useEffect(() => {
-    async function testConnection() {
+    async function testConnection(retries = 3, delay = 1000) {
       try {
         await getDocFromServer(doc(db, 'test', 'connection'));
       } catch (error) {
-        if (error instanceof Error && error.message.includes('the client is offline')) {
-          console.error("Please check your Firebase configuration.");
+        if (retries > 0) {
+          setTimeout(() => {
+            testConnection(retries - 1, delay * 1.5);
+          }, delay);
+        } else {
+          if (error instanceof Error && error.message.includes('the client is offline')) {
+            console.error("Please check your Firebase configuration.");
+          }
         }
       }
     }
@@ -506,9 +638,26 @@ export default function ContentLibrary() {
       handleFirestoreError(error, OperationType.GET, 'saved_resources');
     });
 
+    // Fetch user schemes
+    const schemesQ = query(
+      collection(db, 'schemes'),
+      where('authorId', '==', user.uid),
+      orderBy('createdAt', 'desc')
+    );
+    const unsubscribeSchemes = onSnapshot(schemesQ, (snapshot) => {
+      const userSchemesData = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setUserSchemes(userSchemesData);
+    }, (error) => {
+      console.error("Error fetching schemes in tracker:", error);
+    });
+
     return () => {
       unsubscribe();
       unsubscribeFavs();
+      unsubscribeSchemes();
     };
   }, [user]);
 
@@ -1533,31 +1682,116 @@ export default function ContentLibrary() {
             <div className="relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
               <div className="space-y-4">
                 <span className="px-3 py-1 bg-emerald-500/20 text-emerald-400 font-black text-[9px] uppercase tracking-widest rounded-lg border border-emerald-500/30">
-                  NaCCA Curriculum Tracker
+                  NaCCA Curriculum Tracker & Coverage
                 </span>
-                <h2 className="text-3xl font-black tracking-tight leading-none">Yearly Teaching Progress</h2>
+                <h2 className="text-3xl font-black tracking-tight leading-none">Classroom Progress Tracker</h2>
                 <p className="text-slate-400 text-sm font-medium">
                   Track covered indicators, completed strands, remaining curriculum content, and academic progress for the year.
                 </p>
-                <div className="flex gap-4 pt-2">
+                
+                <div className="grid grid-cols-2 gap-4 pt-2">
                   <div className="space-y-1">
                     <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Select Subject</label>
                     <select
                       value={coverageSubject}
-                      onChange={(e) => setCoverageSubject(e.target.value)}
-                      className="bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-2.5 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      onChange={(e) => {
+                        setCoverageSubject(e.target.value);
+                        setSelectedSchemeId('default-blueprint');
+                      }}
+                      className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-3 py-2 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     >
                       {subjects.map(s => <option key={s} value={s}>{s}</option>)}
                     </select>
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Select Level</label>
+                    <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Select Stage</label>
                     <select
                       value={coverageLevel}
-                      onChange={(e) => setCoverageLevel(e.target.value)}
-                      className="bg-slate-800 border border-slate-700 text-white rounded-xl px-4 py-2.5 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      onChange={(e) => {
+                        const newLvl = e.target.value;
+                        setCoverageLevel(newLvl);
+                        setSelectedSchemeId('default-blueprint');
+                        const classes = CLASSES_BY_LEVEL[newLvl] || [];
+                        setCoverageClass(classes[0] || 'All');
+                      }}
+                      className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-3 py-2 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     >
                       {levels.map(l => <option key={l} value={l}>{l === 'All' ? 'JHS' : l}</option>)}
+                    </select>
+                  </div>
+                  
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Class Level</label>
+                    <select
+                      value={coverageClass}
+                      onChange={(e) => {
+                        setCoverageClass(e.target.value);
+                        setSelectedSchemeId('default-blueprint');
+                      }}
+                      className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-3 py-2 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    >
+                      <option value="All">All Classes</option>
+                      {(CLASSES_BY_LEVEL[coverageLevel] || CLASSES_BY_LEVEL['JHS']).map(c => (
+                        <option key={c} value={c}>{c}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Select Term</label>
+                    <select
+                      value={coverageTerm}
+                      onChange={(e) => setCoverageTerm(e.target.value)}
+                      className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-3 py-2 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    >
+                      <option value="All">All Terms Progress</option>
+                      <option value="Term 1">Term 1 (Weeks 1-12)</option>
+                      <option value="Term 2">Term 2 (Weeks 13-24)</option>
+                      <option value="Term 3">Term 3 (Weeks 25-36)</option>
+                    </select>
+                  </div>
+
+                  <div className="col-span-2 space-y-1">
+                    <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest bg-slate-800/80 text-emerald-400 px-2 py-0.5 rounded">Tracking reference Source</label>
+                    <select
+                      value={selectedSchemeId}
+                      onChange={(e) => {
+                        const schemeId = e.target.value;
+                        setSelectedSchemeId(schemeId);
+                        if (schemeId !== 'default-blueprint') {
+                          const sch = userSchemes.find(s => s.id === schemeId);
+                          if (sch) {
+                            if (sch.subject) setCoverageSubject(sch.subject);
+                            if (sch.level) setCoverageLevel(sch.level);
+                            if (sch.class) setCoverageClass(sch.class);
+                            if (sch.type === 'termly' && sch.term) {
+                              setCoverageTerm(sch.term);
+                            }
+                          }
+                        }
+                      }}
+                      className="w-full bg-emerald-950/80 border border-emerald-800 text-white rounded-xl px-3 py-2.5 text-xs font-black tracking-wide focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    >
+                      <option value="default-blueprint">📖 Standard NaCCA Curriculum Blueprint</option>
+                      {userSchemes
+                        .filter(sch => sch.subject === coverageSubject || coverageSubject === 'All')
+                        .map(sch => (
+                          <option key={sch.id} value={sch.id}>
+                            🗓️ Scheme of Work: {sch.title} ({sch.class})
+                          </option>
+                        ))
+                      }
+                      {userSchemes.some(sch => sch.subject !== coverageSubject) && (
+                        <optgroup label="Other Saved Schemes">
+                          {userSchemes
+                            .filter(sch => sch.subject !== coverageSubject)
+                            .map(sch => (
+                              <option key={sch.id} value={sch.id}>
+                                🗓️ {sch.title} ({sch.subject})
+                              </option>
+                            ))
+                          }
+                        </optgroup>
+                      )}
                     </select>
                   </div>
                 </div>
@@ -1567,28 +1801,53 @@ export default function ContentLibrary() {
               <div className="lg:col-span-2 grid grid-cols-2 sm:grid-cols-3 gap-6">
                 {/* Progress Circle card */}
                 {(() => {
-                  // Compile counts
-                  const strands = SUBJECT_STRANDS[coverageSubject] || [];
                   let totalCount = 0;
                   let checkedCount = 0;
-                  
-                  strands.forEach(strand => {
-                    const subStrands = SUBJECT_SUB_STRANDS[strand] || [strand];
-                    subStrands.forEach(subStrand => {
-                      const indicators = [
-                        { id: `${coverageLevel}_${strand}_${subStrand}_1`, code: `${coverageLevel === 'All' ? 'JHS' : coverageLevel}.${strand.substring(0,2).toUpperCase()}.${subStrand.substring(0,2).toUpperCase()}.1.1`, text: `Understand key definitions & models of ${subStrand}` },
-                        { id: `${coverageLevel}_${strand}_${subStrand}_2`, code: `${coverageLevel === 'All' ? 'JHS' : coverageLevel}.${strand.substring(0,2).toUpperCase()}.${subStrand.substring(0,2).toUpperCase()}.1.2`, text: `Analyze operations and practical demonstrations of ${subStrand}` },
-                        { id: `${coverageLevel}_${strand}_${subStrand}_3`, code: `${coverageLevel === 'All' ? 'JHS' : coverageLevel}.${strand.substring(0,2).toUpperCase()}.${subStrand.substring(0,2).toUpperCase()}.1.3`, text: `Evaluate competency tasks and classroom projects on ${subStrand}` }
-                      ];
-                      
-                      indicators.forEach(ind => {
-                        totalCount++;
-                        if (checkedIndicators[ind.id]) {
-                          checkedCount++;
-                        }
+
+                  const activeScheme = selectedSchemeId !== 'default-blueprint' 
+                    ? userSchemes.find(s => s.id === selectedSchemeId) 
+                    : null;
+
+                  if (activeScheme) {
+                    const parsed = parseSchemeMarkdown(activeScheme.content).filter(item => {
+                      return coverageTerm === 'All' || item.term === coverageTerm;
+                    });
+                    
+                    parsed.forEach((item, index) => {
+                      totalCount++;
+                      const indId = `scheme_${activeScheme.id}_${item.strand}_${item.subStrand}_${index}`;
+                      if (checkedIndicators[indId]) {
+                        checkedCount++;
+                      }
+                    });
+                  } else {
+                    const strands = SUBJECT_STRANDS[coverageSubject] || [];
+                    strands.forEach(strand => {
+                      const subStrands = (SUBJECT_SUB_STRANDS[strand] || [strand]).filter(sub => {
+                        if (coverageTerm === 'All') return true;
+                        return getTermForSubStrand(strand, sub) === coverageTerm;
+                      });
+
+                      subStrands.forEach(subStrand => {
+                        const classPrefix = coverageClass === 'All' 
+                          ? (coverageLevel === 'All' ? 'B7' : (coverageLevel === 'JHS' ? 'B7' : coverageLevel === 'Primary' ? 'B1' : 'B10'))
+                          : (coverageClass === 'KG 1' ? 'KG1' : coverageClass === 'KG 2' ? 'KG2' : coverageClass === 'Basic 1' ? 'B1' : coverageClass === 'Basic 2' ? 'B2' : coverageClass === 'Basic 3' ? 'B3' : coverageClass === 'Basic 4' ? 'B4' : coverageClass === 'Basic 5' ? 'B5' : coverageClass === 'Basic 6' ? 'B6' : coverageClass === 'Basic 7' ? 'B7' : coverageClass === 'Basic 8' ? 'B8' : coverageClass === 'Basic 9' ? 'B9' : 'B12');
+
+                        const indicators = [
+                          { id: `${coverageLevel}_${coverageClass}_${coverageTerm}_${strand}_${subStrand}_1`, code: `${classPrefix}.${strand.substring(0,2).toUpperCase()}.${subStrand.substring(0,2).toUpperCase()}.1.1`, text: `Understand key definitions & models of ${subStrand}` },
+                          { id: `${coverageLevel}_${coverageClass}_${coverageTerm}_${strand}_${subStrand}_2`, code: `${classPrefix}.${strand.substring(0,2).toUpperCase()}.${subStrand.substring(0,2).toUpperCase()}.1.2`, text: `Analyze operations and practical demonstrations of ${subStrand}` },
+                          { id: `${coverageLevel}_${coverageClass}_${coverageTerm}_${strand}_${subStrand}_3`, code: `${classPrefix}.${strand.substring(0,2).toUpperCase()}.${subStrand.substring(0,2).toUpperCase()}.1.3`, text: `Evaluate competency tasks and classroom projects on ${subStrand}` }
+                        ];
+
+                        indicators.forEach(ind => {
+                          totalCount++;
+                          if (checkedIndicators[ind.id]) {
+                            checkedCount++;
+                          }
+                        });
                       });
                     });
-                  });
+                  }
                   
                   const percentage = totalCount > 0 ? Math.round((checkedCount / totalCount) * 100) : 0;
                   
@@ -1639,108 +1898,172 @@ export default function ContentLibrary() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Strands and Sub-strands List (Interactive) */}
             <div className="lg:col-span-2 space-y-6">
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-black text-slate-900 uppercase tracking-tight flex items-center gap-2">
-                  <FolderOpen size={18} className="text-emerald-600" />
-                  Curriculum Tree & Indication List
-                </h3>
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (window.confirm("Are you sure you want to reset all tracking progress for this subject?")) {
-                      const updated = { ...checkedIndicators };
-                      const strands = SUBJECT_STRANDS[coverageSubject] || [];
-                      strands.forEach(strand => {
-                        const subStrands = SUBJECT_SUB_STRANDS[strand] || [strand];
-                        subStrands.forEach(subStrand => {
-                          delete updated[`${coverageLevel}_${strand}_${subStrand}_1`];
-                          delete updated[`${coverageLevel}_${strand}_${subStrand}_2`];
-                          delete updated[`${coverageLevel}_${strand}_${subStrand}_3`];
-                        });
-                      });
-                      setCheckedIndicators(updated);
-                      toast.success("Progress reset successfully!");
-                    }
-                  }}
-                  className="px-4 py-2 border border-slate-200 hover:border-red-200 hover:text-red-600 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-400 transition-colors"
-                >
-                  Reset Progress
-                </button>
-              </div>
+              {(() => {
+                const activeScheme = selectedSchemeId !== 'default-blueprint' 
+                  ? userSchemes.find(s => s.id === selectedSchemeId) 
+                  : null;
 
-              <div className="space-y-4">
-                {(SUBJECT_STRANDS[coverageSubject] || []).map((strand, strandIdx) => {
-                  const subStrands = SUBJECT_SUB_STRANDS[strand] || [strand];
-                  return (
-                    <div key={strand} className="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-6 space-y-4">
-                      <div className="flex items-center gap-3 pb-3 border-b border-slate-50">
-                        <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-sm">
-                          {strandIdx + 1}
+                const parsedRows = activeScheme 
+                  ? parseSchemeMarkdown(activeScheme.content).filter(item => coverageTerm === 'All' || item.term === coverageTerm)
+                  : [];
+
+                const displayStrands = activeScheme 
+                  ? Array.from(new Set(parsedRows.map(p => p.strand)))
+                  : (SUBJECT_STRANDS[coverageSubject] || []);
+
+                return (
+                  <>
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-sm font-black text-slate-900 uppercase tracking-tight flex items-center gap-2">
+                        <FolderOpen size={18} className="text-emerald-600" />
+                        {activeScheme ? `Indicators for ${activeScheme.title}` : `Standard NaCCA Curriculum Blueprint List`}
+                      </h3>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (window.confirm("Are you sure you want to reset all tracking progress for this reference?")) {
+                            const updated = { ...checkedIndicators };
+                            if (activeScheme) {
+                              Object.keys(updated).forEach(key => {
+                                if (key.startsWith(`scheme_${activeScheme.id}`)) {
+                                  delete updated[key];
+                                }
+                              });
+                            } else {
+                              const strands = SUBJECT_STRANDS[coverageSubject] || [];
+                              strands.forEach(strand => {
+                                const subStrands = (SUBJECT_SUB_STRANDS[strand] || [strand]);
+                                subStrands.forEach(subStrand => {
+                                  delete updated[`${coverageLevel}_${coverageClass}_${coverageTerm}_${strand}_${subStrand}_1`];
+                                  delete updated[`${coverageLevel}_${coverageClass}_${coverageTerm}_${strand}_${subStrand}_2`];
+                                  delete updated[`${coverageLevel}_${coverageClass}_${coverageTerm}_${strand}_${subStrand}_3`];
+                                });
+                              });
+                            }
+                            setCheckedIndicators(updated);
+                            toast.success("Progress reset successfully!");
+                          }
+                        }}
+                        className="px-4 py-2 border border-slate-200 hover:border-red-200 hover:text-red-600 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-400 transition-colors"
+                      >
+                        Reset Reference Progress
+                      </button>
+                    </div>
+
+                    <div className="space-y-4">
+                      {displayStrands.length === 0 ? (
+                        <div className="bg-white rounded-3xl p-12 text-center border border-slate-100 text-slate-400 font-bold uppercase text-xs">
+                          No strands found for the selected Stage, Class, or Term combination.
                         </div>
-                        <div>
-                          <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Strand {strandIdx + 1}</p>
-                          <h4 className="font-black text-slate-900 text-sm uppercase">{strand}</h4>
-                        </div>
-                      </div>
+                      ) : (
+                        displayStrands.map((strand, strandIdx) => {
+                          const subStrands = activeScheme
+                            ? Array.from(new Set(parsedRows.filter(p => p.strand === strand).map(p => p.subStrand)))
+                            : (SUBJECT_SUB_STRANDS[strand] || [strand]).filter(sub => {
+                                if (coverageTerm === 'All') return true;
+                                return getTermForSubStrand(strand, sub) === coverageTerm;
+                              });
 
-                      <div className="space-y-4 pt-2">
-                        {subStrands.map(subStrand => {
-                          const indicators = [
-                            { id: `${coverageLevel}_${strand}_${subStrand}_1`, code: `${coverageLevel === 'All' ? 'JHS' : coverageLevel}.${strand.substring(0,2).toUpperCase()}.${subStrand.substring(0,2).toUpperCase()}.1.1`, text: `Understand key definitions & models of ${subStrand}` },
-                            { id: `${coverageLevel}_${strand}_${subStrand}_2`, code: `${coverageLevel === 'All' ? 'JHS' : coverageLevel}.${strand.substring(0,2).toUpperCase()}.${subStrand.substring(0,2).toUpperCase()}.1.2`, text: `Analyze operations and practical demonstrations of ${subStrand}` },
-                            { id: `${coverageLevel}_${strand}_${subStrand}_3`, code: `${coverageLevel === 'All' ? 'JHS' : coverageLevel}.${strand.substring(0,2).toUpperCase()}.${subStrand.substring(0,2).toUpperCase()}.1.3`, text: `Evaluate competency tasks and classroom projects on ${subStrand}` }
-                          ];
-
-                          const coveredCountInSubStrand = indicators.filter(ind => checkedIndicators[ind.id]).length;
-                          const subPercentage = Math.round((coveredCountInSubStrand / indicators.length) * 100);
+                          if (subStrands.length === 0) return null;
 
                           return (
-                            <div key={subStrand} className="pl-4 border-l-2 border-slate-100 focus-within:border-emerald-500 transition-colors space-y-3">
-                              <div className="flex justify-between items-center">
-                                <h5 className="font-black text-slate-700 text-xs uppercase">{subStrand}</h5>
-                                <span className={cn(
-                                  "px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-widest",
-                                  subPercentage === 100 ? "bg-emerald-100 text-emerald-800" : subPercentage > 0 ? "bg-amber-100 text-amber-800" : "bg-slate-100 text-slate-500"
-                                )}>
-                                  {subPercentage}% Done
-                                </span>
+                            <div key={strand} className="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-6 space-y-4">
+                              <div className="flex items-center gap-3 pb-3 border-b border-slate-50">
+                                <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-sm">
+                                  {strandIdx + 1}
+                                </div>
+                                <div>
+                                  <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Strand {strandIdx + 1}</p>
+                                  <h4 className="font-black text-slate-900 text-sm uppercase">{strand}</h4>
+                                </div>
                               </div>
 
-                              <div className="space-y-2">
-                                {indicators.map(ind => (
-                                  <label
-                                    key={ind.id}
-                                    className="flex items-start gap-3 p-3 bg-slate-50 hover:bg-emerald-50/20 rounded-xl cursor-pointer border border-slate-100 hover:border-emerald-100 transition-all text-xs text-slate-600 font-medium"
-                                  >
-                                    <input
-                                      type="checkbox"
-                                      checked={!!checkedIndicators[ind.id]}
-                                      onChange={(e) => {
-                                        setCheckedIndicators({
-                                          ...checkedIndicators,
-                                          [ind.id]: e.target.checked
-                                        });
-                                        if (e.target.checked) {
-                                          toast.success(`Marked as Covered: ${ind.code}`);
-                                        }
-                                      }}
-                                      className="mt-0.5 h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
-                                    />
-                                    <div className="space-y-0.5">
-                                      <code className="text-[9px] font-black text-emerald-700 uppercase bg-emerald-50 px-1.5 py-0.5 rounded">{ind.code}</code>
-                                      <p>{ind.text}</p>
+                              <div className="space-y-4 pt-2">
+                                {subStrands.map(subStrand => {
+                                  const indicators = activeScheme
+                                    ? parsedRows
+                                        .filter(p => p.strand === strand && p.subStrand === subStrand)
+                                        .map((p, index) => ({
+                                          id: `scheme_${activeScheme.id}_${p.strand}_${p.subStrand}_${index}`,
+                                          code: p.indicatorCode || p.week,
+                                          text: p.indicatorText || p.lessonTopic,
+                                          week: p.week,
+                                          lessonTopic: p.lessonTopic
+                                        }))
+                                    : (() => {
+                                        const classPrefix = coverageClass === 'All' 
+                                          ? (coverageLevel === 'All' ? 'B7' : (coverageLevel === 'JHS' ? 'B7' : coverageLevel === 'Primary' ? 'B1' : 'B10'))
+                                          : (coverageClass === 'KG 1' ? 'KG1' : coverageClass === 'KG 2' ? 'KG2' : coverageClass === 'Basic 1' ? 'B1' : coverageClass === 'Basic 2' ? 'B2' : coverageClass === 'Basic 3' ? 'B3' : coverageClass === 'Basic 4' ? 'B4' : coverageClass === 'Basic 5' ? 'B5' : coverageClass === 'Basic 6' ? 'B6' : coverageClass === 'Basic 7' ? 'B7' : coverageClass === 'Basic 8' ? 'B8' : coverageClass === 'Basic 9' ? 'B9' : 'B12');
+
+                                        return [
+                                          { id: `${coverageLevel}_${coverageClass}_${coverageTerm}_${strand}_${subStrand}_1`, code: `${classPrefix}.${strand.substring(0,2).toUpperCase()}.${subStrand.substring(0,2).toUpperCase()}.1.1`, text: `Understand definitions, concepts & terms of ${subStrand}` },
+                                          { id: `${coverageLevel}_${coverageClass}_${coverageTerm}_${strand}_${subStrand}_2`, code: `${classPrefix}.${strand.substring(0,2).toUpperCase()}.${subStrand.substring(0,2).toUpperCase()}.1.2`, text: `Analyze operations, models and practical use of ${subStrand}` },
+                                          { id: `${coverageLevel}_${coverageClass}_${coverageTerm}_${strand}_${subStrand}_3`, code: `${classPrefix}.${strand.substring(0,2).toUpperCase()}.${subStrand.substring(0,2).toUpperCase()}.1.3`, text: `Evaluate competency tasks and assessments on ${subStrand}` }
+                                        ];
+                                      })();
+
+                                  const coveredCountInSubStrand = indicators.filter(ind => checkedIndicators[ind.id]).length;
+                                  const subPercentage = indicators.length > 0 ? Math.round((coveredCountInSubStrand / indicators.length) * 100) : 0;
+
+                                  return (
+                                    <div key={subStrand} className="pl-4 border-l-2 border-slate-100 focus-within:border-emerald-500 transition-colors space-y-3">
+                                      <div className="flex justify-between items-center">
+                                        <h5 className="font-black text-slate-700 text-xs uppercase">{subStrand}</h5>
+                                        <span className={cn(
+                                          "px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-widest",
+                                          subPercentage === 100 ? "bg-emerald-100 text-emerald-800" : subPercentage > 0 ? "bg-amber-100 text-amber-800" : "bg-slate-100 text-slate-500"
+                                        )}>
+                                          {subPercentage}% Done
+                                        </span>
+                                      </div>
+
+                                      <div className="space-y-2">
+                                        {indicators.map(ind => (
+                                          <label
+                                            key={ind.id}
+                                            className="flex items-start gap-3 p-3 bg-slate-50 hover:bg-emerald-50/20 rounded-xl cursor-pointer border border-slate-100 hover:border-emerald-100 transition-all text-xs text-slate-600 font-medium"
+                                          >
+                                            <input
+                                              type="checkbox"
+                                              checked={!!checkedIndicators[ind.id]}
+                                              onChange={(e) => {
+                                                setCheckedIndicators({
+                                                  ...checkedIndicators,
+                                                  [ind.id]: e.target.checked
+                                                });
+                                                if (e.target.checked) {
+                                                  toast.success(`Marked as Covered: ${ind.code}`);
+                                                }
+                                              }}
+                                              className="mt-0.5 h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                                            />
+                                            <div className="space-y-0.5">
+                                              <div className="flex items-center gap-2">
+                                                <code className="text-[9px] font-black text-emerald-700 uppercase bg-emerald-50 px-1.5 py-0.5 rounded mr-1 inline-block shrink-0">{ind.code}</code>
+                                                {'week' in ind && (
+                                                  <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest shrink-0">{String(ind.week).toUpperCase()}</span>
+                                                )}
+                                              </div>
+                                              <p className="text-slate-700 mt-1">{ind.text}</p>
+                                              {'lessonTopic' in ind && ind.lessonTopic && ind.lessonTopic !== 'General Topic' && (
+                                                <p className="text-[10px] text-slate-400 font-bold uppercase mt-1">Topic: {String(ind.lessonTopic)}</p>
+                                              )}
+                                            </div>
+                                          </label>
+                                        ))}
+                                      </div>
                                     </div>
-                                  </label>
-                                ))}
+                                  );
+                                })}
                               </div>
                             </div>
                           );
-                        })}
-                      </div>
+                        })
+                      )}
                     </div>
-                  );
-                })}
-              </div>
+                  </>
+                );
+              })()}
             </div>
 
             {/* Pending Topics & Action suggestions */}
@@ -1754,26 +2077,64 @@ export default function ContentLibrary() {
                 
                 <div className="space-y-3">
                   {(() => {
-                    const strands = SUBJECT_STRANDS[coverageSubject] || [];
+                    const activeScheme = selectedSchemeId !== 'default-blueprint' 
+                      ? userSchemes.find(s => s.id === selectedSchemeId) 
+                      : null;
+
+                    const parsedRows = activeScheme 
+                      ? parseSchemeMarkdown(activeScheme.content).filter(item => coverageTerm === 'All' || item.term === coverageTerm)
+                      : [];
+
                     const pendingList: { strand: string; subStrand: string; code: string }[] = [];
-                    strands.forEach(strand => {
-                      const subStrands = SUBJECT_SUB_STRANDS[strand] || [strand];
-                      subStrands.forEach(subStrand => {
-                        const totalIds = [
-                          `${coverageLevel}_${strand}_${subStrand}_1`,
-                          `${coverageLevel}_${strand}_${subStrand}_2`,
-                          `${coverageLevel}_${strand}_${subStrand}_3`
-                        ];
-                        const allCovered = totalIds.every(id => checkedIndicators[id]);
-                        if (!allCovered) {
-                          pendingList.push({
-                            strand,
-                            subStrand,
-                            code: `${coverageLevel === 'All' ? 'JHS' : coverageLevel}.${strand.substring(0,2).toUpperCase()}.${subStrand.substring(0,2).toUpperCase()}`
-                          });
-                        }
+                    
+                    if (activeScheme) {
+                      const displayStrands = Array.from(new Set(parsedRows.map(p => p.strand)));
+                      displayStrands.forEach(strand => {
+                        const subStrands = Array.from(new Set(parsedRows.filter(p => p.strand === strand).map(p => p.subStrand)));
+                        subStrands.forEach(subStrand => {
+                          const indicators = parsedRows
+                            .filter(p => p.strand === strand && p.subStrand === subStrand)
+                            .map((p, index) => `scheme_${activeScheme.id}_${p.strand}_${p.subStrand}_${index}`);
+                          
+                          const allCovered = indicators.every(id => checkedIndicators[id]);
+                          if (!allCovered) {
+                            pendingList.push({
+                              strand,
+                              subStrand,
+                              code: `WKW`
+                            });
+                          }
+                        });
                       });
-                    });
+                    } else {
+                      const strands = SUBJECT_STRANDS[coverageSubject] || [];
+                      strands.forEach(strand => {
+                        const subStrands = (SUBJECT_SUB_STRANDS[strand] || [strand]).filter(sub => {
+                          if (coverageTerm === 'All') return true;
+                          return getTermForSubStrand(strand, sub) === coverageTerm;
+                        });
+
+                        subStrands.forEach(subStrand => {
+                          const totalIds = [
+                            `${coverageLevel}_${coverageClass}_${coverageTerm}_${strand}_${subStrand}_1`,
+                            `${coverageLevel}_${coverageClass}_${coverageTerm}_${strand}_${subStrand}_2`,
+                            `${coverageLevel}_${coverageClass}_${coverageTerm}_${strand}_${subStrand}_3`
+                          ];
+                          const allCovered = totalIds.every(id => checkedIndicators[id]);
+                          if (!allCovered) {
+                            const classPrefix = coverageClass === 'All' 
+                              ? (coverageLevel === 'All' ? 'B7' : (coverageLevel === 'JHS' ? 'B7' : coverageLevel === 'Primary' ? 'B1' : 'B10'))
+                              : (coverageClass === 'KG 1' ? 'KG1' : coverageClass === 'KG 2' ? 'KG2' : coverageClass === 'Basic 1' ? 'B1' : coverageClass === 'Basic 2' ? 'B2' : coverageClass === 'Basic 3' ? 'B3' : coverageClass === 'Basic 4' ? 'B4' : coverageClass === 'Basic 5' ? 'B5' : coverageClass === 'Basic 6' ? 'B6' : coverageClass === 'Basic 7' ? 'B7' : coverageClass === 'Basic 8' ? 'B8' : coverageClass === 'Basic 9' ? 'B9' : 'B12');
+
+                            pendingList.push({
+                              strand,
+                              subStrand,
+                              code: `${classPrefix}.${strand.substring(0,2).toUpperCase()}.${subStrand.substring(0,2).toUpperCase()}`
+                            });
+                          }
+                        });
+                      });
+                    }
 
                     if (pendingList.length === 0) {
                       return (
@@ -1797,18 +2158,18 @@ export default function ContentLibrary() {
               </div>
 
               {/* Action Board (Fast Preparation) */}
-              <div className="bg-emerald-950 text-white p-6 rounded-[2rem] shadow-xl space-y-4 relative overflow-hiddenborder border-emerald-900">
+              <div className="bg-emerald-950 text-white p-6 rounded-[2rem] shadow-xl space-y-4 relative overflow-hidden border border-emerald-900">
                 <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full blur-2xl" />
                 <h4 className="text-xs font-black uppercase tracking-widest text-[10px] text-emerald-400">Curriculum Action Hub</h4>
                 <p className="text-xs text-slate-300 leading-relaxed font-semibold">
                   Generate classroom resources for pending strands instantly with AI Tutor.
                 </p>
-                <a
-                  href="/ai"
+                <Link
+                  to="/ai"
                   className="block text-center py-3 bg-white text-emerald-900 rounded-xl text-xs font-black uppercase tracking-wider hover:bg-slate-100 transition-colors shadow-lg"
                 >
                   Consult AI Tutor
-                </a>
+                </Link>
               </div>
             </div>
           </div>
