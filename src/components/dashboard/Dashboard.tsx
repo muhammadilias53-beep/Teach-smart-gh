@@ -36,7 +36,8 @@ const AnimatedCounter = ({ value, duration = 1.5 }: { value: number, duration?: 
 };
 
 const Dashboard = () => {
-  const { profile, user, getTrialDaysLeft, daysLeft } = useAuth();
+  const { profile, user, getTrialDaysLeft, daysLeft, isSubscriptionActive } = useAuth();
+  const hasActiveSubscription = isSubscriptionActive();
   const [recentDocs, setRecentDocs] = useState<any[]>([]);
   const [loadingDocs, setLoadingDocs] = useState(true);
   const [viewingDoc, setViewingDoc] = useState<any>(null);
@@ -60,7 +61,7 @@ const Dashboard = () => {
   const [subTimeLeft, setSubTimeLeft] = useState<string>('');
 
   useEffect(() => {
-    if (!profile?.subscriptionEndDate || profile?.subscriptionStatus !== 'active') {
+    if (!profile?.subscriptionEndDate || !isSubscriptionActive()) {
       setSubTimeLeft('');
       return;
     }
@@ -346,8 +347,8 @@ const Dashboard = () => {
               </div>
               <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">
                 {isAdmin ? 'Access Status' : (
-                  profile?.subscriptionStatus === 'active' 
-                    ? (profile.plan === 'quick_pass' ? '⚡ 5-Hour Pass' : 'Elite Pro Access')
+                  hasActiveSubscription 
+                    ? (profile?.plan === 'quick_pass' ? '⚡ 5-Hour Pass' : 'Elite Pro Access')
                     : 'Trial Access'
                 )}
               </p>
@@ -356,12 +357,12 @@ const Dashboard = () => {
               <div className="shrink-0">
                 <h3 className={cn(
                   "font-black text-slate-900 tracking-tighter truncate",
-                  profile?.subscriptionStatus === 'active' && profile.plan === 'quick_pass'
+                  hasActiveSubscription && profile?.plan === 'quick_pass'
                     ? "text-2xl sm:text-3xl font-mono text-emerald-600"
                     : "text-3xl sm:text-4xl"
                 )}>
                   {isAdmin ? '∞' : (
-                    profile?.subscriptionStatus === 'active'
+                    hasActiveSubscription
                       ? subTimeLeft
                       : <><AnimatedCounter value={daysLeft} /><span className="text-2xl ml-1">d</span></>
                   )}
@@ -369,18 +370,18 @@ const Dashboard = () => {
                 <div className={cn(
                   "text-[9px] font-bold px-2 py-1 rounded-full uppercase tracking-tighter whitespace-nowrap mt-1 inline-block",
                   isAdmin ? "text-emerald-600 bg-emerald-50" : (
-                    profile?.subscriptionStatus === 'active'
-                      ? "text-emerald-650 bg-emerald-50 animate-pulse"
+                    hasActiveSubscription
+                      ? "text-emerald-700 bg-emerald-50 animate-pulse font-extrabold"
                       : "text-ghana-red bg-red-50 animate-pulse"
                   )
                 )}>
                   {isAdmin ? 'Lifetime Holder' : (
-                    profile?.subscriptionStatus === 'active' ? 'Active Membership' : 'Days Left'
+                    hasActiveSubscription ? 'Active Membership' : 'Days Left'
                   )}
                 </div>
               </div>
               
-              {!isAdmin && profile?.subscriptionStatus !== 'active' && (
+              {!isAdmin && !hasActiveSubscription && (
                 <Link 
                   to="/billing" 
                   className="px-4 py-2 bg-emerald-deep text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-900 transition-all shadow-lg shadow-emerald-900/20 active:scale-95"

@@ -13,6 +13,7 @@ interface AuthContextType {
   refreshProfile: () => Promise<void>;
   canGenerate: () => boolean;
   isTrialActive: () => boolean;
+  isSubscriptionActive: () => boolean;
   getTrialDaysLeft: () => number;
   daysLeft: number;
   completeOnboarding: (data: Partial<UserProfile>) => Promise<void>;
@@ -133,6 +134,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const isAdmin = user?.email === 'muhammadilias53@gmail.com';
 
+  const isSubscriptionActive = () => {
+    if (!profile) return false;
+    if (profile.subscriptionStatus !== 'active') return false;
+    
+    const subEndDate: any = profile.subscriptionEndDate;
+    if (!subEndDate) return true; // Lifetime/Null end date
+    
+    const endDate = (typeof subEndDate === 'object' && 'toDate' in subEndDate)
+      ? subEndDate.toDate()
+      : new Date(subEndDate);
+    
+    return new Date() < endDate;
+  };
+
   const canGenerate = () => {
     if (isAdmin) return true;
     
@@ -140,21 +155,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // We check if trial is active first
     if (isTrialActive()) return true;
     
-    if (!profile) return false;
-    
-    // Check if subscription is active after trial period
-    if (profile.subscriptionStatus === 'active') {
-      const subEndDate: any = profile.subscriptionEndDate;
-      if (!subEndDate) return true; // Lifetime/Null end date
-      
-      const endDate = (typeof subEndDate === 'object' && 'toDate' in subEndDate)
-        ? subEndDate.toDate()
-        : new Date(subEndDate);
-      
-      return new Date() < endDate;
-    }
-    
-    return false;
+    // Otherwise check for subscription
+    return isSubscriptionActive();
   };
 
   const completeOnboarding = async (data: Partial<UserProfile>) => {
@@ -294,7 +296,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   return (
     <AuthContext.Provider value={{ 
       user, profile, loading, logout, refreshProfile, 
-      canGenerate, isTrialActive, getTrialDaysLeft, daysLeft,
+      canGenerate, isTrialActive, isSubscriptionActive, getTrialDaysLeft, daysLeft,
       completeOnboarding, updateProfileEmail
     }}>
       {children}

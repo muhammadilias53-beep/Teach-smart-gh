@@ -11,7 +11,7 @@ import { ConfirmationModal } from '../common/ConfirmationModal';
 import { NotificationCenter } from './NotificationCenter';
 
 const Sidebar = () => {
-  const { profile, logout, isTrialActive, user, daysLeft } = useAuth();
+  const { profile, logout, isTrialActive, isSubscriptionActive, user, daysLeft } = useAuth();
   const location = useLocation();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [showCompliance, setShowCompliance] = useState(false);
@@ -38,9 +38,10 @@ const Sidebar = () => {
 
   const SidebarContent = () => {
     const [subTimeLeft, setSubTimeLeft] = useState<string>('');
+    const hasActiveSubscription = isSubscriptionActive();
 
     useEffect(() => {
-      if (!profile?.subscriptionEndDate || profile?.subscriptionStatus !== 'active') {
+      if (!profile?.subscriptionEndDate || !isSubscriptionActive()) {
         setSubTimeLeft('');
         return;
       }
@@ -160,10 +161,10 @@ const Sidebar = () => {
                   Account Status
                 </span>
                 <span className="text-[10px] font-black text-ghana-gold uppercase tracking-tighter flex items-center gap-1">
-                   {user?.isAnonymous ? 'GUEST ACCESS' : (profile?.subscriptionStatus === 'active' ? 'ELITE PRO' : 'TRIAL ACCESS')}
+                    {user?.isAnonymous ? 'GUEST ACCESS' : (hasActiveSubscription ? 'ELITE PRO' : 'TRIAL ACCESS')}
                 </span>
               </div>
-              {!user?.isAnonymous && profile?.subscriptionStatus === 'active' && subTimeLeft && (
+              {!user?.isAnonymous && hasActiveSubscription && subTimeLeft && (
                 <div className="flex items-center justify-between mt-1 pt-1 border-t border-slate-50">
                   <span className="text-[9px] font-black text-emerald-600 uppercase tracking-widest">
                     {profile.plan === 'quick_pass' ? '⚡ 5h Pass' : 'Plan Time'}
@@ -176,7 +177,7 @@ const Sidebar = () => {
                   </span>
                 </div>
               )}
-              {!user?.isAnonymous && profile?.subscriptionStatus !== 'active' && (
+              {!user?.isAnonymous && !hasActiveSubscription && (
                 <div className="flex items-center justify-between mt-1 pt-1 border-t border-slate-50">
                   <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">
                     Trial Time

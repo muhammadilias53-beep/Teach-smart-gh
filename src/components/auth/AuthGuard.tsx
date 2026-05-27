@@ -94,7 +94,7 @@ const LockedOverlay = () => {
 };
 
 const AuthGuard = () => {
-  const { user, profile, loading, isTrialActive, daysLeft } = useAuth();
+  const { user, profile, loading, isTrialActive, isSubscriptionActive, daysLeft } = useAuth();
   const location = useLocation();
   const [tookTooLong, setTookTooLong] = React.useState(false);
 
@@ -177,7 +177,7 @@ const AuthGuard = () => {
 
   // Trial/Subscription check using centralized logic
   const isAdmin = user?.email === 'muhammadilias53@gmail.com';
-  const hasActiveSubscription = profile?.subscriptionStatus === 'active';
+  const hasActiveSubscription = isSubscriptionActive();
   const trialActive = isTrialActive();
   const isUserBlocked = !isAdmin && !trialActive && !hasActiveSubscription;
 

@@ -90,7 +90,7 @@ const PLANS: Plan[] = [
 ];
 
 const Billing = () => {
-  const { profile, user, refreshProfile } = useAuth();
+  const { profile, user, refreshProfile, isSubscriptionActive } = useAuth();
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState('');
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
@@ -270,11 +270,11 @@ const Billing = () => {
             
             <div className="flex items-center gap-5 mb-10">
               <div className="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-xl flex items-center justify-center border border-white/10 ring-4 ring-white/5">
-                <Zap className={cn("transition-colors", profile?.subscriptionStatus === 'active' ? "text-ghana-gold fill-ghana-gold" : "text-slate-600")} />
+                <Zap className={cn("transition-colors", isSubscriptionActive() ? "text-ghana-gold fill-ghana-gold" : "text-slate-600")} />
               </div>
               <div>
                 <p className="text-2xl font-black tracking-tight">{profile?.displayName || 'Ghana Teacher'}</p>
-                <p className="text-slate-400 font-bold text-xs uppercase tracking-widest">{profile?.subscriptionStatus === 'active' ? 'Elite Member' : 'Standard Member'}</p>
+                <p className="text-slate-400 font-bold text-xs uppercase tracking-widest">{isSubscriptionActive() ? 'Elite Member' : 'Standard Member'}</p>
               </div>
             </div>
 
@@ -283,9 +283,9 @@ const Billing = () => {
                 <span className="text-slate-400 font-medium">Subscription</span>
                 <span className={cn(
                   "px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest",
-                  profile?.subscriptionStatus === 'active' ? "bg-emerald-500/20 text-emerald-400" : "bg-ghana-red/20 text-ghana-red"
+                  isSubscriptionActive() ? "bg-emerald-500/20 text-emerald-400" : "bg-ghana-red/20 text-ghana-red"
                 )}>
-                  {profile?.subscriptionStatus === 'active' ? 'Active' : 'Expired'}
+                  {isSubscriptionActive() ? 'Active' : 'Expired'}
                 </span>
               </div>
               <div className="flex justify-between items-center text-sm">
