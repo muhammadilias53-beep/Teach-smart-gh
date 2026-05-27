@@ -21,8 +21,8 @@ export interface UserProfile {
   lastGenerationAt?: any;
   photoURL?: string;
   lastPaymentId?: string;
-  planType?: 'termly' | 'yearly' | 'lifetime';
-  plan?: 'termly' | 'yearly' | 'lifetime';
+  planType?: 'quick_pass' | 'termly' | 'yearly' | 'lifetime';
+  plan?: 'quick_pass' | 'termly' | 'yearly' | 'lifetime';
   locality?: string;
   classSize?: string;
   trialResetApril2024Applied?: boolean;

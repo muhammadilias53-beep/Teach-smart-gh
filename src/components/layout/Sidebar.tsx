@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MessageSquare, MessageCircle, FileText, Calendar, BookOpen, PenTool, CheckCircle, Menu, X, LogOut, LayoutDashboard, CreditCard, Zap, User, Package, Library, ShieldCheck, Bell, Shield } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { Link, useLocation } from 'react-router-dom';
@@ -11,7 +11,7 @@ import { ConfirmationModal } from '../common/ConfirmationModal';
 import { NotificationCenter } from './NotificationCenter';
 
 const Sidebar = () => {
-  const { profile, logout, isTrialActive, user } = useAuth();
+  const { profile, logout, isTrialActive, user, daysLeft } = useAuth();
   const location = useLocation();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [showCompliance, setShowCompliance] = useState(false);
@@ -36,8 +36,45 @@ const Sidebar = () => {
     { icon: Shield, label: 'Admin Command', path: '/admin', adminOnly: true },
   ];
 
-  const SidebarContent = () => (
-    <div className="flex flex-col h-full py-8">
+  const SidebarContent = () => {
+    const [subTimeLeft, setSubTimeLeft] = useState<string>('');
+
+    useEffect(() => {
+      if (!profile?.subscriptionEndDate || profile?.subscriptionStatus !== 'active') {
+        setSubTimeLeft('');
+        return;
+      }
+
+      const updateTime = () => {
+        const end = new Date(profile.subscriptionEndDate).getTime();
+        const now = Date.now();
+        const diff = end - now;
+
+        if (diff <= 0) {
+          setSubTimeLeft('Expired');
+          return;
+        }
+
+        if (profile.plan === 'quick_pass') {
+          const hours = Math.floor(diff / (1000 * 60 * 60));
+          const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+          const pad = (num: number) => String(num).padStart(2, '0');
+          setSubTimeLeft(`${pad(hours)}:${pad(minutes)}:${pad(seconds)} left`);
+        } else {
+          const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+          setSubTimeLeft(`${days} day${days > 1 ? 's' : ''} left`);
+        }
+      };
+
+      updateTime();
+      const interval = setInterval(updateTime, 1000);
+      return () => clearInterval(interval);
+    }, [profile]);
+
+    return (
+      <div className="flex flex-col h-full py-8">
       {/* Header */}
       <div className="px-6 mb-10 flex items-center justify-between">
         <Logo />
@@ -126,6 +163,29 @@ const Sidebar = () => {
                    {user?.isAnonymous ? 'GUEST ACCESS' : (profile?.subscriptionStatus === 'active' ? 'ELITE PRO' : 'TRIAL ACCESS')}
                 </span>
               </div>
+              {!user?.isAnonymous && profile?.subscriptionStatus === 'active' && subTimeLeft && (
+                <div className="flex items-center justify-between mt-1 pt-1 border-t border-slate-50">
+                  <span className="text-[9px] font-black text-emerald-600 uppercase tracking-widest">
+                    {profile.plan === 'quick_pass' ? '⚡ 5h Pass' : 'Plan Time'}
+                  </span>
+                  <span className={cn(
+                    "text-[10px] font-mono font-black text-right",
+                    profile.plan === 'quick_pass' ? "text-emerald-600 animate-pulse" : "text-slate-600"
+                  )}>
+                    {subTimeLeft}
+                  </span>
+                </div>
+              )}
+              {!user?.isAnonymous && profile?.subscriptionStatus !== 'active' && (
+                <div className="flex items-center justify-between mt-1 pt-1 border-t border-slate-50">
+                  <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">
+                    Trial Time
+                  </span>
+                  <span className="text-[10px] font-mono font-black text-slate-600 text-right">
+                    {daysLeft} d remaining
+                  </span>
+                </div>
+              )}
               {user?.isAnonymous && (
                 <Link to="/login" className="block text-[8px] font-black text-emerald-600 hover:text-ghana-gold uppercase tracking-widest mt-1 animate-pulse">
                   Upgrade to Professional →
@@ -143,7 +203,8 @@ const Sidebar = () => {
         </div>
       </div>
     </div>
-  );
+    );
+  };
 
   return (
     <>
