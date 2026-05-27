@@ -259,16 +259,16 @@ const Login = () => {
 
           <div className="space-y-4">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.1]">
-              NaCCA-Aligned Lesson Prep for <br className="hidden sm:inline"/>
+              Professional Teaching Tools <br className="hidden sm:inline"/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-deep to-emerald-600">
-                Ghanaian Educators
+                Built for Ghana's Educators
               </span>
             </h1>
             <h2 className="text-lg sm:text-xl font-bold text-slate-700 tracking-tight mt-3">
-              Generate Schemes of Learning, Lesson Notes, Worksheets & Diagnostic Assessments in Minutes
+              Generate NaCCA Schemes of Learning, Lesson Notes, and Practical Ghana Classroom Tools
             </h2>
             <p className="text-slate-500 text-sm sm:text-base font-medium max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-              Empower your teaching career under the <strong>Ghana Education Service (GES)</strong> framework. Playfully generate termly plans, secondary school lesson plans, primary teaching models, and comprehensive assessment papers with correct curriculum indicators and content standard codes.
+              Elevate your instructional impact with <strong>TeachSmart Ghana</strong>. Access professional <strong>GES lesson plan resources</strong> and advanced <strong>teaching tools for Ghana teachers</strong>. Playfully generate termly plans, secondary lesson notes, primary math worksheets, and comprehensive diagnostic assessment papers with correct curriculum standard codes. Accelerate your <strong>Ghana educator professional development</strong> today.
             </p>
           </div>
 
