@@ -20,6 +20,11 @@ import ProfileSettings from './components/profile/ProfileSettings';
 import ResourcePacks from './components/packs/ResourcePacks';
 import AdminCommandCenter from './components/admin/AdminCommandCenter';
 
+// Public pages
+import { About } from './components/public/About';
+import { Features } from './components/public/Features';
+import { BlogResources } from './components/public/BlogResources';
+
 // Generic placeholder for other features
 const Placeholder = ({ name }: { name: string }) => (
     <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
@@ -40,6 +45,9 @@ function App() {
         <Toaster position="top-right" />
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/features" element={<Features />} />
+          <Route path="/blog" element={<BlogResources />} />
           
           <Route element={<AuthGuard />}>
             <Route path="/" element={<Dashboard />} />

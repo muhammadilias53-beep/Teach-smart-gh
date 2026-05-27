@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { Sparkles, Save, Download, RefreshCw, FileText, ChevronLeft, ChevronRight, CheckCircle, Users } from 'lucide-react';
+import { Sparkles, Save, Download, RefreshCw, FileText, ChevronLeft, ChevronRight, CheckCircle, Users, Layout, AlignLeft, Layers, GraduationCap } from 'lucide-react';
 import { generateLessonPlan } from '../../lib/gemini';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
@@ -60,6 +60,7 @@ const LessonPlanGenerator = () => {
     specificLocality: profile?.town || '',
     differentiationStrategies: '',
     customGuidance: '',
+    layoutStyle: 'comprehensive' as 'minimalist' | 'comprehensive' | 'primary-focused',
   });
 
   // Automatically use the indicator as the main learning objective when selected
@@ -231,6 +232,15 @@ const LessonPlanGenerator = () => {
         `;
       }
 
+      let layoutStyleInstruction = "";
+      if (formData.layoutStyle === 'minimalist') {
+        layoutStyleInstruction = "LAYOUT STYLE REQUIREMENT (MINIMALIST): Please make the lesson plan highly condensed, high-density, and concise. Prioritize compact descriptions and brief bullet points for rapid classroom referencing. Keep Phase 1 (Starter), Phase 2 (Main), and Phase 3 (Plenary) activities clear, brief, direct, and to-the-point.";
+      } else if (formData.layoutStyle === 'primary-focused') {
+        layoutStyleInstruction = "LAYOUT STYLE REQUIREMENT (PRIMARY-FOCUSED): Please tailor the lesson plan specifically for early childhood or primary learners (play-centered). Highlight tactile, concrete manipulatives, highly collaborative activities, physical learning games, and interactive group participation. Phase 2 (Main) must be active and play-centered with gamified teacher checking.";
+      } else {
+        layoutStyleInstruction = "LAYOUT STYLE REQUIREMENT (COMPREHENSIVE): Please write a deeply detailed, highly structured, and extensive instructional roadmap. Detail complete step-by-step teacher and learner actions. Ensure core competencies, formative checkpoint milestones, rich teaching/learning resources, and references are fully elaborated.";
+      }
+
       const prompt = `Generate a NaCCA-compliant lesson plan for ${formData.class} (${formData.level}) ${formData.subject} strictly following the Standard-Based Curriculum (SBC). 
       Strand: ${formData.strand}.
       Sub-Strand: ${formData.subStrand}.
@@ -243,6 +253,8 @@ const LessonPlanGenerator = () => {
       Locality: ${formData.locality} (${formData.specificLocality}). 
       
       ${frameDetails}
+
+      LAYOUT GUIDELINE: ${layoutStyleInstruction}
 
       TAILORING INSTRUCTION: Consider the resources typically available in a ${formData.locality} setting in Ghana. If ${formData.locality} is Rural, suggest low-cost, locally available teaching and learning materials.
       
@@ -297,8 +309,26 @@ const LessonPlanGenerator = () => {
     if (!result) return;
     const doc = new jsPDF();
     
+    // Choose theme colors based on layoutStyle
+    let primaryColor = [0, 28, 61];     // Deep Blue
+    let accentColor = [252, 209, 22];   // Ghana Gold
+    let tableHeadColor = [0, 107, 63];   // Ghana Green
+    let labelText = 'OFFICIAL NaCCA CURRICULUM COMPLIANT LESSON PLAN';
+    
+    if (formData.layoutStyle === 'minimalist') {
+      primaryColor = [71, 85, 105];       // Slate 600
+      accentColor = [203, 213, 225];      // Slate 300
+      tableHeadColor = [100, 116, 139];   // Slate 500
+      labelText = 'MINIMALIST SCHEME - CONCISE LESSON PLAN REFERENCE';
+    } else if (formData.layoutStyle === 'primary-focused') {
+      primaryColor = [217, 119, 6];       // Amber 600
+      accentColor = [252, 211, 77];       // Amber 300
+      tableHeadColor = [245, 158, 11];    // Amber 500
+      labelText = '🎈 PRIMARY-GRADE PLAY-BASED LESSON PLAN (KG-B6) 🎒';
+    }
+    
     // Custom Header Branding
-    doc.setFillColor(0, 28, 61); // TeachSmart Deep Blue
+    doc.setFillColor(primaryColor[0], primaryColor[1], primaryColor[2]);
     doc.rect(0, 0, 210, 40, 'F');
     
     doc.setTextColor(255, 255, 255);
@@ -308,15 +338,15 @@ const LessonPlanGenerator = () => {
     
     doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
-    doc.text('OFFICIAL NaCCA CURRICULUM COMPLIANT LESSON PLAN', 105, 26, { align: 'center' });
+    doc.text(labelText, 105, 26, { align: 'center' });
     
-    doc.setDrawColor(252, 209, 22); // Ghana Gold
+    doc.setDrawColor(accentColor[0], accentColor[1], accentColor[2]);
     doc.setLineWidth(1);
     doc.line(40, 32, 170, 32);
 
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(9);
-    doc.text(`CLASS: ${formData.class.toUpperCase()} (${formData.level}) | SUBJECT: ${formData.subject.toUpperCase()} | LOCALITY: ${formData.locality.toUpperCase()}`, 105, 48, { align: 'center' });
+    doc.text(`CLASS: ${formData.class.toUpperCase()} (${formData.level}) | SUBJECT: ${formData.subject.toUpperCase()} | LOCALITY: ${formData.locality.toUpperCase()} | TEMPLATE: ${formData.layoutStyle.toUpperCase()}`, 105, 48, { align: 'center' });
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
     doc.text(`${formData.strand} - ${formData.subStrand}`.toUpperCase(), 105, 56, { align: 'center' });
@@ -347,7 +377,7 @@ const LessonPlanGenerator = () => {
       body: tableData,
       theme: 'grid',
       headStyles: { 
-        fillColor: [0, 107, 63], // Ghana Green
+        fillColor: tableHeadColor as any,
         textColor: [255, 255, 255],
         fontSize: 10,
         fontStyle: 'bold'
@@ -576,6 +606,100 @@ const LessonPlanGenerator = () => {
                   onChange={(e) => setFormData({...formData, differentiationStrategies: e.target.value})}
                 />
               </div>
+
+              {/* Template Gallery Selector */}
+              <div className="space-y-4 pt-6 border-t border-slate-100">
+                <div>
+                  <label className="text-sm font-black text-slate-800 uppercase tracking-wider flex items-center gap-2">
+                    <Layout size={16} className="text-ghana-gold" />
+                    NaCCA-Compliant Template Gallery
+                  </label>
+                  <p className="text-xs text-slate-400 mt-0.5 font-medium">Select a structural layout style suitable for your classroom target.</p>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {[
+                    {
+                      id: 'minimalist',
+                      name: 'Minimalist Theme',
+                      badge: 'Compact & Clean',
+                      badgeBg: 'bg-slate-100 text-slate-700',
+                      icon: AlignLeft,
+                      iconColor: 'text-slate-500',
+                      description: 'High-density format focusing on objective codes and brief phase descriptions. Perfect for quick referencing by experienced teachers.'
+                    },
+                    {
+                      id: 'comprehensive',
+                      name: 'Comprehensive Blueprint',
+                      badge: 'Full NaCCA Standard',
+                      badgeBg: 'bg-emerald-50 text-emerald-700 border border-emerald-100',
+                      icon: Layers,
+                      iconColor: 'text-emerald-600',
+                      description: 'Elaborated lesson notes with granular step-by-step actions, active strategies, clear competencies, and full references.'
+                    },
+                    {
+                      id: 'primary-focused',
+                      name: 'Primary / Play-Based',
+                      badge: 'KG to Basic 6 Focus',
+                      badgeBg: 'bg-amber-50 text-amber-700 border border-amber-100',
+                      icon: GraduationCap,
+                      iconColor: 'text-amber-600',
+                      description: 'Activity-rich template emphasizing concrete manipulatives, child-centered games, and play-based group activities.'
+                    }
+                  ].map((tpl) => {
+                    const IconComponent = tpl.icon;
+                    const isSelected = formData.layoutStyle === tpl.id;
+                    return (
+                      <div 
+                        key={tpl.id}
+                        onClick={() => setFormData(prev => ({ ...prev, layoutStyle: tpl.id as any }))}
+                        className={cn(
+                          "relative cursor-pointer rounded-2xl p-5 border-2 transition-all duration-300 flex flex-col justify-between h-full bg-white select-none hover:shadow-md",
+                          isSelected 
+                            ? "border-emerald-500 bg-emerald-50/10 shadow-sm shadow-emerald-500/5 scale-[1.02] ring-4 ring-emerald-500/10" 
+                            : "border-slate-150 hover:border-slate-300"
+                        )}
+                      >
+                        <div className="space-y-3">
+                          <div className="flex items-start justify-between">
+                            <div className={cn(
+                              "w-10 h-10 rounded-xl flex items-center justify-center bg-slate-50",
+                              isSelected && "bg-emerald-50 text-emerald-600"
+                            )}>
+                              <IconComponent className={cn("w-5 h-5", tpl.iconColor)} />
+                            </div>
+                            <span className={cn("text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full", tpl.badgeBg)}>
+                              {tpl.badge}
+                            </span>
+                          </div>
+                          
+                          <div className="space-y-1">
+                            <h3 className="font-bold text-sm text-slate-800 flex items-center gap-1.5">
+                              {tpl.name}
+                              {isSelected && (
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                              )}
+                            </h3>
+                            <p className="text-[11px] leading-relaxed text-slate-500 font-medium">
+                              {tpl.description}
+                            </p>
+                          </div>
+                        </div>
+                        
+                        <div className="mt-4 pt-3 border-t border-slate-50 flex items-center justify-between">
+                          <span className="text-[10px] font-bold text-slate-400">Layout Format</span>
+                          <span className={cn(
+                            "text-[10px] font-black uppercase tracking-wider",
+                            isSelected ? "text-emerald-600" : "text-slate-400"
+                          )}>
+                            {isSelected ? '✓ Selected' : 'Choose'}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
             <div className="flex gap-4 mt-8">
               <button onClick={prevStep} className="px-6 py-3 rounded-xl border border-gray-200 font-bold hover:bg-gray-50 text-slate-500 flex items-center gap-2">
@@ -779,202 +903,468 @@ const LessonPlanGenerator = () => {
               </div>
             </div>
 
-            <div className="bg-white p-8 lg:p-12 rounded-[2rem] shadow-sm border border-gray-100 space-y-10 ghana-border">
-              <div className="text-center border-b pb-8">
-                  <h2 className="text-3xl font-black text-emerald-deep mb-2">{result.title}</h2>
-                  <div className="flex flex-wrap justify-center gap-4 text-xs font-bold text-slate-400 uppercase tracking-widest mt-4">
-                    <span>{formData.class} ({formData.level})</span>
-                    <span className="w-1 h-1 bg-slate-300 rounded-full my-auto" />
-                    <span>{formData.subject}</span>
-                    <span className="w-1 h-1 bg-slate-300 rounded-full my-auto" />
-                    <span>Strand: {formData.strand}</span>
-                    <span className="w-1 h-1 bg-slate-300 rounded-full my-auto" />
-                    <span>Sub-Strand: {formData.subStrand}</span>
-                    <span className="w-1 h-1 bg-slate-300 rounded-full my-auto" />
-                    <span>Week Ending: {result.weekEnding || formData.weekEnding}</span>
-                    <span className="w-1 h-1 bg-slate-300 rounded-full my-auto" />
-                    <span>Class Size: {result.classSize || formData.classSize}</span>
-                    <span className="w-1 h-1 bg-slate-300 rounded-full my-auto" />
-                    <span>Locality: {formData.locality}</span>
-                  </div>
+            {/* Quick Layout Preview Switcher */}
+            <div className="bg-slate-50 p-3 rounded-2xl border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-sm">
+              <div className="flex items-center gap-2 pl-2">
+                <Layout size={16} className="text-emerald-750 font-bold" />
+                <span className="text-xs font-bold text-slate-700">Preview Layout Theme Style:</span>
               </div>
-
-              <div className="grid md:grid-cols-2 gap-8">
-                 <div className="space-y-6">
-                    {result.strand && (
-                      <section>
-                        <h3 className="text-[10px] font-black text-ghana-red uppercase tracking-widest mb-2">Strand</h3>
-                        <p className="text-slate-700 leading-relaxed font-semibold">{result.strand}</p>
-                      </section>
-                    )}
-                    {result.subStrand && (
-                      <section>
-                        <h3 className="text-[10px] font-black text-ghana-red uppercase tracking-widest mb-2">Sub-Strand</h3>
-                        <p className="text-slate-700 leading-relaxed font-medium">{result.subStrand}</p>
-                      </section>
-                    )}
-                    <section>
-                      <h3 className="text-[10px] font-black text-emerald-deep uppercase tracking-widest mb-2">Indicator (Selected)</h3>
-                      <p className="text-slate-700 text-sm leading-relaxed font-medium">{formData.indicator}</p>
-                    </section>
-                    <section>
-                      <h3 className="text-[10px] font-black text-emerald-deep uppercase tracking-widest mb-2">Content Standard (Selected)</h3>
-                      <p className="text-slate-700 text-sm leading-relaxed font-medium">{formData.contentStandard}</p>
-                    </section>
-                 </div>
-                 <div className="bg-slate-50 p-6 rounded-3xl space-y-6">
-                    <section>
-                      <h3 className="text-[10px] font-black text-emerald-deep uppercase tracking-widest mb-2">Performance Indicator</h3>
-                      <p className="text-slate-700 text-sm leading-relaxed">{result.performanceIndicator}</p>
-                    </section>
-                    <section>
-                      <h3 className="text-[10px] font-black text-emerald-deep uppercase tracking-widest mb-2">Core Competencies</h3>
-                      <p className="text-slate-700 text-sm leading-relaxed">{result.coreCompetencies}</p>
-                    </section>
-                    <section>
-                      <h3 className="text-[10px] font-black text-emerald-deep uppercase tracking-widest mb-2">Key Words</h3>
-                      <div className="flex flex-wrap gap-2 mt-2">
-                        {result.keyWords?.split(',').map((word: string, i: number) => (
-                          <span key={i} className="px-2 py-1 bg-white border border-slate-200 rounded text-[10px] font-medium text-slate-600">
-                            {word.trim()}
-                          </span>
-                        ))}
-                      </div>
-                    </section>
-                 </div>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-8 pt-6 border-t border-slate-100">
-                 <section>
-                    <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">T.L.R.(s)</h3>
-                    <p className="text-slate-600 text-sm italic">{result.tlrs}</p>
-                 </section>
-                 <section>
-                    <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">References</h3>
-                    <p className="text-slate-600 text-sm italic">{result.references}</p>
-                 </section>
-              </div>
-
-              <div className="space-y-8">
-                <section className="bg-emerald-50/30 p-8 rounded-3xl border border-emerald-100 group transition-all hover:bg-emerald-50/50">
-                  <h3 className="text-lg font-bold flex items-center gap-3 mb-6 text-emerald-deep">
-                    <div className="w-1.5 h-6 bg-ghana-gold rounded-full" />
-                    Phase 1: Starter
-                    <span className="text-[10px] font-medium text-emerald-600 opacity-60 ml-2 uppercase">(Preparing the brain for learning)</span>
-                  </h3>
-                  <div className="markdown-body prose prose-emerald max-w-none prose-p:leading-relaxed prose-li:leading-relaxed text-slate-700">
-                    <SafeMarkdown>
-                      {result.phase1}
-                    </SafeMarkdown>
-                  </div>
-                </section>
-
-                <section className="bg-slate-900 text-slate-200 p-8 rounded-3xl group shadow-xl">
-                  <h3 className="text-lg font-bold flex items-center gap-3 mb-6 text-white">
-                    <div className="w-1.5 h-6 bg-emerald-text rounded-full" />
-                    Phase 2: Main
-                    <span className="text-[10px] font-medium text-emerald- text-emerald-text/50 ml-2 uppercase">(New learning including assessment)</span>
-                  </h3>
-                  <div className="markdown-body prose prose-invert prose-emerald max-w-none prose-p:leading-relaxed prose-li:leading-relaxed text-slate-300 pb-6">
-                    <SafeMarkdown>
-                      {result.phase2}
-                    </SafeMarkdown>
-                  </div>
-                </section>
-
-                {result.differentiation && (
-                  <section className="bg-ghana-gold/5 p-8 rounded-[2.5rem] border border-ghana-gold/20 shadow-sm relative overflow-hidden">
-                    <div className="absolute top-0 right-0 p-8 opacity-5">
-                       <Users size={120} />
-                    </div>
-                    <h3 className="text-xl font-black flex items-center gap-3 mb-8 text-slate-900 uppercase tracking-tighter">
-                      <Sparkles className="text-ghana-gold" size={24} />
-                      NaCCA Differentiation Strategies
-                    </h3>
-                    
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                      {/* Struggling Learners */}
-                      <div className="bg-white p-6 rounded-3xl border border-ghana-gold/20 flex flex-col h-full hover:shadow-md transition-shadow">
-                        <div className="flex items-center gap-2 mb-4">
-                          <div className="w-2 h-2 rounded-full bg-red-500" />
-                          <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Struggling Learners</h4>
-                        </div>
-                        <div className="space-y-4 flex-grow">
-                          <div>
-                            <p className="text-[9px] font-bold text-ghana-red uppercase mb-1">Activities</p>
-                            <p className="text-xs text-slate-600 leading-relaxed font-medium">{result.differentiation.strugglingLearners?.activities}</p>
-                          </div>
-                          <div>
-                            <p className="text-[9px] font-bold text-ghana-red uppercase mb-1">Resources</p>
-                            <p className="text-xs text-slate-600 leading-relaxed font-medium">{result.differentiation.strugglingLearners?.resources}</p>
-                          </div>
-                          <div>
-                            <p className="text-[9px] font-bold text-ghana-red uppercase mb-1">Assessment Tips</p>
-                            <p className="text-xs text-slate-600 leading-relaxed font-medium">{result.differentiation.strugglingLearners?.assessments}</p>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Average Learners */}
-                      <div className="bg-white p-6 rounded-3xl border border-ghana-gold/20 flex flex-col h-full hover:shadow-md transition-shadow">
-                        <div className="flex items-center gap-2 mb-4">
-                          <div className="w-2 h-2 rounded-full bg-emerald-500" />
-                          <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Average Learners</h4>
-                        </div>
-                        <div className="space-y-4 flex-grow">
-                          <div>
-                            <p className="text-[9px] font-bold text-emerald-600 uppercase mb-1">Activities</p>
-                            <p className="text-xs text-slate-600 leading-relaxed font-medium">{result.differentiation.averageLearners?.activities}</p>
-                          </div>
-                          <div>
-                            <p className="text-[9px] font-bold text-emerald-600 uppercase mb-1">Resources</p>
-                            <p className="text-xs text-slate-600 leading-relaxed font-medium">{result.differentiation.averageLearners?.resources}</p>
-                          </div>
-                          <div>
-                            <p className="text-[9px] font-bold text-emerald-600 uppercase mb-1">Assessment Tips</p>
-                            <p className="text-xs text-slate-600 leading-relaxed font-medium">{result.differentiation.averageLearners?.assessments}</p>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Advanced Learners */}
-                      <div className="bg-white p-6 rounded-3xl border border-ghana-gold/20 flex flex-col h-full hover:shadow-md transition-shadow">
-                        <div className="flex items-center gap-2 mb-4">
-                          <div className="w-2 h-2 rounded-full bg-indigo-500" />
-                          <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Advanced Learners</h4>
-                        </div>
-                        <div className="space-y-4 flex-grow">
-                          <div>
-                            <p className="text-[9px] font-bold text-indigo-600 uppercase mb-1">Enrichment Activities</p>
-                            <p className="text-xs text-slate-600 leading-relaxed font-medium">{result.differentiation.advancedLearners?.activities}</p>
-                          </div>
-                          <div>
-                            <p className="text-[9px] font-bold text-indigo-600 uppercase mb-1">Advanced Resources</p>
-                            <p className="text-xs text-slate-600 leading-relaxed font-medium">{result.differentiation.advancedLearners?.resources}</p>
-                          </div>
-                          <div>
-                            <p className="text-[9px] font-bold text-indigo-600 uppercase mb-1">Challenge Assessments</p>
-                            <p className="text-xs text-slate-600 leading-relaxed font-medium">{result.differentiation.advancedLearners?.assessments}</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </section>
-                )}
-
-                <section className="bg-slate-50 p-8 rounded-3xl border border-slate-200">
-                   <h3 className="text-lg font-bold flex items-center gap-3 mb-6 text-slate-800">
-                      <CheckCircle className="text-emerald-deep" size={24} />
-                      Phase 3: Plenary / Reflections
-                   </h3>
-                   <div className="markdown-body prose prose-sm prose-emerald max-w-none text-slate-600 leading-relaxed italic border-l-4 border-slate-200 pl-6">
-                     <SafeMarkdown>
-                       {result.phase3}
-                     </SafeMarkdown>
-                   </div>
-                </section>
+              <div className="flex bg-white p-1 rounded-xl border border-slate-150 gap-1 self-start md:self-auto">
+                {[
+                  { id: 'minimalist', name: 'Minimalist Format', icon: AlignLeft },
+                  { id: 'comprehensive', name: 'Comprehensive Blueprint', icon: Layers },
+                  { id: 'primary-focused', name: 'Primary/Play-grade', icon: GraduationCap }
+                ].map(opt => {
+                  const Icon = opt.icon;
+                  const isActive = formData.layoutStyle === opt.id;
+                  return (
+                    <button
+                      key={opt.id}
+                      onClick={() => setFormData(p => ({ ...p, layoutStyle: opt.id as any }))}
+                      className={cn(
+                        "px-3.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all",
+                        isActive 
+                          ? "bg-slate-900 text-white shadow-sm" 
+                          : "text-slate-500 hover:text-slate-800 hover:bg-slate-100"
+                      )}
+                    >
+                      <Icon size={14} />
+                      {opt.name}
+                    </button>
+                  );
+                })}
               </div>
             </div>
+
+            {/* MINIMALIST THEME PREVIEW */}
+            {formData.layoutStyle === 'minimalist' && (
+              <div className="bg-white p-6 lg:p-8 rounded-2xl shadow-sm border border-slate-200 space-y-6">
+                {/* Header */}
+                <div className="border-b pb-4 border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div>
+                    <span className="text-[10px] font-black tracking-widest uppercase text-slate-400">NaCCA Minimalist Layout</span>
+                    <h2 className="text-xl font-black text-slate-800 tracking-tight mt-0.5">{result.title}</h2>
+                  </div>
+                  <div className="flex flex-wrap gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                    <span className="bg-slate-50 px-2 py-1 rounded">{formData.class}</span>
+                    <span className="bg-slate-50 px-2 py-1 rounded">{formData.subject}</span>
+                    <span className="bg-slate-50 px-2 py-1 rounded">Week {result.weekEnding || formData.weekEnding}</span>
+                  </div>
+                </div>
+
+                {/* Metadata Grid */}
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-slate-50 rounded-lg text-xs leading-relaxed">
+                  <div>
+                    <span className="font-bold text-slate-400 block uppercase text-[9px] tracking-wider">Strand</span>
+                    <span className="text-slate-700 font-medium">{result.strand || formData.strand}</span>
+                  </div>
+                  <div>
+                    <span className="font-bold text-slate-400 block uppercase text-[9px] tracking-wider">Sub-Strand</span>
+                    <span className="text-slate-700 font-medium">{result.subStrand || formData.subStrand}</span>
+                  </div>
+                  <div>
+                    <span className="font-bold text-slate-400 block uppercase text-[9px] tracking-wider">Indicator Code</span>
+                    <span className="text-slate-700 font-medium font-mono">{result.indicatorCode || formData.indicator.split(':')[0]}</span>
+                  </div>
+                  <div>
+                    <span className="font-bold text-slate-400 block uppercase text-[9px] tracking-wider">Primary Objective</span>
+                    <span className="text-slate-700 font-medium line-clamp-2">{formData.mainObjective || result.performanceIndicator}</span>
+                  </div>
+                </div>
+
+                {/* Core Notes & References inline */}
+                <div className="grid md:grid-cols-3 gap-4 text-xs">
+                  <div className="border border-slate-100 p-3 rounded">
+                    <span className="font-bold text-slate-400 block uppercase text-[9px] mb-1">Competencies</span>
+                    <p className="text-slate-600 line-clamp-3">{result.coreCompetencies}</p>
+                  </div>
+                  <div className="border border-slate-100 p-3 rounded">
+                    <span className="font-bold text-slate-400 block uppercase text-[9px] mb-1">Keywords</span>
+                    <p className="text-slate-600 line-clamp-3">{result.keyWords}</p>
+                  </div>
+                  <div className="border border-slate-100 p-3 rounded text-slate-600">
+                    <span className="font-bold text-slate-400 block uppercase text-[9px] mb-1">Resources & Refs</span>
+                    <p className="line-clamp-2"><strong>TLR:</strong> {result.tlrs}</p>
+                    <p className="line-clamp-1"><strong>Refs:</strong> {result.references}</p>
+                  </div>
+                </div>
+
+                {/* Phases */}
+                <div className="space-y-4 pt-4 border-t border-slate-150">
+                  <section className="text-xs">
+                    <span className="font-black text-slate-700 uppercase tracking-widest block mb-1 border-l-2 border-slate-500 pl-2">Phase 1: Starter (10 min)</span>
+                    <div className="prose prose-xs max-w-none text-slate-600 pl-2 text-xs">
+                      <SafeMarkdown>{result.phase1}</SafeMarkdown>
+                    </div>
+                  </section>
+                  <section className="text-xs pt-3 border-t border-slate-100">
+                    <span className="font-black text-slate-700 uppercase tracking-widest block mb-1 border-l-2 border-slate-500 pl-2">Phase 2: Main (40 min)</span>
+                    <div className="prose prose-xs max-w-none text-slate-600 pl-2 text-xs">
+                      <SafeMarkdown>{result.phase2}</SafeMarkdown>
+                    </div>
+                  </section>
+                  <section className="text-xs pt-3 border-t border-slate-100">
+                    <span className="font-black text-slate-700 uppercase tracking-widest block mb-1 border-l-2 border-slate-500 pl-2">Phase 3: Plenary & Reflections (10 min)</span>
+                    <div className="prose prose-xs max-w-none text-slate-600 pl-2 text-xs">
+                      <SafeMarkdown>{result.phase3}</SafeMarkdown>
+                    </div>
+                  </section>
+                </div>
+
+                {/* Differentiation Badges */}
+                {result.differentiation && (
+                  <div className="pt-4 border-t border-slate-150 text-xs">
+                    <span className="font-bold text-slate-400 block uppercase text-[9px] tracking-wider mb-2">Differentiation Quick Cards</span>
+                    <div className="grid md:grid-cols-3 gap-3">
+                      <div className="bg-slate-50 p-2.5 rounded">
+                        <span className="font-bold text-red-650 uppercase text-[9px] block">Struggling Learners:</span>
+                        <p className="text-slate-600 text-[11px] mt-0.5 font-medium">{result.differentiation.strugglingLearners?.activities}</p>
+                      </div>
+                      <div className="bg-slate-50 p-2.5 rounded">
+                        <span className="font-bold text-emerald-650 uppercase text-[9px] block">Average Learners:</span>
+                        <p className="text-slate-600 text-[11px] mt-0.5 font-medium">{result.differentiation.averageLearners?.activities}</p>
+                      </div>
+                      <div className="bg-slate-50 p-2.5 rounded">
+                        <span className="font-bold text-blue-650 uppercase text-[9px] block">Advanced Enrichment:</span>
+                        <p className="text-slate-600 text-[11px] mt-0.5 font-medium">{result.differentiation.advancedLearners?.activities}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* COMPREHENSIVE THEME PREVIEW */}
+            {formData.layoutStyle === 'comprehensive' && (
+              <div className="bg-white p-8 lg:p-12 rounded-[2rem] shadow-sm border border-gray-100 space-y-10 ghana-border">
+                <div className="text-center border-b pb-8">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-50 text-emerald-800 text-[10px] border border-emerald-150 rounded-full font-black uppercase tracking-widest mb-4">
+                      👑 Standard Comprehensive Layout
+                    </div>
+                    <h2 className="text-3xl font-black text-emerald-deep mb-2">{result.title}</h2>
+                    <div className="flex flex-wrap justify-center gap-4 text-xs font-bold text-slate-400 uppercase tracking-widest mt-4">
+                      <span>{formData.class} ({formData.level})</span>
+                      <span className="w-1 h-1 bg-slate-300 rounded-full my-auto" />
+                      <span>{formData.subject}</span>
+                      <span className="w-1 h-1 bg-slate-300 rounded-full my-auto" />
+                      <span>Strand: {formData.strand}</span>
+                      <span className="w-1 h-1 bg-slate-300 rounded-full my-auto" />
+                      <span>Sub-Strand: {formData.subStrand}</span>
+                      <span className="w-1 h-1 bg-slate-300 rounded-full my-auto" />
+                      <span>Week Ending: {result.weekEnding || formData.weekEnding}</span>
+                      <span className="w-1 h-1 bg-slate-300 rounded-full my-auto" />
+                      <span>Class Size: {result.classSize || formData.classSize}</span>
+                      <span className="w-1 h-1 bg-slate-300 rounded-full my-auto" />
+                      <span>Locality: {formData.locality}</span>
+                    </div>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-8">
+                   <div className="space-y-6">
+                      {result.strand && (
+                        <section>
+                          <h3 className="text-[10px] font-black text-ghana-red uppercase tracking-widest mb-2">Strand</h3>
+                          <p className="text-slate-700 leading-relaxed font-semibold">{result.strand}</p>
+                        </section>
+                      )}
+                      {result.subStrand && (
+                        <section>
+                          <h3 className="text-[10px] font-black text-ghana-red uppercase tracking-widest mb-2">Sub-Strand</h3>
+                          <p className="text-slate-700 leading-relaxed font-medium">{result.subStrand}</p>
+                        </section>
+                      )}
+                      <section>
+                        <h3 className="text-[10px] font-black text-emerald-deep uppercase tracking-widest mb-2">Indicator (Selected)</h3>
+                        <p className="text-slate-700 text-sm leading-relaxed font-medium">{formData.indicator}</p>
+                      </section>
+                      <section>
+                        <h3 className="text-[10px] font-black text-emerald-deep uppercase tracking-widest mb-2">Content Standard (Selected)</h3>
+                        <p className="text-slate-700 text-sm leading-relaxed font-medium">{formData.contentStandard}</p>
+                      </section>
+                   </div>
+                   <div className="bg-slate-50 p-6 rounded-3xl space-y-6">
+                      <section>
+                        <h3 className="text-[10px] font-black text-emerald-deep uppercase tracking-widest mb-2">Performance Indicator</h3>
+                        <p className="text-slate-700 text-sm leading-relaxed">{result.performanceIndicator}</p>
+                      </section>
+                      <section>
+                        <h3 className="text-[10px] font-black text-emerald-deep uppercase tracking-widest mb-2">Core Competencies</h3>
+                        <p className="text-slate-700 text-sm leading-relaxed">{result.coreCompetencies}</p>
+                      </section>
+                      <section>
+                        <h3 className="text-[10px] font-black text-emerald-deep uppercase tracking-widest mb-2">Key Words</h3>
+                        <div className="flex flex-wrap gap-2 mt-2">
+                          {result.keyWords?.split(',').map((word: string, i: number) => (
+                            <span key={i} className="px-2 py-1 bg-white border border-slate-200 rounded text-[10px] font-medium text-slate-600">
+                              {word.trim()}
+                            </span>
+                          ))}
+                        </div>
+                      </section>
+                   </div>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-8 pt-6 border-t border-slate-100">
+                   <section>
+                      <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">T.L.R.(s)</h3>
+                      <p className="text-slate-600 text-sm italic">{result.tlrs}</p>
+                   </section>
+                   <section>
+                      <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">References</h3>
+                      <p className="text-slate-600 text-sm italic">{result.references}</p>
+                   </section>
+                </div>
+
+                <div className="space-y-8">
+                  <section className="bg-emerald-50/30 p-8 rounded-3xl border border-emerald-100 group transition-all hover:bg-emerald-50/50">
+                    <h3 className="text-lg font-bold flex items-center gap-3 mb-6 text-emerald-deep">
+                      <div className="w-1.5 h-6 bg-ghana-gold rounded-full" />
+                      Phase 1: Starter
+                      <span className="text-[10px] font-medium text-emerald-600 opacity-60 ml-2 uppercase">(Preparing the brain for learning)</span>
+                    </h3>
+                    <div className="markdown-body prose prose-emerald max-w-none prose-p:leading-relaxed prose-li:leading-relaxed text-slate-700">
+                      <SafeMarkdown>{result.phase1}</SafeMarkdown>
+                    </div>
+                  </section>
+
+                  <section className="bg-slate-900 text-slate-200 p-8 rounded-3xl group shadow-xl">
+                    <h3 className="text-lg font-bold flex items-center gap-3 mb-6 text-white">
+                      <div className="w-1.5 h-6 bg-emerald-text rounded-full" />
+                      Phase 2: Main
+                      <span className="text-[10px] font-medium text-emerald-text/50 ml-2 uppercase">(New learning including assessment)</span>
+                    </h3>
+                    <div className="markdown-body prose prose-invert prose-emerald max-w-none prose-p:leading-relaxed prose-li:leading-relaxed text-slate-300 pb-6">
+                      <SafeMarkdown>{result.phase2}</SafeMarkdown>
+                    </div>
+                  </section>
+
+                  {result.differentiation && (
+                    <section className="bg-ghana-gold/5 p-8 rounded-[2.5rem] border border-ghana-gold/20 shadow-sm relative overflow-hidden">
+                      <div className="absolute top-0 right-0 p-8 opacity-5">
+                         <Users size={120} />
+                      </div>
+                      <h3 className="text-xl font-black flex items-center gap-3 mb-8 text-slate-900 uppercase tracking-tighter">
+                        <Sparkles className="text-ghana-gold" size={24} />
+                        NaCCA Differentiation Strategies
+                      </h3>
+                      
+                      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        {/* Struggling Learners */}
+                        <div className="bg-white p-6 rounded-3xl border border-ghana-gold/20 flex flex-col h-full hover:shadow-md transition-shadow">
+                          <div className="flex items-center gap-2 mb-4">
+                            <div className="w-2 h-2 rounded-full bg-red-500" />
+                            <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Struggling Learners</h4>
+                          </div>
+                          <div className="space-y-4 flex-grow">
+                            <div>
+                              <p className="text-[9px] font-bold text-ghana-red uppercase mb-1">Activities</p>
+                              <p className="text-xs text-slate-600 leading-relaxed font-medium">{result.differentiation.strugglingLearners?.activities}</p>
+                            </div>
+                            <div>
+                              <p className="text-[9px] font-bold text-ghana-red uppercase mb-1">Resources</p>
+                              <p className="text-xs text-slate-600 leading-relaxed font-medium">{result.differentiation.strugglingLearners?.resources}</p>
+                            </div>
+                            <div>
+                              <p className="text-[9px] font-bold text-ghana-red uppercase mb-1">Assessment Tips</p>
+                              <p className="text-xs text-slate-600 leading-relaxed font-medium">{result.differentiation.strugglingLearners?.assessments}</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Average Learners */}
+                        <div className="bg-white p-6 rounded-3xl border border-ghana-gold/20 flex flex-col h-full hover:shadow-md transition-shadow">
+                          <div className="flex items-center gap-2 mb-4">
+                            <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                            <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Average Learners</h4>
+                          </div>
+                          <div className="space-y-4 flex-grow">
+                            <div>
+                              <p className="text-[9px] font-bold text-emerald-600 uppercase mb-1">Activities</p>
+                              <p className="text-xs text-slate-600 leading-relaxed font-medium">{result.differentiation.averageLearners?.activities}</p>
+                            </div>
+                            <div>
+                              <p className="text-[9px] font-bold text-emerald-600 uppercase mb-1">Resources</p>
+                              <p className="text-xs text-slate-600 leading-relaxed font-medium">{result.differentiation.averageLearners?.resources}</p>
+                            </div>
+                            <div>
+                              <p className="text-[9px] font-bold text-emerald-600 uppercase mb-1">Assessment Tips</p>
+                              <p className="text-xs text-slate-600 leading-relaxed font-medium">{result.differentiation.averageLearners?.assessments}</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Advanced Learners */}
+                        <div className="bg-white p-6 rounded-3xl border border-ghana-gold/20 flex flex-col h-full hover:shadow-md transition-shadow">
+                          <div className="flex items-center gap-2 mb-4">
+                            <div className="w-2 h-2 rounded-full bg-indigo-500" />
+                            <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Advanced Learners</h4>
+                          </div>
+                          <div className="space-y-4 flex-grow">
+                            <div>
+                              <p className="text-[9px] font-bold text-indigo-600 uppercase mb-1">Enrichment Activities</p>
+                              <p className="text-xs text-slate-600 leading-relaxed font-medium">{result.differentiation.advancedLearners?.activities}</p>
+                            </div>
+                            <div>
+                              <p className="text-[9px] font-bold text-indigo-600 uppercase mb-1">Advanced Resources</p>
+                              <p className="text-xs text-slate-600 leading-relaxed font-medium">{result.differentiation.advancedLearners?.resources}</p>
+                            </div>
+                            <div>
+                              <p className="text-[9px] font-bold text-indigo-600 uppercase mb-1">Challenge Assessments</p>
+                              <p className="text-xs text-slate-600 leading-relaxed font-medium">{result.differentiation.advancedLearners?.assessments}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </section>
+                  )}
+
+                  <section className="bg-slate-50 p-8 rounded-3xl border border-slate-200">
+                     <h3 className="text-lg font-bold flex items-center gap-3 mb-6 text-slate-800">
+                        <CheckCircle className="text-emerald-deep" size={24} />
+                        Phase 3: Plenary / Reflections
+                     </h3>
+                     <div className="markdown-body prose prose-sm prose-emerald max-w-none text-slate-600 leading-relaxed italic border-l-4 border-slate-200 pl-6">
+                       <SafeMarkdown>{result.phase3}</SafeMarkdown>
+                     </div>
+                  </section>
+                </div>
+              </div>
+            )}
+
+            {/* PRIMARY-FOCUSED THEME PREVIEW */}
+            {formData.layoutStyle === 'primary-focused' && (
+              <div className="bg-white p-8 lg:p-12 rounded-[2.5rem] shadow-sm border-2 border-dashed border-amber-300 space-y-10 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-amber-200/20 rounded-bl-full pointer-events-none" />
+                
+                {/* Header */}
+                <div className="text-center border-b pb-8 border-amber-100 bg-amber-50/20 p-6 rounded-3xl border border-dashed border-amber-200">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-[10px] font-black uppercase tracking-widest mb-3">
+                    🎈 PRIMARY-GRADE STUDY LAYOUT (KG-B6)
+                  </div>
+                  <h2 className="text-3xl font-extrabold text-amber-900 mb-2 font-sans tracking-tight">🎒 {result.title} 🎨</h2>
+                  <div className="flex flex-wrap justify-center gap-2 mt-4">
+                    <span className="px-3 py-1 bg-amber-100/50 rounded-full text-xs font-black text-amber-800">{formData.class}</span>
+                    <span className="px-3 py-1 bg-amber-100/50 rounded-full text-xs font-black text-amber-800">{formData.subject}</span>
+                    <span className="px-3 py-1 bg-amber-100/50 rounded-full text-xs font-black text-amber-800">🧸 Week {result.weekEnding || formData.weekEnding}</span>
+                    <span className="px-3 py-1 bg-amber-100/50 rounded-full text-xs font-black text-amber-800">👥 Size: {result.classSize || formData.classSize}</span>
+                  </div>
+                </div>
+
+                {/* Tactile Highlights (Curriculum / TLR cards) */}
+                <div className="grid md:grid-cols-2 gap-6 pb-6 border-b border-amber-100">
+                  <div className="bg-amber-50/30 p-6 rounded-3xl border border-amber-100/50 space-y-4">
+                    <h3 className="text-xs font-black text-amber-700 uppercase tracking-wider flex items-center gap-1.5">
+                      <span>🎯</span> Learning Track Overview
+                    </h3>
+                    <div className="space-y-3 text-sm">
+                      <div>
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Strand</span>
+                        <p className="text-slate-700 font-bold">{formData.strand}</p>
+                      </div>
+                      <div>
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Sub-Strand</span>
+                        <p className="text-slate-700 font-bold">{formData.subStrand}</p>
+                      </div>
+                      <div>
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Selected Indicator</span>
+                        <p className="text-slate-700 font-medium text-xs font-sans mt-0.5">{formData.indicator}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-indigo-50/10 p-6 rounded-3xl border border-indigo-100/50 space-y-4">
+                    <h3 className="text-xs font-black text-indigo-700 uppercase tracking-wider flex items-center gap-1.5">
+                      <span>🧸</span> Concrete Play Materials
+                    </h3>
+                    <div className="space-y-3">
+                      <div>
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">TLRs / Learning Aids</span>
+                        <div className="flex flex-wrap gap-1.5 mt-1.5">
+                          {result.tlrs?.split(',').map((item: string, idx: number) => (
+                            <span key={idx} className="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded text-xs font-bold border border-indigo-100">
+                              🧮 {item.trim()}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                      <div>
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Primary References</span>
+                        <p className="text-slate-600 text-xs italic mt-0.5">{result.references}</p>
+                      </div>
+                      <div>
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Focus Competency</span>
+                        <p className="text-indigo-800 font-semibold text-xs mt-0.5">{result.coreCompetencies}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Playful Phases */}
+                <div className="space-y-8">
+                  <section className="bg-amber-50/40 p-6 lg:p-8 rounded-[2rem] border-2 border-dashed border-amber-200">
+                    <h3 className="text-lg font-black text-amber-900 flex items-center gap-2 mb-4">
+                      <span>🎬</span> Phase 1: Brain Stimulator & Starter!
+                      <span className="text-[10px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full uppercase">10 mins</span>
+                    </h3>
+                    <div className="prose prose-amber max-w-none text-slate-700 text-sm">
+                      <SafeMarkdown>{result.phase1}</SafeMarkdown>
+                    </div>
+                  </section>
+
+                  <section className="bg-orange-50/40 p-6 lg:p-8 rounded-[2rem] border-2 border-dashed border-orange-200">
+                    <h3 className="text-lg font-black text-orange-900 flex items-center gap-2 mb-4">
+                      <span>🧩</span> Phase 2: Interactive Main Action!
+                      <span className="text-[10px] bg-orange-100 text-amber-850 px-2 py-0.5 rounded-full uppercase">40 mins</span>
+                    </h3>
+                    <div className="prose prose-orange max-w-none text-slate-700 text-sm">
+                      <SafeMarkdown>{result.phase2}</SafeMarkdown>
+                    </div>
+                  </section>
+
+                  {/* Level-by-level Inclusive Bento Section */}
+                  {result.differentiation && (
+                    <section className="bg-sky-50/40 p-8 rounded-[2rem] border-2 border-dashed border-sky-200">
+                      <h3 className="text-lg font-black text-sky-900 flex items-center gap-2 mb-6">
+                        <span>🌈</span> Inclusive Levels & Child-Centered Differentiation
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="bg-white p-5 rounded-2xl border border-sky-100 flex flex-col h-full hover:shadow-sm">
+                          <span className="text-[10px] font-black tracking-wider uppercase text-red-500 bg-red-50 border border-red-100 px-2 py-0.5 rounded-full self-start mb-2">Needs Help 🧩</span>
+                          <span className="text-[10px] font-bold text-slate-400 block mb-1">Tailored Game:</span>
+                          <p className="text-xs text-slate-600 leading-relaxed font-semibold mb-3">{result.differentiation.strugglingLearners?.activities}</p>
+                          <span className="text-[10px] font-bold text-slate-400 block mb-1">Familiar Object Needed:</span>
+                          <p className="text-[11px] text-slate-500 italic font-medium">{result.differentiation.strugglingLearners?.resources}</p>
+                        </div>
+                        <div className="bg-white p-5 rounded-2xl border border-sky-100 flex flex-col h-full hover:shadow-sm">
+                          <span className="text-[10px] font-black tracking-wider uppercase text-emerald-500 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded-full self-start mb-2">Steady Learning 🎒</span>
+                          <span className="text-[10px] font-bold text-slate-400 block mb-1">General Activity:</span>
+                          <p className="text-xs text-slate-600 leading-relaxed font-semibold mb-3">{result.differentiation.averageLearners?.activities}</p>
+                          <span className="text-[10px] font-bold text-slate-400 block mb-1">In-Class Check:</span>
+                          <p className="text-[11px] text-slate-500 italic font-medium">{result.differentiation.averageLearners?.assessments}</p>
+                        </div>
+                        <div className="bg-white p-5 rounded-2xl border border-sky-100 flex flex-col h-full hover:shadow-sm">
+                          <span className="text-[10px] font-black tracking-wider uppercase text-indigo-500 bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-full self-start mb-2">Extra Challenges 🚀</span>
+                          <span className="text-[10px] font-bold text-slate-400 block mb-1">Enrichment Task:</span>
+                          <p className="text-xs text-slate-600 leading-relaxed font-semibold mb-3">{result.differentiation.advancedLearners?.activities}</p>
+                          <span className="text-[10px] font-bold text-slate-400 block mb-1">Fun Extension:</span>
+                          <p className="text-[11px] text-slate-500 italic font-medium">{result.differentiation.advancedLearners?.assessments}</p>
+                        </div>
+                      </div>
+                    </section>
+                  )}
+
+                  <section className="bg-teal-50/40 p-6 lg:p-8 rounded-[2rem] border-2 border-dashed border-teal-200">
+                    <h3 className="text-lg font-black text-teal-900 flex items-center gap-2 mb-4">
+                      <span>🎯</span> Phase 3: Playful Check-in & Wrap-up!
+                      <span className="text-[10px] bg-teal-150 text-teal-850 px-2 py-0.5 rounded-full uppercase">10 mins</span>
+                    </h3>
+                    <div className="markdown-body prose prose-teal max-w-none text-slate-700 text-sm leading-relaxed italic border-l-4 border-teal-200 pl-4">
+                      <SafeMarkdown>{result.phase3}</SafeMarkdown>
+                    </div>
+                  </section>
+                </div>
+              </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
