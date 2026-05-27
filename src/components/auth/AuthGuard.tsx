@@ -1,11 +1,97 @@
 import React from 'react';
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { Navigate, Outlet, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import Sidebar from '../layout/Sidebar';
 import { EduPulseBanner } from '../layout/EduPulseBanner';
 import { Onboarding } from '../profile/Onboarding';
 import { motion } from 'motion/react';
 import { differenceInDays } from 'date-fns';
+import { Lock, CreditCard, MessageCircle, CheckCircle2 } from 'lucide-react';
+
+const LockedOverlay = () => {
+  const whatsappNumber = "0556231544";
+  const whatsappUrl = `https://wa.me/233556231544?text=${encodeURIComponent("Hello TeachSmart Admin, my trial has expired and I would like to activate/upgrade my TeachSmart account:")}`;
+
+  return (
+    <div className="bg-white rounded-[2.5rem] p-8 md:p-12 border border-slate-100 shadow-xl overflow-hidden relative">
+      <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-50 rounded-full blur-3xl -z-10 opacity-60" />
+      <div className="max-w-2xl mx-auto text-center space-y-8 py-6">
+        <div className="inline-flex items-center justify-center w-20 h-20 bg-amber-50 text-amber-600 rounded-3xl border border-amber-100 shadow-md">
+          <Lock size={32} />
+        </div>
+        
+        <div className="space-y-4">
+          <span className="px-3 py-1 bg-amber-500/10 text-amber-600 font-black text-[9px] uppercase tracking-widest rounded-lg border border-amber-500/20">
+            Access Suspended
+          </span>
+          <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight leading-none">
+            Your Free Trial Has Ended 🇬🇭
+          </h2>
+          <p className="text-slate-500 text-sm md:text-base font-medium max-w-lg mx-auto leading-relaxed">
+            Your 3-day trial has finished, but your teaching journey doesn't have to pause. Upgrade to TeachSmart Elite to continue generating NaCCA-aligned resources daily.
+          </p>
+        </div>
+
+        {/* Perks Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl mx-auto pt-4 text-left">
+          {[
+            "Fully aligns with standard NaCCA curriculum updates",
+            "Unlimited high-speed lesson plans, schemes, & exams",
+            "Saves 10+ hours per week of manual preparation",
+            "Export polished resources to PDF and Word DOCX"
+          ].map((perk, i) => (
+            <div key={i} className="flex items-start gap-3 p-3.5 bg-slate-50 border border-slate-100/50 rounded-2xl">
+              <CheckCircle2 size={16} className="text-emerald-600 shrink-0 mt-0.5" />
+              <span className="text-xs font-bold text-slate-700">{perk}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Plan Summary Row */}
+        <div className="bg-slate-900 text-white rounded-[2rem] p-6 max-w-xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 border border-slate-800">
+          <div className="text-center sm:text-left">
+            <p className="text-[10px] font-black uppercase text-amber-500 tracking-wider">Most Value Pass</p>
+            <h4 className="font-black text-lg">Elite Pro Teacher</h4>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="text-center bg-white/5 border border-white/5 px-4 py-2 rounded-xl">
+              <span className="block text-[8px] font-black text-slate-400 uppercase">Termly</span>
+              <span className="font-extrabold text-sm text-emerald-400">GHS 50</span>
+            </div>
+            <div className="text-center bg-emerald-900 border border-emerald-800 px-4 py-2 rounded-xl">
+              <span className="block text-[8px] font-black text-emerald-400 uppercase">Yearly</span>
+              <span className="font-extrabold text-sm text-ghana-gold">GHS 100</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Response CTA */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+          <Link
+            to="/billing"
+            className="w-full sm:w-auto px-8 py-4 bg-emerald-deep hover:bg-emerald-900 text-white flex items-center justify-center gap-3 transition-all rounded-2xl text-xs font-black uppercase tracking-widest shadow-lg shadow-emerald-950/20"
+          >
+            <CreditCard size={16} />
+            Upgrade Account Instantly
+          </Link>
+          <a
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full sm:w-auto px-8 py-4 bg-green-500 hover:bg-green-600 text-white flex items-center justify-center gap-3 transition-all rounded-2xl text-xs font-black uppercase tracking-widest shadow-lg shadow-green-500/10"
+          >
+            <MessageCircle size={16} />
+            Contact Admin (0556231544)
+          </a>
+        </div>
+        
+        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">
+          Secured Payments powered by Paystack 🇬🇭
+        </p>
+      </div>
+    </div>
+  );
+};
 
 const AuthGuard = () => {
   const { user, profile, loading, isTrialActive, daysLeft } = useAuth();
@@ -90,17 +176,14 @@ const AuthGuard = () => {
   }
 
   // Trial/Subscription check using centralized logic
-  const activeTrial = isTrialActive();
-  const isExpired = profile?.subscriptionStatus === 'expired' || (profile?.subscriptionEndDate && new Date(profile.subscriptionEndDate) < new Date());
-  
-  const needsPayment = !activeTrial && isExpired && profile?.subscriptionStatus !== 'active';
+  const isAdmin = user?.email === 'muhammadilias53@gmail.com';
+  const hasActiveSubscription = profile?.subscriptionStatus === 'active';
+  const trialActive = isTrialActive();
+  const isUserBlocked = !isAdmin && !trialActive && !hasActiveSubscription;
 
   // Allowed paths even if expired
-  const publicPaths = ['/billing', '/profile', '/', '/library'];
+  const publicPaths = ['/billing', '/profile'];
   const isPublicPath = publicPaths.includes(location.pathname);
-
-  // We allow all navigation regardless of payment status to ensure sidebar responsiveness.
-  // Individual features can implement their own restriction UI if needed.
   
   return (
     <div className="flex min-h-screen bg-gray-50">
@@ -113,7 +196,11 @@ const AuthGuard = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <Outlet />
+            {isUserBlocked && !isPublicPath ? (
+              <LockedOverlay />
+            ) : (
+              <Outlet />
+            )}
           </motion.div>
         </div>
       </main>

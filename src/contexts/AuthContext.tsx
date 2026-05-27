@@ -79,7 +79,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [daysLeft, setDaysLeft] = useState<number>(0);
 
   const TRIAL_RESET_DATE = new Date('2026-05-11T00:00:00Z');
-  const TRIAL_DURATION_DAYS = 14;
+  const TRIAL_DURATION_DAYS = 3;
 
   const isTrialActive = () => {
     return getTrialDaysLeft() > 0;
@@ -136,7 +136,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const canGenerate = () => {
     if (isAdmin) return true;
     
-    // Full access during the 14-day period regardless of status (Restarted for all)
+    // Full access during the 3-day period regardless of status (Restarted for all)
     // We check if trial is active first
     if (isTrialActive()) return true;
     
@@ -238,7 +238,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 uid: user.uid,
                 email: user.email || '',
                 displayName: user.displayName || (isAnonymous ? 'Guest Teacher' : 'Teacher'),
-                trialStartDate: TRIAL_RESET_DATE.toISOString(), // Start from reset date for all
+                trialStartDate: new Date().toISOString(), // Start from registration date for new users
                 subscriptionStatus: 'trial',
                 trialResetMay2026Applied: true,
                 onboardingComplete: isAnonymous ? true : false, 

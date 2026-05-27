@@ -156,6 +156,7 @@ const Login = () => {
           subjectsTaught: subjectsTaught.split(',').map(s => s.trim()).filter(Boolean),
           trialStartDate: serverTimestamp(),
           subscriptionStatus: 'trial',
+          trialResetMay2026Applied: true, // Mark reset applied to avoid overwriting their brand-new signup date
           onboardingComplete: true, // Mark as complete since they filled it during registration
           createdAt: serverTimestamp(),
         };
