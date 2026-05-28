@@ -21,8 +21,9 @@ import { cn } from '../../lib/utils';
 import { SafeMarkdown } from '../common/SafeMarkdown';
 import 'highlight.js/styles/github.css';
 import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import { toast } from 'react-hot-toast';
-import { subjects as sharedSubjects, levels } from '../../constants';
+import { subjects as sharedSubjects, levels, CLASSES_BY_LEVEL } from '../../constants';
 
 const difficulties = ["Easy", "Standard", "Challenging"];
 
@@ -36,18 +37,25 @@ export default function ExamGenerator() {
   const [showSaveConfirm, setShowSaveConfirm] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   
-  const [formData, setFormData] = useState({
-    subject: '',
-    level: profile?.level || '',
-    topics: '',
-    difficulty: 'Standard',
-    title: '',
-    selectedTypes: ['Multiple Choice', 'Theory'] as string[],
-    p1Count: 40,
-    p1Difficulty: 'Standard',
-    p2Count: 6,
-    p2Difficulty: 'Standard'
+  const [formData, setFormData] = useState(() => {
+    const defaultLevel = profile?.level || 'JHS';
+    const classes = CLASSES_BY_LEVEL[defaultLevel] || [];
+    return {
+      subject: '',
+      level: defaultLevel,
+      classLevel: classes[0] || '',
+      topics: '',
+      difficulty: 'Standard',
+      title: '',
+      selectedTypes: ['Multiple Choice', 'Theory'] as string[],
+      p1Count: 40,
+      p1Difficulty: 'Standard',
+      p2Count: 6,
+      p2Difficulty: 'Standard'
+    };
   });
+
+  const currentClasses = CLASSES_BY_LEVEL[formData.level] || [];
 
   const questionTypes = ['Multiple Choice', 'Theory', 'Practical', 'True/False', 'Matching', 'Fill-in-the-blanks'];
 
@@ -57,6 +65,15 @@ export default function ExamGenerator() {
       selectedTypes: prev.selectedTypes.includes(type)
         ? prev.selectedTypes.filter(t => t !== type)
         : [...prev.selectedTypes, type]
+    }));
+  };
+
+  const handleLevelChange = (lvl: any) => {
+    const classes = CLASSES_BY_LEVEL[lvl] || [];
+    setFormData(prev => ({
+      ...prev,
+      level: lvl,
+      classLevel: classes[0] || ''
     }));
   };
 
@@ -92,7 +109,7 @@ export default function ExamGenerator() {
     try {
       const examData = await generateExam(
         formData.subject,
-        formData.level,
+        `${formData.level} (${formData.classLevel})`,
         formData.topics,
         formData.difficulty,
         {
@@ -146,7 +163,8 @@ export default function ExamGenerator() {
         authorId: user.uid,
         title: formData.title || `${formData.subject} - ${formData.topics}`,
         subject: formData.subject,
-        level: formData.level,
+        level: `${formData.level} (${formData.classLevel})`,
+        classLevel: formData.classLevel,
         questions: result.questions,
         markingScheme: result.markingScheme,
         createdAt: serverTimestamp()
@@ -167,7 +185,7 @@ export default function ExamGenerator() {
     const doc = new jsPDF();
     const title = type === 'exam' ? formData.title || 'Examination Paper' : `Marking Scheme: ${formData.title || 'Examination'}`;
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-').replace('T', '_').slice(0, 19);
-    const filename = `${formData.subject}_${formData.level}_${type === 'exam' ? 'Exam' : 'Marking'}_${timestamp}`.replace(/[\s\W]+/g, '_');
+    const filename = `${formData.subject}_${formData.level}_${formData.classLevel}_${type === 'exam' ? 'Exam' : 'Marking'}_${timestamp}`.replace(/[\s\W]+/g, '_');
     
     // Header Branding
     doc.setFillColor(0, 28, 61); // TeachSmart Deep Blue
@@ -193,7 +211,7 @@ export default function ExamGenerator() {
     
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
-    doc.text(`SUBJECT: ${formData.subject.toUpperCase()} | LEVEL: ${formData.level.toUpperCase()} | DIFFICULTY: ${formData.difficulty.toUpperCase()}`, 105, 62, { align: 'center' });
+    doc.text(`SUBJECT: ${formData.subject.toUpperCase()} | LEVEL: ${formData.level.toUpperCase()} (${formData.classLevel.toUpperCase()}) | DIFFICULTY: ${formData.difficulty.toUpperCase()}`, 105, 62, { align: 'center' });
     
     doc.setLineWidth(0.5);
     doc.setDrawColor(230, 230, 230);
@@ -201,22 +219,90 @@ export default function ExamGenerator() {
 
     const content = type === 'exam' ? result.questions : result.markingScheme;
     
-    // Content with basic page wrapping
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(10.5);
-    const splitText = doc.splitTextToSize(content.replace(/[#*]/g, ''), 175);
-    
+    const lines = content.split('\n');
     let cursorY = 78;
     const pageHeight = doc.internal.pageSize.height;
-    
-    splitText.forEach((line: string) => {
-      if (cursorY > pageHeight - 35) {
-        doc.addPage();
-        cursorY = 25;
+    const maxContentY = pageHeight - 35;
+    const marginX = 20;
+
+    const addNewPage = () => {
+      doc.addPage();
+      cursorY = 25;
+    };
+
+    let i = 0;
+    while (i < lines.length) {
+      const origLine = lines[i];
+      const trimmedLine = origLine.trim();
+
+      if (trimmedLine === '') {
+        cursorY += 4;
+        i++;
+        continue;
       }
-      doc.text(line, 20, cursorY);
-      cursorY += 6.5;
-    });
+
+      // Render Markdown Tables using autoTable
+      if (trimmedLine.startsWith('|')) {
+        const tableLines: string[] = [];
+        while (i < lines.length && lines[i].trim().startsWith('|')) {
+          tableLines.push(lines[i].trim());
+          i++;
+        }
+
+        if (tableLines.length > 0) {
+          let headers: string[] = [];
+          const bodyRows: string[][] = [];
+
+          tableLines.forEach((tLine, tIdx) => {
+            const row = tLine.split('|').filter((_, colIdx, arr) => colIdx > 0 && colIdx < arr.length - 1).map(c => c.trim());
+            if (row.length > 0) {
+              if (tIdx === 0) {
+                headers = row;
+              } else if (!tLine.includes('---')) {
+                bodyRows.push(row);
+              }
+            }
+          });
+
+          if (headers.length > 0 || bodyRows.length > 0) {
+            if (cursorY + 15 > maxContentY) {
+              addNewPage();
+            }
+
+            autoTable(doc, {
+              head: headers.length > 0 ? [headers] : [],
+              body: bodyRows,
+              startY: cursorY + 2,
+              theme: 'grid',
+              styles: { fontSize: 8.5, cellPadding: 3.5, valign: 'middle' },
+              headStyles: { fillColor: [0, 28, 61], textColor: 255, fontStyle: 'bold', halign: 'center' },
+              alternateRowStyles: { fillColor: [248, 250, 252] },
+              margin: { left: marginX, right: marginX },
+            });
+
+            cursorY = (doc as any).lastAutoTable.finalY + 6;
+          }
+        }
+        continue;
+      }
+
+      // Standard text line
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(10.5);
+      
+      const cleanLine = origLine.replace(/[#*]/g, '');
+      const splitLines = doc.splitTextToSize(cleanLine, 170);
+      
+      splitLines.forEach((sLine: string) => {
+        if (cursorY > maxContentY) {
+          addNewPage();
+        }
+        doc.text(sLine, marginX, cursorY);
+        cursorY += 6.5;
+      });
+
+      i++;
+    }
 
     // Footer
     const pageCount = (doc.internal as any).getNumberOfPages();
@@ -284,7 +370,7 @@ export default function ExamGenerator() {
             />
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="space-y-2">
               <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Subject Area</label>
               <select 
@@ -299,15 +385,26 @@ export default function ExamGenerator() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Class/Level</label>
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Education Stage</label>
               <select 
                 required
                 className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-bold text-slate-700"
                 value={formData.level}
-                onChange={(e) => setFormData({...formData, level: e.target.value})}
+                onChange={(e) => handleLevelChange(e.target.value)}
               >
-                <option value="">Select Level</option>
                 {levels.map(l => <option key={l} value={l}>{l}</option>)}
+              </select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Specific Class/Form</label>
+              <select 
+                required
+                className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-bold text-slate-700"
+                value={formData.classLevel}
+                onChange={(e) => setFormData({...formData, classLevel: e.target.value})}
+              >
+                {currentClasses.map(c => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
           </div>
@@ -578,7 +675,7 @@ export default function ExamGenerator() {
                   </div>
                   <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-slate-400">
                     <span>Level</span>
-                    <span className="text-slate-900">{formData.level}</span>
+                    <span className="text-slate-900">{formData.level} ({formData.classLevel})</span>
                   </div>
                 </div>
 

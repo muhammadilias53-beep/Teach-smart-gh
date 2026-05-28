@@ -212,6 +212,67 @@ export const generateExam = async (
   const p2Diff = p2Settings?.difficulty ?? difficulty;
   const theoryToAnswer = theoryCount === 6 ? 4 : Math.ceil(theoryCount * 0.7);
 
+  const selectedTypesList = questionTypes && questionTypes.length > 0 ? questionTypes : ['Multiple Choice', 'Theory'];
+
+  // Dynamically build exam structures
+  const structureParts: string[] = [];
+  const rulesParts: string[] = [];
+  const instructionsParts: string[] = [];
+
+  let paperIndex = 1;
+  let sectionLetter = 'A';
+
+  if (selectedTypesList.includes('Multiple Choice')) {
+    structureParts.push(`- PAPER ${paperIndex} (SECTION ${sectionLetter}): Multiple Choice Objective Test`);
+    rulesParts.push(`- SECTION ${sectionLetter} (Multiple Choice): Provide exactly ${objectiveCount} multiple choice questions (with options A, B, C, D). Section difficulty: ${p1Diff}.`);
+    instructionsParts.push(`- Section ${sectionLetter} (Multiple Choice) Instruction: "Answer ALL questions in this section."`);
+    sectionLetter = String.fromCharCode(sectionLetter.charCodeAt(0) + 1);
+  }
+
+  if (selectedTypesList.includes('True/False')) {
+    structureParts.push(`- PAPER ${paperIndex} (SECTION ${sectionLetter}): True / False Questions`);
+    rulesParts.push(`- SECTION ${sectionLetter} (True / False): Provide exactly 10 True/False statements.`);
+    instructionsParts.push(`- Section ${sectionLetter} (True / False) Instruction: "State whether each of the following statements is TRUE or FALSE."`);
+    sectionLetter = String.fromCharCode(sectionLetter.charCodeAt(0) + 1);
+  }
+
+  if (selectedTypesList.includes('Matching')) {
+    structureParts.push(`- PAPER ${paperIndex} (SECTION ${sectionLetter}): Matching Exercise`);
+    rulesParts.push(`- SECTION ${sectionLetter} (Matching): Provide a matching set formatted STRICTLY as a clean Markdown table with exactly three columns: "| Column A (Items to Match) | Your Answer | Column B (Options) |". Provide 5 to 10 matching pairs. For each row in the table, Column A displays a concept/term, the "Your Answer" column must contain a blank space or placeholder like "[       ]" or "______________" for students to input their answers, and Column B displays randomized/jumbled corresponding options.`);
+    instructionsParts.push(`- Section ${sectionLetter} (Matching) Instruction: "Match items in Column A with the correct corresponding terms in Column B. Write the letter/option of your answer from Column B in the space provided in the 'Your Answer' column."`);
+    sectionLetter = String.fromCharCode(sectionLetter.charCodeAt(0) + 1);
+  }
+
+  if (selectedTypesList.includes('Fill-in-the-blanks')) {
+    structureParts.push(`- PAPER ${paperIndex} (SECTION ${sectionLetter}): Fill-in-the-blanks`);
+    rulesParts.push(`- SECTION ${sectionLetter} (Fill-in-the-blanks): Provide exactly 10 short-answer/completion questions where the learner fills in a missing word or phrase.`);
+    instructionsParts.push(`- Section ${sectionLetter} (Fill-in-the-blanks) Instruction: "Fill in the blank spaces with the most appropriate word(s) to complete each sentence."`);
+    sectionLetter = String.fromCharCode(sectionLetter.charCodeAt(0) + 1);
+  }
+
+  // Increment paper index if we had any objective type and also have theory/practical
+  if (structureParts.length > 0 && (selectedTypesList.includes('Theory') || selectedTypesList.includes('Practical'))) {
+    paperIndex++;
+    sectionLetter = 'A'; // Reset section letter for the next paper
+  }
+
+  if (selectedTypesList.includes('Theory')) {
+    structureParts.push(`- PAPER ${paperIndex} (SECTION ${sectionLetter}): Essay / Theory Questions.`);
+    rulesParts.push(`- SECTION ${sectionLetter} (Essay/Theory): Provide exactly ${theoryCount} comprehensive structured theory/essay questions (with sub-parts a, b, c). Section difficulty: ${p2Diff}.`);
+    instructionsParts.push(`- Section ${sectionLetter} (Essay/Theory) Instruction: "Answer question 1 (compulsory) and any other ${theoryToAnswer - 1} questions (for a total of ${theoryToAnswer} questions)."`);
+    sectionLetter = String.fromCharCode(sectionLetter.charCodeAt(0) + 1);
+  }
+
+  if (selectedTypesList.includes('Practical')) {
+    structureParts.push(`- PAPER ${paperIndex} (SECTION ${sectionLetter}): Practical Work / Test of Practical Knowledge.`);
+    rulesParts.push(`- SECTION ${sectionLetter} (Practical): Provide at least 3 detailed Practical questions based on diagrams, measurements, and identification using clear, boxed text-based diagrams description.`);
+    instructionsParts.push(`- Section ${sectionLetter} (Practical) Instruction: "Answer ALL questions in this section. All diagrams should be clearly labeled and referenced."`);
+  }
+
+  const structureFormatted = structureParts.join('\n       ');
+  const rulesFormatted = rulesParts.join('\n       ');
+  const instructionsFormatted = instructionsParts.join('\n       ');
+
   const systemInstruction = `
     You are an expert examiner for the West African Examinations Council (WAEC), strictly adhering to NaCCA SBC/CCP and GES assessment standards for Ghana.
     Generate a high-quality examination for ${subject} (${level}) based on the topics, strand, sub-strand, content standard, and indicator provided.
@@ -230,7 +291,7 @@ export const generateExam = async (
     4. NOMENCLATURE: ALWAYS use the "Basic" level format (e.g., B1-B6 for Primary, B7-B9 for Junior High, B10-B12 for Senior High). NEVER use JHS or SHS alone; always refer to them as Basic 7-9 or Basic 10-12.
     
     Overall Examination Difficulty: ${difficulty}
-    ${questionTypes && questionTypes.length > 0 ? `Selected Question Types to include: ${questionTypes.join(', ')}` : ''}
+    Selected Question Types to include: ${selectedTypesList.join(', ')}
     
     ${teacherInfo?.school ? `SCHOOL HEADER INFO:
     School Name: ${teacherInfo.school}
@@ -239,21 +300,17 @@ export const generateExam = async (
     Region: ${teacherInfo.region || 'N/A'}` : ''}
 
     STRICT WAEC COMPLIANCE RULES:
-    1. STRUCTURE:
-       - PAPER 1 (SECTION A): Objective Test.
-       - PAPER 2 (SECTION B): Essay/Theory.
-       ${questionTypes?.includes('Practical') || subject.toLowerCase().includes('science') ? '- PAPER 3 (SECTION C): Practical Work / Test of Practical Knowledge.' : ''}
+    1. STRUCTURE (STRICTLY generate ONLY these selected sections. Do NOT generate any unselected sections or question types):
+       ${structureFormatted}
     2. QUESTION COUNTS & DIFFICULTY:
-       - SECTION A (Objectives): Exactly ${objectiveCount} Multiple Choice Questions (A, B, C, D). Section difficulty: ${p1Diff}.
-       - SECTION B (Essay): Exactly ${theoryCount} Essay questions. Section difficulty: ${p2Diff}.
-       ${questionTypes?.includes('Practical') || subject.toLowerCase().includes('science') ? '- SECTION C: At least 3 detailed Practical questions based on diagrams, measurements, and identification.' : ''}
+       ${rulesFormatted}
     3. INSTRUCTIONS:
        - Header must include: "NAME: ....................................", "INDEX NUMBER: ............................", "DATE: ............................"
        - ${teacherInfo?.school ? `Include the school name "${teacherInfo.school.toUpperCase()}" prominently in the header centered, followed by the Town and Region if available.` : 'Include placeholders for school name.'}
-       - Section A Instruction: "Answer ALL questions in this section."
-       - Section B Instruction: "Answer question 1 and any other ${theoryToAnswer - 1} questions (for a total of ${theoryToAnswer})."
-       ${questionTypes?.includes('Practical') || subject.toLowerCase().includes('science') ? '- Section C Instruction: "Answer ALL questions in this section. All diagrams should be clearly labeled."' : ''}
-    4. QUALITY:
+       ${instructionsFormatted}
+    4. NO OTHER QUESTION TYPES ALLOWED:
+       - You are STRICTLY forbidden from generating any question formats that the teacher has NOT selected. If 'Theory / Essay' is not in the list of selected types above, you MUST NOT generate any essay or theory questions. If 'Multiple Choice' is not in the list of selected types above, you MUST NOT generate any multiple choice questions. The exam must focus entirely on the requested formats: ${selectedTypesList.join(', ')}.
+    5. QUALITY:
        - Questions must be rigorous and strictly aligned with the Ghanaian NaCCA/WAEC standardized syllabus.
        - Each Theory question must have multiple sub-parts.
        - PRACTICAL QUESTIONS: For subjects requiring practicals (Science, Career Tech, etc.), you MUST include a dedicated section for PRACTICAL QUESTIONS. 
@@ -263,15 +320,16 @@ export const generateExam = async (
          - Label B: Water weed in a beaker
          - Label C: Gas being collected in a test tube
        - Ensure all practical questions involve scenarios with apparatus, observations, and data interpretation as per WAEC format.
-    5. FORMATTING:
+    6. FORMATTING:
        - Use Arabic numerals for main questions correctly prefixed (e.g., 1., 2.).
        - Use lower case letters (e.g., a., b.) for sub-questions.
        - Use Roman numerals (e.g., i, ii) for further sub-divisions.
        - Ensure all multiple choice options are listed with bullets or A, B, C, D labels.
     
     CRITICAL REQUIREMENT: You MUST also generate a VERY DETAILED marking scheme.
-    - For Objective questions, provide a key (e.g., 1. A, 2. B) followed by the correct answer text.
-    - For Theory questions, provide a detailed mark allocation (e.g., [2 marks], [4 marks]) and expected points for each sub-part.
+    - For Objective/short-answer questions, provide a key (e.g., 1. A, 2. B, or True/False keys, or Matching answers) followed by the correct answer text.
+    - For Matching questions, the marking scheme answers MUST ALSO be formatted as a Markdown table with columns: "| Item from Column A | Correct Answer from Column B |".
+    - For Theory/Essay questions, provide a detailed mark allocation (e.g., [2 marks], [4 marks]) and expected points for each sub-part.
     
     The response MUST be a JSON object:
     {
@@ -282,7 +340,7 @@ export const generateExam = async (
 
   const response = await ai.models.generateContent({
     model,
-    contents: `Generate a full WAEC-style examination for ${subject} ${level} covering ${topics}${strand ? ` (Strand: ${strand})` : ''}${subStrand ? ` (Sub-Strand: ${subStrand})` : ''} at a ${difficulty} level.`,
+    contents: `Generate a full WAEC-style examination containing ONLY the selected formats: ${selectedTypesList.join(', ')} for subject ${subject} ${level} covering ${topics}${strand ? ` (Strand: ${strand})` : ''}${subStrand ? ` (Sub-Strand: ${subStrand})` : ''} at a ${difficulty} level.`,
     config: {
       systemInstruction,
       responseMimeType: "application/json",
@@ -505,6 +563,189 @@ You MUST return a JSON object with this exact structure:
  * Robustly parses AI responses that are expected to be JSON.
  * Handles cases where the model might include extra text or markdown markers.
  */
+function extractFirstJSON(text: string): string | null {
+  const firstBrace = text.indexOf('{');
+  const firstBracket = text.indexOf('[');
+  
+  if (firstBrace === -1 && firstBracket === -1) return null;
+  
+  let startIdx = -1;
+  let openChar = '{';
+  let closeChar = '}';
+  
+  if (firstBrace !== -1 && (firstBracket === -1 || firstBrace < firstBracket)) {
+    startIdx = firstBrace;
+    openChar = '{';
+    closeChar = '}';
+  } else {
+    startIdx = firstBracket;
+    openChar = '[';
+    closeChar = ']';
+  }
+
+  let depth = 0;
+  let inString = false;
+  let escape = false;
+
+  for (let i = startIdx; i < text.length; i++) {
+    const char = text[i];
+
+    if (escape) {
+      escape = false;
+      continue;
+    }
+
+    if (char === '\\') {
+      escape = true;
+      continue;
+    }
+
+    if (char === '"') {
+      inString = !inString;
+      continue;
+    }
+
+    if (!inString) {
+      if (char === openChar) {
+        depth++;
+      } else if (char === closeChar) {
+        depth--;
+        if (depth === 0) {
+          return text.substring(startIdx, i + 1);
+        }
+      }
+    }
+  }
+
+  // Fallback to substring if brace matching didn't close cleanly
+  const lastIndex = text.lastIndexOf(closeChar);
+  if (lastIndex !== -1 && lastIndex > startIdx) {
+    return text.substring(startIdx, lastIndex + 1);
+  }
+
+  return null;
+}
+
+function sanitizeJsonBackslashes(str: string): string {
+  let result = "";
+  for (let i = 0; i < str.length; i++) {
+    const char = str[i];
+    if (char === '\\') {
+      if (i + 1 < str.length) {
+        const next = str[i + 1];
+        if (
+          next === 'n' ||
+          next === 't' ||
+          next === 'r' ||
+          next === '"' ||
+          next === '\\' ||
+          next === '/' ||
+          next === 'b' ||
+          next === 'f'
+        ) {
+          result += '\\' + next;
+          i++;
+        } else if (next === 'u' && i + 5 < str.length && /^[0-9a-fA-F]{4}$/.test(str.substring(i + 2, i + 6))) {
+          result += '\\' + str.substring(i + 1, i + 6);
+          i += 5;
+        } else {
+          result += '\\\\';
+        }
+      } else {
+        result += '\\\\';
+      }
+    } else {
+      result += char;
+    }
+  }
+  return result;
+}
+
+function extractFieldStringValue(jsonText: string, key: string): string | null {
+  const regex = new RegExp(`"${key}"\\s*:\\s*"`);
+  const match = jsonText.match(regex);
+  if (!match || match.index === undefined) return null;
+
+  const startIdx = match.index + match[0].length;
+  let inEscape = false;
+  let value = "";
+
+  for (let i = startIdx; i < jsonText.length; i++) {
+    const char = jsonText[i];
+    if (inEscape) {
+      value += char;
+      inEscape = false;
+    } else if (char === '\\') {
+      value += char;
+      inEscape = true;
+    } else if (char === '"') {
+      return value;
+    } else {
+      value += char;
+    }
+  }
+  return value;
+}
+
+function extractFieldArrayValue(jsonText: string, key: string): string[] | null {
+  const regex = new RegExp(`"${key}"\\s*:\\s*\\[`);
+  const match = jsonText.match(regex);
+  if (!match || match.index === undefined) return null;
+
+  const startIdx = match.index + match[0].length;
+  const items: string[] = [];
+  let inString = false;
+  let inEscape = false;
+  let currentStr = "";
+
+  for (let i = startIdx; i < jsonText.length; i++) {
+    const char = jsonText[i];
+    
+    if (inString) {
+      if (inEscape) {
+        currentStr += char;
+        inEscape = false;
+      } else if (char === '\\') {
+        currentStr += char;
+        inEscape = true;
+      } else if (char === '"') {
+        items.push(currentStr);
+        currentStr = "";
+        inString = false;
+      } else {
+        currentStr += char;
+      }
+    } else {
+      if (char === '"') {
+        inString = true;
+      } else if (char === ']') {
+        return items;
+      }
+    }
+  }
+  return items;
+}
+
+function extractDifferentiation(jsonStr: string) {
+  const extractSubSection = (sectionName: string) => {
+    const startRegex = new RegExp(`"${sectionName}"\\s*:\\s*\\{`);
+    const match = jsonStr.match(startRegex);
+    if (!match || match.index === undefined) return { activities: "", resources: "", assessments: "" };
+
+    const searchArea = jsonStr.substring(match.index);
+    const activities = extractFieldStringValue(searchArea, "activities") || "";
+    const resources = extractFieldStringValue(searchArea, "resources") || "";
+    const assessments = extractFieldStringValue(searchArea, "assessments") || "";
+    return { activities, resources, assessments };
+  };
+
+  return {
+    strugglingLearners: extractSubSection("strugglingLearners"),
+    averageLearners: extractSubSection("averageLearners"),
+    advancedLearners: extractSubSection("advancedLearners"),
+  };
+}
+
 function parseAIResponse(response: any) {
   const text = typeof response.text === 'function' ? response.text() : (response.text || "");
   
@@ -517,128 +758,103 @@ function parseAIResponse(response: any) {
     // Try direct parse first
     return JSON.parse(trimmedText);
   } catch (e) {
-    // Attempt to extract anything between the first { and last }
-    const startIdx = trimmedText.indexOf('{');
-    const endIdx = trimmedText.lastIndexOf('}');
-    
-    if (startIdx !== -1 && endIdx !== -1 && endIdx > startIdx) {
-      const potentialJSON = trimmedText.substring(startIdx, endIdx + 1);
-      try {
-        return JSON.parse(potentialJSON);
-      } catch (innerE) {
-        console.warn("Standard JSON parse failed on JSON block, attempting structural extraction...", innerE);
-        
+    try {
+      // Try parsing with sanitized backslashes
+      const sanitized = sanitizeJsonBackslashes(trimmedText);
+      return JSON.parse(sanitized);
+    } catch (e2) {
+      // Attempt robust balanced-braces JSON extraction
+      const extracted = extractFirstJSON(trimmedText);
+      if (extracted) {
         try {
-          // Extract Title
-          let title = "";
-          const titleStartMatch = potentialJSON.match(/"title"\s*:\s*"/);
-          const contentStartMatch = potentialJSON.match(/"content"\s*:\s*"/);
-          if (titleStartMatch && titleStartMatch.index !== undefined && contentStartMatch && contentStartMatch.index !== undefined) {
-            const start = titleStartMatch.index + titleStartMatch[0].length;
-            const endPartSlice = potentialJSON.substring(start, contentStartMatch.index);
-            let titleValStr = endPartSlice.trim();
-            if (titleValStr.endsWith(',')) {
-              titleValStr = titleValStr.slice(0, -1).trim();
-            }
-            if (titleValStr.endsWith('"')) {
-              titleValStr = titleValStr.slice(0, -1);
-            }
-            title = titleValStr;
+          return JSON.parse(extracted);
+        } catch (innerE) {
+          try {
+            const sanitizedExtracted = sanitizeJsonBackslashes(extracted);
+            return JSON.parse(sanitizedExtracted);
+          } catch (innerE2) {
+            console.warn("Standard and sanitized JSON block parsing failed, trying robust schema-aware regex fallback...", innerE2);
           }
+        }
+      }
 
-          // Extract Content
-          let content = "";
-          if (contentStartMatch && contentStartMatch.index !== undefined) {
-            const start = contentStartMatch.index + contentStartMatch[0].length;
-            const summaryStartMatch = potentialJSON.match(/"summary"\s*:\s*\[/);
-            if (summaryStartMatch && summaryStartMatch.index !== undefined) {
-              const endPartSlice = potentialJSON.substring(start, summaryStartMatch.index);
-              let contentValStr = endPartSlice.trim();
-              if (contentValStr.endsWith(',')) {
-                contentValStr = contentValStr.slice(0, -1).trim();
-              }
-              if (contentValStr.endsWith('"')) {
-                contentValStr = contentValStr.slice(0, -1);
-              }
-              content = contentValStr;
-            }
-          }
+      const sourceText = extracted || trimmedText;
+      const unescapedString = (str: string) => {
+        return str
+          .replace(/\\"/g, '"')
+          .replace(/\\n/g, '\n')
+          .replace(/\\t/g, '\t')
+          .replace(/\\\\/g, '\\');
+      };
 
-          // Extract Summary
-          let summary: string[] = [];
-          const summaryStartMatch = potentialJSON.match(/"summary"\s*:\s*\[/);
-          const questionsStartMatch = potentialJSON.match(/"questions"\s*:\s*\[/);
-          if (summaryStartMatch && summaryStartMatch.index !== undefined && questionsStartMatch && questionsStartMatch.index !== undefined) {
-            const start = summaryStartMatch.index + summaryStartMatch[0].length;
-            const endPartSlice = potentialJSON.substring(start, questionsStartMatch.index);
-            let arrayValStr = endPartSlice.trim();
-            if (arrayValStr.endsWith(',')) {
-              arrayValStr = arrayValStr.slice(0, -1).trim();
-            }
-            if (arrayValStr.endsWith(']')) {
-              arrayValStr = arrayValStr.slice(0, -1).trim();
-            }
-            
-            const arrayStr = "[" + arrayValStr + "]";
-            try {
-              summary = JSON.parse(arrayStr);
-            } catch (_) {
-              // regex fallback
-              const items = arrayValStr.match(/"([^"\\]|\\.)*"/g);
-              if (items) {
-                summary = items.map(item => item.substring(1, item.length - 1));
-              }
-            }
-          }
-
-          // Extract Questions
-          let questions: string[] = [];
-          if (questionsStartMatch && questionsStartMatch.index !== undefined) {
-            const start = questionsStartMatch.index + questionsStartMatch[0].length;
-            const endPartSlice = potentialJSON.substring(start);
-            let arrayValStr = endPartSlice.trim();
-            // remove ending curly and array brackets
-            if (arrayValStr.endsWith('}')) {
-              arrayValStr = arrayValStr.slice(0, -1).trim();
-            }
-            if (arrayValStr.endsWith(']')) {
-              arrayValStr = arrayValStr.slice(0, -1).trim();
-            }
-            
-            const arrayStr = "[" + arrayValStr + "]";
-            try {
-              questions = JSON.parse(arrayStr);
-            } catch (_) {
-              // regex fallback
-              const items = arrayValStr.match(/"([^"\\]|\\.)*"/g);
-              if (items) {
-                questions = items.map(item => item.substring(1, item.length - 1));
-              }
-            }
-          }
-
-          // Common unescaping helper
-          const unescape = (str: string) => {
-            return str
-              .replace(/\\"/g, '"')
-              .replace(/\\n/g, '\n')
-              .replace(/\\t/g, '\t')
-              .replace(/\\\\/g, '\\');
-          };
-
-          if (title || content) {
+      try {
+        // 1. Check for Exam Schema: "questions", "markingScheme"
+        if (sourceText.includes('"questions"') && sourceText.includes('"markingScheme"')) {
+          const questionsVal = extractFieldStringValue(sourceText, "questions") || "";
+          const markingSchemeVal = extractFieldStringValue(sourceText, "markingScheme") || "";
+          if (questionsVal || markingSchemeVal) {
             return {
-              title: unescape(title).trim(),
-              content: unescape(content).trim(),
-              summary: summary.map(s => typeof s === 'string' ? unescape(s).trim() : s),
-              questions: questions.map(q => typeof q === 'string' ? unescape(q).trim() : q)
+              questions: unescapedString(questionsVal).trim(),
+              markingScheme: unescapedString(markingSchemeVal).trim()
             };
           }
-        } catch (recoveryError) {
-          console.error("Recovery extraction failed:", recoveryError);
         }
-        
-        throw e; // Throw original parse error if structural recovery fails completely
+
+        // 2. Check for Student Notes Schema: "title", "content", "summary", "questions"
+        if (sourceText.includes('"content"') && sourceText.includes('"summary"')) {
+          const titleVal = extractFieldStringValue(sourceText, "title") || "";
+          const contentVal = extractFieldStringValue(sourceText, "content") || "";
+          const summaryVal = extractFieldArrayValue(sourceText, "summary") || [];
+          const questionsVal = extractFieldArrayValue(sourceText, "questions") || [];
+
+          return {
+            title: unescapedString(titleVal).trim(),
+            content: unescapedString(contentVal).trim(),
+            summary: summaryVal.map(s => unescapedString(s || "").trim()),
+            questions: questionsVal.map(q => unescapedString(q || "").trim())
+          };
+        }
+
+        // 3. Check for Lesson Plan Schema: "phase1", "phase2", "phase3"
+        if (sourceText.includes('"phase1"') || sourceText.includes('"phase2"')) {
+          const title = unescapedString(extractFieldStringValue(sourceText, "title") || "").trim();
+          const weekEnding = unescapedString(extractFieldStringValue(sourceText, "weekEnding") || "").trim();
+          const classSize = unescapedString(extractFieldStringValue(sourceText, "classSize") || "").trim();
+          const strand = unescapedString(extractFieldStringValue(sourceText, "strand") || "").trim();
+          const subStrand = unescapedString(extractFieldStringValue(sourceText, "subStrand") || "").trim();
+          const indicatorCode = unescapedString(extractFieldStringValue(sourceText, "indicatorCode") || "").trim();
+          const contentStandardCode = unescapedString(extractFieldStringValue(sourceText, "contentStandardCode") || "").trim();
+          const performanceIndicator = unescapedString(extractFieldStringValue(sourceText, "performanceIndicator") || "").trim();
+          const coreCompetencies = unescapedString(extractFieldStringValue(sourceText, "coreCompetencies") || "").trim();
+          const keyWords = unescapedString(extractFieldStringValue(sourceText, "keyWords") || "").trim();
+          const tlrs = unescapedString(extractFieldStringValue(sourceText, "tlrs") || "").trim();
+          const references = unescapedString(extractFieldStringValue(sourceText, "references") || "").trim();
+          const phase1 = unescapedString(extractFieldStringValue(sourceText, "phase1") || "").trim();
+          const phase2 = unescapedString(extractFieldStringValue(sourceText, "phase2") || "").trim();
+          const phase3 = unescapedString(extractFieldStringValue(sourceText, "phase3") || "").trim();
+          const differentiation = extractDifferentiation(sourceText);
+
+          return {
+            title,
+            weekEnding,
+            classSize,
+            strand,
+            subStrand,
+            indicatorCode,
+            contentStandardCode,
+            performanceIndicator,
+            coreCompetencies,
+            keyWords,
+            tlrs,
+            references,
+            phase1,
+            phase2,
+            phase3,
+            differentiation
+          };
+        }
+      } catch (recoveryError) {
+        console.error("Backup schema regex recovery failed:", recoveryError);
       }
     }
     
