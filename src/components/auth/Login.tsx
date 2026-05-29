@@ -13,7 +13,7 @@ import {
 } from 'firebase/auth';
 import { motion } from 'motion/react';
 import { GraduationCap, Mail, Lock, User, Chrome, Zap, Info, Eye, EyeOff, FastForward, ArrowRight, CheckCircle2, Clock, BookOpen, Sparkles } from 'lucide-react';
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, setDoc, serverTimestamp, collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { toast } from 'react-hot-toast';
 
@@ -47,6 +47,8 @@ const Login = () => {
   const [error, setError] = useState('');
   const [info, setInfo] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showGuestEmailModal, setShowGuestEmailModal] = useState(false);
+  const [guestEmail, setGuestEmail] = useState('');
 
   useEffect(() => {
     if (user) {
@@ -58,15 +60,71 @@ const Login = () => {
     }
   }, [user, navigate, location]);
 
-  const handleGuestSignIn = async () => {
+  const getSafeDate = (d: any) => {
+    if (!d) return new Date();
+    if (typeof d?.toDate === 'function') return d.toDate();
+    if (d && typeof d === 'object' && typeof d.seconds === 'number') {
+      return new Date(d.seconds * 1000);
+    }
+    const date = new Date(d);
+    return isNaN(date.getTime()) ? new Date() : date;
+  };
+
+  const handleGuestSignIn = async (enteredEmail: string) => {
+    if (!enteredEmail || !enteredEmail.includes('@') || !enteredEmail.includes('.')) {
+      toast.error('Please enter a valid email address.');
+      setError('PLEASE ENTER A VALID EMAIL ADDRESS.');
+      return;
+    }
+    const trimmedEmail = enteredEmail.trim().toLowerCase();
     setLoading(true);
     setError('');
-    toast.loading('Accessing platform as guest...', { id: 'guest-login' });
+    const toastId = toast.loading('Verifying guest trial registration...', { id: 'guest-login' });
     try {
+      const docRef = doc(db, 'used_emails', trimmedEmail);
+      const docSnap = await getDoc(docRef);
+      let isStillWithinTrial = false;
+      let existingCreatedAtStr = '';
+
+      if (docSnap.exists()) {
+        const docData = docSnap.data();
+        const createdAt = docData?.createdAt ? getSafeDate(docData.createdAt) : null;
+        if (createdAt) {
+          const now = new Date();
+          const elapsedMs = now.getTime() - createdAt.getTime();
+          const msInDay = 24 * 60 * 60 * 1000;
+          const elapsedDays = elapsedMs / msInDay;
+          
+          if (elapsedDays < 3) {
+            isStillWithinTrial = true;
+            existingCreatedAtStr = createdAt.toISOString();
+          }
+        }
+        
+        if (!isStillWithinTrial) {
+          toast.dismiss(toastId);
+          toast.error('The 3-day trial for this email address has expired. Please log in with a standard account or use a different email.', { duration: 6000 });
+          setError('THIS EMAIL ADDRESS TRIAL ASSIGNED PERIOD HAS EXPIRED. PLEASE LOG IN OR REDEEM A TRIAL WITH A NEW EMAIL ADDRESS.');
+          setLoading(false);
+          return;
+        }
+      }
+
+      toast.loading('Accessing platform as guest...', { id: 'guest-login' });
+      localStorage.setItem('pending_guest_email', trimmedEmail);
+      if (isStillWithinTrial && existingCreatedAtStr) {
+        localStorage.setItem('pending_guest_trial_start', existingCreatedAtStr);
+      } else {
+        localStorage.removeItem('pending_guest_trial_start');
+      }
+
       await signInAnonymously(auth);
       toast.success('Welcome! You are exploring as a guest.', { id: 'guest-login' });
+      setShowGuestEmailModal(false);
     } catch (err: any) {
       console.error("Guest Auth error:", err);
+      localStorage.removeItem('pending_guest_email');
+      localStorage.removeItem('pending_guest_trial_start');
       if (err.code === 'auth/admin-restricted-operation') {
         setError('GUEST ACCESS IS CURRENTLY DISABLED. PLEASE CONTACT ADMIN OR SIGN IN WITH GOOGLE.');
         toast.error('Guest access is disabled in Firebase Console', { id: 'guest-login', duration: 6000 });
@@ -150,6 +208,23 @@ const Login = () => {
         toast.success('Welcome back, Teacher!', { id: 'auth-toast' });
       } else {
         toast.loading('Creating professional profile...', { id: 'auth-toast' });
+        
+        // Find existing trial records in used_emails to enforce unique 3-day trial limit
+        const cleanedEmail = email.trim().toLowerCase();
+        let originalTrialStart: any = null;
+        try {
+          const usedEmailRef = doc(db, 'used_emails', cleanedEmail);
+          const usedEmailSnap = await getDoc(usedEmailRef);
+          if (usedEmailSnap.exists()) {
+            const usedData = usedEmailSnap.data();
+            if (usedData && usedData.createdAt) {
+              originalTrialStart = getSafeDate(usedData.createdAt).toISOString();
+            }
+          }
+        } catch (err) {
+          console.warn("Could not retrieve existing used_email records:", err);
+        }
+
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const { user: newUser } = userCredential;
         
@@ -166,14 +241,26 @@ const Login = () => {
           school: school || 'Ghana Education Service',
           level: level,
           subjectsTaught: subjectsTaught.split(',').map(s => s.trim()).filter(Boolean),
-          trialStartDate: serverTimestamp(),
+          trialStartDate: originalTrialStart || new Date().toISOString(),
           subscriptionStatus: 'trial',
           trialResetMay2026Applied: true, // Mark reset applied to avoid overwriting their brand-new signup date
           onboardingComplete: true, // Mark as complete since they filled it during registration
-          createdAt: serverTimestamp(),
+          createdAt: originalTrialStart ? new Date(originalTrialStart).toISOString() : serverTimestamp(),
         };
         
         await setDoc(doc(db, 'users', newUser.uid), newProfile);
+        
+        // Record / update used_emails record securely
+        try {
+          await setDoc(doc(db, 'used_emails', cleanedEmail), {
+            uid: newUser.uid,
+            isAnonymous: false,
+            createdAt: originalTrialStart ? new Date(originalTrialStart).toISOString() : serverTimestamp()
+          }, { merge: true });
+        } catch (e) {
+          console.error("Error setting used_emails during standard registration:", e);
+        }
+
         toast.success('Registration successful! Welcome to TeachSmart.', { id: 'auth-toast' });
       }
     } catch (err: any) {
@@ -401,7 +488,7 @@ const Login = () => {
                   </button>
 
                   <button 
-                    onClick={handleGuestSignIn}
+                    onClick={() => setShowGuestEmailModal(true)}
                     className="w-full group flex items-center justify-center gap-4 px-8 py-4 bg-emerald-deep text-white rounded-2xl font-black hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-900/10 text-xs uppercase tracking-widest"
                   >
                     <FastForward size={18} className="group-hover:translate-x-1 transition-transform" />
@@ -603,6 +690,66 @@ const Login = () => {
         <div className="h-px bg-slate-850/30 max-w-xs mx-auto" />
         <p>© {new Date().getFullYear()} TeachSmart Ghana. Created for Professional Ghanaian Educators. Aligned with NaCCA Standards.</p>
       </footer>
+
+      {showGuestEmailModal && (
+        <div id="guest-email-modal" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            className="w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100"
+          >
+            <div className="p-8 space-y-6">
+              <div className="text-center space-y-2">
+                <div className="mx-auto w-12 h-12 bg-emerald-100/80 rounded-full flex items-center justify-center text-emerald-600 mb-2">
+                  <Mail size={22} className="text-emerald-deep" />
+                </div>
+                <h3 className="text-sm font-black text-slate-800 uppercase tracking-wider">
+                  Claim Guest Teacher Trial
+                </h3>
+                <p className="text-[10px] uppercase tracking-wider font-bold text-slate-400 leading-relaxed max-w-xs mx-auto">
+                  To prevent abuse, each email address can claim exactly ONE guest trial period in accordance with NaCCA guidelines.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="relative">
+                  <Mail className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none" size={18} />
+                  <input 
+                    type="email" 
+                    placeholder="ENTER YOUR EMAIL ADDRESS" 
+                    className="w-full pl-14 pr-6 py-4 bg-slate-50/50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-deep/20 focus:border-emerald-deep transition-all text-xs font-bold tracking-widest uppercase outline-none"
+                    value={guestEmail}
+                    onChange={(e) => setGuestEmail(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowGuestEmailModal(false);
+                      setGuestEmail('');
+                    }}
+                    className="flex-1 py-4 border border-slate-200 hover:bg-slate-50 text-slate-500 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleGuestSignIn(guestEmail)}
+                    disabled={loading || !guestEmail}
+                    className="flex-1 py-4 bg-emerald-deep hover:bg-emerald-700 disabled:opacity-50 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all shadow-lg shadow-emerald-950/10 flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    {loading ? "Verifying..." : "Start Trial"}
+                    <ArrowRight size={14} />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 };

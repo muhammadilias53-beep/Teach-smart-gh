@@ -73,6 +73,17 @@ function handleFirestoreError(error: any, operationType: OperationType, path: st
   throw error;
 }
 
+// Helper to get date from various formats (string, timestamp, serial object, or null)
+const getSafeDate = (d: any) => {
+  if (!d) return new Date();
+  if (typeof d?.toDate === 'function') return d.toDate();
+  if (d && typeof d === 'object' && typeof d.seconds === 'number') {
+    return new Date(d.seconds * 1000);
+  }
+  const date = new Date(d);
+  return isNaN(date.getTime()) ? new Date() : date;
+};
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -88,33 +99,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const getTrialDaysLeft = () => {
     if (!profile) return 0;
-    
-    // Helper to get date from various formats (string, timestamp, or null)
-    const getSafeDate = (d: any) => {
-      if (!d) return new Date();
-      if (typeof d?.toDate === 'function') return d.toDate();
-      const date = new Date(d);
-      return isNaN(date.getTime()) ? new Date() : date;
-    };
 
     let startDate = getSafeDate(profile.trialStartDate);
     
     // For universal reset, we ensure everyone uses the reset date as the start
-    // if their actual start date was before or shortly after the reset.
-    if (startDate <= TRIAL_RESET_DATE || !profile.trialResetMay2026Applied) {
+    // ONLY if their actual start date was on or before the reset and they haven't applied the reset.
+    // Brand-new users who register AFTER the reset date (e.g. late May 2026)
+    // should always get their full actual trial starting on their signup date.
+    if (startDate <= TRIAL_RESET_DATE && !profile.trialResetMay2026Applied) {
       startDate = TRIAL_RESET_DATE;
     }
     
-    // Use UTC for day calculation to ensure everyone in Ghana sees the same countdown
     const now = new Date();
-    const nowUTC = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
-    const startUTC = Date.UTC(startDate.getUTCFullYear(), startDate.getUTCMonth(), startDate.getUTCDate());
-    
+    const elapsedMs = now.getTime() - startDate.getTime();
     const msInDay = 24 * 60 * 60 * 1000;
-    const diffDays = Math.floor((nowUTC - startUTC) / msInDay);
     
-    const remaining = TRIAL_DURATION_DAYS - diffDays;
-    return isNaN(remaining) ? 0 : Math.max(0, remaining);
+    const totalDurationMs = TRIAL_DURATION_DAYS * msInDay;
+    const remainingMs = totalDurationMs - elapsedMs;
+    
+    // Precision countdown: Math.ceil guarantees that they get exactly 72 hours from registration.
+    // E.g., if only 1 minute has passed, Math.ceil(71.98h / 24) is 3, so they still have 3 days left
+    // instead of losing a calendar day instantly on midnight rollover.
+    const remainingDays = Math.ceil(remainingMs / msInDay);
+    
+    return isNaN(remainingDays) ? 0 : Math.max(0, Math.min(TRIAL_DURATION_DAYS, remainingDays));
   };
 
   // Auto-update daysLeft every minute to catch day changes reliably
@@ -224,36 +232,133 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               }
 
               // Reset trial for all existing accounts as requested (one-time reset for May 2026)
-              if (!data.trialResetMay2026Applied) {
+              // Only apply this reset if their trialStartDate is actually before or on the reset date, 
+              // so we never overwrite a brand-new user's recent sign-up date!
+              const actualStartDate = getSafeDate(data.trialStartDate);
+              if (!data.trialResetMay2026Applied && actualStartDate <= TRIAL_RESET_DATE) {
                 await setDoc(docRef, { 
                   trialStartDate: TRIAL_RESET_DATE.toISOString(),
                   subscriptionStatus: 'trial',
                   trialResetMay2026Applied: true 
                 }, { merge: true });
+              } else if (!data.trialResetMay2026Applied) {
+                // For brand new accounts that somehow missed this flag, just mark it true without modifying their newer start date
+                await setDoc(docRef, { 
+                  trialResetMay2026Applied: true 
+                }, { merge: true });
               }
               
+              // Backfill / enforce used_emails for existing users
+              const currentEmail = data.email || user.email;
+              if (currentEmail) {
+                const cleanedEmail = currentEmail.trim().toLowerCase();
+                try {
+                  // Fetch the existing record to see if they already had a trial started earlier
+                  const usedEmailRef = doc(db, 'used_emails', cleanedEmail);
+                  const usedEmailSnap = await getDoc(usedEmailRef);
+                  let originalTrialStart: Date | null = null;
+                  
+                  if (usedEmailSnap.exists()) {
+                    const usedData = usedEmailSnap.data();
+                    if (usedData && usedData.createdAt) {
+                      originalTrialStart = getSafeDate(usedData.createdAt);
+                    }
+                  }
+                  
+                  const actualTrialStart = getSafeDate(data.trialStartDate);
+                  if (originalTrialStart && originalTrialStart < actualTrialStart) {
+                    // There's an older trial start date recorded! Restrict this account's trial to the original date of first preparation.
+                    await setDoc(docRef, { 
+                      trialStartDate: originalTrialStart.toISOString() 
+                    }, { merge: true });
+                    data.trialStartDate = originalTrialStart.toISOString();
+                  } else {
+                    // Otherwise update / secure used_emails record with the earliest known trialStartDate
+                    const finalUsedStartDate = originalTrialStart && originalTrialStart < actualTrialStart 
+                      ? originalTrialStart 
+                      : actualTrialStart;
+                      
+                    const isNewRecord = !usedEmailSnap.exists();
+                    const isOlder = originalTrialStart && actualTrialStart < originalTrialStart;
+                    const isDifferentUid = usedEmailSnap.exists() && usedEmailSnap.data()?.uid !== user.uid;
+                    
+                    if (isNewRecord || isOlder || isDifferentUid) {
+                      await setDoc(usedEmailRef, {
+                        uid: user.uid,
+                        isAnonymous: data.isAnonymous || false,
+                        createdAt: finalUsedStartDate.toISOString()
+                      }, { merge: true });
+                    }
+                  }
+                } catch (e) {
+                  console.warn("Could not sync email to used_emails:", e);
+                }
+              }
+
               setProfile(data);
             } else {
               // Initialize new user profile if it doesn't exist
               const isAnonymous = user.isAnonymous;
-              const newProfile: any = {
-                uid: user.uid,
-                email: user.email || '',
-                displayName: user.displayName || (isAnonymous ? 'Guest Teacher' : 'Teacher'),
-                trialStartDate: new Date().toISOString(), // Start from registration date for new users
-                subscriptionStatus: 'trial',
-                trialResetMay2026Applied: true,
-                onboardingComplete: isAnonymous ? true : false, 
-                isAnonymous: isAnonymous,
-                createdAt: serverTimestamp(),
-                lastLoginAt: serverTimestamp(),
-              };
-              try {
-                await setDoc(docRef, newProfile);
-                setProfile(newProfile); 
-              } catch (err) {
-                console.error("Error creating initial profile:", err);
+              const pendingEmail = isAnonymous ? localStorage.getItem('pending_guest_email') : null;
+              if (pendingEmail) {
+                localStorage.removeItem('pending_guest_email');
               }
+              const pendingTrialStart = isAnonymous ? localStorage.getItem('pending_guest_trial_start') : null;
+              if (pendingTrialStart) {
+                localStorage.removeItem('pending_guest_trial_start');
+              }
+
+              const checkAndBuildProfile = async () => {
+                const targetEmail = (user.email || pendingEmail || '').trim().toLowerCase();
+                let originalTrialStart: any = pendingTrialStart || null;
+                
+                if (targetEmail && !originalTrialStart) {
+                  try {
+                    const emailDocSnap = await getDoc(doc(db, 'used_emails', targetEmail));
+                    if (emailDocSnap.exists()) {
+                      const emailData = emailDocSnap.data();
+                      if (emailData && emailData.createdAt) {
+                        originalTrialStart = getSafeDate(emailData.createdAt).toISOString();
+                      }
+                    }
+                  } catch (e) {
+                    console.warn("Could not check used_emails during onAuthStateChanged flow:", e);
+                  }
+                }
+
+                const newProfile: any = {
+                  uid: user.uid,
+                  email: user.email || pendingEmail || '',
+                  displayName: user.displayName || (isAnonymous ? 'Guest Teacher' : 'Teacher'),
+                  trialStartDate: originalTrialStart || new Date().toISOString(),
+                  subscriptionStatus: 'trial',
+                  trialResetMay2026Applied: true,
+                  onboardingComplete: isAnonymous ? true : false, 
+                  isAnonymous: isAnonymous,
+                  createdAt: originalTrialStart ? new Date(originalTrialStart).toISOString() : serverTimestamp(),
+                  lastLoginAt: serverTimestamp(),
+                };
+                try {
+                  await setDoc(docRef, newProfile);
+                  if (newProfile.email) {
+                    const cleanedEmail = newProfile.email.trim().toLowerCase();
+                    try {
+                      await setDoc(doc(db, 'used_emails', cleanedEmail), {
+                        uid: user.uid,
+                        isAnonymous: isAnonymous,
+                        createdAt: originalTrialStart ? new Date(originalTrialStart).toISOString() : serverTimestamp()
+                      }, { merge: true });
+                    } catch (e) {
+                      console.error("Error writing to used_emails:", e);
+                    }
+                  }
+                  setProfile(newProfile); 
+                } catch (err) {
+                  console.error("Error creating initial profile:", err);
+                }
+              };
+
+              await checkAndBuildProfile();
             }
             setLoading(false);
           }, (error) => {

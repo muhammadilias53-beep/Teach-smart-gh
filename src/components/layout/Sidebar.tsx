@@ -127,18 +127,36 @@ const Sidebar = () => {
       </div>
 
       {/* Contact Admin / WhatsApp Link */}
-      <div className="px-4 mb-4" id="sidebar-contact-admin-container">
+      <motion.div
+        className="px-4 mb-4"
+        id="sidebar-contact-admin-container"
+        whileHover={{ scale: 1.03, y: -2 }}
+        whileTap={{ scale: 0.98 }}
+        transition={{ type: "spring", stiffness: 400, damping: 22 }}
+      >
         <a
           id="sidebar-contact-admin-link"
           href={whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-3 w-full px-4 py-3 bg-green-50/70 text-green-800 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-green-100 hover:bg-green-100/80 transition-all group shadow-sm"
+          className="flex items-center gap-3 w-full px-4 py-3 bg-gradient-to-r from-green-50/80 to-emerald-50/80 text-green-800 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-green-100 hover:bg-gradient-to-r hover:from-green-500 hover:to-emerald-600 hover:text-white hover:border-transparent transition-all duration-300 group shadow-sm"
         >
-          <MessageCircle size={14} className="group-hover:rotate-12 transition-transform text-green-600" />
+          <motion.div
+            animate={{
+              scale: [1, 1.15, 1],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="flex items-center justify-center shrink-0"
+          >
+            <MessageCircle size={14} className="group-hover:rotate-12 transition-transform text-green-600 group-hover:text-white" />
+          </motion.div>
           <span>Contact Admin</span>
         </a>
-      </div>
+      </motion.div>
 
       <div className="px-4 mt-auto pt-8 border-t border-slate-100">
         <div className="bg-white p-5 rounded-[2.5rem] border border-slate-100 flex flex-col gap-4 shadow-sm">

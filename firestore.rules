@@ -128,6 +128,13 @@ service cloud.firestore {
       allow read, write: if isAdmin();
     }
 
+    // 7. Used Emails Tracking (Guest single-use enforcement)
+    match /used_emails/{email} {
+      allow get: if true;
+      allow create, update: if isSignedIn() && request.resource.data.uid == request.auth.uid;
+      allow delete: if isAdmin();
+    }
+
     // Connection Test
     match /test/connection {
       allow get: if true;

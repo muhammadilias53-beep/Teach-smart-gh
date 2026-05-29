@@ -27,6 +27,8 @@ export interface UserProfile {
   classSize?: string;
   trialResetApril2024Applied?: boolean;
   trialResetMay2026Applied?: boolean;
+  isAnonymous?: boolean;
+  createdAt?: any;
 }
 
 export interface LessonPlan {

@@ -175,12 +175,27 @@
         "url": { "type": "string" },
         "processedAt": { "type": "string", "format": "date-time" }
       }
+    },
+    "UsedEmail": {
+      "title": "UsedEmail",
+      "description": "Records used email addresses for guest trials and standard accounts to prevent trial abuse",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "isAnonymous": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "isAnonymous"]
     }
   },
   "firestore": {
     "users/{userId}": {
       "schema": "User",
       "description": "Individual teacher profile"
+    },
+    "used_emails/{email}": {
+      "schema": "UsedEmail",
+      "description": "Used email records mapped by email address as the document ID"
     },
     "lessonPlans/{id}": {
       "schema": "LessonPlan",

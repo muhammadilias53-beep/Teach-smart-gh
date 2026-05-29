@@ -279,7 +279,8 @@ export const generateExam = async (
     
     CORE REQUIREMENTS:
     1. ALIGNMENT: Content MUST be strictly based on the provided Strand, Sub-Strand, Content Standard (${contentStandard || 'N/A'}), Indicator (${indicatorCode || 'N/A'}), and Topics (${topics}). Every single question must be traceable to a NaCCA curriculum indicator.
-    2. CURRICULUM INTEGRITY: You MUST maintain the EXACT names of the Strand and Sub-Strand provided. Do NOT change or summarize them. Specifically for Science, the strand "Diversity of Matter" must be used instead of "All Around Us".
+    2. REAL-LIFE PROBLEM SOLVING: Generated questions (across Objectives, True/False, Fill-in-the-blanks, Matching, Practical, and Theory/Essay) MUST always include real-world practical or word problems that can be solved directly using the concepts, methods, values, and analytical formulas/reasoning acquired through the specific strands and sub-strands covered. Frame these problems using relatable Ghanaian cultural, societal, geographical, commercial, or environmental environments (e.g., market purchasing, trading, community development, farming, sanitation challenges, local construction, household budget management).
+    3. CURRICULUM INTEGRITY: You MUST maintain the EXACT names of the Strand and Sub-Strand provided. Do NOT change or summarize them. Specifically for Science, the strand "Diversity of Matter" must be used instead of "All Around Us".
     3. SUBJECT-SPECIFIC COMPLIANCE:
        - French: Prioritize the four basic communicative skills (Listening, Speaking, Reading, Writing). Use the task-based approach. All French text outputs should include the French expression followed by the English translation in parentheses for Basic levels.
        - History: Use narrative and inquiry-based approaches. Focus on sources of evidence.
@@ -312,6 +313,7 @@ export const generateExam = async (
        - You are STRICTLY forbidden from generating any question formats that the teacher has NOT selected. If 'Theory / Essay' is not in the list of selected types above, you MUST NOT generate any essay or theory questions. If 'Multiple Choice' is not in the list of selected types above, you MUST NOT generate any multiple choice questions. The exam must focus entirely on the requested formats: ${selectedTypesList.join(', ')}.
     5. QUALITY:
        - Questions must be rigorous and strictly aligned with the Ghanaian NaCCA/WAEC standardized syllabus.
+       - REAL-LIFE SCENARIOS: Every question must contain, or directly relate to, real-life problems or daily practical scenarios in a Ghanaian context. Learners should be required to solve concrete problems using the specific knowledge and skills acquired through the strands and sub-strands covered.
        - Each Theory question must have multiple sub-parts.
        - PRACTICAL QUESTIONS: For subjects requiring practicals (Science, Career Tech, etc.), you MUST include a dedicated section for PRACTICAL QUESTIONS. 
        - DIAGRAMS: Since you are generating text, represent diagrams as clear, boxed placeholders with detailed descriptions and identification labels. Example:
@@ -432,20 +434,21 @@ STRICT GENERATION RULES
 2. Use simple and clear language suitable for the learner’s level.
 3. Break difficult concepts into understandable explanations.
 4. Use practical and relatable examples.
-5. Avoid complex educational jargon.
-6. Ensure explanations are accurate and curriculum-aligned.
-7. Make notes engaging and interactive.
-8. Use short paragraphs and bullet points where appropriate.
-9. Highlight important points for revision.
-10. Include memory aids, tips, and summaries where useful.
-11. Ensure the notes are suitable for:
+5. REAL-LIFE PROBLEM SOLVING IN QUESTIONS & EXERCISES: All practice questions, exercises, and homework activities generated (both in the practice section of the notes content and inside the returned JSON "questions" array) MUST always contain real-life, practical, or word problems that can be solved with the knowledge acquired through the specific strands and sub-strands covered. Frame these problems using relatable Ghanaian cultural, societal, geographical, commercial, or environmental issues.
+6. Avoid complex educational jargon.
+7. Ensure explanations are accurate and curriculum-aligned.
+8. Make notes engaging and interactive.
+9. Use short paragraphs and bullet points where appropriate.
+10. Highlight important points for revision.
+11. Include memory aids, tips, and summaries where useful.
+12. Ensure the notes are suitable for:
 * classroom revision,
 * homework support,
 * examination preparation,
 * and independent learning.
-12. Make the notes feel naturally written for students, not teachers.
-13. Avoid robotic AI language and textbook-style overload.
-14. Keep the notes concise but comprehensive.
+13. Make the notes feel naturally written for students, not teachers.
+14. Avoid robotic AI language and textbook-style overload.
+15. Keep the notes concise but comprehensive.
 
 ==================================================
 WRITING STYLE REQUIREMENTS
