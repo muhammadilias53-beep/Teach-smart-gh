@@ -152,10 +152,13 @@ const Login = () => {
       toast.dismiss('google-login');
       if (err.code === 'auth/popup-closed-by-user') {
         setError('THE LOGIN POPUP WAS CLOSED BEFORE COMPLETION.');
+        toast.error('Login cancelled: Google popup was closed.', { duration: 5000 });
       } else if (err.code === 'auth/popup-blocked') {
         setError('THE POPUP WAS BLOCKED BY YOUR BROWSER. PLEASE ENABLE POPUPS FOR THIS SITE.');
+        toast.error('Popup blocked! Please allow popups for this site.', { duration: 6000 });
       } else {
         setError(err.message.toUpperCase());
+        toast.error(err.message || 'Google sign-in failed', { duration: 5000 });
       }
     } finally {
       setLoading(false);
@@ -233,7 +236,11 @@ const Login = () => {
           displayName: displayName || 'Teacher'
         });
 
-        // Create personalized profile in Firestore
+        // Create personalized profile in Firestore with May 2026 Reset-awareness standard verification
+        const TRIAL_RESET_DATE = new Date('2026-05-11T00:00:00Z');
+        const baseTrialStart = originalTrialStart ? getSafeDate(originalTrialStart) : new Date();
+        const finalTrialStart = baseTrialStart < TRIAL_RESET_DATE ? TRIAL_RESET_DATE : baseTrialStart;
+
         const newProfile: any = {
           uid: newUser.uid,
           email,
@@ -241,7 +248,7 @@ const Login = () => {
           school: school || 'Ghana Education Service',
           level: level,
           subjectsTaught: subjectsTaught.split(',').map(s => s.trim()).filter(Boolean),
-          trialStartDate: originalTrialStart || new Date().toISOString(),
+          trialStartDate: finalTrialStart.toISOString(),
           subscriptionStatus: 'trial',
           trialResetMay2026Applied: true, // Mark reset applied to avoid overwriting their brand-new signup date
           onboardingComplete: true, // Mark as complete since they filled it during registration

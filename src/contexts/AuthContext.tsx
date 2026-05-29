@@ -266,20 +266,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                   }
                   
                   const actualTrialStart = getSafeDate(data.trialStartDate);
-                  if (originalTrialStart && originalTrialStart < actualTrialStart) {
+                  
+                  // May 2026 Reset aware effective dates comparison
+                  const effectiveOriginalStart = originalTrialStart && originalTrialStart < TRIAL_RESET_DATE
+                    ? TRIAL_RESET_DATE
+                    : originalTrialStart;
+                  const effectiveActualStart = actualTrialStart < TRIAL_RESET_DATE
+                    ? TRIAL_RESET_DATE
+                    : actualTrialStart;
+
+                  if (effectiveOriginalStart && effectiveOriginalStart < effectiveActualStart) {
                     // There's an older trial start date recorded! Restrict this account's trial to the original date of first preparation.
                     await setDoc(docRef, { 
-                      trialStartDate: originalTrialStart.toISOString() 
+                      trialStartDate: effectiveOriginalStart.toISOString() 
                     }, { merge: true });
-                    data.trialStartDate = originalTrialStart.toISOString();
+                    data.trialStartDate = effectiveOriginalStart.toISOString();
                   } else {
                     // Otherwise update / secure used_emails record with the earliest known trialStartDate
-                    const finalUsedStartDate = originalTrialStart && originalTrialStart < actualTrialStart 
-                      ? originalTrialStart 
-                      : actualTrialStart;
+                    const finalUsedStartDate = effectiveOriginalStart && effectiveOriginalStart < effectiveActualStart 
+                      ? effectiveOriginalStart 
+                      : effectiveActualStart;
                       
                     const isNewRecord = !usedEmailSnap.exists();
-                    const isOlder = originalTrialStart && actualTrialStart < originalTrialStart;
+                    const isOlder = effectiveOriginalStart && effectiveActualStart < effectiveOriginalStart;
                     const isDifferentUid = usedEmailSnap.exists() && usedEmailSnap.data()?.uid !== user.uid;
                     
                     if (isNewRecord || isOlder || isDifferentUid) {
@@ -326,11 +335,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                   }
                 }
 
+                // Apply May 2026 Reset-awareness to trialStartDate assignment
+                const baseTrialStart = originalTrialStart ? getSafeDate(originalTrialStart) : new Date();
+                const finalTrialStart = baseTrialStart < TRIAL_RESET_DATE ? TRIAL_RESET_DATE : baseTrialStart;
+
                 const newProfile: any = {
                   uid: user.uid,
                   email: user.email || pendingEmail || '',
                   displayName: user.displayName || (isAnonymous ? 'Guest Teacher' : 'Teacher'),
-                  trialStartDate: originalTrialStart || new Date().toISOString(),
+                  trialStartDate: finalTrialStart.toISOString(),
                   subscriptionStatus: 'trial',
                   trialResetMay2026Applied: true,
                   onboardingComplete: isAnonymous ? true : false, 
