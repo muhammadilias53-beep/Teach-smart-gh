@@ -110,19 +110,19 @@ export const Logo = ({ className, iconOnly = false, size = 'md' }: LogoProps) =>
         <div className="flex flex-col">
           <div className="flex items-center">
             <span className="text-2xl font-black text-[#001C3D] tracking-tighter uppercase leading-none">
-              Teach<span className="text-[#006B3F]">Smart</span>
+              Teach<span className="text-[#006B3F]">Smart</span><span className="text-[#FCD116]">GH</span>
             </span>
           </div>
           <div className="flex items-center gap-2 mt-1">
-             <div className="h-[2px] w-6 bg-[#CE1126]" />
-             <span className="text-sm font-black text-[#CE1126] uppercase tracking-[0.2em]">
-               GHANA
+             <div className="h-[2px] w-4 bg-[#CE1126]" />
+             <span className="text-[9px] font-black text-[#CE1126] uppercase tracking-[0.12em] whitespace-nowrap">
+               CATALYST CREATIVE
              </span>
-             <div className="h-[2px] w-6 bg-[#006B3F]" />
+             <div className="h-[2px] w-4 bg-[#006B3F]" />
           </div>
-          <div className="mt-2 flex items-center gap-1.5 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded-md w-fit">
-            <CheckCircle size={8} className="text-emerald-600 fill-current" />
-            <span className="text-[7px] font-black text-emerald-700 uppercase tracking-widest">GES/NaCCA CERTIFIED</span>
+          <div className="mt-2 flex items-center gap-1.5 bg-sky-50 border border-sky-100 px-2 py-0.5 rounded-md w-fit">
+            <CheckCircle size={8} className="text-sky-600 fill-current" />
+            <span className="text-[7px] font-black text-sky-700 uppercase tracking-widest">GES/NaCCA CERTIFIED</span>
           </div>
           <span className="text-[8px] font-bold text-slate-500 uppercase tracking-tight mt-1 whitespace-nowrap">
             AI-Powered Teaching. Smarter Tomorrow.

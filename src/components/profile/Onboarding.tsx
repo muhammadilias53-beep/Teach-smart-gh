@@ -248,7 +248,7 @@ export const Onboarding = () => {
                     </div>
                     <div>
                       <p className="text-[10px] font-black uppercase tracking-widest text-emerald-500">Ministry Approved</p>
-                      <h4 className="font-black text-lg">TeachSmart Ghana</h4>
+                      <h4 className="font-black text-lg">TeachSmartGH</h4>
                       <p className="text-xs text-slate-400 font-medium italic">NaCCA Calibrated Engine</p>
                     </div>
                   </div>
@@ -276,7 +276,7 @@ export const Onboarding = () => {
         </div>
 
         <p className="text-center mt-8 text-slate-400 text-xs font-bold uppercase tracking-widest">
-          Secure teaching platform by TeachSmart Ghana
+          Secure teaching platform by TeachSmartGH (Catalyst Creative)
         </p>
       </motion.div>
     </div>

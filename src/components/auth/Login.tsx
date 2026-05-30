@@ -305,10 +305,10 @@ const Login = () => {
           </div>
           <div>
             <span className="text-lg font-black tracking-tight text-slate-800 uppercase block leading-none z-10">
-              TeachSmart
+              TeachSmartGH
             </span>
-            <span className="text-[7px] font-black uppercase text-emerald-600 tracking-[0.3em] block mt-0.5 z-10">
-              Ghana
+            <span className="text-[7px] font-black uppercase text-emerald-600 tracking-[0.15em] block mt-0.5 z-10">
+              CATALYST CREATIVE
             </span>
           </div>
         </div>
@@ -362,7 +362,7 @@ const Login = () => {
               Generate NaCCA Schemes of Learning, Lesson Notes, and Practical Ghana Classroom Tools
             </h2>
             <p className="text-slate-500 text-sm sm:text-base font-medium max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-              Elevate your instructional impact with <strong>TeachSmart Ghana</strong>. Access professional <strong>GES lesson plan resources</strong> and advanced <strong>teaching tools for Ghana teachers</strong>. Playfully generate termly plans, secondary lesson notes, primary math worksheets, and comprehensive diagnostic assessment papers with correct curriculum standard codes. Accelerate your <strong>Ghana educator professional development</strong> today.
+              Elevate your instructional impact with <strong>TeachSmartGH</strong>, a premium product by Catalyst Creative. Access professional <strong>GES lesson plan resources</strong> and advanced <strong>teaching tools for Ghana teachers</strong>. Playfully generate termly plans, secondary lesson notes, primary math worksheets, and comprehensive diagnostic assessment papers with correct curriculum standard codes. Accelerate your <strong>Ghana educator professional development</strong> today with “AI-Powered Teaching. Smarter Tomorrow.”
             </p>
           </div>
 
@@ -437,11 +437,11 @@ const Login = () => {
               <div className="inline-flex items-center justify-center w-20 h-20 bg-emerald-deep rounded-3xl shadow-xl shadow-emerald-900/20 mb-6 -rotate-3 hover:rotate-0 transition-transform duration-500">
                 <GraduationCap size={40} className="text-white" />
               </div>
-              <h2 className="text-4xl font-black text-slate-900 tracking-tighter uppercase leading-none mb-2">
-                TeachSmart
+              <h2 className="text-4xl font-black text-[#001C3D] tracking-tighter uppercase leading-none mb-2">
+                TeachSmart<span className="text-[#FCD116]">GH</span>
               </h2>
-              <p className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.4em] mb-4">
-                Ghana Education System
+              <p className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.15em] mb-4">
+                A CATALYST CREATIVE BRAND
               </p>
               <div className="h-px w-12 bg-slate-100 mx-auto mb-4" />
               <p className="text-slate-500 text-sm font-semibold italic max-w-xs mx-auto leading-relaxed">
@@ -695,7 +695,7 @@ const Login = () => {
           <Link to="/blog" className="hover:text-emerald-400 transition-colors">Resources Hub</Link>
         </div>
         <div className="h-px bg-slate-850/30 max-w-xs mx-auto" />
-        <p>© {new Date().getFullYear()} TeachSmart Ghana. Created for Professional Ghanaian Educators. Aligned with NaCCA Standards.</p>
+        <p>© {new Date().getFullYear()} TeachSmartGH (Catalyst Creative). Created for Professional Ghanaian Educators. Aligned with NaCCA Standards.</p>
       </footer>
 
       {showGuestEmailModal && (

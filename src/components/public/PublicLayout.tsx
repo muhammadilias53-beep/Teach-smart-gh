@@ -37,10 +37,10 @@ export const PublicLayout: React.FC<PublicLayoutProps> = ({ children }) => {
             </div>
             <div>
               <span className="text-lg font-black tracking-tight text-slate-800 uppercase block leading-none">
-                TeachSmart
+                TeachSmartGH
               </span>
-              <span className="text-[7px] font-black uppercase text-emerald-600 tracking-[0.3em] block mt-0.5">
-                Ghana
+              <span className="text-[7px] font-black uppercase text-emerald-600 tracking-[0.15em] block mt-0.5">
+                CATALYST CREATIVE
               </span>
             </div>
           </Link>
@@ -153,7 +153,7 @@ export const PublicLayout: React.FC<PublicLayoutProps> = ({ children }) => {
                   <GraduationCap size={16} />
                 </div>
                 <span className="text-sm font-black text-white uppercase tracking-wider">
-                  TeachSmart Ghana
+                  TeachSmartGH
                 </span>
               </div>
               <p className="text-xs text-slate-400 font-medium leading-relaxed max-w-sm">
@@ -204,7 +204,7 @@ export const PublicLayout: React.FC<PublicLayoutProps> = ({ children }) => {
 
           {/* Under footer segment */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] font-bold tracking-wider uppercase">
-            <p className="text-slate-500">© {new Date().getFullYear()} TeachSmart Ghana. Built in Alignment with the National Council for Curriculum and Assessment.</p>
+            <p className="text-slate-500">© {new Date().getFullYear()} TeachSmartGH (Catalyst Creative). Built in Alignment with the National Council for Curriculum and Assessment.</p>
             <div className="flex gap-4">
               <Link to="/login" className="text-slate-500 hover:text-slate-300">Privacy Policy</Link>
               <span className="text-slate-700">|</span>

@@ -20,7 +20,7 @@ const Sidebar = () => {
   const isAdmin = user?.email === 'muhammadilias53@gmail.com';
 
   const whatsappNumber = (import.meta as any).env.VITE_ADMIN_WHATSAPP || "233556231544";
-  const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent("Hello TeachSmart Admin, I have a question/complaint regarding TeachSmart Ghana:")}`;
+  const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodeURIComponent("Hello TeachSmart Admin, I have a question/complaint regarding TeachSmartGH:")}`;
 
   const menuItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
@@ -237,7 +237,7 @@ const Sidebar = () => {
           ) : (
             <Logo iconOnly size="sm" />
           )}
-          <span className="font-black text-slate-900 text-sm uppercase tracking-tighter">TeachSmart</span>
+          <span className="font-black text-slate-900 text-sm uppercase tracking-tighter">TeachSmartGH</span>
         </div>
         <div className="flex items-center gap-2">
           <NotificationCenter />

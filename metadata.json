@@ -1,6 +1,6 @@
 {
-  "name": "TeachSmart Ghana",
-  "description": "An AI-powered platform for Ghanaian teachers to generate NaCCA-compliant lesson plans, schemes of work, and exams for KG1-SHS3. Now with Integrated KG Curriculum support.",
+  "name": "TeachSmartGH",
+  "description": "An AI-powered teaching platform under Catalyst Creative. AI-Powered Teaching. Smarter Tomorrow. Aligned with NaCCA Standards.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
