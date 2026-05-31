@@ -51,6 +51,32 @@ const GHANAIAN_LANGUAGES = [
   "Twi (Asante)"
 ];
 
+const MULTILINGUAL_LANGUAGES = [
+  "English",
+  "Twi",
+  "Fante",
+  "Ewe",
+  "Ga",
+  "Dagbani",
+  "Dagaare",
+  "Gonja",
+  "Kasem",
+  "Nzema",
+  "Bilingual (English + Selected Ghanaian Language)"
+];
+
+const GHANAIAN_LANGUAGES_FOR_BILINGUAL = [
+  "Twi",
+  "Fante",
+  "Ewe",
+  "Ga",
+  "Dagbani",
+  "Dagaare",
+  "Gonja",
+  "Kasem",
+  "Nzema"
+];
+
 const NoteGenerator = () => {
   const { user, profile } = useAuth();
   const navigate = useNavigate();
@@ -155,6 +181,8 @@ const NoteGenerator = () => {
       specificLocality: profile?.town || '',
       differentiation: '',
       objectives: '',
+      language: 'English',
+      bilingualLanguage: 'Twi',
     };
   });
 
@@ -834,6 +862,34 @@ const NoteGenerator = () => {
                   >
                     <option value="">Select Language</option>
                     {GHANAIAN_LANGUAGES.map(lang => (
+                      <option key={lang} value={lang}>{lang}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-gray-500 uppercase">Instructional Language</label>
+                <select 
+                  className="input-field"
+                  value={formData.language}
+                  onChange={(e) => setFormData({...formData, language: e.target.value})}
+                >
+                  {MULTILINGUAL_LANGUAGES.map(lang => (
+                    <option key={lang} value={lang}>{lang}</option>
+                  ))}
+                </select>
+              </div>
+
+              {formData.language.toLowerCase().includes('bilingual') && (
+                <div className="space-y-2 animate-fadeIn">
+                  <label className="text-sm font-bold text-gray-500 uppercase">Bilingual Ghanaian Language</label>
+                  <select 
+                    className="input-field"
+                    value={formData.bilingualLanguage}
+                    onChange={(e) => setFormData({...formData, bilingualLanguage: e.target.value})}
+                  >
+                    {GHANAIAN_LANGUAGES_FOR_BILINGUAL.map(lang => (
                       <option key={lang} value={lang}>{lang}</option>
                     ))}
                   </select>

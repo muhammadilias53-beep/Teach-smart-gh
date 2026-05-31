@@ -38,6 +38,46 @@ const subjectsByLevel: Record<string, string[]> = {
   "SHS": ["English", "Mathematics", "Science", "Social Studies", "Elective Mathematics", "Physics", "Chemistry", "Biology", "Economics", "Geography", "History", "Government", "CRS", "IRS", "Literature in English", "Financial Accounting", "Cost Accounting", "Business Management", "Agricultural Science", "Elective ICT", "Food & Nutrition", "Graphic Design"]
 };
 
+const GHANAIAN_LANGUAGES = [
+  "Dagaare",
+  "Dagbani",
+  "Dangme",
+  "Ewe",
+  "Fante",
+  "Ga",
+  "Gonja",
+  "Kasem",
+  "Nzema",
+  "Twi (Akuapem)",
+  "Twi (Asante)"
+];
+
+const MULTILINGUAL_LANGUAGES = [
+  "English",
+  "Twi",
+  "Fante",
+  "Ewe",
+  "Ga",
+  "Dagbani",
+  "Dagaare",
+  "Gonja",
+  "Kasem",
+  "Nzema",
+  "Bilingual (English + Selected Ghanaian Language)"
+];
+
+const GHANAIAN_LANGUAGES_FOR_BILINGUAL = [
+  "Twi",
+  "Fante",
+  "Ewe",
+  "Ga",
+  "Dagbani",
+  "Dagaare",
+  "Gonja",
+  "Kasem",
+  "Nzema"
+];
+
 export default function SchemeGenerator() {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -48,13 +88,20 @@ export default function SchemeGenerator() {
   
   const [formData, setFormData] = useState({
     subject: '',
+    ghanaianLanguage: '',
     level: 'JHS',
     class: 'Basic 7',
     type: 'termly',
     term: '1',
     title: '',
-    includeLearningOutcomes: true
+    includeLearningOutcomes: true,
+    language: 'English',
+    bilingualLanguage: 'Twi',
   });
+
+  const displaySubject = formData.subject === 'Ghanaian Language' && formData.ghanaianLanguage
+    ? `Ghanaian Language (${formData.ghanaianLanguage})`
+    : formData.subject;
 
   const loadingSteps = [
     "Analyzing NaCCA syllabus requirements...",
@@ -69,6 +116,10 @@ export default function SchemeGenerator() {
     // Client-side validation
     if (!formData.subject) {
       toast.error("Please select a Subject Area.");
+      return;
+    }
+    if (formData.subject === 'Ghanaian Language' && !formData.ghanaianLanguage) {
+      toast.error("Please select a specific Ghanaian Language.");
       return;
     }
     if (!formData.level) {
@@ -92,12 +143,14 @@ export default function SchemeGenerator() {
 
     try {
       const content = await generateSchemeOfWork(
-        formData.subject,
+        displaySubject,
         formData.class,
         formData.type,
         formData.term,
         { 
-          includeLearningOutcomes: formData.includeLearningOutcomes
+          includeLearningOutcomes: formData.includeLearningOutcomes,
+          language: formData.language,
+          bilingualLanguage: formData.bilingualLanguage
         }
       );
       setResult(content);
@@ -117,8 +170,8 @@ export default function SchemeGenerator() {
     try {
       await addDoc(collection(db, 'schemes'), {
         authorId: user.uid,
-        title: formData.title || `${formData.subject} - ${formData.type === 'yearly' ? 'Yearly' : 'Termly'} Scheme of Learning`,
-        subject: formData.subject,
+        title: formData.title || `${displaySubject} - ${formData.type === 'yearly' ? 'Yearly' : 'Termly'} Scheme of Learning`,
+        subject: displaySubject,
         level: formData.level,
         class: formData.class,
         type: formData.type,
@@ -160,7 +213,7 @@ export default function SchemeGenerator() {
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(11);
     doc.setFont("helvetica", "normal");
-    const metaText = `Subject: ${formData.subject.toUpperCase()} | Class: ${formData.class.toUpperCase()} (${formData.level.toUpperCase()})`;
+    const metaText = `Subject: ${displaySubject.toUpperCase()} | Class: ${formData.class.toUpperCase()} (${formData.level.toUpperCase()})`;
     doc.text(metaText, 148.5, 40, { align: 'center' });
 
     // Parse markdown table to array for autoTable
@@ -235,7 +288,7 @@ export default function SchemeGenerator() {
     }
     
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-').replace('T', '_').slice(0, 19);
-    const filename = `${formData.subject}_${formData.level}_Scheme_${formData.type}_${timestamp}`.replace(/[\s\W]+/g, '_');
+    const filename = `${displaySubject}_${formData.level}_Scheme_${formData.type}_${timestamp}`.replace(/[\s\W]+/g, '_');
     doc.save(`${filename}.pdf`);
   };
 
@@ -258,19 +311,36 @@ export default function SchemeGenerator() {
         <div className="absolute top-0 right-0 w-64 h-64 bg-ghana-red/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 opacity-50 group-hover:opacity-100 transition-opacity" />
         
         <form onSubmit={handleGenerate} className="space-y-10 relative z-10">
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className={cn("grid gap-8", formData.subject === 'Ghanaian Language' ? "md:grid-cols-4" : "md:grid-cols-3")}>
             <div className="space-y-2">
               <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Subject Area</label>
               <select 
                 required
                 className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-ghana-red outline-none transition-all font-bold text-slate-700"
                 value={formData.subject}
-                onChange={(e) => setFormData({...formData, subject: e.target.value})}
+                onChange={(e) => setFormData({...formData, subject: e.target.value, ghanaianLanguage: e.target.value === 'Ghanaian Language' ? formData.ghanaianLanguage : ''})}
               >
                 <option value="">Select Subject</option>
                 {formData.level && (subjectsByLevel[formData.level] || []).map(s => <option key={s} value={s}>{s}</option>)}
               </select>
             </div>
+
+            {formData.subject === 'Ghanaian Language' && (
+              <div className="space-y-2 animate-fadeIn">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Ghanaian Language</label>
+                <select 
+                  required
+                  className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-ghana-red outline-none transition-all font-bold text-slate-700"
+                  value={formData.ghanaianLanguage}
+                  onChange={(e) => setFormData({...formData, ghanaianLanguage: e.target.value})}
+                >
+                  <option value="">Select Language</option>
+                  {GHANAIAN_LANGUAGES.map(lang => (
+                    <option key={lang} value={lang}>{lang}</option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             <div className="space-y-2">
               <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Educational Stage</label>
@@ -295,6 +365,37 @@ export default function SchemeGenerator() {
                 {(CLASSES_BY_LEVEL[formData.level] || []).map(c => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
+          </div>
+
+          {/* Multilingual settings */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-6 bg-slate-50 rounded-3xl border border-slate-100/50">
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Instructional Language</label>
+              <select 
+                className="w-full p-4 bg-white border border-slate-200 rounded-2xl focus:ring-2 focus:ring-ghana-red outline-none transition-all font-bold text-slate-700"
+                value={formData.language}
+                onChange={(e) => setFormData({...formData, language: e.target.value})}
+              >
+                {MULTILINGUAL_LANGUAGES.map(lang => (
+                  <option key={lang} value={lang}>{lang}</option>
+                ))}
+              </select>
+            </div>
+
+            {formData.language.toLowerCase().includes('bilingual') && (
+              <div className="space-y-2 animate-fadeIn">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Bilingual translation language</label>
+                <select 
+                  className="w-full p-4 bg-white border border-slate-200 rounded-2xl focus:ring-2 focus:ring-ghana-red outline-none transition-all font-bold text-slate-700"
+                  value={formData.bilingualLanguage}
+                  onChange={(e) => setFormData({...formData, bilingualLanguage: e.target.value})}
+                >
+                  {GHANAIAN_LANGUAGES_FOR_BILINGUAL.map(lang => (
+                    <option key={lang} value={lang}>{lang}</option>
+                  ))}
+                </select>
+              </div>
+            )}
           </div>
 
           <div className="space-y-4">
@@ -447,7 +548,7 @@ export default function SchemeGenerator() {
                 <div>
                    <h3 className="font-black text-slate-900 uppercase tracking-tighter">Roadmap Preview</h3>
                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                     {formData.subject} • {formData.class} ({formData.level}) • {formData.type === 'termly' ? `Term ${formData.term}` : 'Yearly'}
+                     {displaySubject} • {formData.class} ({formData.level}) • {formData.type === 'termly' ? `Term ${formData.term}` : 'Yearly'}
                    </p>
                 </div>
               </div>

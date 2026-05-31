@@ -2,12 +2,96 @@ import { GoogleGenAI } from "@google/genai";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY as string });
 
-export const generateLessonPlan = async (prompt: string, teacherInfo?: { school?: string, district?: string, town?: string, region?: string }) => {
+export const getLanguageInstruction = (language?: string, bilingualLanguage?: string) => {
+  if (!language || language === 'English') {
+    return '';
+  }
+
+  const isBilingual = language.toLowerCase().includes('bilingual');
+  
+  // Set the target Ghanaian language
+  let targetLanguage = language;
+  if (isBilingual) {
+    if (bilingualLanguage) {
+      targetLanguage = bilingualLanguage;
+    } else {
+      // Try to parse from language string like "Bilingual (English + Twi)"
+      const match = language.match(/Bilingual\s*\(English\s*\+\s*([^)]+)\)/i);
+      if (match) {
+        targetLanguage = match[1].trim();
+      } else {
+        targetLanguage = "Twi"; // Default
+      }
+    }
+  }
+
+  if (isBilingual) {
+    return `
+    CRITICAL MULTILINGUAL REQUIREMENT - BILINGUAL MODE (CONFORMS TO OFFICIAL NaCCA & TeachSmartGH STANDARDS):
+    The teacher/learner has selected BILINGUAL MODE (English and Ghanaian Language: ${targetLanguage}).
+    You MUST generate all instructional content, titles, summaries, explanations, descriptions, activities, exercises, questions, and marking schemes in BOTH languages using the following structure:
+    1. English version FIRST.
+    2. Followed immediately by the equivalent translation in ${targetLanguage}.
+    
+    Structure example for titles, headers, and descriptions:
+    **English:**
+    [Detailed content in elegant English...]
+    
+    **${targetLanguage} Translation:**
+    [Detailed content translated fully, grammatically correctly, and culturally appropriately in ${targetLanguage}...]
+    
+    Ensure that this layout is applied consistently across all parts, sections, steps, and exercises. Do not skip translations or mix them into a single paragraph. Keep them clearly demarcated. Do NOT use word-for-word robotic literal translation; write naturally in both languages.
+    `;
+  } else {
+    return `
+    CRITICAL MULTILINGUAL REQUIREMENT - MONOLINGUAL GHANAIAN LANGUAGE Mode (CONFORMS TO OFFICIAL NaCCA & TeachSmartGH STANDARDS):
+    The teacher/learner has selected MONOLINGUAL mode in the Ghanaian language: ${targetLanguage}.
+    You MUST generate the entire content—including all headers, titles, instructional steps, bullet points, checklists, worksheets, explanations, keywords, questions, answers, and assessments—ENTIRELY in the ${targetLanguage} language.
+    You are STRICTLY FORBIDDEN from writing any part of this document/material in the English language (except for official curriculum codes like B7.1.1.1.1 or universally recognized symbols).
+    Ensure the spelling, grammar, orthography, tones, and cultural context are 100% authentic and correct for ${targetLanguage}. Do not provide English translations. The teacher and student must see only ${targetLanguage}.
+    `;
+  }
+};
+
+export const generateLessonPlan = async (
+  prompt: string, 
+  teacherInfo?: { school?: string, district?: string, town?: string, region?: string },
+  language?: string,
+  bilingualLanguage?: string
+) => {
   const model = "gemini-3-flash-preview";
+
+  const isGhanaianLanguage = prompt.toLowerCase().includes('ghanaian language') || prompt.toLowerCase().includes('ghanaian languages') || prompt.toLowerCase().includes('ghanaian') || (language && language !== 'English');
+  let selectedLanguage = "";
+  if (isGhanaianLanguage) {
+    if (language && language !== 'English') {
+      selectedLanguage = language.toLowerCase().includes('bilingual') ? (bilingualLanguage || 'Twi') : language;
+    } else {
+      const match = prompt.match(/Ghanaian Language \(([^)]+)\)/i);
+      if (match) {
+        selectedLanguage = match[1];
+      } else {
+        const match2 = prompt.match(/\((Dagaare|Dagbani|Dangme|Ewe|Fante|Ga|Gonja|Kasem|Nzema|Twi \(Akuapem\)|Twi \(Asante\))\)/i);
+        if (match2) {
+          selectedLanguage = match2[1];
+        }
+      }
+    }
+  }
+
   const systemInstruction = `
     You are an expert Ghanaian teacher and curriculum consultant strictly following the NaCCA (National Council for Curriculum and Assessment) Standard-Based Curriculum (SBC) and Common Core Programme (CCP) for 2024/2025.
     Generate content that is 100% compliant with the latest Ghanaian educational standards as seen in official Strategic Schemes of Learning and Curriculum Handbooks.
     
+    ${language && language !== 'English' ? getLanguageInstruction(language, bilingualLanguage) : (isGhanaianLanguage && selectedLanguage ? `
+    CRITICAL LANGUAGE REQUIREMENT (CONFORMS TO OFFICIAL NaCCA GUIDELINES):
+    The lesson subject is specifically the Ghanaian Language: ${selectedLanguage}.
+    You MUST generate the entire lesson plan—including the title, performance indicators, keywords, phase activities, reflections, differentiation strategies, resources, and assessments—ENTIRELY in the ${selectedLanguage} language.
+    You are STRICTLY FORBIDDEN from writing any part of this lesson plan, descriptions, instructions, steps, lists, guides, or questions in the English language (except for translating from English to ${selectedLanguage} if explicitly asked by the lesson indicators, but even then, the surrounding notes and headings must be in ${selectedLanguage}).
+    Ensure the spelling, grammar, orthography, tones, and cultural context are 100% authentic and correct for ${selectedLanguage}.
+    Do NOT include English translations. The teacher must see only ${selectedLanguage}.
+    ` : '')}
+
     SOURCE OF TRUTH: If the prompt provides specific "LESSON FRAME" details such as activities, keywords, or resources, you MUST treat these as the PRIMARY constraints and incorporate them into the lesson plan.
     
     CURRICULUM INTEGRITY: You MUST maintain the EXACT names of Strands and Sub-strands provided in the prompt. Do NOT summarize or rephrase them. Use the official codes and titles exactly as they appear in the data provided. Specifically for Science, ensure the strand formerly known as "All Around Us" is always referred to as "Diversity of Matter".
@@ -102,10 +186,25 @@ export const generateSchemeOfWork = async (
   term?: string, 
   options?: { 
     includeLearningOutcomes?: boolean, 
-    customPrompt?: string
+    customPrompt?: string,
+    language?: string,
+    bilingualLanguage?: string
   }
 ) => {
   const model = "gemini-3-flash-preview";
+  
+  const isGhanaianLanguage = subject.toLowerCase().includes('ghanaian language') || subject.toLowerCase().includes('ghanaian languages') || subject.toLowerCase().includes('ghanaian') || (options?.language && options.language !== 'English');
+  let selectedLanguage = "";
+  if (isGhanaianLanguage) {
+    if (options?.language && options.language !== 'English') {
+      selectedLanguage = options.language.toLowerCase().includes('bilingual') ? (options.bilingualLanguage || 'Twi') : options.language;
+    } else {
+      const match = subject.match(/\(([^)]+)\)/);
+      if (match) {
+        selectedLanguage = match[1];
+      }
+    }
+  }
   
   let formatInstructions = "";
   if (type === 'yearly') {
@@ -148,6 +247,15 @@ export const generateSchemeOfWork = async (
     You are a NaCCA Curriculum Expert. Generate an official ${type.toUpperCase()} STRATEGIC SCHEME OF LEARNING for ${subject} (${level})${term && type === 'termly' ? ` specifically for TERM ${term}` : ''}.
     All content must align strictly with the latest Ghanaian National Curriculum (SBC/CCP) and NaCCA standards.
     
+    ${options?.language && options.language !== 'English' ? getLanguageInstruction(options.language, options.bilingualLanguage) : (isGhanaianLanguage && selectedLanguage ? `
+    CRITICAL LANGUAGE REQUIREMENT (CONFORMS TO OFFICIAL NaCCA GUIDELINES):
+    The subject is specifically the Ghanaian Language: ${selectedLanguage}.
+    You MUST generate the entire Scheme of Learning table—including all topics, strands descriptions, sub-strands descriptions, weekly lessons topics, learning indicators, teaching & learning activities, and assessment descriptions—ENTIRELY in the ${selectedLanguage} language.
+    You are STRICTLY FORBIDDEN from writing any part of this scheme, instructions, steps, lists, guides, or questions in the English language (except for official NaCCA codes like B7.1.1.1.1, and English/Ghanaian translation labels if required, but even then, the surrounding text must be in ${selectedLanguage}).
+    Ensure the spelling, grammar, orthography, tones, and cultural context are 100% authentic and correct for ${selectedLanguage}.
+    Do NOT include English translations. The teacher must see only ${selectedLanguage}.
+    ` : '')}
+
     CURRICULUM INTEGRITY: You MUST maintain the EXACT names of Strands and Sub-strands as defined in the NaCCA curriculum standards. Do NOT summarize or rephrase official titles. Specifically for Science, ensure the strand formerly known as "All Around Us" is always referred to as "Diversity of Matter".
     
     STRAND PARITY & DISTRIBUTION: When generating schemes, ensure that each Strand of a subject is represented in every term. A bit of every strand should be taught in every term (Term 1, 2, and 3) to ensure continuous engagement. By the end of Term 3, 100% of the curriculum MUST be exhausted.
@@ -199,16 +307,22 @@ export const generateExam = async (
   strand?: string,
   subStrand?: string,
   contentStandard?: string,
-  indicatorCode?: string
+  indicatorCode?: string,
+  language?: string,
+  bilingualLanguage?: string
 ) => {
   const model = "gemini-3-flash-preview";
   
-  const isGhanaianLanguage = subject.toLowerCase().includes('ghanaian language') || subject.toLowerCase().includes('ghanaian languages') || subject.toLowerCase().includes('ghanaian');
+  const isGhanaianLanguage = subject.toLowerCase().includes('ghanaian language') || subject.toLowerCase().includes('ghanaian languages') || subject.toLowerCase().includes('ghanaian') || (language && language !== 'English');
   let selectedLanguage = "";
   if (isGhanaianLanguage) {
-    const match = subject.match(/\(([^)]+)\)/);
-    if (match) {
-      selectedLanguage = match[1];
+    if (language && language !== 'English') {
+      selectedLanguage = language.toLowerCase().includes('bilingual') ? (bilingualLanguage || 'Twi') : language;
+    } else {
+      const match = subject.match(/\(([^)]+)\)/);
+      if (match) {
+        selectedLanguage = match[1];
+      }
     }
   }
   
@@ -443,7 +557,7 @@ export const generateExam = async (
     BECE 2024 SPECIFIC EXAM FORMAT DIRECTIVES (CRITICAL):
     ${beceSpecificInstructions}
     ` : ''}
-    ${isGhanaianLanguage && selectedLanguage ? `
+    ${language && language !== 'English' ? getLanguageInstruction(language, bilingualLanguage) : (isGhanaianLanguage && selectedLanguage ? `
     CRITICAL LANGUAGE REQUIREMENT (CONFORMS TO 2024 BECE SPECIFICATIONS):
     The assessment subject is specifically the Ghanaian Language: ${selectedLanguage}.
     You MUST generate the entire examination—including all questions, multiple choice options (A, B, C, D), reading comprehension passages, titles, section instructions, headers, and matching terms—ENTIRELY in the ${selectedLanguage} language.
@@ -451,7 +565,7 @@ export const generateExam = async (
     Ensure the spelling, grammar, orthography, tones, and cultural context are 100% authentic and correct for ${selectedLanguage}.
     The marking scheme answers and explanations MUST also be written entirely in ${selectedLanguage}.
     Do NOT translate the questions to English. The teacher and student must see only ${selectedLanguage}.
-    ` : ''}
+    ` : '')}
     1. STRUCTURE (STRICTLY generate ONLY these selected sections. Do NOT generate any unselected sections or question types):
        ${structureFormatted}
     2. QUESTION COUNTS & DIFFICULTY:
@@ -522,31 +636,37 @@ export const generateNote = async (
     locality: string;
     specificLocality?: string;
     differentiation?: string;
+    language?: string;
+    bilingualLanguage?: string;
   },
   teacherInfo?: { school?: string, district?: string, region?: string, town?: string, locality?: string }
 ) => {
   const model = "gemini-3.5-flash";
   
-  const isGhanaianLanguage = formData.subject.toLowerCase().includes('ghanaian language') || formData.subject.toLowerCase().includes('ghanaian languages') || formData.subject.toLowerCase().includes('ghanaian');
+  const isGhanaianLanguage = formData.subject.toLowerCase().includes('ghanaian language') || formData.subject.toLowerCase().includes('ghanaian languages') || formData.subject.toLowerCase().includes('ghanaian') || (formData.language && formData.language !== 'English');
   let selectedLanguage = "";
   if (isGhanaianLanguage) {
-    const match = formData.subject.match(/\(([^)]+)\)/);
-    if (match) {
-      selectedLanguage = match[1];
+    if (formData.language && formData.language !== 'English') {
+      selectedLanguage = formData.language.toLowerCase().includes('bilingual') ? (formData.bilingualLanguage || 'Twi') : formData.language;
+    } else {
+      const match = formData.subject.match(/\(([^)]+)\)/);
+      if (match) {
+        selectedLanguage = match[1];
+      }
     }
   }
 
   const systemInstruction = `
 You are an advanced NaCCA-aligned student learning note generation engine designed specifically for Ghanaian learners.
 
-${isGhanaianLanguage && selectedLanguage ? `
+${formData.language && formData.language !== 'English' ? getLanguageInstruction(formData.language, formData.bilingualLanguage) : (isGhanaianLanguage && selectedLanguage ? `
 CRITICAL LANGUAGE REQUIREMENT (CONFORMS TO OFFICIAL NaCCA GUIDELINES):
 The assessment / learning area subject is specifically the Ghanaian Language: ${selectedLanguage}.
 You MUST generate the entire student learning notes—including the title, objectives, keys terms, main lesson notes, important points, worked examples, practice exercises, summary, and homework—ENTIRELY in the ${selectedLanguage} language.
 You are STRICTLY FORBIDDEN from writing any part of this lesson note, descriptions, options, lists, guides, or questions in the English language (except for translating from English to ${selectedLanguage} if explicitly asked by the lesson indicators, but even then, the surrounding notes and headings must be in ${selectedLanguage}).
 Ensure the spelling, grammar, orthography, tones, and cultural context are 100% authentic and correct for ${selectedLanguage}.
 Do NOT include English translations. The learner must see only ${selectedLanguage}.
-` : ''}
+` : '')}
 
 Your task is to generate HIGH-QUALITY STUDENT LEARNING NOTES based strictly on the official NaCCA curriculum data selected by the teacher or learner.
 
@@ -1036,7 +1156,13 @@ function parseAIResponse(response: any) {
   }
 }
 
-export const generateAIPackResource = async (type: string, resourceTitle: string, context: string) => {
+export const generateAIPackResource = async (
+  type: string, 
+  resourceTitle: string, 
+  context: string,
+  language?: string,
+  bilingualLanguage?: string
+) => {
   const model = "gemini-3-flash-preview";
   const systemInstruction = `
     You are an expert AI educational consultant specialized in the Ghanaian curriculum (NaCCA) and WAEC standards.
@@ -1044,6 +1170,8 @@ export const generateAIPackResource = async (type: string, resourceTitle: string
     
     The resource title is: ${resourceTitle}
     The specific request is: ${context}
+    
+    ${language && language !== 'English' ? getLanguageInstruction(language, bilingualLanguage) : ''}
     
     Format the output in clean, professional Markdown. 
     Make it actionable, practical, and highly relevant to the Ghanaian educational context.

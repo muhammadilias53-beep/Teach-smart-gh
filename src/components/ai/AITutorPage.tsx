@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { SafeMarkdown } from '../common/SafeMarkdown';
 import { safeLocalStorage, safeSessionStorage } from '../../lib/storage';
+import { getLanguageInstruction } from '../../lib/gemini';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -24,6 +25,32 @@ const DEFAULT_AITUTOR_MSG: Message[] = [
     role: 'assistant', 
     content: `### Pioneer of Quality Learning! 🇬🇭\n\nI am your **AI Tutor**, a dedicated Ghana Education Service (GES) educational companion and NaCCA instructional planning coach.\n\nI am fully equipped with the official standard-based curriculum guidelines to assist you with:\n1. **Subject Matter Support** — break down any difficult concept.\n2. **Modern Methodology** — design learner-centered activities using realistic local resources.\n3. **Practical Lesson Delivery** — draft active lesson transitions & assessments.\n\nSelect your class details on the right pane or key in your questions below to start our coaching session!` 
   }
+];
+
+const AITUTOR_LANGUAGES = [
+  "English",
+  "Twi",
+  "Fante",
+  "Ewe",
+  "Ga",
+  "Dagbani",
+  "Dagaare",
+  "Gonja",
+  "Kasem",
+  "Nzema",
+  "Bilingual (English + Selected Ghanaian Language)"
+];
+
+const AITUTOR_GHANAIAN_LANGUAGES_FOR_BILINGUAL = [
+  "Twi",
+  "Fante",
+  "Ewe",
+  "Ga",
+  "Dagbani",
+  "Dagaare",
+  "Gonja",
+  "Kasem",
+  "Nzema"
 ];
 
 export default function AITutorPage() {
@@ -41,6 +68,8 @@ export default function AITutorPage() {
   const [selectedSubject, setSelectedSubject] = useState<string>(defaultSubject);
   const [selectedStrand, setSelectedStrand] = useState<string>('All Strands');
   const [topic, setTopic] = useState<string>('');
+  const [selectedLanguage, setSelectedLanguage] = useState<string>('English');
+  const [bilingualLanguage, setBilingualLanguage] = useState<string>('Twi');
 
   // Loaded classes and strands based on selections
   const availableClasses = CLASSES_BY_LEVEL[selectedLevel] || [];
@@ -120,6 +149,9 @@ export default function AITutorPage() {
       }));
 
       const sysInstruction = `You are now “AI Tutor” — an advanced Ghana Education Service (GES) teaching support assistant and NaCCA curriculum teaching coach designed specifically for Ghanaian teachers.
+
+YOUR COMMUNICATION LANGUAGE INSTRUCTIONS:
+${selectedLanguage !== 'English' ? getLanguageInstruction(selectedLanguage, bilingualLanguage) : 'Communicate clearly and professionally in English, unless the user interacts or asks a question in a Ghanaian language, in which case you must match and reply in their language.'}
 
 Your primary responsibility is to guide teachers before, during, and after lesson preparation by providing:
 * subject matter support,
@@ -570,6 +602,35 @@ Explain exactly how I can preemptively address and correct them during my instru
                 className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold outline-none text-slate-700"
               />
             </div>
+
+            {/* Language Selection */}
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">Instructional Language</label>
+              <select 
+                value={selectedLanguage}
+                onChange={(e) => setSelectedLanguage(e.target.value)}
+                className="w-full p-3 bg-slate-50 border border-slate-100 rounded-xl text-xs font-black text-slate-600 outline-none"
+              >
+                {AITUTOR_LANGUAGES.map(lang => (
+                  <option key={lang} value={lang}>{lang}</option>
+                ))}
+              </select>
+            </div>
+
+            {selectedLanguage.toLowerCase().includes('bilingual') && (
+              <div className="space-y-1.5 animate-fadeIn">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">Bilingual Ghanaian Language</label>
+                <select 
+                  value={bilingualLanguage}
+                  onChange={(e) => setBilingualLanguage(e.target.value)}
+                  className="w-full p-3 bg-slate-50 border border-slate-100 rounded-xl text-xs font-black text-slate-600 outline-none"
+                >
+                  {AITUTOR_GHANAIAN_LANGUAGES_FOR_BILINGUAL.map(lang => (
+                    <option key={lang} value={lang}>{lang}</option>
+                  ))}
+                </select>
+              </div>
+            )}
           </div>
 
           {/* Quick Coach Tools */}

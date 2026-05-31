@@ -41,6 +41,32 @@ const GHANAIAN_LANGUAGES = [
   "Twi (Asante)"
 ];
 
+const MULTILINGUAL_LANGUAGES = [
+  "English",
+  "Twi",
+  "Fante",
+  "Ewe",
+  "Ga",
+  "Dagbani",
+  "Dagaare",
+  "Gonja",
+  "Kasem",
+  "Nzema",
+  "Bilingual (English + Selected Ghanaian Language)"
+];
+
+const GHANAIAN_LANGUAGES_FOR_BILINGUAL = [
+  "Twi",
+  "Fante",
+  "Ewe",
+  "Ga",
+  "Dagbani",
+  "Dagaare",
+  "Gonja",
+  "Kasem",
+  "Nzema"
+];
+
 export default function ExamGenerator() {
   const { user, profile } = useAuth();
   const navigate = useNavigate();
@@ -66,7 +92,9 @@ export default function ExamGenerator() {
       p1Count: 40,
       p1Difficulty: 'Standard',
       p2Count: 6,
-      p2Difficulty: 'Standard'
+      p2Difficulty: 'Standard',
+      language: 'English',
+      bilingualLanguage: 'Twi',
     };
   });
 
@@ -138,7 +166,13 @@ export default function ExamGenerator() {
         },
         formData.selectedTypes,
         { count: formData.p1Count, difficulty: formData.p1Difficulty },
-        { count: formData.p2Count, difficulty: formData.p2Difficulty }
+        { count: formData.p2Count, difficulty: formData.p2Difficulty },
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        formData.language,
+        formData.bilingualLanguage
       );
       
       if (!examData || !examData.questions || !examData.markingScheme) {
@@ -440,6 +474,37 @@ export default function ExamGenerator() {
                 {currentClasses.map(c => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
+          </div>
+
+          {/* Multilingual settings */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-6 bg-slate-50 rounded-3xl border border-slate-100/50">
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Instructional Language</label>
+              <select 
+                className="w-full p-4 bg-white border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-bold text-slate-700"
+                value={formData.language}
+                onChange={(e) => setFormData({...formData, language: e.target.value})}
+              >
+                {MULTILINGUAL_LANGUAGES.map(lang => (
+                  <option key={lang} value={lang}>{lang}</option>
+                ))}
+              </select>
+            </div>
+
+            {formData.language.toLowerCase().includes('bilingual') && (
+              <div className="space-y-2 animate-fadeIn">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Bilingual translation language</label>
+                <select 
+                  className="w-full p-4 bg-white border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-bold text-slate-700"
+                  value={formData.bilingualLanguage}
+                  onChange={(e) => setFormData({...formData, bilingualLanguage: e.target.value})}
+                >
+                  {GHANAIAN_LANGUAGES_FOR_BILINGUAL.map(lang => (
+                    <option key={lang} value={lang}>{lang}</option>
+                  ))}
+                </select>
+              </div>
+            )}
           </div>
 
           {formData.level === 'JHS' && formData.subject && (

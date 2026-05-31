@@ -965,7 +965,7 @@ export default function ContentLibrary() {
             </div>
           </div>
         </div>
-          <div className="flex bg-slate-100 p-1.5 rounded-[2rem] self-start md:self-center">
+          <div className="flex bg-slate-100 p-1.5 rounded-[2rem] self-start md:self-center overflow-x-auto max-w-full scrollbar-none whitespace-nowrap select-none">
           <button 
             type="button"
             onClick={() => {
@@ -1677,19 +1677,19 @@ export default function ContentLibrary() {
       ) : (
         <div className="space-y-8">
           {/* Header section with Stats Cards */}
-          <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 rounded-[2.5rem] p-8 md:p-12 text-white shadow-xl relative overflow-hidden">
+          <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 rounded-3xl sm:rounded-[2.5rem] p-5 sm:p-8 md:p-12 text-white shadow-xl relative overflow-hidden animate-fadeIn">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(16,185,129,0.08),transparent)]" />
             <div className="relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
               <div className="space-y-4">
                 <span className="px-3 py-1 bg-emerald-500/20 text-emerald-400 font-black text-[9px] uppercase tracking-widest rounded-lg border border-emerald-500/30">
                   NaCCA Curriculum Tracker & Coverage
                 </span>
-                <h2 className="text-3xl font-black tracking-tight leading-none">Classroom Progress Tracker</h2>
-                <p className="text-slate-400 text-sm font-medium">
+                <h2 className="text-2xl sm:text-3xl font-black tracking-tight leading-none">Classroom Progress Tracker</h2>
+                <p className="text-slate-400 text-xs sm:text-sm font-medium leading-relaxed">
                   Track covered indicators, completed strands, remaining curriculum content, and academic progress for the year.
                 </p>
                 
-                <div className="grid grid-cols-2 gap-4 pt-2">
+                <div className="grid grid-cols-1 min-[420px]:grid-cols-2 gap-4 pt-2">
                   <div className="space-y-1">
                     <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Select Subject</label>
                     <select
@@ -1749,8 +1749,8 @@ export default function ContentLibrary() {
                       <option value="Term 3">Term 3 (Weeks 25-36)</option>
                     </select>
                   </div>
-
-                  <div className="col-span-2 space-y-1">
+ 
+                  <div className="col-span-1 min-[420px]:col-span-2 space-y-1">
                     <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest bg-slate-800/80 text-emerald-400 px-2 py-0.5 rounded">Tracking reference Source</label>
                     <select
                       value={selectedSchemeId}
@@ -1798,16 +1798,16 @@ export default function ContentLibrary() {
               </div>
               
               {/* Stats Counters */}
-              <div className="lg:col-span-2 grid grid-cols-2 sm:grid-cols-3 gap-6">
+              <div className="lg:col-span-2 grid grid-cols-1 min-[480px]:grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6">
                 {/* Progress Circle card */}
                 {(() => {
                   let totalCount = 0;
                   let checkedCount = 0;
-
+ 
                   const activeScheme = selectedSchemeId !== 'default-blueprint' 
                     ? userSchemes.find(s => s.id === selectedSchemeId) 
                     : null;
-
+ 
                   if (activeScheme) {
                     const parsed = parseSchemeMarkdown(activeScheme.content).filter(item => {
                       return coverageTerm === 'All' || item.term === coverageTerm;
@@ -1827,18 +1827,18 @@ export default function ContentLibrary() {
                         if (coverageTerm === 'All') return true;
                         return getTermForSubStrand(strand, sub) === coverageTerm;
                       });
-
+ 
                       subStrands.forEach(subStrand => {
                         const classPrefix = coverageClass === 'All' 
                           ? (coverageLevel === 'All' ? 'B7' : (coverageLevel === 'JHS' ? 'B7' : coverageLevel === 'Primary' ? 'B1' : 'B10'))
                           : (coverageClass === 'KG 1' ? 'KG1' : coverageClass === 'KG 2' ? 'KG2' : coverageClass === 'Basic 1' ? 'B1' : coverageClass === 'Basic 2' ? 'B2' : coverageClass === 'Basic 3' ? 'B3' : coverageClass === 'Basic 4' ? 'B4' : coverageClass === 'Basic 5' ? 'B5' : coverageClass === 'Basic 6' ? 'B6' : coverageClass === 'Basic 7' ? 'B7' : coverageClass === 'Basic 8' ? 'B8' : coverageClass === 'Basic 9' ? 'B9' : 'B12');
-
+ 
                         const indicators = [
                           { id: `${coverageLevel}_${coverageClass}_${coverageTerm}_${strand}_${subStrand}_1`, code: `${classPrefix}.${strand.substring(0,2).toUpperCase()}.${subStrand.substring(0,2).toUpperCase()}.1.1`, text: `Understand key definitions & models of ${subStrand}` },
                           { id: `${coverageLevel}_${coverageClass}_${coverageTerm}_${strand}_${subStrand}_2`, code: `${classPrefix}.${strand.substring(0,2).toUpperCase()}.${subStrand.substring(0,2).toUpperCase()}.1.2`, text: `Analyze operations and practical demonstrations of ${subStrand}` },
                           { id: `${coverageLevel}_${coverageClass}_${coverageTerm}_${strand}_${subStrand}_3`, code: `${classPrefix}.${strand.substring(0,2).toUpperCase()}.${subStrand.substring(0,2).toUpperCase()}.1.3`, text: `Evaluate competency tasks and classroom projects on ${subStrand}` }
                         ];
-
+ 
                         indicators.forEach(ind => {
                           totalCount++;
                           if (checkedIndicators[ind.id]) {
@@ -1853,37 +1853,37 @@ export default function ContentLibrary() {
                   
                   return (
                     <>
-                      <div className="bg-slate-900/50 border border-slate-800 rounded-3xl p-6 flex flex-col items-center justify-center text-center">
-                        <div className="relative w-24 h-24 flex items-center justify-center mb-3">
-                          <svg className="absolute w-full h-full -rotate-90 animate-[spin_4s_linear_infinite] opacity-50 absolute inset-0 pointer-events-none" style={{ animationPlayState: 'paused' }}>
+                      <div className="bg-slate-900/50 border border-slate-800 rounded-3xl p-5 sm:p-6 flex flex-col items-center justify-center text-center">
+                        <div className="relative w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center mb-3">
+                          <svg className="absolute w-full h-full -rotate-90 animate-[spin_4s_linear_infinite] opacity-50 inset-0 pointer-events-none" viewBox="0 0 96 96" style={{ animationPlayState: 'paused' }}>
                             <circle cx="48" cy="48" r="40" stroke="#1e293b" strokeWidth="8" fill="none" />
                             <circle cx="48" cy="48" r="40" stroke="#059669" strokeWidth="8" fill="none" strokeDasharray="251.2" strokeDashoffset={251.2 - (251.2 * percentage) / 100} />
                           </svg>
-                          <svg className="absolute w-full h-full -rotate-90">
+                          <svg className="absolute w-full h-full -rotate-90" viewBox="0 0 96 96">
                             <circle cx="48" cy="48" r="40" stroke="#1e293b" strokeWidth="8" fill="none" />
                             <circle cx="48" cy="48" r="40" stroke="#059669" strokeWidth="8" fill="none" strokeDasharray="251.2" strokeDashoffset={251.2 - (251.2 * percentage) / 100} />
                           </svg>
-                          <span className="text-xl font-black">{percentage}%</span>
+                          <span className="text-lg sm:text-xl font-black">{percentage}%</span>
                         </div>
                         <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">Total Completion</p>
                       </div>
                       
-                      <div className="bg-slate-900/50 border border-slate-800 rounded-3xl p-6 flex flex-col justify-between">
-                        <div className="w-10 h-10 bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center justify-center shadow-lg mb-2">
+                      <div className="bg-slate-900/50 border border-slate-800 rounded-3xl p-5 sm:p-6 flex flex-col justify-between min-h-[140px] sm:min-h-0">
+                        <div className="w-10 h-10 bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center justify-center shadow-lg mb-2 shrink-0">
                           <CheckCircle size={20} />
                         </div>
                         <div>
-                          <p className="text-2xl font-black text-emerald-400">{checkedCount} / {totalCount}</p>
+                          <p className="text-xl sm:text-2xl font-black text-emerald-400">{checkedCount} / {totalCount}</p>
                           <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">Indicators Covered</p>
                         </div>
                       </div>
-
-                      <div className="col-span-2 sm:col-span-1 bg-slate-900/50 border border-slate-800 rounded-3xl p-6 flex flex-col justify-between">
-                        <div className="w-10 h-10 bg-amber-500/10 text-amber-400 rounded-xl flex items-center justify-center shadow-lg mb-2">
+ 
+                      <div className="col-span-1 min-[480px]:col-span-2 sm:col-span-1 bg-slate-900/50 border border-slate-800 rounded-3xl p-5 sm:p-6 flex flex-col justify-between min-h-[140px] sm:min-h-0">
+                        <div className="w-10 h-10 bg-amber-500/10 text-amber-400 rounded-xl flex items-center justify-center shadow-lg mb-2 shrink-0">
                           <Book size={20} />
                         </div>
                         <div>
-                          <p className="text-2xl font-black text-amber-400">{totalCount - checkedCount}</p>
+                          <p className="text-xl sm:text-2xl font-black text-amber-400">{totalCount - checkedCount}</p>
                           <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">Uncovered Items</p>
                         </div>
                       </div>
@@ -1913,10 +1913,10 @@ export default function ContentLibrary() {
 
                 return (
                   <>
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                       <h3 className="text-sm font-black text-slate-900 uppercase tracking-tight flex items-center gap-2">
-                        <FolderOpen size={18} className="text-emerald-600" />
-                        {activeScheme ? `Indicators for ${activeScheme.title}` : `Standard NaCCA Curriculum Blueprint List`}
+                        <FolderOpen size={18} className="text-emerald-600 shrink-0" />
+                        <span>{activeScheme ? `Indicators for ${activeScheme.title}` : `Standard NaCCA Curriculum Blueprint List`}</span>
                       </h3>
                       <button
                         type="button"
@@ -1967,7 +1967,7 @@ export default function ContentLibrary() {
                           if (subStrands.length === 0) return null;
 
                           return (
-                            <div key={strand} className="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-6 space-y-4">
+                            <div key={strand} className="bg-white rounded-3xl sm:rounded-[2rem] border border-slate-100 shadow-sm p-4 sm:p-6 space-y-4">
                               <div className="flex items-center gap-3 pb-3 border-b border-slate-50">
                                 <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-sm">
                                   {strandIdx + 1}
@@ -2007,10 +2007,10 @@ export default function ContentLibrary() {
 
                                   return (
                                     <div key={subStrand} className="pl-4 border-l-2 border-slate-100 focus-within:border-emerald-500 transition-colors space-y-3">
-                                      <div className="flex justify-between items-center">
-                                        <h5 className="font-black text-slate-700 text-xs uppercase">{subStrand}</h5>
+                                      <div className="flex flex-wrap justify-between items-center gap-2">
+                                        <h5 className="font-black text-slate-700 text-xs uppercase break-words min-w-0">{subStrand}</h5>
                                         <span className={cn(
-                                          "px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-widest",
+                                          "px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-widest shrink-0",
                                           subPercentage === 100 ? "bg-emerald-100 text-emerald-800" : subPercentage > 0 ? "bg-amber-100 text-amber-800" : "bg-slate-100 text-slate-500"
                                         )}>
                                           {subPercentage}% Done
@@ -2037,8 +2037,8 @@ export default function ContentLibrary() {
                                               }}
                                               className="mt-0.5 h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
                                             />
-                                            <div className="space-y-0.5">
-                                              <div className="flex items-center gap-2">
+                                            <div className="space-y-0.5 min-w-0">
+                                              <div className="flex flex-wrap items-center gap-1.5 min-w-0">
                                                 <code className="text-[9px] font-black text-emerald-700 uppercase bg-emerald-50 px-1.5 py-0.5 rounded mr-1 inline-block shrink-0">{ind.code}</code>
                                                 {'week' in ind && (
                                                   <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest shrink-0">{String(ind.week).toUpperCase()}</span>

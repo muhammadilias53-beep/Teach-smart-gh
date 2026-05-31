@@ -36,6 +36,46 @@ import {
   RME_LESSON_FRAMES
 } from '../../constants';
 
+const GHANAIAN_LANGUAGES = [
+  "Dagaare",
+  "Dagbani",
+  "Dangme",
+  "Ewe",
+  "Fante",
+  "Ga",
+  "Gonja",
+  "Kasem",
+  "Nzema",
+  "Twi (Akuapem)",
+  "Twi (Asante)"
+];
+
+const MULTILINGUAL_LANGUAGES = [
+  "English",
+  "Twi",
+  "Fante",
+  "Ewe",
+  "Ga",
+  "Dagbani",
+  "Dagaare",
+  "Gonja",
+  "Kasem",
+  "Nzema",
+  "Bilingual (English + Selected Ghanaian Language)"
+];
+
+const GHANAIAN_LANGUAGES_FOR_BILINGUAL = [
+  "Twi",
+  "Fante",
+  "Ewe",
+  "Ga",
+  "Dagbani",
+  "Dagaare",
+  "Gonja",
+  "Kasem",
+  "Nzema"
+];
+
 const LessonPlanGenerator = () => {
   const { user, profile } = useAuth();
   const navigate = useNavigate();
@@ -48,6 +88,7 @@ const LessonPlanGenerator = () => {
     level: 'JHS',
     class: 'Basic 7',
     subject: 'English',
+    ghanaianLanguage: '',
     strand: '',
     subStrand: '',
     contentStandard: '',
@@ -61,7 +102,13 @@ const LessonPlanGenerator = () => {
     differentiationStrategies: '',
     customGuidance: '',
     layoutStyle: 'comprehensive' as 'minimalist' | 'comprehensive' | 'primary-focused',
+    language: 'English',
+    bilingualLanguage: 'Twi',
   });
+  
+  const displaySubject = formData.subject === 'Ghanaian Language' && formData.ghanaianLanguage
+    ? `Ghanaian Language (${formData.ghanaianLanguage})`
+    : formData.subject;
 
   // Automatically use the indicator as the main learning objective when selected
   React.useEffect(() => {
@@ -90,6 +137,9 @@ const LessonPlanGenerator = () => {
       if (!formData.level) newErrors.level = "Required";
       if (!formData.class) newErrors.class = "Required";
       if (!formData.subject) newErrors.subject = "Required";
+      if (formData.subject === 'Ghanaian Language' && !formData.ghanaianLanguage) {
+        newErrors.ghanaianLanguage = "Select a language";
+      }
       if (!formData.classSize || parseInt(formData.classSize) <= 0) newErrors.classSize = "Invalid size";
       if (!formData.weekEnding) newErrors.weekEnding = "Required";
     }
@@ -241,7 +291,7 @@ const LessonPlanGenerator = () => {
         layoutStyleInstruction = "LAYOUT STYLE REQUIREMENT (COMPREHENSIVE): Please write a deeply detailed, highly structured, and extensive instructional roadmap. Detail complete step-by-step teacher and learner actions. Ensure core competencies, formative checkpoint milestones, rich teaching/learning resources, and references are fully elaborated.";
       }
 
-      const prompt = `Generate a NaCCA-compliant lesson plan for ${formData.class} (${formData.level}) ${formData.subject} strictly following the Standard-Based Curriculum (SBC). 
+      const prompt = `Generate a NaCCA-compliant lesson plan for ${formData.class} (${formData.level}) ${displaySubject} strictly following the Standard-Based Curriculum (SBC). 
       Strand: ${formData.strand}.
       Sub-Strand: ${formData.subStrand}.
       Content Standard: ${formData.contentStandard}.
@@ -267,7 +317,7 @@ const LessonPlanGenerator = () => {
         district: profile?.district,
         town: formData.specificLocality || profile?.town,
         region: profile?.region
-      });
+      }, formData.language, formData.bilingualLanguage);
       
       setResult(data);
       setStep(4);
@@ -288,7 +338,7 @@ const LessonPlanGenerator = () => {
         authorId: user.uid,
         level: formData.level,
         class: formData.class,
-        subject: formData.subject,
+        subject: displaySubject,
         locality: formData.locality,
         strand: formData.strand,
         subStrand: formData.subStrand,
@@ -346,7 +396,7 @@ const LessonPlanGenerator = () => {
 
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(9);
-    doc.text(`CLASS: ${formData.class.toUpperCase()} (${formData.level}) | SUBJECT: ${formData.subject.toUpperCase()} | LOCALITY: ${formData.locality.toUpperCase()} | TEMPLATE: ${formData.layoutStyle.toUpperCase()}`, 105, 48, { align: 'center' });
+    doc.text(`CLASS: ${formData.class.toUpperCase()} (${formData.level}) | SUBJECT: ${displaySubject.toUpperCase()} | LOCALITY: ${formData.locality.toUpperCase()} | TEMPLATE: ${formData.layoutStyle.toUpperCase()}`, 105, 48, { align: 'center' });
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
     doc.text(`${formData.strand} - ${formData.subStrand}`.toUpperCase(), 105, 56, { align: 'center' });
@@ -430,7 +480,7 @@ const LessonPlanGenerator = () => {
     });
 
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-').replace('T', '_').slice(0, 19);
-    const filename = `${formData.subject}_${formData.strand}_${formData.subStrand}_LessonPlan_${timestamp}`.replace(/[\s\W]+/g, '_');
+    const filename = `${displaySubject}_${formData.strand}_${formData.subStrand}_LessonPlan_${timestamp}`.replace(/[\s\W]+/g, '_');
     doc.save(`${filename}.pdf`);
   };
 
@@ -515,7 +565,7 @@ const LessonPlanGenerator = () => {
                 <select 
                   className={cn("input-field", errors.subject && "border-red-400 ring-4 ring-red-50")}
                   value={formData.subject}
-                  onChange={(e) => setFormData({...formData, subject: e.target.value, strand: '', subStrand: '', contentStandard: '', indicator: ''})}
+                  onChange={(e) => setFormData({...formData, subject: e.target.value, ghanaianLanguage: e.target.value === 'Ghanaian Language' ? formData.ghanaianLanguage : '', strand: '', subStrand: '', contentStandard: '', indicator: ''})}
                 >
                   {subjects.map(s => (
                     <option key={s} value={s}>{s}</option>
@@ -523,6 +573,48 @@ const LessonPlanGenerator = () => {
                 </select>
                 {errors.subject && <p className="text-[10px] text-red-500 font-bold uppercase tracking-wider">{errors.subject}</p>}
               </div>
+              {formData.subject === 'Ghanaian Language' && (
+                <div className="space-y-2 animate-fadeIn">
+                  <label className="text-sm font-bold text-gray-500 uppercase">Ghanaian Language</label>
+                  <select 
+                    className={cn("input-field", errors.ghanaianLanguage && "border-red-400 ring-4 ring-red-50")}
+                    value={formData.ghanaianLanguage}
+                    onChange={(e) => setFormData({...formData, ghanaianLanguage: e.target.value})}
+                  >
+                    <option value="">Select Language</option>
+                    {GHANAIAN_LANGUAGES.map(lang => (
+                      <option key={lang} value={lang}>{lang}</option>
+                    ))}
+                  </select>
+                  {errors.ghanaianLanguage && <p className="text-[10px] text-red-500 font-bold uppercase tracking-wider">{errors.ghanaianLanguage}</p>}
+                </div>
+              )}
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-gray-500 uppercase">Instructional Language</label>
+                <select 
+                  className="input-field"
+                  value={formData.language}
+                  onChange={(e) => setFormData({...formData, language: e.target.value})}
+                >
+                  {MULTILINGUAL_LANGUAGES.map(lang => (
+                    <option key={lang} value={lang}>{lang}</option>
+                  ))}
+                </select>
+              </div>
+              {formData.language.toLowerCase().includes('bilingual') && (
+                <div className="space-y-2 animate-fadeIn">
+                  <label className="text-sm font-bold text-gray-500 uppercase">Bilingual Ghanaian Language</label>
+                  <select 
+                    className="input-field"
+                    value={formData.bilingualLanguage}
+                    onChange={(e) => setFormData({...formData, bilingualLanguage: e.target.value})}
+                  >
+                    {GHANAIAN_LANGUAGES_FOR_BILINGUAL.map(lang => (
+                      <option key={lang} value={lang}>{lang}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
               <div className="space-y-2">
                 <label className="text-sm font-bold text-gray-500 uppercase">Class Size</label>
                 <input 
@@ -947,7 +1039,7 @@ const LessonPlanGenerator = () => {
                   </div>
                   <div className="flex flex-wrap gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
                     <span className="bg-slate-50 px-2 py-1 rounded">{formData.class}</span>
-                    <span className="bg-slate-50 px-2 py-1 rounded">{formData.subject}</span>
+                    <span className="bg-slate-50 px-2 py-1 rounded">{displaySubject}</span>
                     <span className="bg-slate-50 px-2 py-1 rounded">Week {result.weekEnding || formData.weekEnding}</span>
                   </div>
                 </div>
@@ -1045,7 +1137,7 @@ const LessonPlanGenerator = () => {
                     <div className="flex flex-wrap justify-center gap-4 text-xs font-bold text-slate-400 uppercase tracking-widest mt-4">
                       <span>{formData.class} ({formData.level})</span>
                       <span className="w-1 h-1 bg-slate-300 rounded-full my-auto" />
-                      <span>{formData.subject}</span>
+                      <span>{displaySubject}</span>
                       <span className="w-1 h-1 bg-slate-300 rounded-full my-auto" />
                       <span>Strand: {formData.strand}</span>
                       <span className="w-1 h-1 bg-slate-300 rounded-full my-auto" />
@@ -1244,7 +1336,7 @@ const LessonPlanGenerator = () => {
                   <h2 className="text-3xl font-extrabold text-amber-900 mb-2 font-sans tracking-tight">🎒 {result.title} 🎨</h2>
                   <div className="flex flex-wrap justify-center gap-2 mt-4">
                     <span className="px-3 py-1 bg-amber-100/50 rounded-full text-xs font-black text-amber-800">{formData.class}</span>
-                    <span className="px-3 py-1 bg-amber-100/50 rounded-full text-xs font-black text-amber-800">{formData.subject}</span>
+                    <span className="px-3 py-1 bg-amber-100/50 rounded-full text-xs font-black text-amber-800">{displaySubject}</span>
                     <span className="px-3 py-1 bg-amber-100/50 rounded-full text-xs font-black text-amber-800">🧸 Week {result.weekEnding || formData.weekEnding}</span>
                     <span className="px-3 py-1 bg-amber-100/50 rounded-full text-xs font-black text-amber-800">👥 Size: {result.classSize || formData.classSize}</span>
                   </div>
