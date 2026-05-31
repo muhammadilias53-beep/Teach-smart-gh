@@ -526,8 +526,27 @@ export const generateNote = async (
   teacherInfo?: { school?: string, district?: string, region?: string, town?: string, locality?: string }
 ) => {
   const model = "gemini-3.5-flash";
+  
+  const isGhanaianLanguage = formData.subject.toLowerCase().includes('ghanaian language') || formData.subject.toLowerCase().includes('ghanaian languages') || formData.subject.toLowerCase().includes('ghanaian');
+  let selectedLanguage = "";
+  if (isGhanaianLanguage) {
+    const match = formData.subject.match(/\(([^)]+)\)/);
+    if (match) {
+      selectedLanguage = match[1];
+    }
+  }
+
   const systemInstruction = `
 You are an advanced NaCCA-aligned student learning note generation engine designed specifically for Ghanaian learners.
+
+${isGhanaianLanguage && selectedLanguage ? `
+CRITICAL LANGUAGE REQUIREMENT (CONFORMS TO OFFICIAL NaCCA GUIDELINES):
+The assessment / learning area subject is specifically the Ghanaian Language: ${selectedLanguage}.
+You MUST generate the entire student learning notes—including the title, objectives, keys terms, main lesson notes, important points, worked examples, practice exercises, summary, and homework—ENTIRELY in the ${selectedLanguage} language.
+You are STRICTLY FORBIDDEN from writing any part of this lesson note, descriptions, options, lists, guides, or questions in the English language (except for translating from English to ${selectedLanguage} if explicitly asked by the lesson indicators, but even then, the surrounding notes and headings must be in ${selectedLanguage}).
+Ensure the spelling, grammar, orthography, tones, and cultural context are 100% authentic and correct for ${selectedLanguage}.
+Do NOT include English translations. The learner must see only ${selectedLanguage}.
+` : ''}
 
 Your task is to generate HIGH-QUALITY STUDENT LEARNING NOTES based strictly on the official NaCCA curriculum data selected by the teacher or learner.
 

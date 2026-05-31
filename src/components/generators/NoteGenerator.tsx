@@ -37,6 +37,20 @@ const COMPETENCIES = [
   { code: "DL", label: "Digital Literacy" }
 ];
 
+const GHANAIAN_LANGUAGES = [
+  "Dagaare",
+  "Dagbani",
+  "Dangme",
+  "Ewe",
+  "Fante",
+  "Ga",
+  "Gonja",
+  "Kasem",
+  "Nzema",
+  "Twi (Akuapem)",
+  "Twi (Asante)"
+];
+
 const NoteGenerator = () => {
   const { user, profile } = useAuth();
   const navigate = useNavigate();
@@ -127,6 +141,7 @@ const NoteGenerator = () => {
       level: initialLevel,
       class: initialClass,
       subject: initialSubject,
+      ghanaianLanguage: '',
       strand: initialStrand,
       subStrand: initialSubStrand,
       contentStandard: initialStandard,
@@ -165,6 +180,9 @@ const NoteGenerator = () => {
 
   // Selectors
   const currentClasses = CLASSES_BY_LEVEL[formData.level] || [];
+  const displaySubject = formData.subject === 'Ghanaian Language' && formData.ghanaianLanguage
+    ? `Ghanaian Language (${formData.ghanaianLanguage})`
+    : formData.subject;
   const currentStrands = getSubjectStrands(formData.subject, formData.level);
   const lookupStrand = getLookupStrand(formData.subject, formData.strand);
   const currentSubStrands = getSubjectSubStrands(formData.subject, formData.strand, formData.level);
@@ -230,6 +248,7 @@ const NoteGenerator = () => {
     setFormData(prev => ({
       ...prev,
       subject: newSubject,
+      ghanaianLanguage: newSubject === 'Ghanaian Language' ? prev.ghanaianLanguage : '',
       strand: nextStrand,
       subStrand: nextSubStrand,
       contentStandard: nextStandard,
@@ -337,6 +356,10 @@ const NoteGenerator = () => {
   };
 
   const handleGenerate = async () => {
+    if (formData.subject === 'Ghanaian Language' && !formData.ghanaianLanguage) {
+      toast.error("Please select a specific Ghanaian Language.");
+      return;
+    }
     if (!formData.objectives) {
       toast.error("Please ensure Objectives are filled.");
       return;
@@ -345,7 +368,10 @@ const NoteGenerator = () => {
     setLoading(true);
     try {
       const data = await generateNote(
-        formData,
+        {
+          ...formData,
+          subject: displaySubject
+        },
         { 
           school: profile?.school, 
           district: profile?.district,
@@ -375,7 +401,7 @@ const NoteGenerator = () => {
         authorId: user.uid,
         level: formData.level,
         class: formData.class,
-        subject: formData.subject,
+        subject: displaySubject,
         createdAt: serverTimestamp(),
       });
       toast.success('Notes saved to your cloud library!');
@@ -430,7 +456,7 @@ const NoteGenerator = () => {
       doc.setFontSize(8);
       doc.setFont('helvetica', 'bold');
       doc.setTextColor(40, 40, 40);
-      doc.text(`SUBJECT: ${formData.subject.toUpperCase()} | LEVEL: ${formData.level.toUpperCase()} | CLASS: ${formData.class.toUpperCase()}`, 105, 51, { align: 'center' });
+      doc.text(`SUBJECT: ${displaySubject.toUpperCase()} | LEVEL: ${formData.level.toUpperCase()} | CLASS: ${formData.class.toUpperCase()}`, 105, 51, { align: 'center' });
       
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(7.5);
@@ -712,7 +738,7 @@ const NoteGenerator = () => {
     }
 
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-').replace('T', '_').slice(0, 19);
-    const filename = `${formData.subject}_${formData.level}_Notes_${timestamp}`.replace(/[\s\W]+/g, '_');
+    const filename = `${displaySubject}_${formData.level}_Notes_${timestamp}`.replace(/[\s\W]+/g, '_');
     doc.save(`${filename}.pdf`);
   };
 
@@ -796,6 +822,23 @@ const NoteGenerator = () => {
                   ))}
                 </select>
               </div>
+
+              {formData.subject === 'Ghanaian Language' && (
+                <div className="space-y-2 animate-fadeIn">
+                  <label className="text-sm font-bold text-gray-500 uppercase">Ghanaian Language</label>
+                  <select 
+                    required
+                    className="input-field"
+                    value={formData.ghanaianLanguage}
+                    onChange={(e) => setFormData({...formData, ghanaianLanguage: e.target.value})}
+                  >
+                    <option value="">Select Language</option>
+                    {GHANAIAN_LANGUAGES.map(lang => (
+                      <option key={lang} value={lang}>{lang}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
 
               <div className="space-y-2">
                 <label className="text-sm font-bold text-gray-500 uppercase">Term</label>
@@ -1129,7 +1172,7 @@ const NoteGenerator = () => {
                   <div className="flex flex-wrap gap-2 text-[10px] font-black uppercase tracking-wider">
                     <span className="bg-slate-100 text-slate-800 px-2.5 py-1 rounded-md">LEVEL: {formData.level}</span>
                     <span className="bg-emerald-100/40 text-emerald-800 px-2.5 py-1 rounded-md">CLASS: {formData.class}</span>
-                    <span className="bg-ghana-gold/10 text-slate-900 px-2.5 py-1 rounded-md">SUBJECT: {formData.subject}</span>
+                    <span className="bg-ghana-gold/10 text-slate-900 px-2.5 py-1 rounded-md">SUBJECT: {displaySubject}</span>
                     <span className="bg-indigo-50 text-indigo-800 px-2.5 py-1 rounded-md max-w-xs truncate">STRAND: {formData.strand}</span>
                     <span className="bg-slate-100 text-slate-700 px-2.5 py-1 rounded-md max-w-sm truncate">SUB-STRAND: {formData.subStrand}</span>
                   </div>
