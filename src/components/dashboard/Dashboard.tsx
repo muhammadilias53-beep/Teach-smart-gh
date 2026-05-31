@@ -14,6 +14,7 @@ import { db } from '../../lib/firebase';
 import { handleFirestoreError, OperationType } from '../../lib/firestore-errors';
 import { Logo } from '../common/Logo';
 import { SafeMarkdown } from '../common/SafeMarkdown';
+import { BrandedPlaceholder } from '../common/BrandedPlaceholder';
 import { toast } from 'react-hot-toast';
 import { Download, X, ExternalLink, Mail, Loader2, Send } from 'lucide-react';
 import jsPDF from 'jspdf';
@@ -680,7 +681,10 @@ const Dashboard = () => {
 
       {/* Main Preview Work Area */}
       <div className="grid lg:grid-cols-1 gap-8">
-        <div className="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden flex flex-col shadow-sm">
+        <div className={cn(
+          "bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden flex flex-col shadow-sm transition-all duration-500",
+          recentDocs.length === 0 && !loadingDocs ? "card-fancy" : ""
+        )}>
             <div className="p-8 border-b border-slate-50 flex justify-between items-center bg-slate-50/30">
               <div>
                 <h2 className="text-lg font-black text-slate-900 tracking-tight">Recent Documents</h2>
@@ -692,7 +696,15 @@ const Dashboard = () => {
             </div>
             
             <div className="overflow-x-auto min-h-[400px] custom-scrollbar">
-                <table className="w-full">
+                {recentDocs.length === 0 && !loadingDocs ? (
+                  <div className="p-8">
+                    <BrandedPlaceholder 
+                      title="No Documents Found"
+                      description="You have not created any resources yet. Use our toolkit above to instantly draft Schemes of Learning, Lesson Notes, and Exam Question Papers aligned with approved NaCCA indicators."
+                    />
+                  </div>
+                ) : (
+                  <table className="w-full">
                    <thead>
                       <tr className="bg-slate-50/50">
                         <th className="px-8 py-5 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">Document Title</th>
@@ -738,19 +750,10 @@ const Dashboard = () => {
                             </td>
                           </tr>
                         ))
-                      ) : (
-                        <tr>
-                          <td colSpan={4} className="py-20 text-center">
-                             <div className="flex flex-col items-center opacity-40">
-                                <FileText size={48} className="text-slate-300 mb-3" />
-                                <p className="text-sm font-bold italic">No records found yet</p>
-                                <p className="text-xs mt-1">Generated outputs will appear here automatically</p>
-                             </div>
-                          </td>
-                        </tr>
-                      )}
-                   </tbody>
-                </table>
+                      ) : null}
+                    </tbody>
+                 </table>
+              )}
             </div>
         </div>
       </div>

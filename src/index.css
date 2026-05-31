@@ -85,7 +85,21 @@ h1, h2, h3, h4, h5, h6 {
   }
   
   .card-fancy {
-    @apply bg-white border border-slate-100 rounded-[2rem] p-8 shadow-sm hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-500;
+    @apply bg-white border border-slate-100 rounded-[2rem] p-8 shadow-sm hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-500 relative overflow-hidden;
+  }
+  
+  .card-fancy::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, var(--color-ghana-red) 0%, var(--color-ghana-gold) 50%, var(--color-ghana-green) 100%);
+  }
+  
+  .card-fancy h1, .card-fancy h2, .card-fancy h3, .card-fancy h4, .card-fancy h5, .card-fancy h6 {
+    @apply font-black tracking-tight text-slate-900;
   }
 }
 

@@ -203,14 +203,152 @@ export const generateExam = async (
 ) => {
   const model = "gemini-3-flash-preview";
   
+  const isGhanaianLanguage = subject.toLowerCase().includes('ghanaian language') || subject.toLowerCase().includes('ghanaian languages') || subject.toLowerCase().includes('ghanaian');
+  let selectedLanguage = "";
+  if (isGhanaianLanguage) {
+    const match = subject.match(/\(([^)]+)\)/);
+    if (match) {
+      selectedLanguage = match[1];
+    }
+  }
+  
   // Determine WAEC question counts based on level
   const isSHS = level.toLowerCase().includes('shs');
-  const objectiveCount = p1Settings?.count ?? (isSHS ? 50 : 40);
+  const isJHS = level.toLowerCase().includes('jhs') || level.toLowerCase().includes('basic 7') || level.toLowerCase().includes('basic 8') || level.toLowerCase().includes('basic 9');
+  
+  let objectiveCount = p1Settings?.count ?? (isSHS ? 50 : 40);
   const p1Diff = p1Settings?.difficulty ?? difficulty;
   
-  const theoryCount = p2Settings?.count ?? 6;
+  let theoryCount = p2Settings?.count ?? 6;
   const p2Diff = p2Settings?.difficulty ?? difficulty;
-  const theoryToAnswer = theoryCount === 6 ? 4 : Math.ceil(theoryCount * 0.7);
+  let theoryToAnswer = theoryCount === 6 ? 4 : Math.ceil(theoryCount * 0.7);
+
+  // 2024 BECE Guidelines based on subject
+  let beceSpecificInstructions = "";
+  if (isJHS) {
+    const normSubject = subject.toLowerCase().trim();
+    if (normSubject.includes('science') || normSubject === 'science') {
+      objectiveCount = 40;
+      theoryCount = 5; // 1 compulsory, 4 others in section B
+      theoryToAnswer = 4; // 1 compulsory + 3 from section B
+      beceSpecificInstructions = `
+        STRICT 2024 BECE SCIENCE EXAM STRUCTURE:
+        - PAPER 1 (OBJECTIVE): 40 Multiple Choice Questions (MCQs), 45 minutes, 40 marks.
+        - PAPER 2 (ESSAY): 1 hour 25 minutes, consisting of Section A and Section B.
+        - Section A is COMPULSORY (Question 1) testing practical skills in Agriculture, Biology, Chemistry, and Physics (each sub-part worth 10 marks, total 40 marks). You MUST include a boxed diagram placeholder with labels for this question!
+        - Section B: 4 blended questions from Agriculture, Biology, Chemistry, and Physics. Candidates must answer any 3 (20 marks each, total 60 marks).
+      `;
+    } else if (normSubject.includes('math') || normSubject === 'mathematics') {
+      objectiveCount = 40;
+      theoryCount = 6;
+      theoryToAnswer = 4;
+      beceSpecificInstructions = `
+        STRICT 2024 BECE MATHEMATICS EXAM STRUCTURE:
+        - PAPER 1 (OBJECTIVE): 40 compulsory MCQs, 1 hour, 40 marks.
+        - PAPER 2 (ESSAY): 6 structured and comprehensive questions. Candidates must answer any 4 questions (15 marks each, total 60 marks), 1 hour.
+      `;
+    } else if (normSubject.includes('social') || normSubject.includes('social studies')) {
+      objectiveCount = 40;
+      theoryCount = 5; // 1 compulsory, 2 in Sec II, 2 in Sec III
+      theoryToAnswer = 3; // 1 compulsory + 1 from Sec II + 1 from Sec III
+      beceSpecificInstructions = `
+        STRICT 2024 BECE SOCIAL STUDIES EXAM STRUCTURE:
+        - PAPER 1 (OBJECTIVE): 40 MCQs, 45 minutes, 40 marks.
+        - PAPER 2 (ESSAY): 1 hour, consisting of three sections:
+          * Section I: The Environment. Question 1 is COMPULSORY (20 marks).
+          * Section II: Law, Order, and Nation Building. Candidates answer any 1 question from 2 options (20 marks).
+          * Section III: Social and Economic Development. Candidates answer any 1 question from 2 options (20 marks).
+      `;
+    } else if (normSubject.includes('technology') || normSubject.includes('career')) {
+      objectiveCount = 40;
+      theoryCount = 6; // 3 in Sec A, 3 in Sec B
+      theoryToAnswer = 4; // 1 compulsory + 1 standard from Sec A, and 1 compulsory + 1 standard from Sec B
+      beceSpecificInstructions = `
+        STRICT 2024 BECE CAREER TECHNOLOGY EXAM STRUCTURE:
+        - PAPER 1 (OBJECTIVE): 40 MCQs, 50 minutes, 40 marks.
+        - PAPER 2 (ESSAY): 1 hour 15 minutes, consisting of Section A (Home Economics) and Section B (Pre-Technical Skills).
+          * Section A (Home Economics): 3 questions. Question 1 (test of practical) is COMPULSORY. Answer Question 1 and any other 1 question (15 marks each).
+          * Section B (Pre-Technical Skills): 3 questions. Question 4 (test of practical) is COMPULSORY. Answer Question 4 and any other 1 question (15 marks each).
+      `;
+    } else if (normSubject.includes('computing')) {
+      objectiveCount = 40;
+      theoryCount = 5; // 1 compulsory, 4 standard
+      theoryToAnswer = 4; // 1 compulsory + 3 standard
+      beceSpecificInstructions = `
+        STRICT 2024 BECE COMPUTING EXAM STRUCTURE:
+        - PAPER 1 (OBJECTIVE): 40 compulsory MCQs, 45 minutes, 40 marks.
+        - PAPER 2 (ESSAY): 1 hour 15 minutes, consisting of Section A and Section B:
+          * Section A: Question 1 is COMPULSORY (24 marks).
+          * Section B: 4 questions. Candidates answer any 3 questions (12 marks each, total 36 marks).
+      `;
+    } else if (normSubject.includes('creative') || normSubject.includes('art')) {
+      objectiveCount = 40;
+      theoryCount = 7; // 3 in Sec A, 2 in Sec B, 2 in Sec C
+      theoryToAnswer = 4; // 1 compulsory + 1 other from Sec A, 1 from Sec B, 1 from Sec C
+      beceSpecificInstructions = `
+        STRICT 2024 BECE CREATIVE ART AND DESIGN EXAM STRUCTURE:
+        - PAPER 1 (OBJECTIVE): 40 MCQs, 45 minutes, 40 marks.
+        - PAPER 2 (ESSAY): 1 hour 20 minutes, consisting of three sections (A, B, C):
+          * Section A (Visual Art): 3 questions. Question 1 (Design) is COMPULSORY. Candidates answer Question 1 and any 1 other (15 marks each).
+          * Section B (Music): 2 questions. Candidates answer exactly 1 question (15 marks).
+          * Section C (Dance and Drama): 2 questions. Candidates answer exactly 1 question (15 marks).
+      `;
+    } else if (normSubject.includes('english')) {
+      objectiveCount = 40;
+      theoryCount = 3; // Section A, B, C are distinct parts
+      theoryToAnswer = 3; // Compulsory Parts
+      beceSpecificInstructions = `
+        STRICT 2024 BECE ENGLISH LANGUAGE EXAM STRUCTURE:
+        - PAPER 1 (OBJECTIVE): 40 MCQs (35 Grammar Usage, 5 Oral Language), 50 minutes, 40 marks.
+        - PAPER 2 (ESSAY): 1 hour 10 minutes, consisting of three sections:
+          * Part A (Writing): 3 composition topics. Candidates answer exactly 1 topic (30 marks, ~250 words long).
+          * Part B (Reading): 1 compulsory Reading Comprehension and Summarizing passage with questions (20 marks).
+          * Part C (Literature): 10 compulsory questions based on approved Ghanaian BECE literature extracts (10 marks).
+      `;
+    } else if (normSubject.includes('rme') || normSubject.includes('religious')) {
+      objectiveCount = 40;
+      theoryCount = 5; // 1 compulsory, 4 standard
+      theoryToAnswer = 3; // 1 compulsory + 2 standard
+      beceSpecificInstructions = `
+        STRICT 2024 BECE RELIGIOUS AND MORAL EDUCATION EXAM STRUCTURE:
+        - PAPER 1 (OBJECTIVE): 40 MCQs, 45 minutes, 40 marks.
+        - PAPER 2 (ESSAY): 1 hour, consisting of Section A (compulsory question) and Section B (4 options from which candidates answer 2). Total of 3 questions to answer (20 marks each, total 60 marks).
+      `;
+    } else if (normSubject.includes('french')) {
+      objectiveCount = 20; // 10 Written Comprehension, 10 Vocabulary (due to Listening Comprehension put on hold)
+      theoryCount = 2; // Two compulsory questions
+      theoryToAnswer = 2;
+      beceSpecificInstructions = `
+        STRICT 2024 BECE FRENCH EXAM STRUCTURE:
+        - PAPER 1 (OBJECTIVE): 40 MCQs (Note: Listening comprehension is put on hold. Please generate 20 MCQs: 10 Written Comprehension questions from two short passages, and 10 Vocabulary questions), 30 minutes, 40 marks total.
+        - PAPER 2 (WRITTEN EXPRESSION): 45 minutes, consisting of two compulsory questions:
+          * Question 1: 10 short-answer situational questions (e.g. filling out a form, replying to invitation, giving advice, describing work) for 20 marks.
+          * Question 2: 1 guided composition/essay question for 20 marks.
+      `;
+    } else if (normSubject.includes('language') || normSubject.includes('ghanaian')) {
+      objectiveCount = 40;
+      theoryCount = 4; // 4 distinct parts
+      theoryToAnswer = 4;
+      beceSpecificInstructions = `
+        STRICT 2024 BECE GHANAIAN LANGUAGE${selectedLanguage ? ` (${selectedLanguage.toUpperCase()})` : ''} EXAM STRUCTURE:
+        - PAPER 1 (OBJECTIVE): 40 MCQs covering Customs, Institutions, Oral & Written Literature, and Listening & Speaking, 50 minutes, 40 marks.
+        - PAPER 2 (ESSAY): 1 hour 10 minutes, consisting of 4 parts (total 60 marks):
+          * Part I (Composition): Write a short composition on 1 out of 4 options (30 marks, ~150 words) in ${selectedLanguage || 'the selected Ghanaian language'}.
+          * Part II (Comprehension): 1 compulsory passage with questions in ${selectedLanguage || 'the selected Ghanaian language'} (10 marks).
+          * Part III (Translation): Translate an English passage into ${selectedLanguage || 'the selected Ghanaian language'} (10 marks).
+          * Part IV (Language and Usage): 10 questions on grammar, parts of speech, syntax (10 marks) written entirely in ${selectedLanguage || 'the selected Ghanaian language'}.
+      `;
+    } else if (normSubject.includes('arabic')) {
+      objectiveCount = 40;
+      theoryCount = 3;
+      theoryToAnswer = 1;
+      beceSpecificInstructions = `
+        STRICT 2024 BECE ARABIC EXAM STRUCTURE:
+        - PAPER 1 (OBJECTIVE): 40 MCQs covering lexis, structure, and comprehension, 45 minutes, 70 marks (scaled to 70%).
+        - PAPER 2 (ESSAY): 1 hour, answer exactly 1 guided essay out of 3 set questions (composition, picture description, letter writing, narration) for 30 marks.
+      `;
+    }
+  }
 
   const selectedTypesList = questionTypes && questionTypes.length > 0 ? questionTypes : ['Multiple Choice', 'Theory'];
 
@@ -301,6 +439,19 @@ export const generateExam = async (
     Region: ${teacherInfo.region || 'N/A'}` : ''}
 
     STRICT WAEC COMPLIANCE RULES:
+    ${beceSpecificInstructions ? `
+    BECE 2024 SPECIFIC EXAM FORMAT DIRECTIVES (CRITICAL):
+    ${beceSpecificInstructions}
+    ` : ''}
+    ${isGhanaianLanguage && selectedLanguage ? `
+    CRITICAL LANGUAGE REQUIREMENT (CONFORMS TO 2024 BECE SPECIFICATIONS):
+    The assessment subject is specifically the Ghanaian Language: ${selectedLanguage}.
+    You MUST generate the entire examination—including all questions, multiple choice options (A, B, C, D), reading comprehension passages, titles, section instructions, headers, and matching terms—ENTIRELY in the ${selectedLanguage} language.
+    You are STRICTLY FORBIDDEN from asking, prompting, or writing any questions or options in the English language (except for translating from English to ${selectedLanguage} in Part III Translation, but even then, the surrounding prompts, headers, and target questions must be in ${selectedLanguage}).
+    Ensure the spelling, grammar, orthography, tones, and cultural context are 100% authentic and correct for ${selectedLanguage}.
+    The marking scheme answers and explanations MUST also be written entirely in ${selectedLanguage}.
+    Do NOT translate the questions to English. The teacher and student must see only ${selectedLanguage}.
+    ` : ''}
     1. STRUCTURE (STRICTLY generate ONLY these selected sections. Do NOT generate any unselected sections or question types):
        ${structureFormatted}
     2. QUESTION COUNTS & DIFFICULTY:

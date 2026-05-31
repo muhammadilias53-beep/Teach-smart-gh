@@ -27,6 +27,20 @@ import { subjects as sharedSubjects, levels, CLASSES_BY_LEVEL } from '../../cons
 
 const difficulties = ["Easy", "Standard", "Challenging"];
 
+const GHANAIAN_LANGUAGES = [
+  "Dagaare",
+  "Dagbani",
+  "Dangme",
+  "Ewe",
+  "Fante",
+  "Ga",
+  "Gonja",
+  "Kasem",
+  "Nzema",
+  "Twi (Akuapem)",
+  "Twi (Asante)"
+];
+
 export default function ExamGenerator() {
   const { user, profile } = useAuth();
   const navigate = useNavigate();
@@ -42,6 +56,7 @@ export default function ExamGenerator() {
     const classes = CLASSES_BY_LEVEL[defaultLevel] || [];
     return {
       subject: '',
+      ghanaianLanguage: '',
       level: defaultLevel,
       classLevel: classes[0] || '',
       topics: '',
@@ -56,6 +71,9 @@ export default function ExamGenerator() {
   });
 
   const currentClasses = CLASSES_BY_LEVEL[formData.level] || [];
+  const displaySubject = formData.subject === 'Ghanaian Language' && formData.ghanaianLanguage
+    ? `Ghanaian Language (${formData.ghanaianLanguage})`
+    : formData.subject;
 
   const questionTypes = ['Multiple Choice', 'Theory', 'Practical', 'True/False', 'Matching', 'Fill-in-the-blanks'];
 
@@ -108,7 +126,7 @@ export default function ExamGenerator() {
 
     try {
       const examData = await generateExam(
-        formData.subject,
+        displaySubject,
         `${formData.level} (${formData.classLevel})`,
         formData.topics,
         formData.difficulty,
@@ -161,8 +179,8 @@ export default function ExamGenerator() {
     try {
       await addDoc(collection(db, 'exams'), {
         authorId: user.uid,
-        title: formData.title || `${formData.subject} - ${formData.topics}`,
-        subject: formData.subject,
+        title: formData.title || `${displaySubject} - ${formData.topics}`,
+        subject: displaySubject,
         level: `${formData.level} (${formData.classLevel})`,
         classLevel: formData.classLevel,
         questions: result.questions,
@@ -185,7 +203,7 @@ export default function ExamGenerator() {
     const doc = new jsPDF();
     const title = type === 'exam' ? formData.title || 'Examination Paper' : `Marking Scheme: ${formData.title || 'Examination'}`;
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-').replace('T', '_').slice(0, 19);
-    const filename = `${formData.subject}_${formData.level}_${formData.classLevel}_${type === 'exam' ? 'Exam' : 'Marking'}_${timestamp}`.replace(/[\s\W]+/g, '_');
+    const filename = `${displaySubject}_${formData.level}_${formData.classLevel}_${type === 'exam' ? 'Exam' : 'Marking'}_${timestamp}`.replace(/[\s\W]+/g, '_');
     
     // Header Branding
     doc.setFillColor(0, 28, 61); // TeachSmart Deep Blue
@@ -211,7 +229,7 @@ export default function ExamGenerator() {
     
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
-    doc.text(`SUBJECT: ${formData.subject.toUpperCase()} | LEVEL: ${formData.level.toUpperCase()} (${formData.classLevel.toUpperCase()}) | DIFFICULTY: ${formData.difficulty.toUpperCase()}`, 105, 62, { align: 'center' });
+    doc.text(`SUBJECT: ${displaySubject.toUpperCase()} | LEVEL: ${formData.level.toUpperCase()} (${formData.classLevel.toUpperCase()}) | DIFFICULTY: ${formData.difficulty.toUpperCase()}`, 105, 62, { align: 'center' });
     
     doc.setLineWidth(0.5);
     doc.setDrawColor(230, 230, 230);
@@ -370,19 +388,34 @@ export default function ExamGenerator() {
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className={cn("grid grid-cols-1 gap-8", formData.subject === 'Ghanaian Language' ? "md:grid-cols-4" : "md:grid-cols-3")}>
             <div className="space-y-2">
               <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Subject Area</label>
               <select 
                 required
                 className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-bold text-slate-700"
                 value={formData.subject}
-                onChange={(e) => setFormData({...formData, subject: e.target.value})}
+                onChange={(e) => setFormData({...formData, subject: e.target.value, ghanaianLanguage: e.target.value === 'Ghanaian Language' ? formData.ghanaianLanguage : ''})}
               >
                 <option value="">Select Subject</option>
                 {sharedSubjects.map(s => <option key={s} value={s}>{s}</option>)}
               </select>
             </div>
+
+            {formData.subject === 'Ghanaian Language' && (
+              <div className="space-y-2 animate-fadeIn">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Ghanaian Language</label>
+                <select 
+                  required
+                  className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-bold text-slate-750 cursor-pointer shadow-sm"
+                  value={formData.ghanaianLanguage}
+                  onChange={(e) => setFormData({...formData, ghanaianLanguage: e.target.value})}
+                >
+                  <option value="">Select Language</option>
+                  {GHANAIAN_LANGUAGES.map(lang => <option key={lang} value={lang}>{lang}</option>)}
+                </select>
+              </div>
+            )}
 
             <div className="space-y-2">
               <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Education Stage</label>
@@ -408,6 +441,23 @@ export default function ExamGenerator() {
               </select>
             </div>
           </div>
+
+          {formData.level === 'JHS' && formData.subject && (
+            <div className="p-4 bg-emerald-500/5 rounded-2xl border border-emerald-500/10 flex items-start gap-3">
+              <div className="p-2 bg-emerald-500/10 text-emerald-600 rounded-lg">
+                <Sparkles size={16} className="animate-pulse" />
+              </div>
+              <div className="space-y-1">
+                <h4 className="text-xs font-black text-slate-800 tracking-tight uppercase flex items-center gap-1.5">
+                  Official 2024 BECE Format Engaged
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping inline-block" />
+                </h4>
+                <p className="text-[11px] text-slate-500 font-medium leading-relaxed">
+                  TeachSmartGH has auto-aligned your examination settings for <strong className="text-slate-700 font-bold">{displaySubject}</strong> with the latest 2024 WAEC / NaCCA test specifications. Paper 1 Objectives (40 questions) and Paper 2 Theories with subject-specific sections, marks allocation, and compulsory question rules are preset automatically.
+                </p>
+              </div>
+            </div>
+          )}
 
           <div className="grid md:grid-cols-2 gap-8">
             <div className="p-6 bg-slate-50 rounded-3xl border border-slate-100 space-y-4">
@@ -671,7 +721,7 @@ export default function ExamGenerator() {
                   </div>
                   <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-slate-400">
                     <span>Subject</span>
-                    <span className="text-slate-900">{formData.subject}</span>
+                    <span className="text-slate-900">{displaySubject}</span>
                   </div>
                   <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-slate-400">
                     <span>Level</span>
