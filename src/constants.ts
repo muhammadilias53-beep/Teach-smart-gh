@@ -108,7 +108,7 @@ export const SUBJECT_STRANDS: Record<string, string[]> = {
     "Price Analysis and Prediction in the Modern Economy",
     "Government Economic Policy and Trade"
   ],
-  "Elective ICT": ["Information Systems", "Computer Architecture", "Networking and Data Communications", "Software Development", "Web and Multimedia Development"],
+  "Elective ICT": ["ICTs in the Society", "Network Systems for Transmitting Information"],
   "CRS": ["Study of Religion, God's Creation and Humankind", "Religious Beliefs, Practices, Moral Values and Human Development", "Religious Communities and Nation Building", "Religion and Contemporary Issues"],
   "IRS": ["Al-Quran", "Al-Hadith", "Al-Fiqh", "Islamic History"],
   "Literature in English": ["Introduction to Literature", "African Prose", "Non-African Prose", "African Poetry", "Non-African Poetry", "Drama"],
@@ -141,6 +141,17 @@ export const SUBJECT_SUB_STRANDS: Record<string, string[]> = {
   "States and Societies in Pre-Colonial Times": ["Emergence of Complex States", "Pre-Colonial Economy and Economic Activities", "Emergence of Complex States and Societies"],
   "Age of Encounter and Exchanges Up to the 20th Century": ["Religion and Religious Change", "Global Connections", "Prelude to Colonisation and Colonial Rule", "Response to Colonial Rule"],
   "Independence and Post-Colonial Developments": ["Socio-Economic and Political Developments in Ghana (1957 - 2007)"],
+
+  // Elective ICT Mappings (SHS)
+  "ICTs in the Society": [
+    "Organising, Managing and Presenting Information Using Essential Productivity Tools",
+    "Emerging Technologies and Applications",
+    "Connecting and Communicating Online"
+  ],
+  "Network Systems for Transmitting Information": [
+    "Guided and Unguided Network Systems",
+    "Computer and Information Security"
+  ],
 
   // Accounting & Business Accounting Mappings
   "Financial Accounting": ["Conceptual Framework", "Financial Data Analysis", "Financial Reporting", "Financial Statements", "Partnership Accounts", "Company Accounts", "Cost Accounting Basics"],
@@ -2390,6 +2401,33 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
     ],
     "Socio-Economic and Political Developments in Ghana (1957 - 2007)": [
       "2.4.1.CS.1: Demonstrate understanding of the socio-economic and political developments in Ghana from 1957 - 2007."
+    ]
+  },
+  "Elective ICT": {
+    "Organising, Managing and Presenting Information Using Essential Productivity Tools": [
+      "1.1.1.CS.1: Demonstrate knowledge and understanding of the use of various computing tools to responsibly create multimedia documents containing text, images etc. e.g., birthday cards/Flyers for a specified purpose",
+      "2.1.1.CS.1: Demonstrate knowledge and understanding of Analysing numerical data using Spreadsheet software",
+      "3.1.1.CS.1: Demonstrate knowledge and understanding of Presentation software and Desktop Publishing Software"
+    ],
+    "Emerging Technologies and Applications": [
+      "1.1.2.CS.1: Demonstrate knowledge and understanding of Emerging Technologies",
+      "2.1.2.CS.1: Demonstrate knowledge and understanding of Emerging Technologies",
+      "3.1.2.CS.1: Demonstrate knowledge and understanding of emerging technologies"
+    ],
+    "Connecting and Communicating Online": [
+      "1.1.3.CS.1: Demonstrate knowledge and understanding of the use of the Internet",
+      "2.1.3.CS.1: Demonstrate knowledge and understanding of the World Wide Web",
+      "3.1.3.CS.1: Demonstrate knowledge and understanding of Collaboration tools for Communication and synchronisation"
+    ],
+    "Guided and Unguided Network Systems": [
+      "1.2.1.CS.1: Demonstrate basic knowledge and understanding of guided and unguided network systems",
+      "2.2.1.CS.1: Demonstrate basic knowledge and understanding of guided and unguided network systems",
+      "3.2.1.CS.1: Demonstrate basic knowledge and understanding of guided and unguided network systems"
+    ],
+    "Computer and Information Security": [
+      "1.2.2.CS.1: Demonstrate knowledge and understanding of Safety and Security Issues in the use of computers",
+      "2.2.2.CS.1: Demonstrate knowledge and understanding of safety and security issues in ICT",
+      "3.2.2.CS.1: Demonstrate knowledge and understanding of Safety and security Issues in ICT"
     ]
   }
 };
@@ -4764,6 +4802,76 @@ export const STANDARD_INDICATORS: Record<string, string[]> = {
     "2.4.1.LI.3: Examine Ghana's socio-economic and political developments from 1969 - 1981.",
     "2.4.1.LI.4: Analyse the processes leading to the birth of the Fourth Republic.",
     "2.4.1.LI.5: Assess the socio-economic and political developments in Ghana from 1993 to 2007."
+  ],
+  // Elective ICT Standard Indicators (SHS)
+  "1.1.1.CS.1: Demonstrate knowledge and understanding of the use of various computing tools to responsibly create multimedia documents containing text, images etc. e.g., birthday cards/Flyers for a specified purpose": [
+    "1.1.1.LI.1: Describe software, hardware, and other computing features needed to create a document.",
+    "1.1.1.LI.2: Create, Edit and Format text and paragraphs (Cut, Copy, Bold, Italic, Tables, Find and Replace, Format Painter, Spelling & Grammar check, Styles) using desktop/online computing tools (word processing software e.g., MS Word, Google Docs) keyboard, mouse etc.",
+    "1.1.1.LI.3: Enhance lists by sorting, renumbering, and customising list styles using desktop/online computing tools (word processing software e.g., MS Word, Google Docs) keyboard, mouse etc.",
+    "1.1.1.LI.4: Format the overall appearance of a page through colours, watermarks, headers and footers, page layout, paragraph and line, change capitalisation, bordering and shading, perform bullets and numbering, do page column, tables, graphics) using desktop/online computing tools (word processing software e.g., MS Word, Google Docs) keyboard, mouse etc.",
+    "1.1.1.LI.5: Save and print documents (Save, Save As, Print)"
+  ],
+  "2.1.1.CS.1: Demonstrate knowledge and understanding of Analysing numerical data using Spreadsheet software": [
+    "2.1.1.LI.1: Describe Spreadsheet software workbooks, worksheets, cell referencing",
+    "2.1.1.LI.2: Create and utilise formulae and functions for data analysis. (SUM, AVERAGE, MIN, MAX, IF, DATE, TIME)",
+    "2.1.1.LI.3: Highlight the use of cell referencing (relative and absolute) in formulas.",
+    "2.1.1.LI.4: Generate and interpret graphs and charts to visualise data. (bar, pie, line)",
+    "2.1.1.LI.5: Apply sorting and filtering operations to manipulate tables."
+  ],
+  "3.1.1.CS.1: Demonstrate knowledge and understanding of Presentation software and Desktop Publishing Software": [
+    "3.1.1.LI.1: Discuss Presentation Software and its Features (Windows, Animation, Transition, Presenter view slides, Master slides)",
+    "3.1.1.LI.2: Develop slides, format tables, and incorporate charts, graphs, animation, and transitions in a slide presentation.",
+    "3.1.1.LI.3: Create and save a publication using desktop publishing software, such as MS Publisher or Adobe.",
+    "3.1.1.LI.4: Utilise basic tools in desktop publishing to add pictures, text boxes, tables, word art, and picture frames to a publication."
+  ],
+  "1.1.2.CS.1: Demonstrate knowledge and understanding of Emerging Technologies": [
+    "1.1.2.LI.1: Explain digital devices and their importance",
+    "1.1.2.LI.2: Differentiate between desktops, laptops, smart gadgets (tablets), and servers.",
+    "1.1.2.LI.3: Explore the purpose and uses of smartphones, digital cameras, wearable devices, game devices, e-book readers, portable and digital media players"
+  ],
+  "2.1.2.CS.1: Demonstrate knowledge and understanding of Emerging Technologies": [
+    "2.1.2.LI.1: Discuss the use of technology in education, healthcare, manufacturing, government, finance, entertainment, transport, and business.",
+    "2.1.2.LI.2: Identify technologies used by home users, small/home office users, mobile users, power users and enterprise users."
+  ],
+  "3.1.2.CS.1: Demonstrate knowledge and understanding of emerging technologies": [
+    "3.1.2.LI.1: Analyse and Discuss the Affordances and Impact of Digital Tools in Various Domains.",
+    "3.1.2.LI.2: Evaluate the Role of Social Media as Communication and Collaboration Tools in Society. (Example Facebook, Twitter, Instagram, LinkedIn, YouTube, etc.)"
+  ],
+  "1.1.3.CS.1: Demonstrate knowledge and understanding of the use of the Internet": [
+    "1.1.3.LI.1: Describe the evolution of the Internet and identify the Internet service providers and their functions.",
+    "1.1.3.LI.2: Explore how data travels on the Internet, how the IP addressing system functions and discuss surfing the Web, creating and use of e-mail and mailing lists."
+  ],
+  "2.1.3.CS.1: Demonstrate knowledge and understanding of the World Wide Web": [
+    "2.1.3.LI.1: Navigate the Web effectively using Web addresses, browsers, Web apps, and mobile platforms.",
+    "2.1.3.LI.2: Analyse and discuss the features and multimedia content found on Websites (Graphics, Audio, Videos, Plug-ins)"
+  ],
+  "3.1.3.CS.1: Demonstrate knowledge and understanding of Collaboration tools for Communication and synchronisation": [
+    "3.1.3.LI.1: Create and Set up Communication Tools (Synchronous(Real-time) and/or Asynchronous Communication) (Zoom, Google Meet, Facebook, other video conferencing platforms, instant messaging, telephone conversation / Email, messengers, Intranet, etc.)",
+    "3.1.3.LI.2: Discuss the Types of Websites and Digital Media on the Web (Graphics, Audio, Videos, Plug-ins)"
+  ],
+  "1.2.1.CS.1: Demonstrate basic knowledge and understanding of guided and unguided network systems": [
+    "1.2.1.LI.1: Classify network types and topologies",
+    "1.2.1.LI.2: Classify transmission media used to send and receive data in a network environment"
+  ],
+  "2.2.1.CS.1: Demonstrate basic knowledge and understanding of guided and unguided network systems": [
+    "2.2.1.LI.1: Understand the Concepts and Differences Between Client/Server and Peer-to-Peer Networks.",
+    "2.2.1.LI.2: Describe and Explain Common Network Communication Protocols and Standards, such as Ethernet, TCP/IP, HTTP(s), SMTP, FTP, Wi-Fi, LTE, Bluetooth, IrDA, RFID, and NFC."
+  ],
+  "3.2.1.CS.1: Demonstrate basic knowledge and understanding of guided and unguided network systems": [
+    "3.2.1.LI.1: Describe Commonly used Devices (e.g., broadband, modems, wireless access points, routers, network cards, hubs and switches)."
+  ],
+  "1.2.2.CS.1: Demonstrate knowledge and understanding of Safety and Security Issues in the use of computers": [
+    "1.2.2.LI.1: Discuss Physical Safety Risks (Electrocution, Fire hazard, Tripping hazard, Personal injury) in the use of computers",
+    "1.2.2.LI.2: Discuss Causes of Physical Safety Risks of computer equipment.",
+    "1.2.2.LI.3: Apply preventive measures on physical safety risks (Increase the number of wall sockets and do not use too many extension blocks)"
+  ],
+  "2.2.2.CS.1: Demonstrate knowledge and understanding of safety and security issues in ICT": [
+    "2.2.2.LI.1: Understand and evaluate the risks associated with the use of ICT, including Internet and network attacks (e.g., cyberbullying, malware, botnets, denial-of-service attacks, spoofing, hardware theft, and firewalls).",
+    "2.2.2.LI.2: Discuss and implement preventive mechanisms to mitigate computer network attacks (e.g., antivirus software, hardware and software, and firewalls)."
+  ],
+  "3.2.2.CS.1: Demonstrate knowledge and understanding of Safety and security Issues in ICT": [
+    "3.2.2.LI.1: Discuss the Fundamental Objectives of Computer Security.",
+    "3.2.2.LI.2: Discuss the Threats to Computer Security and how to Prevent such Threats."
   ]
 };
 
