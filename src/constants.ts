@@ -20,6 +20,7 @@ export const subjects = [
   "CRS", 
   "IRS", 
   "Literature in English", 
+  "Accounting",
   "Financial Accounting", 
   "Cost Accounting", 
   "Business Management", 
@@ -52,8 +53,21 @@ export const SUBJECT_STRANDS: Record<string, string[]> = {
   "Elective Mathematics": ["Algebra", "Trigonometry", "Calculus", "Coordinate Geometry", "Statics and Probability", "Vectors and Mechanics"],
   "Science": ["Diversity of Matter", "Cycles", "Systems", "Forces and Energy", "Humans and the Environment"],
   "Physics": ["Mechanics", "Thermal Physics", "Waves", "Electricity and Magnetism", "Atomic and Nuclear Physics"],
-  "Chemistry": ["Atomic Structure", "Chemical Bonding", "Physical Chemistry", "Inorganic Chemistry", "Organic Chemistry", "Chemistry and Environment"],
-  "Biology": ["Cell Biology", "Genetics", "Physiology", "Ecology", "Plant Biology", "Diversity of Life"],
+  "Chemistry": ["Physical Chemistry", "Systematic Chemistry of the Elements", "Chemistry of Carbon Compounds"],
+  "Biology": [
+    "Exploring Biology in Society",
+    "Life in the Fundamental Unit",
+    "Diversity of Living Things and Their Environment",
+    "Diversity of living things and their Environment",
+    "Systems of Life",
+    "Systems of life",
+    "Cell Biology",
+    "Genetics",
+    "Physiology",
+    "Ecology",
+    "Plant Biology",
+    "Diversity of Life"
+  ],
   "English": ["Oral Language", "Reading", "Grammar Usage at Word and Phrase Levels", "Writing", "Writing Conventions and Grammar Usage", "Extensive Reading"],
   "History": ["History as a Subject", "My Country Ghana", "Europeans in Ghana", "Colonisation and Developments under Colonial Rule in Ghana", "Journey to Independence", "Independent Ghana"],
   "Social Studies": ["Environment", "Family Life", "Sense of Purpose", "Law and Order", "Socio-Economic Development", "Nationhood"],
@@ -68,23 +82,209 @@ export const SUBJECT_STRANDS: Record<string, string[]> = {
   ],
   "Career Technology": ["Health and Safety", "Materials for Production", "Tools, Equipment and Processes", "Technology", "Designing and Making of Artefacts/Products", "Entrepreneurial Skills"],
   "Creative Arts": ["Visual Arts", "Performing Arts"],
-  "Financial Accounting": ["Financial Statements", "Partnership Accounts", "Company Accounts", "Cost Accounting Basics"],
-  "Cost Accounting": ["Introduction to Cost Accounting", "Elements of Costing", "Materials Costing", "Labour and Overhead Costing", "Job and Batch Costing"],
-  "Business Management": ["Nature of Management", "Functional Areas of Management", "Legal Environment of Business"],
+  "Financial Accounting": ["Conceptual Framework", "Financial Data Analysis", "Financial Reporting", "Financial Statements", "Partnership Accounts", "Company Accounts", "Cost Accounting Basics"],
+  "Cost Accounting": ["Controlling Cost to Improve Organisational Performance", "Determining Cost of Operations for Pricing and Controlling", "Analysing Information for Control and decision making", "Introduction to Cost Accounting", "Elements of Costing", "Materials Costing", "Labour and Overhead Costing", "Job and Batch Costing"],
+  "Accounting": ["Financial Accounting", "Cost Accounting"],
+  "Business Management": [
+    "Managing Businesses and the Legal Framework of Businesses",
+    "Glocal Business",
+    "Forms of Business",
+    "Functions of Management",
+    "Functional Areas of Management",
+    "Legal Environment of Business and Risk Management",
+    "International Business and E-Business",
+    "Business Development",
+    "Nature of Management",
+    "Legal Environment of Business"
+  ],
   "French": ["L'Identité", "Parler de son Environnement", "Exprimer ses Goûts et ses Préférences", "Les Activités"],
   "Ghanaian Language": ["Oral Language (GL)", "Reading (GL)", "Writing (GL)", "Writing Conventions and Usage (GL)", "Extensive Reading (GL)", "Composition Writing", "Customs and Institutions", "Literature (GL)"],
   "Agricultural Science": ["Introduction to Agriculture", "Soil Science", "Crop Science", "Animal Science", "Agricultural Economics and Extension"],
+  "Economics": [
+    "Consumers' Rational Decision Making",
+    "Consumers’ Rational Decision Making",
+    "Firms' Innovative Decision Making",
+    "Firms’ Innovative Decision Making",
+    "Price Analysis and Prediction in the Modern Economy",
+    "Government Economic Policy and Trade"
+  ],
   "Elective ICT": ["Information Systems", "Computer Architecture", "Networking and Data Communications", "Software Development", "Web and Multimedia Development"],
-  "CRS": ["Biblical Studies", "History of the Church", "Ethics and Moral Life"],
+  "CRS": ["Study of Religion, God's Creation and Humankind", "Religious Beliefs, Practices, Moral Values and Human Development", "Religious Communities and Nation Building", "Religion and Contemporary Issues"],
   "IRS": ["Al-Quran", "Al-Hadith", "Al-Fiqh", "Islamic History"],
   "Literature in English": ["Introduction to Literature", "African Prose", "Non-African Prose", "African Poetry", "Non-African Poetry", "Drama"],
   "Integrated Curriculum (KG)": ["All About Me", "My Family", "Values and Beliefs", "My Local Community", "My Nation Ghana", "All Around Us", "My Global Community"],
   "Our World Our People": ["All About Us", "All Around Us", "Our Beliefs and Values", "Our Nation Ghana", "My Global Community"],
   "Physical Education": ["Motor Skill and Movement Patterns", "Movement Concepts, Principles and Strategies", "Physical Fitness", "Physical Fitness Concepts, Principles and Strategies", "Values and Psycho-social Concepts, Principles and Strategies"],
-  "RME": ["God, His Creation and Attributes", "Religious Practices and their Moral Implications", "Religious Leaders", "The Family and the Community", "The Family, Authority and Obedience", "Religious Leaders and Personalities", "Ethics and Moral Life", "Religion and Economic Life"]
+  "RME": ["God, His Creation and Attributes", "Religious Practices and their Moral Implications", "Religious Leaders", "The Family and the Community", "The Family, Authority and Obedience", "Religious Leaders and Personalities", "Ethics and Moral Life", "Religion and Economic Life"],
+  "Food & Nutrition": ["Nutrition and Health", "Food Production"],
+  "Geography": ["The Earth and Its Neighbourhoods", "Navigating Our Environment", "Human and Environment"],
+  "Government": ["Government and Development", "Constitution, Institutions and Administration", "Ghana in the Global System"]
 };
 
 export const SUBJECT_SUB_STRANDS: Record<string, string[]> = {
+  // Food & Nutrition Mappings
+  "Nutrition and Health": ["Food For Healthy Living", "Food Security"],
+  "Food Production": ["Food Production Technology", "Food Processing Techniques"],
+
+  // Geography Mappings
+  "The Earth and Its Neighbourhoods": ["The Earth and Its Features", "Rocks, Weathering, Soil and Mass Wasting", "The Earth Atmosphere"],
+  "Navigating Our Environment": ["Maps, Their Elements and Analyses", "Geospatial Data Collection, Representation and Interpretation"],
+  "Human and Environment": ["Physical Settings and People", "Economic Activities", "Environmental Degradation", "Environmental Hazards and Their Management"],
+
+  // Government Mappings
+  "Government and Development": ["Basics of Government", "Indigenous and Contemporary Governance in Ghana"],
+  "Constitution, Institutions and Administration": ["Constitution and Organs of Government", "State and Non-State Actors in Ghana"],
+  "Ghana in the Global System": ["Ghana in the Community of Nations", "Globalization and Development"],
+
+  // History Mappings (SHS)
+  "Historical Inquiry and Writing": ["Nature and Scope of History", "Sources and Methods of Reconstructing History"],
+  "States and Societies in Pre-Colonial Times": ["Emergence of Complex States", "Pre-Colonial Economy and Economic Activities", "Emergence of Complex States and Societies"],
+  "Age of Encounter and Exchanges Up to the 20th Century": ["Religion and Religious Change", "Global Connections", "Prelude to Colonisation and Colonial Rule", "Response to Colonial Rule"],
+  "Independence and Post-Colonial Developments": ["Socio-Economic and Political Developments in Ghana (1957 - 2007)"],
+
+  // Accounting & Business Accounting Mappings
+  "Financial Accounting": ["Conceptual Framework", "Financial Data Analysis", "Financial Reporting", "Financial Statements", "Partnership Accounts", "Company Accounts", "Cost Accounting Basics"],
+  "Cost Accounting": ["Controlling Cost to Improve Organisational Performance", "Determining Cost of Operations for Pricing and Controlling", "Analysing Information for Control and decision making", "Introduction to Cost Accounting", "Elements of Costing", "Materials Costing", "Labour and Overhead Costing", "Job and Batch Costing"],
+  
+  "Conceptual Framework": ["Accounting Principles & System", "Accounting Equation & Ledger", "Users of Accounting Info", "Accounting Standards", "Scope of Accounting", "Accounting Equation", "Double Entry Principle", "Trial Balance"],
+  "Financial Data Analysis": ["Correction of Errors & Suspense Accounts", "Bank Reconciliation Statements", "Receivables & Payables Control Accounts", "Ratio Analysis", "Correction of Errors", "Suspense Account", "Bank Reconciliation Statement", "Control Accounts"],
+  "Financial Reporting": ["Sole Proprietorship FINAL Accounts", "Not-for-Profit Final Accounts", "Incomplete Records Accounts", "Partnership Accounts Form", "Company Final Accounts", "Sole Proprietorship Accounts", "Accounts of Not-for-Profit Organisations", "Accounts from Incomplete Records", "Partnership Accounts", "Company Accounts"],
+  "Financial Statements": ["Trading, Profit and Loss Account", "Balance Sheet", "Adjustments", "Incomplete Records Final Accounts"],
+  "Partnership Accounts": ["Partnership Deed", "Appropriation Account", "Partnership Balance Sheet", "Goodwill Treatment"],
+  "Company Accounts": ["Issue of Shares & Debentures", "Company Annual Reports", "Statement of Retained Earnings"],
+  "Cost Accounting Basics": ["Introduction to Cost Concepts", "Classification of Costs", "Costing Terminology"],
+  "Introduction to Cost Accounting": ["Definition & Scope of Costing", "Difference between Financial & Costing", "Standard Installation"],
+  "Elements of Costing": ["Materials Management", "Labour Remuneration", "Overheads Cost Pool"],
+  "Materials Costing": ["Store Ledger pricing (FIFO/LIFO/WAM)", "Inventory Valuation", "Material Requisitions"],
+  "Labour and Overhead Costing": ["Wages and Salary Computation", "Overhead Analysis & Sheets", "Overhead Absorption Rates"],
+  "Job and Batch Costing": ["Job Costing System", "Batch Costing System", "Contract Cost Accounts", "Process Cost Accounts", "Service Costing"],
+  "Controlling Cost to Improve Organisational Performance": ["FIFO, LIFO, and Weighted Average Pricing", "Labour Remuneration & Idle Time", "Payroll and Wages Sheet", "Overhead Allocation and Apportionment", "Overhead Analysis Sheet"],
+  "Determining Cost of Operations for Pricing and Controlling": ["Job Costing Sheets", "Contract Costing & Work Certified", "Service Cost Accounts", "Process Costing and Normal Losses"],
+  "Analysing Information for Control and decision making": ["Activity Based Costing & Cost Drivers", "Marginal costing vs Absorption Costing", "Cost-Volume-Profit and Break-Even Point", "Standard Costing and Variance Analysis", "Budgetary Control and Functional Budgets"],
+
+  // Business Management Mappings
+  "Business Management": [
+    "Managing Businesses and the Legal Framework of Businesses",
+    "Glocal Business",
+    "Forms of Business",
+    "Functions of Management",
+    "Functional Areas of Management",
+    "Legal Environment of Business and Risk Management",
+    "International Business and E-Business",
+    "Business Development",
+    "Nature of Management",
+    "Legal Environment of Business"
+  ],
+  "Managing Businesses and the Legal Framework of Businesses": [
+    "Forms of Business",
+    "Functions of Management",
+    "Functional Areas of Management",
+    "Legal Environment of Business and Risk Management"
+  ],
+  "Glocal Business": [
+    "International Business and E-Business",
+    "Business Development"
+  ],
+  "Nature of Management": [
+    "Forms of Business",
+    "Functions of Management"
+  ],
+  "Legal Environment of Business": [
+    "Legal Environment of Business and Risk Management",
+    "Law of Contract"
+  ],
+  "Forms of Business": [
+    "Forms of Business Ownership", 
+    "Sole Proprietorship", 
+    "Partnership", 
+    "Company & SOEs", 
+    "Concept of Business", 
+    "Joint Stock Companies", 
+    "State-owned Enterprises"
+  ],
+  "Functions of Management": [
+    "Planning and Decision Making", 
+    "Organising and Org Structures", 
+    "Leading styles & Power", 
+    "Controlling processes & tools", 
+    "Management and Administration"
+  ],
+  "Functional Areas of Management": [
+    "Production Management", 
+    "Procurement Management", 
+    "Marketing and Digital Marketing", 
+    "Human Resource Management", 
+    "Financial Management", 
+    "Decision-making", 
+    "Delegation", 
+    "Business Communication", 
+    "Performance Management"
+  ],
+  "Legal Environment of Business and Risk Management": [
+    "Law of Contract", 
+    "Risk Management & Insurance", 
+    "Legal Environment of Business"
+  ],
+  "International Business and E-Business": [
+    "Approaches to International Business", 
+    "Domestic vs International Trade", 
+    "Restrictions in International Trade", 
+    "Multinational Corporations & E-Business"
+  ],
+  "Business Development": [
+    "Entrepreneurship and Setting up a Business", 
+    "Creating a Simple Business Plan", 
+    "Factors affecting Business Environment",
+    "Business Ethics and CSR"
+  ],
+  // Biology
+  "Exploring Biology in Society": ["Biology as the Science of Life", "Biology and Entrepreneurship"],
+  "Life in the Fundamental Unit": ["Cell Structure and Functions", "Movement of Substances in Living Organisms"],
+  "Diversity of Living Things and Their Environment": ["Living Organisms", "Ecology", "Diseases and Infections"],
+  "Diversity of living things and their Environment": ["Living Organisms", "Ecology", "Diseases and Infections"],
+  "Diversity of living things and their Environmnet": ["Living Organisms", "Ecology", "Diseases and Infections"],
+  "Systems of Life": ["Mammalian Systems", "Plant Systems"],
+  "Systems of life": ["Mammalian Systems", "Plant Systems"],
+  // Legacy mappings for backwards-compatible / robust selection
+  "Cell Biology": ["Cell Structure and Functions", "Movement of Substances in Living Organisms"],
+  "Genetics": ["Genetics Key Terms", "Mendel's Laws of Inheritance", "Variation", "Evolution", "Cell Cycle and Cell Division"],
+  "Physiology": ["Mammalian Systems", "Plant Systems", "Cardiovascular and Excretory Systems"],
+  "Ecology": ["Ecological terms", "Ecology in Named Habitats", "Interdependency of Living Organisms", "Energy Flow in Ecosystems"],
+  "Plant Biology": ["Morphology of Flowering Plants", "Plant Tissues and Functions", "Photosynthesis and Transportation", "Reproduction and Excretion in Flowering Plants"],
+  "Diversity of Life": ["Living Organisms", "Classification of Lower Organisms", "Diseases and Infections"],
+
+  // CRS Strands Map to Sub-Strands
+  "Study of Religion, God's Creation and Humankind": [
+    "Background to the Study of Religion and Christianity",
+    "The Nature of God and His Creation"
+  ],
+  "Religious Beliefs, Practices, Moral Values and Human Development": [
+    "The Major Beliefs of Christianity",
+    "Worship and Moral Values for Development",
+    "Christian Music and Values for Development",
+    "Christian Prayer and National Development"
+  ],
+  "Religious Communities and Nation Building": [
+    "The Origin and Nature of Religious Communities",
+    "Religion and Nation Building",
+    "Religious Communities, Gender and Development"
+  ],
+  "Religion and Contemporary Issues": [
+    "Religion and the Environment",
+    "Religion and Sexual Morality",
+    "Religion and Fraud"
+  ],
+
+  "Consumers' Rational Decision Making": ["Introduction to the Subject Economics", "Demand for Goods and Services", "Consumer Behaviour"],
+  "Consumers’ Rational Decision Making": ["Introduction to the Subject Economics", "Demand for Goods and Services", "Consumer Behaviour"],
+  "Firms' Innovative Decision Making": ["Production of Goods and Services", "Supply of Goods and Services", "Market Analysis"],
+  "Firms’ Innovative Decision Making": ["Production of Goods and Services", "Supply of Goods and Services", "Market Analysis"],
+  "Price Analysis and Prediction in the Modern Economy": ["Price and Equilibrium Analysis"],
+  "Government Economic Policy and Trade": [
+    "Macroeconomic Variables (GDP, Inflation, Unemployment, Exchange Rate)", 
+    "Concept of Money, Financial Institutions and Public Finance", 
+    "Agriculture, Industrialization and Trade"
+  ],
   // Mathematics
   "Number": ["Number and Numeration Systems", "Number Operations", "Fractions, Decimals and Percentages", "Number: Ratios and Proportion"],
   "Algebra": ["Patterns and Relationships", "Algebraic Expressions", "Variables and Equations"],
@@ -221,8 +421,9 @@ export const SUBJECT_SUB_STRANDS: Record<string, string[]> = {
   "Thermal Physics": ["Heat Transfer", "Thermodynamics"],
 
   // Chemistry
-  "Atomic Structure": ["Subatomic Particles", "Electron Configuration"],
-  "Chemical Bonding": ["Ionic Bonding", "Covalent Bonding", "Metallic Bonding"],
+  "Physical Chemistry": ["Matter and its Properties", "Equilibria"],
+  "Systematic Chemistry of the Elements": ["Periodicity", "Bonding"],
+  "Chemistry of Carbon Compounds": ["Characterisation of Organic Compounds", "Organic Functional Groups"],
   
   // KG Integrated
   "All About Me": ["I am a wonderful and unique creation", "The parts of the human body and their functions", "Caring for the parts of my body", "Keeping my body healthy by eating good food and taking my vaccination", "My environment and my Health", "Protecting ourselves from home and road accidents"],
@@ -235,6 +436,695 @@ export const SUBJECT_SUB_STRANDS: Record<string, string[]> = {
 };
 
 export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
+  "Financial Accounting": {
+    "Conceptual Framework": [
+      "B10.1.1.1: Demonstrate knowledge and understanding of Accounting, its nature, principles, purpose and application."
+    ],
+    "Financial Data Analysis": [
+      "B11.1.2.1: Analyze accounting transactions using the double-entry system, adjusting ledgers, correcting errors and extracting trial balances.",
+      "B11.1.2.2: Prepare updated cash books, and bank reconciliation statements to monitor liquidity.",
+      "B11.1.2.3: Draft receivables and payables control accounts to audit sub-ledger operations."
+    ],
+    "Financial Reporting": [
+      "B10.1.3.1: Prepare sole proprietorship final financial statements with basic internal adjustments.",
+      "B11.1.3.1: Prepare final statements from single-entry and incomplete financial records.",
+      "B11.1.3.2: Account for financial items in non-profit operations, compiling subscriptions and accumulated funds.",
+      "B12.1.3.1: Account for the constitution, profit distribution, and goodwill of general business partnerships.",
+      "B12.1.3.2: Prepare final structured financial accounts and reports for companies."
+    ],
+    "Financial Statements": [
+      "B10.1.4.1: Compute trading, profit and loss components to determine business profitability."
+    ],
+    "Partnership Accounts": [
+      "B12.1.5.1: Allocate partnership rewards using profit and loss appropriation accounts."
+    ],
+    "Company Accounts": [
+      "B12.1.6.1: Examine company share capital issues and balance sheet groupings."
+    ],
+    "Cost Accounting Basics": [
+      "B10.1.7.1: Classify general overhead and prime expenses in basic production sheets."
+    ]
+  },
+  "Cost Accounting": {
+    "Controlling Cost to Improve Organisational Performance": [
+      "B10.2.1.1: Distinguish nature, purpose, basics and installation guidelines of modern cost accounting files.",
+      "B10.2.1.2: Demonstrate material storage, purchase documentation, and issue pricing under FIFO, LIFO and Weighted Average schemes.",
+      "B11.2.1.1: Account for labour remuneration, idle time metrics, and calculate complete payroll sheets.",
+      "B11.2.1.2: Formulate overhead analysis sheets to apportion common indirect overheads."
+    ],
+    "Determining Cost of Operations for Pricing and Controlling": [
+      "B11.2.2.1: Draft job and batch cost records to compute margins on specific custom orders.",
+      "B12.2.2.1: Account for process costing scenarios including treatment of normal and abnormal losses.",
+      "B12.2.2.2: Reconcile contract costing procedures with architectural certificate milestones.",
+      "B12.2.2.3: Formulate service cost schedules for passenger transport and related service sectors."
+    ],
+    "Analysing Information for Control and decision making": [
+      "B11.2.3.1: Apply Activity Based Costing methods to link overheads to strategic cost pools.",
+      "B11.2.3.2: Contrast Marginal and Absorption costing treatments on period adjustments and profits.",
+      "B12.2.3.1: Draft cost-volume-profit graphs to pinpoint break-even outcomes and margin of safety indices.",
+      "B12.2.3.2: Prepare functional sales, production, purchase, and cash budgets to schedule operations.",
+      "B12.2.3.3: Calculate standard material and labour variances to evaluate operational efficiency discrepancies."
+    ],
+    "Introduction to Cost Accounting": [
+      "B10.2.4.1: Distinguish cost accounting systems from traditional financial ledgers."
+    ],
+    "Elements of Costing": [
+      "B10.2.5.1: Categorize overhead allocations, material supplies, and direct labor costs."
+    ],
+    "Materials Costing": [
+      "B10.2.6.1: Record inventory values using FIFO and LIFO methods."
+    ],
+    "Labour and Overhead Costing": [
+      "B11.2.7.1: Allocate administrative overheads across active service centers."
+    ],
+    "Job and Batch Costing": [
+      "B12.2.8.1: Compute total costs for job-ordered projects and batches."
+    ]
+  },
+  "Business Management": {
+    "Managing Businesses and the Legal Framework of Businesses": [
+      "1.1.1.CS.1: Demonstrate functional knowledge and understanding of business and its various forms of ownership.",
+      "1.1.2.CS.1: Demonstrate knowledge and understanding of the basic functions of management.",
+      "2.1.2.CS.1: Demonstrate knowledge, understanding and application of decision-making skills in organisations.",
+      "2.1.3.CS.1: Demonstrate knowledge and understanding of the Law of Contract."
+    ],
+    "Glocal Business": [
+      "1.2.1.CS1: Demonstrate knowledge and understanding of the business environment and corporate social responsibility.",
+      "2.2.1.CS.1: Demonstrate knowledge and understanding of the approaches to international business.",
+      "3.2.1.CS.1: Demonstrate knowledge and understanding of digital marketing."
+    ],
+    "Forms of Business": [
+      "1.1.1.CS.1: Demonstrate functional knowledge and understanding of business and its various forms of ownership."
+    ],
+    "Forms of Business Ownership": [
+      "1.1.1.CS.1: Demonstrate functional knowledge and understanding of business and its various forms of ownership."
+    ],
+    "Sole Proprietorship": [
+      "1.1.1.CS.1: Demonstrate functional knowledge and understanding of business and its various forms of ownership."
+    ],
+    "Partnership": [
+      "1.1.1.CS.1: Demonstrate functional knowledge and understanding of business and its various forms of ownership."
+    ],
+    "Company & SOEs": [
+      "1.1.1.CS.1: Demonstrate functional knowledge and understanding of business and its various forms of ownership."
+    ],
+    "Concept of Business": [
+      "1.1.1.CS.1: Demonstrate functional knowledge and understanding of business and its various forms of ownership."
+    ],
+    "Joint Stock Companies": [
+      "1.1.1.CS.1: Demonstrate functional knowledge and understanding of business and its various forms of ownership."
+    ],
+    "State-owned Enterprises": [
+      "1.1.1.CS.1: Demonstrate functional knowledge and understanding of business and its various forms of ownership."
+    ],
+    "Functions of Management": [
+      "1.1.2.CS.1: Demonstrate knowledge and understanding of the basic functions of management."
+    ],
+    "Planning and Decision Making": [
+      "1.1.2.CS.1: Demonstrate knowledge and understanding of the basic functions of management."
+    ],
+    "Organising and Org Structures": [
+      "1.1.2.CS.1: Demonstrate knowledge and understanding of the basic functions of management."
+    ],
+    "Leading styles & Power": [
+      "1.1.2.CS.1: Demonstrate knowledge and understanding of the basic functions of management."
+    ],
+    "Controlling processes & tools": [
+      "1.1.2.CS.1: Demonstrate knowledge and understanding of the basic functions of management."
+    ],
+    "Management and Administration": [
+      "1.1.2.CS.1: Demonstrate knowledge and understanding of the basic functions of management."
+    ],
+    "Functional Areas of Management": [
+      "2.1.2.CS.1: Demonstrate knowledge, understanding and application of decision-making skills in organisations.",
+      "2.1.2.CS.2: Demonstrate knowledge and understanding of delegation.",
+      "2.1.2.CS.3: Demonstrate understanding and application of effective communication skills in organisations.",
+      "2.1.3.CS.4: Demonstrate knowledge and understanding of Human Resource Management.",
+      "3.1.2.CS.1: Demonstrate knowledge and understanding of production management.",
+      "3.1.2.CS.2: Demonstrate knowledge and understanding of Procurement Management."
+    ],
+    "Production Management": [
+      "3.1.2.CS.1: Demonstrate knowledge and understanding of production management."
+    ],
+    "Procurement Management": [
+      "3.1.2.CS.2: Demonstrate knowledge and understanding of Procurement Management."
+    ],
+    "Marketing and Digital Marketing": [
+      "3.2.1.CS.1: Demonstrate knowledge and understanding of digital marketing."
+    ],
+    "Human Resource Management": [
+      "2.1.3.CS.4: Demonstrate knowledge and understanding of Human Resource Management."
+    ],
+    "Decision-making": [
+      "2.1.2.CS.1: Demonstrate knowledge, understanding and application of decision-making skills in organisations."
+    ],
+    "Delegation": [
+      "2.1.2.CS.2: Demonstrate knowledge and understanding of delegation."
+    ],
+    "Business Communication": [
+      "2.1.2.CS.3: Demonstrate understanding and application of effective communication skills in organisations."
+    ],
+    "Performance Management": [
+      "2.1.3.CS.4: Demonstrate knowledge and understanding of Human Resource Management."
+    ],
+    "Legal Environment of Business and Risk Management": [
+      "2.1.3.CS.1: Demonstrate knowledge and understanding of the Law of Contract.",
+      "2.1.3.CS.2: Demonstrate knowledge and understanding of business risk and insurance."
+    ],
+    "Law of Contract": [
+      "2.1.3.CS.1: Demonstrate knowledge and understanding of the Law of Contract."
+    ],
+    "Risk Management & Insurance": [
+      "2.1.3.CS.2: Demonstrate knowledge and understanding of business risk and insurance."
+    ],
+    "International Business and E-Business": [
+      "2.2.1.CS.1: Demonstrate knowledge and understanding of the approaches to international business.",
+      "2.2.1.CS.2: Demonstrate knowledge and understanding of Domestic and International Trade.",
+      "3.2.1.CS.1: Demonstrate knowledge and understanding of digital marketing.",
+      "1.2.2.CS1: Demonstrate knowledge and understanding of globalization and international business and how to transform Ghanaian companies into multinational corporations."
+    ],
+    "Approaches to International Business": [
+      "2.2.1.CS.1: Demonstrate knowledge and understanding of the approaches to international business."
+    ],
+    "Domestic vs International Trade": [
+      "2.2.1.CS.2: Demonstrate knowledge and understanding of Domestic and International Trade."
+    ],
+    "Restrictions in International Trade": [
+      "2.2.1.CS.2: Demonstrate knowledge and understanding of Domestic and International Trade."
+    ],
+    "Multinational Corporations & E-Business": [
+      "1.2.2.CS1: Demonstrate knowledge and understanding of globalization and international business and how to transform Ghanaian companies into multinational corporations."
+    ],
+    "Business Development": [
+      "1.2.1.CS1: Demonstrate knowledge and understanding of the business environment and corporate social responsibility.",
+      "3.2.2.CS.1: Demonstrate knowledge and understanding of entrepreneurship and setting up businesses."
+    ],
+    "Entrepreneurship and Setting up a Business": [
+      "3.2.2.CS.1: Demonstrate knowledge and understanding of entrepreneurship and setting up businesses."
+    ],
+    "Creating a Simple Business Plan": [
+      "3.2.2.CS.1: Demonstrate knowledge and understanding of entrepreneurship and setting up businesses."
+    ],
+    "Factors affecting Business Environment": [
+      "1.2.1.CS1: Demonstrate knowledge and understanding of the business environment and corporate social responsibility."
+    ],
+    "Business Ethics and CSR": [
+      "1.2.1.CS1: Demonstrate knowledge and understanding of the business environment and corporate social responsibility."
+    ],
+    "Nature of Management": [
+      "1.1.1.CS.1: Demonstrate functional knowledge and understanding of business and its various forms of ownership.",
+      "1.1.2.CS.1: Demonstrate knowledge and understanding of the basic functions of management."
+    ],
+    "Legal Environment of Business": [
+      "2.1.3.CS.1: Demonstrate knowledge and understanding of the Law of Contract.",
+      "2.1.3.CS.2: Demonstrate knowledge and understanding of business risk and insurance."
+    ]
+  },
+  "Conceptual Framework": {
+    "Accounting Principles & System": [
+      "B10.1.1.1: Explain Accounting as a system and its purpose in daily life."
+    ],
+    "Accounting Equation & Ledger": [
+      "B10.1.1.2: Compute assets, liabilities and capital values using the basic accounting equation."
+    ],
+    "Users of Accounting Info": [
+      "B10.1.1.3: Examine the information needs of various users of accounting information."
+    ],
+    "Accounting Standards": [
+      "B10.1.1.4: Discuss the need for general accounting standards and the role of regulatory bodies."
+    ],
+    "Scope of Accounting": [
+      "B10.1.1.5: Describe the core definitions of bookkeeping, financial accounting and cost accounting."
+    ],
+    "Accounting Equation": [
+      "B10.1.1.6: Apply the double entry guidelines to adjust transactions in the accounting equation."
+    ],
+    "Double Entry Principle": [
+      "B10.1.1.7: Post basic ledger adjustments on various asset, liability, and capital accounts."
+    ],
+    "Trial Balance": [
+      "B10.1.1.8: Extract a standard trial balance from historical ledger balances."
+    ]
+  },
+  "Financial Data Analysis": {
+    "Correction of Errors & Suspense Accounts": [
+      "B11.1.2.1: Identify types of errors not affecting the trial balance and demonstrate the rectification entry procedures."
+    ],
+    "Bank Reconciliation Statements": [
+      "B11.1.2.2: Prepare updated cashbook balances and reconcile with the bank statement to verify financial balances."
+    ],
+    "Receivables & Payables Control Accounts": [
+      "B11.1.2.3: Compile sales and purchase ledger control accounts to audit sub-ledger operations."
+    ],
+    "Ratio Analysis": [
+      "B12.1.2.1: Compute and interpret gross profit, net profit, current, quick, and efficiency ratios."
+    ],
+    "Correction of Errors": [
+      "B11.1.2.4: Distinguish between errors of omission, commission, principle, and complete reversal."
+    ],
+    "Suspense Account": [
+      "B11.1.2.5: Design a suspense account to balance the trial balance temporaries pending audits."
+    ],
+    "Bank Reconciliation Statement": [
+      "B11.1.2.6: Draft a formal bank reconciliation statement starting with cashbook or bank statement balances."
+    ],
+    "Control Accounts": [
+      "B11.1.2.7: Reconcile sub-ledgers with general ledger control totals."
+    ]
+  },
+  "Financial Reporting": {
+    "Sole Proprietorship FINAL Accounts": [
+      "B10.1.3.1: Prepare sole proprietorship final financial statements with adjusting entries."
+    ],
+    "Not-for-Profit Final Accounts": [
+      "B11.1.3.1: Draft receipts and payments, and income and expenditure statements for non-governmental projects."
+    ],
+    "Incomplete Records Accounts": [
+      "B11.1.3.2: Reconstruct profit calculations using Statement of Affairs and single entry conversions."
+    ],
+    "Partnership Accounts Form": [
+      "B12.1.3.1: Draft partnership appropriation accounts, current and capital capital sheets."
+    ],
+    "Company Final Accounts": [
+      "B12.1.3.2: Prepare company income statements and statements of financial position under regulatory frameworks."
+    ],
+    "Sole Proprietorship Accounts": [
+      "B10.1.3.3: Calculate adjustments for prepayments, accruals, depreciation, and bad debts for sole traders."
+    ],
+    "Accounts of Not-for-Profit Organisations": [
+      "B11.1.3.3: Formulate a subscription account to track accrued or prepaid member dues."
+    ],
+    "Accounts from Incomplete Records": [
+      "B11.1.3.4: Convert incomplete records into dual double-entry structures using ledger summaries."
+    ],
+    "Partnership Accounts": [
+      "B12.1.3.3: Manage the entry/retirement of a partner, calculating goodwill shares."
+    ],
+    "Company Accounts": [
+      "B12.1.3.4: Account for share and debenture subscription and payments in general company ledgers."
+    ]
+  },
+  "Financial Statements": {
+    "Trading, Profit and Loss Account": [
+      "B10.1.4.1: Compute gross margins and operating outputs in trading businesses."
+    ],
+    "Balance Sheet": [
+      "B10.1.4.2: Present a classified statement of financial position grouping local capital structures."
+    ],
+    "Adjustments": [
+      "B10.1.4.3: Calculate end-of-period adjustments for outstanding and accrued variables."
+    ],
+    "Incomplete Records Final Accounts": [
+      "B11.1.4.1: Derive sales, purchases, and cash flows to prepare standard sole-proprietor reports."
+    ]
+  },
+  "Partnership Accounts": {
+    "Partnership Deed": [
+      "B12.1.5.1: Review essential clauses in a partnership agreement and deed."
+    ],
+    "Appropriation Account": [
+      "B12.1.5.2: Prepare partnership profit distributions inside appropriation accounts."
+    ],
+    "Partnership Balance Sheet": [
+      "B12.1.5.3: Draft partner capital and current account reports."
+    ],
+    "Goodwill Treatment": [
+      "B12.1.5.4: Formulate ledger adjustments for goodwill in partners entry or exits."
+    ]
+  },
+  "Company Accounts": {
+    "Issue of Shares & Debentures": [
+      "B12.1.6.1: Prepare financial entries for share allocations and payments."
+    ],
+    "Company Annual Reports": [
+      "B12.1.6.2: Outline standard company components (statement of cash flows, director findings)."
+    ],
+    "Statement of Retained Earnings": [
+      "B12.1.6.3: Present company income reserves balances correctly."
+    ]
+  },
+  "Cost Accounting Basics": {
+    "Introduction to Cost Concepts": [
+      "B10.1.7.1: Distinguish between overhead expenditures and primary costs."
+    ],
+    "Classification of Costs": [
+      "B10.1.7.2: Group costs on production volumes, target departments, and product relationships."
+    ],
+    "Costing Terminology": [
+      "B10.1.7.3: Outline basic cost center and cost unit definitions."
+    ]
+  },
+  "Introduction to Cost Accounting": {
+    "Definition & Scope of Costing": [
+      "B10.2.4.1: Explain core definitions and bounds of cost accounting tools."
+    ],
+    "Difference between Financial & Costing": [
+      "B10.2.4.2: Contrast information requirements of cost ledgers versus general accounting."
+    ],
+    "Standard Installation": [
+      "B10.2.4.3: Plan core requirements of implementing a sound cost accounting structure."
+    ]
+  },
+  "Elements of Costing": {
+    "Materials Management": [
+      "B10.2.5.1: Summarize procurement routes of manufacturing resources."
+    ],
+    "Labour Remuneration": [
+      "B10.2.5.2: Trace time sheet outputs to payroll rates."
+    ],
+    "Overheads Cost Pool": [
+      "B10.2.5.3: Explain direct and indirect categorization of operating targets."
+    ]
+  },
+  "Materials Costing": {
+    "Store Ledger pricing (FIFO/LIFO/WAM)": [
+      "B10.2.6.1: Record resource issues under FIFO, LIFO, and Weighted Average costings."
+    ],
+    "Inventory Valuation": [
+      "B10.2.6.2: Compute closing inventory values at lower of aggregate cost or market value."
+    ],
+    "Material Requisitions": [
+      "B10.2.6.3: Formulate requisition sheets tracking stock movements."
+    ]
+  },
+  "Labour and Overhead Costing": {
+    "Wages and Salary Computation": [
+      "B11.2.7.1: Prepare full payroll spreadsheets with core tax and welfare deductions."
+    ],
+    "Overhead Analysis & Sheets": [
+      "B11.2.7.2: Apply step-down distribution rules to assign overheads across cost units."
+    ],
+    "Overhead Absorption Rates": [
+      "B11.2.7.3: Formulate overhead absorption configurations on direct machine or labor metrics."
+    ]
+  },
+  "Job and Batch Costing": {
+    "Job Costing System": [
+      "B12.2.8.1: Construct job sheets detailing prime costs and overhead bounds."
+    ],
+    "Batch Costing System": [
+      "B12.2.8.2: Compute unit costs based on bulk batch executions."
+    ],
+    "Contract Cost Accounts": [
+      "B12.2.8.3: Formulate contract sheets tracking retention moneys and work certified values."
+    ],
+    "Process Cost Accounts": [
+      "B12.2.8.4: Track work-in-progress values across linear production processes."
+    ],
+    "Service Costing": [
+      "B12.2.8.5: Compute cost-per-passenger-kilometer in commercial networks."
+    ]
+  },
+  "Controlling Cost to Improve Organisational Performance": {
+    "FIFO, LIFO, and Weighted Average Pricing": [
+      "B10.2.1.2: Demonstrate material store ledger pricing and issue computation."
+    ],
+    "Labour Remuneration & Idle Time": [
+      "B11.2.1.1: Describe labor cost structures, incentive rewards, and idle hours."
+    ],
+    "Payroll and Wages Sheet": [
+      "B11.2.1.3: Compile payroll spreadsheets detailing gross and net payouts."
+    ],
+    "Overhead Allocation and Apportionment": [
+      "B11.2.1.4: Group indirect expenses to production departments using primary sheets."
+    ],
+    "Overhead Analysis Sheet": [
+      "B11.2.1.5: Perform step-down secondary redistributions of service budgets."
+    ]
+  },
+  "Determining Cost of Operations for Pricing and Controlling": {
+    "Job Costing Sheets": [
+      "B11.2.2.1: Compile individual job sheets determining production profitability."
+    ],
+    "Contract Costing & Work Certified": [
+      "B12.2.2.2: Compute profit reserves on partially completed structural contracts."
+    ],
+    "Service Cost Accounts": [
+      "B12.2.2.4: Formulate operational cost metrics in the services domain."
+    ],
+    "Process Costing and Normal Losses": [
+      "B12.2.2.1: Account for scrap yields and work developments in process accounts."
+    ]
+  },
+  "Analysing Information for Control and decision making": {
+    "Activity Based Costing & Cost Drivers": [
+      "B11.2.3.1: Formulate driver-based rates across multi-channel cost items."
+    ],
+    "Marginal costing vs Absorption Costing": [
+      "B11.2.3.2: contrast income statements prepared under marginal and absorption rules."
+    ],
+    "Cost-Volume-Profit and Break-Even Point": [
+      "B12.2.3.1: Calculate sales thresholds securing target profitability ratios."
+    ],
+    "Standard Costing and Variance Analysis": [
+      "B12.2.3.3: Reconcile actual costs with standard estimates analyzing labor/material spreads."
+    ],
+    "Budgetary Control and Functional Budgets": [
+      "B12.2.3.2: Formulate cash receipts and operational schedules aiding cashflow balance."
+    ]
+  },
+  "Exploring Biology in Society": {
+    "Biology as the Science of Life": [
+      "B10.1.1.1: Demonstrate knowledge and understanding of Biology, the various branches and fields of study, and their benefits in everyday life.",
+      "B10.1.1.2: Apply knowledge and understanding of the scientific method to solve everyday problems.",
+      "B10.1.1.3: Apply knowledge of body symmetry, orientation, and sectioning of various organisms, and make labelled drawings of specimens.",
+      "B10.1.1.4: Demonstrate knowledge, skill, and safety in the use of the microscope.",
+      "B11.1.1.1: Relate the knowledge of the characteristics and life processes of common simple living organisms to their economic importance."
+    ],
+    "Biology and Entrepreneurship": [
+      "B10.1.2.1: Apply the knowledge of basic concepts in biology to improve productivity in fish farming.",
+      "B11.1.2.1: Apply the knowledge of basic concepts in biology to improve crop and animal production.",
+      "B12.1.2.1: Apply knowledge and skills in biotechnology to enhance the value of products that help improve human lives and the environment."
+    ]
+  },
+  "Life in the Fundamental Unit": {
+    "Cell Structure and Functions": [
+      "B11.2.1.1: Demonstrate knowledge and understanding of cell structure and functions, and relate them to organizational hierarchies.",
+      "B12.2.1.1: Explain the molecular structure of nucleic acids (DNA/RNA) and their roles in protein synthesis.",
+      "B12.2.1.2: Explain the cell cycle, cell division (mitosis/meiosis), and their relevance in living things."
+    ],
+    "Movement of Substances in Living Organisms": [
+      "B10.2.2.1: Explain the significance of the various processes involved in the movement of substances in and out of the cell and the factors affecting them."
+    ]
+  },
+  "Diversity of Living Things and Their Environment": {
+    "Living Organisms": [
+      "B10.3.1.1: Identify living organisms using numbered and dichotomous keys.",
+      "B10.3.1.2: Explain how lower organisms are classified into their taxonomic groups.",
+      "B11.3.1.1: Describe the distinctive characteristics, life cycle and characteristics of grain weevil, butterfly, housefly and honeybee.",
+      "B12.3.1.1: Relate the characteristic features and life processes of tilapia, toad, wall gecko and domestic fowl to their economic importance."
+    ],
+    "Ecology": [
+      "B10.3.2.1: Demonstrate knowledge and understanding of major tropical ecological habitats and how living things are adapted to these habitats.",
+      "B10.3.2.2: Use the appropriate ecological tool/devices and methods to estimate the population of given species in a named habitat.",
+      "B11.3.2.1: Explain the features of various tropical habitats and how living organisms are adapted to these habitats.",
+      "B12.3.2.1: Explain the interdependencies of living things and their environment (food chains, webs, and symbiotic relationships) and indicate their importance."
+    ],
+    "Diseases and Infections": [
+      "B10.3.3.1: Discuss the life cycles of common disease-causing organisms, and their effects on humans and other living things.",
+      "B11.3.3.1: Explain immunization, vaccination, and inoculation and state their importance in the environment.",
+      "B12.3.3.1: Examine and explain emerging diseases and infections (SARS, COVID-19, Ebola, Swine flu, etc.) and suggest prevention methods."
+    ]
+  },
+  "Diversity of living things and their Environment": {
+    "Living Organisms": [
+      "B10.3.1.1: Identify living organisms using numbered and dichotomous keys.",
+      "B10.3.1.2: Explain how lower organisms are classified into their taxonomic groups.",
+      "B11.3.1.1: Describe the distinctive characteristics, life cycle and characteristics of grain weevil, butterfly, housefly and honeybee.",
+      "B12.3.1.1: Relate the characteristic features and life processes of tilapia, toad, wall gecko and domestic fowl to their economic importance."
+    ],
+    "Ecology": [
+      "B10.3.2.1: Demonstrate knowledge and understanding of major tropical ecological habitats and how living things are adapted to these habitats.",
+      "B10.3.2.2: Use the appropriate ecological tool/devices and methods to estimate the population of given species in a named habitat.",
+      "B11.3.2.1: Explain the features of various tropical habitats and how living organisms are adapted to these habitats.",
+      "B12.3.2.1: Explain the interdependencies of living things and their environment (food chains, webs, and symbiotic relationships) and indicate their importance."
+    ],
+    "Diseases and Infections": [
+      "B10.3.3.1: Discuss the life cycles of common disease-causing organisms, and their effects on humans and other living things.",
+      "B11.3.3.1: Explain immunization, vaccination, and inoculation and state their importance in the environment.",
+      "B12.3.3.1: Examine and explain emerging diseases and infections (SARS, COVID-19, Ebola, Swine flu, etc.) and suggest prevention methods."
+    ]
+  },
+  "Diversity of living things and their Environmnet": {
+    "Living Organisms": [
+      "B10.3.1.1: Identify living organisms using numbered and dichotomous keys.",
+      "B10.3.1.2: Explain how lower organisms are classified into their taxonomic groups.",
+      "B11.3.1.1: Describe the distinctive characteristics, life cycle and characteristics of grain weevil, butterfly, housefly and honeybee.",
+      "B12.3.1.1: Relate the characteristic features and life processes of tilapia, toad, wall gecko and domestic fowl to their economic importance."
+    ],
+    "Ecology": [
+      "B10.3.2.1: Demonstrate knowledge and understanding of major tropical ecological habitats and how living things are adapted to these habitats.",
+      "B10.3.2.2: Use the appropriate ecological tool/devices and methods to estimate the population of given species in a named habitat.",
+      "B11.3.2.1: Explain the features of various tropical habitats and how living organisms are adapted to these habitats.",
+      "B12.3.2.1: Explain the interdependencies of living things and their environment (food chains, webs, and symbiotic relationships) and indicate their importance."
+    ],
+    "Diseases and Infections": [
+      "B10.3.3.1: Discuss the life cycles of common disease-causing organisms, and their effects on humans and other living things.",
+      "B11.3.3.1: Explain immunization, vaccination, and inoculation and state their importance in the environment.",
+      "B12.3.3.1: Examine and explain emerging diseases and infections (SARS, COVID-19, Ebola, Swine flu, etc.) and suggest prevention methods."
+    ]
+  },
+  "Systems of Life": {
+    "Mammalian Systems": [
+      "B10.4.1.1: Describe the morphology of mammals and relate the external and internal structures to their functions.",
+      "B11.4.1.1: Discuss the human cardiovascular and excretory systems and relate their parts to homeostasis and general well-being.",
+      "B12.4.1.1: Explain the mammalian respiratory, reproductive, musculoskeletal, nervous, and hormonal systems and how they work together."
+    ],
+    "Plant Systems": [
+      "B10.4.2.1: Describe the morphology of flowering plants and explain how these are related to their growth and development.",
+      "B11.4.2.1: Explain transport and nutrition (photosynthesis) in flowering plants and state the factors affecting them.",
+      "B12.4.2.1: Describe reproduction and excretion in flowering plants and relate them to survival."
+    ]
+  },
+  "Systems of life": {
+    "Mammalian Systems": [
+      "B10.4.1.1: Describe the morphology of mammals and relate the external and internal structures to their functions.",
+      "B11.4.1.1: Discuss the human cardiovascular and excretory systems and relate their parts to homeostasis and general well-being.",
+      "B12.4.1.1: Explain the mammalian respiratory, reproductive, musculoskeletal, nervous, and hormonal systems and how they work together."
+    ],
+    "Plant Systems": [
+      "B10.4.2.1: Describe the morphology of flowering plants and explain how these are related to their growth and development.",
+      "B11.4.2.1: Explain transport and nutrition (photosynthesis) in flowering plants and state the factors affecting them.",
+      "B12.4.2.1: Describe reproduction and excretion in flowering plants and relate them to survival."
+    ]
+  },
+  "Cell Biology": {
+    "Cell Structure and Functions": [
+      "B11.2.1.1: Demonstrate knowledge and understanding of cell structure and functions, and relate them to organizational hierarchies."
+    ],
+    "Movement of Substances in Living Organisms": [
+      "B10.2.2.1: Explain the significance of the various processes involved in the movement of substances in and out of the cell and the factors affecting them."
+    ]
+  },
+  "Genetics": {
+    "Genetics Key Terms": [
+      "B12.2.1.1: Explain the molecular structure of nucleic acids (DNA/RNA) and their roles in protein synthesis."
+    ],
+    "Mendel's Laws of Inheritance": [
+      "B12.2.1.2: Explain the cell cycle, cell division (mitosis/meiosis), and their relevance in living things."
+    ]
+  },
+  "Physiology": {
+    "Mammalian Systems": [
+      "B10.4.1.1: Describe the morphology of mammals and relate the external and internal structures to their functions."
+    ],
+    "Plant Systems": [
+      "B10.4.2.1: Describe the morphology of flowering plants and explain how these are related to their growth and development."
+    ]
+  },
+  "Ecology": {
+    "Ecological terms": [
+      "B10.3.2.1: Demonstrate knowledge and understanding of major tropical ecological habitats and how living things are adapted to these habitats."
+    ],
+    "Ecology in Named Habitats": [
+      "B11.3.2.1: Explain the features of various tropical habitats and how living organisms are adapted to these habitats."
+    ]
+  },
+  "Plant Biology": {
+    "Morphology of Flowering Plants": [
+      "B10.4.2.1: Describe the morphology of flowering plants and explain how these are related to their growth and development."
+    ],
+    "Plant Tissues and Functions": [
+      "B11.4.2.1: Explain transport and nutrition (photosynthesis) in flowering plants and state the factors affecting them."
+    ]
+  },
+  "Diversity of Life": {
+    "Living Organisms": [
+      "B10.3.1.1: Identify living organisms using numbered and dichotomous keys."
+    ]
+  },
+  "Consumers' Rational Decision Making": {
+    "Introduction to the Subject Economics": [
+      "B10.1.1.1: Use relevant information gathered from learners’ home, school and community through observation to carefully define economics and stimulate their interest in the subject.",
+      "B11.1.1.1: Use the appropriate economics tools to explain everyday economic issues.",
+      "B12.1.1.1: Exhibit knowledge of advanced economic methodologies and tools."
+    ],
+    "Demand for Goods and Services": [
+      "B10.1.2.1: Use concepts of demand to solve everyday life and societal challenges.",
+      "B11.1.2.1: Use the appropriate factors of demand to explain the differences between change in quantity demanded and change in demand.",
+      "B12.1.2.1: Interpret elasticity of demand and apply the concept to daily life."
+    ],
+    "Consumer Behaviour": [
+      "B10.1.3.1: Use relevant information gathered from home, school and community through observation to carefully explain the concept of utility and the law of diminishing marginal utility.",
+      "B11.1.3.1: Exhibit rational behaviour in determining the equilibrium in consumption of goods and services through practical experiences.",
+      "B12.1.3.1: Use information from the environment to explain income and substitution effects."
+    ]
+  },
+  "Consumers’ Rational Decision Making": {
+    "Introduction to the Subject Economics": [
+      "B10.1.1.1: Use relevant information gathered from learners’ home, school and community through observation to carefully define economics and stimulate their interest in the subject.",
+      "B11.1.1.1: Use the appropriate economics tools to explain everyday economic issues.",
+      "B12.1.1.1: Exhibit knowledge of advanced economic methodologies and tools."
+    ],
+    "Demand for Goods and Services": [
+      "B10.1.2.1: Use concepts of demand to solve everyday life and societal challenges.",
+      "B11.1.2.1: Use the appropriate factors of demand to explain the differences between change in quantity demanded and change in demand.",
+      "B12.1.2.1: Interpret elasticity of demand and apply the concept to daily life."
+    ],
+    "Consumer Behaviour": [
+      "B10.1.3.1: Use relevant information gathered from home, school and community through observation to carefully explain the concept of utility and the law of diminishing marginal utility.",
+      "B11.1.3.1: Exhibit rational behaviour in determining the equilibrium in consumption of goods and services through practical experiences.",
+      "B12.1.3.1: Use information from the environment to explain income and substitution effects."
+    ]
+  },
+  "Firms' Innovative Decision Making": {
+    "Production of Goods and Services": [
+      "B10.2.1.1: Evaluate the relevance of factors of production.",
+      "B11.2.1.1: Use information gathered from the environment to determine the time periods, TP, AP, MP, labour and capital-intensive methods and the cost of production.",
+      "B12.2.1.1: Describe Economies and Diseconomies of scale and demonstrate their effects on production output."
+    ],
+    "Supply of Goods and Services": [
+      "B10.2.2.1: Use relevant information from the environment to explain the meaning, types and the law of supply.",
+      "B11.2.2.1: Use the factors of supply to explain the differences between change in quantity supplied and change in supply.",
+      "B12.2.2.1: Explain elasticity of supply and its importance."
+    ],
+    "Market Analysis": [
+      "B10.2.3.1: Use relevant information from the environment to examine the concept of market and its types.",
+      "B11.2.3.1: Analyse the various markets and determine the types of profits.",
+      "B12.2.3.1: Explain the methods, agencies, problems and solutions of distribution."
+    ]
+  },
+  "Firms’ Innovative Decision Making": {
+    "Production of Goods and Services": [
+      "B10.2.1.1: Evaluate the relevance of factors of production.",
+      "B11.2.1.1: Use information gathered from the environment to determine the time periods, TP, AP, MP, labour and capital-intensive methods and the cost of production.",
+      "B12.2.1.1: Describe Economies and Diseconomies of scale and demonstrate their effects on production output."
+    ],
+    "Supply of Goods and Services": [
+      "B10.2.2.1: Use relevant information from the environment to explain the meaning, types and the law of supply.",
+      "B11.2.2.1: Use the factors of supply to explain the differences between change in quantity supplied and change in supply.",
+      "B12.2.2.1: Explain elasticity of supply and its importance."
+    ],
+    "Market Analysis": [
+      "B10.2.3.1: Use relevant information from the environment to examine the concept of market and its types.",
+      "B11.2.3.1: Analyse the various markets and determine the types of profits.",
+      "B12.2.3.1: Explain the methods, agencies, problems and solutions of distribution."
+    ]
+  },
+  "Price Analysis and Prediction in the Modern Economy": {
+    "Price and Equilibrium Analysis": [
+      "B10.3.1.1: Use relevant information from the environment to discuss pricing.",
+      "B11.3.1.1: Use the concepts of demand and supply to determine the equilibrium in the market.",
+      "B12.3.1.1: Distinguish between minimum (Price Floor) and maximum (Price Ceiling) price controls."
+    ]
+  },
+  "Government Economic Policy and Trade": {
+    "Macroeconomic Variables (GDP, Inflation, Unemployment, Exchange Rate)": [
+      "B10.4.1.1: Examine the meaning and the type of ownership and control of resources and fundamental macroeconomic variables in the local and global economy.",
+      "B11.4.1.1: Determine the effects of changes in the fundamental macroeconomics variables on the economy and their control policies.",
+      "B12.4.1.1: Distinguish the linkages and connections between the fundamental macroeconomic variables."
+    ],
+    "Concept of Money, Financial Institutions and Public Finance": [
+      "B10.4.2.1: Use relevant information from the environment to discuss the concept of money and financial institutions in an economy.",
+      "B11.4.2.1: Employ relevant information in the environment to examine the reasons for holding money, role of financial institutions and taxation in an economy.",
+      "B12.4.2.1: Employ relevant information in the country to examine the national budget and debt."
+    ],
+    "Agriculture, Industrialization and Trade": [
+      "B10.4.3.1: Employ relevant information in the environment to examine the agricultural activities and their importance.",
+      "B11.4.3.1: Use relevant information in the environment to examine the challenges in Agricultural, industrial and Service sectors.",
+      "B12.4.3.1: Use relevant information in the environment to examine the connection between Agriculture and Industry."
+    ]
+  },
   "Number": {
     "Number and Numeration Systems": ["B1.1.1.1: Describe numbers 0 to 100", "B2.1.1.1: Count and estimate 0 to 1000", "B3.1.1.1: Count and estimate 0 to 10,000", "B4.1.1.1: Multi-digit whole numerals to 100,000", "B4.1.1.2: Roman numerals up to XXX (30)", "B5.1.1.1: Multi-digit numerals up to 1,000,000", "B5.1.1.2: Roman numerals up to C (100)", "B6.1.1.1: Multi-digit numerals up to 1 billion", "B7.1.1.1: Demonstrate understanding and the use of place value", "B8.1.1.1: Use place value for expressing quantities in standard form", "B9.1.1.1: Apply the understanding of place value in solving real life problems"],
     "Number Operations": ["B1.1.2.1: Conceptual addition and subtraction", "B2.1.2.1: Sums up to 100", "B3.1.2.1: Sums up to 1000", "B4.1.2.1: Recall multiplication up to 12x12", "B5.1.2.1: Mental math strategies for multiplication", "B6.1.2.1: Basic multiplication facts to 144", "B7.1.2.1: Apply mental mathematics strategies", "B8.1.2.1: Apply mental mathematics strategies", "B9.1.2.1: Apply mental mathematics and properties"],
@@ -1262,10 +2152,976 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
     "Money": ["B8.6.1.1: Plan the wise use of money"],
     "Bribery and Corruption": ["B8.6.2.1: Avoid bribery and corruption"],
     "Time and Leisure": ["B9.6.1.1: Managing time profitably"]
+  },
+  "Chemistry": {
+    "Physical Chemistry": [
+      "1.1.1.CS.1: Explain atomic structure, nuclear stability, and behavior of matter using scientific practices.",
+      "1.1.1.CS.2: Explain reaction energetics, enthalpy changes, and rate parameters.",
+      "1.1.2.CS.1: Apply dynamic equilibrium to chemical operations and industrial processes.",
+      "1.1.2.CS.2: Analyze acid-base properties, ionization, and titration quantities."
+    ],
+    "Systematic Chemistry of the Elements": [
+      "1.2.1.CS.1: Explain periodic trends, and pattern of properties across periods and groups of elements.",
+      "1.2.2.CS.1: Predict and explain interatomic (ionic, covalent, metallic) and intermolecular bonding.",
+      "2.2.1.CS.1: Explain chemical patterns of the halogens and period three elements."
+    ],
+    "Chemistry of Carbon Compounds": [
+      "1.3.1.CS.1: Describe organic purification, and qualitative/quantitative elemental analysis.",
+      "1.3.2.CS.1: Classify organic compounds, explain homologies, and assign IUPAC nomenclature.",
+      "2.3.2.CS.1: Explain structure, properties, reactions, and uses of alkanes, alkenes, alkynes, benzene, alcohols, and carboxylic acids."
+    ],
+    "Matter and its Properties": [
+      "1.1.1.CS.1: Explain atomic structure, nuclear stability, and behavior of matter using scientific practices.",
+      "1.1.1.CS.2: Explain reaction energetics, enthalpy changes, and rate parameters."
+    ],
+    "Equilibria": [
+      "1.1.2.CS.1: Apply dynamic equilibrium to chemical operations and industrial processes.",
+      "1.1.2.CS.2: Analyze acid-base properties, ionization, and titration quantities."
+    ],
+    "Periodicity": [
+      "1.2.1.CS.1: Explain periodic trends, and pattern of properties across periods and groups of elements.",
+      "2.2.1.CS.1: Explain chemical patterns of the halogens and period three elements."
+    ],
+    "Bonding": [
+      "1.2.2.CS.1: Predict and explain interatomic (ionic, covalent, metallic) and intermolecular bonding."
+    ],
+    "Characterisation of Organic Compounds": [
+      "1.3.1.CS.1: Describe organic purification, and qualitative/quantitative elemental analysis."
+    ],
+    "Organic Functional Groups": [
+      "1.3.2.CS.1: Classify organic compounds, explain homologies, and assign IUPAC nomenclature.",
+      "2.3.2.CS.1: Explain structure, properties, reactions, and uses of alkanes, alkenes, alkynes, benzene, alcohols, and carboxylic acids."
+    ]
+  },
+  "CRS": {
+    "Background to the Study of Religion and Christianity": [
+      "1.1.1.CS.1: Explain the concept of religion, recount the history and spread of Christianity, and analyze its influence on traditional beliefs in Ghana."
+    ],
+    "The Nature of God and His Creation": [
+      "1.1.2.CS.1: Explain the nature and attributes of God from Christian and AIR viewpoints, and analyze biblical accounts of creation and the Fall."
+    ],
+    "The Major Beliefs of Christianity": [
+      "2.2.1.CS.1: Identify core Christian doctrines, examine denominational differences, and evaluate the effects of scriptural misinterpretations."
+    ],
+    "Worship and Moral Values for Development": [
+      "2.2.2.CS.1: Analyze Christian and traditional worship practices, and synthesize inherent moral values like humility and love."
+    ],
+    "Christian Music and Values for Development": [
+      "3.2.3.CS.1: Describe forms of Christian music in Ghana, the influence of local traditions, and its role as a tool for national message transmission."
+    ],
+    "Christian Prayer and National Development": [
+      "3.2.4.CS.1: Evaluate the personal/national roles of Christian prayer, critique controversial misuses, and align values with civic duties."
+    ],
+    "The Origin and Nature of Religious Communities": [
+      "1.3.1.CS.1: Trace the historical emergence of Christian enclaves in Ghana, describing their communal characteristics and relationship with traditional society."
+    ],
+    "Religion and Nation Building": [
+      "2.3.2.CS.1: Examine how religious communities negotiate national development, peace, and pluralistic coexistence in Ghana."
+    ],
+    "Religious Communities, Gender and Development": [
+      "3.3.3.CS.1: Evaluate Christian teachings on and contributions of women, aligning them with international/national empowerment frameworks."
+    ],
+    "Religion and the Environment": [
+      "1.4.1.CS.1: Assess Christian environmental stewardship values and show how they combine with traditional taboos and science to care for nature."
+    ],
+    "Religion and Sexual Morality": [
+      "2.4.2.CS.1: Analyze Christian teachings on sexual morality and evaluate how they address contemporary relationships and abuses."
+    ],
+    "Religion and Fraud": [
+      "3.4.3.CS.1: Describe contemporary fraudulent acts (sakawa, cybercrime) and evaluate how Christian ethical teachings address them."
+    ]
+  },
+  "Food & Nutrition": {
+    "Food For Healthy Living": [
+      "1.1.1.CS.1: Demonstrate knowledge and understanding of food commodities, select and use food to meet the needs of individuals and families for healthy living.",
+      "1.1.1.CS.2: Demonstrate Scientific knowledge of food nutrients and their implication to growth and development among individuals, families and the community.",
+      "1.1.1.CS.3: Demonstrate Scientific knowledge in food habit/lifestyles and its implications on growth and development on individuals and families.",
+      "2.1.1.CS.1: Analyse the relationship between food choices and the overall health of individuals, family members and special groups.",
+      "2.1.1.CS.2: Demonstrate the ability to investigate food and nutritional interventions for managing food-related diseases at the household, community, national and global levels.",
+      "2.1.1.CS.3: Demonstrate the ability to plan balanced meals that promote healthy living and meet nutritional needs.",
+      "2.1.1.CS.4: Demonstrate appropriate skills in preparation, cooking and serving of meals for individuals and special groups in the family.",
+      "3.1.1.CS.1: Demonstrate an understanding of the role of Ghanaian festivals and festive occasions in preserving culture, promoting sustainable nutrition and enhancing social well-being.",
+      "3.1.1.CS.2: Demonstrate skills in modifying and preparing festival and festive meals for special occasions, events, and entertainment."
+    ],
+    "Food Security": [
+      "1.1.2.CS.1: Demonstrate knowledge and understanding of how to apply the concepts of food security and its components to ensure sustainable access to nutritious food in everyday living.",
+      "1.1.2.CS.2: Demonstrate knowledge and understanding of applying food storage principles to prevent food spoilage and promote food safety practices for healthy living.",
+      "2.1.2.CS.1: Explain the principles and methods of food preservation and their role in ensuring food security.",
+      "2.1.2.CS.2: Demonstrate the ability to apply appropriate food preservation techniques to extend the shelf life of perishable foods and promote sustainable food security practices.",
+      "3.1.2.CS.1: Demonstrate knowledge and skills in appropriate packaging techniques to maintain the nutritional quality and safety of food products.",
+      "3.1.2.CS.2: Develop entrepreneurial skills in creating and marketing nutritious food products that promote healthy living practices."
+    ],
+    "Food Production Technology": [
+      "1.2.1.CS.1: Demonstrate knowledge and understanding of the types, functions and layout of food laboratories used in food production.",
+      "1.2.1.CS.2: Demonstrate knowledge and understanding in innovative ways of planning and using food laboratories.",
+      "2.2.1.CS.1: Demonstrate an understanding of how to apply scientific principles of heat transfer in food preparation and processing to promote food safety.",
+      "2.2.1.CS.2: Demonstrate the ability to apply knowledge and principles of heat transfer to select and use appropriate cooking methods, tools, and fuels for food preparation and processing.",
+      "3.2.1.CS.1: Demonstrate knowledge and understanding of sugars and apply creative and innovative sugar craft techniques to enhance the appearance and quality of confectionery products.",
+      "3.2.1.CS.2: Demonstrate knowledge, understanding and skills in the application of scientific principles in developing recipes."
+    ],
+    "Food Processing Techniques": [
+      "1.2.2.CS.1: Demonstrate knowledge, understanding, and skills in applying scientific principles to beverage production.",
+      "1.2.2.CS.2: Demonstrate knowledge and understanding of the principles of nutrition and apply them to produce, enrich and fortify beverages to meet the diverse needs of individuals, families and society.",
+      "2.2.2.CS.1: Demonstrate knowledge, understanding, and skills in the development and use of food additives and condiments.",
+      "2.2.2.CS.2: Demonstrate knowledge, understanding and skills in the application of scientific principles in flour cookery and enrichment.",
+      "3.2.2.CS.1: Demonstrate the ability to plan, organize, and manage food exhibitions and bazaars to promote food products and develop entrepreneurial and career opportunities."
+    ]
+  },
+  "Geography": {
+    "The Earth and Its Features": [
+      "1.1.1.CS.1: Demonstrate understanding of Geography as a subject of study.",
+      "1.1.1.CS.2: Demonstrate knowledge of the Solar System and its constituents.",
+      "1.1.1.CS.3: Demonstrate knowledge and skills in describing the shape and movements of The Earth, and the effects of the earth's rotation and revolution.",
+      "1.1.1.CS.4: Demonstrate skills in locating places using longitudes and latitudes.",
+      "2.1.1.CS.1: Demonstrate an understanding of the internal structure of the earth and the concept of continental drift.",
+      "2.1.1.CS.2: Demonstrate knowledge and understanding of landforms, their importance and the processes that leads to their creation.",
+      "3.1.1.CS.1: Demonstrate knowledge and understanding of river channels and associated landforms."
+    ],
+    "Rocks, Weathering, Soil and Mass Wasting": [
+      "1.1.2.CS.1: Demonstrate knowledge in rocks formation and weathering processes.",
+      "2.1.2.CS.1: Demonstrate knowledge and understanding of soils.",
+      "3.1.2.CS.1: Demonstrate knowledge of mass wasting as a geomorphic process."
+    ],
+    "The Earth Atmosphere": [
+      "1.1.3.CS.1: Demonstrate knowledge of the structure and composition of the Earth's atmosphere and explain the terms weather and climate.",
+      "2.1.3.CS.1: Demonstrate understanding of the factors that influence the elements of climate, the world climatic zones and associated vegetation types.",
+      "3.1.3.CS.1: Demonstrate knowledge of climate change and its impacts on the environment and socio-economic development."
+    ],
+    "Maps, Their Elements and Analyses": [
+      "1.2.1.CS.1: Demonstrate understanding of maps, their importance and the map scales.",
+      "1.2.1.CS.2: Demonstrate knowledge and skills of representing relief features on maps.",
+      "2.2.1.CS.1: Demonstrate skill in map analysis.",
+      "3.2.1.CS.1: Demonstrate skills and competencies in interpreting and analysing maps."
+    ],
+    "Geospatial Data Collection, Representation and Interpretation": [
+      "1.2.2.CS.1: Demonstrate knowledge and skills in basic geospatial data collection methods.",
+      "2.2.2.CS.1: Demonstrate skills in basic geospatial data collection methods.",
+      "3.2.2.CS.1: Demonstrate skills in basic geospatial data representation and interpretation using diagrams."
+    ],
+    "Physical Settings and People": [
+      "1.3.1.CS.1: Demonstrate understanding of the physical environment of Ghana and its socio-economic importance and challenges.",
+      "2.3.1.CS.1: Demonstrate skills of drawing and showing the physical setting of West Africa and Africa.",
+      "3.3.1.CS.1: Demonstrate understanding of population growth and distribution, migration trends and settlement types in Ghana.",
+      "3.3.1.CS.2: Analyse the population growth and migration trends in Africa and the world."
+    ],
+    "Economic Activities": [
+      "1.3.2.CS.1: Demonstrate an understanding of the various primary economic activities in Ghana and beyond.",
+      "2.3.2.CS.1: Analyse the manufacturing sector in Ghana.",
+      "3.3.2.CS.1: Evaluate the tourism, trade and transport/communication sectors in Ghana."
+    ],
+    "Environmental Degradation": [
+      "1.3.3.CS.1: Demonstrate an understanding of the causes of environmental pollution and the strategies for dealing with it.",
+      "2.3.3.CS.1: Demonstrate skills of preventing or mitigating land degradation and soil pollution in Ghana.",
+      "3.3.3.CS.1: Demonstrate skills in waste management in Ghana."
+    ],
+    "Environmental Hazards and Their Management": [
+      "1.3.4.CS.1: Demonstrate understanding of the concepts 'hazard' and 'disaster'.",
+      "2.3.4.CS.1: Demonstrate skills for managing earthquakes, floods, drought and fires.",
+      "3.3.4.CS.1: Demonstrate knowledge and skills for preventing or mitigating desert encroachment and landslides."
+    ]
+  },
+  "Government": {
+    "Basics of Government": [
+      "1.1.1.CS.1: Demonstrate understanding of the meanings, basic concepts, principles, and importance of government.",
+      "2.1.1.CS.1: Demonstrate understanding and application of citizenships, rights, and responsibilities to the state.",
+      "3.1.1.CS.1: Demonstrate knowledge and understanding and application of the systems of government."
+    ],
+    "Indigenous and Contemporary Governance in Ghana": [
+      "1.1.2.CS.1: Exhibit understanding and application of the Indigenous systems of government in Ghana.",
+      "2.1.2.CS.1: Demonstrate knowledge and understanding of contemporary Governance System in Ghana.",
+      "3.1.2.CS.1: Compare Indigenous and contemporary Governance in Ghana."
+    ],
+    "Constitution and Organs of Government": [
+      "1.2.1.CS.1: Demonstrate knowledge and understanding of the constitution and organs of government.",
+      "2.2.1.CS.1: Demonstrate knowledge, understanding and appreciation of the organs of government.",
+      "3.2.1.CS.1: Demonstrate understanding and appreciation of the 1992 Republican Constitution."
+    ],
+    "State and Non-State Actors in Ghana": [
+      "1.2.2.CS.1: Exhibit knowledge and understanding of State-Society Relations in Ghana.",
+      "2.2.2.CS.1: Demonstrate understanding and application of State-Society Relations in Ghana.",
+      "3.2.2.CS.1: Evaluate State-Society Relations and Administration."
+    ],
+    "Ghana in the Community of Nations": [
+      "1.3.1.CS.1: Demonstrate knowledge and understanding of Ghana's external relations.",
+      "2.3.1.CS.1: Demonstrate knowledge and understanding of Ghana's external relations.",
+      "3.3.1.CS.1: Demonstrate knowledge, understanding and appreciation of Ghana's external Relations."
+    ],
+    "Globalization and Development": [
+      "2.3.2.CS.1: Demonstrate knowledge and understanding of globalization and development of States.",
+      "3.3.2.CS.1: Demonstrate knowledge and understanding of globalization and development of States."
+    ]
+  },
+  "History": {
+    "Nature and Scope of History": [
+      "1.1.1.CS.1: Demonstrate understanding of the origins, meanings, and nature of history as a discipline.",
+      "1.1.1.CS.2: Exhibit knowledge on the relevance of history to human survival and development."
+    ],
+    "Sources and Methods of Reconstructing History": [
+      "2.1.2.CS.1: Develop application of skills in analysing and interpreting primary and secondary sources.",
+      "3.1.2.CS.1: Demonstrate the application of skills in interpreting and reconstructing the past."
+    ],
+    "Emergence of Complex States": [
+      "1.2.1.CS.1: Demonstrate understanding of Pre-Historic Ghana. (50, 000 BCE to 700 CE)",
+      "1.2.1.CS.2: Demonstrate understanding of the diverse accounts of the emergence of major states in Ghana, including the causes of migration and creation of settlements.",
+      "1.2.1.CS.3: Demonstrate knowledge of the complex social, political, and scientific systems of selected states and kingdoms in Ghana."
+    ],
+    "Emergence of Complex States and Societies": [
+      "3.2.1.CS.1: Demonstrate understanding of African Pre-History from the Earliest Times to 500 BCE and appreciate the unique features of the complex African civilisations."
+    ],
+    "Pre-Colonial Economy and Economic Activities": [
+      "1.2.2.CS.1: Demonstrate knowledge and understanding of pre-colonial economy and economic activities in Ghana.",
+      "3.2.2.CS.1: Demonstrate understanding of the origins, organisation, and impact of the Trans-Saharan Trade"
+    ],
+    "Religion and Religious Change": [
+      "1.3.1.CS.1: Demonstrate understanding of the religious change and continuity in Ghana.",
+      "3.3.1.CS.1: Demonstrate understanding of the religious change and continuity in Africa."
+    ],
+    "Global Connections": [
+      "2.3.2.CS.1: Exhibit knowledge and understanding of the advent of European presence and activities along the coast of Ghana",
+      "3.3.2.CS.1: Demonstrate understanding of the advent and impact of the Trans-Atlantic Slave Trade in Africa."
+    ],
+    "Prelude to Colonisation and Colonial Rule": [
+      "2.3.3.CS.1: Demonstrate understanding of the processes leading to the establishment of British rule in the Gold Coast and the impact on the people of Ghana.",
+      "3.3.3.CS.1: Demonstrate understanding of how the Europeans scrambled for and partitioned Africa and how Africans were eventually drawn into the two World Wars."
+    ],
+    "Response to Colonial Rule": [
+      "2.3.4.CS.1: Demonstrate understanding of the nature and activities of Nationalist Movements including their efforts in resisting colonial domination in the Gold Coast.",
+      "3.3.4.CS.1: Demonstrate understanding of Africans’ resistance against colonial rule."
+    ],
+    "Socio-Economic and Political Developments in Ghana (1957 - 2007)": [
+      "2.4.1.CS.1: Demonstrate understanding of the socio-economic and political developments in Ghana from 1957 - 2007."
+    ]
   }
 };
 
 export const STANDARD_INDICATORS: Record<string, string[]> = {
+  // Chemistry Standard Indicators
+  "1.1.1.CS.1: Explain atomic structure, nuclear stability, and behavior of matter using scientific practices.": [
+    "1.1.1.LI.1: Describe chemical processes around us, and their applications in everyday life (food, agriculture, medicine, energy).",
+    "1.1.1.LI.2: Discuss and explain safety rules and hazard symbols (corrosive, toxic, flammable) in the chemistry laboratory.",
+    "1.1.1.LI.3: Explain why chemicals should be stored by compatibility rather than alphabetically.",
+    "1.1.1.LI.4: Describe the steps involved in the scientific method of inquiry.",
+    "1.1.1.LI.5: State the main postulates of Dalton's atomic theory and describe its historical weaknesses.",
+    "1.1.1.LI.6: Describe cathode rays and alpha scattering experiments, explaining weaknesses in J. J. Thomson and Rutherford's models.",
+    "1.1.1.LI.7: Describe Bohr's planetary theory and explain the importance of quantum numbers to electronic structures.",
+    "1.1.1.LI.8: Apply properties of solids, liquids, and gases under the kinetic theory of matter to distinguish states.",
+    "1.1.1.LI.9: Perform calculations on gas behavior using Boyle's, Charles', Gay-Lussac's, and the combined gas laws.",
+    "1.1.1.LI.10: State Graham's law of diffusion and Dalton's law of partial pressures and perform calculations from experimental data.",
+    "1.1.1.LI.11: Distinguish ideal and real gas deviations using the van der Waals equation.",
+    "1.1.1.LI.12: Describe laboratory preparation and tests for hydrogen, ammonia, and carbon (IV) oxide gases."
+  ],
+  "1.1.1.CS.2: Explain reaction energetics, enthalpy changes, and rate parameters.": [
+    "1.1.1.LI.13: Explain chemical energy, endothermic/exothermic profiles, and state standard enthalpy definitions (formation, combustion).",
+    "1.1.1.LI.14: Calculate reaction enthalpy changes using calorimetry relationships (q = mcΔT) and experimental results.",
+    "1.1.1.LI.15: State Hess's law of constant heat summation and construct energy cycles to determine unknown enthalpies.",
+    "1.1.1.LI.16: Use Born-Haber cycles to calculate lattice energy, electron affinity, and ionization energy properties.",
+    "1.1.1.LI.17: Discuss bond energy as a measure of bond strength and calculate reaction enthalpies.",
+    "1.1.1.LI.18: Define rate of reaction and explain methods for measuring rates (initial, average, and instantaneous rates).",
+    "1.1.1.LI.19: Investigate experimental factors affecting reaction rates (concentration, surface area, temperature, catalyst).",
+    "1.1.1.LI.20: State collision theory principles and sketch Maxwell-Boltzmann energy distribution curves.",
+    "1.1.1.LI.21: Construct rate equations (r = k[A]^x[B]^y) from experimental tables and determine order of reactions."
+  ],
+  "1.1.2.CS.1: Apply dynamic equilibrium to chemical operations and industrial processes.": [
+    "1.1.2.LI.1: Explain dynamic equilibrium state, write reversibility models, and perform calculations on initial/equilibrium concentration lists.",
+    "1.1.2.LI.2: State Le Chatelier's Principle and deduce qualitative shifts from stress factors (concentration, temperature, pressure).",
+    "1.1.2.LI.3: Apply dynamic equilibrium and reaction rates to evaluate commercial efficiency in the Haber and Contact processes.",
+    "1.1.2.LI.4: Establish mathematical relationships between Kp and Kc using the ideal gas law and calculate Ksp values."
+  ],
+  "1.1.2.CS.2: Analyze acid-base properties, ionization, and titration quantities.": [
+    "1.1.2.LI.5: Explain Arrhenius, Bronsted-Lowry, and Lewis concepts of acids and bases, highlighting strengths and constraints.",
+    "1.1.2.LI.6: Differentiate strong/weak acids and bases using extent of dissociation, conductivity, pH, and neutralization values.",
+    "1.1.2.LI.7: Describe physical and chemical reactions of acids/bases with metals, carbonates, basic oxides, and ammonium salts.",
+    "1.1.2.LI.8: Differentiate acidic, basic, normal, double, hydrated, and complex salts and list their domestic/industrial uses.",
+    "1.1.2.LI.9: Perform acid-base titrations (including back titrations and double-indicator systems) to determine unknown quantities.",
+    "1.1.2.LI.10: Define pH and pOH, convert hydrogen ion concentrations, and discuss ionic product of water (Kw).",
+    "1.1.2.LI.11: State the concept of salt hydrolysis and predict acidity/alkalinity for different salt groups.",
+    "1.1.2.LI.12: Draw standard acid-base titration curves and select appropriate indicators (methyl orange, phenolphthalein)."
+  ],
+  "1.2.1.CS.1: Explain periodic trends, and pattern of properties across periods and groups of elements.": [
+    "1.2.1.LI.1: Use electron configuration to classify elements into s, p, and d blocks and find positions in the periodic table.",
+    "1.2.1.LI.2: Explain trends in periodic properties (atomic radius, ionic radius, ionization energy, electronegativity).",
+    "1.2.1.LI.3: Account for discrepancies/anomalies in periodic trends with respect to beryllium, boron, oxygen, and nitrogen.",
+    "1.2.1.LI.4: Describe trends in physical and chemical properties of period 3 elements and their compounds (hydrides, oxides, chlorides).",
+    "1.2.1.LI.5: Study thermal stability trends under heat tests on period 2 and 3 nitrates/carbonates."
+  ],
+  "1.2.2.CS.1: Predict and explain interatomic (ionic, covalent, metallic) and intermolecular bonding.": [
+    "1.2.2.LI.1: Distinguish chemical bonding categories (ionic, covalent, metallic) and describe properties of their compounds.",
+    "1.2.2.LI.2: Explain factors influencing ionic bond formation (ionization energy, lattice energy) and model NaCl crystal lattice structure.",
+    "1.2.2.LI.3: Model covalent bond categories (simple, coordinate/dative, polar) using Lewis dot structures.",
+    "1.2.2.LI.4: Explain orbital mixing and hybridization (sp, sp2, sp3, sp3d, sp3d2) to predict molecular shapes and bond angles using VSEPR.",
+    "1.2.2.LI.5: Explain intermolecular forces (dipole-dipole, van der Waals, hydrogen bonding) and analyze factors affecting their strengths.",
+    "1.2.2.LI.6: Relate intermolecular forces to variations in physical properties (solubility, boiling points, viscosity)."
+  ],
+  "2.2.1.CS.1: Explain chemical patterns of the halogens and period three elements.": [
+    "2.2.1.LI.1: Detail physical and chemical properties of Group 17 halogens (physical state, electronegativity differences, bond energy curves).",
+    "2.2.1.LI.2: Describe displacement and precipitation reactions of h halides/halogens to compare standard electrode potentials.",
+    "2.2.1.LI.3: Discuss acid strength trends, Ka values, and thermal stability of hydrogen halides.",
+    "2.2.1.LI.4: Write electron configurations of first-row transition elements and describe their characteristics (variable oxidation, color, complexes, catalysis).",
+    "2.2.1.LI.5: Use molecular models/reagents to analyze geometry and coordination circles of first-row complex ions."
+  ],
+  "1.3.1.CS.1: Describe organic purification, and qualitative/quantitative elemental analysis.": [
+    "1.3.1.LI.1: Outline techniques to purify organic solids and liquids (distillation, crystallization, chromatography).",
+    "1.3.1.LI.2: Explain qualitative tests and perform mass composition calculations for carbon, hydrogen, nitrogen, sulfur, and halogens in organic compounds.",
+    "1.3.1.LI.3: Interpret paper chromatography sheets and Rf values to index purity of organic extracts."
+  ],
+  "1.3.2.CS.1: Classify organic compounds, explain homologies, and assign IUPAC nomenclature.": [
+    "1.3.2.LI.1: Distinguish organic vs inorganic compounds and categorize structures (aliphatic, cyclic, heterocyclic, aromatic).",
+    "1.3.2.LI.2: Explain homologous series characteristics, general formulas, and various representations (molecular, structural, condensed).",
+    "1.3.2.LI.3: Define structural and stereoisomerism (chain, positional, functional, geometrical cis-trans isomerism).",
+    "1.3.2.LI.4: Apply IUPAC rules to name and draw parent alkanes, alkenes, alkynes, and their branched structures up to six carbons."
+  ],
+  "2.3.2.CS.1: Explain structure, properties, reactions, and uses of alkanes, alkenes, alkynes, benzene, alcohols, and carboxylic acids.": [
+    "2.3.2.LI.1: Discuss source, naming, low reactivity, combustion reactions, and free-radical substitution mechanisms of alkanes.",
+    "2.3.2.LI.2: Describe preparation and addition reactions of alkenes and alkynes, applying Markovnikov's rule.",
+    "2.3.2.LI.3: Describe structure, resonance/stability, and electrophilic substitution reactions of benzene (nitration, halogenation, Friedel-Crafts).",
+    "2.3.2.LI.4: Explain industrial production, classification, dehydration/esterification, and characteristic tests (Lucas/iodoform) of alcohols.",
+    "2.3.2.LI.5: Explain structure, synthesis, acidity factors, and organic salt/ester reactions of alkanoic (carboxylic) acids.",
+    "2.3.2.LI.6: Describe preparation, properties, nucleophilic substitution mechanisms, and commercial uses of alkanoic acid derivatives (esters, amides).",
+    "2.3.2.LI.7: Detail fats and oils structure as triglycerides, describe saponification, and contrast properties of soapy vs soapless detergents.",
+    "2.3.2.LI.8: Define polymers and map addition vs condensation paths (producing nylon-6,6 or terylene) alongside plastic pollution remedies.",
+    "2.3.2.LI.9: Describe molecular structures/bonding of amino acids, proteins, and carbohydrates, performing diagnostic tests (Fehling's, Biuret)."
+  ],
+  // CRS Standard Indicators
+  "1.1.1.CS.1: Explain the concept of religion, recount the history and spread of Christianity, and analyze its influence on traditional beliefs in Ghana.": [
+    "1.1.1.LI.1: Explain the concept of religion from learners' perspectives, classical definitions (Emile Durkheim, Edward Tylor, Paul Tillich), and misconceptions.",
+    "1.1.1.LI.2: Discuss the characteristics of religion and categorize ways in which definitions of religion are classified (theological, sociological, psychological, moral).",
+    "1.1.1.LI.3: Justify the need to study religion at SHS, detailing reasons (moral development, civic responsibility, interfaith harmony) and career avenues.",
+    "1.1.1.LI.4: Recount the global origins of Christianity and trace its historical backgrounds in Ghana (Portuguese arrival, missionary groups).",
+    "1.1.1.LI.5: State the contributions of indigenous agents such as Philip Quaque and the role of mission schools/churches in nation-building.",
+    "1.1.1.LI.6: Contrast African Indigenous Religion (AIR) before European contact and assess the areas of conflict, convergence, and blending with Christianity."
+  ],
+  "1.1.2.CS.1: Explain the nature and attributes of God from Christian and AIR viewpoints, and analyze biblical accounts of creation and the Fall.": [
+    "1.1.2.LI.1: Explain the Father, Son, and Holy Spirit as the Christian concept of Trinity with scriptural references.",
+    "1.1.2.LI.2: Explain how the natural environment reveals God's character (orderliness, care, beauty, design, peace, mystery) in Christianity and AIR.",
+    "1.1.2.LI.3: Analyze unique attributes of God (omniscience, omnipotence, omnipresence) and attributes of God found in humans (mercy, holiness, justice).",
+    "1.1.2.LI.4: Examine theological approaches and debates over God's nature (the problem of evil, personal vs impersonal God).",
+    "1.1.2.LI.5: Contrast Christianity and other religions' views of God, and discuss how moral values in divine attributes apply to life.",
+    "1.1.2.LI.6: Analyze and compare the Priestly and Yahwist accounts of creation (Genesis 1-2) with scientific theories like the Big Bang or evolution.",
+    "1.1.2.LI.7: Discuss the original close relationship between God and humankind, trace the temptation/disobedience in Genesis 3, and examine the origin of sin.",
+    "1.1.2.LI.8: Critically examine philosophical tensions (free will vs. determinism, justice vs. mercy) and compare how AIR accounts handle the origin of sin/moral failure."
+  ],
+  "2.2.1.CS.1: Identify core Christian doctrines, examine denominational differences, and evaluate the effects of scriptural misinterpretations.": [
+    "2.2.1.LI.1: Describe major Christian beliefs, the second coming of Jesus, resurrection, judgment, and the doctrinal significance of holy scriptures.",
+    "2.2.1.LI.2: Interrogate differences in denominational interpretations of Christian beliefs (Catholicism vs. Protestantism, baptism, sacraments, tithing, role of women).",
+    "2.2.1.LI.3: Assess the personal and social effects of scriptural misinterpretations (misrepresenting 'God will provide' to excuse laziness, or misinterpreting 'generational curses').",
+    "2.2.1.LI.4: Examine how African traditional witchcraft beliefs, spiritual protective objects, and musical expressions influenced Ghanaian Christianity."
+  ],
+  "2.2.2.CS.1: Analyze Christian and traditional worship practices, and synthesize inherent moral values like humility and love.": [
+    "2.2.2.LI.1: Explain how Christian worship is performed in Ghana, highlighting liturgical, charismatic, musical, prayer, and preaching styles.",
+    "2.2.2.LI.2: Compare traditional and contemporary worship elements (prayer, praise, giving, sacraments, deliverance) across major denominations.",
+    "2.2.2.LI.3: Synthesise moral values inherent in Christian worship (humility, gratitude, forgiveness, love, obedience) and apply them to life dilemmas."
+  ],
+  "3.2.3.CS.1: Describe forms of Christian music in Ghana, the influence of local traditions, and its role as a tool for national message transmission.": [
+    "3.2.3.LI.1: Identify the nature and different forms of Christian music in Ghana (classical hymns, choral anthems, traditional/charismatic praise, urban gospel).",
+    "3.2.3.LI.2: Describe how churches in Ghana have incorporated local language, musical rhythms, instruments, and traditional proverbs.",
+    "3.2.3.LI.3: Assess the spiritual, emotional, doctrinal, and community-unifying functions of gospel music in Ghanaian society.",
+    "3.2.3.LI.4: Propose how Christian music serves as a tool for moral education, social cohesion, cultural preservation, and national campaigns/messaging."
+  ],
+  "3.2.4.CS.1: Evaluate the personal/national roles of Christian prayer, critique controversial misuses, and align values with civic duties.": [
+    "3.2.4.LI.1: Examine scriptural foundations and forms of prayer (silent, spontaneous, liturgical) used across different Christian denominations.",
+    "3.2.4.LI.2: Evaluate the practice of Christian prayer at state and secular events, and explore issues of religious pluralism and constitutional neutrality.",
+    "3.2.4.LI.3: Critique the misuse and abuse of Christian prayer (imprecatory prayer for harm, commercialisation of prayer, or public showy displays)."
+  ],
+  "1.3.1.CS.1: Trace the historical emergence of Christian enclaves in Ghana, describing their communal characteristics and relationship with traditional society.": [
+    "1.3.1.LI.1: Trace the circumstances that led to the creation of separate Christian enclaves (Abokobi, Osu Salems, Akropong) in Ghana.",
+    "1.3.1.LI.2: Describe core characteristics of early Christian communities (unity, love, fellowship, moral living, biblical foundations in Acts 2).",
+    "1.3.1.LI.3: Compare early community characteristics with traditional society relating to authority, dress, work conduct, and membership regulations."
+  ],
+  "2.3.2.CS.1: Examine how religious communities negotiate national development, peace, and pluralistic coexistence in Ghana.": [
+    "2.3.2.LI.1: Examine the traditional and evolving roles of Christian communities in addressing education, healthcare, and peacebuilding.",
+    "2.3.2.LI.2: Explain the concept of religious pluralism, contrasting it with exclusivism and inclusivism in pluralistic Ghanaian towns.",
+    "2.3.2.LI.3: Analyze opportunities and challenges of religious nationalism and investigate real-life examples (Chief Imam's visit to a Catholic church, inter-religious marriages)."
+  ],
+  "3.3.3.CS.1: Evaluate Christian teachings on and contributions of women, aligning them with international/national empowerment frameworks.": [
+    "3.3.3.LI.1: Identify key scriptures affirming the dignity and spiritual equality of women (Genesis 1:27, Galatians 3:28) and rebut patriarchal misinterpretations.",
+    "3.3.3.LI.2: Assess the vital roles and financial contributions of key women during Jesus' ministry, the resurrection witnesses, and in the early Church (Lydia, Phoebe, Priscilla).",
+    "3.3.3.LI.3: Describe the traditional and leadership roles of women in modern churches, and identify ways religious teachings have historically constrained females.",
+    "3.3.3.LI.4: Examine structural alignments between Christian values and (inter)national frameworks for women's empowerment (UN SDG 5, Ghana's Affirmative Action Act)."
+  ],
+  "1.4.1.CS.1: Assess Christian environmental stewardship values and show how they combine with traditional taboos and science to care for nature.": [
+    "1.4.1.LI.1: Identify negative human activities affecting the environment (deforestation, galamsey/illegal mining, plastic waste) and suggest recovery options.",
+    "1.4.1.LI.2: Describe biblical teachings on environment care, creation stewardship, and Christian values applied to ecological preservation.",
+    "1.4.1.LI.3: Comparatively analyze overlaps between Christian stewardship and traditional African practices (sacred groves, taboos) on nature preservation."
+  ],
+  "2.4.2.CS.1: Analyze Christian teachings on sexual morality and evaluate how they address contemporary relationships and abuses.": [
+    "2.4.2.LI.1: Examine the concept of sexual morality, contrasting traditional religious and contemporary secular viewpoints in Ghana.",
+    "2.4.2.LI.2: Describe various forms of contemporary sexual behaviors (sexting, cohabitation, hookup, revenge porn) and their social implications.",
+    "2.4.2.LI.3: Analyze Christian teachings on chastity, fidelity, purity, and self-discipline to prevent sexual abuse, exploitation, and stigmatisation."
+  ],
+  "3.4.3.CS.1: Describe contemporary fraudulent acts (sakawa, cybercrime) and evaluate how Christian ethical teachings address them.": [
+    "3.4.3.LI.1: Describe contemporary fraudulent practices (SIM box fraud, sakawa, phishing, mobile money scams) and their emotional/economic impacts.",
+    "3.4.3.LI.2: Explain scriptural instructions against fraud (dishonest weights, stealing) and define the roles of conscience, repentance, and restitution.",
+    "3.4.3.LI.3: Discuss how Christian ethical values (honesty, accountability, stewardship) can be practically applied in schools, workplaces, and communities."
+  ],
+  // Food & Nutrition Standard Indicators
+  "1.1.1.CS.1: Demonstrate knowledge and understanding of food commodities, select and use food to meet the needs of individuals and families for healthy living.": [
+    "1.1.1.LI.1: Explain basic concepts in food and nutrition and their implication to healthy living.",
+    "1.1.1.LI.2: Classify food commodities under the various food groups to enhance food selection and utilisation.",
+    "1.1.1.LI.3: Analyse ways convenience foods can be processed and used to promote healthy nutritional practice in households.",
+    "1.1.1.LI.4: Analyse the effect of heat on the nutritional values of the various food commodities."
+  ],
+  "1.1.1.CS.2: Demonstrate Scientific knowledge of food nutrients and their implication to growth and development among individuals, families and the community.": [
+    "1.1.1.LI.5: Identify food nutrients and their effects on growth and development in the body (proteins, carbohydrates, fats/lipids, vitamins, minerals, water).",
+    "1.1.1.LI.6: Discuss the effects of nutrient deficiencies on growth and development of the individual, family and society (Kwashiorkor, Marasmus, scurvy, etc.)."
+  ],
+  "1.1.1.CS.3: Demonstrate Scientific knowledge in food habit/lifestyles and its implications on growth and development on individuals and families.": [
+    "1.1.1.LI.7: Discuss food habits/ lifestyles and their implications on the nutritional status of individuals, families and societies (eating frequency, balanced diet).",
+    "1.1.1.LI.8: Analyse factors that influence food habits/ lifestyle practices in daily nutrition (geographical, cultural, technological, religious, economic, etc.)."
+  ],
+  "2.1.1.CS.1: Analyse the relationship between food choices and the overall health of individuals, family members and special groups.": [
+    "2.1.1.LI.1: Explain the importance of consuming a balanced diet for maintaining good health (proteins, vitamins, minerals, and water functions).",
+    "2.1.1.LI.2: Identify dietary-related diseases and their causes among individuals, families and the community (obesity, diabetes, hypertension, malnutrition).",
+    "2.1.1.LI.3: Analyse the effects of excessive consumption of processed foods and sugary drinks on health."
+  ],
+  "2.1.1.CS.2: Demonstrate the ability to investigate food and nutritional interventions for managing food-related diseases at the household, community, national and global levels.": [
+    "2.1.1.LI.4: Explain basic concepts of nutritional interventions (dietary diversification, school feeding programs, nutrition education, supplementation).",
+    "2.1.1.LI.5: Examine household and community-based food and nutritional interventions supporting individuals, families and societies to manage dietary related diseases.",
+    "2.1.1.LI.6: Apply basic research skills (interviews, questionnaires) to assess the impact and challenges of household-based and community-based food and nutritional interventions."
+  ],
+  "2.1.1.CS.3: Demonstrate the ability to plan balanced meals that promote healthy living and meet nutritional needs.": [
+    "2.1.1.LI.7: Demonstrate appropriate cooking methods that help retain nutrients in food to promote healthy living (steaming, grilling, poaching, boiling).",
+    "2.1.1.LI.8: Develop a meal plan that meets the nutritional needs of individuals and families (toddlers, adolescents, pregnant/lactating mothers, manual workers, sedentary).",
+    "2.1.1.LI.9: Plan special meals to support groups of individuals suffering from dietary related diseases (hypertensive, diabetic, anaemic) in the family."
+  ],
+  "2.1.1.CS.4: Demonstrate appropriate skills in preparation, cooking and serving of meals for individuals and special groups in the family.": [
+    "2.1.1.LI.10: Prepare and cook balanced meals that meet the dietary needs of special groups in the family (toddlers, adolescents, pregnant/lactating mothers, invalids).",
+    "2.1.1.LI.11: Apply proper serving techniques and table-setting skills suitable for different individuals and special groups (basic, formal, buffet table settings)."
+  ],
+  "3.1.1.CS.1: Demonstrate an understanding of the role of Ghanaian festivals and festive occasions in preserving culture, promoting sustainable nutrition and enhancing social well-being.": [
+    "3.1.1.LI.1: Describe major Ghanaian festivals and their associated traditional foods (Religious, Cultural, Harvest, National festivals).",
+    "3.1.1.LI.2: Analyse the role of traditional foods in promoting sustainable nutrition and their impact on healthy living (balanced diet, medicinal/healing properties).",
+    "3.1.1.LI.3: Analyse how traditional festive meals can be modified for improved health benefits and sustainability (reducing excess salt and oil, eco-friendly cooking).",
+    "3.1.1.LI.4: Examine the social and communal benefits of festive and festivals dishes in strengthening relationships and enhancing overall well-being."
+  ],
+  "3.1.1.CS.2: Demonstrate skills in modifying and preparing festival and festive meals for special occasions, events, and entertainment.": [
+    "3.1.1.LI.5: Plan festive and festivals meals suitable for various occasions or events (dinners, cocktails, luncheons, tea parties).",
+    "3.1.1.LI.6: Prepare and cook dishes for festive/festivals/occasions/events (cakes, jollof rice, fries with sauces) and display for peer feedback."
+  ],
+  "1.1.2.CS.1: Demonstrate knowledge and understanding of how to apply the concepts of food security and its components to ensure sustainable access to nutritious food in everyday living.": [
+    "1.1.2.LI.1: Explain the concept of food security and the implication of its components (availability, affordability, accessibility, safety, stability) in everyday living.",
+    "1.1.2.LI.2: Analyse the factors influencing food security at the household and national levels (socio-economic, environmental, and political factors)."
+  ],
+  "1.1.2.CS.2: Demonstrate knowledge and understanding of applying food storage principles to prevent food spoilage and promote food safety practices for healthy living.": [
+    "1.1.2.LI.3: Explain the concept and principles of food storage and their role in preventing food spoilage (dry, refrigerated, frozen storage, FIFO).",
+    "1.1.2.LI.4: Discuss the causes of food spoilage and its implication for food safety (microbial spoilage, enzymatic activity, chemical reactions, physical factors).",
+    "1.1.2.LI.5: Demonstrate appropriate food handling, storage and hygiene practices to minimise contamination and ensure food safety (storing fish, onion, mango, banana, beans)."
+  ],
+  "2.1.2.CS.1: Explain the principles and methods of food preservation and their role in ensuring food security.": [
+    "2.1.2.LI.1: Describe the principles of food preservation and how they help maintain food quality and safety (prevention of microbial growth, moisture control, acidity, oxidation).",
+    "2.1.2.LI.2: Describe the various food preservation methods and their effectiveness in extending food shelf life (freezing, canning, drying, salting, sugaring, pickling).",
+    "2.1.2.LI.3: Differentiate between various food preservation methods such as drying, freezing, fermentation and canning."
+  ],
+  "2.1.2.CS.2: Demonstrate the ability to apply appropriate food preservation techniques to extend the shelf life of perishable foods and promote sustainable food security practices.": [
+    "2.1.2.LI.4: Demonstrate the application of appropriate food preservation methods (marmalade, jam, pickles, shito) to support sustainable food security.",
+    "2.1.2.LI.5: Package and store preserved food under suitable conditions to maintain quality and safety (vapour proof, grease proof, waterproof, glass, vacuum, etc.).",
+    "2.1.2.LI.6: Apply appropriate eco-friendly packaging methods (biodegradable, edible packaging, beeswax wraps, glass) to enhance preservation and minimise waste."
+  ],
+  "3.1.2.CS.1: Demonstrate knowledge and skills in appropriate packaging techniques to maintain the nutritional quality and safety of food products.": [
+    "3.1.2.LI.1: Explain the role of food packaging in maintaining nutritional quality, hygiene and food safety (barrier against contaminants, temperature, moisture).",
+    "3.1.2.LI.2: Apply appropriate eco-friendly packaging methods (compostable, beeswax, glass, bioplastics) to enhance food preservation and design prototypes."
+  ],
+  "3.1.2.CS.2: Develop entrepreneurial skills in creating and marketing nutritious food products that promote healthy living practices.": [
+    "3.1.2.LI.3: Identify business opportunities in food production that support healthy eating habits and sustainable nutrition (agricultural production, retail, catering).",
+    "3.1.2.LI.4: Develop, package and market a nutritious food product that aligns with consumer health needs and industry standards, and perform break-even analyses."
+  ],
+  "1.2.1.CS.1: Demonstrate knowledge and understanding of the types, functions and layout of food laboratories used in food production.": [
+    "1.2.1.LI.1: Discuss the concept of food laboratories and their functions in food production (kitchens, microbiological, chemical, sensory evaluation laboratories).",
+    "1.2.1.LI.2: Discuss the types of kitchen laboratories layout and their implication in food production (single-line, L-shaped, U-shaped, island, parallel layouts)."
+  ],
+  "1.2.1.CS.2: Demonstrate knowledge and understanding in innovative ways of planning and using food laboratories.": [
+    "1.2.1.LI.3: Evaluate the factors that affect the planning and layout of food laboratories (purpose, infrastructure, equipment, space, safety, socio-cultural, budget).",
+    "1.2.1.LI.4: Suggest ways of re-designing/ renovation/refurbishment of a food laboratory to enhance the functions of various areas within the laboratory.",
+    "1.2.1.LI.5: Discuss ways of ensuring hygiene in the food laboratory (personal hygiene, food hygiene, environmental hygiene)."
+  ],
+  "2.2.1.CS.1: Demonstrate an understanding of how to apply scientific principles of heat transfer in food preparation and processing to promote food safety.": [
+    "2.2.1.LI.1: Discuss the various methods of food preparation and processing that apply principles of heat transfer (conduction, convection, radiation).",
+    "2.2.1.LI.2: Relate the various principles of heat transfer (conduction on stovetop, oven convection, radiation grilling/microwaving) to cooking methods."
+  ],
+  "2.2.1.CS.2: Demonstrate the ability to apply knowledge and principles of heat transfer to select and use appropriate cooking methods, tools, and fuels for food preparation and processing.": [
+    "2.2.1.LI.3: Discuss the different methods of food preparation and processing to promote sustainable food safety practices (Upcycling food scraps, composting, portion control).",
+    "2.2.1.LI.4: Analyse the challenges of applying the various heat transfer principles in food preparation and processing (uneven heat distribution, energy consumption, safety)."
+  ],
+  "3.2.1.CS.1: Demonstrate knowledge and understanding of sugars and apply creative and innovative sugar craft techniques to enhance the appearance and quality of confectionery products.": [
+    "3.2.1.LI.1: Discuss the types, properties and functions of sugars/sweeteners (granulated, cubes, liquid, powder) in food production and sugar craft.",
+    "3.2.1.LI.2: Demonstrate the application of creative and innovative sugar craft techniques to design and decorate confectionery products (fondant, royal, butter icing)."
+  ],
+  "3.2.1.CS.2: Demonstrate knowledge, understanding and skills in the application of scientific principles in developing recipes.": [
+    "3.2.1.LI.3: Explain the scientific principles involved in recipe development (protein, carbohydrate, fat interactions, moist/dry/combination cooking methods).",
+    "3.2.1.LI.4: Develop and modify recipes using scientific principles to improve taste, texture, nutritional content and presentation (réchauffé/leftover design rules)."
+  ],
+  "1.2.2.CS.1: Demonstrate knowledge, understanding, and skills in applying scientific principles to beverage production.": [
+    "1.2.2.LI.1: Discuss the types of beverages and their uses (alcoholic vs non-alcoholic: stimulants, nourishing, refreshing, hydration, nutrition, energy).",
+    "1.2.2.LI.2: Explain the scientific principles involved in the selection, processing, and preservation of beverages (cleanliness, safety, temperature control, tannin extraction)."
+  ],
+  "1.2.2.CS.2: Demonstrate knowledge and understanding of the principles of nutrition and apply them to produce, enrich and fortify beverages to meet the diverse needs of individuals, families and society.": [
+    "1.2.2.LI.3: Analyse how to enrich or fortify beverages with vitamins, minerals, proteins, and plant extracts to meet nutrition needs.",
+    "1.2.2.LI.4: Conduct experiments to produce non-alcoholic beverages using local food commodities (sobolo leaves, prekese, turkey berry) to meet nutritional needs.",
+    "1.2.2.LI.5: Evaluate how scientific principles influence alcoholic beverage production (biochemical fermentation, physical distillation, aging/maturation) using local food commodities."
+  ],
+  "2.2.2.CS.1: Demonstrate knowledge, understanding, and skills in the development and use of food additives and condiments.": [
+    "2.2.2.LI.1: Distinguish between food additives (naturally/artificially produced stocks, mixed spices) and condiments (vinegar, ketchup, mustard, ground ginger).",
+    "2.2.2.LI.2: Conduct experiments to develop natural colours from natural food sources (beetroot, turmeric, karadafa leaves).",
+    "2.2.2.LI.3: Prepare food additives and condiments from local food sources and label them (prekese, turkey berry, aniseed/rosemary, karadafa powder)."
+  ],
+  "2.2.2.CS.2: Demonstrate knowledge, understanding and skills in the application of scientific principles in flour cookery and enrichment.": [
+    "2.2.2.LI.4: Explain the scientific principles underlying flour cookery, including gluten formation, gelatinisation and leavening (yeast, baking powder, baking soda).",
+    "2.2.2.LI.5: Discuss the basic ingredients used in flour cookery (flour structure, fat tenderness, sugar sweetening/coloring, egg value/raising).",
+    "2.2.2.LI.6: Apply appropriate techniques to improve the texture and nutritional value of flour-based products through enrichment and fortification.",
+    "2.2.2.LI.7: Evaluate the quality of different flour products based on texture, appearance and nutritional composition."
+  ],
+  "3.2.2.CS.1: Demonstrate the ability to plan, organize, and manage food exhibitions and bazaars to promote food products and develop entrepreneurial and career opportunities.": [
+    "3.2.2.LI.1: Plan and organise a food exhibition or bazaar to showcase newly developed food products to target consumers (objectives, target audience, venue selection, budget).",
+    "3.2.2.LI.2: Apply marketing and promotional strategies to attract consumers and enhance the visibility of food products (pre-event promotion, booth design, free sampling, pricing).",
+    "3.2.2.LI.3: Explore career opportunities in the food industry (nutrition/dietetics, food science, culinary services, agribusness development, R&D).",
+    "3.2.2.LI.4: Discuss work ethics in the food industry, highlighting qualities like punctuality, honesty, reliability, and hygiene practices."
+  ],
+  // Business Management Standard Indicators
+  "1.1.1.CS.1: Demonstrate functional knowledge and understanding of business and its various forms of ownership.": [
+    "1.1.1.LI.1: Explain business, its objectives, discuss its role in society, and classify its different forms.",
+    "1.1.1.LI.2: Examine the features of sole proprietorship business, identify its benefits, challenges and sources of funding.",
+    "1.1.1.LI.3: Discuss partnership business, its features, deed, formation, benefits, challenges and sources of funding.",
+    "1.1.1.LI.4: Describe a company and discuss its features, types, the procedure for registration, benefits, challenges and sources of funding.",
+    "1.1.1.LI.5: Examine State-owned enterprises, their features, types, benefits, challenges and sources of funding."
+  ],
+  "1.1.2.CS.1: Demonstrate knowledge and understanding of the basic functions of management.": [
+    "1.1.2.LI.1: Explain management, its levels and skills",
+    "1.1.2.LI.2: Differentiate between management and administration and identify the career paths in business management",
+    "1.1.2.LI.3: Explain planning, its tools, processes, benefits and limitations.",
+    "1.1.2.LI.4: Explain the concept of organising, its principles, importance and describe organisational structures.",
+    "1.1.2.LI.5: Describe departmentalisation, its types and explain the reasons, benefits and challenges of dividing an organisation into distinct units.",
+    "1.1.2.LI.6: Differentiate between centralisation and decentralisation and examine their advantages and disadvantages",
+    "1.1.2.LI.7: Explain leadership, its various styles/forms, sources of power in leadership and the importance of effective leadership.",
+    "1.1.2.LI.8: Discuss emotional intelligence, leadership skill development, and conflict management, and relate these concepts to effective leadership practices.",
+    "1.1.2.LI.9: Explain controlling, its types, processes, tools and importance."
+  ],
+  "2.1.2.CS.1: Demonstrate knowledge, understanding and application of decision-making skills in organisations.": [
+    "2.1.2.LI.1: Explain decision-making, its importance, types and tools.",
+    "2.1.2.LI.2: Identify management levels and the decisions they make and analyse the steps in the decision-making process."
+  ],
+  "2.1.2.CS.2: Demonstrate knowledge and understanding of delegation.": [
+    "2.1.2.LI.1: Explain delegation and outline its principles and steps involved in the process of delegation.",
+    "2.1.2.LI.2: Identify the benefits of delegation, its limitations and ways of making it effective"
+  ],
+  "2.1.2.CS.3: Demonstrate understanding and application of effective communication skills in organisations.": [
+    "2.1.2.LI.1: Explain business communication, its importance, processes and forms/types.",
+    "2.1.2.LI.2: Explain the channels of business communication, the barriers and ways of making communication effective."
+  ],
+  "2.1.3.CS.4: Demonstrate knowledge and understanding of Human Resource Management.": [
+    "2.2.3.LI.1: Explain Human Resource Management, its functions and describe the processes involved in recruitment and selection.",
+    "2.2.3.LI.2: Explain the components of Performance Management and its importance.",
+    "2.2.3.LI.3: Explain Labour and Industrial relations including Collective bargaining processes."
+  ],
+  "3.1.2.CS.1: Demonstrate knowledge and understanding of production management.": [
+    "3.1.2.LI.1: Explain the functions of Production Management and identify the main forms of production.",
+    "3.1.2.LI.2: Describe the types of production and the steps in production planning and control."
+  ],
+  "3.1.2.CS.2: Demonstrate knowledge and understanding of Procurement Management.": [
+    "3.1.2.LI.1: Explain Procurement Management and discuss its importance and process.",
+    "3.1.2.LI.2: Explain the strategies in procurement, legal and ethical guidelines governing procurement and identify the challenges in the procurement management."
+  ],
+  "2.1.3.CS.1: Demonstrate knowledge and understanding of the Law of Contract.": [
+    "2.1.3.LI.1: Explain a contract and its elements.",
+    "2.1.3.LI.2: Explain types of contracts and how contracts may be vitiated and discharged."
+  ],
+  "2.1.3.CS.2: Demonstrate knowledge and understanding of business risk and insurance.": [
+    "2.1.3.LI.1: Explain business risk, identify the types of business risks and how to manage risk",
+    "2.1.3.LI.2: Explain insurance and outline its principles, policies and importance to businesses"
+  ],
+  "2.2.1.CS.1: Demonstrate knowledge and understanding of the approaches to international business.": [
+    "2.2.1.LI.1: Explain the following approaches to international business: a. franchising, b. joint venturing, c. licensing and d. wholly-owned subsidiary"
+  ],
+  "2.2.1.CS.2: Demonstrate knowledge and understanding of Domestic and International Trade.": [
+    "2.2.1.LI.1: Differentiate between domestic and international trade, and outline the basis and documents used in international trade.",
+    "2.2.1.LI.2: Analyse the various restrictions in international trade, the reasons for restrictions and explain the benefits and challenges of international trade."
+  ],
+  "3.2.1.CS.1: Demonstrate knowledge and understanding of digital marketing.": [
+    "3.2.1.LI.1: Explain marketing, evaluate its functions and analyse the Extended Marketing Mix (7Ps)",
+    "3.2.1.LI.2: Discuss the processes involved in new product development and the product life cycle",
+    "3.2.1.LI.3: Explain e-business and digital marketing, its tools and assess the benefits and challenges in their applications in business"
+  ],
+  "1.2.2.CS1: Demonstrate knowledge and understanding of globalization and international business and how to transform Ghanaian companies into multinational corporations.": [
+    "1.2.2.LI.1: Explain the factors driving globalisation, analyse its impact on local businesses, and discuss the benefits and challenges of operating businesses in a global market.",
+    "1.2.2.LI.2: Explain international business, it features, the reasons for engaging in it, and discuss its benefits and the challenges.",
+    "1.2.2.LI.3: Describe multinational corporation and discuss its features, benefits and challenges including factors driving companies to become multination corporation.",
+    "1.2.1.LI.4: Explain indigenous Ghanaian businesses with examples, outline the steps to become a multinational corporation, and discuss strategies for Ghanaian companies to transform into multinational operations."
+  ],
+  "1.2.1.CS1: Demonstrate knowledge and understanding of the business environment and corporate social responsibility.": [
+    "1.2.1.LI.1: Analyse the factors affecting the internal and external environment of business using SWOT and PESTEL",
+    "1.2.1.LI.2: Define business ethics, outline its key principles, and explain the importance of business ethics in promoting integrity, trust, and accountability within organisations.",
+    "1.2.1.LI.3: Explain corporate social responsibility and discuss its types of initiatives",
+    "1.2.1.LI.4: Discuss the benefits and challenges of Corporate Social Responsibility"
+  ],
+  "3.2.2.CS.1: Demonstrate knowledge and understanding of entrepreneurship and setting up businesses.": [
+    "3.2.2.LI.1: Describe entrepreneurship and outline the characteristics and roles of entrepreneurs",
+    "3.2.2.LI.2: Identify ways of entering into businesses and describe the various documents needed by entrepreneurs.",
+    "3.2.2.LI.3: Analyse the process of setting up a business, prepare a simple business plan for the establishment of business and outline the reasons for business successes and failures."
+  ],
+
+  // Accounting and Financial/Cost Accounting Standard Indicators
+  "B10.1.1.1: Demonstrate knowledge and understanding of Accounting, its nature, principles, purpose and application.": [
+    "B10.1.1.1.1: Distinguish between financial and cost accounting functions, stating objectives and scope of each.",
+    "B10.1.1.1.2: Research standard bookkeeping processes used in local businesses (sole traders, retail, corporate)."
+  ],
+  "B11.1.2.1: Analyze accounting transactions using the double-entry system, adjusting ledgers, correcting errors and extracting trial balances.": [
+    "B11.1.2.1.1: Apply basic double-entry ledger posting rules to debit and credit asset/liability actions.",
+    "B11.1.2.1.2: Post entries in journals and adjust physical ledger mappings."
+  ],
+  "B11.1.2.2: Prepare updated cash books, and bank reconciliation statements to monitor liquidity.": [
+    "B11.1.2.2.1: Identify causes of differences between general cashbooks and Bank Statement structures.",
+    "B11.1.2.2.2: Draft bank reconciliation reports resolving unpresented cheques and direct debits."
+  ],
+  "B11.1.2.3: Draft receivables and payables control accounts to audit sub-ledger operations.": [
+    "B11.1.2.3.1: Reconcile trade receivable sub-ledgers with general ledger control accounts.",
+    "B11.1.2.3.2: Account for contra entries, bad debts, and dishonoured cheques in control ledgers."
+  ],
+  "B10.1.3.1: Prepare sole proprietorship final financial statements with basic internal adjustments.": [
+    "B10.1.3.1.1: Construct standard trading profit & loss sheets resolving inventory and margin outcomes.",
+    "B10.1.3.1.2: Account for accrued or prepaid expenses and depreciation adjustments."
+  ],
+  "B11.1.3.1: Prepare final statements from single-entry and incomplete financial records.": [
+    "B11.1.3.1.1: Construct opening and closing Statements of Affairs to derive net asset capitals.",
+    "B11.1.3.1.2: Reconstruct summary cash receipt ledgers to compute total credit sales."
+  ],
+  "B11.1.3.2: Account for financial items in non-profit operations, compiling subscriptions and accumulated funds.": [
+    "B11.1.3.2.1: Reconcile nonprofit receipts and payments accounts with income/expense spreadsheets.",
+    "B11.1.3.2.2: Prepare ledger accounts tracing prepaid and outstanding member subscriptions."
+  ],
+  "B12.1.3.1: Account for the constitution, profit distribution, and goodwill of general business partnerships.": [
+    "B12.1.3.1.1: Formulate partner capital/current accounts following profit distribution sharing arrangements.",
+    "B12.1.3.1.2: Post ledger entries for goodwill treatment on admission or retirement of general partners."
+  ],
+  "B12.1.3.2: Prepare final structured financial accounts and reports for companies.": [
+    "B12.1.3.2.1: Sketch standardized company financial layouts mapping share reserves, retained gains, and debentures.",
+    "B12.1.3.2.2: Analyze corporate annual reports checking cash flows and auditing declarations."
+  ],
+  "B10.1.4.1: Compute trading, profit and loss components to determine business profitability.": [
+    "B10.1.4.1.1: Calculate gross margin ratios and operating net returns from merchant logs."
+  ],
+  "B12.1.5.1: Allocate partnership rewards using profit and loss appropriation accounts.": [
+    "B12.1.5.1.1: Compute interest on capital allocations, drawings charges, and partner salary distributions."
+  ],
+  "B12.1.6.1: Examine company share capital issues and balance sheet groupings.": [
+    "B12.1.6.1.1: Post company ledger entries accounting for share subscriptions and share premium reserves."
+  ],
+  "B10.1.7.1: Classify general overhead and prime expenses in basic production sheets.": [
+    "B10.1.7.1.1: Group expenditures into prime costs, factory overheads, and administrative costs."
+  ],
+  "B10.2.1.1: Distinguish nature, purpose, basics and installation guidelines of modern cost accounting files.": [
+    "B10.2.1.1.1: Compare information outputs of cost accounting databases with financial ledgers.",
+    "B10.2.1.1.2: Assess local operational targets before installing custom costing parameters."
+  ],
+  "B10.2.1.2: Demonstrate material storage, purchase documentation, and issue pricing under FIFO, LIFO and Weighted Average schemes.": [
+    "B10.2.1.2.1: Record warehouse receipts and issues using FIFO, LIFO, and Weighted Average structures.",
+    "B10.2.1.2.2: Calculate lower of cost or net realizable value for raw material stock balances."
+  ],
+  "B11.2.1.1: Account for labour remuneration, idle time metrics, and calculate complete payroll sheets.": [
+    "B11.2.1.1.1: Compute base wages using standard day-rate, piece-rate, and differential incentive systems.",
+    "B11.2.1.1.2: Formulate standard payroll spreadsheets showing itemized statutory tax and union deductions."
+  ],
+  "B11.2.1.2: Formulate overhead analysis sheets to apportion common indirect overheads.": [
+    "B11.2.1.2.1: Allocate administrative overhead budgets using mathematical step-down reapportionment models.",
+    "B11.2.1.2.2: Determine machine-hour or direct labor-hour overhead absorption rates."
+  ],
+  "B11.2.2.1: Draft job and batch cost records to compute margins on specific custom orders.": [
+    "B11.2.2.1.1: Complete customer job cost sheets summing raw resource requisitions and prime wage variables.",
+    "B11.2.2.1.2: Formulate batch cost schedules tracking cost-per-unit metrics on serialized print or chemical batches."
+  ],
+  "B12.2.2.1: Account for process costing scenarios including treatment of normal and abnormal losses.": [
+    "B12.2.2.1.1: Chart process account flows calculating equivalent units of production on work-in-progress stock.",
+    "B12.2.2.1.2: Reconcile scrap returns, byproduct transfers, and process spill normal/abnormal waste parameters."
+  ],
+  "B12.2.2.2: Reconcile contract costing procedures with architectural certificate milestones.": [
+    "B12.2.2.2.1: Draft contract accounts summing materials sent to site, site wages, and plant depreciation.",
+    "B12.2.2.2.2: Calculate reserve profits recognizing architect certified percentage milestones."
+  ],
+  "B12.2.2.3: Formulate service cost schedules for passenger transport and related service sectors.": [
+    "B12.2.2.3.1: Prepare operating and service sheets for logistics and transport businesses."
+  ],
+  "B11.2.3.1: Apply Activity Based Costing methods to link overheads to strategic cost pools.": [
+    "B11.2.3.1.1: Classify factory overhead items into defined cost activity pools.",
+    "B11.2.3.1.2: Calculate cost-driver rates (setups, inspections, machine hours) to assign resource demands dynamically."
+  ],
+  "B11.2.3.2: Contrast Marginal and Absorption costing treatments on period adjustments and profits.": [
+    "B11.2.3.2.1: Prepare monthly income comparisons accounting for differences in closing stock valuations.",
+    "B11.2.3.2.2: Reconcile marginal costing profits with traditional absorption costing reports."
+  ],
+  "B12.2.3.1: Draft cost-volume-profit graphs to pinpoint break-even outcomes and margin of safety indices.": [
+    "B12.2.3.1.1: Calculate contribution-to-sales ratios, break-even unit quantities, and target profit sales targets.",
+    "B12.2.3.1.2: Plot multi-variable margins of safety on coordinates charts mapping operational thresholds."
+  ],
+  "B12.2.3.2: Prepare functional sales, production, purchase, and cash budgets to schedule operations.": [
+    "B12.2.3.2.1: Formulate production budgets using anticipated sales targets adjusted for holding stock policies.",
+    "B12.2.3.2.2: Draft comprehensive cash budgets mapping receipts and layouts to preserve liquid buffers."
+  ],
+  "B12.2.3.3: Calculate standard material and labour variances to evaluate operational efficiency discrepancies.": [
+    "B12.2.3.3.1: Analyze price, usage, rate, and efficiency variances comparing standard targets with audited payments.",
+    "B12.2.3.3.2: Formulate ledger adjustments reconciling theoretical standards with physical production invoices."
+  ],
+  "B10.1.1.2: Compute assets, liabilities and capital values using the basic accounting equation.": [
+    "B10.1.1.2.1: State and demonstrate how transaction impacts preserve basic account equation states."
+  ],
+  "B10.1.1.3: Examine the information needs of various users of accounting information.": [
+    "B10.1.1.3.1: Distinguish information targets of internal managers, tax authorities, and creditors."
+  ],
+  "B10.1.1.4: Discuss the need for general accounting standards and the role of regulatory bodies.": [
+    "B10.1.1.4.1: Examine how the IFRS frameworks protect global reporting honesty."
+  ],
+  "B10.1.1.5: Describe the core definitions of bookkeeping, financial accounting and cost accounting.": [
+    "B10.1.1.5.1: List the differences between original records entry and analytical spreadsheet operations."
+  ],
+  "B10.1.1.6: Apply the double entry guidelines to adjust transactions in the accounting equation.": [
+    "B10.1.1.6.1: Draft double-entry balances across dual asset transactions."
+  ],
+  "B10.1.1.7: Post basic ledger adjustments on various asset, liability, and capital accounts.": [
+    "B10.1.1.7.1: Open, ledger, and extract closing balances across t-accounts."
+  ],
+  "B10.1.1.8: Extract a standard trial balance from historical ledger balances.": [
+    "B10.1.1.8.1: Reconcile general ledger balances to prove computational equality."
+  ],
+  "B11.1.2.4: Distinguish between errors of omission, commission, principle, and complete reversal.": [
+    "B11.1.2.4.1: Identify structural errors and summarize rectify procedures."
+  ],
+  "B11.1.2.5: Design a suspense account to balance the trial balance temporaries pending audits.": [
+    "B11.1.2.5.1: Rectify errors utilizing journal corrections posted to suspense accounts."
+  ],
+  "B11.1.2.6: Draft a formal bank reconciliation statement starting with cashbook or bank statement balances.": [
+    "B11.1.2.6.1: Prepare unadjusted Cashbook balances and bank adjustments."
+  ],
+  "B11.1.2.7: Reconcile sub-ledgers with general ledger control totals.": [
+    "B11.1.2.7.1: Identify outstanding invoice differences in Control Account sheets."
+  ],
+  "B10.1.3.3: Calculate adjustments for prepayments, accruals, depreciation, and bad debts for sole traders.": [
+    "B10.1.3.3.1: Calculate reducing balance or straight line depreciation schedules."
+  ],
+  "B11.1.3.3: Formulate a subscription account to track accrued or prepaid member dues.": [
+    "B11.1.3.3.1: Distinguish prepaid/outstanding subscription members data."
+  ],
+  "B11.1.3.4: Convert incomplete records into dual double-entry structures using ledger summaries.": [
+    "B11.1.3.4.1: Formulate cash receipt and payment analysis ledgers."
+  ],
+  "B12.1.3.3: Manage the entry/retirement of a partner, calculating goodwill shares.": [
+    "B12.1.3.3.1: Post double entry shares for partners entry/retirement records."
+  ],
+  "B12.1.3.4: Account for share and debenture subscription and payments in general company ledgers.": [
+    "B12.1.3.4.1: Journalize company share payments in general ledger files."
+  ],
+  "B10.1.4.2: Present a classified statement of financial position grouping local capital structures.": [
+    "B10.1.4.2.1: Group asset resources by current/noncurrent balance structures."
+  ],
+  "B10.1.4.3: Calculate end-of-period adjustments for outstanding and accrued variables.": [
+    "B10.1.4.3.1: Allocate month-end adjustments to the cost of operations."
+  ],
+  "B11.1.4.1: Derive sales, purchases, and cash flows to prepare standard sole-proprietor reports.": [
+    "B11.1.4.1.1: Reconstruct control records under single entry rules."
+  ],
+  "B12.1.5.2: Prepare partnership profit distributions inside appropriation accounts.": [
+    "B12.1.5.2.1: draft partner profit appropriation schedules."
+  ],
+  "B12.1.5.3: Draft partner capital and current account reports.": [
+    "B12.1.5.3.1: distinguish fluctuating and fixed partner current structures."
+  ],
+  "B12.1.5.4: Formulate ledger adjustments for goodwill in partners entry or exits.": [
+    "B12.1.5.4.1: Post entries adjusting partners ledger capital lines for goodwill transfers."
+  ],
+  "B12.1.6.2: Outline standard company components (statement of cash flows, director findings).": [
+    "B11.1.6.2.1: Identify elements in published financial profiles."
+  ],
+  "B12.1.6.3: Present company income reserves balances correctly.": [
+    "B12.1.6.3.1: Map reserves balances inside statement of changes in equity."
+  ],
+  "B10.2.4.2: Contrast information requirements of cost ledgers versus general accounting.": [
+    "B10.2.4.2.1: Differentiate internal management data from external reporting files."
+  ],
+  "B10.2.4.3: Plan core requirements of implementing a sound cost accounting structure.": [
+    "B10.2.4.3.1: Outline cost sheet installation pathways."
+  ],
+  "B10.2.5.2: Trace time sheet outputs to payroll rates.": [
+    "B10.2.5.2.1: Reconcile production clocks with labor cost databases."
+  ],
+  "B10.2.5.3: Explain direct and indirect categorization of operating targets.": [
+    "B10.2.5.3.1: Map expenses to prime vs general factory overhead sectors."
+  ],
+  "B10.2.6.2: Compute closing inventory values at lower of aggregate cost or market value.": [
+    "B10.2.6.2.1: Apply IAS 2 rules mapping realistic inventory markets."
+  ],
+  "B10.2.6.3: Formulate requisition sheets tracking stock movements.": [
+    "B10.2.6.3.1: Track store receipts with official requisition tickets."
+  ],
+  "B11.2.7.2: Apply step-down distribution rules to assign overheads across cost units.": [
+    "B11.2.7.2.1: Allocate support center expenditures using mathematical proportions."
+  ],
+  "B11.2.7.3: Formulate overhead absorption configurations on direct machine or labor metrics.": [
+    "B11.2.7.3.1: Derive factory absorption base factors."
+  ],
+  "B12.2.8.2: Compute unit costs based on bulk batch executions.": [
+    "B12.2.8.2.1: Summarize average unit cost per batch yield."
+  ],
+  "B12.2.8.3: Formulate contract sheets tracking retention moneys and work certified values.": [
+    "B12.2.8.3.1: Compile contract ledger adjustments computing architectural values."
+  ],
+  "B12.2.8.4: Track work-in-progress values across linear production processes.": [
+    "B12.2.8.4.1: Compute equivalent production units."
+  ],
+  "B12.2.8.5: Compute cost-per-passenger-kilometer in commercial networks.": [
+    "B12.2.8.5.1: Calculate service costing parameters for public transit fleets."
+  ],
+  "B11.2.1.3: Compile payroll spreadsheets detailing gross and net payouts.": [
+    "B11.2.1.3.1: Compute monthly salary sheets mapping personal tax tiers."
+  ],
+  "B11.2.1.4: Group indirect expenses to production departments using primary sheets.": [
+    "B11.2.1.4.1: Distribute general rent and power budgets based on floor layouts."
+  ],
+  "B11.2.1.5: Perform step-down secondary redistributions of service budgets.": [
+    "B11.2.1.5.1: Balance support center sheets with standard allocation tiers."
+  ],
+  "B12.2.2.4: Formulate operational cost metrics in the services domain.": [
+    "B12.2.2.4.1: Prepare cost unit metrics for public transport networks."
+  ],
+  "B12.2.3.2: Formulate cash receipts and operational schedules aiding cashflow balance.": [
+    "B12.2.3.2.1: Reconcile cashflow schedules tracking planned payouts."
+  ],
+  // Biology Standard Indicators
+  "B10.1.1.1: Demonstrate knowledge and understanding of Biology, the various branches and fields of study, and their benefits in everyday life.": [
+    "B10.1.1.1.1: Observe specimen samples (honey, fish, milk, medicines) and identify respective biological domains.",
+    "B10.1.1.1.2: Prepare a research report outlining how various fields of biology apply to human careers and health."
+  ],
+  "B10.1.1.2: Apply knowledge and understanding of the scientific method to solve everyday problems.": [
+    "B10.1.1.2.1: Outline key processes of scientific investigation (observation, hypothesis, experiment, analysis, conclusion).",
+    "B10.1.1.2.2: Apply the scientific method to address immediate local environmental challenges (e.g. sanitation, water security)."
+  ],
+  "B10.1.1.3: Apply knowledge of body symmetry, orientation, and sectioning of various organisms, and make labelled drawings of specimens.": [
+    "B10.1.1.3.1: Distinguish between bilateral, radial and spherical symmetries of common plant/animal specimens.",
+    "B10.1.1.3.2: Make clear, well-annotated biological drawings of cross-sections and longitudinal-sections of specific structures."
+  ],
+  "B10.1.1.4: Demonstrate knowledge, skill, and safety in the use of the microscope.": [
+    "B10.1.1.4.1: Examine and describe the main parts and functions of a compound light microscope.",
+    "B10.1.1.4.2: Demonstrate correct, safe manipulative technique to configure the stage and obtain clear glass slide focuses."
+  ],
+  "B11.1.1.1: Relate the knowledge of the characteristics and life processes of common simple living organisms to their economic importance.": [
+    "B11.1.1.1.1: Describe biological processes and characteristics of Rhizopus, Moss, and Fern.",
+    "B11.1.1.1.2: Discuss the ecological benefits and harmful qualities of these basic lower plants/fungi."
+  ],
+  "B10.1.2.1: Apply the knowledge of basic concepts in biology to improve productivity in fish farming.": [
+    "B10.1.2.1.1: Identify optimal environmental criteria (pH, dissolved oxygen, temperature) for nursery pond stocking.",
+    "B10.1.2.1.2: Build an experimental aquarium to analyze feeding behaviors and growth scales of fingerlings."
+  ],
+  "B11.1.2.1: Apply the knowledge of basic concepts in biology to improve crop and animal production.": [
+    "B11.1.2.1.1: Demonstrate how soil enrichment mechanisms (composting, mulching) depend on basic bacterial activities.",
+    "B11.1.2.1.2: Discuss biological principles underlying selective animal breeding, immunization, and deworming routines."
+  ],
+  "B12.1.2.1: Apply knowledge and skills in biotechnology to enhance the value of products that help improve human lives and the environment.": [
+    "B12.1.2.1.1: Describe microbial fermentation pathways used in local dietary production (Kenkey, Yoghurt, Bread, Pito).",
+    "B12.1.2.1.2: Outline fundamental molecular techniques used for tissue culturing, gene splicing, and bioremediation."
+  ],
+  "B11.2.1.1: Demonstrate knowledge and understanding of cell structure and functions, and relate them to organizational hierarchies.": [
+    "B11.2.1.1.1: Distinguish between prokaryotic and eukaryotic cells, and compare specialized animal and plant cell organelles.",
+    "B11.2.1.1.2: Relate cellular specialization to structural levels (cells -> tissues -> organs -> systems -> organisms)."
+  ],
+  "B12.2.1.1: Explain the molecular structure of nucleic acids (DNA/RNA) and their roles in protein synthesis.": [
+    "B12.2.1.1.1: Draw and label the double-helix Watson-Crick model of DNA, describing nucleotide pairing principles.",
+    "B12.2.1.1.2: Outline the phase stages of transcription and translation within cellular protein production mechanisms."
+  ],
+  "B12.2.1.2: Explain the cell cycle, cell division (mitosis/meiosis), and their relevance in living things.": [
+    "B12.2.1.2.1: Contrast the phase events of Mitosis and Meiosis, citing chromosomal replication behaviors.",
+    "B11.2.1.2.2: Discuss the biological significance of cell divisions to organism growth, tissue repair, and sexual heredity."
+  ],
+  "B10.2.2.1: Explain the significance of the various processes involved in the movement of substances in and out of the cell and the factors affecting them.": [
+    "B10.2.2.1.1: Demonstrate the occurrence of passive diffusion, osmosis, active transport, and bulk cellular transport.",
+    "B10.2.2.1.2: Design model experiments checking temperature, surface-to-volume ratio, and concentration dependencies."
+  ],
+  "B10.3.1.1: Identify living organisms using numbered and dichotomous keys.": [
+    "B10.3.1.1.1: Sample local animals and plants and build standard dichotomous keys based on physical features."
+  ],
+  "B10.3.1.2: Explain how lower organisms are classified into their taxonomic groups.": [
+    "B10.3.1.2.1: Explain taxonomic ranking hierarchies (Domain, Kingdom, Phylum, Class, Order, Family, Genus, Species)."
+  ],
+  "B11.3.1.1: Describe the distinctive characteristics, life cycle and characteristics of grain weevil, butterfly, housefly and honeybee.": [
+    "B11.3.1.1.1: Examine body segmentation, appendages, and metamorphic cycles of weevils, butterflies, houseflies, and honeybees.",
+    "B11.3.1.1.2: Evaluate economic roles (pollination, honey yields) and health risks (vector transmissions) of these insects."
+  ],
+  "B12.3.1.1: Relate the characteristic features and life processes of tilapia, toad, wall gecko and domestic fowl to their economic importance.": [
+    "B12.3.1.1.1: Compare respiratory, reproductive, and thermoregulatory structures of tilapia, toad, gecko, and fowl.",
+    "B12.3.1.1.2: Discuss local perceptions, dietary values, and agricultural benefits of these diverse classes."
+  ],
+  "B10.3.2.1: Demonstrate knowledge and understanding of major tropical ecological habitats and how living things are adapted to these habitats.": [
+    "B10.3.2.1.1: Describe characteristics of rainforest, savannah, desert, seashore, river pond, and lagoon habitats.",
+    "B10.3.2.1.2: Investigate morphologic and behavioral adaptive traits of organisms living in specialized regions."
+  ],
+  "B10.3.2.2: Use the appropriate ecological tool/devices and methods to estimate the population of given species in a named habitat.": [
+    "B10.3.2.2.1: Apply quadrat sampling, pitfall traps, pooters, and Lincoln Indice strategies to compute local insect profiles."
+  ],
+  "B11.3.2.1: Explain the features of various tropical habitats and how living organisms are adapted to these habitats.": [
+    "B11.3.2.1.1: Document the adaptative features of tropical organisms during field trips or simulated digital explorations."
+  ],
+  "B12.3.2.1: Explain the interdependencies of living things and their environment (food chains, webs, and symbiotic relationships) and indicate their importance.": [
+    "B12.3.2.1.1: Plot complex food webs mapping tropical biotic dependencies.",
+    "B12.3.2.1.2: Distinguish between biological associations: parasitism, mutualism, commensalism, saprophytism, and epiphytism."
+  ],
+  "B10.3.3.1: Discuss the life cycles of common disease-causing organisms, and their effects on humans and other living things.": [
+    "B10.3.3.1.1: Analyze life cycles, vectors, symptoms, and control measures for Plasmodium, Schistosoma, and Hookworms."
+  ],
+  "B11.3.3.1: Explain immunization, vaccination, and inoculation and state their importance in the environment.": [
+    "B11.3.3.1.1: Distinguish between active/passive immunity and artificial inoculation procedures promoting health."
+  ],
+  "B12.3.3.1: Examine and explain emerging diseases and infections (SARS, COVID-19, Ebola, Swine flu, etc.) and suggest prevention methods.": [
+    "B12.3.3.1.1: Conduct epidemiological checks detailing transmission dynamics of SARS, COVID-19, and Monkeypox, outlining hygiene options."
+  ],
+  "B10.4.1.1: Describe the morphology of mammals and relate the external and internal structures to their functions.": [
+    "B10.4.1.1.1: Dissect a sedated small mammal (rat/rabbit) to examine internal organs and draw annotated body maps."
+  ],
+  "B11.4.1.1: Discuss the human cardiovascular and excretory systems and relate their parts to homeostasis and general well-being.": [
+    "B11.4.1.1.1: Plot blood flow routes inside mammalian hearts and describe double-circulation pathways.",
+    "B11.4.1.1.2: Chart nephrotic waste filtration loops inside mammalian kidneys defending chemical equilibrium."
+  ],
+  "B12.4.1.1: Explain the mammalian respiratory, reproductive, musculoskeletal, nervous, and hormonal systems and how they work together.": [
+    "B12.4.1.1.1: Contrast mammalian skeletal subsystems (axial and appendicular skull, vertebrae, limbs and girdles).",
+    "B12.4.1.1.2: Outline chemical and electrical coordination loops combining neuro-endocrine centers with muscle targets."
+  ],
+  "B10.4.2.1: Describe the morphology of flowering plants and explain how these are related to their growth and development.": [
+    "B10.4.2.1.1: Classify monocotyledonous and dicotyledonous plant root, stem, leaf, and seed adaptive characteristics."
+  ],
+  "B11.4.2.1: Explain transport and nutrition (photosynthesis) in flowering plants and state the factors affecting them.": [
+    "B11.4.2.1.1: Map water and mineral ascending routes through vascular tissues (xylem and phloem).",
+    "B11.4.2.1.2: Perform light-to-chlorophyll tests showing constraints influencing organic sugar yields."
+  ],
+  "B12.4.2.1: Describe reproduction and excretion in flowering plants and relate them to survival.": [
+    "B12.4.2.1.1: Sketch and annotate complete whorl sectors of a flower (calyx, corolla, androecium, gynoecium).",
+    "B12.4.2.1.2: Distinguish botanical waste release patterns (excreting resins, gums, latexes, carbon dioxide, and excess water)."
+  ],
+
+  // Economics Standard Indicators
+  "B10.1.1.1: Use relevant information gathered from learners’ home, school and community through observation to carefully define economics and stimulate their interest in the subject.": [
+    "B10.1.1.1.1: Brainstorm in mixed ability groups to define Economics based on everyday experiences.",
+    "B10.1.1.1.2: Research career options (finance, policy, academia) available to Economics graduates."
+  ],
+  "B11.1.1.1: Use the appropriate economics tools to explain everyday economic issues.": [
+    "B11.1.1.1.1: Apply basic mathematical tables and models (equations) to economic problems.",
+    "B11.1.1.1.2: Interpret and plot line graphs, bar charts, and pie charts/pictograms for pricing."
+  ],
+  "B12.1.1.1: Exhibit knowledge of advanced economic methodologies and tools.": [
+    "B12.1.1.1.1: Demonstrate how to construct and derive algebraic demand and supply schedules."
+  ],
+  "B10.1.2.1: Use concepts of demand to solve everyday life and societal challenges.": [
+    "B10.1.2.1.1: Describe wants, scarcity, choice, scale of preference and opportunity cost.",
+    "B10.1.2.1.2: Role-play situations illustrating the principle of opportunity cost and scarcity."
+  ],
+  "B11.1.2.1: Use the appropriate factors of demand to explain the differences between change in quantity demanded and change in demand.": [
+    "B11.1.2.1.1: Plot shift in demand vs movement along the demand curve under ceteris paribus.",
+    "B11.1.2.1.2: Analyze non-price determinants (income, tastes, seasons) affecting total demand."
+  ],
+  "B12.1.2.1: Interpret elasticity of demand and apply the concept to daily life.": [
+    "B12.1.2.1.1: Calculate price, income and cross elasticity of demand using standard formulas.",
+    "B12.1.2.1.2: Discuss applications of elasticity to business price settings and government taxation."
+  ],
+  "B10.1.3.1: Use relevant information gathered from home, school and community through observation to carefully explain the concept of utility and the law of diminishing marginal utility.": [
+    "B10.1.3.1.1: Explain total utility, average utility and marginal utility using food/water tests."
+  ],
+  "B11.1.3.1: Exhibit rational behaviour in determining the equilibrium in consumption of goods and services through practical experiences.": [
+    "B11.1.3.1.1: Graphically model consumer equilibrium where marginal utility equals price."
+  ],
+  "B12.1.3.1: Use information from the environment to explain income and substitution effects.": [
+    "B12.1.3.1.1: Distinguish between substitution effect and income effect using indifference curves."
+  ],
   // Career Technology - Health and Safety
   "B7.1.1.1: Demonstrate knowledge of basic concept of staying healthy": ["B7.1.1.1.1: Discuss the need to stay healthy", "B7.1.1.1.2: Describe ways of maintaining personal hygiene", "B7.1.1.1.3: Discuss food hygiene"],
   "B7.1.2.1: Demonstrate knowledge of preventing accidents in the workshop/site and laboratory": ["B7.1.2.1.1: Describe accidents in the workshop/site/laboratory", "B7.1.2.1.2: Explain the need for keeping the workshop/site and the laboratory safe"],
@@ -2580,6 +4436,335 @@ export const STANDARD_INDICATORS: Record<string, string[]> = {
   "B4.5.1.1: Examine the need for authority and obedience": ["B4.5.1.1.1: Examine need for authority and obedience"],
   "B5.5.1.1: Discuss the importance of being obedient to authority": ["B5.5.1.1.1: Discuss importance of obedience"],
   "B2.5.1.1: Demonstrate how to relate with family members": ["B2.5.1.1.1: Demonstrate how to relate with family members"],
+
+  // Geography Standard Indicators
+  "1.1.1.CS.1: Demonstrate understanding of Geography as a subject of study.": [
+    "1.1.1.LI.1: Explain Geography and its branches.",
+    "1.1.1.LI.2: Discuss career prospects and the importance of studying geography."
+  ],
+  "1.1.1.CS.2: Demonstrate knowledge of the Solar System and its constituents.": [
+    "1.1.1.LI.3: Describe the solar system and its constituents.",
+    "1.1.1.LI.4: Discuss the characteristics of the planets in the solar system."
+  ],
+  "1.1.1.CS.3: Demonstrate knowledge and skills in describing the shape and movements of The Earth, and the effects of the earth's rotation and revolution.": [
+    "1.1.1.LI.5: Discuss evidence of the shape of earth.",
+    "1.1.1.LI.6: Examine the effects of the Earth's rotation and revolution."
+  ],
+  "1.1.1.CS.4: Demonstrate skills in locating places using longitudes and latitudes.": [
+    "1.1.1.LI.7: Use latitudes and longitudes to locate places on the earth's surface.",
+    "1.1.1.LI.8: Calculate distances using latitudes and time using longitudes."
+  ],
+  "2.1.1.CS.1: Demonstrate an understanding of the internal structure of the earth and the concept of continental drift.": [
+    "2.1.1.LI.1: Sketch, label and describe the internal structure of the Earth.",
+    "2.1.1.LI.2: Explain the concept of continental drift and discuss the supporting evidence."
+  ],
+  "2.1.1.CS.2: Demonstrate knowledge and understanding of landforms, their importance and the processes that leads to their creation.": [
+    "2.1.1.LI.3: Identify the different types of mountains (e.g. volcanic, fold and block), their characteristics, the processes that create them and their importance.",
+    "2.1.1.LI.4: Describe the types of plains (structural, erosional and depositional) and the processes that create them and their importance."
+  ],
+  "3.1.1.CS.1: Demonstrate knowledge and understanding of river channels and associated landforms.": [
+    "3.1.1.LI.1: Describe the development of river channels and associated landforms.",
+    "3.1.1.LI.2: Examine the importance of river landforms to the socio-economic development in Ghana."
+  ],
+  "1.1.2.CS.1: Demonstrate knowledge in rocks formation and weathering processes.": [
+    "1.1.2.LI.1: Discuss the three types of rock, their characteristics, formational processes and their importance.",
+    "1.1.2.LI.2: Explain weathering and the factors affecting its processes.",
+    "1.1.2.LI.3: Evaluate the three weathering processes (physical, chemical and biological weathering processes)."
+  ],
+  "2.1.2.CS.1: Demonstrate knowledge and understanding of soils.": [
+    "2.1.2.LI.1: State and explain the factors of soil formation.",
+    "2.1.2.LI.2: Differentiate between the soil types and discuss the importance of soil."
+  ],
+  "3.1.2.CS.1: Demonstrate knowledge of mass wasting as a geomorphic process.": [
+    "3.1.2.LI.1: Discuss mass wasting and the factors that influence it.",
+    "3.1.2.LI.2: Examine the types of mass wasting.",
+    "3.1.2.LI.3: Discuss the socio-economic and environmental effects of mass wasting."
+  ],
+  "1.1.3.CS.1: Demonstrate knowledge of the structure and composition of the Earth's atmosphere and explain the terms weather and climate.": [
+    "1.1.3.LI.1: Discuss the physical structure and composition of the Earth's atmosphere and their importance.",
+    "1.1.3.LI.2: Explain the differences between the weather and climate and the factors that affect them.",
+    "1.1.3.LI.3: Calculate the annual and mean rainfall and temperature data of a station with appropriate instruments for measuring the various elements of weather."
+  ],
+  "2.1.3.CS.1: Demonstrate understanding of the factors that influence the elements of climate, the world climatic zones and associated vegetation types.": [
+    "2.1.3.LI.1: Discuss the factors influencing the various climatic elements.",
+    "2.1.3.LI.2: Identify the forms of precipitation and the types of rainfall.",
+    "2.1.3.LI.3: Describe the characteristics associated with vegetation within each climatic zone in the world."
+  ],
+  "3.1.3.CS.1: Demonstrate knowledge of climate change and its impacts on the environment and socio-economic development.": [
+    "3.1.3.LI.1: Discuss the causes and evidence of climate change in Ghana.",
+    "3.1.3.LI.2: Discuss the socio-economic and environmental impacts of climate change in Ghana and beyond.",
+    "3.1.3.LI.3: Discuss adaptation strategies and remedies for climate change in Ghana."
+  ],
+  "1.2.1.CS.1: Demonstrate understanding of maps, their importance and the map scales.": [
+    "1.2.1.LI.1: Discuss the types of maps and their importance.",
+    "1.2.1.LI.2: Explain the concept of map scale and convert from one scale type to another."
+  ],
+  "1.2.1.CS.2: Demonstrate knowledge and skills of representing relief features on maps.": [
+    "1.2.1.LI.3: Examine the methods of representing relief on maps.",
+    "1.2.1.LI.4: Read and interpret contours on maps."
+  ],
+  "2.2.1.CS.1: Demonstrate skill in map analysis.": [
+    "2.2.1.LI.1: Reproduce map by reduction and enlargement.",
+    "2.2.1.LI.2: Measure distances and areas on maps.",
+    "2.2.1.LI.3: Determine directions and bearings.",
+    "2.2.1.LI.4: Draw sectional profiles (annotated) and calculate vertical exaggeration and gradient."
+  ],
+  "3.2.1.CS.1: Demonstrate skills and competencies in interpreting and analysing maps.": [
+    "3.2.1.LI.1: Analyse natural features on maps (e.g. relief, drainage).",
+    "3.2.1.LI.2: Analyse cultural features on maps (e.g. settlements, farms and roads).",
+    "3.2.1.LI.3: Analyse the interrelationships between natural and cultural features on maps."
+  ],
+  "1.2.2.CS.1: Demonstrate knowledge and skills in basic geospatial data collection methods.": [
+    "1.2.2.LI.1: Discuss the methods of collecting geospatial data (surveying, remote sensing, GPS etc.).",
+    "1.2.2.LI.2: Assess the geospatial data collection tools."
+  ],
+  "2.2.2.CS.1: Demonstrate skills in basic geospatial data collection methods.": [
+    "2.2.2.LI.1: Identify and discuss the methods of collecting geospatial data (surveying, remote sensing, GIS, GPS etc).",
+    "2.2.2.LI.2: Collect and map geospatial data using Computer and Mobile Apps, GIS and GPS.",
+    "2.2.2.LI.3: Explore the emerging technologies for geospatial data collection."
+  ],
+  "3.2.2.CS.1: Demonstrate skills in basic geospatial data representation and interpretation using diagrams.": [
+    "3.2.2.LI.1: Analyse and interpret geospatial data using dot maps.",
+    "3.2.2.LI.2: Analyse and interpret geospatial data using flow charts."
+  ],
+  "1.3.1.CS.1: Demonstrate understanding of the physical environment of Ghana and its socio-economic importance and challenges.": [
+    "1.3.1.LI.1: Draw the outline map of Ghana and describe the location and size, and indicate the administrative regions.",
+    "1.3.1.LI.2: Discuss the major relief and drainage features of Ghana and their importance and challenges to development.",
+    "1.3.1.LI.3: Discuss the climate, vegetation and soil types in Ghana and their importance and challenges to socio-economic development."
+  ],
+  "2.3.1.CS.1: Demonstrate skills of drawing and showing the physical setting of West Africa and Africa.": [
+    "2.3.1.LI.1: Describe the geographic location, size and political divisions of West Africa and Africa.",
+    "2.3.1.LI.2: Describe the relief, drainage, climate and vegetation of West Africa and Africa."
+  ],
+  "3.3.1.CS.1: Demonstrate understanding of population growth and distribution, migration trends and settlement types in Ghana.": [
+    "3.3.1.LI.1: Examine population growth and distribution in Ghana.",
+    "3.3.1.LI.2: Discuss migration trends, settlement types and patterns in Ghana.",
+    "3.3.1.LI.3: Discuss factors influencing population growth, population distribution and migration in Ghana."
+  ],
+  "3.3.1.CS.2: Analyse the population growth and migration trends in Africa and the world.": [
+    "3.3.1.LI.4: Compare Ghana's population growth to that of Africa and the world.",
+    "3.3.1.LI.5: Explore the socio-economic implications of migration from Africa to the rest of the world."
+  ],
+  "1.3.2.CS.1: Demonstrate an understanding of the various primary economic activities in Ghana and beyond.": [
+    "1.3.2.LI.1: Discuss the characteristics of subsistence and commercial agriculture and their importance and challenges in Ghana.",
+    "1.3.2.LI.2: Examine the methods, importance and problems of lumbering and mining in Ghana."
+  ],
+  "2.3.2.CS.1: Analyse the manufacturing sector in Ghana.": [
+    "2.3.2.LI.1: Discuss the distribution, types and characteristics of manufacturing industries in Ghana.",
+    "2.3.2.LI.2: Discuss the importance and challenges of manufacturing industries in Ghana."
+  ],
+  "3.3.2.CS.1: Evaluate the tourism, trade and transport/communication sectors in Ghana.": [
+    "3.3.2.LI.1: Examine the role of tourism in the socio-economic development of Ghana and the challenges facing the tourism sector.",
+    "3.3.2.LI.2: Assess the role of trade in the socio-economic development of Ghana and the challenges facing the sector.",
+    "3.3.2.LI.3: Examine the role of transport and communication in the socio-economic development of Ghana and the challenges facing the sector."
+  ],
+  "1.3.3.CS.1: Demonstrate an understanding of the causes of environmental pollution and the strategies for dealing with it.": [
+    "1.3.3.LI.1: Examine causes and measures for preventing or mitigating air pollution in Ghana.",
+    "1.3.3.LI.2: Examine causes and measures for preventing/mitigating water pollution in Ghana."
+  ],
+  "2.3.3.CS.1: Demonstrate skills of preventing or mitigating land degradation and soil pollution in Ghana.": [
+    "2.3.3.LI.1: Discuss the causes of land degradation, its effects and management strategies in Ghana.",
+    "2.3.3.LI.2: Discuss the causes of soil pollution, its effects and management strategies in Ghana."
+  ],
+  "3.3.3.CS.1: Demonstrate skills in waste management in Ghana.": [
+    "3.3.3.LI.1: Discuss the sources of waste in your community and Ghana.",
+    "3.3.3.LI.2: Discuss the effects of improper waste management or disposal in your community and Ghana.",
+    "3.3.3.LI.3: Examine appropriate methods of waste management in Ghana: Reduce, Reuse and Recycle (3Rs)."
+  ],
+  "1.3.4.CS.1: Demonstrate understanding of the concepts 'hazard' and 'disaster'.": [
+    "1.3.4.LI.1: Differentiate between hazards and disasters.",
+    "1.3.4.LI.2: Sketch areas in Ghana prone to floods, drought, bushfires and earthquakes."
+  ],
+  "2.3.4.CS.1: Demonstrate skills for managing earthquakes, floods, drought and fires.": [
+    "2.3.4.LI.1: Examine the measures for managing floods in Ghana.",
+    "2.3.4.LI.2: Examine the measures for managing drought and fires in Ghana."
+  ],
+  "3.3.4.CS.1: Demonstrate knowledge and skills for preventing or mitigating desert encroachment and landslides.": [
+    "3.3.4.LI.1: Examine ways of managing desert encroachment.",
+    "3.3.4.LI.2: Examine measures for the prevention/mitigation of landslides."
+  ],
+  // Government Standard Indicators
+  "1.1.1.CS.1: Demonstrate understanding of the meanings, basic concepts, principles, and importance of government.": [
+    "1.1.1.LI.1: Analyse the meanings of government.",
+    "1.1.1.LI.2: Analyse basic concepts and principles of government.",
+    "1.1.1.LI.3: Explain the importance of the study of government."
+  ],
+  "1.1.2.CS.1: Exhibit understanding and application of the Indigenous systems of government in Ghana": [
+    "1.1.2.LI.1: Describe the structure of indigenous systems of government in Ghana.",
+    "1.1.2.LI.2: Describe how traditional leaders contribute to the socio-economic development of Ghana."
+  ],
+  "1.2.1.CS.1: Demonstrate knowledge and understanding of the constitution and organs of government": [
+    "1.2.1.LI.1: Explain the meaning of constitution and constitutionalism.",
+    "1.2.1.LI.2: Discuss the various types of constitution.",
+    "1.2.1.LI.3: Explain the meaning, composition and types of the executive.",
+    "1.2.1.LI.4: Explain the meaning, types, and structure of the legislature.",
+    "1.2.1.LI.5: Explain the meaning and structure of the Judiciary."
+  ],
+  "1.2.2.CS.1: Exhibit knowledge and understanding of State-Society Relations in Ghana": [
+    "1.2.2.LI.1: Explain how public opinion influences public policy decisions.",
+    "1.2.2.LI.2: Discuss the principles of mass media.",
+    "1.2.2.LI.3: Explain political party and its structure and Pressure Group."
+  ],
+  "1.3.1.CS.1: Demonstrate knowledge and understanding of Ghana's external relations.": [
+    "1.3.1.LI.1: Identify and explain state and non-state actors in the international system.",
+    "1.3.1.LI.2: Discuss the role of state and non-state actors in the international system."
+  ],
+  "2.1.1.CS.1: Demonstrate understanding and application of citizenships, rights, and responsibilities to the state.": [
+    "2.1.1.LI.1: Explain the concept of citizenship.",
+    "2.1.1.LI.2: Discuss how citizenship is acquired in Ghana.",
+    "2.1.1.LI.3: Explain the meaning and types of rights.",
+    "2.1.1.LI.4: Examine how citizens' rights are protected.",
+    "2.1.1.LI.5: Establish the symbiotic relationship between the responsibility of the state towards citizens and vice versa in national development.",
+    "2.1.1.LI.6: Discuss how the rights of a citizen can be restricted."
+  ],
+  "2.1.2.CS.1: Demonstrate knowledge and understanding of contemporary Governance System in Ghana.": [
+    "2.1.2.LI.1: Examine the features of democratic system of governance.",
+    "2.1.2.LI.2: Analyse the features of good governance."
+  ],
+  "2.2.1.CS.1: Demonstrate knowledge, understanding and appreciation of the organs of government.": [
+    "2.2.1.LI.1: Examine the functions of the executive organ of government.",
+    "2.2.1.LI.2: Discuss the significance of the legislature in a democratic state.",
+    "2.2.1.LI.3: Discuss the role of the Judiciary in a democratic state."
+  ],
+  "2.2.2.CS.1: Demonstrate understanding and application of State-Society Relations in Ghana.": [
+    "2.2.2.LI.1: Mass media and democratic state development.",
+    "2.2.2.LI.2: Discuss party systems.",
+    "2.2.2.LI.3: Assess the significance of the EC in Ghana's democratic practice.",
+    "2.2.2.LI.4: Describe Decentralization, types, and structure of Ghana’s local government system.",
+    "2.2.2.LI.5: Describe the Public Service.",
+    "2.2.2.LI.6: Distinguish between E-government and E-governance."
+  ],
+  "2.3.1.CS.1: Demonstrate knowledge and understanding of Ghana's external relations.": [
+    "2.3.1.LI.1: Discuss Diplomacy.",
+    "2.3.1.LI.2: Examine the determinants of Ghana's foreign policy.",
+    "2.3.1.LI.3: Discuss the actors and institutions involved in Ghana's foreign policy."
+  ],
+  "2.3.2.CS.1: Demonstrate knowledge and understanding of globalization and development of States.": [
+    "2.3.2.LI.1: Explain the meaning and characteristics of globalisation.",
+    "2.3.2.LI.2: Discuss the types of globalisation."
+  ],
+  "3.1.1.CS.1: Demonstrate knowledge and understanding and application of the systems of government.": [
+    "3.1.1.LI.1: Discuss the systems of government.",
+    "3.1.1.LI.2: Provide reasons for Ghana's adoption of unitary system of government."
+  ],
+  "3.1.2.CS.1: Compare Indigenous and contemporary Governance in Ghana.": [
+    "3.1.2.LI.1: Assess the democratic features of the indigenous governance system.",
+    "3.1.2.LI.2: Examine the role of the chieftaincy institution in contemporary governance in Ghana."
+  ],
+  "3.2.1.CS.1: Demonstrate understanding and appreciation of the 1992 Republican Constitution.": [
+    "3.2.1.LI.1: Examine the salient features of the 1992 Republican Constitution.",
+    "3.2.1.LI.2: Describe separation of powers, checks and balances.",
+    "3.2.1.LI.3: Discuss the relevance of the existence of separation of powers, checks and balances in Ghana."
+  ],
+  "3.2.2.CS.1: Evaluate State-Society Relations and Administration.": [
+    "3.2.2.LI.1: Discuss the role of political parties in a democratic state.",
+    "3.2.2.LI.2: Assess the types and functions of elections.",
+    "3.2.2.LI.3: Assess the effects of the concept of decentralization on development.",
+    "3.2.2.LI.4: Examine the functions and challenges of the Public Service.",
+    "3.2.2.LI.5: Examine the relevance of e-governance in the socio-economic development of Ghana."
+  ],
+  "3.3.1.CS.1: Demonstrate knowledge, understanding and appreciation of Ghana's external Relations.": [
+    "3.3.1.LI.1: Assess Ghana's foreign policy of good neighbourliness.",
+    "3.3.1.LI.2: Analyse Ghana's foreign policy towards Economic Community of West African States (ECOWAS), Africa Union (AU), European Union (EU) and United Nations Organisation (UNO)."
+  ],
+  "3.3.2.CS.1: Demonstrate knowledge and understanding of globalization and development of States.": [
+    "3.3.2.LI.1: Assess the effects of globalisation on the development of the Ghanaian economy.",
+    "3.3.2.LI.2: Discuss the measures aimed at mitigating the negative effects of globalization on Ghana's development."
+  ],
+  // History Standard Indicators (SHS)
+  "1.1.1.CS.1: Demonstrate understanding of the origins, meanings, and nature of history as a discipline.": [
+    "1.1.1.LI.1: Trace the origins and meanings of the word 'history' using conventional and non-conventional sources.",
+    "1.1.1.LI.2: Analyse the nature and scope of History as an academic discipline.",
+    "1.1.1.LI.3: Investigate some common misconceptions associated with the study of History."
+  ],
+  "1.1.1.CS.2: Exhibit knowledge on the relevance of history to human survival and development.": [
+    "1.1.1.LI.1: Justify why the study of History is relevant to individuals and the society.",
+    "1.1.1.LI.2: Analyse the need for the study of History in Ghanaian schools."
+  ],
+  "2.1.2.CS.1: Develop application of skills in analysing and interpreting primary and secondary sources.": [
+    "2.1.2.LI.1: Categorise sources of history into Primary and Secondary.",
+    "2.1.2.LI.2: Examine the authenticity of Primary and Secondary Sources.",
+    "2.1.2.LI.3: Assess authentic online historical sources."
+  ],
+  "3.1.2.CS.1: Demonstrate the application of skills in interpreting and reconstructing the past.": [
+    "3.1.2.LI.1: Corroborate historical sources and draw conclusions.",
+    "3.1.2.LI.2: Explore how methods and skills for reconstructing history can provide avenues for societal development."
+  ],
+  "1.2.1.CS.1: Demonstrate understanding of Pre-Historic Ghana. (50, 000 BCE to 700 CE)": [
+    "1.2.1.LI.1: Examine the nature of the earliest human culture in Ghana.",
+    "1.2.1.LI.2: Analyse the Pre-Historic Periods in Ghana."
+  ],
+  "1.2.1.CS.2: Demonstrate understanding of the diverse accounts of the emergence of major states in Ghana, including the causes of migration and creation of settlements.": [
+    "1.2.1.LI.1: Analyse the multiple perspectives on the migration accounts of any major ethnic group that settled in each of the three vegetation zones in Ghana.",
+    "1.2.1.LI.2: Discuss the reasons for the migration of the various ethnic groups into Ghana.",
+    "1.2.1.LI.3: Recount factors responsible for the rise and decline of major states and kingdoms in Ghana."
+  ],
+  "1.2.1.CS.3: Demonstrate knowledge of the complex social, political, and scientific systems of selected states and kingdoms in Ghana.": [
+    "1.2.1.LI.1: Analyse the socio-cultural organisation of the major kingdoms in Pre-Colonial Ghana.",
+    "1.2.1.LI.2: Examine the political organisation of states and kingdoms in Pre-Colonial Ghana.",
+    "1.2.1.LI.3: Explain the unique methods of providing health care in pre-colonial Ghana.",
+    "1.2.1.LI.4: Analyse the history of Art and Technology in pre-colonial Ghana."
+  ],
+  "3.2.1.CS.1: Demonstrate understanding of African Pre-History from the Earliest Times to 500 BCE and appreciate the unique features of the complex African civilisations.": [
+    "3.2.1.LI.1: Trace the origin of human beings from diverse point of views including scientific and non-scientific theories.",
+    "3.2.1.LI.2: Assess the factors leading to the emergence of earliest African states and kingdoms.",
+    "3.2.1.LI.3: Analyse the key features of earliest African civilisations."
+  ],
+  "1.2.2.CS.1: Demonstrate knowledge and understanding of pre-colonial economy and economic activities in Ghana.": [
+    "1.2.2.LI.1: Examine agricultural activities in pre-colonial Ghana.",
+    "1.2.2.LI.2: Investigate the existence and the development of pre-colonial Ghanaian industries.",
+    "1.2.2.LI.3: Investigate the nature of trade and the development of trading activities in pre-colonial Ghana."
+  ],
+  "3.2.2.CS.1: Demonstrate understanding of the origins, organisation, and impact of the Trans-Saharan Trade": [
+    "3.2.2.LI.1: Discuss the origin and nature of the Trans-Saharan Trade in Africa.",
+    "3.2.2.LI.2: Assess the socio-economic and political effects of the Trans-Saharan Trade on pre-colonial African societies.",
+    "3.2.2.LI.3: Investigate reasons for the decline of the Trans-Saharan Trade."
+  ],
+  "1.3.1.CS.1: Demonstrate understanding of the religious change and continuity in Ghana.": [
+    "1.3.1.LI.1: Discuss the indigenous Ghanaian religious beliefs and practices.",
+    "1.3.1.LI.2: Trace the advent and influences of Islam and Christianity in Ghana."
+  ],
+  "3.3.1.CS.1: Demonstrate understanding of the religious change and continuity in Africa.": [
+    "3.3.1.LI.1: Discuss indigenous African religious beliefs and practices.",
+    "3.3.1.LI.2: Trace the advent and influence of Islam and Christianity on Africa."
+  ],
+  "2.3.2.CS.1: Exhibit knowledge and understanding of the advent of European presence and activities along the coast of Ghana": [
+    "2.3.2.LI.1: Identify the European countries whose citizens sailed to the coast of Ghana.",
+    "2.3.2.LI.2: Explore the diverse motives behind European exploration to the coast of Ghana.",
+    "2.3.2.LI.3: Examine the changing patterns of trade with the coming of Europeans."
+  ],
+  "3.3.2.CS.1: Demonstrate understanding of the advent and impact of the Trans-Atlantic Slave Trade in Africa.": [
+    "3.3.2.LI.1: Investigate the nature and impact of the Trans-Atlantic Slave Trade.",
+    "3.3.2.LI.2: Analyse the nature of African resistance against the Trans-Atlantic Slave Trade."
+  ],
+  "2.3.3.CS.1: Demonstrate understanding of the processes leading to the establishment of British rule in the Gold Coast and the impact on the people of Ghana.": [
+    "2.3.3.LI.1: Examine sources on the processes leading to colonial rule in the Gold Coast.",
+    "2.3.3.LI.2: Assess the socio-political effects of European (British) presence in Ghana.",
+    "2.3.3.LI.3: Examine the effects of the European presence on the economy of Ghana."
+  ],
+  "3.3.3.CS.1: Demonstrate understanding of how the Europeans scrambled for and partitioned Africa and how Africans were eventually drawn into the two World Wars.": [
+    "3.3.3.LI.1: Assess the Berlin Conference of 1884-1885 and its impact on Africa.",
+    "3.3.3.LI.2: Assess indirect and direct rule systems in West Africa.",
+    "3.3.3.LI.3: Assess Africa's role in the First and Second World Wars and how this influenced independence struggle across different regions."
+  ],
+  "2.3.4.CS.1: Demonstrate understanding of the nature and activities of Nationalist Movements including their efforts in resisting colonial domination in the Gold Coast.": [
+    "2.3.4.LI.1: Describe the nature of resistance against colonial rule in Ghana.",
+    "2.3.4.LI.2: Identify nationalist movements in Ghana before the WWII.",
+    "2.3.4.LI.3: Analyse the activities of nationalist movements before the WWII.",
+    "2.3.4.LI.4: Identify nationalist movements in Ghana after the WWII.",
+    "2.3.4.LI.5: Examine post-WWII nationalist struggles in Ghana that led to the attainment of Independence."
+  ],
+  "3.3.4.CS.1: Demonstrate understanding of Africans’ resistance against colonial rule.": [
+    "3.3.4.LI.1: Discuss the conditions that led to African resistance to colonial rule.",
+    "3.3.4.LI.2: Analyse the nature of African resistance against colonial rule."
+  ],
+  "2.4.1.CS.1: Demonstrate understanding of the socio-economic and political developments in Ghana from 1957 - 2007.": [
+    "2.4.1.LI.1: Examine the nature of the diarchic system of government in Ghana from 1957 – 1960.",
+    "2.4.1.LI.2: Assess the Socio-economic and political developments in Ghana from 1957 – 1969.",
+    "2.4.1.LI.3: Examine Ghana's socio-economic and political developments from 1969 - 1981.",
+    "2.4.1.LI.4: Analyse the processes leading to the birth of the Fourth Republic.",
+    "2.4.1.LI.5: Assess the socio-economic and political developments in Ghana from 1993 to 2007."
+  ]
 };
 
 export const PE_LESSON_FRAMES: Record<string, any> = {

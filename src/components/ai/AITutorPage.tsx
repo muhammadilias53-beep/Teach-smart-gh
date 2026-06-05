@@ -73,7 +73,13 @@ export default function AITutorPage() {
 
   // Loaded classes and strands based on selections
   const availableClasses = CLASSES_BY_LEVEL[selectedLevel] || [];
-  const availableStrands = SUBJECT_STRANDS[selectedSubject] || [];
+  const availableStrands = selectedSubject === 'English' && selectedLevel === 'JHS'
+    ? ["Oral Language", "Reading", "Grammar Usage", "Writing", "Literature"]
+    : selectedSubject === 'Ghanaian Language' && selectedLevel === 'JHS'
+      ? ["Customs and Institutions", "Listening and Speaking", "Reading", "Language and Usage", "Composition Writing", "Literature"]
+      : selectedSubject === 'History' && selectedLevel === 'SHS'
+        ? ["Historical Inquiry and Writing", "States and Societies in Pre-Colonial Times", "Age of Encounter and Exchanges Up to the 20th Century", "Independence and Post-Colonial Developments"]
+        : SUBJECT_STRANDS[selectedSubject] || [];
 
   // Initialize defaults on change
   useEffect(() => {

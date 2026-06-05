@@ -92,6 +92,9 @@ const NoteGenerator = () => {
     if (subj === 'Ghanaian Language' && lvl === 'JHS') {
       return ["Customs and Institutions", "Listening and Speaking", "Reading", "Language and Usage", "Composition Writing", "Literature"];
     }
+    if (subj === 'History' && lvl === 'SHS') {
+      return ["Historical Inquiry and Writing", "States and Societies in Pre-Colonial Times", "Age of Encounter and Exchanges Up to the 20th Century", "Independence and Post-Colonial Developments"];
+    }
     return SUBJECT_STRANDS[subj] || [];
   };
 
@@ -158,7 +161,13 @@ const NoteGenerator = () => {
     const lookupStrand = getLookupStrand(initialSubject, initialStrand, initialLevel);
     const initialSubStrands = getSubjectSubStrands(initialSubject, initialStrand, initialLevel);
     const initialSubStrand = initialSubStrands[0] || '';
-    const initialStandards = (SUB_STRAND_STANDARDS[lookupStrand]?.[initialSubStrand] || SUB_STRAND_STANDARDS[initialStrand]?.[initialSubStrand]) || [];
+    const initialStandards = (
+      SUB_STRAND_STANDARDS[lookupStrand]?.[initialSubStrand] || 
+      SUB_STRAND_STANDARDS[initialStrand]?.[initialSubStrand] ||
+      SUB_STRAND_STANDARDS[initialSubject]?.[initialSubStrand] ||
+      SUB_STRAND_STANDARDS[initialSubject]?.[initialStrand] ||
+      []
+    );
     const initialStandard = initialStandards[0] || '';
     const initialIndicators = STANDARD_INDICATORS[initialStandard] || getFallbackIndicators(initialStandard);
     const initialIndicator = initialIndicators[0] || '';
@@ -214,7 +223,13 @@ const NoteGenerator = () => {
   const currentStrands = getSubjectStrands(formData.subject, formData.level);
   const lookupStrand = getLookupStrand(formData.subject, formData.strand);
   const currentSubStrands = getSubjectSubStrands(formData.subject, formData.strand, formData.level);
-  const currentStandards = (SUB_STRAND_STANDARDS[lookupStrand]?.[formData.subStrand] || SUB_STRAND_STANDARDS[formData.strand]?.[formData.subStrand]) || [];
+  const currentStandards = (
+    SUB_STRAND_STANDARDS[lookupStrand]?.[formData.subStrand] || 
+    SUB_STRAND_STANDARDS[formData.strand]?.[formData.subStrand] ||
+    SUB_STRAND_STANDARDS[formData.subject]?.[formData.subStrand] ||
+    SUB_STRAND_STANDARDS[formData.subject]?.[formData.strand] ||
+    []
+  );
   const currentIndicators = STANDARD_INDICATORS[formData.contentStandard] || getFallbackIndicators(formData.contentStandard);
 
   // Cascading Dropdown Selectors
@@ -236,7 +251,13 @@ const NoteGenerator = () => {
     const nextSubStrands = getSubjectSubStrands(nextSubject, nextStrand, newLevel);
     const nextSubStrand = nextSubStrands[0] || '';
 
-    const nextStandards = (SUB_STRAND_STANDARDS[lookupNextStrand]?.[nextSubStrand] || SUB_STRAND_STANDARDS[nextStrand]?.[nextSubStrand]) || [];
+    const nextStandards = (
+      SUB_STRAND_STANDARDS[lookupNextStrand]?.[nextSubStrand] || 
+      SUB_STRAND_STANDARDS[nextStrand]?.[nextSubStrand] ||
+      SUB_STRAND_STANDARDS[nextSubject]?.[nextSubStrand] ||
+      SUB_STRAND_STANDARDS[nextSubject]?.[nextStrand] ||
+      []
+    );
     const nextStandard = nextStandards[0] || '';
 
     const nextIndicators = STANDARD_INDICATORS[nextStandard] || getFallbackIndicators(nextStandard);
@@ -267,7 +288,13 @@ const NoteGenerator = () => {
     const nextSubStrands = getSubjectSubStrands(newSubject, nextStrand, formData.level);
     const nextSubStrand = nextSubStrands[0] || '';
 
-    const nextStandards = (SUB_STRAND_STANDARDS[lookupNextStrand]?.[nextSubStrand] || SUB_STRAND_STANDARDS[nextStrand]?.[nextSubStrand]) || [];
+    const nextStandards = (
+      SUB_STRAND_STANDARDS[lookupNextStrand]?.[nextSubStrand] || 
+      SUB_STRAND_STANDARDS[nextStrand]?.[nextSubStrand] ||
+      SUB_STRAND_STANDARDS[newSubject]?.[nextSubStrand] ||
+      SUB_STRAND_STANDARDS[newSubject]?.[nextStrand] ||
+      []
+    );
     const nextStandard = nextStandards[0] || '';
 
     const nextIndicators = STANDARD_INDICATORS[nextStandard] || getFallbackIndicators(nextStandard);
@@ -290,7 +317,13 @@ const NoteGenerator = () => {
     const nextSubStrands = getSubjectSubStrands(formData.subject, newStrand, formData.level);
     const nextSubStrand = nextSubStrands[0] || '';
 
-    const nextStandards = (SUB_STRAND_STANDARDS[lookupNewStrand]?.[nextSubStrand] || SUB_STRAND_STANDARDS[newStrand]?.[nextSubStrand]) || [];
+    const nextStandards = (
+      SUB_STRAND_STANDARDS[lookupNewStrand]?.[nextSubStrand] || 
+      SUB_STRAND_STANDARDS[newStrand]?.[nextSubStrand] ||
+      SUB_STRAND_STANDARDS[formData.subject]?.[nextSubStrand] ||
+      SUB_STRAND_STANDARDS[formData.subject]?.[newStrand] ||
+      []
+    );
     const nextStandard = nextStandards[0] || '';
 
     const nextIndicators = STANDARD_INDICATORS[nextStandard] || getFallbackIndicators(nextStandard);
@@ -308,7 +341,13 @@ const NoteGenerator = () => {
 
   const handleSubStrandChange = (newSubStrand: string) => {
     const lookupCurrentStrand = getLookupStrand(formData.subject, formData.strand);
-    const nextStandards = (SUB_STRAND_STANDARDS[lookupCurrentStrand]?.[newSubStrand] || SUB_STRAND_STANDARDS[formData.strand]?.[newSubStrand]) || [];
+    const nextStandards = (
+      SUB_STRAND_STANDARDS[lookupCurrentStrand]?.[newSubStrand] || 
+      SUB_STRAND_STANDARDS[formData.strand]?.[newSubStrand] ||
+      SUB_STRAND_STANDARDS[formData.subject]?.[newSubStrand] ||
+      SUB_STRAND_STANDARDS[formData.subject]?.[formData.strand] ||
+      []
+    );
     const nextStandard = nextStandards[0] || '';
 
     const nextIndicators = STANDARD_INDICATORS[nextStandard] || getFallbackIndicators(nextStandard);

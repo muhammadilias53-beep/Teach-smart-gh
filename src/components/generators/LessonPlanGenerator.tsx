@@ -181,6 +181,9 @@ const LessonPlanGenerator = () => {
     if (subj === 'Ghanaian Language' && lvl === 'JHS') {
       return ["Customs and Institutions", "Listening and Speaking", "Reading", "Language and Usage", "Composition Writing", "Literature"];
     }
+    if (subj === 'History' && lvl === 'SHS') {
+      return ["Historical Inquiry and Writing", "States and Societies in Pre-Colonial Times", "Age of Encounter and Exchanges Up to the 20th Century", "Independence and Post-Colonial Developments"];
+    }
     return SUBJECT_STRANDS[subj] || [];
   };
 
@@ -241,7 +244,13 @@ const LessonPlanGenerator = () => {
   const currentStrands = getSubjectStrands(formData.subject, formData.level);
   const lookupStrand = getLookupStrand(formData.subject, formData.strand);
   const currentSubStrands = getSubjectSubStrands(formData.subject, formData.strand, formData.level);
-  const currentStandards = (SUB_STRAND_STANDARDS[lookupStrand]?.[formData.subStrand] || SUB_STRAND_STANDARDS[formData.strand]?.[formData.subStrand]) || [];
+  const currentStandards = (
+    SUB_STRAND_STANDARDS[lookupStrand]?.[formData.subStrand] || 
+    SUB_STRAND_STANDARDS[formData.strand]?.[formData.subStrand] ||
+    SUB_STRAND_STANDARDS[formData.subject]?.[formData.subStrand] ||
+    SUB_STRAND_STANDARDS[formData.subject]?.[formData.strand] ||
+    []
+  );
   const currentIndicators = STANDARD_INDICATORS[formData.contentStandard] || getFallbackIndicators(formData.contentStandard);
 
   const handleGenerate = async () => {

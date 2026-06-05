@@ -41,6 +41,19 @@ import { ConfirmationModal } from '../common/ConfirmationModal';
 import { safeLocalStorage } from '../../lib/storage';
 import { Link } from 'react-router-dom';
 
+const getSelectableStrands = (subj: string, lvl: string) => {
+  if (subj === 'English' && lvl === 'JHS') {
+    return ["Oral Language", "Reading", "Grammar Usage", "Writing", "Literature"];
+  }
+  if (subj === 'Ghanaian Language' && lvl === 'JHS') {
+    return ["Customs and Institutions", "Listening and Speaking", "Reading", "Language and Usage", "Composition Writing", "Literature"];
+  }
+  if (subj === 'History' && lvl === 'SHS') {
+    return ["Historical Inquiry and Writing", "States and Societies in Pre-Colonial Times", "Age of Encounter and Exchanges Up to the 20th Century", "Independence and Post-Colonial Developments"];
+  }
+  return SUBJECT_STRANDS[subj] || [];
+};
+
 enum OperationType {
   CREATE = 'create',
   UPDATE = 'update',
@@ -1821,7 +1834,7 @@ export default function ContentLibrary() {
                       }
                     });
                   } else {
-                    const strands = SUBJECT_STRANDS[coverageSubject] || [];
+                    const strands = getSelectableStrands(coverageSubject, coverageLevel);
                     strands.forEach(strand => {
                       const subStrands = (SUBJECT_SUB_STRANDS[strand] || [strand]).filter(sub => {
                         if (coverageTerm === 'All') return true;
@@ -1909,7 +1922,7 @@ export default function ContentLibrary() {
 
                 const displayStrands = activeScheme 
                   ? Array.from(new Set(parsedRows.map(p => p.strand)))
-                  : (SUBJECT_STRANDS[coverageSubject] || []);
+                  : getSelectableStrands(coverageSubject, coverageLevel);
 
                 return (
                   <>
@@ -1930,7 +1943,7 @@ export default function ContentLibrary() {
                                 }
                               });
                             } else {
-                              const strands = SUBJECT_STRANDS[coverageSubject] || [];
+                              const strands = getSelectableStrands(coverageSubject, coverageLevel);
                               strands.forEach(strand => {
                                 const subStrands = (SUBJECT_SUB_STRANDS[strand] || [strand]);
                                 subStrands.forEach(subStrand => {
@@ -2107,7 +2120,7 @@ export default function ContentLibrary() {
                         });
                       });
                     } else {
-                      const strands = SUBJECT_STRANDS[coverageSubject] || [];
+                      const strands = getSelectableStrands(coverageSubject, coverageLevel);
                       strands.forEach(strand => {
                         const subStrands = (SUBJECT_SUB_STRANDS[strand] || [strand]).filter(sub => {
                           if (coverageTerm === 'All') return true;
