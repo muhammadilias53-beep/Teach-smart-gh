@@ -147,8 +147,8 @@ const CURRICULUM_BOOKS: Record<string, { title: string, url: string, level: stri
     { title: "Primary History Curriculum (B1-B6)", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/HISTORY-B1-B6.pdf", level: "Primary" },
     { title: "SHS History", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/HISTORY-SHS.pdf", level: "SHS" }
   ],
-  "Elective Mathematics": [
-    { title: "SHS Elective Mathematics", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/ELECTIVE-MATHEMATICS-SHS.pdf", level: "SHS" }
+  "Additional Mathematics": [
+    { title: "SHS Additional Mathematics", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/ELECTIVE-MATHEMATICS-SHS.pdf", level: "SHS" }
   ],
   "Physics": [
     { title: "SHS Physics", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/PHYSICS-SHS.pdf", level: "SHS" }

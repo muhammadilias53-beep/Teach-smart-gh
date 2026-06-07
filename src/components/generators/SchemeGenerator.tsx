@@ -35,7 +35,7 @@ const subjectsByLevel: Record<string, string[]> = {
   "KG": ["Integrated Curriculum (KG)"],
   "Primary": ["English", "Mathematics", "Science", "Social Studies", "Computing", "RME", "Creative Arts", "Ghanaian Language", "French", "History"],
   "JHS": ["English", "Mathematics", "Science", "Social Studies", "Computing", "RME", "Creative Arts", "Ghanaian Language", "French", "Career Technology"],
-  "SHS": ["English", "Mathematics", "Science", "Social Studies", "Elective Mathematics", "Physics", "Chemistry", "Biology", "Economics", "Geography", "History", "Government", "CRS", "IRS", "Literature in English", "Financial Accounting", "Cost Accounting", "Business Management", "Agricultural Science", "Elective ICT", "Food & Nutrition", "Graphic Design"]
+  "SHS": ["English", "Mathematics", "Science", "Social Studies", "Additional Mathematics", "Physics", "Chemistry", "Biology", "Economics", "Geography", "History", "Government", "CRS", "IRS", "Literature in English", "Financial Accounting", "Cost Accounting", "Business Management", "Agricultural Science", "Elective ICT", "Food & Nutrition", "Graphic Design"]
 };
 
 const GHANAIAN_LANGUAGES = [

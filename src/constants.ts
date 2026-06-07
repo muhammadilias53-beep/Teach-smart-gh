@@ -9,7 +9,7 @@ export const subjects = [
   "Creative Arts", 
   "French", 
   "Ghanaian Language", 
-  "Elective Mathematics", 
+  "Additional Mathematics", 
   "Physics", 
   "Chemistry", 
   "Biology", 
@@ -50,7 +50,7 @@ export const CLASSES_BY_LEVEL: Record<string, string[]> = {
 
 export const SUBJECT_STRANDS: Record<string, string[]> = {
   "Mathematics": ["Number", "Algebra", "Geometry and Measurement", "Handling Data"],
-  "Elective Mathematics": ["Algebra", "Trigonometry", "Calculus", "Coordinate Geometry", "Statics and Probability", "Vectors and Mechanics"],
+  "Additional Mathematics": ["Modelling with Algebra", "Geometric Reasoning and Measurement", "Calculus", "Handling Data"],
   "Science": ["Diversity of Matter", "Cycles", "Systems", "Forces and Energy", "Humans and the Environment"],
   "Physics": ["Mechanics", "Thermal Physics", "Waves", "Electricity and Magnetism", "Atomic and Nuclear Physics"],
   "Chemistry": ["Physical Chemistry", "Systematic Chemistry of the Elements", "Chemistry of Carbon Compounds"],
@@ -110,7 +110,7 @@ export const SUBJECT_STRANDS: Record<string, string[]> = {
   ],
   "Elective ICT": ["ICTs in the Society", "Network Systems for Transmitting Information"],
   "CRS": ["Study of Religion, God's Creation and Humankind", "Religious Beliefs, Practices, Moral Values and Human Development", "Religious Communities and Nation Building", "Religion and Contemporary Issues"],
-  "IRS": ["Al-Quran", "Al-Hadith", "Al-Fiqh", "Islamic History"],
+  "IRS": ["Study of Religions, God's Creation and Humankind", "Religious beliefs, practices, moral values and human development", "Religious communities and nation building", "Religion and contemporary issues"],
   "Literature in English": ["Introduction to Literature", "African Prose", "Non-African Prose", "African Poetry", "Non-African Poetry", "Drama"],
   "Integrated Curriculum (KG)": ["All About Me", "My Family", "Values and Beliefs", "My Local Community", "My Nation Ghana", "All Around Us", "My Global Community"],
   "Our World Our People": ["All About Us", "All Around Us", "Our Beliefs and Values", "Our Nation Ghana", "My Global Community"],
@@ -142,6 +142,27 @@ export const SUBJECT_SUB_STRANDS: Record<string, string[]> = {
   "Age of Encounter and Exchanges Up to the 20th Century": ["Religion and Religious Change", "Global Connections", "Prelude to Colonisation and Colonial Rule", "Response to Colonial Rule"],
   "Independence and Post-Colonial Developments": ["Socio-Economic and Political Developments in Ghana (1957 - 2007)"],
 
+  // Elective IRS Mappings (SHS)
+  "Study of Religions, God's Creation and Humankind": [
+    "Background to the study of religion and Islam",
+    "The nature of God and His creation"
+  ],
+  "Religious beliefs, practices, moral values and human development": [
+    "The major beliefs of Islam",
+    "Worship and Moral Values for Development",
+    "Muslim Practices and National Development"
+  ],
+  "Religious communities and nation building": [
+    "The origin and nature of Islamic communities",
+    "Religion and Nation Building",
+    "Religious Communities, Gender and Development"
+  ],
+  "Religion and contemporary issues": [
+    "Islam and the environment",
+    "Islam and sexual morality",
+    "Islam and fraud"
+  ],
+
   // Elective ICT Mappings (SHS)
   "ICTs in the Society": [
     "Organising, Managing and Presenting Information Using Essential Productivity Tools",
@@ -151,6 +172,30 @@ export const SUBJECT_SUB_STRANDS: Record<string, string[]> = {
   "Network Systems for Transmitting Information": [
     "Guided and Unguided Network Systems",
     "Computer and Information Security"
+  ],
+
+  // Additional Mathematics Mappings (SHS)
+  "Modelling with Algebra": [
+    "Number and Algebraic Patterns",
+    "Applications of Algebra",
+    "Application of Algebra"
+  ],
+  "Geometric Reasoning and Measurement": [
+    "Spatial Sense",
+    "Measurement of Triangles",
+    "Spatial Reasoning",
+    "Measuring Triangles"
+  ],
+  "Calculus": [
+    "Principles of Calculus",
+    "Applications of Calculus",
+    "Principle of Calculus",
+    "Application of Calculus"
+  ],
+  "Handling Data (Add Math)": [
+    "Organising, Representing and Interpreting Data",
+    "Making Predictions with Data",
+    "Organising and Representing and Interpreting Data"
   ],
 
   // Accounting & Business Accounting Mappings
@@ -2428,6 +2473,100 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "1.2.2.CS.1: Demonstrate knowledge and understanding of Safety and Security Issues in the use of computers",
       "2.2.2.CS.1: Demonstrate knowledge and understanding of safety and security issues in ICT",
       "3.2.2.CS.1: Demonstrate knowledge and understanding of Safety and security Issues in ICT"
+    ]
+  },
+  "IRS": {
+    "Background to the study of religion and Islam": [
+      "1.1.1.CS.1: Demonstrate knowledge of the concept of religion and an understanding of the importance of studying religion at SHS",
+      "1.1.1.CS.2: Demonstrate understanding of the history of Islam and evaluate the contributions of Islam to the development of Ghana."
+    ],
+    "The nature of God and His creation": [
+      "2.1.2.CS.1: Demonstrate understanding of the nature of Allah (God) in Islam and indicate how to apply the moral values in them to life.",
+      "3.1.2.CS.1: Demonstrate understanding of creation stories of Islam and assess how humans’ disobedience has affected the disposition of humankind"
+    ],
+    "The major beliefs of Islam": [
+      "1.2.1.CS.1: Demonstrate knowledge and understanding of the beliefs of Islam and AIR’s influence and critically assess the varied interpretations of these beliefs."
+    ],
+    "Worship and Moral Values for Development": [
+      "2.2.2.CS.1: Demonstrate the understanding of worship in Islam and elements of its influence, to deduce and apply values inherent in them.",
+      "3.2.2.CS.1: Demonstrate understanding of worship of Islam to justify the need for respect for the religious other."
+    ],
+    "Muslim Practices and National Development": [
+      "3.2.3.CS.1: Demonstrate knowledge and appreciation of Islamic practices for national development"
+    ],
+    "The origin and nature of Islamic communities": [
+      "1.3.1.CS.1: Demonstrate understanding of the origins, characteristics and roles of Islamic religious communities, and their relationship with other religions."
+    ],
+    "Religion and Nation Building": [
+      "2.3.2.CS.1: Demonstrate understanding of opportunities and challenges in religious pluralism for nation-building."
+    ],
+    "Religious Communities, Gender and Development": [
+      "3.3.3.CS.1: Demonstrate knowledge and understanding of Islamic teachings, values and the contributions of women and explain how international policies on the development and empowerment of women aligns or otherwise with Islam"
+    ],
+    "Islam and the environment": [
+      "1.4.1.CS.1: Demonstrate an understanding of the environmental values in the teachings of Islam and show how they collaborate Science to address environmental problems."
+    ],
+    "Islam and sexual morality": [
+      "2.4.2.CS.1: Demonstrate an understanding of the teachings of Islam on sexual morality and the values inherent in them"
+    ],
+    "Islam and fraud": [
+      "3.4.3.CS.1: Demonstrate an understanding of the teachings of Islam on fraud and how to apply them"
+    ]
+  },
+  "Additional Mathematics": {
+    "Number and Algebraic Patterns": [
+      "1.1.1.CS.1: Demonstrate knowledge and understanding of binary operations, sets and binomial theorem and solve related problems in real life situations.",
+      "2.1.1.CS.1: Demonstrate understanding of De Morgan's laws on sets and binomial expansions with positive integers."
+    ],
+    "Applications of Algebra": [
+      "1.1.2.CS.1: Demonstrate knowledge and understanding of applying algebraic processes and reasoning involving sequence, functions, and linear programming.",
+      "2.1.1.CS.2: Demonstrate the ability to apply algebraic processes and reasoning to model and solve real life situations involving sequences, and linear programming and use appropriate techniques to solve quadratic inequalities, as well as resolve rational functions.",
+      "3.1.2.CS.1: Demonstrate understanding and use of logic, linear transformations, matrices and their applications to solve real life problems."
+    ],
+    "Application of Algebra": [
+      "1.1.2.CS.1: Demonstrate knowledge and understanding of applying algebraic processes and reasoning involving sequence, functions, and linear programming.",
+      "2.1.1.CS.2: Demonstrate the ability to apply algebraic processes and reasoning to model and solve real life situations involving sequences, and linear programming and use appropriate techniques to solve quadratic inequalities, as well as resolve rational functions.",
+      "3.1.2.CS.1: Demonstrate understanding and use of logic, linear transformations, matrices and their applications to solve real life problems."
+    ],
+    "Spatial Sense": [
+      "1.2.1.CS.1: Demonstrate knowledge and understanding of spatial sense in relation to lines and angles between intersecting lines.",
+      "2.2.1.CS.1: Demonstrate understanding of loci and circles and their applications."
+    ],
+    "Measurement of Triangles": [
+      "1.2.2.CS.1: Demonstrate understanding of the measurement of triangles and radians."
+    ],
+    "Spatial Reasoning": [
+      "3.2.1.CS.1: Demonstrate understanding of parabola and its properties."
+    ],
+    "Measuring Triangles": [
+      "3.2.2.CS.1: Demonstrate understanding of drawing and analysing basic trigonometric graphs and compound angles."
+    ],
+    "Principles of Calculus": [
+      "1.3.1.CS.1: Demonstrate understanding of the limit of a function, investigate the behaviour of a function near a value in its domain and establish the derivative of a function.",
+      "2.3.1.CS.1: Identify and apply integration rules and techniques to solve transcendental functions."
+    ],
+    "Applications of Calculus": [
+      "1.3.2.CS.1: Determine the equation of tangents and normal to a curve at a given point.",
+      "2.3.2.CS.1: Investigate the turning point of a function and find maximum/minimum values in real life."
+    ],
+    "Principle of Calculus": [
+      "1.3.1.CS.1: Demonstrate understanding of the limit of a function, investigate the behaviour of a function near a value in its domain and establish the derivative of a function."
+    ],
+    "Application of Calculus": [
+      "1.3.2.CS.1: Determine the equation of tangents and normal to a curve at a given point."
+    ],
+    "Organising, Representing and Interpreting Data": [
+      "1.4.1.CS.1: Collect quantitative and qualitative data, organise and present data using graphs.",
+      "3.4.1.CS.1: Describe the nature and strength of relationship between two given variables using scatter diagram and correlation coefficient."
+    ],
+    "Making Predictions with Data": [
+      "1.4.2.CS.1: Demonstrate knowledge of basic principles of permutation and combination and interpret probability in everyday life.",
+      "2.4.2.CS.1: Solve problems using the axioms and the laws of probability.",
+      "3.4.2.CS.1: Solve problems involving conditional probability using permutations and combinations."
+    ],
+    "Organising and Representing and Interpreting Data": [
+      "1.4.1.CS.1: Collect quantitative and qualitative data, organise and present data using graphs.",
+      "3.4.1.CS.1: Describe the nature and strength of relationship between two given variables using scatter diagram and correlation coefficient."
     ]
   }
 };
@@ -4872,6 +5011,169 @@ export const STANDARD_INDICATORS: Record<string, string[]> = {
   "3.2.2.CS.1: Demonstrate knowledge and understanding of Safety and security Issues in ICT": [
     "3.2.2.LI.1: Discuss the Fundamental Objectives of Computer Security.",
     "3.2.2.LI.2: Discuss the Threats to Computer Security and how to Prevent such Threats."
+  ],
+  // Elective IRS Standard Indicators (SHS)
+  "1.1.1.CS.1: Demonstrate knowledge of the concept of religion and an understanding of the importance of studying religion at SHS": [
+    "1.1.1.LI.1: Explain the meaning of religion and the various ways in which definitions of religion may be classified.",
+    "1.1.1.LI.2: Justify the need to study religion at SHS"
+  ],
+  "1.1.1.CS.2: Demonstrate understanding of the history of Islam and evaluate the contributions of Islam to the development of Ghana.": [
+    "1.1.1.LI.3: Examine the pre-Islamic context of Arabia",
+    "1.1.1.LI.4: Describe the birth and life of Muhammad before prophethood",
+    "1.1.1.LI.5: Recount the call and life of Muhammad as prophet",
+    "1.1.1.LI.6: Explain challenges of early Muslims",
+    "1.1.1.LI.7: Examine the role of religion in the life of Africans (Ghanaians) before the arrival of Islam",
+    "1.1.1.LI.8: Assess the influence of the arrival of Islam on AIR",
+    "1.1.1.LI.9: Discuss the contributions of Islam to the development of Ghana"
+  ],
+  "2.1.2.CS.1: Demonstrate understanding of the nature of Allah (God) in Islam and indicate how to apply the moral values in them to life.": [
+    "2.1.2.LI.1: Explain how the natural environment reveals the nature of Allah.",
+    "2.1.2.LI.2: Analyse the nature of Allah through His attributes as espoused by Islam",
+    "2.1.2.LI.3: Examine theological approaches and debates over the nature of Allah in Islam",
+    "2.1.2.LI.4: Compare and contrast Islam’s understanding of the nature of Allah",
+    "2.1.2.LI.5: Apply the moral values in the attributes of Allah in Islam"
+  ],
+  "3.1.2.CS.1: Demonstrate understanding of creation stories of Islam and assess how humans’ disobedience has affected the disposition of humankind": [
+    "3.1.2.LI.1: Examine the Creation story in the Qur’an",
+    "3.1.2.LI.2: Discuss the disobedience of Adam and Hawa in the Qur’an",
+    "3.1.2.LI.3: Critically examine the philosophical underpinnings associated with the disobedience of humankind"
+  ],
+  "1.2.1.CS.1: Demonstrate knowledge and understanding of the beliefs of Islam and AIR’s influence and critically assess the varied interpretations of these beliefs.": [
+    "1.2.1.LI.1: Identify the nature or form of Islamic monotheism (Tawhid)",
+    "1.2.1.LI.2: Examine the six articles of faith in Islam",
+    "1.2.1.LI.3: Assess the concept of Shariah and its interpretations",
+    "1.2.1.LI.4: Examine ways in which African Indigenous Religion has influenced the belief system of Islam in Ghana"
+  ],
+  "2.2.2.CS.1: Demonstrate the understanding of worship in Islam and elements of its influence, to deduce and apply values inherent in them.": [
+    "2.2.2.LI.1: Explain how the five pillars of Islam are performed",
+    "2.2.2.LI.2: Analyse elements of worship in Islam to deduce their scriptural references",
+    "2.2.2.LI.3: Examine ways in which Islamic worship has influenced the Ghanaian society",
+    "2.2.2.LI.4: Synthesise moral values inherent in Islamic worship and how to apply them"
+  ],
+  "3.2.2.CS.1: Demonstrate understanding of worship of Islam to justify the need for respect for the religious other.": [
+    "3.2.2.LI.1: Examine worship in Islam and how it has transformed throughout history",
+    "3.2.2.LI.2: Compare and contrast Islamic worship with African Indigenous Religion (AIR) and Christianity",
+    "3.2.2.LI.3: Analyse how knowledge and understanding of the differences and common patterns in worship can help in promoting religious respect"
+  ],
+  "3.2.3.CS.1: Demonstrate knowledge and appreciation of Islamic practices for national development": [
+    "3.2.3.LI.1: Examine the practice of Zakat for national development",
+    "3.2.3.LI.2: Assess the practice of Sadaqah for poverty alleviation",
+    "3.2.3.LI.3: Explore the practice of Hajj for peace-building",
+    "3.2.3.LI.4: Examine the practice of prayer (Salah) for the development of time-consciousness"
+  ],
+  "1.3.1.CS.1: Demonstrate understanding of the origins, characteristics and roles of Islamic religious communities, and their relationship with other religions.": [
+    "1.3.1.LI.1: Explain the origin of Islamic religious communities",
+    "1.3.1.LI.2: Describe the characteristics of Islamic communities",
+    "1.3.1.LI.3: Examine the changing roles of Islamic communities in Ghanaian society.",
+    "1.3.1.LI.4: Examine how Islam has collaborated with AIR and Christianity in creating harmonious co-existence"
+  ],
+  "2.3.2.CS.1: Demonstrate understanding of opportunities and challenges in religious pluralism for nation-building.": [
+    "2.3.2.LI.1: Explain the concept of religious pluralism",
+    "2.3.2.LI.2: Examine Islamic teachings on religious pluralism",
+    "2.3.2.LI.3: Identify the opportunities and challenges of religious pluralism in Ghana",
+    "2.3.2.LI.4: Examine how the challenges and opportunities for religious pluralism can be used for nation-building",
+    "2.3.2.LI.5: Explore real-life examples of religious pluralism in local and global contexts"
+  ],
+  "3.3.3.CS.1: Demonstrate knowledge and understanding of Islamic teachings, values and the contributions of women and explain how international policies on the development and empowerment of women aligns or otherwise with Islam": [
+    "3.3.3.LI.1: Identify the key teachings of Islam on women",
+    "3.3.3.LI.2: Assess the contributions of key women to the start and spread of Islam",
+    "3.3.3.LI.3: Discuss the roles women play in Islamic communities and in society at large",
+    "3.3.3.LI.4: Examine ways in which Islamic religious teachings are perceived to constrain the role of women in society",
+    "3.3.3.LI.5: Examine alignments between Islamic values and (inter)national policies on women empowerment"
+  ],
+  "1.4.1.CS.1: Demonstrate an understanding of the environmental values in the teachings of Islam and show how they collaborate Science to address environmental problems.": [
+    "1.4.1.LI.1: Identify human activities that affect the environment.",
+    "1.4.1.LI.2: Identify the environmental values in the teachings of Islam",
+    "1.4.1.LI.3: Comparatively analyse how Islamic values align with those of AIR and Christianity on environmental protection",
+    "1.4.1.LI.4: Examine how Islamic environmental values can complement science and technology to solve environmental problems"
+  ],
+  "2.4.2.CS.1: Demonstrate an understanding of the teachings of Islam on sexual morality and the values inherent in them": [
+    "2.4.2.LI.1: Examine the concept of sexual morality within local and global contexts",
+    "2.4.2.LI.2: Analyse the teachings of Islam on sexual morality",
+    "2.4.2.LI.3: Analyse the moral values in the teachings of Islam on sexual morality",
+    "2.4.2.LI.4: Describe how to apply Islamic teachings on sexual morality within the context of contemporary sexual behaviours"
+  ],
+  "3.4.3.CS.1: Demonstrate an understanding of the teachings of Islam on fraud and how to apply them": [
+    "3.4.3.LI.1: Describe some key contemporary fraudulent acts",
+    "3.4.3.LI.2: Explain the teachings of Islam on fraud",
+    "3.4.3.LI.3: Discuss how ethical teachings of Islam can be used to address the incidences of fraud"
+  ],
+  // Additional Mathematics Standard Indicators
+  "1.1.1.CS.1: Demonstrate knowledge and understanding of binary operations, sets and binomial theorem and solve related problems in real life situations.": [
+    "1.1.1.LI.1: Explain binary operations and apply that knowledge in solving related problems.",
+    "1.1.1.LI.2: Solve problems involving properties of binary operations.",
+    "1.1.1.LI.3: Model and solve real life problems on sets.",
+    "1.1.1.LI.4: Expand binomials with positive integral indices and simplify coefficients of the terms."
+  ],
+  "2.1.1.CS.1: Demonstrate understanding of De Morgan's laws on sets and binomial expansions with positive integers.": [
+    "2.1.1.LI.1: Investigate De Morgan's law on sets algebraically and graphically, formulate and solve real life problems up to three sets.",
+    "2.1.1.LI.2: Use the expansion of (1-x)^n or (1+x)^n to approximate exponential numbers."
+  ],
+  "1.1.2.CS.1: Demonstrate knowledge and understanding of applying algebraic processes and reasoning involving sequence, functions, and linear programming.": [
+    "1.1.2.LI.1: Examine, analyse, determine and predict other terms in a pattern/sequence.",
+    "1.1.2.LI.2: Distinguish among various types of relations, find the domain and range of, and evaluate functions.",
+    "1.1.2.LI.3: Show that a function is injective, surjective, and bijective.",
+    "1.1.2.LI.4: Find graphical and algebraic solutions to a system of three linear equations in three variables."
+  ],
+  "2.1.1.CS.2: Demonstrate the ability to apply algebraic processes and reasoning to model and solve real life situations involving sequences, and linear programming and use appropriate techniques to solve quadratic inequalities, as well as resolve rational functions.": [
+    "2.1.1.LI.3: Generate the terms of a recurrence sequence and find an explicit formula for the sum of the sequence.",
+    "2.1.1.LI.4: Determine the arithmetic and geometric means of linear and exponential sequences.",
+    "2.1.1.LI.5: Formulate and derive appropriate strategies to solve quadratic inequalities.",
+    "2.1.1.LI.6: Resolve rational functions into partial fractions, specifically quadratic denominators and improper rational functions."
+  ],
+  "3.1.2.CS.1: Demonstrate understanding and use of logic, linear transformations, matrices and their applications to solve real life problems.": [
+    "3.1.2.LI.1: Construct compound statements and truth tables using connectives.",
+    "3.1.2.LI.2: Apply linear transformation to find images of points and objects, and reflections and rotation.",
+    "3.1.2.LI.3: Find the inverse of a matrix using linear transformation."
+  ],
+  "1.2.1.CS.1: Demonstrate knowledge and understanding of spatial sense in relation to lines and angles between intersecting lines.": [
+    "1.2.1.LI.1: Describe the properties of lines, including parallel, perpendicular and midpoints.",
+    "1.2.1.LI.2: Derive the equation of a line in various forms, find the shortest distance between a point and a line."
+  ],
+  "2.2.1.CS.1: Demonstrate understanding of loci and circles and their applications.": [
+    "2.2.1.LI.1: Deduce the equation of a circle and find its centre and radius.",
+    "2.2.1.LI.2: Determine the equation of a locus under a given condition."
+  ],
+  "1.2.2.CS.1: Demonstrate understanding of the measurement of triangles and radians.": [
+    "1.2.2.LI.1: Identify values of the special angles, explain the radian measure orally and mathematically.",
+    "1.2.2.LI.2: Solve problems on acute angles between two intersecting lines."
+  ],
+  "3.2.1.CS.1: Demonstrate understanding of parabola and its properties.": [
+    "3.2.1.LI.1: Construct a parabola of a given quadratic equation and explain its key features.",
+    "3.2.1.LI.2: Deduce the directrix and focus from a parabolic equation and vice versa."
+  ],
+  "3.2.2.CS.1: Demonstrate understanding of drawing and analysing basic trigonometric graphs and compound angles.": [
+    "3.2.2.LI.1: Draw and analyse basic trigonometric graphs using values of the unit circle.",
+    "3.2.2.LI.2: Prove and apply compound angles to derive the identities for multiple angles."
+  ],
+  "1.3.1.CS.1: Demonstrate understanding of the limit of a function, investigate the behaviour of a function near a value in its domain and establish the derivative of a function.": [
+    "1.3.1.LI.1: Describe and interpret the meaning of the limit of a function.",
+    "1.3.1.LI.2: Distinguish between continuous and discontinuous functions near an input value."
+  ],
+  "2.3.1.CS.1: Identify and apply integration rules and techniques to solve transcendental functions.": [
+    "2.3.1.LI.1: Identify and apply integration rules to evaluate integrals.",
+    "2.3.1.LI.2: Identify and apply appropriate techniques for integration of a function."
+  ],
+  "1.3.2.CS.1: Determine the equation of tangents and normal to a curve at a given point.": [
+    "1.3.2.LI.1: Determine the equation of tangents and normal to a curve."
+  ],
+  "2.3.2.CS.1: Investigate the turning point of a function and find maximum/minimum values in real life.": [
+    "2.3.2.LI.1: Determine the maximum/minimum values within the given constraints."
+  ],
+  "1.4.1.CS.1: Collect quantitative and qualitative data, organise and present data using graphs.": [
+    "1.4.1.LI.1: Collect quantitative and qualitative data, and organise and present data using graphs."
+  ],
+  "3.4.1.CS.1: Describe the nature and strength of relationship between two given variables using scatter diagram and correlation coefficient.": [
+    "3.4.1.LI.1: Describe the nature and strength of relationship between two given variables using scatter diagram."
+  ],
+  "1.4.2.CS.1: Demonstrate knowledge of basic principles of permutation and combination and interpret probability in everyday life.": [
+    "1.4.2.LI.1: Explain combination and permutation, state their difference and solve basic problems."
+  ],
+  "2.4.2.CS.1: Solve problems using the axioms and the laws of probability.": [
+    "2.4.2.LI.1: Solve problems using the axioms and the laws of probability."
+  ],
+  "3.4.2.CS.1: Solve problems involving conditional probability using permutations and combinations.": [
+    "3.4.2.LI.1: Solve problems involving conditional probability using permutations and combinations."
   ]
 };
 
