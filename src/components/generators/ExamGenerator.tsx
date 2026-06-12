@@ -23,7 +23,8 @@ import 'highlight.js/styles/github.css';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { toast } from 'react-hot-toast';
-import { subjects as sharedSubjects, levels, CLASSES_BY_LEVEL } from '../../constants';
+import { subjects as sharedSubjects, levels, CLASSES_BY_LEVEL, subjectsByLevel } from '../../constants';
+import { SearchableDropdown } from '../ui/SearchableDropdown';
 
 const difficulties = ["Easy", "Standard", "Challenging"];
 
@@ -116,11 +117,18 @@ export default function ExamGenerator() {
 
   const handleLevelChange = (lvl: any) => {
     const classes = CLASSES_BY_LEVEL[lvl] || [];
-    setFormData(prev => ({
-      ...prev,
-      level: lvl,
-      classLevel: classes[0] || ''
-    }));
+    const levelSubjects = subjectsByLevel[lvl] || [];
+    setFormData(prev => {
+      const currentSubj = prev.subject;
+      const newSubj = levelSubjects.includes(currentSubj) ? currentSubj : '';
+      return {
+        ...prev,
+        level: lvl,
+        classLevel: classes[0] || '',
+        subject: newSubj,
+        ghanaianLanguage: newSubj === 'Ghanaian Language' ? prev.ghanaianLanguage : ''
+      };
+    });
   };
 
   const cleanMarkdown = (content: string) => {
@@ -425,15 +433,16 @@ export default function ExamGenerator() {
           <div className={cn("grid grid-cols-1 gap-8", formData.subject === 'Ghanaian Language' ? "md:grid-cols-4" : "md:grid-cols-3")}>
             <div className="space-y-2">
               <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Subject Area</label>
-              <select 
-                required
-                className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-bold text-slate-700"
+              <SearchableDropdown
                 value={formData.subject}
-                onChange={(e) => setFormData({...formData, subject: e.target.value, ghanaianLanguage: e.target.value === 'Ghanaian Language' ? formData.ghanaianLanguage : ''})}
-              >
-                <option value="">Select Subject</option>
-                {sharedSubjects.map(s => <option key={s} value={s}>{s}</option>)}
-              </select>
+                options={formData.level ? (subjectsByLevel[formData.level] || []).slice().sort((a,b) => a.localeCompare(b)) : []}
+                placeholder="Select Subject"
+                onChange={(val) => setFormData({
+                  ...formData,
+                  subject: val,
+                  ghanaianLanguage: val === 'Ghanaian Language' ? formData.ghanaianLanguage : ''
+                })}
+              />
             </div>
 
             {formData.subject === 'Ghanaian Language' && (
@@ -446,7 +455,7 @@ export default function ExamGenerator() {
                   onChange={(e) => setFormData({...formData, ghanaianLanguage: e.target.value})}
                 >
                   <option value="">Select Language</option>
-                  {GHANAIAN_LANGUAGES.map(lang => <option key={lang} value={lang}>{lang}</option>)}
+                  {GHANAIAN_LANGUAGES.slice().sort((a,b) => a.localeCompare(b)).map(lang => <option key={lang} value={lang}>{lang}</option>)}
                 </select>
               </div>
             )}

@@ -186,6 +186,21 @@
         "createdAt": { "type": "string", "format": "date-time" }
       },
       "required": ["uid", "isAnonymous"]
+    },
+    "PwaLaunch": {
+      "title": "PwaLaunch",
+      "description": "Log of PWA launch events and standalone installations",
+      "type": "object",
+      "properties": {
+        "displayMode": { "type": "string" },
+        "referral": { "type": "string" },
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "language": { "type": "string" },
+        "userAgent": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["displayMode"]
     }
   },
   "firestore": {
@@ -228,6 +243,10 @@
     "saved_resources/{id}": {
       "schema": "SavedResource",
       "description": "Resources purchased or saved by user"
+    },
+    "pwa_launches/{id}": {
+      "schema": "PwaLaunch",
+      "description": "PWA lifecycle launch and install events"
     }
   }
 }

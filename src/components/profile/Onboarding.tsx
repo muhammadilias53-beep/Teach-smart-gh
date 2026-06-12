@@ -14,6 +14,7 @@ import {
 import { useAuth } from '../../contexts/AuthContext';
 import { subjects, levels, GHANA_REGIONS } from '../../constants';
 import { cn } from '../../lib/utils';
+import { SearchableDropdown } from '../ui/SearchableDropdown';
 import { toast } from 'react-hot-toast';
 import { Level, UserProfile } from '../../types';
 
@@ -207,17 +208,12 @@ export const Onboarding = () => {
                 <div className="space-y-6">
                   <div className="space-y-2">
                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Main Subject</label>
-                    <div className="relative">
-                      <BookOpen className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
-                      <select 
-                        value={formData.mainSubject}
-                        onChange={(e) => setFormData({...formData, mainSubject: e.target.value})}
-                        className="w-full p-4 pl-12 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-ghana-red outline-none transition-all font-bold text-slate-700 appearance-none"
-                      >
-                        <option value="">Select Subject</option>
-                        {subjects.map(s => <option key={s} value={s}>{s}</option>)}
-                      </select>
-                    </div>
+                    <SearchableDropdown
+                      value={formData.mainSubject}
+                      options={subjects.slice().sort((a,b) => a.localeCompare(b))}
+                      placeholder="Select Subject"
+                      onChange={(val) => setFormData({...formData, mainSubject: val})}
+                    />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     {(levels as Level[]).map(l => (

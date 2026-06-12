@@ -24,19 +24,13 @@ import 'highlight.js/styles/github.css';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { toast } from 'react-hot-toast';
-import { subjects as sharedSubjects, levels, CLASSES_BY_LEVEL, SUBJECT_STRANDS, SUBJECT_SUB_STRANDS } from '../../constants';
+import { subjects as sharedSubjects, levels, CLASSES_BY_LEVEL, SUBJECT_STRANDS, SUBJECT_SUB_STRANDS, subjectsByLevel } from '../../constants';
+import { SearchableDropdown } from '../ui/SearchableDropdown';
 
 const types = [
   { id: 'termly', label: 'Termly', icon: Calendar, desc: '12-week breakdown' },
   { id: 'yearly', label: 'Yearly', icon: Sparkles, desc: 'Full academic year' }
 ];
-
-const subjectsByLevel: Record<string, string[]> = {
-  "KG": ["Integrated Curriculum (KG)"],
-  "Primary": ["English", "Mathematics", "Science", "Social Studies", "Computing", "RME", "Creative Arts", "Ghanaian Language", "French", "History"],
-  "JHS": ["English", "Mathematics", "Science", "Social Studies", "Computing", "RME", "Creative Arts", "Ghanaian Language", "French", "Career Technology"],
-  "SHS": ["English", "Mathematics", "Science", "Social Studies", "Additional Mathematics", "Physics", "Chemistry", "Biology", "Economics", "Geography", "History", "Government", "CRS", "IRS", "Literature in English", "Financial Accounting", "Cost Accounting", "Business Management", "Agricultural Science", "Elective ICT", "Food & Nutrition", "Graphic Design"]
-};
 
 const GHANAIAN_LANGUAGES = [
   "Dagaare",
@@ -314,15 +308,16 @@ export default function SchemeGenerator() {
           <div className={cn("grid gap-8", formData.subject === 'Ghanaian Language' ? "md:grid-cols-4" : "md:grid-cols-3")}>
             <div className="space-y-2">
               <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Subject Area</label>
-              <select 
-                required
-                className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-ghana-red outline-none transition-all font-bold text-slate-700"
+              <SearchableDropdown
                 value={formData.subject}
-                onChange={(e) => setFormData({...formData, subject: e.target.value, ghanaianLanguage: e.target.value === 'Ghanaian Language' ? formData.ghanaianLanguage : ''})}
-              >
-                <option value="">Select Subject</option>
-                {formData.level && (subjectsByLevel[formData.level] || []).map(s => <option key={s} value={s}>{s}</option>)}
-              </select>
+                options={formData.level ? (subjectsByLevel[formData.level] || []).slice().sort((a, b) => a.localeCompare(b)) : []}
+                placeholder="Select Subject"
+                onChange={(val) => setFormData({
+                  ...formData,
+                  subject: val,
+                  ghanaianLanguage: val === 'Ghanaian Language' ? formData.ghanaianLanguage : ''
+                })}
+              />
             </div>
 
             {formData.subject === 'Ghanaian Language' && (
@@ -335,7 +330,7 @@ export default function SchemeGenerator() {
                   onChange={(e) => setFormData({...formData, ghanaianLanguage: e.target.value})}
                 >
                   <option value="">Select Language</option>
-                  {GHANAIAN_LANGUAGES.map(lang => (
+                  {GHANAIAN_LANGUAGES.slice().sort((a,b) => a.localeCompare(b)).map(lang => (
                     <option key={lang} value={lang}>{lang}</option>
                   ))}
                 </select>
@@ -348,7 +343,20 @@ export default function SchemeGenerator() {
                 required
                 className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-ghana-red outline-none transition-all font-bold text-slate-700"
                 value={formData.level}
-                onChange={(e) => setFormData({...formData, level: e.target.value, class: CLASSES_BY_LEVEL[e.target.value][0]})}
+                onChange={(e) => {
+                  const newLvl = e.target.value;
+                  const newClasses = CLASSES_BY_LEVEL[newLvl] || [];
+                  const levelSubjects = subjectsByLevel[newLvl] || [];
+                  const currentSubj = formData.subject;
+                  const newSubj = levelSubjects.includes(currentSubj) ? currentSubj : '';
+                  setFormData({
+                    ...formData,
+                    level: newLvl,
+                    class: newClasses[0] || '',
+                    subject: newSubj,
+                    ghanaianLanguage: newSubj === 'Ghanaian Language' ? formData.ghanaianLanguage : ''
+                  });
+                }}
               >
                 {levels.map(l => <option key={l} value={l}>{l}</option>)}
               </select>

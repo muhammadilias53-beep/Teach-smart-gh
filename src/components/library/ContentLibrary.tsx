@@ -37,6 +37,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../../lib/utils';
 import { subjects, levels, CLASSES_BY_LEVEL, SUBJECT_STRANDS, SUBJECT_SUB_STRANDS } from '../../constants';
 import { toast } from 'react-hot-toast';
+import { SearchableDropdown } from '../ui/SearchableDropdown';
 import { ConfirmationModal } from '../common/ConfirmationModal';
 import { safeLocalStorage } from '../../lib/storage';
 import { Link } from 'react-router-dom';
@@ -146,6 +147,9 @@ const CURRICULUM_BOOKS: Record<string, { title: string, url: string, level: stri
   "History": [
     { title: "Primary History Curriculum (B1-B6)", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/HISTORY-B1-B6.pdf", level: "Primary" },
     { title: "SHS History", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/HISTORY-SHS.pdf", level: "SHS" }
+  ],
+  "Arabic": [
+    { title: "SHS Arabic Curriculum", url: "https://nacca.gov.gh/wp-content/uploads/2023/09/ARABIC-SHS.pdf", level: "SHS" }
   ],
   "Additional Mathematics": [
     { title: "SHS Additional Mathematics", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/ELECTIVE-MATHEMATICS-SHS.pdf", level: "SHS" }
@@ -1705,16 +1709,16 @@ export default function ContentLibrary() {
                 <div className="grid grid-cols-1 min-[420px]:grid-cols-2 gap-4 pt-2">
                   <div className="space-y-1">
                     <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Select Subject</label>
-                    <select
+                    <SearchableDropdown
                       value={coverageSubject}
-                      onChange={(e) => {
-                        setCoverageSubject(e.target.value);
+                      options={subjects.slice().sort((a,b) => a.localeCompare(b))}
+                      placeholder="Select Subject"
+                      onChange={(val) => {
+                        setCoverageSubject(val);
                         setSelectedSchemeId('default-blueprint');
                       }}
-                      className="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-3 py-2 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                    >
-                      {subjects.map(s => <option key={s} value={s}>{s}</option>)}
-                    </select>
+                      triggerClassName="w-full bg-slate-800 border border-slate-700 text-white rounded-xl px-3 py-2 text-xs font-bold flex items-center justify-between cursor-pointer select-none"
+                    />
                   </div>
                   <div className="space-y-1">
                     <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Select Stage</label>
@@ -2242,16 +2246,13 @@ export default function ContentLibrary() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label className="block text-xs font-black text-slate-400 uppercase tracking-widest">Subject</label>
-                  <select 
-                    required
+                  <label className="block text-xs font-black text-slate-400 tracking-widest uppercase">Subject</label>
+                  <SearchableDropdown
                     value={newResource.subject}
-                    onChange={(e) => setNewResource({...newResource, subject: e.target.value})}
-                    className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none font-bold"
-                  >
-                    <option value="">Select...</option>
-                    {subjects.map(s => <option key={s} value={s}>{s}</option>)}
-                  </select>
+                    options={subjects.slice().sort((a,b) => a.localeCompare(b))}
+                    placeholder="Select Subject"
+                    onChange={(val) => setNewResource({...newResource, subject: val})}
+                  />
                 </div>
                 <div className="space-y-2">
                   <label className="block text-xs font-black text-slate-400 uppercase tracking-widest">Level</label>

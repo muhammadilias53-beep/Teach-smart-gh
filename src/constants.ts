@@ -1,4 +1,5 @@
 export const subjects = [
+  "Arabic",
   "English", 
   "Mathematics", 
   "Science", 
@@ -35,6 +36,13 @@ export const subjects = [
 
 export const levels = ["KG", "Primary", "JHS", "SHS"];
 
+export const subjectsByLevel: Record<string, string[]> = {
+  "KG": ["Integrated Curriculum (KG)"],
+  "Primary": ["English", "Mathematics", "Science", "Our World Our People", "Social Studies", "Computing", "RME", "Creative Arts", "Ghanaian Language", "French", "History", "Physical Education"],
+  "JHS": ["English", "Mathematics", "Science", "Social Studies", "Computing", "RME", "Creative Arts", "Ghanaian Language", "French", "Career Technology", "Physical Education"],
+  "SHS": ["Arabic", "English", "Mathematics", "Science", "Social Studies", "Additional Mathematics", "Physics", "Chemistry", "Biology", "Economics", "Geography", "History", "Government", "CRS", "IRS", "Literature in English", "Financial Accounting", "Cost Accounting", "Business Management", "Agricultural Science", "Elective ICT", "Food & Nutrition", "Graphic Design", "Physical Education"]
+};
+
 export const GHANA_REGIONS = [
   "Greater Accra", "Ashanti", "Central", "Eastern", "Western", 
   "Northern", "Upper East", "Upper West", "Volta", "Bono", 
@@ -49,6 +57,7 @@ export const CLASSES_BY_LEVEL: Record<string, string[]> = {
 };
 
 export const SUBJECT_STRANDS: Record<string, string[]> = {
+  "Arabic": ["Arabic Listening", "Arabic Speaking", "Arabic Reading", "Arabic Writing"],
   "Mathematics": ["Number", "Algebra", "Geometry and Measurement", "Handling Data"],
   "Additional Mathematics": ["Modelling with Algebra", "Geometric Reasoning and Measurement", "Calculus", "Handling Data"],
   "Science": ["Diversity of Matter", "Cycles", "Systems", "Forces and Energy", "Humans and the Environment"],
@@ -122,6 +131,11 @@ export const SUBJECT_STRANDS: Record<string, string[]> = {
 };
 
 export const SUBJECT_SUB_STRANDS: Record<string, string[]> = {
+  "Arabic Listening": ["Phonology of the Arabic Language", "Listening Comprehension and Participation"],
+  "Arabic Speaking": ["Everyday Oral Communication", "Oracy and Aesthetics", "Arabic Speaking Grammar"],
+  "Arabic Reading": ["Phonological Awareness and Oral Reading Fluency", "Reading Comprehension", "Arabic Reading Grammar", "Critical Reading"],
+  "Arabic Writing": ["Arabic Orthography", "Composition", "Creative Writing", "Arabic Writing Grammar"],
+
   // Food & Nutrition Mappings
   "Nutrition and Health": ["Food For Healthy Living", "Food Security"],
   "Food Production": ["Food Production Technology", "Food Processing Techniques"],
@@ -492,6 +506,53 @@ export const SUBJECT_SUB_STRANDS: Record<string, string[]> = {
 };
 
 export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
+  "Arabic": {
+    "Phonology of the Arabic Language": [
+      "1.1.1.CS.1: Demonstrate knowledge and ability to identify the sound patterns of Arabic poetry and prose.",
+      "1.1.2.CS.1: Demonstrate knowledge and understanding of the difference of Arabic types and the various regional Arabic dialects."
+    ],
+    "Listening Comprehension and Participation": [
+      "1.1.3.CS.1: Demonstrate knowledge and understanding of the meanings and purposes of the various non-fictional texts."
+    ],
+    "Everyday Oral Communication": [
+      "1.2.1.CS.1: Demonstrate knowledge and application of arithmetic methods to calculate in hundreds and thousands, quantities, distance and weight.",
+      "1.2.1.CS.2: Demonstrate knowledge and understanding of culturally specific expressions on sad/happy moments"
+    ],
+    "Oracy and Aesthetics": [
+      "1.2.2.CS.1: Demonstrate knowledge and literary creativity in narrating a known local story, using simple literary devices.",
+      "1.2.2.CS.2: Demonstrate knowledge and ability to recall and reproduce lines of Modern Arabic poetry and prose with clear voice and articulation."
+    ],
+    "Arabic Speaking Grammar": [
+      "1.2.3.CS.1: Speaking Good Arabic: Grammar Unit: Demonstrate knowledge and understanding of parts of speech and their various characteristics"
+    ],
+    "Phonological Awareness and Oral Reading Fluency": [
+      "1.3.1.CS.1: Demonstrate understanding and application of reading techniques of a moderately complex authentic text at a reasonable speed."
+    ],
+    "Reading Comprehension": [
+      "1.3.2.CS.1: Demonstrate knowledge and understanding of text content using reading strategies of semi-complex text at a reasonable speed. (B1, CEFR)",
+      "1.3.2.CS.2: Demonstrate knowledge and application of basic translation/interpretation rules and methods involving simple Arabic and English texts from different fields and varying degrees of difficulty"
+    ],
+    "Arabic Reading Grammar": [
+      "1.3.3.CS.1: Reading Good Arabic: Grammar Unit: Demonstrate knowledge and understanding of parts of speech and their grammatical functions"
+    ],
+    "Critical Reading": [
+      "1.3.4.CS.1: Demonstrate knowledge and understanding of the introduction of Arabic Literature"
+    ],
+    "Arabic Orthography": [
+      "1.4.1.CS.1: Demonstrate understanding and knowledge of the orthography of Arabic and the exceptions to the conventional spelling system."
+    ],
+    "Composition": [
+      "1.4.2.CS.1: Demonstrate knowledge and application of writing methods using special styles, diction, and appropriate registers in compositions.",
+      "1.4.2.CS.2: Demonstrate knowledge and application of basic translation/interpretation rules and methods involving simple Arabic and English texts from different fields and varying degrees of difficulty"
+    ],
+    "Creative Writing": [
+      "1.4.3.CS.1: Demonstrate knowledge and application of strategies of composing straightforward descriptive essay on a range of familiar subjects within your field of interest.",
+      "1.4.3.CS.2: Demonstrate knowledge and creativity in adopting famous quotations as a specific theme to recount real stories using simple narrative style."
+    ],
+    "Arabic Writing Grammar": [
+      "1.4.4.CS.1: Demonstrate knowledge of types of sentences and their components: the Subject and Predicate (Complement), the Subject and Predicate (Object)"
+    ]
+  },
   "Financial Accounting": {
     "Conceptual Framework": [
       "B10.1.1.1: Demonstrate knowledge and understanding of Accounting, its nature, principles, purpose and application."
@@ -2572,6 +2633,115 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
 };
 
 export const STANDARD_INDICATORS: Record<string, string[]> = {
+  // Arabic Standard Indicators
+  "1.1.1.CS.1: Demonstrate knowledge and ability to identify the sound patterns of Arabic poetry and prose.": [
+    "1.1.1.LI.1: Identify the sound pattern of Arabic poetry, focusing on the rhyming patterns.",
+    "1.1.1.LI.2: Identify the sound pattern of Arabic poetry, focusing on the rhythm, the stressed and unstressed elements.",
+    "1.1.1.LI.3: Identify the sound pattern of Arabic prose, highlighting the syllable and consonant cluster, the stressed and unstressed sounds.",
+    "1.1.1.LI.4: Describe the sound pattern of Arabic prose, and the levels of tones that relate to moods or emotions."
+  ],
+  "1.1.2.CS.1: Demonstrate knowledge and understanding of the difference of Arabic types and the various regional Arabic dialects.": [
+    "1.1.2.LI.1: Identify the peculiar phonological features of Modern Standard Arabic.",
+    "1.1.2.LI.2: Identify the textual representations of sounds in words of the MSA and their sequence.",
+    "1.1.2.LI.3: Identify the distinct phonological features of Arabic dialect of Cairo and that of Saudi Arabia.",
+    "1.1.2.LI.4: Identify the phonological features of Arabic dialect of Saudi Arabia and imitate its sounds pattern."
+  ],
+  "1.1.3.CS.1: Demonstrate knowledge and understanding of the meanings and purposes of the various non-fictional texts.": [
+    "1.1.3.LI.1: Explain the general idea of an audio speech or reading from an Informational text and write down identifiable words from the audio.",
+    "1.1.3.LI.2: Tell the meanings of words from media news, using clues from surrounding words and context."
+  ],
+  "1.2.1.CS.1: Demonstrate knowledge and application of arithmetic methods to calculate in hundreds and thousands, quantities, distance and weight.": [
+    "1.2.1.LI.1: Count the number of students in class, estimate the congregation size at your mosque or church.",
+    "1.2.1.LI.2: Tell how much you buy food, clothes, learning materials, and electronics.",
+    "1.2.1.LI.3: Tell the distance between your house to the school, market, shopping centre, or city centre.",
+    "1.2.1.LI.4: Tell your weight, that of people you know, or items you use."
+  ],
+  "1.2.1.CS.2: Demonstrate knowledge and understanding of culturally specific expressions on sad/happy moments": [
+    "1.2.1.LI.1: Exemplify appropriate words of condolences to a bereaved family.",
+    "1.2.1.LI.2: Say words of consolation or comfort to a person who loses a property or business.",
+    "1.2.1.LI.3: Say words of congratulation, felicitation or well-wishing to a person in happy moment."
+  ],
+  "1.2.1.CS.3: Demonstrate knowledge and application of effective communicative strategies.": [
+    "1.2.1.LI.1: Apply questions as a strategy to seek clarity of a statement.",
+    "1.2.1.LI.2: Employ rhetorical question to show surprise or wonder about an opposing statement or view.",
+    "1.2.1.LI.3: Give a two-sentence introduction of the topic, six-sentence main body, and two-sentence conclusion."
+  ],
+  "1.2.1.CS.4: Demonstrate knowledge and application of basic translation/interpretation rules and methods involving simple Arabic and English texts from different fields and varying degrees of difficulty": [
+    "1.2.1.LI.1: Tell the English equivalent denotative meanings of words in an Arabic text.",
+    "1.2.1.LI.2: Give the Arabic equivalent denotative meanings of words in an English text.",
+    "1.2.1.LI.3: Give the English equivalent connotative meanings of words in an Arabic text.",
+    "1.2.1.LI.4: Give the Arabic equivalent connotative meanings of words in an English text."
+  ],
+  "1.2.2.CS.1: Demonstrate knowledge and literary creativity in narrating a known local story, using simple literary devices.": [
+    "1.2.2.LI.1: Give a summary of a famous Ghanaian story using words from a literature book.",
+    "1.2.2.LI.2: Narrate a summarized story from a prescribed literature textbook adopting familiar names within your locality.",
+    "1.2.2.LI.3: In not more than 100 words, give an account of a real event in your own words, employing simple literary devices like Simile.",
+    "1.2.2.LI.4: In not more than 100 words, give an account of a real event in your own words, employing metaphor, and imagery."
+  ],
+  "1.2.2.CS.2: Demonstrate knowledge and ability to recall and reproduce lines of Modern Arabic poetry and prose with clear voice and articulation.": [
+    "1.2.2.LI.1: Recite a Modern Arabic poem of 10 lines from memory, with clear voice and articulation at a natural pace.",
+    "1.2.2.LI.2: Recite a Modern Arabic poem of 10 lines from memory, with clear voice, articulation, rhythm and intonation.",
+    "1.2.2.LI.3: Recite a Modern Arabic prose of 10 lines from memory, with clear voice and articulation at a natural pace.",
+    "1.2.2.LI.4: Recite a Modern Arabic poem of 10 lines from memory, with clear voice, articulation, recitation and intonation."
+  ],
+  "1.2.3.CS.1: Speaking Good Arabic: Grammar Unit: Demonstrate knowledge and understanding of parts of speech and their various characteristics": [
+    "1.2.3.LI.1: Orally compose 5 nominal sentences about personal experiences and tell the reason for starting with a Noun and its grammatical function.",
+    "1.2.3.LI.2: Apply the grammatical rule to orally compose 5 verbal sentences about recent events in the community, and the reason for starting with the verb and its morphological changes.",
+    "1.2.3.LI.3: Apply the grammatical rule to orally compose 5 sentences that contain particles and their grammatical functions."
+  ],
+  "1.3.1.CS.1: Demonstrate understanding and application of reading techniques of a moderately complex authentic text at a reasonable speed.": [
+    "1.3.1.LI.1: Read semi-complex fully vowelized verses of the Quran with clear voice, rhythm, intonation, and proper pronunciation at a reasonable speed.",
+    "1.3.1.LI.2: Read semi-complex fully vowelized verses of poetry with clear voice, rhythm, intonation, and proper pronunciation at a reasonable speed.",
+    "1.3.1.LI.3: Read semi-complex fully vowelized classic prose with clear voice, rhythm, intonation, and proper pronunciation at a reasonable speed.",
+    "1.3.1.LI.4: Read semi-complex fully vowelized classic prose with clear voice, rhythm, intonation, and proper pronunciation at a reasonable speed."
+  ],
+  "1.3.2.CS.1: Demonstrate knowledge and understanding of text content using reading strategies of semi-complex text at a reasonable speed. (B1, CEFR)": [
+    "1.3.2.LI.1: Survey the text for clues related to its general idea, its relevance, and how the ideas connect to each other.",
+    "1.3.2.LI.2: Give possible meanings of unknown words in the passage, and then confirm their meanings from the dictionary."
+  ],
+  "1.3.2.CS.2: Demonstrate knowledge and application of basic translation/interpretation rules and methods involving simple Arabic and English texts from different fields and varying degrees of difficulty": [
+    "1.3.2.LI.1: Provide the denotative meanings of Arabic words, phrases, and sentences in an English text.",
+    "1.3.2.LI.2: Provide the denotative meanings of English words, phrases, and sentences in an Arabic text.",
+    "1.3.2.LI.3: Provide the connotative meanings of Arabic words, phrases, and sentences in an English text.",
+    "1.3.2.LI.4: Provide the connotative meanings of English words, phrases, and sentences in an Arabic text."
+  ],
+  "1.3.3.CS.1: Reading Good Arabic: Grammar Unit: Demonstrate knowledge and understanding of parts of speech and their grammatical functions": [
+    "1.3.3.LI.1: Identify nouns, verbs and particles and state their identifiable features.",
+    "1.3.3.LI.2: State the grammatical functions of nouns, verbs, and particles in a given sentence."
+  ],
+  "1.3.4.CS.1: Demonstrate knowledge and understanding of the introduction of Arabic Literature": [
+    "1.3.4.LI.1: Give the general definition of Arabic literature and the factors that influenced its development.",
+    "1.3.4.LI.2: Identify the various types of Arabic literature and their literary functions.",
+    "1.3.4.LI.3: Identify the social and cultural elements in a given text (prose).",
+    "1.3.4.LI.4: Identify the social and cultural elements in selected lines of poetry."
+  ],
+  "1.4.1.CS.1: Demonstrate understanding and knowledge of the orthography of Arabic and the exceptions to the conventional spelling system.": [
+    "1.4.1.LI.1: Compose an essay using words some of whose letters lose their audio manifestation, as well as those some of whose letters are pronounced and yet do not have textual representations. Use 10 of such for each of the two categories.",
+    "1.4.1.LI.2: List letters whose sounds are pronounced and yet do not have textual representations, with examples."
+  ],
+  "1.4.2.CS.1: Demonstrate knowledge and application of writing methods using special styles, diction, and appropriate registers in compositions.": [
+    "1.4.2.LI.1: Write a simple composition by planning, drafting, editing, and revising your draft, using formal and informal expressions.",
+    "1.4.2.LI.2: Differentiate between formal and informal texts by identifying vocabularies and expressions peculiar to each."
+  ],
+  "1.4.2.CS.2: Demonstrate knowledge and application of basic translation/interpretation rules and methods involving simple Arabic and English texts from different fields and varying degrees of difficulty": [
+    "1.4.2.LI.1: Write the denotative meanings of Arabic words in an English text.",
+    "1.4.2.LI.2: Write the denotative meanings of English words in an Arabic text.",
+    "1.4.2.LI.3: Write the connotative meanings of Arabic words in an English text.",
+    "1.4.2.LI.4: Write the connotative meanings of English words in an Arabic text."
+  ],
+  "1.4.3.CS.1: Demonstrate knowledge and application of strategies of composing straightforward descriptive essay on a range of familiar subjects within your field of interest.": [
+    "1.4.3.LI.1: Compose an essay to describe someone close to you with whom you’ve shared an experience in the past.",
+    "1.4.3.LI.2: Compose an essay to describe something that has sentimental value for you."
+  ],
+  "1.4.3.CS.2: Demonstrate knowledge and creativity in adopting famous quotations as a specific theme to recount real stories using simple narrative style.": [
+    "1.4.3.LI.1: Write about a real event using one of the famous quotes as the theme, employing simple literary devices like Simile.",
+    "1.4.3.LI.2: Write an account of a real event in not less than 20 lines with one of the famous quotes as the theme, using metaphor, and imagery."
+  ],
+  "1.4.4.CS.1: Demonstrate knowledge of types of sentences and their components: the Subject and Predicate (Complement), the Subject and Predicate (Object)": [
+    "1.4.4.LI.1: Extract from the passage 10 nominal sentences and identify their two major components with their grammatical functions and the attached declensions.",
+    "1.4.4.LI.2: Extract from the passage 10 verbal sentences and identify their two major components with their grammatical functions and the attached declensions."
+  ],
+
   // Chemistry Standard Indicators
   "1.1.1.CS.1: Explain atomic structure, nuclear stability, and behavior of matter using scientific practices.": [
     "1.1.1.LI.1: Describe chemical processes around us, and their applications in everyday life (food, agriculture, medicine, energy).",

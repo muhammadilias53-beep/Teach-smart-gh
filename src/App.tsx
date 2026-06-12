@@ -19,6 +19,7 @@ import SchemeGenerator from './components/generators/SchemeGenerator';
 import ProfileSettings from './components/profile/ProfileSettings';
 import ResourcePacks from './components/packs/ResourcePacks';
 import AdminCommandCenter from './components/admin/AdminCommandCenter';
+import { PWALifecycleTracker } from './components/PWALifecycleTracker';
 
 // Public pages
 import { About } from './components/public/About';
@@ -40,8 +41,9 @@ import { Toaster } from 'react-hot-toast';
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
+    <Router>
+      <AuthProvider>
+        <PWALifecycleTracker />
         <Toaster position="top-right" />
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -67,8 +69,8 @@ function App() {
         </Routes>
         
         <GeminiAssistant />
-      </Router>
-    </AuthProvider>
+      </AuthProvider>
+    </Router>
   );
 }
 

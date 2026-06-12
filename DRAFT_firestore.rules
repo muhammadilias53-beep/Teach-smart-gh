@@ -126,6 +126,29 @@ service cloud.firestore {
       allow read, write: if isAdmin();
     }
 
+    // 7. Used Emails Tracking (Guest single-use enforcement)
+    match /used_emails/{email} {
+      allow get: if true;
+      allow create, update: if isSignedIn() && request.resource.data.uid == request.auth.uid;
+      allow delete: if isAdmin();
+    }
+
+    // 8. PWA Launches - Analytics
+    match /pwa_launches/{id} {
+      function isValidPwaLaunch(data) {
+        return data.displayMode is string && data.displayMode.size() <= 64 &&
+               data.referral is string && data.referral.size() <= 256 &&
+               data.uid is string && data.uid.size() <= 128 &&
+               data.email is string && data.email.size() <= 128 &&
+               data.language is string && data.language.size() <= 32 &&
+               data.userAgent is string && data.userAgent.size() <= 512;
+      }
+      allow list: if isAdmin();
+      allow get: if isAdmin();
+      allow create: if isValidPwaLaunch(incoming());
+      allow update, delete: if false;
+    }
+
     // Connection Test
     match /test/connection {
       allow get: if true;

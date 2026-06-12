@@ -12,24 +12,24 @@ interface LogoProps {
 export const Logo = ({ className, iconOnly = false, size = 'md' }: LogoProps) => {
   const sizes = {
     sm: 'w-10 h-10',
-    md: 'w-16 h-16',
+    md: 'w-12 h-12',
     lg: 'w-32 h-32',
   };
 
   const iconSizes = {
     sm: 'w-8 h-8',
-    md: 'w-14 h-14',
+    md: 'w-10 h-10',
     lg: 'w-28 h-28',
   };
 
   return (
-    <div className={cn("flex items-center gap-4", className)}>
+    <div className={cn("flex items-center gap-3 min-w-0 select-none", className)}>
       <motion.div 
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         className={cn(
           sizes[size],
-          "relative flex items-center justify-center group"
+          "relative flex items-center justify-center shrink-0 group"
         )}
       >
         <svg 
@@ -107,24 +107,24 @@ export const Logo = ({ className, iconOnly = false, size = 'md' }: LogoProps) =>
       </motion.div>
 
       {!iconOnly && (
-        <div className="flex flex-col">
+        <div className="flex flex-col min-w-0">
           <div className="flex items-center">
-            <span className="text-2xl font-black text-[#001C3D] tracking-tighter uppercase leading-none">
+            <span className="text-xl font-black text-[#001C3D] tracking-tighter uppercase leading-none truncate max-w-full">
               Teach<span className="text-[#006B3F]">Smart</span><span className="text-[#FCD116]">GH</span>
             </span>
           </div>
-          <div className="flex items-center gap-2 mt-1">
-             <div className="h-[2px] w-4 bg-[#CE1126]" />
-             <span className="text-[9px] font-black text-[#CE1126] uppercase tracking-[0.12em] whitespace-nowrap">
+          <div className="flex items-center gap-1 mt-1 max-w-full overflow-hidden">
+             <div className="h-[2px] w-2 bg-[#CE1126] shrink-0" />
+             <span className="text-[7.5px] font-black text-[#CE1126] uppercase tracking-[0.08em] truncate">
                CATALYST CREATIVE
              </span>
-             <div className="h-[2px] w-4 bg-[#006B3F]" />
+             <div className="h-[2px] w-2 bg-[#006B3F] shrink-0" />
           </div>
-          <div className="mt-2 flex items-center gap-1.5 bg-sky-50 border border-sky-100 px-2 py-0.5 rounded-md w-fit">
-            <CheckCircle size={8} className="text-sky-600 fill-current" />
-            <span className="text-[7px] font-black text-sky-700 uppercase tracking-widest">GES/NaCCA CERTIFIED</span>
+          <div className="mt-1.5 flex items-center gap-1 bg-sky-50 border border-sky-100 px-1.5 py-0.5 rounded-md w-fit shrink-0">
+            <CheckCircle size={8} className="text-sky-600 fill-current shrink-0" />
+            <span className="text-[6.5px] font-black text-sky-700 uppercase tracking-widest whitespace-nowrap">GES/NaCCA CERTIFIED</span>
           </div>
-          <span className="text-[8px] font-bold text-slate-500 uppercase tracking-tight mt-1 whitespace-nowrap">
+          <span className="text-[7.5px] font-semibold text-slate-500 uppercase tracking-tight mt-1 leading-snug break-words">
             AI-Powered Teaching. Smarter Tomorrow.
           </span>
         </div>

@@ -25,8 +25,10 @@ import {
   SCIENCE_B9_LESSON_FRAMES,
   MATH_B7_LESSON_FRAMES,
   ENGLISH_B7_LESSON_FRAMES,
-  FRENCH_B4_B6_LESSON_FRAMES
+  FRENCH_B4_B6_LESSON_FRAMES,
+  subjectsByLevel
 } from '../../constants';
+import { SearchableDropdown } from '../ui/SearchableDropdown';
 
 const COMPETENCIES = [
   { code: "CP", label: "Critical Thinking and Problem Solving" },
@@ -238,10 +240,13 @@ const NoteGenerator = () => {
     const firstClass = matchedClasses[0] || '';
     
     let nextSubject = formData.subject;
-    if (newLevel === 'KG') {
-      nextSubject = 'Integrated Curriculum (KG)';
-    } else if (formData.subject === 'Integrated Curriculum (KG)') {
-      nextSubject = 'Science';
+    const levelSubjects = subjectsByLevel[newLevel] || [];
+    if (!levelSubjects.includes(nextSubject)) {
+      if (newLevel === 'KG') {
+        nextSubject = 'Integrated Curriculum (KG)';
+      } else {
+        nextSubject = levelSubjects.includes('Science') ? 'Science' : (levelSubjects[0] || '');
+      }
     }
 
     const nextStrands = getSubjectStrands(nextSubject, newLevel);
@@ -879,15 +884,12 @@ const NoteGenerator = () => {
 
               <div className="space-y-2">
                 <label className="text-sm font-bold text-gray-500 uppercase">Subject Area</label>
-                <select 
-                  className="input-field"
+                <SearchableDropdown
                   value={formData.subject}
-                  onChange={(e) => handleSubjectChange(e.target.value)}
-                >
-                  {subjects.map(s => (
-                    <option key={s} value={s}>{s}</option>
-                  ))}
-                </select>
+                  options={formData.level ? (subjectsByLevel[formData.level] || []).slice().sort((a,b) => a.localeCompare(b)) : []}
+                  placeholder="Select Subject"
+                  onChange={handleSubjectChange}
+                />
               </div>
 
               {formData.subject === 'Ghanaian Language' && (
@@ -900,7 +902,7 @@ const NoteGenerator = () => {
                     onChange={(e) => setFormData({...formData, ghanaianLanguage: e.target.value})}
                   >
                     <option value="">Select Language</option>
-                    {GHANAIAN_LANGUAGES.map(lang => (
+                    {GHANAIAN_LANGUAGES.slice().sort((a,b) => a.localeCompare(b)).map(lang => (
                       <option key={lang} value={lang}>{lang}</option>
                     ))}
                   </select>

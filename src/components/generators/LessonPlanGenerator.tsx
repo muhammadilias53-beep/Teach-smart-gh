@@ -33,8 +33,10 @@ import {
   OWOP_B1_B3_LESSON_FRAMES,
   OWOP_B4_B6_LESSON_FRAMES,
   PE_LESSON_FRAMES,
-  RME_LESSON_FRAMES
+  RME_LESSON_FRAMES,
+  subjectsByLevel
 } from '../../constants';
+import { SearchableDropdown } from '../ui/SearchableDropdown';
 
 const GHANAIAN_LANGUAGES = [
   "Dagaare",
@@ -552,7 +554,24 @@ const LessonPlanGenerator = () => {
                 <select 
                   className={cn("input-field", errors.level && "border-red-400 ring-4 ring-red-50")}
                   value={formData.level}
-                  onChange={(e) => setFormData({...formData, level: e.target.value, class: CLASSES_BY_LEVEL[e.target.value][0]})}
+                  onChange={(e) => {
+                    const newLvl = e.target.value;
+                    const newClasses = CLASSES_BY_LEVEL[newLvl] || [];
+                    const levelSubjects = subjectsByLevel[newLvl] || [];
+                    const currentSubj = formData.subject;
+                    const newSubj = levelSubjects.includes(currentSubj) ? currentSubj : '';
+                    setFormData({
+                      ...formData,
+                      level: newLvl,
+                      class: newClasses[0] || '',
+                      subject: newSubj,
+                      ghanaianLanguage: newSubj === 'Ghanaian Language' ? formData.ghanaianLanguage : '',
+                      strand: '',
+                      subStrand: '',
+                      contentStandard: '',
+                      indicator: ''
+                    });
+                  }}
                 >
                   {levels.map(l => <option key={l} value={l}>{l}</option>)}
                 </select>
@@ -571,15 +590,21 @@ const LessonPlanGenerator = () => {
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-bold text-gray-500 uppercase">Subject Area</label>
-                <select 
-                  className={cn("input-field", errors.subject && "border-red-400 ring-4 ring-red-50")}
+                <SearchableDropdown
                   value={formData.subject}
-                  onChange={(e) => setFormData({...formData, subject: e.target.value, ghanaianLanguage: e.target.value === 'Ghanaian Language' ? formData.ghanaianLanguage : '', strand: '', subStrand: '', contentStandard: '', indicator: ''})}
-                >
-                  {subjects.map(s => (
-                    <option key={s} value={s}>{s}</option>
-                  ))}
-                </select>
+                  options={formData.level ? (subjectsByLevel[formData.level] || []).slice().sort((a,b) => a.localeCompare(b)) : []}
+                  placeholder="Select Subject"
+                  error={errors.subject}
+                  onChange={(val) => setFormData({
+                    ...formData, 
+                    subject: val, 
+                    ghanaianLanguage: val === 'Ghanaian Language' ? formData.ghanaianLanguage : '', 
+                    strand: '', 
+                    subStrand: '', 
+                    contentStandard: '', 
+                    indicator: ''
+                  })}
+                />
                 {errors.subject && <p className="text-[10px] text-red-500 font-bold uppercase tracking-wider">{errors.subject}</p>}
               </div>
               {formData.subject === 'Ghanaian Language' && (
@@ -591,7 +616,7 @@ const LessonPlanGenerator = () => {
                     onChange={(e) => setFormData({...formData, ghanaianLanguage: e.target.value})}
                   >
                     <option value="">Select Language</option>
-                    {GHANAIAN_LANGUAGES.map(lang => (
+                    {GHANAIAN_LANGUAGES.slice().sort((a,b) => a.localeCompare(b)).map(lang => (
                       <option key={lang} value={lang}>{lang}</option>
                     ))}
                   </select>

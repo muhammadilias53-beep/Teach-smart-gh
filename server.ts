@@ -233,6 +233,26 @@ async function startServer() {
     return res.status(404).json({ error: "Could not find any fresh education news at this time." });
   });
 
+  // API Route: Log PWA Launch Analytics
+  app.post("/api/analytics/pwa-launch", async (req, res) => {
+    try {
+      const { displayMode, referral, uid, email, language } = req.body;
+      const userAgent = req.headers["user-agent"] || "unknown";
+      
+      console.log(`[Analytics] PWA Launch Event logged: mode=${displayMode}, uid=${uid}, email=${email}, referral=${referral}, lang=${language || 'en'}, UA=${userAgent}`);
+      
+      return res.json({ 
+        status: "success", 
+        message: "Launch analytics tracked securely on console", 
+        id: "log_" + Date.now().toString(36),
+        mode: displayMode 
+      });
+    } catch (error: any) {
+      console.error("[Analytics] Error logging PWA launch:", error.message);
+      return res.json({ status: "skipped", reason: error.message });
+    }
+  });
+
   // Vite middleware for development
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({

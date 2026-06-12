@@ -9,6 +9,7 @@ import { Logo } from '../common/Logo';
 import { ComplianceModal } from '../common/ComplianceModal';
 import { ConfirmationModal } from '../common/ConfirmationModal';
 import { NotificationCenter } from './NotificationCenter';
+import { PWAInstallButton } from '../common/PWAInstallButton';
 
 const Sidebar = () => {
   const { profile, logout, isTrialActive, isSubscriptionActive, user, daysLeft } = useAuth();
@@ -114,6 +115,11 @@ const Sidebar = () => {
           );
         })}
       </nav>
+
+      {/* PWA Install Button */}
+      <div className="px-4 mb-3">
+        <PWAInstallButton />
+      </div>
 
       {/* Compliance Link */}
       <div className="px-4 mb-2">
