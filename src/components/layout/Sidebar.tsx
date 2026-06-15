@@ -132,6 +132,38 @@ const Sidebar = () => {
         </button>
       </div>
 
+      {/* Join TeachSmart Family / WhatsApp Community Link */}
+      <motion.div
+        className="px-4 mb-2"
+        id="sidebar-join-family-container"
+        whileHover={{ scale: 1.03, y: -2 }}
+        whileTap={{ scale: 0.98 }}
+        transition={{ type: "spring", stiffness: 400, damping: 22 }}
+      >
+        <a
+          id="sidebar-join-family-link"
+          href="https://chat.whatsapp.com/Jwsy8Dc8C0YD4DmVyEUKhT"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-3 w-full px-4 py-3 bg-gradient-to-r from-emerald-600 to-green-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest border border-transparent hover:from-emerald-700 hover:to-green-700 transition-all duration-300 group shadow-lg shadow-emerald-600/10"
+        >
+          <motion.div
+            animate={{
+              scale: [1, 1.15, 1],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="flex items-center justify-center shrink-0"
+          >
+            <MessageCircle size={14} className="group-hover:rotate-12 transition-transform text-ghana-gold" />
+          </motion.div>
+          <span>Join TeachSmart Family</span>
+        </a>
+      </motion.div>
+
       {/* Contact Admin / WhatsApp Link */}
       <motion.div
         className="px-4 mb-4"

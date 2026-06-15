@@ -97,6 +97,12 @@ const NoteGenerator = () => {
     if (subj === 'History' && lvl === 'SHS') {
       return ["Historical Inquiry and Writing", "States and Societies in Pre-Colonial Times", "Age of Encounter and Exchanges Up to the 20th Century", "Independence and Post-Colonial Developments"];
     }
+    if (subj === 'Mathematics' && lvl === 'SHS') {
+      return ["Numbers for everyday life", "Algebraic Thinking", "Geometry around us", "Making sense of and using data"];
+    }
+    if (subj === 'Physical Education' && lvl === 'SHS') {
+      return ["Physical Activity and Health"];
+    }
     return SUBJECT_STRANDS[subj] || [];
   };
 
@@ -137,6 +143,20 @@ const NoteGenerator = () => {
       }
       if (strand === 'Customs and Institutions') {
         return ["Rites of Passage", "Naming Systems", "The Clan System", "Chieftaincy"];
+      }
+    }
+    if (subj === 'Mathematics' && lvl === 'SHS') {
+      if (strand === 'Numbers for everyday life') {
+        return ["Real number and numeration system", "Proportional reasoning"];
+      }
+      if (strand === 'Algebraic Thinking' || strand === 'Algebraic Reasoning') {
+        return ["Applications of expressions, equations and inequalities", "Patterns and relationships"];
+      }
+      if (strand === 'Geometry around us') {
+        return ["Spatial sense", "Measurement"];
+      }
+      if (strand === 'Making sense of and using data') {
+        return ["Statistical reasoning and its application in real life", "Chance"];
       }
     }
     const lookupStrand = getLookupStrand(subj, strand, lvl);

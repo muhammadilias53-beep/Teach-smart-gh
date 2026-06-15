@@ -3,7 +3,7 @@ import { motion, animate, AnimatePresence } from 'motion/react';
 import { 
   FileText, Calendar, PenTool, BookOpen, ArrowRight, Zap, 
   Trophy, Package, Activity, Target, Award, TrendingUp, Clock, 
-  ShieldCheck, Heart, CheckCircle, MessageSquare
+  ShieldCheck, Heart, CheckCircle, MessageSquare, MessageCircle
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
@@ -655,28 +655,59 @@ const Dashboard = () => {
         </div>
       </section>
 
-      {/* Help & Customer Support Section */}
-      <section className="bg-emerald-50/60 rounded-[3rem] p-8 md:p-10 border border-emerald-100/50 flex flex-col md:flex-row items-center justify-between gap-6" id="dashboard-support-section">
-        <div className="flex items-center gap-5">
-          <div className="w-14 h-14 bg-emerald-700 text-white rounded-2xl flex items-center justify-center font-black shadow-md shadow-emerald-900/10 shrink-0">
-            <MessageSquare size={24} />
+      {/* Help & Community Section Group */}
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Help & Support Card */}
+        <div className="bg-emerald-50/60 rounded-[3rem] p-8 md:p-10 border border-emerald-100/50 flex flex-col justify-between gap-6" id="dashboard-support-section">
+          <div className="flex items-start gap-5">
+            <div className="w-14 h-14 bg-emerald-700 text-white rounded-2xl flex items-center justify-center font-black shadow-md shadow-emerald-900/10 shrink-0">
+              <MessageSquare size={24} />
+            </div>
+            <div>
+              <h3 className="text-lg font-black text-slate-900 uppercase tracking-tight">Need Help or Have a Complaint?</h3>
+              <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mt-1">
+                Get in touch directly with the Admin Team on WhatsApp to resolve any platform queries or complaints.
+              </p>
+            </div>
           </div>
-          <div>
-            <h3 className="text-lg font-black text-slate-900 uppercase tracking-tight">Need Help or Have a Complaint?</h3>
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mt-1">Get in touch directly with the Admin Team on WhatsApp to launch any complaint or question</p>
-          </div>
+          <a
+            href={`https://wa.me/${((import.meta as any).env.VITE_ADMIN_WHATSAPP || "233556231544").replace(/[^0-9]/g, '')}?text=${encodeURIComponent("Hello TeachSmart Admin, I have a support request/complaint regarding the TeachSmart Ghana application:")}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 px-6 py-3.5 bg-emerald-900 text-white hover:bg-emerald-800 transition-all rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-emerald-900/15"
+            id="dashboard-contact-admin-btn"
+            aria-label="Contact TeachSmart Admin via WhatsApp for support and complaints"
+          >
+            <span>Contact Support</span>
+            <ArrowRight size={14} />
+          </a>
         </div>
-        <a
-          href={`https://wa.me/${((import.meta as any).env.VITE_ADMIN_WHATSAPP || "233556231544").replace(/[^0-9]/g, '')}?text=${encodeURIComponent("Hello TeachSmart Admin, I have a support request/complaint regarding the TeachSmart Ghana application:")}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center justify-center gap-2 px-6 py-3.5 bg-emerald-900 text-white hover:bg-emerald-800 transition-all rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-emerald-900/15"
-          id="dashboard-contact-admin-btn"
-          aria-label="Contact TeachSmart Admin via WhatsApp for support and complaints"
-        >
-          <span>Contact Admin on WhatsApp</span>
-          <ArrowRight size={14} />
-        </a>
+
+        {/* WhatsApp Community Card */}
+        <div className="bg-gradient-to-br from-green-50/80 to-emerald-50/50 rounded-[3rem] p-8 md:p-10 border border-green-100/50 flex flex-col justify-between gap-6" id="dashboard-community-section">
+          <div className="flex items-start gap-4">
+            <div className="w-14 h-14 bg-green-600 text-white rounded-2xl flex items-center justify-center font-black shadow-md shadow-green-900/10 shrink-0">
+              <MessageCircle size={24} />
+            </div>
+            <div>
+              <h3 className="text-lg font-black text-slate-900 uppercase tracking-tight">Join the TeachSmart Family</h3>
+              <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mt-1">
+                Join our national WhatsApp community of Ghanaian teachers to share resources, ideas, and get first-hand updates.
+              </p>
+            </div>
+          </div>
+          <a
+            href="https://chat.whatsapp.com/Jwsy8Dc8C0YD4DmVyEUKhT"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 px-6 py-3.5 bg-green-600 text-white hover:bg-green-700 transition-all rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-green-900/15"
+            id="dashboard-join-community-btn"
+            aria-label="Join the TeachSmart Ghana WhatsApp Community"
+          >
+            <span>Join WhatsApp Community</span>
+            <ExternalLink size={14} />
+          </a>
+        </div>
       </section>
 
       {/* Main Preview Work Area */}

@@ -9,7 +9,14 @@ import {
   Copy,
   Layout,
   BookOpen,
-  X
+  X,
+  Award,
+  ShieldCheck,
+  ChevronRight,
+  Activity,
+  Layers,
+  HelpCircle,
+  Info
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -77,6 +84,8 @@ export default function ExamGenerator() {
   const [showMarkingScheme, setShowMarkingScheme] = useState(false);
   const [showSaveConfirm, setShowSaveConfirm] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [showSbcGuide, setShowSbcGuide] = useState(false);
+  const [activeGuideTab, setActiveGuideTab] = useState<'principles' | 'domains' | 'itemAnalysis' | 'waecScheme'>('principles');
   
   const [formData, setFormData] = useState(() => {
     const defaultLevel = profile?.level || 'JHS';
@@ -413,6 +422,346 @@ export default function ExamGenerator() {
         <p className="text-slate-500 max-w-xl mx-auto font-medium">
           Generate standardized BECE/WASSCE style papers with exact question counts, practical diagrams, and official marking schemes.
         </p>
+
+        {/* Dynamic National Standards-Based Assessment (SBA) Training Guide */}
+        <div className="max-w-3xl mx-auto text-left mt-6">
+          <div className="bg-slate-900 text-white rounded-3xl p-6 shadow-xl border border-slate-800 transition-all">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="p-3 bg-emerald-500/10 text-emerald-400 rounded-2xl border border-emerald-500/20">
+                  <Award size={24} className="text-emerald-400" />
+                </div>
+                <div>
+                  <h3 className="font-black text-lg tracking-tight text-white flex items-center gap-2">
+                    NaCCA Standard-Based Assessment (SBA) Standards
+                    <span className="bg-amber-400 text-slate-950 text-[10px] uppercase font-black px-2 py-0.5 rounded-full inline-block">
+                      GES / NaCCA Aligned
+                    </span>
+                  </h3>
+                  <p className="text-xs text-slate-400 font-medium">
+                    Our exam generator strictly implements national test construction guidelines, Bloom's Taxonomy, and DOK cognitive levels.
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowSbcGuide(!showSbcGuide)}
+                className="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold rounded-xl transition-all border border-slate-700 self-start md:self-auto flex items-center gap-1.5"
+                id="btn-sbc-guide-toggle"
+              >
+                {showSbcGuide ? "Hide SBA Guide" : "Explore SBA Guidelines"}
+                <ChevronRight size={14} className={cn("transition-transform duration-300", showSbcGuide ? "rotate-90" : "")} />
+              </button>
+            </div>
+
+            <AnimatePresence>
+              {showSbcGuide && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="overflow-hidden mt-6 pt-6 border-t border-slate-800 space-y-6 animate-fadeIn"
+                >
+                  {/* Tabs for Navigation */}
+                  <div className="flex flex-wrap gap-2 border-b border-slate-800 pb-3">
+                    <button
+                      type="button"
+                      onClick={() => setActiveGuideTab('principles')}
+                      className={cn(
+                        "px-4 py-2 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all flex items-center gap-1.5",
+                        activeGuideTab === 'principles' 
+                          ? "bg-emerald-500 text-slate-950 shadow-lg" 
+                          : "bg-slate-800 text-slate-450 hover:text-white"
+                      )}
+                      id="tab-sbc-principles"
+                    >
+                      <ShieldCheck size={14} />
+                      8 Item Principles
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setActiveGuideTab('domains')}
+                      className={cn(
+                        "px-4 py-2 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all flex items-center gap-1.5",
+                        activeGuideTab === 'domains' 
+                          ? "bg-emerald-500 text-slate-950 shadow-lg" 
+                          : "bg-slate-800 text-slate-450 hover:text-white"
+                      )}
+                      id="tab-sbc-domains"
+                    >
+                      <Layers size={14} />
+                      Domains of Learning
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setActiveGuideTab('itemAnalysis')}
+                      className={cn(
+                        "px-4 py-2 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all flex items-center gap-1.5",
+                        activeGuideTab === 'itemAnalysis' 
+                          ? "bg-emerald-500 text-slate-950 shadow-lg" 
+                          : "bg-slate-800 text-slate-450 hover:text-white"
+                      )}
+                      id="tab-sbc-analysis"
+                    >
+                      <Activity size={14} />
+                      Item Analysis (p-value)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setActiveGuideTab('waecScheme')}
+                      className={cn(
+                        "px-4 py-2 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all flex items-center gap-1.5",
+                        activeGuideTab === 'waecScheme' 
+                          ? "bg-emerald-500 text-slate-950 shadow-lg" 
+                          : "bg-slate-800 text-slate-450 hover:text-white"
+                      )}
+                      id="tab-waec-scheme-overview"
+                    >
+                      <BookOpen size={14} />
+                      WAEC 2024 Schemes
+                    </button>
+                  </div>
+
+                  {/* Tab Contents */}
+                  {activeGuideTab === 'principles' && (
+                    <motion.div 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs"
+                    >
+                      <div className="bg-slate-850 p-4 rounded-2xl border border-slate-800 space-y-2">
+                        <div className="font-bold text-emerald-400 flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
+                          1. Clarity & Specificity
+                        </div>
+                        <p className="text-slate-350 leading-relaxed">
+                          Items must be completely free of vague or complex wording. In MCQs, the stem should clearly and fully pose the problem, enabling students to formulate its solution before looking at the A/B/C/D alternatives.
+                        </p>
+                      </div>
+                      <div className="bg-slate-850 p-4 rounded-2xl border border-slate-800 space-y-2">
+                        <div className="font-bold text-emerald-400 flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
+                          2. Relevance & Content Validity
+                        </div>
+                        <p className="text-slate-350 leading-relaxed">
+                          All assessment items must map directly back to official NaCCA standards, strands, sub-strands, and learning indicators, protecting content validity metrics.
+                        </p>
+                      </div>
+                      <div className="bg-slate-850 p-4 rounded-2xl border border-slate-800 space-y-2">
+                        <div className="font-bold text-emerald-400 flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
+                          3. Balanced Difficulty Index
+                        </div>
+                        <p className="text-slate-350 leading-relaxed">
+                          A healthy test spreads item difficulties systematically. While few easy and hard items exist, the bulk are balanced with p-values of 0.45 to 0.75, which is ideal for grading.
+                        </p>
+                      </div>
+                      <div className="bg-slate-850 p-4 rounded-2xl border border-slate-800 space-y-2">
+                        <div className="font-bold text-emerald-400 flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
+                          4. Plausible & Cognitive Distractors
+                        </div>
+                        <p className="text-slate-350 leading-relaxed">
+                          MCQ incorrect choices (distractors) are modeled around proven student misconceptions and require active conceptual evaluation rather than obvious guessing.
+                        </p>
+                      </div>
+                      <div className="bg-slate-850 p-4 rounded-2xl border border-slate-800 space-y-2">
+                        <div className="font-bold text-emerald-400 flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
+                          5. Objective Consistency & Fairness
+                        </div>
+                        <p className="text-slate-350 leading-relaxed">
+                          Items are design-tested to be free of regional, cultural, or personal biases, ensuring equal scoring opportunities for children in all parts of Ghana.
+                        </p>
+                      </div>
+                      <div className="bg-slate-850 p-4 rounded-2xl border border-slate-800 space-y-2">
+                        <div className="font-bold text-emerald-400 flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
+                          6. Zero Grammatical Clues
+                        </div>
+                        <p className="text-slate-350 leading-relaxed">
+                          Prevents accidental hints (e.g., matching plural stems to plural verbs in choices). All choices are similar in length, style, complexity, and grammatical context.
+                        </p>
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {activeGuideTab === 'domains' && (
+                    <motion.div 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="space-y-4 text-xs"
+                    >
+                      <div className="bg-slate-850 p-5 rounded-2xl border border-slate-800 space-y-3">
+                        <h4 className="text-emerald-400 font-bold uppercase tracking-wider text-[11px] flex items-center gap-2">
+                          <Layers size={14} /> Cognitive Domain (Revised Bloom's & Depth of Knowledge):
+                        </h4>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                          <div className="p-3 bg-slate-900/40 rounded-xl border border-slate-800 space-y-1">
+                            <span className="text-amber-400 font-black">Remember/Understand</span>
+                            <p className="text-slate-450 text-[11px] leading-relaxed">Recall, list, state, label terms (DOK 1). Lays the foundational literacy for basic concepts.</p>
+                          </div>
+                          <div className="p-3 bg-slate-900/40 rounded-xl border border-slate-800 space-y-1">
+                            <span className="text-amber-400 font-black">Apply/Analyze</span>
+                            <p className="text-slate-450 text-[11px] leading-relaxed">Demonstrate, categorize, compute in real Ghanaian contexts (DOK 2 & 3). Relates knowledge directly to the environment.</p>
+                          </div>
+                          <div className="p-3 bg-slate-900/40 rounded-xl border border-slate-800 space-y-1">
+                            <span className="text-amber-400 font-black">Evaluate/Create</span>
+                            <p className="text-slate-450 text-[11px] leading-relaxed">Formulate, critique, design structures or practical workflows (DOK 4). Instills critical self-reliance and innovation.</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="bg-slate-850 p-4 rounded-2xl border border-slate-800 space-y-2">
+                          <h4 className="text-emerald-400 font-bold uppercase tracking-wider text-[11px] flex items-center gap-2">
+                            <Sparkles size={14} /> Affective Domain (Values & Actions):
+                          </h4>
+                          <p className="text-slate-350 leading-relaxed">
+                            Formulates moral, civic, and ethno-cultural reasoning questions. Especially for RME and Social Studies, questions require students to evaluate civic behaviors, ethics, and values in real-life societal scenarios.
+                          </p>
+                        </div>
+                        <div className="bg-slate-850 p-4 rounded-2xl border border-slate-800 space-y-2">
+                          <h4 className="text-emerald-400 font-bold uppercase tracking-wider text-[11px] flex items-center gap-2">
+                            <Activity size={14} /> Psychomotor Domain (Skills & Practicals):
+                          </h4>
+                          <p className="text-slate-350 leading-relaxed">
+                            For hands-on topics (Career Tech, Science, Computing), we generate performance evaluations, freehand drawing cues, materials sorting lists, and experimental workflow validations.
+                          </p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {activeGuideTab === 'itemAnalysis' && (
+                    <motion.div 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="space-y-4 text-xs"
+                    >
+                      <div className="bg-slate-850 p-5 rounded-2xl border border-slate-800 space-y-4">
+                        <h4 className="text-emerald-400 font-bold uppercase tracking-wider text-[11px] flex items-center gap-2">
+                          <Activity size={14} /> Statistical Item Metrics & Quality Targets
+                        </h4>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="space-y-1.5">
+                            <span className="text-white font-bold flex items-center gap-1.5">
+                              <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                              Difficulty Index (p-value):
+                            </span>
+                            <p className="text-slate-350 leading-relaxed font-medium">
+                              Calculates the proportion of students who answered correctly. 
+                              Our engine prioritizes the <strong>optimal p-value range of 0.45 to 0.75</strong> for moderate difficulty. This target ensures examinations are neither too challenging nor trivial.
+                            </p>
+                          </div>
+                          
+                          <div className="space-y-1.5">
+                            <span className="text-white font-bold flex items-center gap-1.5">
+                              <span className="w-2 h-2 rounded-full bg-amber-400" />
+                              Discrimination Index (DI):
+                            </span>
+                            <p className="text-slate-350 leading-relaxed font-medium">
+                              Measures how effectively an item distinguishes high-achieving from low-achieving master groups. 
+                              Items are systematically checked for positive, high-discrimination outputs, filtering out misleading or double-edged items.
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="pt-3 border-t border-slate-800 flex items-start gap-2.5 text-[11px] text-slate-400">
+                          <Info size={14} className="text-emerald-500 shrink-0 mt-0.5" />
+                          <p className="leading-relaxed">
+                            <strong>Note on MCQ Distractor Analysis:</strong> All incorrect alternatives generated represent active misconceptions. If students guessed blind, distractor frequencies would balance; TeachSmart ensures distractors have high cognitive plausibility so students must demonstrate authentic mastery.
+                          </p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {activeGuideTab === 'waecScheme' && (
+                    <motion.div 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="space-y-4 text-xs font-medium"
+                    >
+                      <div className="bg-slate-850 p-5 rounded-2xl border border-slate-800 space-y-4">
+                        <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                          <h4 className="text-emerald-400 font-bold uppercase tracking-wider text-[11px] flex items-center gap-2">
+                            <BookOpen size={14} /> Official WAEC 2024 Exam Structures
+                          </h4>
+                          <span className="text-[10px] bg-slate-900 border border-slate-800 text-slate-300 font-bold px-2 py-0.5 rounded-full">
+                            Continuous Assessment 30% | External 70%
+                          </span>
+                        </div>
+
+                        <div className="overflow-x-auto">
+                          <table className="w-full text-left text-slate-300 text-[11px]">
+                            <thead>
+                              <tr className="border-b border-slate-800 text-slate-400 font-bold">
+                                <th className="pb-2">Subject</th>
+                                <th className="pb-2">Paper 1 (Objective)</th>
+                                <th className="pb-2">Paper 2 (Essay & Practical)</th>
+                                <th className="pb-2">Weight / Scaling</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr className="border-b border-slate-850">
+                                <td className="py-2.5 font-bold text-white">Career Technology</td>
+                                <td className="py-2.5 text-slate-400">40 MCQs / 50 min. (40 marks)</td>
+                                <td className="py-2.5 text-slate-400">Section A (compulsory test of practical) & Section B (choice)</td>
+                                <td className="py-2.5 text-slate-400">Paper 1 (40), Paper 2 (60) = 100 Marks</td>
+                              </tr>
+                              <tr className="border-b border-slate-850">
+                                <td className="py-2.5 font-bold text-white">Computing</td>
+                                <td className="py-2.5 text-slate-400">40 MCQs / 45 min. (40 marks)</td>
+                                <td className="py-2.5 text-slate-400">Section A (compulsory flowchart/algorithm) & Section B (3 of 4)</td>
+                                <td className="py-2.5 text-slate-400">Paper 1 (40), Paper 2 (60) = 100 Marks</td>
+                              </tr>
+                              <tr className="border-b border-slate-850">
+                                <td className="py-2.5 font-bold text-white">French</td>
+                                <td className="py-2.5 text-slate-400">Part I: Listening (20m), Part II: Written (10m), Part III: Vocab (10m)</td>
+                                <td className="py-2.5 text-slate-400">Question 1 (thematic forms/advice - 20m), Question 2 (essay - 20m)</td>
+                                <td className="py-2.5 text-slate-400">P1 scaling: 1.5x (60m). P2: (40m) = 100 Marks</td>
+                              </tr>
+                              <tr className="border-b border-slate-850">
+                                <td className="py-2.5 font-bold text-white">Ghanaian Language</td>
+                                <td className="py-2.5 text-slate-400">40 MCQs / 50 min. on Customs, Literature, grammar</td>
+                                <td className="py-2.5 text-slate-400">4 parts: Composition (30m), Comprehension (10m), Translation (10m), Usage (10m)</td>
+                                <td className="py-2.5 text-slate-400">Paper 1 (40), Paper 2 (60) = 100 Marks</td>
+                              </tr>
+                              <tr className="border-b border-slate-850">
+                                <td className="py-2.5 font-bold text-white">Arabic</td>
+                                <td className="py-2.5 text-slate-400">40 MCQs / 45 min lexis, grammar & structures</td>
+                                <td className="py-2.5 text-slate-400">Guided essay (picture/letter writing - 30m)</td>
+                                <td className="py-2.5 text-slate-400">P1 scaled by 2.25 (70m), P2 (30m) = 100 Marks</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3 border-t border-slate-800">
+                          <div className="p-3 bg-slate-900/40 rounded-xl border border-slate-800 space-y-1">
+                            <span className="text-emerald-400 font-bold">Bringing Foreign Materials</span>
+                            <p className="text-slate-450 text-[11px] leading-relaxed">
+                              Immediate withholding of results for any candidate bringing cribs, programmable calculators, or custom-inscribed clothing into the examination call.
+                            </p>
+                          </div>
+                          <div className="p-3 bg-slate-900/40 rounded-xl border border-slate-800 space-y-1">
+                            <span className="text-emerald-400 font-bold">Mass Cheating Guidelines</span>
+                            <p className="text-slate-450 text-[11px] leading-relaxed">
+                              If more than half at a center collude in any paper, the entire center is de-recognized for a minimum of 1 year, with results strictly withheld as per WAEC 2024 regulations.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
       </div>
 
       <div className="bg-white p-8 lg:p-12 rounded-[3rem] shadow-sm border border-slate-100 ghana-border relative overflow-hidden group">

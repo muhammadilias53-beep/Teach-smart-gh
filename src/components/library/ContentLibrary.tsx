@@ -99,7 +99,7 @@ const CURRICULUM_BOOKS: Record<string, { title: string, url: string, level: stri
     { title: "KG Mathematics Curriculum", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/MATHEMATICS-KG.pdf", level: "KG" },
     { title: "Mathematics Curriculum (B1-B6)", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/MATHEMATICS-LOWER-PRIMARY-B1-B3.pdf", level: "Basic 1-6 (Primary)" },
     { title: "Mathematics Curriculum (B7-B9)", url: "https://nacca.gov.gh/wp-content/uploads/2020/12/Mathematics-JHS-B7-B9.pdf", level: "Basic 7-9 (JHS)" },
-    { title: "Senior High Mathematics", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/CORE-MATHEMATICS-SHS.pdf", level: "Basic 10-12 (SHS)" }
+    { title: "NaCCA SHS Mathematics Curriculum (SHS 1-3, Sept 2023)", url: "https://nacca.gov.gh/wp-content/uploads/2023/09/MATHEMATICS-SHS.pdf", level: "SHS" }
   ],
   "English": [
     { title: "KG English Language", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/ENGLISH-KG.pdf", level: "KG" },
@@ -119,7 +119,8 @@ const CURRICULUM_BOOKS: Record<string, { title: string, url: string, level: stri
   ],
   "Physical Education": [
     { title: "Physical Education Curriculum (B1-B6)", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/PE-LP-B1-B6.pdf", level: "Basic 1-6 (Primary)" },
-    { title: "PE and Health Curriculum (B7-B9)", url: "https://nacca.gov.gh/wp-content/uploads/2020/12/PE-JHS-B7-B9.pdf", level: "JHS" }
+    { title: "PE and Health Curriculum (B7-B9)", url: "https://nacca.gov.gh/wp-content/uploads/2020/12/PE-JHS-B7-B9.pdf", level: "JHS" },
+    { title: "NaCCA SHS Physical Education & Health (Core) Curriculum (SHS 1-3, Sept 2023)", url: "https://nacca.gov.gh/wp-content/uploads/2023/09/PHYSICAL-EDUCATION-SHS.pdf", level: "SHS" }
   ],
   "Computing": [
     { title: "Computing Curriculum (B1-B6)", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/COMPUTING-LOWER-PRIMARY-B1-B3.pdf", level: "Basic 1-6 (Primary)" },
@@ -135,6 +136,9 @@ const CURRICULUM_BOOKS: Record<string, { title: string, url: string, level: stri
   "Creative Arts": [
     { title: "Creative Arts and Design (B1-B6)", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/CREATIVE-ARTS-B1-B6.pdf", level: "Basic 1-6 (Primary)" },
     { title: "Creative Arts and Design (B7-B9)", url: "https://nacca.gov.gh/wp-content/uploads/2020/12/Creative-Arts-B7-B9.pdf", level: "Basic 7-9 (JHS)" }
+  ],
+  "Art and Design Studio": [
+    { title: "NaCCA Art and Design Studio Curriculum (SHS 1-3, Sept 2023)", url: "https://nacca.gov.gh/wp-content/uploads/2023/09/ART-AND-DESIGN-STUDIO-SHS.pdf", level: "SHS" }
   ],
   "French": [
     { title: "French Curriculum (B4-B6)", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/FRENCH-B4-B6.pdf", level: "Basic 1-6 (Primary)" },
@@ -173,7 +177,7 @@ const CURRICULUM_BOOKS: Record<string, { title: string, url: string, level: stri
     { title: "SHS Government", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/GOVERNMENT-SHS.pdf", level: "SHS" }
   ],
   "Literature in English": [
-    { title: "SHS Literature in English", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/LITERATURE-IN-ENGLISH-SHS.pdf", level: "SHS" }
+    { title: "NaCCA SHS Literature-in-English Curriculum (SHS 1-3, Sept 2023)", url: "https://nacca.gov.gh/wp-content/uploads/2023/09/LITERATURE-IN-ENGLISH-SHS.pdf", level: "SHS" }
   ],
   "Financial Accounting": [
     { title: "SHS Financial Accounting", url: "https://nacca.gov.gh/wp-content/uploads/2019/04/FINANCIAL-ACCOUNTING-SHS.pdf", level: "SHS" }
@@ -348,6 +352,36 @@ const OFFICIAL_SYSTEM_RESOURCES: Omit<Resource, 'createdAt'>[] = [
     resourceCategory: 'AI Teaching Visual',
     term: 'Term 3',
     content: `### Visual Organ Map: Human Digestive System\n**Subject:** Science | **Class:** Basic 7\n\n**Visual layout description for board:**\n- **Mouth:** Entry point with mechanical teeth grinding.\n- **Esophagus:** Food path tube.\n- **Stomach:** Acidic breakdown container.\n- **Small Intestine:** Nutrient filtration organ.\n- **Large Intestine:** Water absorption path.`
+  },
+  {
+    id: 'system-lesson-notes-pe-shs1',
+    authorId: 'system',
+    title: 'Career Pathways in Physical Education & Health - SHS 1 Notes',
+    description: 'NaCCA-aligned study and discussion guide on career options and attributes in Ghanaian sports and physical education.',
+    subject: 'Physical Education',
+    level: 'SHS',
+    strand: 'Physical Activity and Health',
+    subStrand: 'Career Pathways in Physical Activity and Sports',
+    topic: 'Careers vs Professions in Sports',
+    type: 'note',
+    resourceCategory: 'AI-Generated Lesson Notes',
+    term: 'Term 1',
+    content: `### Career Pathways in Physical Education & Health\n**Subject:** Physical Education & Health (Core) | **Class:** SHS 1 | **Strand:** Physical Activity and Health | **Sub-Strand:** Career Pathways in Physical Activity and Sports\n\n--- \n### 1. Learning Objectives\n- Differentiate between a career and a profession. \n- Identify four core career pathways in Ghanaian Physical Education and Health.\n- Discuss professional attributes and mindsets required for these roles.\n\n### 2. Definitions\n- **Career:** The progressive journey of a person's working life, including various jobs and roles.\n- **Profession:** An occupation that requires specialized training, credentials, and formal qualifications (e.g., a sports doctor or coach).\n\n### 3. Key Career Pathways in Ghana\n- **Physical Education Teacher:** Teaching sports, health, and wellness concepts in schools.\n- **Sport Administrator:** Organizing sporting events, leagues, and operations at school or district levels.\n- **Sports Coach:** Guiding athletes from basic training to professional competitions.\n- **Fitness Trainer:** Running fitness classes or wellness coaching in community and private settings.\n\n### 4. Classroom Activity (Think-Pair-Share)\nDiscuss with your partner why choosing a sports career that aligns with your interest, skills, and passion leads to better long-term success.`
+  },
+  {
+    id: 'system-lesson-notes-art-design-shs1',
+    authorId: 'system',
+    title: 'Intellectual Property & Copyright Laws - Art & Design Studio Notes',
+    description: 'NaCCA-aligned lesson notes on copyright, patents, and trademarks in Ghana for SHS students and design practitioners.',
+    subject: 'Art and Design Studio',
+    level: 'SHS',
+    strand: 'Art and Design Theories and Application',
+    subStrand: 'Professional Practice and Ethics',
+    topic: 'Intellectual Property Laws in Ghana',
+    type: 'note',
+    resourceCategory: 'AI-Generated Lesson Notes',
+    term: 'Term 1',
+    content: `### Intellectual Property & Copyright Laws in Ghana\n**Subject:** Art and Design Studio | **Class:** SHS 1 | **Strand:** Art and Design Theories and Application | **Sub-Strand:** Professional Practice and Ethics\n\n--- \n### 1. Learning Objectives\n- Define intellectual property and copyright.\n- Explain the importance of the Copyright Act of Ghana, 2005 (Act 690).\n- Discuss the ethical rules for using other artists' works as inspiration or references.\n\n### 2. What is Intellectual Property (IP)?\n- Intellectual property refers to creations of the mind: inventions, literary and artistic works, designs, symbols, names, and images used in commerce.\n- It is protected in law through **Patents**, **Copyright**, and **Trademarks**, which enable creators to earn recognition or financial benefit from what they invent or create.\n\n### 3. Key Legislative Acts in Ghana\n- **Copyright Act, 2005 (Act 690):** Protects literary, artistic, musical, sound recordings, and broadcasts from unauthorized copying and distribution.\n- **Patent Act, 2003 (Act 657):** Covers technical inventions and processes.\n- **Trademarks Act, 2004 (Act 664):** Protects brand names, logos, and symbols.\n- **Companies Act, 2019 (Act 992):** Governs registration of art and design businesses.\n\n### 4. Ethical Use of Others' Artworks\n- Always attribute/credit the original source when reproducing or building upon existing forms.\n- Transform secondary materials significantly to establish original ownership and avoid plagiarism.\n- Request written permission/licensing before industrializing or commercializing another person's creative work.`
   }
 ];
 

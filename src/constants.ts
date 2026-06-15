@@ -29,6 +29,7 @@ export const subjects = [
   "Elective ICT", 
   "Food & Nutrition", 
   "Graphic Design",
+  "Art and Design Studio",
   "Integrated Curriculum (KG)",
   "Our World Our People",
   "Physical Education"
@@ -40,7 +41,7 @@ export const subjectsByLevel: Record<string, string[]> = {
   "KG": ["Integrated Curriculum (KG)"],
   "Primary": ["English", "Mathematics", "Science", "Our World Our People", "Social Studies", "Computing", "RME", "Creative Arts", "Ghanaian Language", "French", "History", "Physical Education"],
   "JHS": ["English", "Mathematics", "Science", "Social Studies", "Computing", "RME", "Creative Arts", "Ghanaian Language", "French", "Career Technology", "Physical Education"],
-  "SHS": ["Arabic", "English", "Mathematics", "Science", "Social Studies", "Additional Mathematics", "Physics", "Chemistry", "Biology", "Economics", "Geography", "History", "Government", "CRS", "IRS", "Literature in English", "Financial Accounting", "Cost Accounting", "Business Management", "Agricultural Science", "Elective ICT", "Food & Nutrition", "Graphic Design", "Physical Education"]
+  "SHS": ["Arabic", "English", "Mathematics", "Science", "Social Studies", "Additional Mathematics", "Physics", "Chemistry", "Biology", "Economics", "Geography", "History", "Government", "CRS", "IRS", "Literature in English", "Financial Accounting", "Cost Accounting", "Business Management", "Agricultural Science", "Elective ICT", "Food & Nutrition", "Graphic Design", "Physical Education", "Art and Design Studio"]
 };
 
 export const GHANA_REGIONS = [
@@ -127,7 +128,8 @@ export const SUBJECT_STRANDS: Record<string, string[]> = {
   "RME": ["God, His Creation and Attributes", "Religious Practices and their Moral Implications", "Religious Leaders", "The Family and the Community", "The Family, Authority and Obedience", "Religious Leaders and Personalities", "Ethics and Moral Life", "Religion and Economic Life"],
   "Food & Nutrition": ["Nutrition and Health", "Food Production"],
   "Geography": ["The Earth and Its Neighbourhoods", "Navigating Our Environment", "Human and Environment"],
-  "Government": ["Government and Development", "Constitution, Institutions and Administration", "Ghana in the Global System"]
+  "Government": ["Government and Development", "Constitution, Institutions and Administration", "Ghana in the Global System"],
+  "Art and Design Studio": ["Art and Design Theories and Application", "Creative Methodologies", "Creative Project"]
 };
 
 export const SUBJECT_SUB_STRANDS: Record<string, string[]> = {
@@ -150,11 +152,39 @@ export const SUBJECT_SUB_STRANDS: Record<string, string[]> = {
   "Constitution, Institutions and Administration": ["Constitution and Organs of Government", "State and Non-State Actors in Ghana"],
   "Ghana in the Global System": ["Ghana in the Community of Nations", "Globalization and Development"],
 
+  // Art and Design Studio Mappings
+  "Art and Design Theories and Application": [
+    "Meanings, Scope and Role of Art and Design Studio",
+    "Material Classifications and Methods",
+    "Professional Practice and Ethics"
+  ],
+  "Creative Methodologies": [
+    "Thinking Studio",
+    "Fabrication and Construction"
+  ],
+  "Creative Project": [
+    "Artefact Production",
+    "Portfolio Building"
+  ],
+
   // History Mappings (SHS)
   "Historical Inquiry and Writing": ["Nature and Scope of History", "Sources and Methods of Reconstructing History"],
   "States and Societies in Pre-Colonial Times": ["Emergence of Complex States", "Pre-Colonial Economy and Economic Activities", "Emergence of Complex States and Societies"],
   "Age of Encounter and Exchanges Up to the 20th Century": ["Religion and Religious Change", "Global Connections", "Prelude to Colonisation and Colonial Rule", "Response to Colonial Rule"],
   "Independence and Post-Colonial Developments": ["Socio-Economic and Political Developments in Ghana (1957 - 2007)"],
+
+  // Physical Activity and Health Mappings (SHS PE Core)
+  "Physical Activity and Health": [
+    "Career Pathways in Physical Activity and Sports",
+    "Traditional Dances",
+    "Gymnastics",
+    "Organized Sports Participation",
+    "Sports Participation",
+    "Health and Wellness",
+    "Long Distance Events",
+    "Traditional Games",
+    "Recreational Activities"
+  ],
 
   // Elective IRS Mappings (SHS)
   "Study of Religions, God's Creation and Humankind": [
@@ -360,6 +390,11 @@ export const SUBJECT_SUB_STRANDS: Record<string, string[]> = {
   "Algebra": ["Patterns and Relationships", "Algebraic Expressions", "Variables and Equations"],
   "Geometry and Measurement": ["Shapes and Space", "Measurement", "Position and Transformation"],
   "Handling Data": ["Data", "Chance or Probability"],
+  "Numbers for everyday life": ["Real number and numeration system", "Proportional reasoning"],
+  "Algebraic Thinking": ["Applications of expressions, equations and inequalities", "Patterns and relationships"],
+  "Algebraic Reasoning": ["Applications of expressions, equations and inequalities", "Patterns and relationships"],
+  "Geometry around us": ["Spatial sense", "Measurement"],
+  "Making sense of and using data": ["Statistical reasoning and its application in real life", "Chance"],
   
   // Our World Our People
   "All About Us": ["Nature of God", "Myself", "My Family and the Community", "Home and School"],
@@ -502,10 +537,52 @@ export const SUBJECT_SUB_STRANDS: Record<string, string[]> = {
   "My Local Community": ["Knowing the special places in my community", "Knowing the important people/occupation in my community", "Knowing the special leaders in our community and country"],
   "My Nation Ghana": ["History and celebration of Ghana's Independence"],
   "All Around Us": ["Living and non-living things", "Living things: Animals (Domestic and wild)", "Water", "Air", "Plants", "Gardening", "Light - Day and Night", "Changing weather conditions"],
-  "My Global Community": ["Connecting and communicating with the global community"]
+  "My Global Community": ["Connecting and communicating with the global community"],
+
+  // Literature in English Mappings (NaCCA Standard-Based)
+  "Introduction to Literature": ["General Knowledge in Literature"],
+  "African Prose": ["Knowing your elements", "Appreciation", "From Narrative to Craft"],
+  "Non-African Prose": ["Knowing your elements", "Appreciation", "From Narrative to Craft"],
+  "African Poetry": ["Knowing your poetic elements", "Appreciation", "From Verse to Performance"],
+  "Non-African Poetry": ["Knowing your poetic elements", "Appreciation", "From Verse to Performance"],
+  "Drama": ["Knowing your dramatic elements", "Appreciation", "From Script to Stage"]
 };
 
 export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
+  "Art and Design Studio": {
+    "Meanings, Scope and Role of Art and Design Studio": [
+      "1.1.1.CS.1: Demonstrate understanding of the Scope and role of Art and Design Studios in the Ghanaian society"
+    ],
+    "Material Classifications and Methods": [
+      "1.1.2.CS.1: Demonstrate knowledge and understanding of art and design material classification and method."
+    ],
+    "Professional Practice and Ethics": [
+      "1.1.3.CS.1: Demonstrate knowledge and understanding of professional practices and ethics in Art."
+    ],
+    "Thinking Studio": [
+      "1.2.1.CS.1: Demonstrate understanding of art and design studio ideation and proposal presentations as studio tasks to solve societal problems.",
+      "2.2.1.CS.1: Demonstrate the knowledge and understanding of mixed media ideations in the studio as a proposition for 21st Century interventions for antique cultural products and product design.",
+      "3.2.1.CS.1: Demonstrate knowledge and understanding of 21st Century futuristic propositions and product design for Sustainable Development Goals (SDGs)."
+    ],
+    "Fabrication and Construction": [
+      "1.2.2.CS.1: Demonstrate understanding and application of studio processes, relevant tools and materials to create 2-dimensional artworks through visual thinking and creative communication.",
+      "1.2.2.CS.2: Demonstrate understanding and application of studio processes, relevant tools and materials to create 3-dimensional artworks through visual thinking and creative communication.",
+      "2.2.2.CS.1: Demonstrate knowledge and application of image making as well as repetition processes and techniques with local ideas and relevant studio skills to create 2-Dimensional artworks.",
+      "2.2.2.CS.2: Demonstrate knowledge and application of subtractive processes and techniques for making 3-Dimensional artwork with local materials and relevant studio skills.",
+      "3.2.2.CS.1: Demonstrate knowledge and skill in using analogue and digital media processes and techniques, together with any other relevant skills and materials in the environment to create 2-Dimensional solutions for societal problems.",
+      "3.2.2.CS.2: Demonstrate knowledge and application of subtractive processes and techniques for making three-dimensional artwork with local materials and relevant studio skills."
+    ],
+    "Artefact Production": [
+      "1.3.1.CS.1: Demonstrate understanding and application of creative processes in artefact production with emphasis on protective and decorative processes.",
+      "2.3.1.CS.1: Demonstrate knowledge and understanding of art and design studio theory and creative methodologies for artefact production with an emphasis on designing and finishing.",
+      "3.3.1.CS.1: Demonstrate knowledge and understanding of advanced Finishing Techniques/Processes to create art or design work for functional and aesthetic purposes."
+    ],
+    "Portfolio Building": [
+      "1.3.2.CS.1: Demonstrate understanding and application of art and design portfolio-building to exhibit art or design work.",
+      "2.3.2.CS.1: Demonstrate knowledge and understanding in portfolio building to mount an exhibition and generate an artist statement and exhibition brochure.",
+      "3.3.2.CS.1: Demonstrate knowledge, understanding and application of current trends in portfolio building in the art world."
+    ]
+  },
   "Arabic": {
     "Phonology of the Arabic Language": [
       "1.1.1.CS.1: Demonstrate knowledge and ability to identify the sound patterns of Arabic poetry and prose.",
@@ -2509,6 +2586,45 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "2.4.1.CS.1: Demonstrate understanding of the socio-economic and political developments in Ghana from 1957 - 2007."
     ]
   },
+  "Physical Activity and Health": {
+    "Career Pathways in Physical Activity and Sports": [
+      "1.1.1.CS.1: Demonstrate knowledge and understanding of career pathways in physical education and health (e.g., teaching, educational leadership, sport management, coaching, etc.)"
+    ],
+    "Traditional Dances": [
+      "1.1.2.CS.1: Demonstrate the understanding of traditional dances as physical and recreational activity to improve skill and health related fitness."
+    ],
+    "Gymnastics": [
+      "1.1.3.CS.1: Demonstrate the ability perform basic gymnastics activities to improve skill and health related fitness."
+    ],
+    "Organized Sports Participation": [
+      "1.1.4.CS.1: Demonstrate the ability to apply various skills in organised sports (e.g., football, handball, etc.)",
+      "2.1.2.CS.1: Demonstrate the ability to use basic skills in performing individual and team sports (e.g., table tennis, netball, etc)."
+    ],
+    "Sports Participation": [
+      "1.1.4.CS.1: Demonstrate the ability to apply various skills in organised sports (e.g., football, handball, etc.)",
+      "2.1.2.CS.1: Demonstrate the ability to use basic skills in performing individual and team sports (e.g., table tennis, netball, etc)."
+    ],
+    "Health and Wellness": [
+      "1.1.5.CS.1: Discuss health and wellness and their importance in everyday life",
+      "2.1.3.CS.1: Demonstrate understanding of health and wellness.",
+      "3.1.3.CS.1: Demonstrate understanding of skin, skin care and grooming.",
+      "3.1.3.CS.2: Demonstrate understanding of ICT negative practices and their health implications.",
+      "3.1.3.CS.3: Demonstrate knowledge and understanding of sports injuries.",
+      "3.1.3.CS.4: Demonstrate knowledge and understanding of substance use and misuse.",
+      "3.1.3.CS.5: Demonstrate knowledge and understanding of rehabilitation as a way of gaining functionality after recovering from injuries."
+    ],
+    "Long Distance Events": [
+      "2.1.5.CS.1: Demonstrate knowledge and understanding of long-distance events in athletics."
+    ],
+    "Traditional Games": [
+      "2.1.4.CS.1: Demonstrate the ability to apply basic movements in performing traditional games.",
+      "3.1.4.CS.1: Demonstrate the ability to apply basic movements in performing traditional games.",
+      "3.1.4.CS.2: Demonstrate the ability to apply basic movement in performing traditional games."
+    ],
+    "Recreational Activities": [
+      "3.1.5.CS.1: Demonstrate an understanding of the importance, benefits and various types of recreational activities and participate in any of them to promote lifelong fitness and well-being."
+    ]
+  },
   "Elective ICT": {
     "Organising, Managing and Presenting Information Using Essential Productivity Tools": [
       "1.1.1.CS.1: Demonstrate knowledge and understanding of the use of various computing tools to responsibly create multimedia documents containing text, images etc. e.g., birthday cards/Flyers for a specified purpose",
@@ -2629,10 +2745,511 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "1.4.1.CS.1: Collect quantitative and qualitative data, organise and present data using graphs.",
       "3.4.1.CS.1: Describe the nature and strength of relationship between two given variables using scatter diagram and correlation coefficient."
     ]
+  },
+  "Literature in English": {
+    "General Knowledge in Literature": [
+      "1.1.1.CS.1: Demonstrate understanding and interest in Literature-in-English and make meaningful connections to text and life.",
+      "1.1.1.CS.2: Demonstrate knowledge and understanding in the tools of literary analyses."
+    ],
+    "Knowing your elements": [
+      "1.2.1.CS.1: Demonstrate knowledge and understanding of a variety of prose fictional texts.",
+      "1.2.1.CS.2: Demonstrate understanding of how novelists use elements of style and themes in selected prose texts.",
+      "2.2.1.CS.1: Demonstrate knowledge and understanding of a variety of prose non-fiction texts.",
+      "2.2.1.CS.2: Demonstrate knowledge of how authors apply style and themes in non-fictional texts."
+    ],
+    "Appreciation": [
+      "1.2.2.CS.1: Demonstrate knowledge and understanding in diversity in contexts, plots and settings as tools for interpreting narrative texts.",
+      "2.2.2.CS.1: Demonstrate knowledge and understanding of diversity in themes and style as tools for interpreting narrative text."
+    ],
+    "From Narrative to Craft": [
+      "1.2.3.CS.1: Exhibit creative writing skills by producing short stories useful for fictional prose.",
+      "2.2.3.CS.1: Exhibit creative writing skills by producing novels as fictional and non-fictional prose."
+    ],
+    "Knowing your dramatic elements": [
+      "1.3.1.CS.1: Demonstrate understanding of the dramatic techniques/elements in analysing varied texts.",
+      "2.3.1.CS.1: Demonstrate knowledge and understanding of a variety of dramatic forms in analysing varied texts.",
+      "3.3.1.CS.1: Demonstrate knowledge and understanding of a variety of dramatic forms in analysing varied texts."
+    ],
+    "Knowing your poetic elements": [
+      "1.4.1.CS.1: Engage with a variety of poetic forms for pleasure and aesthetic effect.",
+      "2.4.1.CS.1: Engage with a variety of poetic forms for pleasure and its aesthetic effect.",
+      "3.4.1.CS.1: Demonstrate knowledge and understanding of how authors apply the elements of poetry in their works."
+    ],
+    "From Verse to Performance": [
+      "1.4.3.CS.1: Reconstruct and perform poetic pieces.",
+      "2.4.3.CS.1: Reconstruct and perform poetic pieces."
+    ],
+    "From Script to Stage": [
+      "1.3.3.CS.1: Exhibit knowledge and understanding of scripting and performing drama pieces.",
+      "2.3.3.CS.1: Exhibit knowledge and understanding of scripting and performing drama pieces."
+    ]
+  },
+  "Numbers for everyday life": {
+    "Real number and numeration system": [
+      "1.1.1.CS.1: Demonstrate knowledge and understanding of real number systems and the operations of the various subsets.",
+      "1.1.1.CS.2: Demonstrate knowledge and understanding of real number systems with respect to the concepts and vocabulary of sets, establish their relationships and carry out simple surveys using the properties of sets.",
+      "2.1.1.CS.1: Demonstrate knowledge and understanding of surds, indices and logarithms and establish their laws and properties.",
+      "2.1.1.CS.2: Demonstrate knowledge and understanding of the laws and properties of indices and logarithms and their applications to solving real-life problems.",
+      "2.1.1.CS.3: Demonstrate understanding of the concepts of modulo arithmetic and solve real life problems on them."
+    ],
+    "Real number and Numeration system": [
+      "1.1.1.CS.1: Demonstrate knowledge and understanding of real number systems and the operations of the various subsets.",
+      "1.1.1.CS.2: Demonstrate knowledge and understanding of real number systems with respect to the concepts and vocabulary of sets, establish their relationships and carry out simple surveys using the properties of sets.",
+      "2.1.1.CS.1: Demonstrate knowledge and understanding of surds, indices and logarithms and establish their laws and properties.",
+      "2.1.1.CS.2: Demonstrate knowledge and understanding of the laws and properties of indices and logarithms and their applications to solving real-life problems.",
+      "2.1.1.CS.3: Demonstrate understanding of the concepts of modulo arithmetic and solve real life problems on them."
+    ],
+    "Proportional reasoning": [
+      "1.1.2.CS.1: Demonstrate an understanding of proportional reasoning involving fractions and its operations and use it to solve real-life problems, including rounding off.",
+      "1.1.2.CS.2: Demonstrate a conceptual understanding of proportional reasoning on percentages and use it to solve everyday life problems, including simple interest, discount, profit, loss, commission, etc.",
+      "2.1.2.CS.1: Demonstrate knowledge and understanding of ratios, rates and proportions and use it to solve real-world problems.",
+      "2.1.2.CS.2: Demonstrate an understanding of proportional reasoning using mathematical connections among ratios, rates and proportions to solve daily problems, including compound interest, tax (VAT, E-Levy), utilities, depreciation, etc.",
+      "3.1.2.CS.1: Establish the validity of logical arguments and use it to make relevant decisions in solving problems.",
+      "3.1.2.CS.2: Demonstrate a conceptual understanding of proportionality in relation to variation and use it to solve real-life problems."
+    ]
+  },
+  "Algebraic Thinking": {
+    "Applications of expressions, equations and inequalities": [
+      "1.2.1.CS.1: Demonstrate knowledge and understanding of algebraic expressions and solve real-life problems on them.",
+      "1.2.1.CS.2: Demonstrate knowledge and understanding of equations and inequalities in one variable and apply it in solving real-life problems.",
+      "2.2.1.CS.1: Demonstrate knowledge and understanding of simultaneous equations involving two variables and apply it to solve every day-life problems."
+    ],
+    "Patterns and relationships": [
+      "1.2.2.CS.1: Demonstrate an understanding of mapping, relations, and functions and the ability to interpret graphs of a function and its applications in real life.",
+      "1.2.2.CS.2: Demonstrate understanding of the gradient and equation of a straight line, the magnitude of a line segment, and its applications in real-life situations.",
+      "2.2.2.CS.1: Demonstrate understanding of patterns and relations involving sequence and series, generate strategies for algebraic formulas, and use them in solving real-life problems.",
+      "3.2.2.CS.1: Solve problems on quadratic functions and equations, including real-life problems."
+    ],
+    "Patterns and relations": [
+      "1.2.2.CS.1: Demonstrate an understanding of mapping, relations, and functions and the ability to interpret graphs of a function and its applications in real life.",
+      "1.2.2.CS.2: Demonstrate understanding of the gradient and equation of a straight line, the magnitude of a line segment, and its applications in real-life situations.",
+      "2.2.2.CS.1: Demonstrate understanding of patterns and relations involving sequence and series, generate strategies for algebraic formulas, and use them in solving real-life problems.",
+      "3.2.2.CS.1: Solve problems on quadratic functions and equations, including real-life problems."
+    ]
+  },
+  "Algebraic Reasoning": {
+    "Applications of expressions, equations and inequalities": [
+      "1.2.1.CS.1: Demonstrate knowledge and understanding of algebraic expressions and solve real-life problems on them.",
+      "1.2.1.CS.2: Demonstrate knowledge and understanding of equations and inequalities in one variable and apply it in solving real-life problems.",
+      "2.2.1.CS.1: Demonstrate knowledge and understanding of simultaneous equations involving two variables and apply it to solve every day-life problems."
+    ],
+    "Patterns and relationships": [
+      "1.2.2.CS.1: Demonstrate an understanding of mapping, relations, and functions and the ability to interpret graphs of a function and its applications in real life.",
+      "1.2.2.CS.2: Demonstrate understanding of the gradient and equation of a straight line, the magnitude of a line segment, and its applications in real-life situations.",
+      "2.2.2.CS.1: Demonstrate understanding of patterns and relations involving sequence and series, generate strategies for algebraic formulas, and use them in solving real-life problems.",
+      "3.2.2.CS.1: Solve problems on quadratic functions and equations, including real-life problems."
+    ],
+    "Patterns and relations": [
+      "1.2.2.CS.1: Demonstrate an understanding of mapping, relations, and functions and the ability to interpret graphs of a function and its applications in real life.",
+      "1.2.2.CS.2: Demonstrate understanding of the gradient and equation of a straight line, the magnitude of a line segment, and its applications in real-life situations.",
+      "2.2.2.CS.1: Demonstrate understanding of patterns and relations involving sequence and series, generate strategies for algebraic formulas, and use them in solving real-life problems.",
+      "3.2.2.CS.1: Solve problems on quadratic functions and equations, including real-life problems."
+    ]
+  },
+  "Geometry around us": {
+    "Spatial sense": [
+      "1.3.1.CS.1: Demonstrate a conceptual understanding of spatial sense with respect to angles, parallel lines, transversal and polygons, and apply their properties to solve everyday life problems.",
+      "2.3.1.CS.1: Demonstrate a conceptual understanding of spatial sense regarding changes and invariance achieved by performing a combination of successive transformations (reflection, translation, rotation) in a 2D shape.",
+      "3.3.1.CS.1: Draw circles for given radii and use the circle theorems; identify the tangent as perpendicular to the radius.",
+      "3.3.1.CS.2: Demonstrate knowledge and understanding of geometrical construction, use the knowledge to construct plane shapes and apply these."
+    ],
+    "Measurement": [
+      "1.3.2.CS.1: Interpret information about real-world/nature applications of vectors and recognise vectors with the same magnitude and direction.",
+      "1.3.2.CS.2: Demonstrate a conceptual understanding of primary trigonometric ratios and apply it to solve problems that involve right triangles.",
+      "1.3.2.CS.3: Demonstrate conceptual understanding of the measurement of perimeter and area of circles and quadrilaterals.",
+      "2.3.2.CS.1: Demonstrate knowledge and understanding of measurement with respect to operations on bearings and vectors.",
+      "2.3.2.CS.2: Demonstrate an understanding of the inverse of trigonometric ratios and angles of elevation/depression, and apply the knowledge.",
+      "2.3.2.CS.3: Demonstrate conceptual understanding of the measurement of surface area, volume and capacity of solid shapes.",
+      "3.3.2.CS.1: Draw graphs of given trigonometric functions and use them to solve related problems."
+    ]
+  },
+  "Making sense of and using data": {
+    "Statistical reasoning and its application in real life": [
+      "1.4.1.CS.1: Demonstrate a conceptual understanding of the appropriateness of data collection methods to collect everyday life data.",
+      "1.4.1.CS.2: Demonstrate conceptual understanding of data organisation and presentation for grouped and ungrouped data, including 3D graphs/charts with appropriate digital technology.",
+      "1.4.1.CS.3: Demonstrate the ability to embark on a project involving the collection, analysis and interpretation of quantitative and qualitative data.",
+      "2.4.1.CS.1: Design a data collection instrument and justify its appropriateness for collecting everyday life data to address a contextual issue.",
+      "2.4.1.CS.2: Demonstrate an understanding of data presentations and analysis for grouped and ungrouped data and describe the relationship.",
+      "2.4.1.CS.3: Demonstrate the ability to carry out a mini-project involving data handling (data collection, analysis and interpretation).",
+      "3.4.1.CS.1: Establish simple mathematical relationships between two variables in a given observational or experimental context.",
+      "3.4.1.CS.2: Demonstrate the ability to compare different data sets and use appropriate vocabulary to contribute."
+    ],
+    "Chance": [
+      "1.4.2.CS.1: Demonstrate conceptual understanding of simple and compound probability experiments involving two independent events.",
+      "2.4.2.CS.1: Demonstrate a conceptual understanding of simple and compound probability experiments involving two dependent events.",
+      "3.4.2.CS.1: Explain how a given probability from print and electronic media influences individual decisions; select and analyse real-life data."
+    ]
   }
 };
 
 export const STANDARD_INDICATORS: Record<string, string[]> = {
+  // Art and Design Studio Indicators
+  "1.1.1.CS.1: Demonstrate understanding of the Scope and role of Art and Design Studios in the Ghanaian society": [
+    "1.1.1.LI.1: Document the components of Art and Design Studio (Sculpture, Painting, Graphic Design, Textiles, Ceramics, Jewellery, Leatherwork, Pliable Arts, Contemporary Art).",
+    "1.1.1.LI.2: Document the roles of the various components of the Art and Design Studio."
+  ],
+  "1.1.2.CS.1: Demonstrate knowledge and understanding of art and design material classification and method.": [
+    "1.1.2.LI.1: Discuss art materials according to nature, technique and purpose.",
+    "1.1.2.LI.2: Discuss the basic methods and techniques in creating 2-D and 3-D art and design works.",
+    "1.1.2.LI.3: Discuss the basic methods for preparing and storing art media."
+  ],
+  "1.1.3.CS.1: Demonstrate knowledge and understanding of professional practices and ethics in Art.": [
+    "1.1.3.LI.1: Explain the concept of professional practice in Art.",
+    "1.1.3.LI.2: Analyse the concept of ethics in Art and Design."
+  ],
+  "1.2.1.CS.1: Demonstrate understanding of art and design studio ideation and proposal presentations as studio tasks to solve societal problems.": [
+    "1.2.1.LI.1: Identify how art or design studio tasks can be used as an artistic intervention for social problems.",
+    "1.2.1.LI.2: Determine possible multiple forms of artworks in Art and Design that can be used to solve identified problems in society.",
+    "1.2.1.LI.3: Create multiple proposals with accompanying notes in 2D, 3D, or mixed-media presentations for possible art and design studio task."
+  ],
+  "2.2.1.CS.1: Demonstrate the knowledge and understanding of mixed media ideations in the studio as a proposition for 21st Century interventions for antique cultural products and product design.": [
+    "2.2.1.LI.1: Analyse antique artworks made in single materials and propose new ways of making such works as mixed media representations.",
+    "2.3.1.LI.2: Analyse multiple approaches, material combinations, and techniques for the work, as well as the appropriate mode of presentations.",
+    "2.3.1.LI.3: Create multiple annotated mixed media presentations in preferred artistic formats as studio thinking for creating artworks."
+  ],
+  "3.2.1.CS.1: Demonstrate knowledge and understanding of 21st Century futuristic propositions and product design for Sustainable Development Goals (SDGs).": [
+    "3.2.1.LI.1: Discuss embedded sustainable development messages within selected artworks through the analysis of the actual meaning of the image, and reflection and reaction.",
+    "3.2.1.LI.2: Create innovative artworks and designs on sustainable development using both digital and other media ideations to show the relevance of sustainable living.",
+    "3.2.1.LI.3: Design and create artwork based on the message of sustainability using biodegradable and 80% recyclable waste materials."
+  ],
+  "1.2.2.CS.1: Demonstrate understanding and application of studio processes, relevant tools and materials to create 2-dimensional artworks through visual thinking and creative communication.": [
+    "1.2.2.LI.1: Examine the workability of conventional and non-conventional tools and materials from the environment that can be used to create 2-D art or design works.",
+    "1.2.2.LI.2: Design and create 2-D art or design work using conventional and non-conventional materials, tools, and relevant processes to respond to societal problems."
+  ],
+  "1.2.2.CS.2: Demonstrate understanding and application of studio processes, relevant tools and materials to create 3-dimensional artworks through visual thinking and creative communication.": [
+    "1.2.2.LI.1: Identify materials, tools, and relevant processes and techniques used in performing 3D studio tasks.",
+    "1.2.2.LI.2: Design and create 3D artworks using conventional and non-conventional materials, tools, and relevant processes to respond to societal problems."
+  ],
+  "2.2.2.CS.1: Demonstrate knowledge and application of image making as well as repetition processes and techniques with local ideas and relevant studio skills to create 2-Dimensional artworks.": [
+    "2.2.2.LI.1: Identify and document image-making, and repetition processes and techniques used to create selected 2-Dimensional art or design works.",
+    "2.2.2.LI.2: Analyse how image-making and repeat processes and techniques for creating 2-D artworks can be undertaken with relevant tools and materials.",
+    "2.2.2.LI.3: Create 2-D art or design works with tools and materials with image making and repeat processes and techniques."
+  ],
+  "2.2.2.CS.2: Demonstrate knowledge and application of subtractive processes and techniques for making 3-Dimensional artwork with local materials and relevant studio skills.": [
+    "2.2.2.LI.1: Identify materials and the appropriate tools that can be used in the subtractive processes of creating 3-D artforms.",
+    "2.2.2.LI.2: Review different types of subtractive processes and techniques for performing particular studio tasks and creation of artworks.",
+    "2.2.2.LI.3: Design and Create 3D artwork with local materials and appropriate tools using subtractive processes and techniques to solve a societal problem."
+  ],
+  "3.2.2.CS.1: Demonstrate knowledge and skill in using analogue and digital media processes and techniques, together with any other relevant skills and materials in the environment to create 2-Dimensional solutions for societal problems.": [
+    "3.2.2.LI.1: Analyse multiple media processes and techniques used in creating 2-Dimensional artworks in the environment.",
+    "3.2.2.LI.2: Categorise tools, materials and methods for analogue and digital media in the environment, and their potential usage.",
+    "3.2.2.LI.3: Create 2-Dimensional artwork using multiple methods, including analogue and digital media processes and techniques in response to societal problems."
+  ],
+  "3.2.2.CS.2: Demonstrate knowledge and application of subtractive processes and techniques for making three-dimensional artwork with local materials and relevant studio skills.": [
+    "3.2.2.LI.1: Identify objects from various disciplines of study such as education, engineering, health, architecture, agriculture etc to record their form and methods of fabrication.",
+    "3.2.2.LI.2: Discuss materials and method of fabrications in relation to additive and subtractive processes and techniques, together with any other applicable methods for creating 3-Dimensional mix-media artwork.",
+    "3.2.2.LI.3: Design and create 3-dimensional mixed media artworks using materials, appropriate tools and processes in response to challenges within selected disciplines of study such as education, engineering, health, architecture, agriculture, etc."
+  ],
+  "1.3.1.CS.1: Demonstrate understanding and application of creative processes in artefact production with emphasis on protective and decorative processes.": [
+    "1.3.1.LI.1: Use a visual medium to create art and design projects with an emphasis on protective and decorative processes.",
+    "1.3.1.LI.2: Apply safety measures in creating art and design work with special attention to protective and decorative processes to create artwork."
+  ],
+  "2.3.1.CS.1: Demonstrate knowledge and understanding of art and design studio theory and creative methodologies for artefact production with an emphasis on designing and finishing.": [
+    "2.3.1.LI.1: Distinguish and record the difference between protective processes and decorative processes in artefact productions.",
+    "2.3.1.LI.2: Apply knowledge and skills in safety, maintenance and sustainability in environmental protection and energy conservation (Greening Education).",
+    "2.3.1.LI.3: Apply designing and finishing processes to create an artistic project to solve a social problem."
+  ],
+  "3.3.1.CS.1: Demonstrate knowledge and understanding of advanced Finishing Techniques/Processes to create art or design work for functional and aesthetic purposes.": [
+    "3.3.1.LI.1: Make a short video presentation to illustrate the characteristics of advanced finishing techniques.",
+    "3.3.1.LI.2: Mount an exhibition that reflects selected advanced finishing techniques.",
+    "3.3.1.LI.3: Present a short report on the exhibition mounted in relation to advanced finishing techniques."
+  ],
+  "1.3.2.CS.1: Demonstrate understanding and application of art and design portfolio-building to exhibit art or design work.": [
+    "1.3.2.LI.1: Develop artist statements to reflect portfolio and exhibition.",
+    "1.3.2.LI.2: Generate a manual and digital portfolio as evidence of art and design practice.",
+    "1.3.2.LI.3: Use appropriate strategies to mount art and design exhibition."
+  ],
+  "2.3.2.CS.1: Demonstrate knowledge and understanding in portfolio building to mount an exhibition and generate an artist statement and exhibition brochure.": [
+    "2.3.2.LI.1: Distinguish between portfolio building and exhibition.",
+    "2.3.2.LI.2: Mount in-person, digital, and or online exhibitions of their own art or design works and that of others.",
+    "2.3.2.LI.3: Generate artist statements and exhibition brochures on their own art or design exhibitions and that of another artist."
+  ],
+  "3.3.2.CS.1: Demonstrate knowledge, understanding and application of current trends in portfolio building in the art world.": [
+    "3.3.2.LI.1: Identify and analyse the challenges involved in organising digital portfolios.",
+    "3.3.2.LI.2: In small groups, discuss and report on the benefits of a digital portfolio.",
+    "3.3.2.LI.3: Using group discussion, identify some contemporary Ghanaian artists who depend largely on portfolio building in their artistic practice."
+  ],
+
+  // SHS PE Core Indicators
+  "1.1.1.CS.1: Demonstrate knowledge and understanding of career pathways in physical education and health (e.g., teaching, educational leadership, sport management, coaching, etc.)": [
+    "1.1.1.LI.1: Identify and discuss career pathways in physical education and health and the professional attributes and mind sets required for practice.",
+    "1.1.1.LI.2: Identify role models in Ghana and beyond in various careers in physical education and discuss their contributions to the society and sports development in general."
+  ],
+  "1.1.2.CS.1: Demonstrate the understanding of traditional dances as physical and recreational activity to improve skill and health related fitness.": [
+    "1.1.2.LI.1: Explain the concepts of traditional dance as physical and recreational activities for improving skill and health-related fitness.",
+    "1.1.2.LI.2: Perform a traditional dance as physical and recreational activities for improving skill and health-related fitness (e.g. Agbadza).",
+    "1.1.2.LI.3: Perform a traditional dance as physical and recreational activities for improving skill and health-related fitness (e.g. Kpanlogo).",
+    "1.1.2.LI.4: Perform a traditional dance as physical and recreational activities for improving skill and health-related fitness (e.g. Adowa)."
+  ],
+  "1.1.3.CS.1: Demonstrate the ability perform basic gymnastics activities to improve skill and health related fitness.": [
+    "1.1.3.LI.1: Perform floor activities in gymnastics for improving skill and health-related fitness (forward roll).",
+    "1.1.3.LI.2: Perform floor activities in gymnastics for improving skill and health-related fitness (backward roll).",
+    "1.1.3.LI.3: Perform floor activities in gymnastics for improving skill and health-related fitness (handstand)."
+  ],
+  "1.1.4.CS.1: Demonstrate the ability to apply various skills in organised sports (e.g., football, handball, etc.)": [
+    "1.1.4.LI.1: Identify the types of basic skills in football and apply them in a game of football (passing and receiving in football).",
+    "1.1.4.LI.2: Identify the types of basic skills in football and apply them in a game (dribbling in football).",
+    "1.1.4.LI.3: Identify the types of basic skills in football and apply them in a game of football (shooting in football).",
+    "1.1.4.LI.4: Identify the types of basic skills in handball and apply them in a game of handball (Chest pass in handball).",
+    "1.1.4.LI.5: Identify the types of basic skills in handball and apply them in a game of handball (Overhead pass in handball).",
+    "1.1.4.LI.6: Point out the basic skills involved in handball and apply them (Shooting in handball).",
+    "1.1.4.LI.7: Pinpoint the basic skills in basketball and use them effectively (Dribbling in basketball).",
+    "1.1.4.LI.8: Perform the lay-up shot in basketball with proper form (Lay up in basketball)."
+  ],
+  "2.1.2.CS.1: Demonstrate the ability to use basic skills in performing individual and team sports (e.g., table tennis, netball, etc).": [
+    "2.1.2.LI.1: Apply basic skills in performing individual and team sports (e.g., table tennis - Service and reception in table tennis).",
+    "2.1.2.LI.2: Apply basic skills in performing individual and team sports (e.g., table tennis - forehand and backhand strokes in table tennis).",
+    "2.1.2.LI.3: Apply the basic skills acquired in a game of table tennis.",
+    "2.1.2.LI.4: Apply basic skills in performing individual and team sports (e.g., netball - footwork and chest pass).",
+    "2.1.2.LI.5: Apply basic skills in performing individual and team sports (e.g., netball - shooting).",
+    "2.1.2.LI.6: Apply the skills acquired from the previous lessons in a game situation.",
+    "2.1.2.LI.7: Apply basic skills in performing individual and team sports (e.g., volleyball - underarm serve and digging reception in volleyball).",
+    "2.1.2.LI.8: Apply basic skills in performing individual and team sports (e.g., volleyball - reinforcement of underarm serve and digging reception in volleyball).",
+    "2.1.2.LI.9: Apply basic skills in performing individual and team sports (e.g., volleyball - zones and rotational order on the court in volleyball).",
+    "2.1.2.LI.10: Apply basic skills in performing individual and team sports (e.g., hockey - grip and pushing in hockey).",
+    "2.1.2.LI.11: Identify the basic skills in hockey and apply them in a game (e.g., hockey - dribbling in hockey).",
+    "2.1.2.LI.12: Identify the basic skills in hockey and apply them in a game (e.g., hockey - hitting in hockey)."
+  ],
+  "1.1.5.CS.1: Discuss health and wellness and their importance in everyday life": [
+    "1.1.5.LI.1: The pillars of health and how they influence life (Concept of health).",
+    "1.1.5.LI.2: Wellness, healthy and unhealthy lifestyle (Concept of wellness and healthy lifestyle).",
+    "1.1.5.LI.3: Identify and explain the determinants of health.",
+    "1.1.5.LI.4: Describe the wellness continuum and discuss the barriers to accessing health services.",
+    "1.1.5.LI.5: Identify the components of wellness and how they influence life (physical, social, intellectual/mental and emotional wellness).",
+    "1.1.5.LI.6: Identify the components of wellness and how they influence life (spiritual, environmental, occupational/vocational and financial wellness)."
+  ],
+  "2.1.3.CS.1: Demonstrate understanding of health and wellness.": [
+    "2.1.3.LI.1: Explain the concepts of human diseases.",
+    "2.1.3.LI.2: Discuss the classification of human diseases.",
+    "2.1.3.LI.3: Discuss vaccination and immunisation as a form of disease prevention."
+  ],
+  "3.1.3.CS.1: Demonstrate understanding of skin, skin care and grooming.": [
+    "3.1.3.LI.1: Discuss the concept of the human skin, its care and grooming."
+  ],
+  "3.1.3.CS.2: Demonstrate understanding of ICT negative practices and their health implications.": [
+    "3.1.3.LI.2: Discuss ICT negative practices and their health implications."
+  ],
+  "3.1.3.CS.3: Demonstrate knowledge and understanding of sports injuries.": [
+    "3.1.3.LI.3: Discuss the concept of sports injuries and how they manifest."
+  ],
+  "3.1.3.CS.4: Demonstrate knowledge and understanding of substance use and misuse.": [
+    "3.1.3.LI.4: Discuss and practice preventive measures relating to sports injuries."
+  ],
+  "3.1.3.CS.5: Demonstrate knowledge and understanding of rehabilitation as a way of gaining functionality after recovering from injuries.": [
+    "3.1.3.LI.5: Discuss substance use, its causes and risk factors.",
+    "3.1.3.LI.6: Discuss the consequences of substance use.",
+    "3.1.3.LI.7: Discuss the concept and types of rehabilitation.",
+    "3.1.3.LI.8: Discuss Principles, factors affecting and hindrances to rehabilitation.",
+    "3.1.3.LI.9: Discuss the avenues available for rehabilitation."
+  ],
+  "2.1.5.CS.1: Demonstrate knowledge and understanding of long-distance events in athletics.": [
+    "2.1.5.LI.1: Identify the basic skills in race walking and apply them."
+  ],
+  "2.1.4.CS.1: Demonstrate the ability to apply basic movements in performing traditional games.": [
+    "2.1.4.LI.1: Identify various traditional games and discuss their origins and importance.",
+    "2.1.4.LI.2: Identify the basic skills in performing arm wrestling and tug of war.",
+    "2.1.4.LI.3: Identify the basic skills in performing the African Cloth Parachuting or sail."
+  ],
+  "3.1.4.CS.1: Demonstrate the ability to apply basic movements in performing traditional games.": [
+    "3.1.4.LI.1: Identify the basic skills in performing chaskele."
+  ],
+  "3.1.4.CS.2: Demonstrate the ability to apply basic movement in performing traditional games.": [
+    "3.1.4.LI.2: Identify the basic skills in performing Tumatu (hopscotch) and ampe."
+  ],
+  "3.1.5.CS.1: Demonstrate an understanding of the importance, benefits and various types of recreational activities and participate in any of them to promote lifelong fitness and well-being.": [
+    "3.1.5.LI.1: Discuss the different types of recreational activities in Physical Education.",
+    "3.1.5.LI.2: Participate in a variety of recreational activities and reflect on experiences.",
+    "3.1.5.LI.3: Explain the benefits of engaging in recreational activities.",
+    "3.1.5.LI.4: Create a personal plan to guide regular participation in recreational activities."
+  ],
+
+  // SHS Mathematics Indicators
+  "1.1.1.CS.1: Demonstrate knowledge and understanding of real number systems and the operations of the various subsets.": [
+    "1.1.1.LI.1: Develop the real number system using the closure property.",
+    "1.1.1.LI.2: Distinguish between rational and irrational numbers using the conversion of common fractions to decimals and solve related problems.",
+    "1.1.1.LI.3: Establish the properties of real numbers with respect to commutative, associative, identity, inverse, distributive, etc."
+  ],
+  "1.1.1.CS.2: Demonstrate knowledge and understanding of real number systems with respect to the concepts and vocabulary of sets, establish their relationships and carry out simple surveys using the properties of sets.": [
+    "1.1.1.LI.1: Determine the properties of subsets (for two-set problems), their vocabulary and operations and use them to solve real-life problems.",
+    "1.1.1.LI.2: Organise information visually to establish the relationship between and among sets of items (three sets) and apply these to conduct mini surveys in the school community and beyond.",
+    "1.1.1.LI.3: Establish the relationship between and among three sets, including set equations and de Morgan's law."
+  ],
+  "1.1.2.CS.1: Demonstrate an understanding of proportional reasoning involving fractions and its operations and use it to solve real-life problems, including rounding off.": [
+    "1.1.2.LI.1: Establish the concept of fractions and investigate the connections between fractions and decimal numbers.",
+    "1.1.2.LI.2: Establish additive and multiplicative inverses of fractions using multi-purpose model charts."
+  ],
+  "1.1.2.CS.2: Demonstrate a conceptual understanding of proportional reasoning on percentages and use it to solve everyday life problems, including simple interest, discount, profit, loss, commission, etc.": [
+    "1.1.2.LI.1: Develop models to examine connections between and among fractions, percentages and decimal numbers and make generalisations.",
+    "1.1.2.LI.2: Analyse daily activities/issues/businesses involving percentage change, including simple problems involving personal or household finance (such as utility bills, exchange rates, project budgeting, school fees, shopping, etc.)"
+  ],
+  "1.2.1.CS.1: Demonstrate knowledge and understanding of algebraic expressions and solve real-life problems on them.": [
+    "1.2.1.LI.1: Use numbers, patterns, and variables to formulate mathematical expressions and apply the algebraic order of the four operations to solve problems.",
+    "1.2.1.LI.2: Factorise algebraic expressions involving quadratic trinomials.",
+    "1.2.1.LI.3: Recognise perfect squares and apply the idea to solve problems, including the difference of two squares of binomials.",
+    "1.2.1.LI.4: Analyse and apply operations on simple algebraic fractions involving monomial and binomial denominators and determine the conditions under which an algebraic fraction is zero or undefined."
+  ],
+  "1.2.1.CS.2: Demonstrate knowledge and understanding of equations and inequalities in one variable and apply it in solving real-life problems.": [
+    "1.2.1.LI.1: Construct and interpret formulae for a given task and apply them to problems involving change of subjects.",
+    "1.2.1.LI.2: Solve linear equations and inequalities in one variable for a given problem and relate it to real life situations."
+  ],
+  "1.2.2.CS.1: Demonstrate an understanding of mapping, relations, and functions and the ability to interpret graphs of a function and its applications in real life.": [
+    "1.2.2.LI.1: Distinguish between relations and functions using models such as graphs, investigate relationships between two number sets and determine rules for mappings or functions.",
+    "1.2.2.LI.2: Draw graphs of linear functions and interpret them."
+  ],
+  "1.2.2.CS.2: Demonstrate understanding of the gradient and equation of a straight line, the magnitude of a line segment, and its applications in real-life situations.": [
+    "1.2.2.LI.1: Extend the knowledge of the coordinates of two points to find the gradient and equation of a straight line.",
+    "1.2.2.LI.2: Recognise and interpret two points on a straight line and use it to find the distance between them."
+  ],
+  "1.3.1.CS.1: Demonstrate a conceptual understanding of spatial sense with respect to angles, parallel lines, transversal and polygons, and apply their properties to solve everyday life problems.": [
+    "1.3.1.LI.1: Draw and describe angles with various measures, including acute, right, straight, obtuse and reflex angles and solve problems on them.",
+    "1.3.1.LI.2: Solve problems that involve parallel lines, perpendicular lines transversal, and pairs of angles formed between them.",
+    "1.3.1.LI.3: State and apply the exterior angle theorem of a triangle to solve problems.",
+    "1.3.1.LI.4: State and apply the Pythagorean theorem, verify the formula and apply it.",
+    "1.3.1.LI.5: State and use the properties of quadrilaterals and calculate the sums of interior and exterior angles."
+  ],
+  "1.3.2.CS.1: Interpret information about real-world/nature applications of vectors and recognise vectors with the same magnitude and direction.": [
+    "1.3.2.LI.1: Recognise a vector as a quantity with both magnitude and direction.",
+    "1.3.2.LI.2: Represent a vector in two-space geometrically as a directed line segment."
+  ],
+  "1.3.2.CS.2: Demonstrate a conceptual understanding of primary trigonometric ratios and apply it to solve problems that involve right triangles.": [
+    "1.3.2.LI.1: Investigate the three basic trigonometric ratios (tangent, sine and cosine) of an acute angle in degrees.",
+    "1.3.2.LI.2: Find the trigonometric functions of special angles 30o, 45o and 60o.",
+    "1.3.2.LI.3: Solve problems using the three primary trigonometric ratios for angles from 0o to 360o in standard position."
+  ],
+  "1.3.2.CS.3: Demonstrate conceptual understanding of the measurement of perimeter and area of circles and quadrilaterals.": [
+    "1.3.2.LI.1: Identify and compare referents for SI and imperial area measurements of regular, composite and irregular 2D shapes.",
+    "1.3.2.LI.2: Estimate the perimeter and area of a given regular, composite or irregular 2D shape.",
+    "1.3.2.LI.3: Solve a contextual problem that involves the perimeter and area of regular, composite and irregular 2D shapes.",
+    "1.3.2.LI.4: Determine the volume of prisms and solve everyday life problems."
+  ],
+  "1.4.1.CS.1: Demonstrate a conceptual understanding of the appropriateness of data collection methods to collect everyday life data.": [
+    "1.4.1.LI.1: Classify data (primary and secondary) as quantitative (discrete and continuous), qualitative (nominal and ordinal), numerical, categorical, grouped, ungrouped, etc.",
+    "1.4.1.LI.2: Identify and validate quantitative data collection methods (Survey/Questionnaire, Interviews, Observation, Existing Data) and use them to collect everyday-life data.",
+    "1.4.1.LI.3: Identify and validate qualitative data collection methods (interviews, observations, focus groups, oral histories, online tracking, social media monitoring, etc.) and use them to collect everyday-life data."
+  ],
+  "1.4.1.CS.2: Demonstrate conceptual understanding of data organisation and presentation for grouped and ungrouped data, including 3D graphs/charts with appropriate digital technology.": [
+    "1.4.1.LI.1: Organise and present data (grouped/ungrouped) using frequency tables, line graphs, pie charts, multiple bar graphs, infographics, etc.",
+    "1.4.1.LI.2: Analyse and interpret data using descriptive statistics.",
+    "1.4.1.LI.3: Use mathematical arguments to support personal choices as well as incorporate views and perspectives of others."
+  ],
+  "1.4.1.CS.3: Demonstrate the ability to embark on a project involving the collection, analysis and interpretation of quantitative and qualitative data.": [
+    "1.4.1.LI.1: Develop and execute a project with a team by collecting and analysing data.",
+    "1.4.1.LI.2: Present a project report to your class or at a school forum."
+  ],
+  "1.4.2.CS.1: Demonstrate conceptual understanding of simple and compound probability experiments involving two independent events.": [
+    "1.4.2.LI.1: List the elements of the sample space from a simple or compound experiment involving two independent events.",
+    "1.4.2.LI.2: Determine the probabilities of independent events and express the results as fractions, decimals, percentages and/or ratios.",
+    "1.4.2.LI.3: Solve everyday life problems involving the probability of two independent events."
+  ],
+  "2.1.1.CS.1: Demonstrate knowledge and understanding of surds, indices and logarithms and establish their laws and properties.": [
+    "2.1.1.LI.1: Carry out operations on surds and rationalize monomial denominators.",
+    "2.1.1.LI.2: Explain the concepts of indices and logarithms with examples.",
+    "2.1.1.LI.3: Compose and decompose logarithm laws and properties with exponents and apply the concepts to solve real-life problems."
+  ],
+  "2.1.1.CS.2: Demonstrate knowledge and understanding of the laws and properties of indices and logarithms and their applications to solving real-life problems.": [
+    "2.1.1.LI.1: Investigate real life problems using laws and properties of indices and logarithms.",
+    "2.1.1.LI.2: Use mathematical connections to explore the relevance of surds, indices and logarithms and their applications to scientific concepts."
+  ],
+  "2.1.1.CS.3: Demonstrate understanding of the concepts of modulo arithmetic and solve real life problems on them.": [
+    "2.1.1.LI.1: Investigate the concept and existence of modulo arithmetic in learners' environment and introduce it as the arithmetic of remainders.",
+    "2.1.1.LI.2: Model and solve real-life problems involving modular arithmetic."
+  ],
+  "2.1.2.CS.1: Demonstrate knowledge and understanding of ratios, rates and proportions and use it to solve real-world problems.": [
+    "2.1.2.LI.1: Explain the concepts ratios and rate as a comparison of quantities.",
+    "2.1.2.LI.2: Establish the relationships among ratio, rates and proportions."
+  ],
+  "2.1.2.CS.2: Demonstrate an understanding of proportional reasoning using mathematical connections among ratios, rates and proportions to solve daily problems, including compound interest, tax (VAT, E-Levy), utilities, depreciation, etc.": [
+    "2.1.2.LI.1: Apply the concept of ratios, rates and proportions to solve problems in financial mathematics, health, sports, etc.",
+    "2.1.2.LI.2: Establish the relevance of ratios, rates and proportions in their day-to-day activities, make generalisations and apply them to solve real-world problems."
+  ],
+  "2.2.1.CS.1: Demonstrate knowledge and understanding of simultaneous equations involving two variables and apply it to solve every day-life problems.": [
+    "2.2.1.LI.1: Solve simultaneous linear equations involving two variables using the graphical method and interpret them.",
+    "2.2.1.LI.2: Analyse two linear equations in two variables and solve them using the elimination and substitution methods.",
+    "2.2.1.LI.3: Analyse, model, and solve word problems of simultaneous linear equations involving numbers, age, etc."
+  ],
+  "2.2.2.CS.1: Demonstrate understanding of patterns and relations involving sequence and series, generate strategies for algebraic formulas, and use them in solving real-life problems.": [
+    "2.2.2.LI.1: Explore patterns of a sequence using plane figures and continue with more terms.",
+    "2.2.2.LI.2: Recognise and find the nth term and the sum of the nth term of an arithmetic progression (AP) or linear sequence.",
+    "2.2.2.LI.3: Identify geometric progression or exponential sequence and find the algebraic expression for the general term.",
+    "2.2.2.LI.4: Analyse, model, and solve real-life problems involving financial mathematics.",
+    "2.2.2.LI.5: Analyse, model, and solve real-life problems involving exponential growth."
+  ],
+  "2.3.1.CS.1: Demonstrate a conceptual understanding of spatial sense regarding changes and invariance achieved by performing a combination of successive transformations (reflection, translation, rotation) in a 2D shape.": [
+    "2.3.1.LI.1: Identify and translate an object or point by a translating vector and describe the image.",
+    "2.3.1.LI.2: Identify and explain the reflection of an object in a mirror line and describe the image points.",
+    "2.3.1.LI.3: Identify shapes with rotational symmetry and show the image of an object (or point) after a rotation about the origin (or point).",
+    "2.3.1.LI.4: Carry out an enlargement of a plane shape given a scale factor."
+  ],
+  "2.3.2.CS.1: Demonstrate knowledge and understanding of measurement with respect to operations on bearings and vectors.": [
+    "2.3.2.LI.1: Perform addition, subtraction, and scalar multiplication on vectors represented as directed line segments in two-space and in Cartesian form."
+  ],
+  "2.3.2.CS.2: Demonstrate an understanding of the inverse of trigonometric ratios and angles of elevation/depression, and apply the knowledge.": [
+    "2.3.2.LI.1: Determine the inverse of trigonometric ratios (graphs excluded) and talk about their applications.",
+    "2.3.2.LI.2: Solve real-life problems involving angles of elevation and depression."
+  ],
+  "2.3.2.CS.3: Demonstrate conceptual understanding of the measurement of surface area, volume and capacity of solid shapes.": [
+    "2.3.2.LI.1: Solve problems that involve SI and imperial units in surface area measurements and verify the solutions.",
+    "2.3.2.LI.2: Solve problems that involve SI and imperial units in volume and capacity measurements.",
+    "2.3.2.LI.3: Solve real world problems that involve the volume/capacity of a 3-D object."
+  ],
+  "2.4.1.CS.1: Design a data collection instrument and justify its appropriateness for collecting everyday life data to address a contextual issue.": [
+    "2.4.1.LI.1: Design a data collection instrument by employing a feasible digital technology.",
+    "2.4.1.LI.2: Evaluate a given data collection instrument by identifying potential problems."
+  ],
+  "2.4.1.CS.2: Demonstrate an understanding of data presentations and analysis for grouped and ungrouped data and describe the relationship.": [
+    "2.4.1.LI.1: Organise and present data by means of the ogive, waffle diagrams, box and whisker plots.",
+    "2.4.1.LI.2: Analyse and interpret data using measures of dispersion and justify which of these measures best suits.",
+    "2.4.1.LI.3: Use mathematical arguments to support personal choices as well as incorporate views and perspectives of others."
+  ],
+  "2.4.1.CS.3: Demonstrate the ability to carry out a mini-project involving data handling (data collection, analysis and interpretation).": [
+    "2.4.1.LI.1: Develop and implement a project plan for the collection, analysis and interpretation of data.",
+    "2.4.1.LI.2: Present a project report including the use of PowerPoint, infographics, etc."
+  ],
+  "2.4.2.CS.1: Demonstrate a conceptual understanding of simple and compound probability experiments involving two dependent events.": [
+    "2.4.2.LI.1: List the elements of the sample space from a simple or compound experiment involving two dependent events.",
+    "2.4.2.LI.2: Solve everyday life problems involving the probability of two dependent events."
+  ],
+  "3.1.2.CS.1: Establish the validity of logical arguments and use it to make relevant decisions in solving problems.": [
+    "3.1.2.LI.1: Investigate to establish differences between variables in situational growth (symbolic logic) and apply it.",
+    "3.1.2.LI.2: Make intelligent guessing to establish valid arguments and draw logical conclusions.",
+    "3.1.2.LI.3: Carry out mini real-life investigations to solve problems involving logical reasoning within their local community."
+  ],
+  "3.1.2.CS.2: Demonstrate a conceptual understanding of proportionality in relation to variation and use it to solve real-life problems.": [
+    "3.1.2.LI.1: Use proportional reasoning to investigate the various types of variation (direct and inverse) and extend this to make generalisations.",
+    "3.1.2.LI.2: Use proportional reasoning to investigate the various types of variation (joint and partial) and extend this to make generalisations."
+  ],
+  "3.2.2.CS.1: Solve problems on quadratic functions and equations, including real-life problems.": [
+    "3.2.2.LI.1: Identify and solve quadratic equations.",
+    "3.2.2.LI.2: Solve quadratic equations graphically and find the maximum and minimum points.",
+    "3.2.2.LI.3: Identify and explain the axis of symmetry, write its equation and solve linear and quadratic equations simultaneously.",
+    "3.2.2.LI.4: Use quadratic graphs to solve related equations and solve real-life problems to find the range of values."
+  ],
+  "3.3.1.CS.1: Draw circles for given radii and use the circle theorems; identify the tangent as perpendicular to the radius.": [
+    "3.3.1.LI.1: Identify parts of a circle and draw circles for given radii.",
+    "3.3.1.LI.2: Discuss the circle theorems by identifying the statements, proofs, examples and applications.",
+    "3.3.1.LI.3: Identify the tangent as perpendicular to the radius at the point of contact and verify the Alternate Segment Theorem.",
+    "3.3.1.LI.4: Verify that tangents drawn from an external point to the same circle are equal when measured from their point of contact."
+  ],
+  "3.3.1.CS.2: Demonstrate knowledge and understanding of geometrical construction, use the knowledge to construct plane shapes and apply these.": [
+    "3.3.1.LI.1: Recall the construction of various angles such as 75o, 105o, 135o and 150o.",
+    "3.3.1.LI.2: Construct a triangle or quadrilateral under given conditions.",
+    "3.3.1.LI.3: Construct a particular locus for a given condition."
+  ],
+  "3.3.2.CS.1: Draw graphs of given trigonometric functions and use them to solve related problems.": [
+    "3.3.2.LI.1: Draw graphs of given trigonometric functions and use them to solve related problems."
+  ],
+  "3.4.1.CS.1: Establish simple mathematical relationships between two variables in a given observational or experimental context.": [
+    "3.4.1.LI.1: Establish simple mathematical relationships between two variables in a given observational or experimental context.",
+    "3.4.1.LI.2: Collect data from an experimental study in which the interest is based on treatment and non-treatment (control) groups."
+  ],
+  "3.4.1.CS.2: Demonstrate the ability to compare different data sets and use appropriate vocabulary to contribute.": [
+    "3.4.1.LI.1: Compare the quality of different datasets using knowledge and skills acquired from data analysis techniques.",
+    "3.4.1.LI.2: Discuss data information published in local and/or international media platforms."
+  ],
+  "3.4.2.CS.1: Explain how a given probability from print and electronic media influences individual decisions; select and analyse real-life data.": [
+    "3.4.2.LI.1: Identify examples from print and electronic media where probability is used, and explain how the given probability influences.",
+    "3.4.2.LI.2: Solve everyday life problems involving the probability of two dependent and independent events, including addition and multiplication laws."
+  ],
   // Arabic Standard Indicators
   "1.1.1.CS.1: Demonstrate knowledge and ability to identify the sound patterns of Arabic poetry and prose.": [
     "1.1.1.LI.1: Identify the sound pattern of Arabic poetry, focusing on the rhyming patterns.",
@@ -5344,6 +5961,106 @@ export const STANDARD_INDICATORS: Record<string, string[]> = {
   ],
   "3.4.2.CS.1: Solve problems involving conditional probability using permutations and combinations.": [
     "3.4.2.LI.1: Solve problems involving conditional probability using permutations and combinations."
+  ],
+
+  // Literature in English Indicators
+  "1.1.1.CS.1: Demonstrate understanding and interest in Literature-in-English and make meaningful connections to text and life.": [
+    "1.1.1.LI.1: Explain the concepts, types and importance of literature.",
+    "1.1.1.LI.2: Differentiate between oral and written literature.",
+    "1.1.1.LI.3: Compare and contrast the relationship between genres in oral and written literature."
+  ],
+  "1.1.1.CS.2: Demonstrate knowledge and understanding in the tools of literary analyses.": [
+    "1.1.1.LI.1: Use the tools in analysing varied level appropriate texts."
+  ],
+  "1.2.1.CS.1: Demonstrate knowledge and understanding of a variety of prose fictional texts.": [
+    "1.2.1.LI.1: Discuss short stories and novels of varied contexts for pleasure.",
+    "1.2.1.LI.2: Make a distinction between a variety of prose fiction texts.",
+    "1.2.1.LI.3: Establish the purposes and appeal of a variety of prose texts."
+  ],
+  "1.2.1.CS.2: Demonstrate understanding of how novelists use elements of style and themes in selected prose texts.": [
+    "1.2.1.LI.1: Review knowledge and understanding of the tools of literary analyses, e.g., elements of prose.",
+    "1.2.1.LI.2: Use the knowledge gained to examine how an author creates plot and setting.",
+    "1.2.1.LI.3: Examine characters and theme, and how they reflect context and society.",
+    "1.2.1.LI.4: Discuss how the elements of language and style enhance meaning in fictional texts."
+  ],
+  "2.2.1.CS.1: Demonstrate knowledge and understanding of a variety of prose non-fiction texts.": [
+    "2.2.1.LI.1: Examine the structure of fiction and nonfiction texts.",
+    "2.2.1.LI.2: Compare the elements of fiction and non-fiction."
+  ],
+  "2.2.1.CS.2: Demonstrate knowledge of how authors apply style and themes in non-fictional texts.": [
+    "2.1.1.LI.1: Discuss the development of themes throughout the selected prose texts.",
+    "2.2.1.LI.2: Discuss the development of style in the selected prose texts.",
+    "2.2.1.LI.3: Discuss how authors use style to bring out themes in their works.",
+    "2.2.1.LI.4: Discuss authors' use of theme and style in creating non-fictional texts."
+  ],
+  "1.2.2.CS.1: Demonstrate knowledge and understanding in diversity in contexts, plots and settings as tools for interpreting narrative texts.": [
+    "1.2.2.LI.1: Establish the relationship between context and setting.",
+    "1.2.2.LI.2: Examine different types of plot devices using level appropriate texts.",
+    "1.2.2.LI.3: Analyse the relationship between/among plot, subplots and conflict."
+  ],
+  "2.2.2.CS.1: Demonstrate knowledge and understanding of diversity in themes and style as tools for interpreting narrative text.": [
+    "2.2.2.LI.1: Examine more themes in novels through the major incidents and related ideas.",
+    "2.2.2.LI.2: Discuss the different aspects of style authors use in creating their works.",
+    "2.2.2.LI.3: Examine the overall impact of the author's narrative devices and the effect on meaning."
+  ],
+  "1.2.3.CS.1: Exhibit creative writing skills by producing short stories useful for fictional prose.": [
+    "1.2.3.LI.1: Produce summaries of longer texts exhibiting different parts and types of plot structures.",
+    "1.2.3.LI.2: Produce a narrative piece with the elements learnt (plot and setting).",
+    "1.2.3.LI.3: Dramatise portions of narrative texts such as subplots.",
+    "1.2.3.LI.4: Write a review of other learners' pieces and some read novels."
+  ],
+  "2.2.3.CS.1: Exhibit creative writing skills by producing novels as fictional and non-fictional prose.": [
+    "2.2.3.LI.1: Produce summaries of some selected novels based on varied themes.",
+    "2.2.3.LI.2: Produce narrative pieces applying different styles.",
+    "2.2.3.LI.3: Apply the narrative writing skills to edit and review short stories created."
+  ],
+  "1.3.1.CS.1: Demonstrate understanding of the dramatic techniques/elements in analysing varied texts.": [
+    "1.3.1.LI.1: Review knowledge in elements of prose and apply them in the discussion of elements of drama.",
+    "1.3.1.LI.2: Identify and explain the significance of the plot.",
+    "1.3.1.LI.3: Identify the various conflicts in drama texts and explain how these move the plot forward."
+  ],
+  "2.3.1.CS.1: Demonstrate knowledge and understanding of a variety of dramatic forms in analysing varied texts.": [
+    "2.3.1.LI.1: Identify the forms in varied drama texts.",
+    "2.3.1.LI.2: Distinguish between the forms of drama.",
+    "2.3.1.LI.3: Examine how the forms are developed in varied texts."
+  ],
+  "3.3.1.CS.1: Demonstrate knowledge and understanding of a variety of dramatic forms in analysing varied texts.": [
+    "3.3.1.LI.1: Discuss the connection between dramatic forms and themes.",
+    "3.3.1.LI.2: Compare and contrast the different dramatic forms in varied texts."
+  ],
+  "1.4.1.CS.1: Engage with a variety of poetic forms for pleasure and aesthetic effect.": [
+    "1.4.1.LI.1: Analyse different forms of narrative poems (Epics, Ballads, Idyll, lay) with increasing difficulties for meaning and effect.",
+    "1.4.1.LI.2: Distinguish between the features of narrative poems and lyrical poems in context."
+  ],
+  "2.4.1.CS.1: Engage with a variety of poetic forms for pleasure and its aesthetic effect.": [
+    "2.4.1.LI.1: Explore the different forms of lyrical poems (Elegy, Ode, Sonnet, Haiku) using interesting level appropriate examples for pleasure.",
+    "2.4.1.LI.2: Distinguish between the features of lyrical poems in context.",
+    "2.4.1.LI.3: Compare and contrast the use of language in lyrical poetry to bring out its beauty(aesthetic value)."
+  ],
+  "3.4.1.CS.1: Demonstrate knowledge and understanding of how authors apply the elements of poetry in their works.": [
+    "3.4.1.LI.1: Review the elements of poetry.",
+    "3.4.1.LI.2: Discuss the use of elements of poetry in varied selected poems.",
+    "3.4.1.LI.3: Compare and contrast how different poets use the elements to create meaning."
+  ],
+  "1.4.3.CS.1: Reconstruct and perform poetic pieces.": [
+    "1.4.3.LI.1: Perform parts of selected poems.",
+    "1.4.3.LI.2: Reconstruct a poem into another creative expression (song, painting, parodies).",
+    "1.4.3.LI.3: Create short poems."
+  ],
+  "2.4.3.CS.1: Reconstruct and perform poetic pieces.": [
+    "2.4.3.LI.1: Create a stanza of a poem using a simple template as a guide.",
+    "2.4.3.LI.2: Edit and perform the poem created in class."
+  ],
+  "1.3.3.CS.1: Exhibit knowledge and understanding of scripting and performing drama pieces.": [
+    "1.3.3.LI.1: Perform monologues of chosen scenes from a variety of plays.",
+    "1.3.3.LI.2: Perform skits of chosen scenes from a variety of plays.",
+    "1.3.3.LI.3: Write and perform simple skits from stories read.",
+    "1.3.3.LI.4: Write and perform a sketch on relevant themes and values.",
+    "1.3.3.LI.5: Write and produce plays using the skills acquired."
+  ],
+  "2.3.3.CS.1: Exhibit knowledge and understanding of scripting and performing drama pieces.": [
+    "2.3.3.LI.1: Write a drama piece on varied themes depicting real world events.",
+    "2.3.3.LI.2: Perform parts/full Acts and scenes."
   ]
 };
 
