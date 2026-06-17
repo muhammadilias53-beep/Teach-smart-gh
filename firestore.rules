@@ -73,7 +73,7 @@ service cloud.firestore {
       allow update: if isAdmin() || (
         isSignedIn() && 
         (existing().userId == request.auth.uid || existing().userId == 'all') &&
-        incoming().diff(existing()).affectedKeys().hasOnly(['read'])
+        incoming().diff(existing()).affectedKeys().hasOnly(['read', 'opensCount', 'clicksCount'])
       );
       allow delete: if isAdmin();
     }

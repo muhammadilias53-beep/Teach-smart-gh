@@ -10,7 +10,8 @@ import {
   ArrowRight,
   Target,
   Copy,
-  AlertCircle
+  AlertCircle,
+  MessageSquare
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -590,6 +591,17 @@ export default function SchemeGenerator() {
                   <Download size={18} />
                   Download PDF
                 </button>
+                <a 
+                  href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
+                    `Hi colleague! I generated a highly detailed, NaCCA-aligned Scheme of Learning for *${displaySubject}* (${formData.class}) using *TeachSmartGH* by Catalyst Creative.\n\n*Scheme of Work Details:*\n- Subject: ${displaySubject}\n- Class: ${formData.class}\n- Term: Term ${formData.term}\n\nJoin me in using AI-powered tools for smarter teaching at: ${window.location.origin}`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 sm:flex-none bg-[#25D366] text-white py-3 px-6 rounded-xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-[#20ba59] transition-all cursor-pointer shadow-lg shadow-green-500/10 text-center"
+                >
+                  <MessageSquare size={18} />
+                  Share via WhatsApp
+                </a>
               </div>
             </div>
 

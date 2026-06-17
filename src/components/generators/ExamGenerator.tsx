@@ -16,7 +16,8 @@ import {
   Activity,
   Layers,
   HelpCircle,
-  Info
+  Info,
+  MessageSquare
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -1070,7 +1071,7 @@ export default function ExamGenerator() {
                   {saved ? "Saved" : "Save Cloud"}
                 </button>
 
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-wrap sm:flex-nowrap">
                   <button 
                     onClick={() => downloadPDF('exam')}
                     className="px-6 py-3 bg-white text-slate-900 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2 hover:bg-slate-100 transition-all shadow-lg"
@@ -1085,6 +1086,17 @@ export default function ExamGenerator() {
                     <CheckCircle size={14} />
                     Scheme PDF
                   </button>
+                  <a 
+                    href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
+                      `Hi colleague! I generated a high-quality, NaCCA curriculum-aligned exam paper for *${displaySubject}* (${formData.level}) using *TeachSmartGH* by Catalyst Creative.\n\n*Resource Details:*\n- Subject: ${displaySubject}\n- Level: ${formData.level}\n- Topics: ${formData.topics || "General"}\n\nJoin me in using AI-powered tools for smarter teaching at: ${window.location.origin}`
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-6 py-3 bg-[#25D366] text-white rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2 hover:bg-[#20ba59] transition-all shadow-lg shadow-green-500/10 cursor-pointer"
+                  >
+                    <MessageSquare size={14} />
+                    WhatsApp
+                  </a>
                 </div>
               </div>
             </div>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { Sparkles, Save, Download, RefreshCw, FileText, ChevronLeft, ChevronRight, CheckCircle, Users, Layout, AlignLeft, Layers, GraduationCap } from 'lucide-react';
+import { Sparkles, Save, Download, RefreshCw, FileText, ChevronLeft, ChevronRight, CheckCircle, Users, Layout, AlignLeft, Layers, GraduationCap, MessageSquare } from 'lucide-react';
 import { generateLessonPlan } from '../../lib/gemini';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
@@ -1023,7 +1023,7 @@ const LessonPlanGenerator = () => {
                 </div>
               </div>
               
-              <div className="flex gap-2 p-1 bg-white/5 rounded-2xl">
+              <div className="flex gap-2 p-1 bg-white/5 rounded-2xl flex-wrap sm:flex-nowrap">
                 <button 
                   onClick={() => setStep(3)} 
                   className="px-6 py-3 bg-white/10 text-white rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-white/20 transition-all flex items-center gap-2"
@@ -1046,6 +1046,17 @@ const LessonPlanGenerator = () => {
                   <Download size={14} />
                   Download PDF Now
                 </button>
+                <a 
+                  href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
+                    `Hi colleague! I generated a high-quality, NaCCA curriculum-aligned lesson plan for *${displaySubject}* (${formData.class}) using *TeachSmartGH* by Catalyst Creative.\n\n*Lesson Plan Details:*\n- Subject: ${displaySubject}\n- Class: ${formData.class}\n- Strand: ${formData.strand || "N/A"}\n- Sub-Strand: ${formData.subStrand || "N/A"}\n- Indicator: ${formData.indicator || "N/A"}\n\nJoin me in using AI-powered tools for smarter teaching at: ${window.location.origin}`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-6 py-3 bg-[#25D366] text-white rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-[#20ba59] transition-all flex items-center gap-2 shadow-lg shadow-green-500/10 cursor-pointer"
+                >
+                  <MessageSquare size={14} />
+                  WhatsApp
+                </a>
               </div>
             </div>
 

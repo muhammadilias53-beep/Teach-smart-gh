@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Sparkles, Save, Download, RefreshCw, ChevronRight, ChevronLeft, CheckCircle, BookOpen, MapPin, Quote } from 'lucide-react';
+import { Sparkles, Save, Download, RefreshCw, ChevronRight, ChevronLeft, CheckCircle, BookOpen, MapPin, Quote, MessageSquare } from 'lucide-react';
 import { generateNote } from '../../lib/gemini';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
@@ -1265,7 +1265,7 @@ const NoteGenerator = () => {
             animate={{ opacity: 1, scale: 1 }}
             className="space-y-6"
           >
-            <div className="flex gap-4 sticky top-20 lg:top-4 z-10 shadow-lg p-2 bg-white/50 backdrop-blur-md rounded-2xl border border-white/20">
+            <div className="flex gap-2 sm:gap-4 flex-wrap sm:flex-nowrap sticky top-20 lg:top-4 z-10 shadow-lg p-2 bg-white/50 backdrop-blur-md rounded-2xl border border-white/20">
               <button onClick={() => setStep(2)} className="px-4 py-2 bg-white border rounded-xl font-bold text-sm hover:bg-gray-50">Edit</button>
               <button 
                 onClick={handleSave} 
@@ -1279,6 +1279,17 @@ const NoteGenerator = () => {
                 <Download size={18} />
                 PDF
               </button>
+              <a 
+                href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
+                  `Hi colleague! I generated a highly detailed learning note for *${displaySubject}* (${formData.class}) using *TeachSmartGH* by Catalyst Creative.\n\n*Note Details:*\n- Subject: ${displaySubject}\n- Class: ${formData.class}\n- Strand: ${formData.strand || "N/A"}\n- Sub-Strand: ${formData.subStrand || "N/A"}\n\nJoin me in using AI-powered tools for smarter teaching at: ${window.location.origin}`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-[#25D366] text-white px-4 py-2 rounded-xl font-bold text-sm flex items-center gap-2 hover:bg-[#20ba59] transition-all cursor-pointer shadow-lg shadow-green-500/10"
+              >
+                <MessageSquare size={18} />
+                WhatsApp
+              </a>
             </div>
 
             <div className="bg-white p-6 lg:p-10 rounded-3xl shadow-sm border border-gray-100 space-y-6 ghana-border relative overflow-hidden">

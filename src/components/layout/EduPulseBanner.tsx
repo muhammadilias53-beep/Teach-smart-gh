@@ -36,7 +36,7 @@ export const EduPulseBanner = () => {
     const unsubscribe = onSnapshot(q, (snapshot) => {
       if (!snapshot.empty) {
         const doc = snapshot.docs[0];
-        const data = doc.data() as Notification;
+        const data = doc.data() as any;
         
         // Handle server timestamps that might be null briefly on creation
         const createdAt = data.createdAt;
@@ -44,7 +44,18 @@ export const EduPulseBanner = () => {
         const isFresh = (Date.now() - alertTime) < 604800000; // 7 days (ensure visibility in dev/production)
         const isDismissed = safeLocalStorage.getItem(`dismissed_alert_${doc.id}`) || dismissedSession.includes(doc.id);
         
-        if (isFresh && !isDismissed) {
+        // Schedule check: Force hidden if scheduled for future
+        let isScheduledFuture = false;
+        if (data.scheduledFor) {
+          try {
+            const schedDate = data.scheduledFor.toDate ? data.scheduledFor.toDate() : new Date(data.scheduledFor);
+            if (schedDate > new Date()) {
+              isScheduledFuture = true;
+            }
+          } catch (e) {}
+        }
+
+        if (isFresh && !isDismissed && !isScheduledFuture) {
           setLatestAlert({ id: doc.id, ...data });
           setIsVisible(true);
         } else {

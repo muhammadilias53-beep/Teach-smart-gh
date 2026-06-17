@@ -153,7 +153,7 @@
     },
     "Notification": {
       "title": "Notification",
-      "description": "Real-time alerts for teachers regarding curriculum, resources, or events",
+      "description": "Professional multi-priority, targeted alerts, announcements, and resources for TeachSmartGH",
       "type": "object",
       "properties": {
         "userId": { "type": "string", "description": "Owner of the notification or 'all' for broadcast" },
@@ -162,6 +162,18 @@
         "type": { "type": "string", "enum": ["update", "resource", "event", "system"] },
         "read": { "type": "boolean" },
         "link": { "type": "string", "description": "Optional internal or external link" },
+        "category": { "type": "string", "description": "Announcement, New Feature, Bug Fix, success, tutorial etc..." },
+        "priority": { "type": "string", "enum": ["high", "medium", "low"] },
+        "pinned": { "type": "boolean" },
+        "fullContent": { "type": "string", "description": "Expanded description markdown or plain text" },
+        "imageUrl": { "type": "string", "description": "Optional associated image URL" },
+        "pdfUrl": { "type": "string", "description": "Optional linked PDF document URL" },
+        "videoUrl": { "type": "string", "description": "Optional linked YouTube or tutorial video URL" },
+        "actionLabel": { "type": "string", "description": "Optional custom label for action buttons" },
+        "audienceType": { "type": "string", "description": "all, trial, premium, class, subject, region, user" },
+        "audienceValue": { "type": "string", "description": "Specific level value matching selection" },
+        "opensCount": { "type": "number", "description": "Aggregated analytics metadata" },
+        "clicksCount": { "type": "number", "description": "Aggregated analytics metadata" },
         "createdAt": { "type": "string", "format": "date-time" }
       },
       "required": ["userId", "title", "message", "type", "createdAt"]
