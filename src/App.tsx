@@ -2,8 +2,8 @@
  * TeachSmart Ghana - AI-Powered Teaching Assistant
  * Version: 1.0.1
  */
-import React, { useEffect } from 'react';
-import { HashRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import React from 'react';
+import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import AuthGuard from './components/auth/AuthGuard';
 import Login from './components/auth/Login';
@@ -20,8 +20,10 @@ import ProfileSettings from './components/profile/ProfileSettings';
 import ResourcePacks from './components/packs/ResourcePacks';
 import BstemLabGuide from './components/packs/BstemLabGuide';
 import BstemMathGuide from './components/packs/BstemMathGuide';
+import BstemTechGuide from './components/packs/BstemTechGuide';
 import AdminCommandCenter from './components/admin/AdminCommandCenter';
 import { PWALifecycleTracker } from './components/PWALifecycleTracker';
+import ScrollToTop from './components/common/ScrollToTop';
 
 // Public pages
 import { About } from './components/public/About';
@@ -40,16 +42,6 @@ const Placeholder = ({ name }: { name: string }) => (
 );
 
 import { Toaster } from 'react-hot-toast';
-
-function ScrollToTop() {
-  const { pathname } = useLocation();
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
-
-  return null;
-}
 
 function App() {
   return (
@@ -74,6 +66,7 @@ function App() {
             <Route path="/packs" element={<ResourcePacks />} />
             <Route path="/bstem-guide" element={<BstemLabGuide />} />
             <Route path="/bstem-math" element={<BstemMathGuide />} />
+            <Route path="/bstem-tech" element={<BstemTechGuide />} />
             <Route path="/exams" element={<ExamGenerator />} />
             <Route path="/billing" element={<Billing />} />
             <Route path="/profile" element={<ProfileSettings />} />

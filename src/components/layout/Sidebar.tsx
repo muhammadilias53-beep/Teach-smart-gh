@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MessageSquare, MessageCircle, FileText, Calendar, BookOpen, PenTool, CheckCircle, Menu, X, LogOut, LayoutDashboard, CreditCard, Zap, User, Package, Library, ShieldCheck, Bell, Shield, Atom, Calculator } from 'lucide-react';
+import { MessageSquare, MessageCircle, FileText, Calendar, BookOpen, PenTool, CheckCircle, Menu, X, LogOut, LayoutDashboard, CreditCard, Zap, User, Package, Library, ShieldCheck, Bell, Shield, Atom, Calculator, Cpu } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '../../lib/utils';
@@ -32,6 +32,7 @@ const Sidebar = () => {
     { icon: Package, label: 'Resource Packs', path: '/packs' },
     { icon: Atom, label: 'BSTEM Lab Guide', path: '/bstem-guide' },
     { icon: Calculator, label: 'BSTEM Math Guide', path: '/bstem-math' },
+    { icon: Cpu, label: 'BSTEM Tech Guide', path: '/bstem-tech' },
     { icon: Library, label: 'Content Library', path: '/library' },
     { icon: PenTool, label: 'Exams & Tests', path: '/exams' },
     { icon: CreditCard, label: 'Subscription', path: '/billing' },

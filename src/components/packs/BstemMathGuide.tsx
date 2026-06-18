@@ -335,7 +335,7 @@ export default function BstemMathGuide() {
   const [activeTab, setActiveTab] = useState<'kit' | 'standards' | 'case' | 'syllabus' | 'games'>('kit');
   
   // Game states
-  const [activeSubLab, setActiveSubLab] = useState<'snail' | 'hanoi' | 'pig' | 'picks' | 'happy' | 'handshake'>('picks');
+  const [activeSubLab, setActiveSubLab] = useState<'snail' | 'hanoi' | 'pig' | 'picks' | 'happy' | 'handshake' | 'gridlines' | 'target'>('picks');
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 pb-12 font-sans">
@@ -804,6 +804,24 @@ export default function BstemMathGuide() {
                   >
                     🌈 Happy Numbers
                   </button>
+                  <button
+                    onClick={() => setActiveSubLab('gridlines')}
+                    className={cn(
+                      "px-3 py-1.5 rounded-md text-[11px] uppercase tracking-wider font-bold transition-all",
+                      activeSubLab === 'gridlines' ? "bg-[#1e293b] text-white shadow-sm" : "text-slate-600 hover:text-slate-800"
+                    )}
+                  >
+                    🧮 Gridlines Numbers
+                  </button>
+                  <button
+                    onClick={() => setActiveSubLab('target')}
+                    className={cn(
+                      "px-3 py-1.5 rounded-md text-[11px] uppercase tracking-wider font-bold transition-all",
+                      activeSubLab === 'target' ? "bg-[#1e293b] text-white shadow-sm" : "text-slate-600 hover:text-slate-800"
+                    )}
+                  >
+                    🎯 Target Maths
+                  </button>
                 </div>
 
                 <div className="border border-slate-200 rounded-xl p-5 bg-slate-50/50">
@@ -821,6 +839,12 @@ export default function BstemMathGuide() {
 
                   {/* LAB E: HAPPY NUMBERS */}
                   {activeSubLab === 'happy' && <HappyNumbersLab />}
+
+                  {/* LAB F: GRIDLINES NUMBERS */}
+                  {activeSubLab === 'gridlines' && <GridlinesNumbersLab />}
+
+                  {/* LAB G: TARGET MATHS */}
+                  {activeSubLab === 'target' && <TargetMathsLab />}
                 </div>
               </div>
             )}
@@ -1577,8 +1601,1580 @@ function HappyNumbersLab() {
 }
 
 // ----------------------------------------------------
+// Sub-Lab 6: Gridlines Numbers Interactive Lab
+// ----------------------------------------------------
+
+interface GridlinesCard {
+  id: string;
+  value: string;
+  type: 'D' | 'A' | 'R' | 'I' | 'E'; // Digit, Arithmetic, Rational, Indices, Equals
+  points: number;
+}
+
+const GRIDLINES_DECK_PRESETS: Omit<GridlinesCard, 'id'>[] = [
+  // Digits (D)
+  { value: "0", type: "D", points: 1 },
+  { value: "1", type: "D", points: 1 },
+  { value: "2", type: "D", points: 1 },
+  { value: "3", type: "D", points: 1 },
+  { value: "4", type: "D", points: 1 },
+  { value: "5", type: "D", points: 1 },
+  { value: "6", type: "D", points: 1 },
+  { value: "7", type: "D", points: 1 },
+  { value: "8", type: "D", points: 2 },
+  { value: "9", type: "D", points: 2 },
+  { value: "10", type: "D", points: 2 },
+  { value: "12", type: "D", points: 2 },
+  { value: "13", type: "D", points: 2 },
+  { value: "17", type: "D", points: 2 },
+  { value: "47", type: "D", points: 3 },
+  { value: "64", type: "D", points: 3 },
+  
+  // Arithmetic (A)
+  { value: "+", type: "A", points: 1 },
+  { value: "-", type: "A", points: 1 },
+  { value: "*", type: "A", points: 2 },
+  { value: "/", type: "A", points: 2 },
+  { value: "+", type: "A", points: 1 },
+  { value: "-", type: "A", points: 1 },
+
+  // Rationals (R)
+  { value: "0.8", type: "R", points: 3 },
+  { value: "0.7", type: "R", points: 3 },
+  { value: "0.15", type: "R", points: 3 },
+  { value: "0.75", type: "R", points: 3 },
+  { value: "0.65", type: "R", points: 3 },
+  { value: "1/5", type: "R", points: 3 },
+  { value: "3/4", type: "R", points: 3 },
+  { value: "1/4", type: "R", points: 2 },
+  { value: "1/10", type: "R", points: 3 },
+  { value: "1/2", type: "R", points: 2 },
+  { value: "1/3", type: "R", points: 3 },
+  { value: "60%", type: "R", points: 3 },
+  { value: "15%", type: "R", points: 3 },
+  { value: "40%", type: "R", points: 3 },
+  { value: "50%", type: "R", points: 2 },
+  { value: "25%", type: "R", points: 2 },
+
+  // Indices (I)
+  { value: "^2", type: "I", points: 2 },
+  { value: "^3", type: "I", points: 3 },
+  { value: "^0", type: "I", points: 2 },
+  { value: "^1", type: "I", points: 2 },
+  { value: "√", type: "I", points: 3 }
+];
+
+// Lightweight synthesis of educational gaming retro beeps
+function playGridlinesTone(freq: number, type: OscillatorType, duration: number) {
+  try {
+    const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const osc = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+    
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    osc.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+    
+    gainNode.gain.setValueAtTime(0.08, audioCtx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+    
+    osc.start();
+    osc.stop(audioCtx.currentTime + duration);
+  } catch (e) {
+    // Ignore audio autoplay restrictions
+  }
+}
+
+function parseGridlinesToken(token: string): number | null {
+  if (token.endsWith('%')) {
+    const val = parseFloat(token.slice(0, -1));
+    return isNaN(val) ? null : val / 100;
+  }
+  if (token.includes('/')) {
+    const parts = token.split('/');
+    if (parts.length === 2) {
+      const num = parseFloat(parts[0]);
+      const den = parseFloat(parts[1]);
+      if (!isNaN(num) && !isNaN(den) && den !== 0) {
+        return num / den;
+      }
+    }
+  }
+  const val = parseFloat(token);
+  return isNaN(val) ? null : val;
+}
+
+function safeEvalGridlines(tokens: string[]): number | null {
+  const outputQueue: string[] = [];
+  const operatorStack: string[] = [];
+  const precedence: { [key: string]: number } = {
+    '+': 1,
+    '-': 1,
+    '*': 2,
+    '/': 2,
+  };
+
+  for (const token of tokens) {
+    const value = parseGridlinesToken(token);
+    if (value !== null) {
+      outputQueue.push(value.toString());
+    } else if (token === '+' || token === '-' || token === '*' || token === '/' || token === 'x' || token === '÷') {
+      const op = token === 'x' ? '*' : token === '÷' ? '/' : token;
+      while (
+        operatorStack.length > 0 &&
+        precedence[operatorStack[operatorStack.length - 1]] >= precedence[op]
+      ) {
+        outputQueue.push(operatorStack.pop()!);
+      }
+      operatorStack.push(op);
+    } else {
+      return null;
+    }
+  }
+
+  while (operatorStack.length > 0) {
+    outputQueue.push(operatorStack.pop()!);
+  }
+
+  const stack: number[] = [];
+  for (const token of outputQueue) {
+    const num = parseFloat(token);
+    if (!isNaN(num)) {
+      stack.push(num);
+    } else {
+      if (stack.length < 2) return null;
+      const b = stack.pop()!;
+      const a = stack.pop()!;
+      if (token === '+') stack.push(a + b);
+      else if (token === '-') stack.push(a - b);
+      else if (token === '*') stack.push(a * b);
+      else if (token === '/') {
+        if (b === 0) return null;
+        stack.push(a / b);
+      } else {
+        return null;
+      }
+    }
+  }
+
+  if (stack.length === 1) {
+    return stack[0];
+  }
+  return null;
+}
+
+function evaluateGridlinesStatement(tokens: string[]): number | null {
+  try {
+    // Process unary "√" (root) operators
+    const processed: string[] = [];
+    for (let i = 0; i < tokens.length; i++) {
+      const t = tokens[i];
+      if (t === '√') {
+        if (i + 1 < tokens.length) {
+          const nextVal = parseGridlinesToken(tokens[i + 1]);
+          if (nextVal !== null && nextVal >= 0) {
+            processed.push(Math.sqrt(nextVal).toString());
+            i++; 
+          } else {
+            return null;
+          }
+        } else {
+          return null;
+        }
+      } else {
+        processed.push(t);
+      }
+    }
+
+    // Process exponential powers like "^2", "^3"
+    const withPowers: string[] = [];
+    for (let i = 0; i < processed.length; i++) {
+      const t = processed[i];
+      if (t.startsWith('^')) {
+        const exponentStr = t.slice(1);
+        const exponent = parseFloat(exponentStr);
+        if (withPowers.length > 0) {
+          const lastNum = parseFloat(withPowers[withPowers.length - 1]);
+          if (!isNaN(lastNum)) {
+            withPowers[withPowers.length - 1] = Math.pow(lastNum, exponent).toString();
+          } else {
+            return null;
+          }
+        } else {
+          return null;
+        }
+      } else {
+        withPowers.push(t);
+      }
+    }
+
+    return safeEvalGridlines(withPowers);
+  } catch (err) {
+    return null;
+  }
+}
+
+function generateClassicGridlinesDeck(): GridlinesCard[] {
+  let counter = 0;
+  return GRIDLINES_DECK_PRESETS.map(item => ({
+    ...item,
+    id: `card-${counter++}-${Math.random()}`
+  }));
+}
+
+function solveGridlinesHint(visibleCards: GridlinesCard[]): string {
+  const digits = visibleCards.filter(c => c.type === 'D');
+  const ops = visibleCards.filter(c => c.type === 'A');
+  
+  for (const d1 of digits) {
+    for (const d2 of digits) {
+      if (d1.id === d2.id) continue;
+      for (const op of ops) {
+        const v1 = parseFloat(d1.value);
+        const v2 = parseFloat(d2.value);
+        if (isNaN(v1) || !isFinite(v1) || isNaN(v2) || !isFinite(v2)) continue;
+        
+        let result: number | null = null;
+        if (op.value === '+') result = v1 + v2;
+        if (op.value === '-') result = v1 - v2;
+        if (op.value === '*' || op.value === 'x') result = v1 * v2;
+        if (op.value === '/' || op.value === '÷') {
+          if (v2 !== 0) result = v1 / v2;
+        }
+        
+        if (result !== null) {
+          const matchDigit = digits.find(d => d.id !== d1.id && d.id !== d2.id && Math.abs(parseFloat(d.value) - result!) < 0.001);
+          if (matchDigit) {
+            return `💡 hint: Select cards "${d1.value}", "${op.value}", "${d2.value}", click "Insert =", then select "${matchDigit.value}"!`;
+          }
+        }
+      }
+    }
+  }
+
+  // Check simple powers
+  const indices = visibleCards.filter(c => c.type === 'I');
+  for (const d1 of digits) {
+    for (const ind of indices) {
+      if (ind.value === '^2') {
+        const val = parseFloat(d1.value);
+        const sq = val * val;
+        const target = digits.find(d => d.id !== d1.id && Math.abs(parseFloat(d.value) - sq) < 0.001);
+        if (target) {
+          return `💡 hint: Square the "${d1.value}" card ("${d1.value}", "^2"), insert "=", and match it with "${target.value}"!`;
+        }
+      }
+      if (ind.value === '^3') {
+        const val = parseFloat(d1.value);
+        const cb = val * val * val;
+        const target = digits.find(d => d.id !== d1.id && Math.abs(parseFloat(d.value) - cb) < 0.001);
+        if (target) {
+          return `💡 hint: Cube the "${d1.value}" card ("${d1.value}", "^3"), insert "=", and match it with "${target.value}"!`;
+        }
+      }
+      if (ind.value === '√') {
+        const val = parseFloat(d1.value);
+        if (val >= 0) {
+          const s = Math.sqrt(val);
+          const target = digits.find(d => d.id !== d1.id && Math.abs(parseFloat(d.value) - s) < 0.001);
+          if (target) {
+            return `💡 hint: Take the square root of "${d1.value}" ("√", "${d1.value}"), insert "=", and match it with "${target.value}"!`;
+          }
+        }
+      }
+    }
+  }
+
+  // Check ratio equivalence
+  const rationals = visibleCards.filter(c => c.type === 'R');
+  for (const rat of rationals) {
+    const val = parseGridlinesToken(rat.value);
+    if (val !== null) {
+      const mat = rationals.find(r => r.id !== rat.id && Math.abs(parseGridlinesToken(r.value)! - val) < 0.001);
+      if (mat) {
+        return `💡 hint: Try evaluating rationals! "${rat.value}" equals "${mat.value}" directly in the NaCCA curriculum!`;
+      }
+    }
+  }
+
+  return "💡 hint: Draw new cards or reset if the board seems too complex. Look for basic numbers first!";
+}
+
+function GridlinesNumbersLab() {
+  const [deck, setDeck] = useState<GridlinesCard[]>([]);
+  const [visibleGrid, setVisibleGrid] = useState<GridlinesCard[]>([]);
+  const [activeStatement, setActiveStatement] = useState<GridlinesCard[]>([]);
+  const [equalsRemaining, setEqualsRemaining] = useState(10);
+  const [score, setScore] = useState(0);
+  const [highScore, setHighScore] = useState(0);
+  const [verifiedEquations, setVerifiedEquations] = useState<string[]>([]);
+  const [soundEnabled, setSoundEnabled] = useState(true);
+  const [showRulesGuide, setShowRulesGuide] = useState(false);
+  const [hintsBox, setHintsBox] = useState<string | null>(null);
+
+  // Load Highscore
+  useEffect(() => {
+    const saved = localStorage.getItem('gridlines_high_score');
+    if (saved) {
+      setHighScore(parseInt(saved, 10));
+    }
+    resetGridlinesGame();
+  }, []);
+
+  const resetGridlinesGame = () => {
+    const fullDeck = [...generateClassicGridlinesDeck(), ...generateClassicGridlinesDeck()].sort(() => Math.random() - 0.5);
+    const gridSelection = fullDeck.slice(0, 25);
+    const remainingDeck = fullDeck.slice(25);
+
+    setDeck(remainingDeck);
+    setVisibleGrid(gridSelection);
+    setActiveStatement([]);
+    setEqualsRemaining(10);
+    setScore(0);
+    setVerifiedEquations([]);
+    setHintsBox(null);
+    if (soundEnabled) playGridlinesTone(520, 'sine', 0.2);
+    toast.success('Gridlines Numbers Board Initialized!')
+  };
+
+  const handleCardClick = (card: GridlinesCard) => {
+    // If card is already in active statement, clicking it removes it
+    if (activeStatement.some(c => c.id === card.id)) {
+      setActiveStatement(prev => prev.filter(c => c.id !== card.id));
+      if (soundEnabled) playGridlinesTone(350, 'sine', 0.08);
+      return;
+    }
+
+    // Append to active statement
+    setActiveStatement(prev => [...prev, card]);
+    if (soundEnabled) playGridlinesTone(600, 'sine', 0.08);
+  };
+
+  const handleInsertEquals = () => {
+    // Check if statement already has an equals sign
+    if (activeStatement.some(c => c.type === 'E')) {
+      toast.error('Only one equals sign allowed in Gridlines equations.');
+      return;
+    }
+    const equalsCard: GridlinesCard = {
+      id: `eq-${Math.random()}`,
+      value: '=',
+      type: 'E',
+      points: 0
+    };
+    setActiveStatement(prev => [...prev, equalsCard]);
+    if (soundEnabled) playGridlinesTone(450, 'sine', 0.1);
+  };
+
+  const clearActiveStatement = () => {
+    setActiveStatement([]);
+    if (soundEnabled) playGridlinesTone(280, 'sine', 0.15);
+  };
+
+  const getHint = () => {
+    const hint = solveGridlinesHint(visibleGrid);
+    setHintsBox(hint);
+    if (soundEnabled) playGridlinesTone(880, 'sine', 0.15);
+  };
+
+  const validateStatement = () => {
+    if (activeStatement.length < 3) {
+      toast.error('Statements must be at least 3 cards (e.g. A = B).');
+      return;
+    }
+
+    // Verify there is exactly one equals card
+    const eqIdx = activeStatement.findIndex(c => c.type === 'E');
+    if (eqIdx === -1) {
+      toast.error('Please insert an equals (=) card to complete the equation!');
+      return;
+    }
+
+    if (activeStatement.filter(c => c.type === 'E').length > 1) {
+      toast.error('Multiple equals signs found. Keep to a single equation.');
+      return;
+    }
+
+    const leftCards = activeStatement.slice(0, eqIdx);
+    const rightCards = activeStatement.slice(eqIdx + 1);
+
+    if (leftCards.length === 0 || rightCards.length === 0) {
+      toast.error('Left Hand Side or Right Hand Side can not be empty.');
+      return;
+    }
+
+    // Evaluate
+    const lhsVal = evaluateGridlinesStatement(leftCards.map(c => c.value));
+    const rhsVal = evaluateGridlinesStatement(rightCards.map(c => c.value));
+
+    if (lhsVal === null || rhsVal === null) {
+      if (soundEnabled) playGridlinesTone(150, 'sawtooth', 0.35);
+      toast.error(`Invalid structure! Could not evaluate values. Check syntax.`);
+      return;
+    }
+
+    // Account for float precision using small epsilon
+    const isMatched = Math.abs(lhsVal - rhsVal) < 0.002;
+
+    if (!isMatched) {
+      if (soundEnabled) playGridlinesTone(150, 'sawtooth', 0.35);
+      toast.error(`Calculation mismatch! LHS evaluated to ${Number(lhsVal.toFixed(2))} but RHS evaluated to ${Number(rhsVal.toFixed(2))}. Try again.`);
+      return;
+    }
+
+    // SUCCESS! Let's tally scores
+    // Points score = Sum of points of all used cards + optional multiplier for length
+    const matchedCardPoints = activeStatement.reduce((acc, curr) => acc + curr.points, 0);
+    const lengthMultiplier = activeStatement.length >= 6 ? 2.0 : activeStatement.length >= 5 ? 1.5 : activeStatement.length >= 4 ? 1.25 : 1.0;
+    const equationPoints = Math.round(matchedCardPoints * lengthMultiplier);
+
+    const updatedScore = score + equationPoints;
+    setScore(updatedScore);
+
+    // Save High Score
+    if (updatedScore > highScore) {
+      setHighScore(updatedScore);
+      localStorage.setItem('gridlines_high_score', updatedScore.toString());
+    }
+
+    // Format equation trace
+    const equationText = activeStatement.map(c => c.value).join(' ');
+    setVerifiedEquations(prev => [equationText, ...prev]);
+
+    // Play fanfare sequence
+    if (soundEnabled) {
+      playGridlinesTone(523.25, 'triangle', 0.15); // C5
+      setTimeout(() => playGridlinesTone(659.25, 'triangle', 0.15), 140); // E5
+      setTimeout(() => playGridlinesTone(783.99, 'triangle', 0.3), 280); // G5
+    }
+
+    // Consume one equals card from the solver
+    setEqualsRemaining(prev => Math.max(0, prev - 1));
+
+    // Remove cards from the 25-grid and refill from deck
+    const usedIds = activeStatement.filter(c => c.type !== 'E').map(c => c.id);
+    const refilledGrid = visibleGrid.map(card => {
+      if (usedIds.includes(card.id)) {
+        if (deck.length > 0) {
+          const nextCard = deck[0];
+          setDeck(prev => prev.slice(1));
+          return nextCard;
+        } else {
+          // If deck is empty, reshuffle a new pack
+          const freshPack = generateClassicGridlinesDeck().sort(() => Math.random() - 0.5);
+          const nextCard = freshPack[0];
+          setDeck(freshPack.slice(1));
+          return nextCard;
+        }
+      }
+      return card;
+    });
+
+    setVisibleGrid(refilledGrid);
+    setActiveStatement([]);
+    setHintsBox(null);
+    toast.success(`Correct Statement! +${equationPoints} Points Added. 🎉`);
+  };
+
+  return (
+    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm overflow-hidden font-sans">
+      {/* Visual Header */}
+      <div className="bg-gradient-to-r from-emerald-600 via-[#1e293b] to-indigo-700 py-5 px-6 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <span className="text-[10px] uppercase font-black tracking-widest bg-yellow-500/20 text-yellow-300 border border-yellow-500/30 px-2.5 py-0.5 rounded-full">
+            NaCCA Aligned Classroom Game
+          </span>
+          <h2 className="text-xl font-bold flex items-center gap-1.5 mt-1">
+            🧮 Gridlines Numbers: Interactive Challenge
+          </h2>
+          <p className="text-[11px] text-slate-300 mt-0.5">
+            Construct mathematically equivalent equations using integers, decimals, indices, and roots.
+          </p>
+        </div>
+
+        <div className="flex gap-2">
+          <button 
+            onClick={() => setShowRulesGuide(!showRulesGuide)}
+            className="px-3 py-1 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-xs font-semibold select-none flex items-center gap-1 transition-all"
+          >
+            <BookOpen size={12} />
+            Rules Guide
+          </button>
+          <button 
+            onClick={() => setSoundEnabled(!soundEnabled)}
+            className="px-3 py-1 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-xs font-semibold select-none flex items-center gap-1 transition-all"
+          >
+            {soundEnabled ? "🔊 Sound On" : "🔇 Silent"}
+          </button>
+        </div>
+      </div>
+
+      {/* Game Overview Stats */}
+      <div className="grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-slate-100 dark:divide-slate-800 bg-slate-50 dark:bg-slate-950 p-4 border-b border-slate-100 dark:border-slate-800">
+        <div className="p-2 text-center md:text-left">
+          <p className="text-[10px] uppercase font-bold tracking-wider text-slate-400">Current Score</p>
+          <p className="text-xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-0.5">{score} pts</p>
+        </div>
+        <div className="p-2 text-center md:text-left">
+          <p className="text-[10px] uppercase font-bold tracking-wider text-slate-400">Personal Best</p>
+          <p className="text-xl font-extrabold text-[#1e293b] dark:text-slate-200 mt-0.5">{highScore} pts</p>
+        </div>
+        <div className="p-2 text-center md:text-left">
+          <p className="text-[10px] uppercase font-bold tracking-wider text-slate-400">Equals Stack (=)</p>
+          <p className="text-xl font-extrabold text-indigo-600 dark:text-indigo-400 mt-0.5">
+            {equalsRemaining > 0 ? `🎟️ ${equalsRemaining} Left` : "🏁 Round Finished!"}
+          </p>
+        </div>
+        <div className="p-2 text-center md:text-left">
+          <p className="text-[10px] uppercase font-bold tracking-wider text-slate-400">Draw Deck size</p>
+          <p className="text-xl font-extrabold text-slate-700 dark:text-slate-400 mt-0.5">📦 {deck.length} cards</p>
+        </div>
+      </div>
+
+      {/* Rules Guide Overlay Block */}
+      {showRulesGuide && (
+        <motion.div 
+          initial={{ opacity: 0, y: -10 }} 
+          animate={{ opacity: 1, y: 0 }} 
+          className="bg-indigo-50/75 dark:bg-indigo-950/20 border-b border-indigo-100 dark:border-indigo-900 p-5 text-xs text-slate-700 dark:text-slate-300 grid grid-cols-1 md:grid-cols-2 gap-4 leading-normal"
+        >
+          <div>
+            <h4 className="font-bold text-indigo-900 dark:text-indigo-400 mb-1">AIM OF THE GAME</h4>
+            <p>
+              Match cards together in the 25-Card Grid to form validated algebraic equations. Every equation must include exactly one Equals sign (=). Click cards to add them to your equation bar!
+            </p>
+            <h4 className="font-bold text-indigo-900 dark:text-indigo-400 mt-3 mb-1">CARD COLOR CODES:</h4>
+            <ul className="space-y-1">
+              <li>🔘 <strong className="text-slate-800 dark:text-slate-100">Digits (D):</strong> Whole integers like <code className="font-semibold select-all font-mono">0</code> to <code className="font-semibold select-all font-mono">64</code>.</li>
+              <li>🟡 <strong className="text-amber-800 dark:text-amber-400">Arithmetic (A):</strong> Operational symbols: <code className="font-semibold select-all font-mono">+</code>, <code className="font-semibold select-all font-mono">-</code>, <code className="font-semibold select-all font-mono">*</code>, <code className="font-semibold select-all font-mono">/</code>.</li>
+              <li>🟢 <strong className="text-emerald-800 dark:text-emerald-400">Rationals (R):</strong> Decimals, fractions, and percent values. E.g. <code className="font-semibold select-all font-mono">1/5</code> and <code className="font-semibold select-all font-mono">20%</code>.</li>
+              <li>🔴 <strong className="text-rose-800 dark:text-rose-400">Indices (I):</strong> Powers & root symbols: <code className="font-semibold select-all font-mono">^2</code>, <code className="font-semibold select-all font-mono">^3</code>, <code className="font-semibold select-all font-mono">√</code>.</li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-bold text-indigo-900 dark:text-indigo-400 mb-1">HOW SCORING WORKS:</h4>
+            <p>
+              Cards list their specific difficulty points on the top-left! Basic digits are worth 1-2 points. Rational values, indices, and roots are worth 3 points!
+            </p>
+            <p className="mt-1.5 font-bold">
+              ⚡ Multipliers: 4-card statement = 1.25x point bonus. 5-card statement = 1.5x bonus. 6+ cards = 2.0x mega bonus!
+            </p>
+            <div className="bg-white/80 dark:bg-slate-900 border border-slate-200/50 rounded-lg p-2.5 mt-2.5">
+              <span className="font-semibold text-slate-800 dark:text-slate-200 block mb-1">Example equations:</span>
+              <ul className="space-y-0.5 list-disc pl-4 font-mono text-[11px] text-slate-600 dark:text-slate-400">
+                <li>2 + 3 = 5 (Simple Arithmetic)</li>
+                <li>2 ^ 3 = 8 (Power Indice value)</li>
+                <li>0.8 - 60% = 1/5 (Rational expressions!)</li>
+                <li>√ 9 + 4 = 7 (Root logic)</li>
+              </ul>
+            </div>
+          </div>
+        </motion.div>
+      )}
+
+      {/* Main Game Interface Block */}
+      {equalsRemaining === 0 ? (
+        <div className="flex flex-col items-center justify-center py-16 px-4 bg-slate-50 dark:bg-slate-950 text-center animate-fade-in">
+          <Trophy size={48} className="text-yellow-500 animate-bounce mb-3" />
+          <h3 className="text-2xl font-black text-[#1e293b] dark:text-white uppercase tracking-tight">Challenge Completed!</h3>
+          <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mt-1">
+            Superb job! You used all available Equals cards to construct complex, curriculum-aligned mathematical equations.
+          </p>
+          <div className="my-6 p-6 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl shadow-sm text-center max-w-xs w-full">
+            <span className="text-[10px] uppercase font-bold tracking-widest text-[#1e293b]">Final Score</span>
+            <p className="text-4xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-1">{score} pts</p>
+            <div className="flex justify-between items-center bg-slate-50 dark:bg-slate-950 p-2 text-xs rounded border border-slate-100 dark:border-slate-850 mt-4">
+              <span className="text-slate-500">Equations Solved:</span>
+              <span className="font-bold text-[#1e293b] dark:text-white">{verifiedEquations.length}</span>
+            </div>
+          </div>
+          <button
+            onClick={resetGridlinesGame}
+            className="px-6 py-2.5 bg-indigo-650 text-white font-bold rounded-xl shadow-md hover:bg-indigo-700 transition"
+          >
+            Play Gridlines Again
+          </button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 p-6">
+          
+          {/* LEFT PANEL: The 5x5 Card Grid (8 Cols) */}
+          <div className="lg:col-span-8 space-y-4">
+            <div className="flex justify-between items-center bg-slate-50 dark:bg-slate-950 px-4 py-2.5 rounded-xl border border-dashed border-slate-200 dark:border-slate-850">
+              <span className="text-xs font-extrabold text-slate-500 uppercase tracking-wider flex items-center gap-1">
+                🃏 The 5x5 Gridlines Table
+              </span>
+              <button 
+                onClick={resetGridlinesGame}
+                className="text-[10px] border border-slate-200 hover:bg-slate-100 font-bold px-2 py-1 rounded flex items-center gap-1 transition"
+              >
+                <RotateCcw size={10} />
+                Reset Board
+              </button>
+            </div>
+
+            <div className="grid grid-cols-5 gap-2 sm:gap-3 p-4 bg-slate-50/50 dark:bg-slate-950/20 border border-slate-100 dark:border-slate-850 rounded-2xl">
+              {visibleGrid.map((card, idx) => {
+                const isSelected = activeStatement.some(c => c.id === card.id);
+                return (
+                  <motion.div
+                    key={card.id || idx}
+                    onClick={() => handleCardClick(card)}
+                    className={cn(
+                      "relative h-16 w-full max-w-[80px] sm:h-24 sm:max-w-none rounded-xl border-2 flex flex-col justify-between p-1 cursor-pointer select-none transition-all shadow-sm",
+                      isSelected 
+                        ? "opacity-30 border-dashed border-slate-200 bg-slate-100 dark:bg-slate-800 scale-90 cursor-not-allowed" 
+                        : card.type === 'D' ? "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 hover:border-slate-350 dark:hover:border-slate-700 hover:scale-105"
+                        : card.type === 'A' ? "bg-amber-50/80 dark:bg-amber-950/20 border-amber-200 dark:border-amber-900/60 text-amber-900 dark:text-amber-400 hover:border-amber-350 hover:scale-105"
+                        : card.type === 'R' ? "bg-emerald-50/80 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-900/60 text-emerald-900 dark:text-emerald-400 hover:border-emerald-350 hover:scale-105"
+                        : "bg-rose-50/80 dark:bg-rose-950/20 border-rose-200 dark:border-rose-900/60 text-rose-900 dark:text-rose-400 hover:border-rose-350 hover:scale-105"
+                    )}
+                  >
+                    {/* Points value (Top-Left) */}
+                    <span className="text-[8px] sm:text-[9px] font-black text-slate-400/80 leading-none">
+                      {card.points}p
+                    </span>
+
+                    {/* Category Code (Top-Right) */}
+                    <span className="text-[8px] sm:text-[9px] font-bold text-slate-400/80 leading-none text-right">
+                      {card.type}
+                    </span>
+
+                    {/* Value in center */}
+                    <span className="text-center text-xs sm:text-base font-extrabold tracking-tight my-1 sm:my-2 block text-[#1e293b] dark:text-white">
+                      {card.value}
+                    </span>
+
+                    {/* Fine subtle bottom spacer */}
+                    <div className="text-[5px] sm:text-[6px] tracking-widest text-[#1e293b]/30 dark:text-white/20 uppercase font-mono text-center">
+                      GRIDLINES
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* RIGHT PANEL: Formulating Equations & Active Builder */}
+          <div className="lg:col-span-4 space-y-4">
+            
+            {/* Active Equation Bar */}
+            <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-100 dark:border-slate-850 flex flex-col justify-between h-full min-h-[300px]">
+              <div>
+                <span className="text-[10px] uppercase font-bold tracking-widest text-slate-400 block mb-2">
+                  🛠️ Active Equation builder
+                </span>
+
+                <div className="min-h-[80px] bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-850 rounded-xl p-3 flex flex-wrap gap-1.5 items-center justify-start relative">
+                  {activeStatement.length === 0 ? (
+                    <span className="text-[11px] text-slate-400 italic">
+                      Click cards from the grid leftward to construct your mathematical statement...
+                    </span>
+                  ) : (
+                    activeStatement.map((card, idx) => (
+                      <div
+                        key={idx}
+                        onClick={() => {
+                          if (card.type === 'E') {
+                            setActiveStatement(prev => prev.filter((_, i) => i !== idx));
+                          } else {
+                            handleCardClick(card);
+                          }
+                        }}
+                        className={cn(
+                          "px-2.5 py-1 rounded font-bold text-xs shadow-xs cursor-pointer select-none transition hover:scale-95 flex items-center gap-1 border",
+                          card.type === 'E' ? "bg-indigo-600 text-white border-indigo-700 font-extrabold"
+                          : card.type === 'D' ? "bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-700"
+                          : card.type === 'A' ? "bg-amber-100 dark:bg-amber-950/45 text-amber-800 dark:text-amber-400 border-amber-200 dark:border-amber-900"
+                          : card.type === 'R' ? "bg-emerald-100 dark:bg-emerald-950/45 text-emerald-800 dark:text-emerald-400 border-emerald-250 dark:border-emerald-900"
+                          : "bg-rose-105 dark:bg-rose-950/45 text-rose-800 dark:text-rose-400 border-rose-200 dark:border-rose-900"
+                        )}
+                      >
+                        {card.value}
+                      </div>
+                    ))
+                  )}
+                </div>
+
+                {/* Insertion Utilities buttons */}
+                <div className="grid grid-cols-2 gap-2 mt-3">
+                  <button
+                    onClick={handleInsertEquals}
+                    className="py-2 bg-[#1e293b] text-white hover:bg-slate-800 font-bold rounded-lg text-[10px] uppercase tracking-wide flex items-center justify-center gap-1.5 shadow-xs transition"
+                  >
+                    <span>➕ Insert Equals (=)</span>
+                  </button>
+                  <button
+                    onClick={clearActiveStatement}
+                    className="py-2 border border-slate-200 hover:bg-slate-100 font-bold rounded-lg text-[10px] uppercase tracking-wide flex items-center justify-center gap-1.5 text-slate-650 transition"
+                  >
+                    <span>🗑️ Clear Line</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Validation panel */}
+              <div className="pt-4 border-t border-slate-200/50 mt-4 space-y-3">
+                <button
+                  onClick={validateStatement}
+                  className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-sm select-none"
+                >
+                  <CheckCircle size={16} />
+                  Validate Math Statement
+                </button>
+
+                <div className="flex gap-2">
+                  <button
+                    onClick={getHint}
+                    className="flex-1 py-1 px-2.5 bg-yellow-500/10 hover:bg-yellow-500/20 border border-yellow-500/35 text-yellow-800 dark:text-yellow-400 font-bold rounded-lg text-[10px] flex items-center justify-center gap-1.5 transition-all"
+                  >
+                    💡 TeachSmart Hint
+                  </button>
+                </div>
+
+                {hintsBox && (
+                  <motion.div 
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-xl text-[11px] text-yellow-900 dark:text-yellow-400"
+                  >
+                    {hintsBox}
+                  </motion.div>
+                )}
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      )}
+
+      {/* FOOTER: Activity Tracker List */}
+      {verifiedEquations.length > 0 && (
+        <div className="border-t border-slate-100 dark:border-slate-800 p-4 bg-slate-50/50 dark:bg-slate-950/20">
+          <p className="text-[10px] uppercase font-bold tracking-wider text-slate-400 mb-2">
+            📝 Validated equations (This Round)
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {verifiedEquations.map((eqText, index) => (
+              <span 
+                key={index}
+                className="bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900 px-3 py-1 rounded-full text-xs font-mono font-bold text-emerald-800 dark:text-emerald-400 flex items-center gap-1"
+              >
+                <Check size={12} />
+                {eqText}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ----------------------------------------------------
 // Diagnostic Cases Static Table
 // ----------------------------------------------------
 const CASES = [
   ...CASES_DATA
 ];
+
+// ----------------------------------------------------
+// Sub-Lab 7: Target Maths Classroom Game Lab
+// ----------------------------------------------------
+
+interface TargetMathsCard {
+  id: string;
+  target: number;
+  numbers: (number | string)[]; // Can include 'x' for unknowns
+  category: 'single' | 'double' | 'fractions' | 'unknowns';
+  solutionX?: number; // Correct value of x for unknowns mode
+}
+
+const TARGET_MATHS_PRESETS: TargetMathsCard[] = [
+  // Single Digits (Green)
+  { id: 'tm-s1', target: 7, numbers: [8, 2, 3, 3], category: 'single' },
+  { id: 'tm-s2', target: 6, numbers: [2, 3, 5, 1], category: 'single' },
+  { id: 'tm-s3', target: 10, numbers: [1, 2, 3, 4], category: 'single' },
+  { id: 'tm-s4', target: 12, numbers: [9, 5, 1, 3], category: 'single' },
+  { id: 'tm-s5', target: 14, numbers: [3, 5, 2, 9], category: 'single' },
+  { id: 'tm-s6', target: 20, numbers: [6, 2, 5, 8], category: 'single' },
+  { id: 'tm-s7', target: 8, numbers: [4, 2, 1, 1], category: 'single' },
+  { id: 'tm-s8', target: 9, numbers: [5, 4, 3, 3], category: 'single' },
+
+  // Double Digits (Red)
+  { id: 'tm-d1', target: 9, numbers: [16, 13, 12, 7], category: 'double' },
+  { id: 'tm-d2', target: 5, numbers: [10, 15, 2, 5], category: 'double' },
+  { id: 'tm-d3', target: 4, numbers: [12, 11, 10, 9], category: 'double' },
+  { id: 'tm-d4', target: 7, numbers: [14, 6, 3, 2], category: 'double' },
+  { id: 'tm-d5', target: 13, numbers: [25, 12, 10, 6], category: 'double' },
+  { id: 'tm-d6', target: 11, numbers: [20, 15, 5, 2], category: 'double' },
+
+  // Fractions (Purple)
+  { id: 'tm-f1', target: 1, numbers: [5, 4, 3, 0.5], category: 'fractions' }, // 0.5 is 1/2
+  { id: 'tm-f2', target: 5, numbers: [9, 3, 0.333, 2], category: 'fractions' }, // 0.333 is 1/3
+  { id: 'tm-f3', target: 8, numbers: [6, 2, 0.5, 4], category: 'fractions' },
+  { id: 'tm-f4', target: 3, numbers: [8, 4, 1, 0.5], category: 'fractions' },
+  { id: 'tm-f5', target: 6, numbers: [12, 3, 1.5, 0.5], category: 'fractions' },
+
+  // Unknowns (Orange)
+  { id: 'tm-u1', target: 5, numbers: [5, 7, 5, 'x'], category: 'unknowns', solutionX: 2 },
+  { id: 'tm-u2', target: 9, numbers: [10, 4, 'x', 3], category: 'unknowns', solutionX: 2 },
+  { id: 'tm-u3', target: 12, numbers: [15, 5, 'x', 2], category: 'unknowns', solutionX: 3 },
+  { id: 'tm-u4', target: 8, numbers: [12, 'x', 2, 6], category: 'unknowns', solutionX: 4 },
+];
+
+interface TargetMathsToken {
+  id: string;
+  type: 'num' | 'op' | 'x';
+  value: string;
+  cardIndex?: number; // 0, 1, 2, 3 to track usage
+}
+
+function playTargetMathsTone(freq: number, type: OscillatorType, duration: number) {
+  try {
+    const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const osc = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+    
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    osc.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+    
+    gainNode.gain.setValueAtTime(0.06, audioCtx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+    
+    osc.start();
+    osc.stop(audioCtx.currentTime + duration);
+  } catch (e) {
+    // Autoplay constraint bypass
+  }
+}
+
+// Solver function
+interface TargetSolveResult {
+  expr: string;
+  steps: string[];
+}
+
+function solveTargetMathsCard(numbers: number[], target: number): TargetSolveResult | null {
+  const ops = ['+', '-', '*', '/'];
+  
+  function evalOp(a: number, b: number, op: string): number | null {
+    if (op === '+') return a + b;
+    if (op === '-') return a - b;
+    if (op === '*') return a * b;
+    if (op === '/') {
+      if (Math.abs(b) < 0.0001) return null;
+      return a / b;
+    }
+    return null;
+  }
+
+  function permute(arr: number[]): number[][] {
+    if (arr.length === 1) return [arr];
+    const res: number[][] = [];
+    for (let i = 0; i < arr.length; i++) {
+      const current = arr[i];
+      const remaining = arr.slice(0, i).concat(arr.slice(i + 1));
+      const remainingPerms = permute(remaining);
+      for (const p of remainingPerms) {
+        res.push([current, ...p]);
+      }
+    }
+    return res;
+  }
+
+  const numPerms = permute(numbers);
+
+  for (const p of numPerms) {
+    const [A, B, C, D] = p;
+    for (const op1 of ops) {
+      for (const op2 of ops) {
+        for (const op3 of ops) {
+          
+          // Case 1: ((A op B) op C) op D
+          let val1 = evalOp(A, B, op1);
+          if (val1 !== null) {
+            let val2 = evalOp(val1, C, op2);
+            if (val2 !== null) {
+              let val3 = evalOp(val2, D, op3);
+              if (val3 !== null && Math.abs(val3 - target) < 0.002) {
+                return {
+                  expr: `((${A} ${op1} ${B}) ${op2} ${C}) ${op3} ${D}`,
+                  steps: [
+                    `Combine ${A} and ${B}: ${A} ${op1} ${B} = ${Number(val1.toFixed(2))}`,
+                    `Combine that with ${C}: ${Number(val1.toFixed(2))} ${op2} ${C} = ${Number(val2.toFixed(2))}`,
+                    `Apply ${D} to finish: ${Number(val2.toFixed(2))} ${op3} ${D} = ${target}`
+                  ]
+                };
+              }
+            }
+          }
+
+          // Case 2: (A op (B op C)) op D
+          let valBC = evalOp(B, C, op2);
+          if (valBC !== null) {
+            let val1 = evalOp(A, valBC, op1);
+            if (val1 !== null) {
+              let val3 = evalOp(val1, D, op3);
+              if (val3 !== null && Math.abs(val3 - target) < 0.002) {
+                return {
+                  expr: `(${A} ${op1} (${B} ${op2} ${C})) ${op3} ${D}`,
+                  steps: [
+                    `Combine inside brackets (${B} ${op2} ${C}): ${valBC}`,
+                    `Combine ${A} with that output: ${A} ${op1} ${valBC} = ${Number(val1.toFixed(2))}`,
+                    `Apply ${D} with ${op3}: ${Number(val1.toFixed(2))} ${op3} ${D} = ${target}`
+                  ]
+                };
+              }
+            }
+          }
+
+          // Case 3: A op ((B op C) op D)
+          if (valBC !== null) {
+            let valInner = evalOp(valBC, D, op3);
+            if (valInner !== null) {
+              let valFinal = evalOp(A, valInner, op1);
+              if (valFinal !== null && Math.abs(valFinal - target) < 0.002) {
+                return {
+                  expr: `${A} ${op1} ((${B} ${op2} ${C}) ${op3} ${D})`,
+                  steps: [
+                    `Combine inside brackets (${B} ${op2} ${C}): ${valBC}`,
+                    `Combine with ${D} using ${op3}: ${valInner}`,
+                    `Complete the formula with ${A} ${op1} ${valInner} = ${target}`
+                  ]
+                };
+              }
+            }
+          }
+
+          // Case 4: A op (B op (C op D))
+          let valCD = evalOp(C, D, op3);
+          if (valCD !== null) {
+            let valInner = evalOp(B, valCD, op2);
+            if (valInner !== null) {
+              let valFinal = evalOp(A, valInner, op1);
+              if (valFinal !== null && Math.abs(valFinal - target) < 0.002) {
+                return {
+                  expr: `${A} ${op1} (${B} ${op2} (${C} ${op3} ${D}))`,
+                  steps: [
+                    `Evaluate RHS first (${C} ${op3} ${D}): ${valCD}`,
+                    `Merge with ${B} using ${op2}: ${valInner}`,
+                    `Apply ${A} with ${op1}: ${A} ${op1} ${valInner} = ${target}`
+                  ]
+                };
+              }
+            }
+          }
+
+          // Case 5: (A op B) op (C op D)
+          let valAB = evalOp(A, B, op1);
+          let valCD_c5 = evalOp(C, D, op3);
+          if (valAB !== null && valCD_c5 !== null) {
+            let valFinal = evalOp(valAB, valCD_c5, op2);
+            if (valFinal !== null && Math.abs(valFinal - target) < 0.002) {
+              return {
+                expr: `(${A} ${op1} ${B}) ${op2} (${C} ${op3} ${D})`,
+                steps: [
+                  `Evaluate Left: (${A} ${op1} ${B}) = ${valAB}`,
+                  `Evaluate Right: (${C} ${op3} ${D}) = ${valCD_c5}`,
+                  `Combine both parts: ${valAB} ${op2} ${valCD_c5} = ${target}`
+                ]
+              };
+            }
+          }
+
+        }
+      }
+    }
+  }
+  return null;
+}
+
+function TargetMathsLab() {
+  const [activeCategory, setActiveCategory] = useState<'single' | 'double' | 'fractions' | 'unknowns'>('single');
+  const [currentCard, setCurrentCard] = useState<TargetMathsCard>(TARGET_MATHS_PRESETS[0]);
+  const [activeTokens, setActiveTokens] = useState<TargetMathsToken[]>([]);
+  const [score, setScore] = useState(0);
+  const [highScore, setHighScore] = useState(0);
+  const [xValue, setXValue] = useState<number>(2);
+  const [showGuide, setShowGuide] = useState(false);
+  const [soundEnabled, setSoundEnabled] = useState(true);
+  const [puzzleHistory, setPuzzleHistory] = useState<string[]>([]);
+  const [hintResult, setHintResult] = useState<TargetSolveResult | null>(null);
+
+  // Load Highscore on Mount
+  useEffect(() => {
+    const saved = localStorage.getItem('target_maths_high_score');
+    if (saved) {
+      setHighScore(parseInt(saved, 10));
+    }
+    loadNewCard('single');
+  }, []);
+
+  const loadNewCard = (category: typeof activeCategory) => {
+    const filtered = TARGET_MATHS_PRESETS.filter(c => c.category === category);
+    // Grab a random card from this collection
+    const randomCard = filtered[Math.floor(Math.random() * filtered.length)];
+    setCurrentCard(randomCard);
+    setActiveTokens([]);
+    setHintResult(null);
+    if (category === 'unknowns') {
+      setXValue(randomCard.solutionX ?? 2);
+    }
+    if (soundEnabled) playTargetMathsTone(580, 'sine', 0.15);
+  };
+
+  const handleCategoryChange = (category: typeof activeCategory) => {
+    setActiveCategory(category);
+    loadNewCard(category);
+  };
+
+  const handleCardNumberClick = (num: number | string, elementIndex: number) => {
+    // Verify if this specific card node is already in the formula
+    if (activeTokens.some(t => t.cardIndex === elementIndex)) {
+      toast.error('To preserve NaCCA Target rules, each outside number must be used exactly once.');
+      return;
+    }
+
+    const valueStr = num === 'x' ? 'x' : num.toString();
+    const tokenType = num === 'x' ? 'x' : 'num';
+
+    const newToken: TargetMathsToken = {
+      id: `token-card-${Math.random()}`,
+      type: tokenType,
+      value: valueStr,
+      cardIndex: elementIndex
+    };
+
+    setActiveTokens(prev => [...prev, newToken]);
+    if (soundEnabled) playTargetMathsTone(640, 'sine', 0.08);
+  };
+
+  const handleOperatorClick = (op: string) => {
+    const newToken: TargetMathsToken = {
+      id: `token-op-${Math.random()}`,
+      type: 'op',
+      value: op
+    };
+    setActiveTokens(prev => [...prev, newToken]);
+    if (soundEnabled) playTargetMathsTone(520, 'sine', 0.08);
+  };
+
+  const clearFormula = () => {
+    setActiveTokens([]);
+    setHintResult(null);
+    if (soundEnabled) playTargetMathsTone(300, 'sine', 0.12);
+  };
+
+  const deleteLastToken = () => {
+    setActiveTokens(prev => prev.slice(0, -1));
+    if (soundEnabled) playTargetMathsTone(380, 'sine', 0.05);
+  };
+
+  const formatFractionDisplay = (numVal: number | string): string => {
+    if (typeof numVal === 'string') return numVal;
+    if (Math.abs(numVal - 0.5) < 0.01) return '1/2';
+    if (Math.abs(numVal - 0.333) < 0.02) return '1/3';
+    if (Math.abs(numVal - 1.5) < 0.01) return '1.5';
+    return numVal.toString();
+  };
+
+  // Automated Formula Evaluator Whitelister
+  const evaluateFormula = (): number | null => {
+    if (activeTokens.length === 0) return null;
+    
+    // Convert tokens to eval expression string
+    let expr = '';
+    for (const t of activeTokens) {
+      if (t.type === 'x') {
+        expr += ` ${xValue} `;
+      } else {
+        let v = t.value;
+        if (v === '×') v = '*';
+        if (v === '÷') v = '/';
+        // handle decimal fractions safely
+        if (v === '1/2') v = '0.5';
+        if (v === '1/3') v = '0.33333333';
+        expr += ` ${v} `;
+      }
+    }
+
+    // Clean space and validate structure
+    const sanitized = expr.replace(/\s+/g, '');
+    if (!/^[0-9+\-*/().]+$/.test(sanitized)) return null;
+
+    try {
+      const solverFn = new Function(`return (${sanitized});`);
+      const val = solverFn();
+      return typeof val === 'number' && isFinite(val) ? val : null;
+    } catch {
+      return null;
+    }
+  };
+
+  const checkSolution = () => {
+    // 1. Verify that all 4 outer cards have been clicked exactly once!
+    const indicesUsed = activeTokens.filter(t => t.cardIndex !== undefined).map(t => t.cardIndex);
+    const uniqueIndices = Array.from(new Set(indicesUsed));
+    
+    if (uniqueIndices.length < 4 || indicesUsed.length > 4) {
+      toast.error('Rule Violation: You MUST use each outer number once and once only!');
+      if (soundEnabled) playTargetMathsTone(160, 'sawtooth', 0.35);
+      return;
+    }
+
+    // 2. Evaluate
+    const result = evaluateFormula();
+    if (result === null) {
+      toast.error('Syntax error in formula structure. Check details.');
+      if (soundEnabled) playTargetMathsTone(160, 'sawtooth', 0.35);
+      return;
+    }
+
+    const isMatch = Math.abs(result - currentCard.target) < 0.01;
+
+    if (isMatch) {
+      // For unknowns, verify if x is also correct!
+      if (activeCategory === 'unknowns' && currentCard.solutionX !== undefined && xValue !== currentCard.solutionX) {
+        toast.error(`Equation is balanced but the algebraic value of unknown 'x' is incorrect for this card! Find another value for x.`);
+        if (soundEnabled) playTargetMathsTone(200, 'sawtooth', 0.35);
+        return;
+      }
+
+      // Success! Play arcade sound sequence
+      if (soundEnabled) {
+        playTargetMathsTone(523, 'triangle', 0.12);
+        setTimeout(() => playTargetMathsTone(659, 'triangle', 0.12), 100);
+        setTimeout(() => playTargetMathsTone(783, 'triangle', 0.12), 200);
+        setTimeout(() => playTargetMathsTone(1046, 'triangle', 0.25), 300);
+      }
+
+      // Calculate score based on difficulty
+      let points = 20;
+      if (activeCategory === 'double') points = 35;
+      if (activeCategory === 'fractions') points = 50;
+      if (activeCategory === 'unknowns') points = 60;
+
+      const newScore = score + points;
+      setScore(newScore);
+
+      if (newScore > highScore) {
+        setHighScore(newScore);
+        localStorage.setItem('target_maths_high_score', newScore.toString());
+      }
+
+      const formulaText = activeTokens.map(t => t.value).join(' ');
+      const historyStr = `🎯 ${formulaText} = ${currentCard.target} (${activeCategory.toUpperCase()})`;
+      setPuzzleHistory(prev => [historyStr, ...prev]);
+
+      toast.success(`Target Attained! +${points} Points Added! 🎉`);
+      loadNewCard(activeCategory);
+    } else {
+      toast.error(`Target not reached! Evaluation equals ${Number(result.toFixed(2))}, but target is ${currentCard.target}.`);
+      if (soundEnabled) playTargetMathsTone(180, 'sawtooth', 0.35);
+    }
+  };
+
+  const getSmarterHint = () => {
+    // Build direct numbers array replacing fraction strings
+    const numList: number[] = currentCard.numbers.map((val) => {
+      if (val === 'x') {
+        return currentCard.solutionX ?? 2;
+      }
+      return typeof val === 'number' ? val : parseFloat(val);
+    });
+
+    const solved = solveTargetMathsCard(numList, currentCard.target);
+    if (solved) {
+      setHintResult(solved);
+      if (soundEnabled) playTargetMathsTone(880, 'sine', 0.15);
+    } else {
+      toast.error('No solution found! Reshuffle card.');
+    }
+  };
+
+  // Color theme selectors based on selected category
+  const borderTheme = activeCategory === 'single' ? 'border-emerald-500'
+    : activeCategory === 'double' ? 'border-rose-500'
+    : activeCategory === 'fractions' ? 'border-purple-500'
+    : 'border-amber-500';
+
+  const textTheme = activeCategory === 'single' ? 'text-emerald-700 dark:text-emerald-400'
+    : activeCategory === 'double' ? 'text-rose-700 dark:text-rose-450'
+    : activeCategory === 'fractions' ? 'text-purple-700 dark:text-purple-400'
+    : 'text-amber-700 dark:text-amber-450';
+
+  const badgeBg = activeCategory === 'single' ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+    : activeCategory === 'double' ? 'bg-rose-50 text-rose-700 border-rose-200'
+    : activeCategory === 'fractions' ? 'bg-purple-50 text-purple-700 border-purple-200'
+    : 'bg-amber-50 text-amber-700 border-amber-200';
+
+  return (
+    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-150 dark:border-slate-800 shadow-sm overflow-hidden font-sans">
+      {/* Banner design */}
+      <div className="bg-gradient-to-r from-red-650 via-teal-700 to-amber-600/90 py-5 px-6 text-white flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <span className="text-[10px] uppercase font-black tracking-widest bg-white/20 text-white border border-white/30 px-2.5 py-0.5 rounded-full">
+            NaCCA 2026 Interactive Board Game
+          </span>
+          <h2 className="text-xl font-bold flex items-center gap-1.5 mt-1">
+            🎯 Target Maths: Clovers Board Room
+          </h2>
+          <p className="text-[11px] text-slate-200 mt-0.5">
+            Construct target numbers using four balanced parameters. Strictly respect operations ordering.
+          </p>
+        </div>
+
+        <div className="flex gap-2">
+          <button 
+            onClick={() => setShowGuide(!showGuide)}
+            className="px-3 py-1 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-xs font-semibold select-none flex items-center gap-1 transition-all"
+          >
+            <BookOpen size={12} />
+            Instructions Mode
+          </button>
+          <button 
+            onClick={() => setSoundEnabled(!soundEnabled)}
+            className="px-3 py-1 bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg text-xs font-semibold select-none"
+          >
+            {soundEnabled ? "🔊 Sound" : "🔇 Mute"}
+          </button>
+        </div>
+      </div>
+
+      {/* Stats row */}
+      <div className="grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-slate-100 dark:divide-slate-800 bg-slate-50 dark:bg-slate-950 p-4 border-b border-slate-100 dark:border-slate-800">
+        <div className="p-1.5 text-center md:text-left">
+          <p className="text-[9px] uppercase font-bold tracking-wider text-slate-400">Total Score</p>
+          <p className="text-lg font-extrabold text-emerald-600 dark:text-emerald-400">{score} pts</p>
+        </div>
+        <div className="p-1.5 text-center md:text-left">
+          <p className="text-[9px] uppercase font-bold tracking-wider text-slate-400">Personal Best</p>
+          <p className="text-lg font-extrabold text-slate-700 dark:text-slate-350">{highScore} pts</p>
+        </div>
+        <div className="p-1.5 text-center md:text-left">
+          <p className="text-[9px] uppercase font-bold tracking-wider text-slate-400">Active Mode</p>
+          <p className="text-sm font-bold text-slate-700 dark:text-slate-300 mt-0.5 capitalize">
+            {activeCategory} Piles
+          </p>
+        </div>
+        <div className="p-1.5 text-center md:text-left">
+          <p className="text-[9px] uppercase font-bold tracking-wider text-slate-400">Completed</p>
+          <p className="text-lg font-extrabold text-[#1e293b] dark:text-slate-200">✅ {puzzleHistory.length}</p>
+        </div>
+      </div>
+
+      {/* Category selector row */}
+      <div className="p-4 bg-slate-50/50 dark:bg-slate-950/20 border-b border-slate-100 dark:border-slate-800 flex flex-wrap gap-2 justify-center">
+        {(['single', 'double', 'fractions', 'unknowns'] as const).map((cat) => {
+          const isActive = activeCategory === cat;
+          return (
+            <button
+              key={cat}
+              onClick={() => handleCategoryChange(cat)}
+              className={cn(
+                "px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all border",
+                isActive 
+                  ? cat === 'single' ? "bg-emerald-600 text-white border-emerald-600 shadow-sm"
+                    : cat === 'double' ? "bg-rose-600 text-white border-rose-600 shadow-sm"
+                    : cat === 'fractions' ? "bg-purple-600 text-white border-purple-600 shadow-sm"
+                    : "bg-amber-600 text-white border-amber-600 shadow-sm"
+                  : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:bg-slate-100"
+              )}
+            >
+              {cat === 'single' ? "🟢 Single Digit"
+                : cat === 'double' ? "🔴 Double Digit"
+                : cat === 'fractions' ? "🟣 Fractions Mode"
+                : "🟠 Unknowns (x)"}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Guide Overlay */}
+      {showGuide && (
+        <motion.div 
+          initial={{ opacity: 0, height: 0 }} 
+          animate={{ opacity: 1, height: 'auto' }} 
+          className="bg-slate-50/90 dark:bg-slate-950/20 px-6 py-4 border-b border-slate-150 dark:border-slate-850 text-xs text-slate-600 dark:text-slate-400 leading-relaxed grid grid-cols-1 md:grid-cols-2 gap-4"
+        >
+          <div>
+            <h4 className="font-extrabold text-slate-800 dark:text-slate-200 mb-1">TARGET MATHS GOALS:</h4>
+            <p>
+              Arrange the 4 numbers shown on the outer leaf circles to calculate the target value shown in the center! Use operations like addition, subtraction, multiplication, and division, as well as bracket parenthesis templates to enforce correct hierarchy.
+            </p>
+            <h4 className="font-extrabold text-slate-800 dark:text-slate-200 mt-2.5 mb-1">MANDATORY RULE:</h4>
+            <p className="font-semibold text-rose-600 dark:text-rose-450 border border-rose-100 bg-rose-50/50 p-2 rounded">
+              ⚠️ You must use EVERY outside parameter EXACTLY once. Reusing, doubling, or omitting parameters is forbidden!
+            </p>
+          </div>
+          <div>
+            <h4 className="font-extrabold text-slate-800 dark:text-slate-200 mb-1">ALGEBRAIC UNKNOWNS:</h4>
+            <p>
+              In "Unknowns" mode, one leaf contains the icon <strong className="font-semibold select-all font-mono">x</strong>. You must set what the value of <strong className="font-semibold select-all font-mono">x</strong> represents using the dynamic math sliders, and then construct the valid equation.
+            </p>
+            <div className="bg-amber-500/10 border border-amber-500/20 p-2.5 rounded-lg mt-2 text-[11px] text-amber-900 dark:text-amber-400 font-mono">
+              <strong>Example calculation:</strong><br />
+              LHS outer nodes: [8, 2, 3, 3] target: 7<br />
+              Solution: (8 * 2) - (3 * 3) = 16 - 9 = 7!
+            </div>
+          </div>
+        </motion.div>
+      )}
+
+      {/* Main core layout split */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 p-6">
+        
+        {/* LEFT PANEL: Interactive Card rendering (5 cols) */}
+        <div className="lg:col-span-6 flex flex-col items-center justify-center space-y-6 bg-slate-50/40 dark:bg-slate-950/10 p-4 rounded-3xl border border-slate-100 dark:border-slate-850/60">
+          <span className="text-[10px] uppercase font-bold tracking-widest text-slate-400 block tracking-tight">
+            CLOVER CAROUSEL VIEWPLATE
+          </span>
+
+          {/* Visual 3D Ring container */}
+          <div className="relative w-64 h-64 flex items-center justify-center select-none">
+            
+            {/* Center Target Node */}
+            <motion.div 
+              key={currentCard.id}
+              initial={{ scale: 0.8, rotate: -45 }}
+              animate={{ scale: 1, rotate: 0 }}
+              className={cn(
+                "w-24 h-24 rounded-full border-8 flex flex-col items-center justify-center shadow-lg font-black text-2xl z-20 bg-white dark:bg-slate-900",
+                borderTheme
+              )}
+            >
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">
+                Target
+              </span>
+              <span className="text-3xl font-black mt-1 text-slate-800 dark:text-white">
+                {currentCard.target}
+              </span>
+            </motion.div>
+
+            {/* Pointer SVG connection lines */}
+            <svg className="absolute inset-0 w-full h-full z-10 pointer-events-none" viewBox="0 0 256 256">
+              {/* Top pointer */}
+              <line x1="128" y1="50" x2="128" y2="88" stroke="#cbd5e1" strokeWidth="4" strokeDasharray="3 3" />
+              {/* Right pointer */}
+              <line x1="206" y1="128" x2="168" y2="128" stroke="#cbd5e1" strokeWidth="4" strokeDasharray="3 3" />
+              {/* Bottom pointer */}
+              <line x1="128" y1="206" x2="128" y2="168" stroke="#cbd5e1" strokeWidth="4" strokeDasharray="3 3" />
+              {/* Left pointer */}
+              <line x1="50" y1="128" x2="88" y2="128" stroke="#cbd5e1" strokeWidth="4" strokeDasharray="3 3" />
+            </svg>
+
+            {/* Loop over nodes: top, right, bottom, left */}
+            {currentCard.numbers.map((num, idx) => {
+              const isUsed = activeTokens.some(t => t.cardIndex === idx);
+              const isX = num === 'x';
+              const displayVal = isX ? 'x' : formatFractionDisplay(num);
+
+              // Absolute coordinates
+              const positionClasses = idx === 0 ? "top-0 left-[98px]"
+                : idx === 1 ? "top-[98px] right-0"
+                : idx === 2 ? "bottom-0 left-[98px]"
+                : "top-[98px] left-0";
+
+              return (
+                <motion.button
+                  key={`${currentCard.id}-node-${idx}`}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => handleCardNumberClick(num, idx)}
+                  disabled={isUsed}
+                  className={cn(
+                    "absolute w-14 h-14 rounded-full border-2 flex items-center justify-center font-black text-sm sm:text-base shadow-md transition-all duration-150",
+                    positionClasses,
+                    isUsed 
+                      ? "opacity-25 bg-slate-100 border-slate-250 cursor-not-allowed scale-90"
+                      : isX ? "bg-amber-550 border-amber-500 text-amber-900 dark:text-amber-300 hover:shadow-amber-200/50"
+                      : activeCategory === 'single' ? "bg-emerald-50 border-emerald-400 text-emerald-800 dark:text-emerald-300 hover:shadow-emerald-200/50"
+                      : activeCategory === 'double' ? "bg-rose-50 border-rose-400 text-rose-800 dark:text-rose-305 hover:shadow-rose-200/50"
+                      : "bg-purple-50 border-purple-400 text-purple-800 dark:text-purple-305 hover:shadow-purple-200/50"
+                  )}
+                >
+                  {displayVal}
+                </motion.button>
+              );
+            })}
+          </div>
+
+          <div className="flex gap-2 w-full max-w-xs mt-2 select-none">
+            <button
+              onClick={() => loadNewCard(activeCategory)}
+              className="flex-1 py-1 px-3 border border-slate-200 hover:bg-slate-100 dark:border-slate-800 dark:hover:bg-slate-800 rounded-lg text-[11px] font-bold uppercase tracking-wider text-slate-500 transition-all flex items-center justify-center gap-1"
+            >
+              🔄 Reshuffle Pile
+            </button>
+            <button
+              onClick={getSmarterHint}
+              className="flex-1 py-1 px-3 bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-950/20 text-indigo-700 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-900 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-1"
+            >
+              💡 Solver Solution
+            </button>
+          </div>
+
+          {/* Algebraic Unknown sliders */}
+          {activeCategory === 'unknowns' && (
+            <div className="w-full max-w-xs p-4 bg-amber-50/50 dark:bg-amber-950/10 border border-amber-200 dark:border-amber-900/60 rounded-2xl space-y-2">
+              <span className="text-[10px] uppercase font-bold tracking-widest text-amber-800 dark:text-amber-400 block text-center">
+                🛠️ Choose value of variable 'x'
+              </span>
+              <div className="flex items-center gap-3">
+                <input
+                  type="range"
+                  min="1"
+                  max="10"
+                  value={xValue}
+                  onChange={(e) => {
+                    setXValue(parseInt(e.target.value, 10));
+                    if (soundEnabled) playTargetMathsTone(450, 'sine', 0.05);
+                  }}
+                  className="w-full h-1.5 bg-amber-250 dark:bg-amber-900 rounded-lg appearance-none cursor-pointer"
+                />
+                <span className="text-sm font-black text-amber-800 dark:text-amber-400 bg-amber-100 dark:bg-amber-955 px-2.5 py-1 rounded-full border border-amber-400/30">
+                  x = {xValue}
+                </span>
+              </div>
+              <p className="text-[9px] text-amber-700 dark:text-amber-500 italic text-center">
+                Slide to calibrate active values before writing your expressions!
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* RIGHT PANEL: Drafting Block & Numeric Pad (7 cols) */}
+        <div className="lg:col-span-6 space-y-5 flex flex-col justify-between">
+          <div className="space-y-4">
+            <span className="text-[10px] uppercase font-bold tracking-widest text-slate-400 block tracking-tight">
+              FORMULA EXPRESSION builder
+            </span>
+
+            {/* active build pad */}
+            <div className="min-h-[90px] bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 p-4 rounded-2xl flex flex-wrap gap-2 items-center justify-start relative shadow-inner">
+              {activeTokens.length === 0 ? (
+                <p className="text-xs text-slate-400 italic">
+                  Tap card leaves above and mathematical pads below to draft your balanced equation...
+                </p>
+              ) : (
+                activeTokens.map((t, index) => (
+                  <span
+                    key={t.id}
+                    className={cn(
+                      "px-3 py-1.5 rounded-lg text-sm font-mono font-black border tracking-tight flex items-center justify-center shadow-xs",
+                      t.type === 'op' ? "bg-[#1e293b] text-white border-slate-800"
+                        : t.type === 'x' ? "bg-amber-100 text-amber-800 border-amber-300"
+                        : activeCategory === 'single' ? "bg-emerald-50 text-emerald-800 border-emerald-250"
+                        : activeCategory === 'double' ? "bg-rose-50 text-rose-800 border-rose-250"
+                        : "bg-purple-50 text-purple-800 border-purple-250"
+                    )}
+                  >
+                    {t.type === 'x' ? `x (${xValue})` : t.value}
+                  </span>
+                ))
+              )}
+            </div>
+
+            {/* Operations pad */}
+            <div className="space-y-2">
+              <span className="text-[10px] uppercase font-bold tracking-widest text-slate-400 block">
+                ❌ Operations keypad
+              </span>
+              <div className="grid grid-cols-6 gap-2">
+                {(['+', '-', '×', '÷', '(', ')'] as const).map((op) => (
+                  <button
+                    key={op}
+                    onClick={() => handleOperatorClick(op)}
+                    className="py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-extrabold rounded-xl transition-all shadow-xs text-sm"
+                  >
+                    {op}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* deletion row */}
+            <div className="grid grid-cols-2 gap-2 select-none">
+              <button
+                onClick={deleteLastToken}
+                disabled={activeTokens.length === 0}
+                className="py-2 px-3 border border-slate-200 hover:bg-slate-100 dark:border-slate-800 dark:hover:bg-slate-800 disabled:opacity-50 rounded-xl font-bold text-xs uppercase text-slate-650 transition flex items-center justify-center gap-1.5"
+              >
+                <span>⬅️ Retract Key</span>
+              </button>
+              <button
+                onClick={clearFormula}
+                disabled={activeTokens.length === 0}
+                className="py-2 px-3 border border-slate-200 hover:bg-slate-100 dark:border-slate-800 dark:hover:bg-slate-800 disabled:opacity-50 rounded-xl font-bold text-xs uppercase text-slate-650 transition flex items-center justify-center gap-1.5"
+              >
+                <span>🗑️ Wipe Screen</span>
+              </button>
+            </div>
+          </div>
+
+          <div className="pt-4 border-t border-slate-200/55 space-y-4">
+            <button
+              onClick={checkSolution}
+              disabled={activeTokens.length === 0}
+              className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-200 text-white font-extrabold rounded-2xl shadow-md tracking-wide text-sm transition flex items-center justify-center gap-2"
+            >
+              <CheckCircle size={16} />
+              Verify Formula Equation
+            </button>
+
+            {/* Solver solver visual section */}
+            {hintResult && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-indigo-50/70 dark:bg-indigo-950/20 rounded-2xl p-4 border border-indigo-100 dark:border-indigo-900/40 text-xs"
+              >
+                <span className="font-extrabold text-indigo-900 dark:text-indigo-300 block mb-1.5 uppercase tracking-wide">
+                  💡 TeachSmart AI Solver Output:
+                </span>
+                <p className="font-mono font-black text-sm text-indigo-750 dark:text-indigo-400 bg-white/80 dark:bg-slate-900 p-2 border border-indigo-100 dark:border-slate-850 rounded-xl">
+                  {hintResult.expr}
+                </p>
+                <div className="mt-2 text-slate-600 dark:text-slate-400 space-y-1">
+                  <strong>Permuted Solution Path:</strong>
+                  {hintResult.steps.map((st, sidx) => (
+                    <div key={sidx} className="flex gap-1.5 items-start">
+                      <span className="text-indigo-600 font-bold">➢</span>
+                      <span>{st}</span>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </div>
+        </div>
+
+      </div>
+
+      {/* FOOTER: Activity Tracker List */}
+      {puzzleHistory.length > 0 && (
+        <div className="border-t border-slate-150 dark:border-slate-800 p-4 bg-slate-50/50 dark:bg-slate-950/20">
+          <p className="text-[10px] uppercase font-bold tracking-wider text-slate-400 mb-2">
+            📝 Validated Target equations (This Session)
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {puzzleHistory.map((item, idx) => (
+              <span 
+                key={idx}
+                className="bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900 px-3 py-1 rounded-full text-xs font-mono font-bold text-emerald-800 dark:text-emerald-400 flex items-center gap-1.5"
+              >
+                <Check size={12} className="text-emerald-600" />
+                {item}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+

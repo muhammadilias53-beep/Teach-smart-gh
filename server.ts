@@ -9,9 +9,9 @@ import { readFileSync } from "fs";
 
 dotenv.config();
 
-// Load Firebase Config safely in ESM
+// Load Firebase Config safely in both ESM and bundled CJS
 const firebaseConfig = JSON.parse(
-  readFileSync(new URL("./firebase-applet-config.json", import.meta.url), "utf-8")
+  readFileSync(path.join(process.cwd(), "firebase-applet-config.json"), "utf-8")
 );
 
 // Initialize Firebase Admin

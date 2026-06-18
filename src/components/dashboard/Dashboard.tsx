@@ -216,6 +216,7 @@ const Dashboard = () => {
     { icon: Calendar, label: 'Scheme of Work', path: '/schemes', color: 'bg-ghana-gold', bg: 'bg-amber-50' },
     { icon: Atom, label: 'BSTEM Lab Guide', path: '/bstem-guide', color: 'bg-indigo-600', bg: 'bg-indigo-50' },
     { icon: Calculator, label: 'BSTEM Math Guide', path: '/bstem-math', color: 'bg-teal-600', bg: 'bg-teal-50' },
+    { icon: Cpu, label: 'BSTEM Tech Guide', path: '/bstem-tech', color: 'bg-amber-600', bg: 'bg-amber-50' },
     { icon: PenTool, label: 'Create Exam', path: '/exams', color: 'bg-slate-900', bg: 'bg-slate-100' },
     { icon: Package, label: 'Resource Packs', path: '/packs', color: 'bg-indigo-500', bg: 'bg-indigo-50' },
     { icon: BookOpen, label: 'Subject Library', path: '/library', color: 'bg-emerald-deep', bg: 'bg-emerald-50' },
@@ -768,8 +769,19 @@ const Dashboard = () => {
                     className="flex items-center justify-between p-3 bg-white dark:bg-slate-900 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/10 border border-slate-100 dark:border-slate-800 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-300 transition-all"
                   >
                     <div className="flex items-center gap-2">
-                       <Calculator size={14} className="text-emerald-600 animate-bounce" />
+                       <Calculator size={14} className="text-emerald-600" />
                        <span>BSTEM JHS Mathematics Guide</span>
+                    </div>
+                    <ArrowRight size={14} className="text-slate-400" />
+                  </Link>
+
+                  <Link 
+                    to="/bstem-tech" 
+                    className="flex items-center justify-between p-3 bg-white dark:bg-slate-900 hover:bg-amber-50/50 dark:hover:bg-amber-950/10 border border-slate-100 dark:border-slate-800 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-300 transition-all"
+                  >
+                    <div className="flex items-center gap-2">
+                       <Cpu size={14} className="text-amber-600 animate-pulse" />
+                       <span>BSTEM Technology & Engineering</span>
                     </div>
                     <ArrowRight size={14} className="text-slate-400" />
                   </Link>
