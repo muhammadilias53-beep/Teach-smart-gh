@@ -74,7 +74,7 @@ const GHANAIAN_LANGUAGES_FOR_BILINGUAL = [
 ];
 
 export default function SchemeGenerator() {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [loadingStep, setLoadingStep] = useState(0);
@@ -145,7 +145,8 @@ export default function SchemeGenerator() {
         { 
           includeLearningOutcomes: formData.includeLearningOutcomes,
           language: formData.language,
-          bilingualLanguage: formData.bilingualLanguage
+          bilingualLanguage: formData.bilingualLanguage,
+          isBstemSchool: profile?.isBstemSchool
         }
       );
       setResult(content);

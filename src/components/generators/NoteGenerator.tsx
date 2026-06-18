@@ -469,7 +469,8 @@ const NoteGenerator = () => {
           district: profile?.district,
           region: profile?.region,
           town: formData.specificLocality || profile?.town,
-          locality: formData.locality
+          locality: formData.locality,
+          isBstemSchool: profile?.isBstemSchool
         }
       );
 

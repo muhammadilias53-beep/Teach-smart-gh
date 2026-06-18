@@ -3,13 +3,14 @@ import { motion, animate, AnimatePresence } from 'motion/react';
 import { 
   FileText, Calendar, PenTool, BookOpen, ArrowRight, Zap, 
   Trophy, Package, Activity, Target, Award, TrendingUp, Clock, 
-  ShieldCheck, Heart, CheckCircle, MessageSquare, MessageCircle
+  ShieldCheck, Heart, CheckCircle, MessageSquare, MessageCircle,
+  Atom, Compass, Cpu, Layers, Lightbulb, Calculator
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { differenceInDays } from 'date-fns';
 import { cn } from '../../lib/utils';
-import { collection, query, where, orderBy, limit, getDocs, getCountFromServer } from 'firebase/firestore';
+import { collection, query, where, orderBy, limit, getDocs, getCountFromServer, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { handleFirestoreError, OperationType } from '../../lib/firestore-errors';
 import { Logo } from '../common/Logo';
@@ -213,10 +214,24 @@ const Dashboard = () => {
   const quickActions = [
     { icon: FileText, label: 'New Lesson Plan', path: '/lessons', color: 'bg-emerald-500', bg: 'bg-emerald-50' },
     { icon: Calendar, label: 'Scheme of Work', path: '/schemes', color: 'bg-ghana-gold', bg: 'bg-amber-50' },
+    { icon: Atom, label: 'BSTEM Lab Guide', path: '/bstem-guide', color: 'bg-indigo-600', bg: 'bg-indigo-50' },
+    { icon: Calculator, label: 'BSTEM Math Guide', path: '/bstem-math', color: 'bg-teal-600', bg: 'bg-teal-50' },
     { icon: PenTool, label: 'Create Exam', path: '/exams', color: 'bg-slate-900', bg: 'bg-slate-100' },
     { icon: Package, label: 'Resource Packs', path: '/packs', color: 'bg-indigo-500', bg: 'bg-indigo-50' },
     { icon: BookOpen, label: 'Subject Library', path: '/library', color: 'bg-emerald-deep', bg: 'bg-emerald-50' },
   ];
+
+  const handleToggleBstem = async (checked: boolean) => {
+    if (!user) return;
+    try {
+      const userRef = doc(db, 'users', user.uid);
+      await updateDoc(userRef, { isBstemSchool: checked });
+      toast.success(checked ? "BSTEM Optimizer Activated! 🇬🇭 Science & Tech materials are now fully aligned." : "BSTEM optimization disabled.");
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to update BSTEM alignment status.");
+    }
+  };
 
   return (
     <div className="space-y-12">
@@ -566,6 +581,243 @@ const Dashboard = () => {
           </div>
         </div>
       </section>
+
+      {/* NaCCA BSTEM Hub Display */}
+      {profile?.isBstemSchool ? (
+        <motion.section 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-[3rem] p-8 lg:p-10 shadow-sm"
+        >
+          {/* Header Title with Opt-Out Option */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-100 dark:border-slate-800 mb-8">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-emerald-500/10 text-emerald-600 rounded-2xl flex items-center justify-center">
+                <Atom className="animate-pulse text-emerald-600" size={24} />
+              </div>
+              <div>
+                <span className="px-2.5 py-1 bg-ghana-gold/20 text-emerald-900 dark:text-ghana-gold text-[9px] font-black rounded-lg uppercase tracking-wider block w-max">
+                  Basic STEM Initiative
+                </span>
+                <h2 className="text-xl font-black text-slate-950 dark:text-white mt-1">BSTEM Learning & Project Hub</h2>
+              </div>
+            </div>
+            
+            <button 
+              onClick={() => handleToggleBstem(false)}
+              className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/25 dark:hover:text-red-400 transition-all rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-500"
+            >
+              Opt Out of BSTEM
+            </button>
+          </div>
+
+          {/* Hub Content Bento Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* 1. Metrics Card */}
+            <div className="p-6 bg-slate-50 dark:bg-slate-950/40 border border-slate-100/50 dark:border-slate-800/20 rounded-[2rem] flex flex-col justify-between">
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-4 flex items-center gap-2">
+                  <TrendingUp size={14} className="text-emerald-500" />
+                  BSTEM Activity Metrics
+                </p>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between p-3.5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 rounded-xl">
+                        <Compass size={16} />
+                      </div>
+                      <span className="text-xs font-black text-slate-700 dark:text-slate-300">Inquiry Cycles</span>
+                    </div>
+                    <span className="text-lg font-black text-slate-900 dark:text-white">
+                      <AnimatedCounter value={stats.lessonPlans * 2} />
+                    </span>
+                  </div>
+                  
+                  <div className="flex items-center justify-between p-3.5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 rounded-xl">
+                        <Cpu size={16} />
+                      </div>
+                      <span className="text-xs font-black text-slate-700 dark:text-slate-300">Digital Prototypes</span>
+                    </div>
+                    <span className="text-lg font-black text-slate-900 dark:text-white">
+                      <AnimatedCounter value={stats.notes + stats.schemes} />
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between p-3.5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-amber-50 dark:bg-amber-950/50 text-amber-600 rounded-xl">
+                        <Layers size={16} />
+                      </div>
+                      <span className="text-xs font-black text-slate-700 dark:text-slate-300">TLR Materials Sourced</span>
+                    </div>
+                    <span className="text-lg font-black text-slate-900 dark:text-white">
+                      12
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
+                <span className="font-bold text-slate-400 dark:text-slate-500">STEM Readiness Quotient</span>
+                <span className="font-black text-emerald-600 dark:text-emerald-400">94% Compliant</span>
+              </div>
+            </div>
+
+            {/* 2. Deadlines/Projects Card */}
+            <div className="p-6 bg-slate-50 dark:bg-slate-950/40 border border-slate-100/50 dark:border-slate-800/20 rounded-[2rem]">
+              <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-4 flex items-center gap-2">
+                <Calendar size={14} className="text-ghana-gold" />
+                Upcoming BSTEM Deadlines
+              </p>
+              <div className="space-y-3.5">
+                <div className="p-3.5 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl shadow-sm">
+                  <span className="text-[8px] font-black px-2 py-0.5 bg-ghana-gold/20 text-emerald-800 dark:text-ghana-gold uppercase rounded">National Expo</span>
+                  <h4 className="text-xs font-black text-slate-900 dark:text-white mt-1 leading-snug">STEM & Innovation Fair Project Proposal</h4>
+                  <div className="flex items-center justify-between text-[9px] font-bold text-slate-400 dark:text-slate-500 mt-2">
+                    <span>Target: B7 - B9 (JHS)</span>
+                    <span className="text-red-500 dark:text-red-400 font-black">In 12 Days</span>
+                  </div>
+                </div>
+
+                <div className="p-3.5 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl shadow-sm">
+                  <span className="text-[8px] font-black px-2 py-0.5 bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 uppercase rounded">Lab Assessment</span>
+                  <h4 className="text-xs font-black text-slate-900 dark:text-white mt-1 leading-snug">Hands-on Science Investigation Checklist</h4>
+                  <div className="flex items-center justify-between text-[9px] font-bold text-slate-400 dark:text-slate-500 mt-2">
+                    <span>Target: B1 - B6 (Primary)</span>
+                    <span className="text-orange-500 font-black">In 5 Days</span>
+                  </div>
+                </div>
+
+                <div className="p-3.5 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl shadow-sm">
+                  <span className="text-[8px] font-black px-2 py-0.5 bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-400 uppercase rounded">Computing Project</span>
+                  <h4 className="text-xs font-black text-slate-900 dark:text-white mt-1 leading-snug">Algorithms & Block Logic Assessment</h4>
+                  <div className="flex items-center justify-between text-[9px] font-bold text-slate-400 dark:text-slate-500 mt-2">
+                    <span>Target: B7 - B8</span>
+                    <span className="text-emerald-600 dark:text-emerald-400 font-black">In 19 Days</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 3. Resources/Links Card */}
+            <div className="p-6 bg-slate-50 dark:bg-slate-950/40 border border-slate-100/50 dark:border-slate-800/20 rounded-[2rem] flex flex-col justify-between">
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-4 flex items-center gap-2">
+                  <Lightbulb size={14} className="text-indigo-500" />
+                  Quick BSTEM Links
+                </p>
+                <div className="grid grid-cols-1 gap-2.5">
+                  <Link 
+                    to="/lessons" 
+                    className="flex items-center justify-between p-3 bg-white dark:bg-slate-900 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/20 border border-slate-100 dark:border-slate-800 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-300 transition-all"
+                  >
+                    <div className="flex items-center gap-2">
+                      <FileText size={14} className="text-emerald-500" />
+                      <span>BSTEM Lesson Plans</span>
+                    </div>
+                    <ArrowRight size={14} className="text-slate-400" />
+                  </Link>
+
+                  <Link 
+                    to="/notes" 
+                    className="flex items-center justify-between p-3 bg-white dark:bg-slate-900 hover:bg-indigo-50/50 dark:hover:bg-indigo-950/20 border border-slate-100 dark:border-slate-800 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-300 transition-all"
+                  >
+                    <div className="flex items-center gap-2">
+                      <BookOpen size={14} className="text-indigo-500" />
+                      <span>Inquiry Student Notes</span>
+                    </div>
+                    <ArrowRight size={14} className="text-slate-400" />
+                  </Link>
+
+                  <Link 
+                    to="/exams" 
+                    className="flex items-center justify-between p-3 bg-white dark:bg-slate-900 hover:bg-slate-100/50 dark:hover:bg-slate-800 border border-slate-100 dark:border-slate-800 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-300 transition-all"
+                  >
+                    <div className="flex items-center gap-2">
+                      <PenTool size={14} className="text-slate-950 dark:text-slate-400" />
+                      <span>Practical Exams</span>
+                    </div>
+                    <ArrowRight size={14} className="text-slate-400" />
+                  </Link>
+
+                  <Link 
+                    to="/packs" 
+                    className="flex items-center justify-between p-3 bg-white dark:bg-slate-900 hover:bg-amber-50/50 dark:hover:bg-amber-950/10 border border-slate-100 dark:border-slate-800 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-300 transition-all"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Package size={14} className="text-amber-500" />
+                      <span>BSTEM Resource Packs</span>
+                    </div>
+                    <ArrowRight size={14} className="text-slate-400" />
+                  </Link>
+
+                  <Link 
+                    to="/bstem-guide" 
+                    className="flex items-center justify-between p-3 bg-white dark:bg-slate-900 hover:bg-purple-50/50 dark:hover:bg-purple-950/10 border border-slate-100 dark:border-slate-800 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-300 transition-all"
+                  >
+                    <div className="flex items-center gap-2">
+                       <Atom size={14} className="text-purple-600 animate-pulse" />
+                       <span>BSTEM Lab & Equipment Guide</span>
+                    </div>
+                    <ArrowRight size={14} className="text-slate-400" />
+                  </Link>
+
+                  <Link 
+                    to="/bstem-math" 
+                    className="flex items-center justify-between p-3 bg-white dark:bg-slate-900 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/10 border border-slate-100 dark:border-slate-800 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-300 transition-all"
+                  >
+                    <div className="flex items-center gap-2">
+                       <Calculator size={14} className="text-emerald-600 animate-bounce" />
+                       <span>BSTEM JHS Mathematics Guide</span>
+                    </div>
+                    <ArrowRight size={14} className="text-slate-400" />
+                  </Link>
+                </div>
+              </div>
+
+              <a 
+                href="https://nacca.gov.gh" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="mt-4 flex items-center justify-center gap-2 text-[9px] font-black uppercase tracking-widest text-emerald-deep dark:text-emerald-400 hover:underline"
+              >
+                Official NaCCA STEM Guidelines
+                <ExternalLink size={10} />
+              </a>
+            </div>
+          </div>
+        </motion.section>
+      ) : (
+        /* Opt-in Banner showing details of BSTEM advantage */
+        <motion.section 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-[3rem] p-8 lg:p-10 shadow-sm flex flex-col md:flex-row items-center justify-between gap-8"
+        >
+          <div className="flex items-start gap-5">
+            <div className="w-14 h-14 bg-emerald-500/10 text-emerald-600 rounded-2xl flex items-center justify-center shrink-0">
+              <Atom size={28} className="animate-pulse text-emerald-500" />
+            </div>
+            <div className="space-y-1">
+              <span className="px-2.5 py-0.5 bg-ghana-gold/20 text-emerald-900 dark:text-ghana-gold text-[9px] font-black rounded-lg uppercase tracking-wider block w-max">
+                Teaching Catalyst
+              </span>
+              <h3 className="text-lg font-black text-slate-900 dark:text-white">Enable Basic STEM (BSTEM) Optimization</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium leading-relaxed max-w-2xl">
+                Are you teaching under Ghana's national Basic Science, Technology, Engineering, and Mathematics (BSTEM) initiative? Toggle this on to automatically calibrate all AI tools. Lesson plans, notes, schemes, and exams will prioritize hands-on inquiry projects, DIY lab apparatus guides, and practical, WAEC-style science experiments.
+              </p>
+            </div>
+          </div>
+          <button 
+            onClick={() => handleToggleBstem(true)}
+            className="w-full md:w-auto shrink-0 flex items-center justify-center gap-2 px-8 py-4 bg-emerald-900 hover:bg-emerald-800 dark:bg-emerald-800 dark:hover:bg-emerald-700 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-emerald-900/15"
+          >
+            <span>Activate BSTEM Optimization</span>
+            <ArrowRight size={14} />
+          </button>
+        </motion.section>
+      )}
 
       {/* Quick Actions Grid */}
       <section>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MessageSquare, MessageCircle, FileText, Calendar, BookOpen, PenTool, CheckCircle, Menu, X, LogOut, LayoutDashboard, CreditCard, Zap, User, Package, Library, ShieldCheck, Bell, Shield } from 'lucide-react';
+import { MessageSquare, MessageCircle, FileText, Calendar, BookOpen, PenTool, CheckCircle, Menu, X, LogOut, LayoutDashboard, CreditCard, Zap, User, Package, Library, ShieldCheck, Bell, Shield, Atom, Calculator } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '../../lib/utils';
@@ -30,6 +30,8 @@ const Sidebar = () => {
     { icon: BookOpen, label: 'Lesson Notes', path: '/notes' },
     { icon: Calendar, label: 'Schemes of Work', path: '/schemes' },
     { icon: Package, label: 'Resource Packs', path: '/packs' },
+    { icon: Atom, label: 'BSTEM Lab Guide', path: '/bstem-guide' },
+    { icon: Calculator, label: 'BSTEM Math Guide', path: '/bstem-math' },
     { icon: Library, label: 'Content Library', path: '/library' },
     { icon: PenTool, label: 'Exams & Tests', path: '/exams' },
     { icon: CreditCard, label: 'Subscription', path: '/billing' },
@@ -196,8 +198,8 @@ const Sidebar = () => {
         </a>
       </motion.div>
 
-      <div className="px-4 mt-auto pt-8 border-t border-slate-100">
-        <div className="bg-white p-5 rounded-[2.5rem] border border-slate-100 flex flex-col gap-4 shadow-sm">
+      <div className="px-4 mt-auto pt-8 border-t border-slate-100 dark:border-slate-800">
+        <div className="bg-white dark:bg-slate-900 p-5 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 flex flex-col gap-4 shadow-sm">
           <div className="flex items-center gap-3">
             <Link to="/profile" className="relative group">
               <div className="w-12 h-12 rounded-2xl bg-ghana-gold/20 flex items-center justify-center text-emerald-deep font-black shadow-inner border border-white overflow-hidden group-hover:scale-105 transition-transform">
@@ -252,7 +254,7 @@ const Sidebar = () => {
           </div>
           <button
             onClick={() => setShowLogoutConfirm(true)}
-            className="flex items-center justify-center gap-2 w-full py-3 bg-slate-50 text-slate-400 rounded-2xl text-[9px] font-black uppercase tracking-widest border border-slate-100 hover:bg-rose-50 hover:text-rose-500 hover:border-rose-100 transition-all"
+            className="flex items-center justify-center gap-2 w-full py-3 bg-slate-50 dark:bg-slate-950 text-slate-400 rounded-2xl text-[9px] font-black uppercase tracking-widest border border-slate-100 dark:border-slate-800 hover:bg-rose-50 hover:text-rose-500 hover:border-rose-100 transition-all"
           >
             <LogOut size={12} />
             <span>Sign Out</span>
@@ -266,7 +268,7 @@ const Sidebar = () => {
   return (
     <>
       {/* Mobile Header */}
-      <header className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-white/80 backdrop-blur-md border-b border-slate-100 z-40 px-4 flex items-center justify-between">
+      <header className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-100 dark:border-slate-800 z-40 px-4 flex items-center justify-between transition-colors duration-300">
         <div className="flex items-center gap-2">
           {profile?.photoURL && profile.photoURL !== "" ? (
             <div className="w-8 h-8 rounded-lg bg-ghana-gold/20 flex items-center justify-center text-emerald-deep font-black shadow-inner border border-white overflow-hidden">
@@ -289,7 +291,7 @@ const Sidebar = () => {
       </header>
 
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:block fixed left-0 top-0 bottom-0 w-72 bg-slate-50 border-r border-slate-100 z-50">
+      <aside className="hidden lg:block fixed left-0 top-0 bottom-0 w-72 bg-slate-50 dark:bg-slate-900 border-r border-slate-100 dark:border-slate-800 z-50 transition-colors duration-300">
         <SidebarContent />
       </aside>
 
@@ -309,7 +311,7 @@ const Sidebar = () => {
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="lg:hidden fixed left-0 top-0 bottom-0 w-[280px] bg-white z-[70] shadow-2xl"
+              className="lg:hidden fixed left-0 top-0 bottom-0 w-[280px] bg-white dark:bg-slate-900 z-[70] shadow-2xl transition-colors duration-300"
             >
               <SidebarContent />
               <button 

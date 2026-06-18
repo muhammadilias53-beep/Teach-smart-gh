@@ -180,7 +180,8 @@ export default function ExamGenerator() {
           school: profile?.school,
           region: profile?.region,
           district: profile?.district,
-          town: profile?.town
+          town: profile?.town,
+          isBstemSchool: profile?.isBstemSchool
         },
         formData.selectedTypes,
         { count: formData.p1Count, difficulty: formData.p1Difficulty },

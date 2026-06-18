@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@variant dark (&:where(.dark, .dark *));
 @plugin "@tailwindcss/typography";
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap');
 
@@ -34,6 +35,20 @@
   --primary: var(--color-navy-deep);
   --primary-foreground: #ffffff;
   --secondary: var(--color-ghana-gold);
+}
+
+.dark {
+  --background: #090e1a;
+  --color-slate-900: #f8fafc;
+  --color-slate-800: #f1f5f9;
+  --color-slate-600: #cbd5e1;
+  --color-slate-500: #94a3b8;
+  --color-slate-400: #64748b;
+  --color-slate-200: #334155;
+  --color-slate-100: #1e293b;
+  --color-slate-50: #0d1527;
+  --color-cream: #090e1a;
+  --color-emerald-deep: #f8fafc; /* Map deep emerald text to soft-white in dark mode */
 }
 
 body {
@@ -173,3 +188,256 @@ h1, h2, h3, h4, h5, h6 {
 .markdown-body pre code {
   @apply bg-transparent text-inherit p-0 border-0 text-xs;
 }
+
+/* --------------------------------------------------
+   Print Media Stylesheet for TeachSmart Ghana (GH)
+   Ensures beautiful NaCCA schemes, lesson plans, & exams
+   -------------------------------------------------- */
+
+@media screen {
+  .print-only {
+    display: none !important;
+  }
+}
+
+@media print {
+  /* Establish high-quality page frame & margins */
+  @page {
+    size: A4 portrait;
+    margin: 15mm 15mm 20mm 15mm;
+  }
+
+  /* Force light theme elements on print, saving ink & boosting contrast */
+  *,
+  *::before,
+  *::after {
+    background: transparent !important;
+    color: #0f172a !important; /* Force Slate 900 */
+    box-shadow: none !important;
+    text-shadow: none !important;
+    -webkit-print-color-adjust: economy !important;
+    print-color-adjust: economy !important;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    font-family: "Inter", system-ui, sans-serif !important;
+    font-size: 10pt !important;
+    line-height: 1.5 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+
+  /* Structural expand to cover the whole width */
+  main,
+  .main-content,
+  .printable-area,
+  #root,
+  .container {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    overflow-x: visible !important;
+    height: auto !important;
+    min-height: auto !important;
+    position: static !important;
+  }
+
+  /* Hide active UI, navigation sidebar, toolbars, and controls */
+  aside,
+  header,
+  nav,
+  button,
+  .no-print,
+  .print-hide,
+  .edu-pulse-banner,
+  .toast,
+  .notification-center,
+  .action-buttons,
+  .tab-buttons,
+  .back-btn,
+  [role="dialog"],
+  [role="alert"],
+  .modal-overlay,
+  .floating-action-button {
+    display: none !important;
+  }
+
+  /* Print-only headers and brand stamps */
+  .print-only {
+    display: block !important;
+  }
+
+  .print-header-brand {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px double #0f172a !important;
+    padding-bottom: 8px !important;
+    margin-bottom: 25px !important;
+  }
+
+  .print-header-brand .brand-title {
+    font-size: 16pt !important;
+    font-weight: 900 !important;
+    letter-spacing: -0.025em;
+  }
+
+  .print-header-brand .accreditation-stamp {
+    font-size: 8pt !important;
+    font-weight: 800 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border: 1px solid #0f172a !important;
+    padding: 2px 6px !important;
+    border-radius: 4px !important;
+  }
+
+  /* Layout and Flow Break Control */
+  h1, h2, h3, h4, .section-title {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+    font-family: "Outfit", "Inter", sans-serif !important;
+    font-weight: 800 !important;
+    color: #0f172a !important;
+  }
+
+  h1 {
+    font-size: 22pt !important;
+    margin-top: 0 !important;
+    margin-bottom: 12pt !important;
+    border-bottom: 2px solid #0f172a !important;
+    padding-bottom: 6px !important;
+    text-transform: uppercase !important;
+  }
+
+  h2 {
+    font-size: 14pt !important;
+    margin-top: 24pt !important;
+    margin-bottom: 10pt !important;
+    border-left: 4px solid #0f172a !important;
+    padding-left: 10px !important;
+  }
+
+  h3 {
+    font-size: 11pt !important;
+    margin-top: 16pt !important;
+    margin-bottom: 6pt !important;
+  }
+
+  p, li, blockquote {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  p {
+    margin-bottom: 10pt !important;
+    font-size: 10pt !important;
+    color: #1e293b !important;
+  }
+
+  /* Multi-column NaCCA tables (Schemes of Learning, Lesson Plans) */
+  table {
+    page-break-inside: auto !important;
+    break-inside: auto !important;
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin: 16pt 0 !important;
+  }
+
+  tr {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    page-break-after: auto !important;
+    break-after: auto !important;
+  }
+
+  thead {
+    display: table-header-group !important; /* Keep headers repeating on each page */
+  }
+
+  th {
+    border: 1.5px solid #0f172a !important;
+    background-color: #f8fafc !important; /* Soft printable grey */
+    color: #0f172a !important;
+    font-size: 8.5pt !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    padding: 6px 8px !important;
+    text-align: left !important;
+  }
+
+  td {
+    border: 1px solid #475569 !important; /* Clear print borders */
+    font-size: 8pt !important;
+    padding: 5px 7px !important;
+    vertical-align: top !important;
+    word-break: break-word !important;
+  }
+
+  /* List alignments */
+  ul, ol {
+    margin-top: 5pt !important;
+    margin-bottom: 10pt !important;
+    padding-left: 20px !important;
+  }
+
+  li {
+    font-size: 10pt !important;
+    margin-bottom: 4pt !important;
+  }
+
+  /* Dynamic Markdown specific formatting */
+  .markdown-body {
+    background: transparent !important;
+    padding: 0 !important;
+  }
+
+  .markdown-body h1 {
+    font-size: 18pt !important;
+  }
+
+  .markdown-body h2 {
+    font-size: 13pt !important;
+    border-left: 3px solid #0f172a !important;
+  }
+
+  .markdown-body h3 {
+    font-size: 11pt !important;
+  }
+
+  .markdown-body table {
+    border: 1.5px solid #0f172a !important;
+    box-shadow: none !important;
+  }
+
+  .markdown-body th {
+    background: #f1f5f9 !important;
+  }
+
+  /* Footnotes and accreditation info fixed on multiple pages */
+  .print-footer-brand {
+    display: block !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    border-top: 1px solid #cbd5e1 !important;
+    padding-top: 6px !important;
+    font-size: 7.5pt !important;
+    color: #475569 !important;
+    text-align: center !important;
+    font-family: "Inter", sans-serif !important;
+  }
+
+  /* Multi-page separation hints */
+  .page-break {
+    page-break-before: always !important;
+    break-before: always !important;
+  }
+}
+

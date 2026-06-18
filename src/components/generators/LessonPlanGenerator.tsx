@@ -347,7 +347,8 @@ const LessonPlanGenerator = () => {
         school: profile?.school, 
         district: profile?.district,
         town: formData.specificLocality || profile?.town,
-        region: profile?.region
+        region: profile?.region,
+        isBstemSchool: profile?.isBstemSchool
       }, formData.language, formData.bilingualLanguage);
       
       setResult(data);

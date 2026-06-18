@@ -186,7 +186,7 @@ const AuthGuard = () => {
   const isPublicPath = publicPaths.includes(location.pathname);
   
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
       <EduPulseBanner />
       <Sidebar />
       <main className="flex-1 lg:ml-72 pt-24 lg:pt-10 overflow-x-hidden min-w-0">

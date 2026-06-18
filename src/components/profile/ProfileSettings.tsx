@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { User, School, MapPin, Save, Shield, BadgeCheck, Loader2, Camera, Upload, BookOpen, GraduationCap, Users, Briefcase, Globe } from 'lucide-react';
+import { User, School, MapPin, Save, Shield, BadgeCheck, Loader2, Camera, Upload, BookOpen, GraduationCap, Users, Briefcase, Globe, Sun, Moon } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
@@ -21,6 +21,21 @@ export default function ProfileSettings() {
   const [success, setSuccess] = useState(false);
   const [uploading, setUploading] = useState(false);
   
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('theme') || 'light';
+  });
+
+  const toggleTheme = (newTheme: 'light' | 'dark') => {
+    setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
+    if (newTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    toast.success(`${newTheme === 'dark' ? 'Dark' : 'Light'} mode enabled! 🇬🇭`);
+  };
+  
   const [formData, setFormData] = useState({
     displayName: profile?.displayName || '',
     school: profile?.school || '',
@@ -31,7 +46,8 @@ export default function ProfileSettings() {
     locality: profile?.locality || 'Urban',
     classSize: profile?.classSize || '40',
     subjectsTaught: profile?.subjectsTaught?.join(', ') || '',
-    teachingExperienceYears: profile?.teachingExperienceYears || ''
+    teachingExperienceYears: profile?.teachingExperienceYears || '',
+    isBstemSchool: profile?.isBstemSchool || false
   });
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -100,15 +116,15 @@ export default function ProfileSettings() {
     <div className="max-w-4xl mx-auto space-y-10">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight">Profile Settings</h1>
-          <p className="text-slate-500 font-medium italic">Personalize your TeachSmart experience.</p>
+          <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Profile Settings</h1>
+          <p className="text-slate-500 dark:text-slate-400 font-medium italic">Personalize your TeachSmart experience.</p>
         </div>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-8">
         {/* Profile Card */}
         <div className="lg:col-span-1 space-y-6">
-          <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm text-center">
+          <div className="bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-sm text-center">
             <div className="relative inline-block group mb-6">
               <div className="w-24 h-24 bg-ghana-gold rounded-3xl flex items-center justify-center font-black text-4xl text-emerald-deep mx-auto shadow-xl shadow-ghana-gold/20 overflow-hidden">
                 {profile?.photoURL && profile.photoURL !== "" ? (
@@ -123,35 +139,83 @@ export default function ProfileSettings() {
               </label>
             </div>
             
-            <h2 className="text-xl font-black text-slate-900">{profile?.displayName}</h2>
-            <p className="text-slate-500 text-sm font-medium mb-6">{profile?.email}</p>
+            <h2 className="text-xl font-black text-slate-900 dark:text-white">{profile?.displayName}</h2>
+            <p className="text-slate-500 dark:text-slate-400 text-sm font-medium mb-6">{profile?.email}</p>
             
-            <div className="pt-6 border-t border-slate-50 flex flex-col gap-3">
-              <div className="flex items-center gap-3 text-left p-3 bg-slate-50 rounded-2xl">
-                <div className="w-8 h-8 bg-white rounded-xl flex items-center justify-center text-slate-400">
+            <div className="pt-6 border-t border-slate-50 dark:border-slate-800 flex flex-col gap-3">
+              <div className="flex items-center gap-3 text-left p-3 bg-slate-50 dark:bg-slate-950 rounded-2xl">
+                <div className="w-8 h-8 bg-white dark:bg-slate-900 rounded-xl flex items-center justify-center text-slate-400 dark:text-slate-500">
                   <Shield size={16} />
                 </div>
                 <div>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Status</p>
-                  <p className="text-xs font-bold text-slate-700 capitalize">{profile?.subscriptionStatus} Member</p>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">Status</p>
+                  <p className="text-xs font-bold text-slate-700 dark:text-slate-300 capitalize">{profile?.subscriptionStatus} Member</p>
                 </div>
               </div>
-              <div className="flex items-center gap-3 text-left p-3 bg-emerald-50 rounded-2xl border border-emerald-100">
-                <div className="w-8 h-8 bg-white rounded-xl flex items-center justify-center text-emerald-600">
+              <div className="flex items-center gap-3 text-left p-3 bg-emerald-50 dark:bg-emerald-950/20 rounded-2xl border border-emerald-100 dark:border-emerald-900/30">
+                <div className="w-8 h-8 bg-white dark:bg-slate-900 rounded-xl flex items-center justify-center text-emerald-600">
                   <BadgeCheck size={16} />
                 </div>
                 <div>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600">Verified</p>
-                  <p className="text-xs font-bold text-emerald-700">NaCCA Accredited</p>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400">Verified</p>
+                  <p className="text-xs font-bold text-emerald-700 dark:text-emerald-300">NaCCA Accredited</p>
                 </div>
               </div>
+            </div>
+          </div>
+
+          {/* Theme Settings Card */}
+          <div className="bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-sm space-y-6">
+            <div className="space-y-1">
+              <h3 className="text-lg font-black text-slate-900 dark:text-white">App Appearance</h3>
+              <p className="text-slate-500 dark:text-slate-400 text-xs font-medium">Choose your visual preference.</p>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4 pb-2">
+              <button
+                type="button"
+                onClick={() => toggleTheme('light')}
+                className={cn(
+                  "flex flex-col items-center gap-3 p-4 rounded-2xl border-2 transition-all group cursor-pointer",
+                  theme === 'light'
+                    ? "bg-emerald-50/50 dark:bg-slate-800/50 border-ghana-gold text-slate-900 dark:text-white"
+                    : "bg-slate-50 dark:bg-slate-950 border-slate-100 dark:border-slate-800/80 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                )}
+              >
+                <div className={cn(
+                  "p-2.5 rounded-xl transition-all",
+                  theme === 'light' ? "bg-ghana-gold/20 text-slate-800" : "bg-white dark:bg-slate-900"
+                )}>
+                  <Sun size={20} className={cn("transition-transform group-hover:rotate-12", theme === 'light' && "text-amber-600")} />
+                </div>
+                <span className="text-xs font-black uppercase tracking-wider">Light</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => toggleTheme('dark')}
+                className={cn(
+                  "flex flex-col items-center gap-3 p-4 rounded-2xl border-2 transition-all group cursor-pointer",
+                  theme === 'dark'
+                    ? "bg-slate-800/20 dark:bg-slate-800 border-ghana-gold text-slate-950 dark:text-white"
+                    : "bg-slate-50 dark:bg-slate-950 border-slate-100 dark:border-slate-800/80 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                )}
+              >
+                <div className={cn(
+                  "p-2.5 rounded-xl transition-all",
+                  theme === 'dark' ? "bg-slate-700/50 text-amber-400" : "bg-white dark:bg-slate-900"
+                )}>
+                  <Moon size={20} className={cn("transition-transform group-hover:-rotate-12", theme === 'dark' && "text-amber-400")} />
+                </div>
+                <span className="text-xs font-black uppercase tracking-wider">Dark</span>
+              </button>
             </div>
           </div>
         </div>
 
         {/* Update Form */}
         <div className="lg:col-span-2">
-          <form onSubmit={handleSubmit} className="bg-white p-8 md:p-10 rounded-[2.5rem] border border-slate-100 shadow-sm space-y-8">
+          <form onSubmit={handleSubmit} className="bg-white dark:bg-slate-900 p-8 md:p-10 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-sm space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-2">
                 <label className="flex items-center gap-2 text-xs font-black text-slate-400 uppercase tracking-widest ml-1">
@@ -296,6 +360,29 @@ export default function ProfileSettings() {
                   className="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none font-bold text-slate-700 transition-all"
                   placeholder="e.g. 5"
                 />
+              </div>
+
+              <div className="md:col-span-2 space-y-3 pt-6 border-t border-slate-100 dark:border-slate-850">
+                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 p-6 bg-emerald-50/20 dark:bg-emerald-950/10 border border-emerald-100/50 dark:border-emerald-900/20 rounded-3xl">
+                  <div className="space-y-1">
+                    <h4 className="text-sm font-black text-slate-900 dark:text-white flex items-center gap-2 flex-wrap md:flex-nowrap">
+                      <span className="px-2.5 py-1 bg-ghana-gold/20 dark:bg-ghana-gold/10 text-emerald-800 dark:text-ghana-gold text-[9px] font-black rounded-lg uppercase tracking-wider">Ghana BSTEM Option</span>
+                      Basic STEM (BSTEM) Aligned
+                    </h4>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 font-medium leading-relaxed max-w-xl">
+                      Is your school registered or operating under the Basic Science, Technology, Engineering, and Mathematics (BSTEM) initiative? Turning this on optimizes all AI generation (lesson plans, schemes of learning, exams) to integrate BSTEM methodologies, practical activity setups, and national BSTEM learning standards.
+                    </p>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer select-none self-end md:self-center">
+                    <input 
+                      type="checkbox" 
+                      className="sr-only peer"
+                      checked={formData.isBstemSchool}
+                      onChange={(e) => setFormData({...formData, isBstemSchool: e.target.checked})}
+                    />
+                    <div className="w-14 h-8 bg-slate-200 dark:bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-emerald-600"></div>
+                  </label>
+                </div>
               </div>
             </div>
 

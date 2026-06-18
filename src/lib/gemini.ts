@@ -55,7 +55,7 @@ export const getLanguageInstruction = (language?: string, bilingualLanguage?: st
 
 export const generateLessonPlan = async (
   prompt: string, 
-  teacherInfo?: { school?: string, district?: string, town?: string, region?: string },
+  teacherInfo?: { school?: string, district?: string, town?: string, region?: string, isBstemSchool?: boolean },
   language?: string,
   bilingualLanguage?: string
 ) => {
@@ -126,7 +126,17 @@ export const generateLessonPlan = async (
     School: ${teacherInfo.school}
     Town: ${teacherInfo.town || 'N/A'}
     District: ${teacherInfo.district || 'N/A'}
-    Region: ${teacherInfo.region || 'N/A'}` : ''}
+    Region: ${teacherInfo.region || 'N/A'}
+    BSTEM Aligned School: ${teacherInfo.isBstemSchool ? 'YES' : 'NO'}` : ''}
+
+    ${teacherInfo?.isBstemSchool ? `
+    BSTEM SCHOOL INSTRUCTION (CRITICAL - INTEGRATE BSTEM METHODOLOGIES):
+    Since the school is a BSTEM Aligned School, you MUST design of all instructional parts, starters, main activities, and plenary elements to prominently incorporate the Basic Science, Technology, Engineering, and Mathematics (BSTEM) framework:
+    1. Focus heavily on practical inquiry-based learning, hands-on scientific experimentation, basic computational concepts, mathematical modeling, and engineering design loops.
+    2. Suggest concrete, accessible local Ghanaian resources, physical models, and simple handmade tools suitable for experimentation in classrooms.
+    3. Use the BSTEM Inquiry Cycle (Observation -> Questioning -> Conjecture -> Investigation -> Discussion -> Reflective Application).
+    4. Provide clear STEAM (Science, Tech, Engineering, Arts, Math) connections where plausible.
+    ` : ''}
 
     The response MUST be a JSON object with the following structure:
     {
@@ -188,7 +198,8 @@ export const generateSchemeOfWork = async (
     includeLearningOutcomes?: boolean, 
     customPrompt?: string,
     language?: string,
-    bilingualLanguage?: string
+    bilingualLanguage?: string,
+    isBstemSchool?: boolean
   }
 ) => {
   const model = "gemini-3-flash-preview";
@@ -276,6 +287,14 @@ export const generateSchemeOfWork = async (
     
     ${options?.customPrompt ? `SPECIFIC FOCUS: ${options.customPrompt}` : ''}
 
+    ${options?.isBstemSchool ? `
+    BSTEM SCHEME INSTRUCTION (CRITICAL - INTEGRATE BSTEM METHODOLOGIES):
+    Since the teacher is preparing a scheme for a BSTEM Aligned School, all weekly teaching and learning activities, project indicators, and teaching & learning resources (TLRs) MUST prioritize hands-on Basic STEM concepts:
+    1. Focus on inquiry-driven investigations, engineering design loops, active student prototyping, and mathematical problem-solving.
+    2. Propose low-cost or easily sourced everyday Ghanaian materials (e.g. bottles, carton, wire, plants, soil, battery-led sets) as the primary learning resources (TLRs).
+    3. Include practical lab activities, science/tech projects, and active experiments in the "Teaching & Learning Activities" column where applicable.
+    ` : ''}
+
     NOMENCLATURE: ALWAYS use the "Basic" level format (e.g., B1-B6 for Primary, B7-B9 for Junior High, B10-B12 for Senior High). NEVER use JHS or SHS alone; always refer to them as Basic 7-9 or Basic 10-12.
     ${formatInstructions}
     
@@ -300,7 +319,7 @@ export const generateExam = async (
   level: string, 
   topics: string, 
   difficulty: string, 
-  teacherInfo?: { school?: string, region?: string, district?: string, town?: string }, 
+  teacherInfo?: { school?: string, region?: string, district?: string, town?: string, isBstemSchool?: boolean }, 
   questionTypes?: string[],
   p1Settings?: { count: number, difficulty: string },
   p2Settings?: { count: number, difficulty: string },
@@ -570,7 +589,16 @@ export const generateExam = async (
     School Name: ${teacherInfo.school}
     Town: ${teacherInfo.town || 'N/A'}
     District: ${teacherInfo.district || 'N/A'}
-    Region: ${teacherInfo.region || 'N/A'}` : ''}
+    Region: ${teacherInfo.region || 'N/A'}
+    BSTEM Aligned School: ${teacherInfo.isBstemSchool ? 'YES' : 'NO'}` : ''}
+
+    ${teacherInfo?.isBstemSchool ? `
+    BSTEM EXAM INSTRUCTION (CRITICAL - INTEGRATE BSTEM METHODOLOGIES):
+    Since this is a BSTEM Aligned School, all multiple-choice, practical, and theory questions MUST incorporate BSTEM principles:
+    1. Focus questions on real-life troubleshooting, scientific hypothesis testing, data table comprehension, computing logic, or engineering design/construction challenges.
+    2. Ensure that practical questions include scenarios with simple apparatus, lab safety guidelines, and active scientific observations.
+    3. Encourage critical thinking, analytical reasoning, and practical mathematical/scientific calculation.
+    ` : ''}
 
     STRICT WAEC COMPLIANCE RULES:
     ${beceSpecificInstructions ? `
@@ -659,7 +687,7 @@ export const generateNote = async (
     language?: string;
     bilingualLanguage?: string;
   },
-  teacherInfo?: { school?: string, district?: string, region?: string, town?: string, locality?: string }
+  teacherInfo?: { school?: string, district?: string, region?: string, town?: string, locality?: string, isBstemSchool?: boolean }
 ) => {
   const model = "gemini-3.5-flash";
   
@@ -736,6 +764,7 @@ ${formData.differentiation ? `- Differentiation Strategy: ${formData.differentia
 ${teacherInfo?.school ? `- School Name: ${teacherInfo.school}` : ''}
 ${teacherInfo?.district ? `- District Name: ${teacherInfo.district}` : ''}
 ${teacherInfo?.region ? `- Region Name: ${teacherInfo.region}` : ''}
+${teacherInfo?.isBstemSchool ? `- BSTEM Aligned School: YES` : ''}
 
 ==================================================
 STRICT GENERATION RULES
@@ -750,6 +779,10 @@ STRICT GENERATION RULES
 8. Make notes engaging and interactive.
 9. Use short paragraphs and bullet points where appropriate.
 10. Highlight important points for revision.
+${teacherInfo?.isBstemSchool ? `11. BSTEM NOTE INSTRUCTION (CRITICAL): Since this is a BSTEM Aligned School, all student note content, practice questions, and worked examples MUST prioritize BSTEM principles:
+    - Incorporate rich step-by-step scientific illustrations, inquiry cycles, and practical science or computing definitions.
+    - Provide deep hands-on activities that students can try at home or in the classroom, explaining the underlying scientific, technological, engineering, or mathematical logic in detail.
+    - Focus heavily on critical thinking, design loops, and analytical problem-solving.` : ''}
 11. Include memory aids, tips, and summaries where useful.
 12. Ensure the notes are suitable for:
 * classroom revision,
