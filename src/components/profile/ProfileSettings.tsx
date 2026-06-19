@@ -21,21 +21,6 @@ export default function ProfileSettings() {
   const [success, setSuccess] = useState(false);
   const [uploading, setUploading] = useState(false);
   
-  const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('theme') || 'light';
-  });
-
-  const toggleTheme = (newTheme: 'light' | 'dark') => {
-    setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
-    if (newTheme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-    toast.success(`${newTheme === 'dark' ? 'Dark' : 'Light'} mode enabled! 🇬🇭`);
-  };
-  
   const [formData, setFormData] = useState({
     displayName: profile?.displayName || '',
     school: profile?.school || '',
@@ -161,54 +146,6 @@ export default function ProfileSettings() {
                   <p className="text-xs font-bold text-emerald-700 dark:text-emerald-300">NaCCA Accredited</p>
                 </div>
               </div>
-            </div>
-          </div>
-
-          {/* Theme Settings Card */}
-          <div className="bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-sm space-y-6">
-            <div className="space-y-1">
-              <h3 className="text-lg font-black text-slate-900 dark:text-white">App Appearance</h3>
-              <p className="text-slate-500 dark:text-slate-400 text-xs font-medium">Choose your visual preference.</p>
-            </div>
-            
-            <div className="grid grid-cols-2 gap-4 pb-2">
-              <button
-                type="button"
-                onClick={() => toggleTheme('light')}
-                className={cn(
-                  "flex flex-col items-center gap-3 p-4 rounded-2xl border-2 transition-all group cursor-pointer",
-                  theme === 'light'
-                    ? "bg-emerald-50/50 dark:bg-slate-800/50 border-ghana-gold text-slate-900 dark:text-white"
-                    : "bg-slate-50 dark:bg-slate-950 border-slate-100 dark:border-slate-800/80 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
-                )}
-              >
-                <div className={cn(
-                  "p-2.5 rounded-xl transition-all",
-                  theme === 'light' ? "bg-ghana-gold/20 text-slate-800" : "bg-white dark:bg-slate-900"
-                )}>
-                  <Sun size={20} className={cn("transition-transform group-hover:rotate-12", theme === 'light' && "text-amber-600")} />
-                </div>
-                <span className="text-xs font-black uppercase tracking-wider">Light</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => toggleTheme('dark')}
-                className={cn(
-                  "flex flex-col items-center gap-3 p-4 rounded-2xl border-2 transition-all group cursor-pointer",
-                  theme === 'dark'
-                    ? "bg-slate-800/20 dark:bg-slate-800 border-ghana-gold text-slate-950 dark:text-white"
-                    : "bg-slate-50 dark:bg-slate-950 border-slate-100 dark:border-slate-800/80 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
-                )}
-              >
-                <div className={cn(
-                  "p-2.5 rounded-xl transition-all",
-                  theme === 'dark' ? "bg-slate-700/50 text-amber-400" : "bg-white dark:bg-slate-900"
-                )}>
-                  <Moon size={20} className={cn("transition-transform group-hover:-rotate-12", theme === 'dark' && "text-amber-400")} />
-                </div>
-                <span className="text-xs font-black uppercase tracking-wider">Dark</span>
-              </button>
             </div>
           </div>
         </div>

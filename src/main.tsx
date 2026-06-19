@@ -3,13 +3,9 @@ import {createRoot} from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 
-// Initialize theme from localStorage immediately to prevent layout shifts
-const savedTheme = localStorage.getItem('theme');
-if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-  document.documentElement.classList.add('dark');
-} else {
-  document.documentElement.classList.remove('dark');
-}
+// Force TeachSmartGH to remain in light theme always for all users as per branding rules
+localStorage.setItem('theme', 'light');
+document.documentElement.classList.remove('dark');
 
 // Register PWA Service Worker for offline asset caching and resilient routing
 if ('serviceWorker' in navigator) {
