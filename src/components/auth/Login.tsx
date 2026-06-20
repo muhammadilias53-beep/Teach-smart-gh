@@ -61,22 +61,52 @@ const Login = () => {
   }, []);
 
   const handleInstallClick = async () => {
+    const isIframe = window.self !== window.top;
+
     if (!deferredPrompt) {
       // No native prompt available; show instructions
-      setShowInstructions(prev => !prev);
+      setShowInstructions(prev => {
+        const next = !prev;
+        if (next) {
+          if (isIframe) {
+            toast.success("Ghana PWA Manual Installation Guide opened below! 🇬🇭 Note: Since you are viewing this within a workspace preview frame, click '[ Open in New Tab ]' or use your browser menu to install natively.", { 
+              duration: 8000, 
+              id: 'pwa-guide-iframe' 
+            });
+          } else {
+            toast.success("Ghana PWA Manual Installation Guide triggering below! 🇬🇭", { 
+              duration: 5000, 
+              id: 'pwa-guide-direct' 
+            });
+          }
+        }
+        return next;
+      });
       return;
     }
     
-    // Show the native browser install prompt
-    deferredPrompt.prompt();
-    
-    // Wait for the user to respond to the prompt
-    const { outcome } = await deferredPrompt.userChoice;
-    console.log(`User response to install prompt: ${outcome}`);
-    
-    if (outcome === 'accepted') {
-      setIsInstalled(true);
-      setDeferredPrompt(null);
+    try {
+      // Show the native browser install prompt
+      await deferredPrompt.prompt();
+      
+      // Wait for the user to respond to the prompt
+      const { outcome } = await deferredPrompt.userChoice;
+      console.log(`User response to install prompt: ${outcome}`);
+      
+      if (outcome === 'accepted') {
+        setIsInstalled(true);
+        setDeferredPrompt(null);
+        toast.success("Thank you for accepting! TeachSmartGH installation initiated. 🇬🇭");
+      } else {
+        toast("Installation dismissed. You can still use the web version or follow the manual installation guide below anytime! 📶");
+      }
+    } catch (err) {
+      console.error("Native PWA install prompt failed inside this environment:", err);
+      setShowInstructions(true);
+      toast.error(
+        "Interactive install is constrained in this frame. Please click Open in New Tab or use your browser menu to install, or follow the guide below! 🇬🇭",
+        { duration: 7500, id: 'pwa-prompt-error' }
+      );
     }
   };
 
