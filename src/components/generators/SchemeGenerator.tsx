@@ -17,6 +17,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { generateSchemeOfWork } from '../../lib/gemini';
 import { db } from '../../lib/firebase';
+import { saveOffline } from '../../lib/indexedDB';
 import { collection, addDoc, serverTimestamp, query, where, getDocs, limit, orderBy } from 'firebase/firestore';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../../lib/utils';
@@ -164,7 +165,7 @@ export default function SchemeGenerator() {
   const handleSave = async () => {
     if (!user || !result) return;
     try {
-      await addDoc(collection(db, 'schemes'), {
+      const payload = {
         authorId: user.uid,
         title: formData.title || `${displaySubject} - ${formData.type === 'yearly' ? 'Yearly' : 'Termly'} Scheme of Learning`,
         subject: displaySubject,
@@ -173,13 +174,53 @@ export default function SchemeGenerator() {
         type: formData.type,
         content: result,
         includeLearningOutcomes: formData.includeLearningOutcomes,
-        createdAt: serverTimestamp()
-      });
+        createdAt: new Date().toISOString()
+      };
+
+      const isOnline = navigator.onLine;
+      let docRefId = '';
+
+      if (isOnline) {
+        try {
+          const docRef = await addDoc(collection(db, 'schemes'), {
+            ...payload,
+            createdAt: serverTimestamp()
+          });
+          docRefId = docRef.id;
+        } catch (firebaseErr) {
+          console.warn("Firebase scheme write failed, using local DB fallback.", firebaseErr);
+        }
+      }
+
+      await saveOffline('schemes', { ...payload, id: docRefId || undefined }, !!docRefId);
+      
       setSaved(true);
-      toast.success("Scheme saved to your library!");
+      if (docRefId) {
+        toast.success("Scheme saved to cloud and cached offline! 🇬🇭");
+      } else {
+        toast.success("Scheme saved locally to offline cabinet! TeachSmartGH will synchronize it once online. 🇬🇭");
+      }
     } catch (error) {
       console.error("Failed to save scheme:", error);
-      toast.error("Failed to save scheme.");
+      try {
+        const fallbackPayload = {
+          authorId: user.uid,
+          title: formData.title || `${displaySubject} - ${formData.type === 'yearly' ? 'Yearly' : 'Termly'} Scheme of Learning`,
+          subject: displaySubject,
+          level: formData.level,
+          class: formData.class,
+          type: formData.type,
+          content: result,
+          includeLearningOutcomes: formData.includeLearningOutcomes,
+          createdAt: new Date().toISOString()
+        };
+        await saveOffline('schemes', fallbackPayload, false);
+        setSaved(true);
+        toast.success("Saved locally! Scheme backed up in offline storage. 🇬🇭");
+      } catch (offlineErr) {
+        console.error("Offline save fallback also failed", offlineErr);
+        toast.error("Failed to save. Storage is unavailable.");
+      }
     }
   };
 

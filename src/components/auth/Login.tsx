@@ -12,7 +12,7 @@ import {
   updateProfile as firebaseUpdateProfile
 } from 'firebase/auth';
 import { motion } from 'motion/react';
-import { GraduationCap, Mail, Lock, User, Chrome, Zap, Info, Eye, EyeOff, FastForward, ArrowRight, CheckCircle2, Clock, BookOpen, Sparkles } from 'lucide-react';
+import { GraduationCap, Mail, Lock, User, Chrome, Zap, Info, Eye, EyeOff, FastForward, ArrowRight, CheckCircle2, Clock, BookOpen, Sparkles, Download } from 'lucide-react';
 import { doc, getDoc, setDoc, serverTimestamp, collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { toast } from 'react-hot-toast';
@@ -24,6 +24,61 @@ const Login = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
+
+  // PWA Install State
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [isInstalled, setIsInstalled] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(false);
+
+  useEffect(() => {
+    // Check if already in standalone display mode
+    const isStandalone = 
+      window.matchMedia('(display-mode: standalone)').matches || 
+      (window.navigator as any).standalone === true;
+      
+    if (isStandalone) {
+      setIsInstalled(true);
+    }
+
+    const handleBeforePrompt = (e: Event) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+
+    const handleAppInstalled = () => {
+      setIsInstalled(true);
+      setDeferredPrompt(null);
+      toast.success('TeachSmartGH successfully installed! Feel free to run it offline 🇬🇭');
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforePrompt);
+    window.addEventListener('appinstalled', handleAppInstalled);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforePrompt);
+      window.removeEventListener('appinstalled', handleAppInstalled);
+    };
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (!deferredPrompt) {
+      // No native prompt available; show instructions
+      setShowInstructions(prev => !prev);
+      return;
+    }
+    
+    // Show the native browser install prompt
+    deferredPrompt.prompt();
+    
+    // Wait for the user to respond to the prompt
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log(`User response to install prompt: ${outcome}`);
+    
+    if (outcome === 'accepted') {
+      setIsInstalled(true);
+      setDeferredPrompt(null);
+    }
+  };
 
   const scrollToRegister = () => {
     setIsLogin(false);
@@ -674,6 +729,81 @@ const Login = () => {
                   </button>
                 </p>
               </div>
+            </div>
+
+            {/* Structured PWA Offline Installation Section */}
+            <div className="mx-12 mb-8 p-5 bg-slate-50/70 border border-slate-100 rounded-2xl text-left space-y-4">
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 flex-shrink-0 shadow-sm">
+                  <Download size={18} className="animate-pulse" />
+                </div>
+                <div className="space-y-1">
+                  <div className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-emerald-100/60 text-emerald-800 text-[8px] font-black rounded uppercase tracking-wider">
+                    Official PWA App
+                  </div>
+                  <h3 className="font-extrabold text-xs text-slate-800 uppercase tracking-tight">
+                    Install TeachSmartGH App
+                  </h3>
+                  <p className="text-[10px] text-slate-500 font-semibold leading-relaxed">
+                    Prepare lesson notes, generate NaCCA schemes, and prepare diagnostic assessments with zero internet data. Works beautifully offline!
+                  </p>
+                </div>
+              </div>
+
+              {!isInstalled ? (
+                <div className="space-y-3">
+                  <button
+                    type="button"
+                    onClick={handleInstallClick}
+                    className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-white border border-slate-200 hover:border-emerald-500/20 hover:bg-emerald-50/10 text-slate-700 hover:text-emerald-deep font-black text-[9px] uppercase tracking-widest rounded-xl transition-all shadow-sm active:scale-[0.98] cursor-pointer"
+                  >
+                    <Download size={12} />
+                    <span>{deferredPrompt ? 'Install App (Offline)' : 'Offline Installation Guide'}</span>
+                  </button>
+
+                  {/* Instructive prompt collapsed details */}
+                  {showInstructions && (
+                    <motion.div 
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      className="p-4 bg-white rounded-xl border border-slate-150 space-y-3 text-[10px] font-semibold text-slate-600 leading-relaxed"
+                    >
+                      <p className="font-black text-slate-800 uppercase text-[9px] tracking-wide border-b border-slate-100 pb-1 flex items-center justify-between">
+                        <span>How to Install offline:</span>
+                        <span className="text-emerald-600 text-[8px] bg-emerald-50 px-1 py-0.5 rounded">All Devices</span>
+                      </p>
+                      
+                      <div className="space-y-2.5">
+                        <div className="flex flex-col gap-0.5">
+                          <span className="font-black text-emerald-600 uppercase text-[8px] tracking-wide">1. iOS (Safari on iPhone / iPad):</span>
+                          <span>Tap the standard <span className="font-bold text-slate-800 underline">Share button</span> (square with arrow pointing up) at the bottom, then scroll down and select <span className="font-bold text-slate-800 underline">Add to Home Screen</span>.</span>
+                        </div>
+                        <div className="flex flex-col gap-0.5">
+                          <span className="font-black text-emerald-600 uppercase text-[8px] tracking-wide">2. Android Devices (Chrome):</span>
+                          <span>Tap the 3 dots in top right corner of Chrome and select <span className="font-bold text-slate-800 underline">Install App</span> or <span className="font-bold text-slate-800 underline">Add to Home Screen</span>.</span>
+                        </div>
+                        <div className="flex flex-col gap-0.5">
+                          <span className="font-black text-emerald-600 uppercase text-[8px] tracking-wide">3. Desktop (Chrome/Edge):</span>
+                          <span>Click the install prompt/icon in Chrome's URL search bar at the very top right.</span>
+                        </div>
+                      </div>
+
+                      <button 
+                        type="button"
+                        onClick={() => setShowInstructions(false)}
+                        className="text-[8px] font-black text-slate-400 hover:text-emerald-600 uppercase tracking-widest block transition-colors mt-2"
+                      >
+                        [ Hide Setup Instructions ]
+                      </button>
+                    </motion.div>
+                  )}
+                </div>
+              ) : (
+                <div className="flex items-center gap-2 text-emerald-700 bg-emerald-50/50 border border-emerald-100 px-4 py-3 rounded-xl text-[9px] font-black uppercase tracking-wider">
+                  <CheckCircle2 size={12} className="text-emerald-500" />
+                  <span>Integrated Offline PWA Installed 🇬🇭</span>
+                </div>
+              )}
             </div>
             
             <div className="py-5 bg-gradient-to-b from-white to-slate-50 text-center px-12 border-t border-slate-100">

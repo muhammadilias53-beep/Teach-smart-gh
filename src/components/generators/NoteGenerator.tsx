@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Sparkles, Save, Download, RefreshCw, ChevronRight, ChevronLeft, CheckCircle, BookOpen, MapPin, Quote, MessageSquare } from 'lucide-react';
 import { generateNote } from '../../lib/gemini';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { saveOffline } from '../../lib/indexedDB';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -488,19 +489,48 @@ const NoteGenerator = () => {
   const handleSave = async () => {
     if (!result || !user) return;
     setSaving(true);
+
+    const payload = {
+      ...result,
+      authorId: user.uid,
+      level: formData.level,
+      class: formData.class,
+      subject: displaySubject,
+      createdAt: new Date().toISOString()
+    };
+
     try {
-      await addDoc(collection(db, 'notes'), {
-        ...result,
-        authorId: user.uid,
-        level: formData.level,
-        class: formData.class,
-        subject: displaySubject,
-        createdAt: serverTimestamp(),
-      });
-      toast.success('Notes saved to your cloud library!');
+      const isOnline = navigator.onLine;
+      let docRefId = '';
+      
+      if (isOnline) {
+        try {
+          const docRef = await addDoc(collection(db, 'notes'), {
+            ...payload,
+            createdAt: serverTimestamp()
+          });
+          docRefId = docRef.id;
+        } catch (firebaseErr) {
+          console.warn("Firebase notes write failed, using local DB fallback.", firebaseErr);
+        }
+      }
+
+      await saveOffline('notes', { ...payload, id: docRefId || undefined }, !!docRefId);
+
+      if (docRefId) {
+        toast.success('Notes saved to cloud and cached offline! 🇬🇭');
+      } else {
+        toast.success('Notes saved to locally to your offline cabinet! TeachSmartGH will synchronize it later. 🇬🇭');
+      }
     } catch (err) {
       console.error(err);
-      toast.error('Failed to save. Please check your connection.');
+      try {
+        await saveOffline('notes', payload, false);
+        toast.success('Saved locally! Your notes were backed up offline. 🇬🇭');
+      } catch (offlineErr) {
+        console.error("Local save fallback also failed", offlineErr);
+        toast.error('Failed to save. Permissions might be restricted.');
+      }
     } finally {
       setSaving(false);
     }

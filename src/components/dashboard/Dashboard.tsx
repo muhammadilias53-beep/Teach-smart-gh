@@ -12,6 +12,7 @@ import { differenceInDays } from 'date-fns';
 import { cn } from '../../lib/utils';
 import { collection, query, where, orderBy, limit, getDocs, getCountFromServer, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
+import { getOffline, syncPendingToFirebase, cacheFirestoreItems } from '../../lib/indexedDB';
 import { handleFirestoreError, OperationType } from '../../lib/firestore-errors';
 import { Logo } from '../common/Logo';
 import { SafeMarkdown } from '../common/SafeMarkdown';
@@ -100,6 +101,51 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       if (!user) return;
+      
+      // Phase 1: Load offline cached items from IndexedDB instantly
+      try {
+        const lpOffline = await getOffline('lessonPlans', user.uid);
+        const exOffline = await getOffline('exams', user.uid);
+        const scOffline = await getOffline('schemes', user.uid);
+        const ntOffline = await getOffline('notes', user.uid);
+
+        const offlineDocs: any[] = [
+          ...lpOffline.map(d => ({ ...d, type: 'Lesson Plan' })),
+          ...exOffline.map(d => ({ ...d, type: 'Exam' })),
+          ...scOffline.map(d => ({ ...d, type: 'Scheme' })),
+          ...ntOffline.map(d => ({ ...d, type: 'Note' }))
+        ];
+        
+        offlineDocs.sort((a, b) => b.createdAt - a.createdAt);
+        
+        if (offlineDocs.length > 0) {
+          setRecentDocs(offlineDocs.slice(0, 5));
+          setStats(prev => ({
+            ...prev,
+            lessonPlans: lpOffline.length,
+            exams: exOffline.length,
+            schemes: scOffline.length,
+            notes: ntOffline.length,
+            total: lpOffline.length + exOffline.length + scOffline.length + ntOffline.length + prev.packs
+          }));
+        }
+      } catch (indexedDbErr) {
+        console.warn("IndexedDB load failed early in dashboard", indexedDbErr);
+      }
+
+      // Phase 2: Attempt background synchronization of unsynced documents if online
+      if (navigator.onLine) {
+        try {
+          const syncedCount = await syncPendingToFirebase(user.uid);
+          if (syncedCount > 0) {
+            toast.success(`Successfully synchronized ${syncedCount} offline document(s) with your cloud library! 🇬🇭`);
+          }
+        } catch (syncErr) {
+          console.warn("Background document sync failed", syncErr);
+        }
+      }
+
+      // Phase 3: Fetch fresh data from Firestore
       try {
         const lpPath = 'lessonPlans';
         const exPath = 'exams';
@@ -161,6 +207,20 @@ const Dashboard = () => {
 
         const [lpSnap, exSnap, scSnap, ntSnap, pkSnap, countLp, countEx, countSc, countNt, countPk] = results;
         
+        // Cache fetched items to IndexedDB in background
+        if (lpSnap) {
+          cacheFirestoreItems('lessonPlans', lpSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        }
+        if (exSnap) {
+          cacheFirestoreItems('exams', exSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        }
+        if (scSnap) {
+          cacheFirestoreItems('schemes', scSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        }
+        if (ntSnap) {
+          cacheFirestoreItems('notes', ntSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        }
+
         const docs: any[] = [];
         if (lpSnap) docs.push(...lpSnap.docs.map(doc => ({ id: doc.id, ...doc.data(), type: 'Lesson Plan' })));
         if (exSnap) docs.push(...exSnap.docs.map(doc => ({ id: doc.id, ...doc.data(), type: 'Exam' })));
@@ -170,8 +230,8 @@ const Dashboard = () => {
 
         if (docs.length > 0) {
           docs.sort((a, b) => {
-            const tA = a.createdAt?.toMillis?.() || 0;
-            const tB = b.createdAt?.toMillis?.() || 0;
+            const tA = (a.createdAt?.toMillis ? a.createdAt.toMillis() : new Date(a.createdAt).getTime()) || 0;
+            const tB = (b.createdAt?.toMillis ? b.createdAt.toMillis() : new Date(b.createdAt).getTime()) || 0;
             return tB - tA;
           });
           setRecentDocs(docs.slice(0, 5));

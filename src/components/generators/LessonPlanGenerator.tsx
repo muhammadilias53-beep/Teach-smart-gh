@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Sparkles, Save, Download, RefreshCw, FileText, ChevronLeft, ChevronRight, CheckCircle, Users, Layout, AlignLeft, Layers, GraduationCap, MessageSquare } from 'lucide-react';
 import { generateLessonPlan } from '../../lib/gemini';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { saveOffline } from '../../lib/indexedDB';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../contexts/AuthContext';
 import { cn } from '../../lib/utils';
@@ -364,24 +365,53 @@ const LessonPlanGenerator = () => {
   const handleSave = async () => {
     if (!result || !user) return;
     setSaving(true);
+
+    const payload = {
+      ...result,
+      authorId: user.uid,
+      level: formData.level,
+      class: formData.class,
+      subject: displaySubject,
+      locality: formData.locality,
+      strand: formData.strand,
+      subStrand: formData.subStrand,
+      contentStandard: formData.contentStandard,
+      indicator: formData.indicator,
+      createdAt: new Date().toISOString()
+    };
+
     try {
-      await addDoc(collection(db, 'lessonPlans'), {
-        ...result,
-        authorId: user.uid,
-        level: formData.level,
-        class: formData.class,
-        subject: displaySubject,
-        locality: formData.locality,
-        strand: formData.strand,
-        subStrand: formData.subStrand,
-        contentStandard: formData.contentStandard,
-        indicator: formData.indicator,
-        createdAt: serverTimestamp(),
-      });
-      alert('Lesson plan saved successfully!');
+      const isOnline = navigator.onLine;
+      let docRefId = '';
+      
+      if (isOnline) {
+        try {
+          const docRef = await addDoc(collection(db, 'lessonPlans'), {
+            ...payload,
+            createdAt: serverTimestamp()
+          });
+          docRefId = docRef.id;
+        } catch (firebaseErr) {
+          console.warn("Firebase save failed, falling back to local DB only.", firebaseErr);
+        }
+      }
+
+      await saveOffline('lessonPlans', { ...payload, id: docRefId || undefined }, !!docRefId);
+
+      if (docRefId) {
+        alert('Lesson plan saved successfully to your cloud library and cached offline! 🇬🇭');
+      } else {
+        alert('Lesson plan saved locally to your offline cabinet! TeachSmartGH will synchronize it once a stable connection is restored. 🇬🇭');
+      }
     } catch (err) {
-      console.error(err);
-      alert('Failed to save. Permissions might be restricted.');
+      console.error("Failed to save lesson plan fully:", err);
+      try {
+        await saveOffline('lessonPlans', payload, false);
+        alert('Saved locally! Your lesson plan has been stored offline because of network fluctuations. 🇬🇭');
+      } catch (offlineErr) {
+        console.error("Local save fallback also failed:", offlineErr);
+        alert('Failed to save. Storage is locked or your browser lacks IndexedDB permissions.');
+      }
     } finally {
       setSaving(false);
     }

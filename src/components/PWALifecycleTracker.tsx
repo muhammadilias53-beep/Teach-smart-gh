@@ -2,10 +2,27 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import { toast } from 'react-hot-toast';
+import { automateUserMessages } from '../lib/messageAutomator';
 
 export const PWALifecycleTracker: React.FC = () => {
-  const { user, profile } = useAuth();
+  const { user, profile, isSubscriptionActive, getTrialDaysLeft } = useAuth();
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+
+  // Trigger automated curriculum scheduler/alerts for users
+  useEffect(() => {
+    if (user?.uid) {
+      const isSubActive = isSubscriptionActive ? isSubscriptionActive() : false;
+      const trialDays = getTrialDaysLeft ? getTrialDaysLeft() : 0;
+      automateUserMessages(
+        user.uid, 
+        user.email || undefined, 
+        isSubActive, 
+        trialDays, 
+        profile?.subscriptionStatus
+      ).catch(err => console.warn("Failed to generate automated messages:", err));
+    }
+  }, [user, profile]);
 
   useEffect(() => {
     // 1. Detect and Log Launch Mode (Standalone vs. Standard Tab)
@@ -152,6 +169,46 @@ export const PWALifecycleTracker: React.FC = () => {
       window.removeEventListener('appinstalled', handleAppInstalled);
     };
   }, [user]);
+
+  // 4. Online/Offline Connection Toast System
+  useEffect(() => {
+    const handleOnline = () => {
+      toast.success(
+        'Connected back online! 🟢 AI-powered generation templates and cloud synchronization are now fully active. Smarter tomorrow! 🇬🇭',
+        { duration: 5500, id: 'conn-toast' }
+      );
+    };
+
+    const handleOffline = () => {
+      toast.error(
+        'Offline Mode Active! 📶 Currently relying on cached files and local IndexedDB. Saved lesson plans, notes, and schemes are fully cached, but AI generation is temporarily unavailable offline.',
+        { duration: 7500, id: 'conn-toast' }
+      );
+    };
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    // Prompt if already offline during startup
+    if (!navigator.onLine) {
+      const timer = setTimeout(() => {
+        toast.error(
+          'Offline Mode Active 📶 Local cabinet enabled. You can safely read and edit your library. AI generation tasks will pause until network connection is regained.',
+          { duration: 8000, id: 'conn-toast-startup' }
+        );
+      }, 1500);
+      return () => {
+        clearTimeout(timer);
+        window.removeEventListener('online', handleOnline);
+        window.removeEventListener('offline', handleOffline);
+      };
+    }
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
 
   // Completely silent tracking background component
   return null;

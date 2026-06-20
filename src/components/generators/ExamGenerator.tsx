@@ -23,6 +23,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { generateExam } from '../../lib/gemini';
 import { db } from '../../lib/firebase';
+import { saveOffline } from '../../lib/indexedDB';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../../lib/utils';
@@ -230,7 +231,7 @@ export default function ExamGenerator() {
     if (!user || !result) return;
     setIsSaving(true);
     try {
-      await addDoc(collection(db, 'exams'), {
+      const payload = {
         authorId: user.uid,
         title: formData.title || `${displaySubject} - ${formData.topics}`,
         subject: displaySubject,
@@ -238,14 +239,54 @@ export default function ExamGenerator() {
         classLevel: formData.classLevel,
         questions: result.questions,
         markingScheme: result.markingScheme,
-        createdAt: serverTimestamp()
-      });
+        createdAt: new Date().toISOString()
+      };
+
+      const isOnline = navigator.onLine;
+      let docRefId = '';
+
+      if (isOnline) {
+        try {
+          const docRef = await addDoc(collection(db, 'exams'), {
+            ...payload,
+            createdAt: serverTimestamp()
+          });
+          docRefId = docRef.id;
+        } catch (firebaseErr) {
+          console.warn("Firebase exam write failed, using local DB fallback.", firebaseErr);
+        }
+      }
+
+      await saveOffline('exams', { ...payload, id: docRefId || undefined }, !!docRefId);
+
       setSaved(true);
       setShowSaveConfirm(false);
-      toast.success("Exam saved to library!");
+      if (docRefId) {
+        toast.success("Exam saved to library and cached offline! 🇬🇭");
+      } else {
+        toast.success("Exam saved locally to offline cabinet! TeachSmartGH will synchronize it once online. 🇬🇭");
+      }
     } catch (error) {
       console.error("Failed to save exam:", error);
-      toast.error("Failed to save exam. Please try again.");
+      try {
+        const fallbackPayload = {
+          authorId: user.uid,
+          title: formData.title || `${displaySubject} - ${formData.topics}`,
+          subject: displaySubject,
+          level: `${formData.level} (${formData.classLevel})`,
+          classLevel: formData.classLevel,
+          questions: result.questions,
+          markingScheme: result.markingScheme,
+          createdAt: new Date().toISOString()
+        };
+        await saveOffline('exams', fallbackPayload, false);
+        setSaved(true);
+        setShowSaveConfirm(false);
+        toast.success("Saved locally! Exam backed up in offline storage. 🇬🇭");
+      } catch (offlineErr) {
+        console.error("Offline save also failed", offlineErr);
+        toast.error("Failed to save exam. Storage is unavailable.");
+      }
     } finally {
       setIsSaving(false);
     }

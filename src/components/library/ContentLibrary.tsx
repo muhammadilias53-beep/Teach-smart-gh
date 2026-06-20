@@ -31,6 +31,7 @@ import {
   getDocFromServer
 } from 'firebase/firestore';
 import { db, auth } from '../../lib/firebase';
+import { getOffline } from '../../lib/indexedDB';
 import { useAuth } from '../../contexts/AuthContext';
 import { Resource } from '../../types';
 import { motion, AnimatePresence } from 'motion/react';
@@ -689,7 +690,13 @@ export default function ContentLibrary() {
       handleFirestoreError(error, OperationType.GET, 'saved_resources');
     });
 
-    // Fetch user schemes
+    // Fetch user schemes (Offline-first preloading from IndexedDB)
+    getOffline('schemes', user.uid).then(cachedSchemes => {
+      if (cachedSchemes && cachedSchemes.length > 0) {
+        setUserSchemes(cachedSchemes);
+      }
+    }).catch(err => console.warn("Preloading offline schemes from IndexedDB failed:", err));
+
     const schemesQ = query(
       collection(db, 'schemes'),
       where('authorId', '==', user.uid),
