@@ -18,6 +18,9 @@ export default defineConfig(({mode}) => {
       },
       dedupe: ['react', 'react-dom'],
     },
+    optimizeDeps: {
+      include: ['react', 'react-dom', 'react-router-dom', 'motion/react', 'lucide-react', 'react-hot-toast'],
+    },
     server: {
       // HMR is disabled in AI Studio via DISABLE_HMR env var.
       // Do not modifyâfile watching is disabled to prevent flickering during agent edits.

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Download, Sparkles, Smartphone, Check, HelpCircle, Share, PlusSquare } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { toast } from 'react-hot-toast';
 
 interface BeforeInstallPromptEvent extends Event {
   readonly platforms: string[];
@@ -65,41 +64,19 @@ export const PWAInstallButton: React.FC = () => {
       return;
     }
 
-    const isIframe = typeof window !== 'undefined' && window.self !== window.top;
+    if (!deferredPrompt) return;
 
-    if (!deferredPrompt) {
-      if (isIframe) {
-        toast.success(
-          "To install TeachSmartGH natively, click 'Open in New Tab' at the top-right of your workspace view, then click the browser's Install icon or app menu! 🇬🇭",
-          { duration: 9000, id: 'pwa-install-iframe-btn' }
-        );
-      } else {
-        toast(
-          "To complete layout setup: Tap your browser's options menu (3-dots or Safari Share) and select 'Install TeachSmartGH' or 'Add to Home Screen'! 📶",
-          { duration: 8000, id: 'pwa-install-manual-btn' }
-        );
-      }
-      return;
-    }
+    // Show native prompt
+    await deferredPrompt.prompt();
 
-    try {
-      // Show native prompt
-      await deferredPrompt.prompt();
-
-      // Check choice
-      const choiceResult = await deferredPrompt.userChoice;
-      if (choiceResult.outcome === 'accepted') {
-        console.log('[PWA] User accepted the install prompt');
-        setIsInstalled(true);
-        setIsReady(false);
-        toast.success("Successfully installed TeachSmartGH PWA! 🇬🇭");
-      } else {
-        console.log('[PWA] User dismissed the install prompt');
-        toast("Installation dismissed. You can install it anytime from this sidebar panel.");
-      }
-    } catch (err) {
-      console.error("Installation prompt rejected or failed:", err);
-      toast.error("Interactive install is restricted in this window. Tap 'Open in New Tab' to load outside the frame, then retry! 🇬🇭");
+    // Check choice
+    const choiceResult = await deferredPrompt.userChoice;
+    if (choiceResult.outcome === 'accepted') {
+      console.log('[PWA] User accepted the install prompt');
+      setIsInstalled(true);
+      setIsReady(false);
+    } else {
+      console.log('[PWA] User dismissed the install prompt');
     }
 
     setDeferredPrompt(null);
@@ -119,9 +96,9 @@ export const PWAInstallButton: React.FC = () => {
     );
   }
 
-  // Show installation trigger inside iframes so developers and users can easily trigger information drawers
-  const isCurrentlyInIframe = typeof window !== 'undefined' && window.self !== window.top;
-  if (!isReady && !isIOS && !isCurrentlyInIframe) {
+  // If not ready and not iOS, don't show the setup bar unless we want to allow users to trigger it.
+  // We can show it for iOS users as a guide anyway since iOS doesn't trigger beforeinstallprompt!
+  if (!isReady && !isIOS) {
     return null;
   }
 

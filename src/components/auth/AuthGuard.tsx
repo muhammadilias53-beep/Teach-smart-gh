@@ -1,6 +1,8 @@
 import React from 'react';
 import { Navigate, Outlet, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { useSidebar } from '../../contexts/SidebarContext';
+import { cn } from '../../lib/utils';
 import Sidebar from '../layout/Sidebar';
 import { EduPulseBanner } from '../layout/EduPulseBanner';
 import { Onboarding } from '../profile/Onboarding';
@@ -95,6 +97,7 @@ const LockedOverlay = () => {
 
 const AuthGuard = () => {
   const { user, profile, loading, isTrialActive, isSubscriptionActive, daysLeft } = useAuth();
+  const { isCollapsed } = useSidebar();
   const location = useLocation();
   const [tookTooLong, setTookTooLong] = React.useState(false);
 
@@ -166,14 +169,8 @@ const AuthGuard = () => {
     );
   }
 
-  // Force onboarding if not complete (Skip for anonymous/guest users)
-  // Robust check: A profile is complete if the flag is true, OR if they have the minimum required fields
-  const hasEssentials = profile.school && profile.level && (profile.subjectsTaught?.length || profile.subjects?.length);
-  const isProfileComplete = profile.onboardingComplete === true || !!hasEssentials;
-
-  if (!user.isAnonymous && !isProfileComplete) {
-    return <Onboarding />;
-  }
+  // Profile setup is completely OPTIONAL for newly registered accounts
+  // Users can explore tools immediately or complete setup anytime from Profile Settings
 
   // Trial/Subscription check using centralized logic
   const isAdmin = user?.email === 'muhammadilias53@gmail.com';
@@ -189,7 +186,10 @@ const AuthGuard = () => {
     <div className="flex min-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
       <EduPulseBanner />
       <Sidebar />
-      <main className="flex-1 lg:ml-72 pt-24 lg:pt-10 overflow-x-hidden min-w-0">
+      <main className={cn(
+        "flex-1 pt-24 lg:pt-10 overflow-x-hidden min-w-0 transition-all duration-300",
+        isCollapsed ? "lg:ml-20" : "lg:ml-72"
+      )}>
         <div className="max-w-7xl mx-auto px-4 lg:px-12 pb-20">
           <motion.div
             initial={{ opacity: 0, y: 10 }}

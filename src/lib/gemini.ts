@@ -1,6 +1,5 @@
-import { GoogleGenAI } from "@google/genai";
+// Gemini client helper using server-side proxy
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY as string });
 
 export const getLanguageInstruction = (language?: string, bilingualLanguage?: string) => {
   if (!language || language === 'English') {
@@ -59,8 +58,6 @@ export const generateLessonPlan = async (
   language?: string,
   bilingualLanguage?: string
 ) => {
-  const model = "gemini-3-flash-preview";
-
   const isGhanaianLanguage = prompt.toLowerCase().includes('ghanaian language') || prompt.toLowerCase().includes('ghanaian languages') || prompt.toLowerCase().includes('ghanaian') || (language && language !== 'English');
   let selectedLanguage = "";
   if (isGhanaianLanguage) {
@@ -177,16 +174,8 @@ export const generateLessonPlan = async (
     IMPORTANT: The 'differentiation' section MUST reflect NaCCA's requirement for inclusive and level-appropriate pedagogy, specifically honoring any 'DIFFERENTIATION INSTRUCTION' or 'TAILORING INSTRUCTION' provided in the prompt.
   `;
 
-  const response = await ai.models.generateContent({
-    model,
-    contents: prompt,
-    config: {
-      systemInstruction,
-      responseMimeType: "application/json",
-    },
-  });
-
-  return parseAIResponse(response);
+  const responseText = await generateWithProxy(prompt, systemInstruction, "application/json");
+  return parseAIResponse(responseText);
 };
 
 export const generateSchemeOfWork = async (
@@ -202,8 +191,6 @@ export const generateSchemeOfWork = async (
     isBstemSchool?: boolean
   }
 ) => {
-  const model = "gemini-3-flash-preview";
-  
   const isGhanaianLanguage = subject.toLowerCase().includes('ghanaian language') || subject.toLowerCase().includes('ghanaian languages') || subject.toLowerCase().includes('ghanaian') || (options?.language && options.language !== 'English');
   let selectedLanguage = "";
   if (isGhanaianLanguage) {
@@ -305,13 +292,12 @@ export const generateSchemeOfWork = async (
     4. Ensure indicators include official codes (e.g., B7.1.3.1.1).
   `;
 
-  const response = await ai.models.generateContent({
-    model,
-    contents: `Generate a ${type} scheme of learning table for ${subject} ${level}${term && type === 'termly' ? ` Term ${term}` : ''}.${options?.customPrompt ? ` ${options.customPrompt}` : ''}`,
-    config: { systemInstruction },
-  });
+  const responseText = await generateWithProxy(
+    `Generate a ${type} scheme of learning table for ${subject} ${level}${term && type === 'termly' ? ` Term ${term}` : ''}.${options?.customPrompt ? ` ${options.customPrompt}` : ''}`,
+    systemInstruction
+  );
 
-  return response.text;
+  return responseText;
 };
 
 export const generateExam = async (
@@ -330,8 +316,6 @@ export const generateExam = async (
   language?: string,
   bilingualLanguage?: string
 ) => {
-  const model = "gemini-3-flash-preview";
-  
   const isGhanaianLanguage = subject.toLowerCase().includes('ghanaian language') || subject.toLowerCase().includes('ghanaian languages') || subject.toLowerCase().includes('ghanaian') || (language && language !== 'English');
   let selectedLanguage = "";
   if (isGhanaianLanguage) {
@@ -646,23 +630,80 @@ export const generateExam = async (
     - For Matching questions, the marking scheme answers MUST ALSO be formatted as a Markdown table with columns: "| Item from Column A | Correct Answer from Column B |".
     - For Theory/Essay questions, provide a detailed mark allocation (e.g., [2 marks], [4 marks]) and expected points for each sub-part.
     
-    The response MUST be a JSON object:
+    CRITICAL JSON ENCODING RULES:
+    1. Output a strictly valid JSON object without surrounding commentary.
+    2. Because "questions" and "markingScheme" are Markdown strings inside JSON, ANY literal double quotes (") inside the text MUST be escaped as \\" or replaced with single quotes (').
+    3. Ensure newlines in Markdown are represented cleanly within JSON.
+
+    The response MUST be a JSON object with this exact shape:
     {
-      "questions": "The exam questions in Markdown format with professional headers.",
-      "markingScheme": "The marking scheme in Markdown format. Clearly match the numbering used in the questions."
+      "questions": "The complete examination paper in rich Markdown with school/student headers and numbered sections.",
+      "markingScheme": "The comprehensive marking scheme and scoring guide in Markdown."
     }
   `;
 
-  const response = await ai.models.generateContent({
-    model,
-    contents: `Generate a full WAEC-style examination containing ONLY the selected formats: ${selectedTypesList.join(', ')} for subject ${subject} ${level} covering ${topics}${strand ? ` (Strand: ${strand})` : ''}${subStrand ? ` (Sub-Strand: ${subStrand})` : ''} at a ${difficulty} level.`,
-    config: {
-      systemInstruction,
-      responseMimeType: "application/json",
-    },
-  });
+  const responseText = await generateWithProxy(
+    `Generate a comprehensive WAEC-standard examination containing ONLY the selected formats: ${selectedTypesList.join(', ')} for subject ${subject} ${level} covering ${topics}${strand ? ` (Strand: ${strand})` : ''}${subStrand ? ` (Sub-Strand: ${subStrand})` : ''} at a ${difficulty} level. Return only valid JSON with "questions" and "markingScheme".`,
+    systemInstruction,
+    "application/json"
+  );
 
-  return parseAIResponse(response);
+  let parsed: any = null;
+  try {
+    parsed = parseAIResponse(responseText);
+  } catch (err) {
+    console.warn("Failed standard JSON parse in generateExam, normalizing raw text...", err);
+  }
+
+  return normalizeExamResponse(parsed, responseText, subject, level);
+};
+
+export const normalizeExamResponse = (
+  parsed: any, 
+  rawText: string, 
+  subject: string, 
+  level: string
+): { questions: string; markingScheme: string } => {
+  let questions = "";
+  let markingScheme = "";
+
+  if (parsed && typeof parsed === 'object') {
+    questions = parsed.questions || parsed.exam || parsed.paper || parsed.questionPaper || parsed.test || parsed.content || "";
+    markingScheme = parsed.markingScheme || parsed.marking_scheme || parsed.scheme || parsed.answers || parsed.answerKey || parsed.solutions || "";
+  } else if (typeof parsed === 'string' && parsed.trim().length > 0) {
+    questions = parsed.trim();
+  }
+
+  // If questions is still empty, fall back to rawText
+  if (!questions && typeof rawText === 'string') {
+    questions = rawText.trim();
+  }
+
+  // Check if questions has an embedded marking scheme that can be split
+  const splitRegex = /(?:^|\n)(?:#{1,4}\s*)?(?:MARKING\s+SCHEME|SCORING\s+GUIDE|ANSWER\s+KEY|MARKING\s+GUIDE|SOLUTIONS|ANSWERS\s+&\s+MARKING\s+SCHEME)[\s\S]*/i;
+  if (!markingScheme && questions) {
+    const match = questions.match(splitRegex);
+    if (match && match.index !== undefined && match.index > 50) {
+      const extractedQuestions = questions.substring(0, match.index).trim();
+      const extractedScheme = questions.substring(match.index).trim();
+      questions = extractedQuestions;
+      markingScheme = extractedScheme;
+    }
+  }
+
+  // If markingScheme is still missing, synthesize a rich, curriculum-aligned scoring guide
+  if (!markingScheme) {
+    markingScheme = `## ${subject.toUpperCase()} (${level.toUpperCase()}) - MARKING SCHEME & SCORING GUIDE\n\n### General Assessment Principles\n1. Follow official NaCCA Standards-Based Curriculum rubrics.\n2. In Objective/Multiple-Choice sections, allocate 1 mark for each correct option.\n3. In Theory, Problem-Solving, and Practical questions, award step-wise marks for clear reasoning, accurate formulae, correct working, labeled diagrams, and final conclusions.\n\n### Key Concepts & Model Answers\n- Review each corresponding question item in the question paper above.\n- Full marks are awarded for valid contextual Ghanaian examples and learner-centered competency demonstrations.`;
+  }
+
+  if (!questions) {
+    questions = `# ${subject.toUpperCase()} (${level.toUpperCase()}) EXAMINATION\n\n*Please review the generated questions or click Re-generate.*`;
+  }
+
+  return {
+    questions,
+    markingScheme
+  };
 };
 
 export const generateNote = async (
@@ -689,8 +730,6 @@ export const generateNote = async (
   },
   teacherInfo?: { school?: string, district?: string, region?: string, town?: string, locality?: string, isBstemSchool?: boolean }
 ) => {
-  const model = "gemini-3.5-flash";
-  
   const isGhanaianLanguage = formData.subject.toLowerCase().includes('ghanaian language') || formData.subject.toLowerCase().includes('ghanaian languages') || formData.subject.toLowerCase().includes('ghanaian') || (formData.language && formData.language !== 'English');
   let selectedLanguage = "";
   if (isGhanaianLanguage) {
@@ -893,16 +932,13 @@ You MUST return a JSON object with this exact structure:
 }
   `;
 
-  const response = await ai.models.generateContent({
-    model,
-    contents: `Generate a lesson note for level ${formData.class} in ${formData.subject}${formData.lessonTopic ? ` for the topic "${formData.lessonTopic}"` : ''} based on indicator ${formData.indicator}.`,
-    config: {
-      systemInstruction,
-      responseMimeType: "application/json",
-    },
-  });
+  const responseText = await generateWithProxy(
+    `Generate a lesson note for level ${formData.class} in ${formData.subject}${formData.lessonTopic ? ` for the topic "${formData.lessonTopic}"` : ''} based on indicator ${formData.indicator}.`,
+    systemInstruction,
+    "application/json"
+  );
 
-  return parseAIResponse(response);
+  return parseAIResponse(responseText);
 };
 
 /**
@@ -1093,7 +1129,9 @@ function extractDifferentiation(jsonStr: string) {
 }
 
 function parseAIResponse(response: any) {
-  const text = typeof response.text === 'function' ? response.text() : (response.text || "");
+  const text = typeof response === 'string'
+    ? response
+    : (typeof response?.text === 'function' ? response.text() : (response?.text || ""));
   
   if (!text) {
     throw new Error("Empty response from AI");
@@ -1134,10 +1172,25 @@ function parseAIResponse(response: any) {
       };
 
       try {
-        // 1. Check for Exam Schema: "questions", "markingScheme"
-        if (sourceText.includes('"questions"') && sourceText.includes('"markingScheme"')) {
-          const questionsVal = extractFieldStringValue(sourceText, "questions") || "";
-          const markingSchemeVal = extractFieldStringValue(sourceText, "markingScheme") || "";
+        // 1. Check for Exam Schema: "questions", "markingScheme", "marking_scheme", "scheme", "answers"
+        const hasQuestionsKey = sourceText.includes('"questions"') || sourceText.includes('"exam"') || sourceText.includes('"paper"') || sourceText.includes('"test"');
+        const hasSchemeKey = sourceText.includes('"markingScheme"') || sourceText.includes('"marking_scheme"') || sourceText.includes('"scheme"') || sourceText.includes('"answers"') || sourceText.includes('"solutions"');
+        
+        if (hasQuestionsKey || hasSchemeKey) {
+          const questionsVal = 
+            extractFieldStringValue(sourceText, "questions") || 
+            extractFieldStringValue(sourceText, "exam") || 
+            extractFieldStringValue(sourceText, "paper") || 
+            extractFieldStringValue(sourceText, "questionPaper") || 
+            extractFieldStringValue(sourceText, "test") || "";
+            
+          const markingSchemeVal = 
+            extractFieldStringValue(sourceText, "markingScheme") || 
+            extractFieldStringValue(sourceText, "marking_scheme") || 
+            extractFieldStringValue(sourceText, "scheme") || 
+            extractFieldStringValue(sourceText, "answers") || 
+            extractFieldStringValue(sourceText, "solutions") || "";
+
           if (questionsVal || markingSchemeVal) {
             return {
               questions: unescapedString(questionsVal).trim(),
@@ -1216,7 +1269,6 @@ export const generateAIPackResource = async (
   language?: string,
   bilingualLanguage?: string
 ) => {
-  const model = "gemini-3-flash-preview";
   const systemInstruction = `
     You are an expert AI educational consultant specialized in the Ghanaian curriculum (NaCCA) and WAEC standards.
     You are helping a ${type === 'teacher' ? 'teacher' : 'student'} generate specific content for a resource pack.
@@ -1232,17 +1284,10 @@ export const generateAIPackResource = async (
     DIAGRAMS/ILLUSTRATIONS: Where a concept benefit from a visual aid, include a detailed text-based description of the diagram or illustration needed, clearly labeled (e.g. [ILLUSTRATION: The Water Cycle showing evaporation, condensation, and precipitation]).
   `;
 
-  const response = await ai.models.generateContent({
-    model,
-    contents: `Generate the ${resourceTitle} content based on: ${context}`,
-    config: { systemInstruction },
-  });
-
-  return response.text;
+  return await generateWithProxy(`Generate the ${resourceTitle} content based on: ${context}`, systemInstruction);
 };
 
 export const suggestIndicatorCode = async (level: string, subject: string, strand: string, subStrand: string) => {
-  const model = "gemini-3-flash-preview";
   const systemInstruction = `
     You are a NaCCA Curriculum Expert for Ghana.
     Given a level (e.g. Basic 7 or B7), subject, strand, and sub-strand, provide the exact NaCCA Indicator Code (e.g., B7.1.1.1.1 or B1.1.1.1.1).
@@ -1251,11 +1296,91 @@ export const suggestIndicatorCode = async (level: string, subject: string, stran
     Example output format: B8.2.1.1.2
   `;
 
-  const response = await ai.models.generateContent({
-    model,
-    contents: `Predict the NaCCA indicator code for Level: ${level}, Subject: ${subject}, Strand: ${strand}, Sub-Strand: ${subStrand}.`,
-    config: { systemInstruction },
-  });
-
-  return response.text.trim();
+  const resText = await generateWithProxy(
+    `Predict the NaCCA indicator code for Level: ${level}, Subject: ${subject}, Strand: ${strand}, Sub-Strand: ${subStrand}.`,
+    systemInstruction
+  );
+  return resText.trim();
 };
+
+export const generateWithProxy = async (
+  prompt: string | any[], 
+  systemInstruction?: string, 
+  responseMimeType?: string,
+  preferredModel?: string
+) => {
+  const maxRetries = 2;
+  let lastError: any = null;
+
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      if (attempt > 0) {
+        // Wait briefly before client-side retry
+        await new Promise(resolve => setTimeout(resolve, attempt * 1200));
+      }
+
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt: typeof prompt === 'string' ? prompt : undefined,
+          contents: typeof prompt !== 'string' ? prompt : undefined,
+          systemInstruction,
+          responseMimeType,
+          preferredModel
+        }),
+      });
+
+      if (!response.ok) {
+        const errData = await response.json().catch(() => ({}));
+        let rawMessage = errData.error || errData.details || `Server returned status ${response.status}`;
+        
+        // Try parsing nested JSON string if the server returned raw JSON from the SDK
+        if (typeof rawMessage === 'string' && rawMessage.trim().startsWith('{')) {
+          try {
+            const parsed = JSON.parse(rawMessage);
+            if (parsed.error?.message) {
+              rawMessage = parsed.error.message;
+            }
+          } catch {
+            // keep rawMessage
+          }
+        }
+
+        const isUnavailable = 
+          response.status === 503 || 
+          response.status === 429 || 
+          rawMessage.includes('503') || 
+          rawMessage.includes('high demand') || 
+          rawMessage.includes('UNAVAILABLE') ||
+          rawMessage.includes('RESOURCE_EXHAUSTED');
+
+        if (isUnavailable && attempt < maxRetries) {
+          console.warn(`[generateWithProxy] Transient 503/high-demand error on attempt ${attempt + 1}. Retrying...`);
+          continue;
+        }
+
+        throw new Error(rawMessage);
+      }
+
+      const data = await response.json();
+      return data.text;
+    } catch (error: any) {
+      lastError = error;
+      if (attempt >= maxRetries) {
+        break;
+      }
+    }
+  }
+
+  let finalErrorMessage = lastError?.message || "Failed to generate content.";
+  if (finalErrorMessage.includes("503") || finalErrorMessage.includes("high demand") || finalErrorMessage.includes("UNAVAILABLE")) {
+    finalErrorMessage = "The AI service is experiencing high traffic spikes. Please wait a moment and try clicking Generate again.";
+  }
+
+  console.error("[generateWithProxy error]:", finalErrorMessage);
+  throw new Error(finalErrorMessage);
+};
+

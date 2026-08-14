@@ -11,7 +11,10 @@ import {
   Target,
   Copy,
   AlertCircle,
-  MessageSquare
+  MessageSquare,
+  Edit3,
+  Check,
+  Eye
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -80,6 +83,8 @@ export default function SchemeGenerator() {
   const [loading, setLoading] = useState(false);
   const [loadingStep, setLoadingStep] = useState(0);
   const [result, setResult] = useState<string | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [hasEdited, setHasEdited] = useState(false);
   const [saved, setSaved] = useState(false);
   
   const [formData, setFormData] = useState({
@@ -591,20 +596,32 @@ export default function SchemeGenerator() {
             animate={{ opacity: 1, y: 0 }}
             className="space-y-8"
           >
-            <div className="flex items-center justify-between gap-4 flex-wrap bg-white p-4 rounded-[2rem] border border-slate-100 shadow-sm">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-ghana-red/10 rounded-2xl flex items-center justify-center">
-                  <FileText className="text-ghana-red" />
+            <div className="flex flex-col xl:flex-row items-stretch xl:items-center justify-between gap-4 bg-white p-4 rounded-2xl sm:rounded-[2rem] border border-slate-200 shadow-sm">
+              <div className="flex items-center gap-3 min-w-0 shrink">
+                <div className="w-10 h-10 bg-ghana-red/10 rounded-xl flex items-center justify-center shrink-0">
+                  <FileText className="text-ghana-red" size={20} />
                 </div>
-                <div>
-                   <h3 className="font-black text-slate-900 uppercase tracking-tighter">Roadmap Preview</h3>
-                   <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                <div className="min-w-0">
+                   <h3 className="font-black text-slate-900 uppercase tracking-tight text-sm">Roadmap Preview</h3>
+                   <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider truncate">
                      {displaySubject} • {formData.class} ({formData.level}) • {formData.type === 'termly' ? `Term ${formData.term}` : 'Yearly'}
                    </p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 w-full sm:w-auto">
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  onClick={() => setIsEditing(!isEditing)}
+                  className={cn(
+                    "py-2 px-3.5 sm:px-4 sm:py-2.5 rounded-xl font-bold text-xs whitespace-nowrap shrink-0 flex items-center justify-center gap-1.5 transition-all shadow-sm",
+                    isEditing
+                      ? "bg-amber-500 hover:bg-amber-600 text-white"
+                      : "bg-slate-100 hover:bg-slate-200 text-slate-800"
+                  )}
+                >
+                  {isEditing ? <Eye size={15} /> : <Edit3 size={15} />}
+                  {isEditing ? "Preview Table" : "Edit Scheme"}
+                </button>
                 <button 
                   onClick={() => {
                     if (result) {
@@ -612,25 +629,25 @@ export default function SchemeGenerator() {
                       toast.success("Markdown copied to clipboard!");
                     }
                   }}
-                  className="flex-1 sm:flex-none btn-ghost py-3 px-6 text-sm flex items-center justify-center gap-2"
+                  className="py-2 px-3 sm:px-3.5 sm:py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-xs whitespace-nowrap shrink-0 flex items-center justify-center gap-1.5 transition-colors"
                   title="Copy raw markdown"
                 >
-                  <Copy size={18} />
-                  Copy Raw
+                  <Copy size={15} />
+                  Copy
                 </button>
                 <button 
                   onClick={handleSave}
                   disabled={saved}
-                  className="flex-1 sm:flex-none py-3 px-6 rounded-xl border border-slate-200 font-bold text-sm flex items-center justify-center gap-2 hover:bg-slate-50 transition-colors"
+                  className="py-2 px-3.5 sm:px-4 sm:py-2.5 rounded-xl border border-slate-200 font-bold text-xs whitespace-nowrap shrink-0 flex items-center justify-center gap-1.5 hover:bg-slate-50 transition-colors"
                 >
-                  {saved ? <CheckCircle size={18} className="text-emerald-500" /> : <BookOpen size={18} />}
-                  {saved ? "Saved" : "Save Scheme"}
+                  {saved ? <CheckCircle size={15} className="text-emerald-500" /> : <BookOpen size={15} />}
+                  {saved ? "Saved" : "Save Cloud"}
                 </button>
                 <button 
                   onClick={downloadPDF}
-                  className="flex-1 sm:flex-none btn-primary !bg-slate-900 py-3 px-6 text-sm flex items-center justify-center gap-2"
+                  className="btn-primary !bg-slate-900 py-2 px-4 sm:px-5 sm:py-2.5 text-xs font-bold whitespace-nowrap shrink-0 flex items-center justify-center gap-1.5"
                 >
-                  <Download size={18} />
+                  <Download size={15} />
                   Download PDF
                 </button>
                 <a 
@@ -639,14 +656,91 @@ export default function SchemeGenerator() {
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 sm:flex-none bg-[#25D366] text-white py-3 px-6 rounded-xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-[#20ba59] transition-all cursor-pointer shadow-lg shadow-green-500/10 text-center"
+                  className="bg-[#25D366] text-white py-2 px-3.5 sm:px-4 sm:py-2.5 rounded-xl font-bold text-xs whitespace-nowrap shrink-0 flex items-center justify-center gap-1.5 hover:bg-[#20ba59] transition-all cursor-pointer shadow-sm text-center"
                 >
-                  <MessageSquare size={18} />
-                  Share via WhatsApp
+                  <MessageSquare size={15} />
+                  WhatsApp
                 </a>
               </div>
             </div>
 
+            {/* Teacher Customization Banner */}
+            {hasEdited && (
+              <div className="bg-emerald-50 border border-emerald-200 p-3 rounded-2xl flex items-center justify-between text-xs text-emerald-900">
+                <div className="flex items-center gap-2">
+                  <CheckCircle size={16} className="text-emerald-600" />
+                  <span className="font-bold">Custom teacher edits active! All table row modifications will be reflected in your downloaded PDF and Cloud scheme.</span>
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-wider bg-emerald-200/60 px-2 py-0.5 rounded-md">Edited</span>
+              </div>
+            )}
+
+            {/* EDIT MODE SCHEME FORM */}
+            {isEditing ? (
+              <div className="bg-white p-8 lg:p-12 rounded-[3rem] shadow-xl border border-amber-200/80 space-y-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-4 border-slate-100">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center font-bold">
+                      <Edit3 size={20} />
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-black text-slate-900">Edit Scheme of Learning</h2>
+                      <p className="text-xs text-slate-500">Edit weekly breakdowns, indicators, learning activities, or resources directly.</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setIsEditing(false)}
+                    className="px-5 py-2.5 bg-slate-900 text-white rounded-xl text-xs font-black uppercase tracking-wider hover:bg-slate-800 transition-all flex items-center gap-1.5 self-start sm:self-auto"
+                  >
+                    <Check size={14} />
+                    Done Editing & View Table
+                  </button>
+                </div>
+
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="block text-xs font-black text-slate-700 uppercase tracking-wider">
+                      Scheme Markdown Table Content
+                    </label>
+                    <span className="text-[10px] text-slate-400 font-medium">Keep markdown table structure (using | and ---) for clean PDF export</span>
+                  </div>
+                  <textarea
+                    rows={18}
+                    value={result || ''}
+                    onChange={(e) => {
+                      setResult(e.target.value);
+                      setHasEdited(true);
+                    }}
+                    className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-mono text-slate-800 focus:bg-white focus:border-amber-500 focus:outline-none leading-relaxed"
+                    placeholder="Enter or edit markdown table rows..."
+                  />
+                </div>
+
+                <div className="flex flex-wrap items-center justify-between gap-4 border-t border-slate-100 pt-4">
+                  <span className="text-xs text-slate-500 font-medium">
+                    Changes are parsed dynamically into both the live preview table and the generated PDF.
+                  </span>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setIsEditing(false)}
+                      className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all shadow-md"
+                    >
+                      <Check size={14} />
+                      Done & View Table
+                    </button>
+                    <button
+                      onClick={downloadPDF}
+                      className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all shadow-md"
+                    >
+                      <Download size={14} />
+                      Download Edited PDF
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : null}
+
+            {!isEditing && (
             <div className="bg-white p-10 lg:p-16 rounded-[4rem] shadow-2xl border border-slate-100 relative min-h-[600px] ghana-border-red overflow-x-auto">
                <div className="markdown-body prose prose-slate max-w-none prose-headings:font-black prose-headings:uppercase prose-headings:tracking-tighter prose-headings:mt-10 first:prose-headings:mt-0 prose-p:font-medium prose-li:font-medium prose-table:border prose-table:border-slate-100 prose-th:bg-slate-50 prose-th:p-4 prose-td:p-4">
                 <SafeMarkdown>
@@ -654,6 +748,7 @@ export default function SchemeGenerator() {
                 </SafeMarkdown>
               </div>
             </div>
+            )}
 
             <div className="flex justify-center pt-10 pb-20">
               <button 

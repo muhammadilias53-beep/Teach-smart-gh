@@ -35,37 +35,90 @@ export default function ProfileSettings() {
     isBstemSchool: profile?.isBstemSchool || false
   });
 
+  const resizeImageToAvatar = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const MAX_DIM = 256;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_DIM) {
+              height = Math.round((height * MAX_DIM) / width);
+              width = MAX_DIM;
+            }
+          } else {
+            if (height > MAX_DIM) {
+              width = Math.round((width * MAX_DIM) / height);
+              height = MAX_DIM;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            resolve(event.target?.result as string);
+            return;
+          }
+          ctx.drawImage(img, 0, 0, width, height);
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+          resolve(dataUrl);
+        };
+        img.onerror = () => reject(new Error("Failed to process image file"));
+        img.src = event.target?.result as string;
+      };
+      reader.onerror = () => reject(new Error("Failed to read image file"));
+      reader.readAsDataURL(file);
+    });
+  };
+
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !user) return;
 
-    if (file.size > 1024 * 1024) { // 1MB limit for base64
-      toast.error("Image size too large. Please upload an image smaller than 1MB.");
+    if (!file.type.startsWith('image/')) {
+      toast.error("Please select a valid image file.");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) { // 5MB source limit
+      toast.error("Image size too large. Please upload an image smaller than 5MB.");
       return;
     }
 
     setUploading(true);
-    const reader = new FileReader();
-    reader.onloadend = async () => {
-      const base64String = reader.result as string;
-      try {
-        const userRef = doc(db, 'users', user.uid);
-        await updateDoc(userRef, { photoURL: base64String });
-        
-        if (auth.currentUser) {
-          await updateProfile(auth.currentUser, { photoURL: base64String });
+    try {
+      const optimizedBase64 = await resizeImageToAvatar(file);
+      const userRef = doc(db, 'users', user.uid);
+      await updateDoc(userRef, { 
+        photoURL: optimizedBase64,
+        updatedAt: new Date()
+      });
+      
+      if (auth.currentUser) {
+        try {
+          // Firebase Auth profile update has strict length limits on photoURL (~2KB)
+          if (optimizedBase64.length < 2000) {
+            await updateProfile(auth.currentUser, { photoURL: optimizedBase64 });
+          }
+        } catch (authErr) {
+          console.warn("Auth updateProfile photoURL skipped (using Firestore profile):", authErr);
         }
-        
-        await refreshProfile();
-        toast.success("Profile picture updated!");
-      } catch (error) {
-        console.error("Error uploading image:", error);
-        toast.error("Failed to upload image.");
-      } finally {
-        setUploading(false);
       }
-    };
-    reader.readAsDataURL(file);
+      
+      await refreshProfile();
+      toast.success("Profile picture updated!");
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      toast.error("Failed to upload image.");
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { Sparkles, Save, Download, RefreshCw, FileText, ChevronLeft, ChevronRight, CheckCircle, Users, Layout, AlignLeft, Layers, GraduationCap, MessageSquare } from 'lucide-react';
+import { Sparkles, Save, Download, RefreshCw, FileText, ChevronLeft, ChevronRight, CheckCircle, Users, Layout, AlignLeft, Layers, GraduationCap, MessageSquare, Edit3, Check, RotateCcw, FileEdit, AlertCircle } from 'lucide-react';
 import { generateLessonPlan } from '../../lib/gemini';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { saveOffline } from '../../lib/indexedDB';
@@ -86,6 +86,8 @@ const LessonPlanGenerator = () => {
   const [step, setStep] = useState(1);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [result, setResult] = useState<any>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [hasEdited, setHasEdited] = useState(false);
   const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState({
     level: 'JHS',
@@ -471,7 +473,7 @@ const LessonPlanGenerator = () => {
       ['Sub-Strand', formData.subStrand],
       ['Content Standard', formData.contentStandard],
       ['Indicator', formData.indicator],
-      ['Primary Objective', formData.mainObjective || result.performanceIndicator],
+      ['Primary Objective', result.performanceIndicator || formData.mainObjective],
       ['Core Competencies', result.coreCompetencies],
       ['Key Words', result.keyWords],
       ['Teaching & Learning Resources (TLRs)', result.tlrs],
@@ -1043,21 +1045,33 @@ const LessonPlanGenerator = () => {
             animate={{ opacity: 1, scale: 1 }}
             className="space-y-6"
           >
-            <div className="flex flex-col md:flex-row gap-4 sticky top-20 lg:top-4 z-20 shadow-2xl p-4 bg-slate-900 rounded-[2rem] border border-white/10 ring-4 ring-slate-900/10">
-              <div className="flex-1 flex items-center gap-3 px-4">
-                <div className="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center text-white">
-                  <CheckCircle size={20} />
+            <div className="flex flex-col xl:flex-row items-stretch xl:items-center justify-between gap-3 p-3 sm:p-4 bg-slate-900 rounded-2xl sm:rounded-[2rem] border border-white/10 ring-4 ring-slate-900/10 sticky top-20 lg:top-4 z-20 shadow-2xl">
+              <div className="flex items-center gap-3 px-2 sm:px-3 min-w-0 shrink">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 bg-emerald-500 rounded-xl flex items-center justify-center text-white shrink-0 shadow-md shadow-emerald-500/20">
+                  <CheckCircle size={18} />
                 </div>
-                <div>
+                <div className="min-w-0">
                   <p className="text-[10px] font-black uppercase tracking-widest text-emerald-400">Lesson Generated</p>
-                  <p className="text-white font-bold text-sm truncate max-w-[200px]">{result.title}</p>
+                  <p className="text-white font-bold text-xs sm:text-sm truncate max-w-[200px] sm:max-w-[300px] xl:max-w-[260px]" title={result.title}>{result.title}</p>
                 </div>
               </div>
               
-              <div className="flex gap-2 p-1 bg-white/5 rounded-2xl flex-wrap sm:flex-nowrap">
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 p-1 bg-white/5 rounded-xl sm:rounded-2xl">
+                <button 
+                  onClick={() => setIsEditing(!isEditing)} 
+                  className={cn(
+                    "px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl font-bold uppercase tracking-wider text-[11px] whitespace-nowrap shrink-0 transition-all flex items-center gap-1.5 shadow-md",
+                    isEditing 
+                      ? "bg-amber-500 hover:bg-amber-600 text-white shadow-amber-500/20" 
+                      : "bg-white/10 hover:bg-white/20 text-white"
+                  )}
+                >
+                  {isEditing ? <Check size={14} /> : <Edit3 size={14} />}
+                  {isEditing ? "Preview Format" : "Edit Plan"}
+                </button>
                 <button 
                   onClick={() => setStep(3)} 
-                  className="px-6 py-3 bg-white/10 text-white rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-white/20 transition-all flex items-center gap-2"
+                  className="px-3.5 py-2 sm:px-4 sm:py-2.5 bg-white/10 text-white rounded-xl font-bold uppercase tracking-wider text-[11px] whitespace-nowrap shrink-0 hover:bg-white/20 transition-all flex items-center gap-1.5"
                 >
                   <RefreshCw size={14} />
                   Re-generate
@@ -1065,17 +1079,17 @@ const LessonPlanGenerator = () => {
                 <button 
                   onClick={handleSave} 
                   disabled={saving}
-                  className="px-6 py-3 bg-blue-600 text-white rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-blue-700 transition-all flex items-center gap-2 shadow-lg shadow-blue-600/20"
+                  className="px-3.5 py-2 sm:px-4 sm:py-2.5 bg-blue-600 text-white rounded-xl font-bold uppercase tracking-wider text-[11px] whitespace-nowrap shrink-0 hover:bg-blue-700 transition-all flex items-center gap-1.5 shadow-md shadow-blue-600/20"
                 >
                   <Save size={14} />
                   {saving ? "Saving..." : "Save Cloud"}
                 </button>
                 <button 
                   onClick={handleDownloadPDF} 
-                  className="px-8 py-3 bg-emerald-500 text-white rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-emerald-600 transition-all border-none flex items-center gap-2 shadow-lg shadow-emerald-500/20"
+                  className="px-4 py-2 sm:px-4 sm:py-2.5 bg-emerald-500 text-white rounded-xl font-bold uppercase tracking-wider text-[11px] whitespace-nowrap shrink-0 hover:bg-emerald-600 transition-all border-none flex items-center gap-1.5 shadow-md shadow-emerald-500/20"
                 >
                   <Download size={14} />
-                  Download PDF Now
+                  Download PDF
                 </button>
                 <a 
                   href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
@@ -1083,7 +1097,7 @@ const LessonPlanGenerator = () => {
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-6 py-3 bg-[#25D366] text-white rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-[#20ba59] transition-all flex items-center gap-2 shadow-lg shadow-green-500/10 cursor-pointer"
+                  className="px-3.5 py-2 sm:px-4 sm:py-2.5 bg-[#25D366] text-white rounded-xl font-bold uppercase tracking-wider text-[11px] whitespace-nowrap shrink-0 hover:bg-[#20ba59] transition-all flex items-center gap-1.5 shadow-md shadow-green-500/10 cursor-pointer"
                 >
                   <MessageSquare size={14} />
                   WhatsApp
@@ -1091,7 +1105,275 @@ const LessonPlanGenerator = () => {
               </div>
             </div>
 
+            {/* Teacher Modification Banner */}
+            {hasEdited && (
+              <div className="bg-emerald-50 border border-emerald-200 p-3 rounded-2xl flex items-center justify-between text-xs text-emerald-900">
+                <div className="flex items-center gap-2">
+                  <CheckCircle size={16} className="text-emerald-600" />
+                  <span className="font-bold">Custom teacher modifications active! Changes will be included in your PDF and Cloud save.</span>
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-wider bg-emerald-200/60 px-2 py-0.5 rounded-md">Edited</span>
+              </div>
+            )}
+
+            {/* EDIT MODE FORM */}
+            {isEditing ? (
+              <div className="bg-white p-6 lg:p-8 rounded-3xl shadow-xl border border-amber-200/80 space-y-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-4 border-slate-100">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-9 h-9 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-bold">
+                      <Edit3 size={18} />
+                    </div>
+                    <div>
+                      <h2 className="text-lg font-black text-slate-900">Edit Lesson Plan Content</h2>
+                      <p className="text-xs text-slate-500">Fine-tune pedagogical details, activities, or local examples before saving or downloading PDF.</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setIsEditing(false)}
+                    className="px-4 py-2 bg-slate-900 text-white rounded-xl text-xs font-bold hover:bg-slate-800 transition-all flex items-center gap-1.5 self-start sm:self-auto"
+                  >
+                    <Check size={14} />
+                    Done Editing & Preview
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div className="md:col-span-2">
+                    <label className="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5">
+                      Lesson Plan Title
+                    </label>
+                    <input
+                      type="text"
+                      value={result.title || ''}
+                      onChange={(e) => {
+                        setResult((prev: any) => ({ ...prev, title: e.target.value }));
+                        setHasEdited(true);
+                      }}
+                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-800 focus:bg-white focus:border-emerald-500 focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5">
+                      Indicator Code / Reference
+                    </label>
+                    <input
+                      type="text"
+                      value={result.indicatorCode || ''}
+                      onChange={(e) => {
+                        setResult((prev: any) => ({ ...prev, indicatorCode: e.target.value }));
+                        setHasEdited(true);
+                      }}
+                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-800 focus:bg-white focus:border-emerald-500 focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5">
+                      Core Competencies
+                    </label>
+                    <input
+                      type="text"
+                      value={result.coreCompetencies || ''}
+                      onChange={(e) => {
+                        setResult((prev: any) => ({ ...prev, coreCompetencies: e.target.value }));
+                        setHasEdited(true);
+                      }}
+                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-800 focus:bg-white focus:border-emerald-500 focus:outline-none"
+                    />
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <label className="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5">
+                      Primary Learning Objective (Performance Indicator)
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={result.performanceIndicator || formData.mainObjective || ''}
+                      onChange={(e) => {
+                        setResult((prev: any) => ({ ...prev, performanceIndicator: e.target.value }));
+                        setHasEdited(true);
+                      }}
+                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:bg-white focus:border-emerald-500 focus:outline-none leading-relaxed"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5">
+                      Teaching & Learning Resources (TLRs)
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={result.tlrs || ''}
+                      onChange={(e) => {
+                        setResult((prev: any) => ({ ...prev, tlrs: e.target.value }));
+                        setHasEdited(true);
+                      }}
+                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:bg-white focus:border-emerald-500 focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5">
+                      Key Vocabulary / Key Words
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={result.keyWords || ''}
+                      onChange={(e) => {
+                        setResult((prev: any) => ({ ...prev, keyWords: e.target.value }));
+                        setHasEdited(true);
+                      }}
+                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:bg-white focus:border-emerald-500 focus:outline-none"
+                    />
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <label className="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5">
+                      Curriculum References
+                    </label>
+                    <input
+                      type="text"
+                      value={result.references || ''}
+                      onChange={(e) => {
+                        setResult((prev: any) => ({ ...prev, references: e.target.value }));
+                        setHasEdited(true);
+                      }}
+                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:bg-white focus:border-emerald-500 focus:outline-none"
+                    />
+                  </div>
+
+                  {/* 3 Phases */}
+                  <div className="md:col-span-2 space-y-4 pt-2">
+                    <div className="border-t border-slate-100 pt-4">
+                      <label className="block text-xs font-black text-amber-700 uppercase tracking-wider mb-1.5 flex items-center justify-between">
+                        <span>Phase 1: Starter / Introduction (10 mins)</span>
+                        <span className="text-[10px] text-slate-400 font-normal">Supports Markdown</span>
+                      </label>
+                      <textarea
+                        rows={4}
+                        value={result.phase1 || ''}
+                        onChange={(e) => {
+                          setResult((prev: any) => ({ ...prev, phase1: e.target.value }));
+                          setHasEdited(true);
+                        }}
+                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-mono text-slate-800 focus:bg-white focus:border-amber-500 focus:outline-none leading-relaxed"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-black text-blue-700 uppercase tracking-wider mb-1.5 flex items-center justify-between">
+                        <span>Phase 2: Main Teaching & Learning Activities (40 mins)</span>
+                        <span className="text-[10px] text-slate-400 font-normal">Supports Markdown</span>
+                      </label>
+                      <textarea
+                        rows={8}
+                        value={result.phase2 || ''}
+                        onChange={(e) => {
+                          setResult((prev: any) => ({ ...prev, phase2: e.target.value }));
+                          setHasEdited(true);
+                        }}
+                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-mono text-slate-800 focus:bg-white focus:border-blue-500 focus:outline-none leading-relaxed"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-black text-emerald-700 uppercase tracking-wider mb-1.5 flex items-center justify-between">
+                        <span>Phase 3: Plenary / Reflection / Assessment (10 mins)</span>
+                        <span className="text-[10px] text-slate-400 font-normal">Supports Markdown</span>
+                      </label>
+                      <textarea
+                        rows={4}
+                        value={result.phase3 || ''}
+                        onChange={(e) => {
+                          setResult((prev: any) => ({ ...prev, phase3: e.target.value }));
+                          setHasEdited(true);
+                        }}
+                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-mono text-slate-800 focus:bg-white focus:border-emerald-500 focus:outline-none leading-relaxed"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Differentiation */}
+                  <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-slate-100 pt-4">
+                    <div>
+                      <label className="block text-xs font-black text-red-700 uppercase tracking-wider mb-1.5">
+                        Differentiation (Struggling Learners)
+                      </label>
+                      <textarea
+                        rows={3}
+                        value={result.differentiation?.strugglingLearners?.activities || ''}
+                        onChange={(e) => {
+                          setResult((prev: any) => ({
+                            ...prev,
+                            differentiation: {
+                              ...prev.differentiation,
+                              strugglingLearners: {
+                                ...prev.differentiation?.strugglingLearners,
+                                activities: e.target.value
+                              }
+                            }
+                          }));
+                          setHasEdited(true);
+                        }}
+                        className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:bg-white focus:border-red-400 focus:outline-none leading-relaxed"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-black text-indigo-700 uppercase tracking-wider mb-1.5">
+                        Differentiation (Advanced / Gifted Learners)
+                      </label>
+                      <textarea
+                        rows={3}
+                        value={result.differentiation?.advancedLearners?.activities || ''}
+                        onChange={(e) => {
+                          setResult((prev: any) => ({
+                            ...prev,
+                            differentiation: {
+                              ...prev.differentiation,
+                              advancedLearners: {
+                                ...prev.differentiation?.advancedLearners,
+                                activities: e.target.value
+                              }
+                            }
+                          }));
+                          setHasEdited(true);
+                        }}
+                        className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:bg-white focus:border-indigo-400 focus:outline-none leading-relaxed"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap items-center justify-between gap-4 border-t border-slate-100 pt-4">
+                  <span className="text-xs text-slate-500 font-medium">
+                    Changes are automatically applied to the active lesson plan.
+                  </span>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setIsEditing(false)}
+                      className="px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all shadow-md"
+                    >
+                      <Check size={14} />
+                      Done & View Layout
+                    </button>
+                    <button
+                      onClick={handleDownloadPDF}
+                      className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all shadow-md"
+                    >
+                      <Download size={14} />
+                      Export Edited PDF
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : null}
+
             {/* Quick Layout Preview Switcher */}
+            {!isEditing && (
+            <>
             <div className="bg-slate-50 p-3 rounded-2xl border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-sm">
               <div className="flex items-center gap-2 pl-2">
                 <Layout size={16} className="text-emerald-750 font-bold" />
@@ -1552,6 +1834,8 @@ const LessonPlanGenerator = () => {
                   </section>
                 </div>
               </div>
+            )}
+            </>
             )}
           </motion.div>
         )}

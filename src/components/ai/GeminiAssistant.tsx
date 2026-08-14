@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { MessageSquare, Send, X, Bot, User, Loader2, Mic, RotateCcw, Lock } from 'lucide-react';
-import { GoogleGenAI } from "@google/genai";
+import { generateWithProxy } from '../../lib/gemini';
 import { cn } from '../../lib/utils';
 import { SafeMarkdown } from '../common/SafeMarkdown';
 import 'highlight.js/styles/github.css';
@@ -84,15 +84,11 @@ const GeminiAssistant = () => {
     setLoading(true);
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY as string });
-      const model = "gemini-3-flash-preview";
       const history = messages.map(m => ({ role: m.role, parts: [{ text: m.content }] }));
       
-      const response = await ai.models.generateContent({
-        model,
-        contents: [...history, { role: 'user', parts: [{ text: messageContent }]}],
-        config: {
-            systemInstruction: `You are now “AI Tutor” — an advanced Ghana Education Service (GES) teaching support assistant and NaCCA curriculum teaching coach designed specifically for Ghanaian teachers.
+      const resText = await generateWithProxy(
+        [...history, { role: 'user', parts: [{ text: messageContent }]}],
+        `You are now “AI Tutor” — an advanced Ghana Education Service (GES) teaching support assistant and NaCCA curriculum teaching coach designed specifically for Ghanaian teachers.
 
 Your primary responsibility is to guide teachers before, during, and after lesson preparation by providing:
 * subject matter support,
@@ -253,14 +249,13 @@ Transform the sidebar assistant into a powerful AI Tutor that acts as a trusted 
 * understand topics better,
 * improve learner engagement,
 * and confidently deliver NaCCA-aligned lessons in real classrooms.`
-        }
-      });
+      );
 
       if (currentSessionId !== requestSessionIdRef.current) {
         return;
       }
 
-      setMessages(prev => [...prev, { role: 'assistant', content: response.text || 'Sorry, I encountered an error.' }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: resText || 'Sorry, I encountered an error.' }]);
     } catch (err) {
       if (currentSessionId !== requestSessionIdRef.current) {
         return;

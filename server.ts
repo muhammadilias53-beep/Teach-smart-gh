@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import { initializeApp, getApps } from "firebase-admin/app";
 import { getFirestore, FieldValue, Timestamp } from "firebase-admin/firestore";
 import { readFileSync } from "fs";
+import { GoogleGenAI } from "@google/genai";
 
 dotenv.config();
 
@@ -29,6 +30,66 @@ async function startServer() {
   const PORT = 3000;
 
   app.use(express.json());
+
+  // API Route: Secure AI Proxy with multi-model fallback & backoff retries
+  app.post("/api/generate", async (req, res) => {
+    const { prompt, contents, systemInstruction, responseMimeType, preferredModel } = req.body;
+    const apiKey = process.env.GEMINI_API_KEY;
+
+    if (!apiKey) {
+      return res.status(500).json({ error: "Gemini API key is not configured on the server." });
+    }
+
+    // Models in priority order with resilient multi-tier fallback
+    const candidateModels = preferredModel 
+      ? [preferredModel, 'gemini-2.5-flash', 'gemini-flash-latest', 'gemini-3.7-flash', 'gemini-3.1-flash-lite']
+      : ['gemini-2.5-flash', 'gemini-flash-latest', 'gemini-3.7-flash', 'gemini-3.1-flash-lite'];
+
+    // Deduplicate models preserving order
+    const modelsToTry = Array.from(new Set(candidateModels));
+
+    const ai = new GoogleGenAI({ 
+      apiKey,
+      httpOptions: {
+        headers: {
+          'User-Agent': 'aistudio-build',
+        }
+      }
+    });
+
+    let lastError: any = null;
+
+    for (const modelName of modelsToTry) {
+      try {
+        const response = await ai.models.generateContent({
+          model: modelName,
+          contents: contents || prompt,
+          config: {
+            systemInstruction: systemInstruction || undefined,
+            responseMimeType: responseMimeType || undefined,
+            maxOutputTokens: 8192,
+          }
+        });
+
+        if (response && response.text) {
+          return res.json({ text: response.text, modelUsed: modelName });
+        }
+      } catch (error: any) {
+        lastError = error;
+        const errMsg = error?.message || String(error);
+        console.warn(`[Gemini Proxy] Model ${modelName} encountered error: ${errMsg}`);
+        // Immediately try the next candidate model in the cascade
+        continue;
+      }
+    }
+
+    console.error("[Gemini Proxy Final Error]:", lastError?.message || lastError);
+    const friendlyMessage = lastError?.message?.includes("503") || lastError?.message?.includes("high demand")
+      ? "AI services are currently experiencing high demand. Please try generating again in a few moments."
+      : (lastError?.message || "Failed to generate AI response. Please try again.");
+
+    return res.status(503).json({ error: friendlyMessage, details: lastError?.message });
+  });
 
   // API Route: Verify Paystack Payment
   app.post("/api/verify-payment", async (req, res) => {

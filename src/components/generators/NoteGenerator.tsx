@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Sparkles, Save, Download, RefreshCw, ChevronRight, ChevronLeft, CheckCircle, BookOpen, MapPin, Quote, MessageSquare } from 'lucide-react';
+import { Sparkles, Save, Download, RefreshCw, ChevronRight, ChevronLeft, CheckCircle, BookOpen, MapPin, Quote, MessageSquare, Edit3, Check, Eye, Plus, Trash2, AlertCircle } from 'lucide-react';
 import { generateNote } from '../../lib/gemini';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { saveOffline } from '../../lib/indexedDB';
@@ -219,6 +219,8 @@ const NoteGenerator = () => {
   });
 
   const [result, setResult] = useState<any>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [hasEdited, setHasEdited] = useState(false);
   const [saving, setSaving] = useState(false);
 
   // Helper to find pre-defined lesson frames
@@ -1296,33 +1298,264 @@ const NoteGenerator = () => {
             animate={{ opacity: 1, scale: 1 }}
             className="space-y-6"
           >
-            <div className="flex gap-2 sm:gap-4 flex-wrap sm:flex-nowrap sticky top-20 lg:top-4 z-10 shadow-lg p-2 bg-white/50 backdrop-blur-md rounded-2xl border border-white/20">
-              <button onClick={() => setStep(2)} className="px-4 py-2 bg-white border rounded-xl font-bold text-sm hover:bg-gray-50">Edit</button>
-              <button 
-                onClick={handleSave} 
-                disabled={saving}
-                className="flex-1 bg-slate-900 text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-slate-800 transition-all"
-              >
-                <Save size={18} />
-                {saving ? "Saving..." : "Save to My Notes"}
-              </button>
-              <button onClick={handleDownloadPDF} className="bg-ghana-gold text-emerald-deep px-4 py-2 rounded-xl font-bold text-sm flex items-center gap-2 hover:bg-opacity-90">
-                <Download size={18} />
-                PDF
-              </button>
-              <a 
-                href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
-                  `Hi colleague! I generated a highly detailed learning note for *${displaySubject}* (${formData.class}) using *TeachSmartGH* by Catalyst Creative.\n\n*Note Details:*\n- Subject: ${displaySubject}\n- Class: ${formData.class}\n- Strand: ${formData.strand || "N/A"}\n- Sub-Strand: ${formData.subStrand || "N/A"}\n\nJoin me in using AI-powered tools for smarter teaching at: ${window.location.origin}`
-                )}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-[#25D366] text-white px-4 py-2 rounded-xl font-bold text-sm flex items-center gap-2 hover:bg-[#20ba59] transition-all cursor-pointer shadow-lg shadow-green-500/10"
-              >
-                <MessageSquare size={18} />
-                WhatsApp
-              </a>
+            <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-3 sticky top-20 lg:top-4 z-20 shadow-xl p-3 bg-slate-900 rounded-2xl sm:rounded-[2rem] border border-white/10 ring-4 ring-slate-900/10">
+              <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+                <button 
+                  onClick={() => setIsEditing(!isEditing)} 
+                  className={cn(
+                    "px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl font-bold uppercase tracking-wider text-[11px] whitespace-nowrap shrink-0 flex items-center gap-1.5 transition-all shadow-md",
+                    isEditing 
+                      ? "bg-amber-500 hover:bg-amber-600 text-white shadow-amber-500/20" 
+                      : "bg-white/10 hover:bg-white/20 text-white"
+                  )}
+                >
+                  {isEditing ? <Eye size={14} /> : <Edit3 size={14} />}
+                  {isEditing ? "Preview Notes" : "Edit Content"}
+                </button>
+                <button 
+                  onClick={() => setStep(2)} 
+                  className="px-3.5 py-2 sm:px-4 sm:py-2.5 bg-white/10 text-white rounded-xl font-bold uppercase tracking-wider text-[11px] whitespace-nowrap shrink-0 hover:bg-white/20 transition-all flex items-center gap-1.5"
+                >
+                  Setup
+                </button>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                <button 
+                  onClick={handleSave} 
+                  disabled={saving}
+                  className="px-3.5 py-2 sm:px-4 sm:py-2.5 bg-blue-600 text-white rounded-xl font-bold uppercase tracking-wider text-[11px] whitespace-nowrap shrink-0 flex items-center gap-1.5 hover:bg-blue-700 transition-all shadow-md shadow-blue-600/20"
+                >
+                  <Save size={14} />
+                  {saving ? "Saving..." : "Save Cloud"}
+                </button>
+                <button 
+                  onClick={handleDownloadPDF} 
+                  className="bg-ghana-gold text-emerald-deep px-4 py-2 sm:px-4 sm:py-2.5 rounded-xl font-bold uppercase tracking-wider text-[11px] whitespace-nowrap shrink-0 flex items-center gap-1.5 hover:bg-opacity-90 shadow-md"
+                >
+                  <Download size={14} />
+                  Download PDF
+                </button>
+                <a 
+                  href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
+                    `Hi colleague! I generated a highly detailed learning note for *${displaySubject}* (${formData.class}) using *TeachSmartGH* by Catalyst Creative.\n\n*Note Details:*\n- Subject: ${displaySubject}\n- Class: ${formData.class}\n- Strand: ${formData.strand || "N/A"}\n- Sub-Strand: ${formData.subStrand || "N/A"}\n\nJoin me in using AI-powered tools for smarter teaching at: ${window.location.origin}`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-[#25D366] text-white px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl font-bold uppercase tracking-wider text-[11px] whitespace-nowrap shrink-0 flex items-center gap-1.5 hover:bg-[#20ba59] transition-all cursor-pointer shadow-md shadow-green-500/10"
+                >
+                  <MessageSquare size={14} />
+                  WhatsApp
+                </a>
+              </div>
             </div>
 
+            {/* Teacher Modification Banner */}
+            {hasEdited && (
+              <div className="bg-emerald-50 border border-emerald-200 p-3 rounded-2xl flex items-center justify-between text-xs text-emerald-900">
+                <div className="flex items-center gap-2">
+                  <CheckCircle size={16} className="text-emerald-600" />
+                  <span className="font-bold">Custom teacher modifications active! Changes are included in your PDF and Cloud save.</span>
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-wider bg-emerald-200/60 px-2 py-0.5 rounded-md">Edited</span>
+              </div>
+            )}
+
+            {/* EDIT MODE NOTE FORM */}
+            {isEditing ? (
+              <div className="bg-white p-6 lg:p-10 rounded-3xl shadow-xl border border-amber-200/80 space-y-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-4 border-slate-100">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center font-bold">
+                      <Edit3 size={20} />
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-black text-slate-900">Edit Lesson Note Content</h2>
+                      <p className="text-xs text-slate-500">Edit text, lesson summary points, or review questions before downloading PDF.</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setIsEditing(false)}
+                    className="px-5 py-2.5 bg-slate-900 text-white rounded-xl text-xs font-black uppercase tracking-wider hover:bg-slate-800 transition-all flex items-center gap-1.5 self-start sm:self-auto"
+                  >
+                    <Check size={14} />
+                    Done Editing & Preview
+                  </button>
+                </div>
+
+                <div className="space-y-5">
+                  <div>
+                    <label className="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5">
+                      Note Title / Headline
+                    </label>
+                    <input
+                      type="text"
+                      value={result.title || ''}
+                      onChange={(e) => {
+                        setResult((prev: any) => ({ ...prev, title: e.target.value }));
+                        setHasEdited(true);
+                      }}
+                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-900 focus:bg-white focus:border-emerald-500 focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label className="block text-xs font-black text-slate-700 uppercase tracking-wider">
+                        Main Note Content (Markdown Supported)
+                      </label>
+                      <span className="text-[10px] text-slate-400 font-medium">Headings, lists, bullet points, tables</span>
+                    </div>
+                    <textarea
+                      rows={14}
+                      value={result.content || ''}
+                      onChange={(e) => {
+                        setResult((prev: any) => ({ ...prev, content: e.target.value }));
+                        setHasEdited(true);
+                      }}
+                      className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-mono text-slate-800 focus:bg-white focus:border-emerald-500 focus:outline-none leading-relaxed"
+                      placeholder="Write or edit full lesson notes here..."
+                    />
+                  </div>
+
+                  {/* Summary Points Editor */}
+                  <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <label className="text-xs font-black text-slate-800 uppercase tracking-wider flex items-center gap-2">
+                        <Quote size={14} className="text-ghana-gold" />
+                        Key Takeaways / Lesson Summary Points
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const currentSummary = Array.isArray(result.summary) ? [...result.summary] : [];
+                          currentSummary.push('New summary takeaway point');
+                          setResult((prev: any) => ({ ...prev, summary: currentSummary }));
+                          setHasEdited(true);
+                        }}
+                        className="text-xs font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1 bg-emerald-100/60 px-2.5 py-1 rounded-lg"
+                      >
+                        <Plus size={12} />
+                        Add Point
+                      </button>
+                    </div>
+
+                    <div className="space-y-2">
+                      {Array.isArray(result.summary) && result.summary.map((point: string, idx: number) => (
+                        <div key={idx} className="flex items-center gap-2">
+                          <span className="w-6 h-6 rounded-full bg-slate-200 text-slate-700 text-xs font-bold flex items-center justify-center shrink-0">
+                            {idx + 1}
+                          </span>
+                          <input
+                            type="text"
+                            value={point}
+                            onChange={(e) => {
+                              const updated = [...result.summary];
+                              updated[idx] = e.target.value;
+                              setResult((prev: any) => ({ ...prev, summary: updated }));
+                              setHasEdited(true);
+                            }}
+                            className="flex-1 px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-800 focus:border-emerald-500 focus:outline-none"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const updated = result.summary.filter((_: any, i: number) => i !== idx);
+                              setResult((prev: any) => ({ ...prev, summary: updated }));
+                              setHasEdited(true);
+                            }}
+                            className="p-1.5 text-slate-400 hover:text-red-500 transition-colors"
+                            title="Remove point"
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Review Questions Editor */}
+                  <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <label className="text-xs font-black text-slate-800 uppercase tracking-wider flex items-center gap-2">
+                        <CheckCircle size={14} className="text-emerald-600" />
+                        Review / Class Practice Questions
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const currentQuestions = Array.isArray(result.questions) ? [...result.questions] : [];
+                          currentQuestions.push('New review question?');
+                          setResult((prev: any) => ({ ...prev, questions: currentQuestions }));
+                          setHasEdited(true);
+                        }}
+                        className="text-xs font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1 bg-emerald-100/60 px-2.5 py-1 rounded-lg"
+                      >
+                        <Plus size={12} />
+                        Add Question
+                      </button>
+                    </div>
+
+                    <div className="space-y-2">
+                      {Array.isArray(result.questions) && result.questions.map((q: string, idx: number) => (
+                        <div key={idx} className="flex items-center gap-2">
+                          <span className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold flex items-center justify-center shrink-0">
+                            Q{idx + 1}
+                          </span>
+                          <input
+                            type="text"
+                            value={q}
+                            onChange={(e) => {
+                              const updated = [...result.questions];
+                              updated[idx] = e.target.value;
+                              setResult((prev: any) => ({ ...prev, questions: updated }));
+                              setHasEdited(true);
+                            }}
+                            className="flex-1 px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-800 focus:border-emerald-500 focus:outline-none"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const updated = result.questions.filter((_: any, i: number) => i !== idx);
+                              setResult((prev: any) => ({ ...prev, questions: updated }));
+                              setHasEdited(true);
+                            }}
+                            className="p-1.5 text-slate-400 hover:text-red-500 transition-colors"
+                            title="Remove question"
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap items-center justify-between gap-4 border-t border-slate-100 pt-4">
+                  <span className="text-xs text-slate-500 font-medium">
+                    All edits are applied in real-time to your PDF exports and cloud notes.
+                  </span>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setIsEditing(false)}
+                      className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all shadow-md"
+                    >
+                      <Check size={14} />
+                      Done & View Notes
+                    </button>
+                    <button
+                      onClick={handleDownloadPDF}
+                      className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all shadow-md"
+                    >
+                      <Download size={14} />
+                      Download Edited PDF
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : null}
+
+            {!isEditing && (
             <div className="bg-white p-6 lg:p-10 rounded-3xl shadow-sm border border-gray-100 space-y-6 ghana-border relative overflow-hidden">
               <div className="absolute top-0 left-0 w-2 h-full bg-ghana-gold" />
               
@@ -1378,6 +1611,7 @@ const NoteGenerator = () => {
                 </div>
               )}
             </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

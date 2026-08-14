@@ -4,7 +4,8 @@ import {
   FileText, Calendar, PenTool, BookOpen, ArrowRight, Zap, 
   Trophy, Package, Activity, Target, Award, TrendingUp, Clock, 
   ShieldCheck, Heart, CheckCircle, MessageSquare, MessageCircle,
-  Atom, Compass, Cpu, Layers, Lightbulb, Calculator
+  Atom, Compass, Cpu, Layers, Lightbulb, Calculator, Users, Briefcase,
+  Sparkles, HelpCircle, UserCheck, Settings
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
@@ -22,6 +23,7 @@ import { Download, X, ExternalLink, Mail, Loader2, Send } from 'lucide-react';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { AdminNotificationPanel } from './AdminNotificationPanel';
+import { GuidedTourModal } from '../common/GuidedTourModal';
 
 const AnimatedCounter = ({ value, duration = 1.5 }: { value: number, duration?: number }) => {
   const [displayValue, setDisplayValue] = useState(0);
@@ -63,6 +65,23 @@ const Dashboard = () => {
   const isAdmin = user?.email === 'muhammadilias53@gmail.com';
 
   const [subTimeLeft, setSubTimeLeft] = useState<string>('');
+  const [showGuidedTour, setShowGuidedTour] = useState(false);
+
+  // Auto-launch guided tour once for newly registered users who haven't seen it yet
+  useEffect(() => {
+    if (user && !user.isAnonymous) {
+      const tourKey = `teachsmart_tour_seen_${user.uid}`;
+      const seen = localStorage.getItem(tourKey);
+      if (!seen) {
+        // Show after brief delay so dashboard mounts smoothly
+        const timer = setTimeout(() => {
+          setShowGuidedTour(true);
+          localStorage.setItem(tourKey, 'true');
+        }, 800);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [user]);
 
   useEffect(() => {
     if (!profile?.subscriptionEndDate || !isSubscriptionActive()) {
@@ -273,13 +292,13 @@ const Dashboard = () => {
 
   const quickActions = [
     { icon: FileText, label: 'New Lesson Plan', path: '/lessons', color: 'bg-emerald-500', bg: 'bg-emerald-50' },
+    { icon: BookOpen, label: 'Lesson Notes', path: '/notes', color: 'bg-teal-600', bg: 'bg-teal-50' },
     { icon: Calendar, label: 'Scheme of Work', path: '/schemes', color: 'bg-ghana-gold', bg: 'bg-amber-50' },
-    { icon: Atom, label: 'BSTEM Lab Guide', path: '/bstem-guide', color: 'bg-indigo-600', bg: 'bg-indigo-50' },
-    { icon: Calculator, label: 'BSTEM Math Guide', path: '/bstem-math', color: 'bg-teal-600', bg: 'bg-teal-50' },
-    { icon: Cpu, label: 'BSTEM Tech Guide', path: '/bstem-tech', color: 'bg-amber-600', bg: 'bg-amber-50' },
     { icon: PenTool, label: 'Create Exam', path: '/exams', color: 'bg-slate-900', bg: 'bg-slate-100' },
-    { icon: Package, label: 'Resource Packs', path: '/packs', color: 'bg-indigo-500', bg: 'bg-indigo-50' },
-    { icon: BookOpen, label: 'Subject Library', path: '/library', color: 'bg-emerald-deep', bg: 'bg-emerald-50' },
+    { icon: FileText, label: 'AI Assignments', path: '/assignments', color: 'bg-purple-600', bg: 'bg-purple-50' },
+    { icon: Award, label: 'Terminal Reports', path: '/reports', color: 'bg-emerald-deep', bg: 'bg-emerald-50' },
+    { icon: Atom, label: 'BSTEM Lab Guide', path: '/bstem-guide', color: 'bg-indigo-600', bg: 'bg-indigo-50' },
+    { icon: Calculator, label: 'BSTEM Math Guide', path: '/bstem-math', color: 'bg-amber-600', bg: 'bg-amber-50' },
   ];
 
   const handleToggleBstem = async (checked: boolean) => {
@@ -317,18 +336,111 @@ const Dashboard = () => {
           )}
         </div>
         <div className="flex flex-wrap items-center gap-3">
+          <button
+            onClick={() => setShowGuidedTour(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-emerald-50 dark:bg-slate-800 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-slate-700 rounded-full text-[10px] font-black uppercase tracking-[0.15em] transition-all border border-emerald-200 dark:border-slate-700 shadow-sm"
+          >
+            <Sparkles size={12} className="text-emerald-600 dark:text-emerald-400 shrink-0" />
+            <span className="whitespace-nowrap">Platform Tour</span>
+          </button>
           <div className="flex items-center gap-2 px-4 py-2 bg-emerald-900 text-ghana-gold rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-emerald-900/10">
             <ShieldCheck size={12} className="fill-current shrink-0" />
             <span className="whitespace-nowrap">Policy Compliant</span>
           </div>
-          <div className="flex items-center gap-2 px-4 py-2 bg-white text-emerald-deep rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-md border border-slate-100">
+          <div className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 text-emerald-deep dark:text-white rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-md border border-slate-100 dark:border-slate-700">
             <Zap size={12} className="text-ghana-gold shrink-0" />
             <span className="whitespace-nowrap">Live NaCCA Sync</span>
           </div>
         </div>
       </div>
 
+      {/* Optional Profile Setup Banner for users who haven't personalized their details yet */}
+      {(!profile?.school || !profile?.level || !profile?.subjectsTaught || profile?.subjectsTaught.length === 0) && (
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="rounded-[2rem] p-5 sm:p-6 bg-gradient-to-r from-blue-50/90 to-indigo-50/80 dark:from-slate-900 dark:to-slate-800 border border-blue-100 dark:border-slate-700 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4"
+        >
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-blue-600/20 shrink-0">
+              <UserCheck size={22} />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300">
+                  Optional Setup
+                </span>
+                <h3 className="font-black text-xs uppercase tracking-wider text-slate-900 dark:text-white">
+                  Personalize Your Teaching Profile
+                </h3>
+              </div>
+              <p className="text-xs text-slate-600 dark:text-slate-300 mt-1 max-w-xl font-medium leading-relaxed">
+                Add your school name and grade level so all your lesson plans and exams auto-populate with official headers. You can set this up anytime.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3 w-full md:w-auto shrink-0">
+            <button
+              onClick={() => setShowGuidedTour(true)}
+              className="flex-1 md:flex-initial px-4 py-2.5 rounded-xl bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 text-xs font-bold hover:bg-slate-50 dark:hover:bg-slate-700 transition-all text-center"
+            >
+              Take Tour
+            </button>
+            <Link
+              to="/profile"
+              className="flex-1 md:flex-initial px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-black uppercase tracking-wider transition-all shadow-md shadow-blue-600/20 text-center flex items-center justify-center gap-1.5"
+            >
+              <Settings size={14} />
+              Set Up Profile
+            </Link>
+          </div>
+        </motion.div>
+      )}
+
       <AdminNotificationPanel />
+
+      {/* Automated Subscription & Motivation Notification Panel */}
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        className={`rounded-[2rem] p-6 border shadow-sm flex flex-col md:flex-row items-center justify-between gap-6 ${
+          hasActiveSubscription
+            ? 'bg-emerald-50/40 border-emerald-100 text-emerald-950'
+            : 'bg-amber-50/40 border-amber-200 text-amber-950'
+        }`}
+      >
+        <div className="flex items-center gap-4">
+          <div className={`p-4 rounded-2xl ${
+            hasActiveSubscription ? 'bg-emerald-600 text-white' : 'bg-ghana-gold text-white'
+          }`}>
+            {hasActiveSubscription ? <ShieldCheck size={24} /> : <Zap size={24} />}
+          </div>
+
+          <div>
+            <h3 className="font-black text-xs uppercase tracking-wider text-slate-900">
+              {hasActiveSubscription ? 'Premium Membership Active' : 'Automated Subscription Alert'}
+            </h3>
+            <p className="text-xs text-slate-600 mt-1 max-w-xl font-medium leading-relaxed">
+              {hasActiveSubscription
+                ? 'Thank you for supporting quality education in Ghana! Your premium status is fully active. You have full access to TeachSmartGH 2.0: lesson plans, quizzes, report cards, and classroom trackers.'
+                : 'Empower your classroom with the absolute best! Upgrade to Premium today to unlock unlimited NaCCA curriculum-aligned lesson plans, printable exam papers, terminal report comments, and school letter drafts instantly.'}
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <Link
+            to="/billing"
+            className={`px-5 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all inline-block whitespace-nowrap shadow-md ${
+              hasActiveSubscription
+                ? 'bg-slate-900 text-white hover:bg-black'
+                : 'bg-slate-900 text-white hover:bg-black hover:shadow-lg'
+            }`}
+          >
+            {hasActiveSubscription ? 'Manage Plan' : 'Upgrade to Premium'}
+          </Link>
+        </div>
+      </motion.div>
 
       {/* Admin Oversight */}
       {user?.email === 'muhammadilias53@gmail.com' && (
@@ -803,12 +915,12 @@ const Dashboard = () => {
                   </Link>
 
                   <Link 
-                    to="/packs" 
+                    to="/bstem-tech" 
                     className="flex items-center justify-between p-3 bg-white dark:bg-slate-900 hover:bg-amber-50/50 dark:hover:bg-amber-950/10 border border-slate-100 dark:border-slate-800 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-300 transition-all"
                   >
                     <div className="flex items-center gap-2">
-                      <Package size={14} className="text-amber-500" />
-                      <span>BSTEM Resource Packs</span>
+                      <Cpu size={14} className="text-amber-500" />
+                      <span>BSTEM Tech & Computing Guide</span>
                     </div>
                     <ArrowRight size={14} className="text-slate-400" />
                   </Link>
@@ -1045,8 +1157,8 @@ const Dashboard = () => {
                 <h2 className="text-lg font-black text-slate-900 tracking-tight">Recent Documents</h2>
                 <p className="text-xs text-slate-500 font-medium italic mt-0.5">Your most recently generated educational materials</p>
               </div>
-              <Link to="/library" className="text-xs font-black uppercase tracking-widest text-emerald-deep hover:text-emerald-light transition-colors">
-                Library Archive
+              <Link to="/lessons" className="text-xs font-black uppercase tracking-widest text-emerald-deep hover:text-emerald-light transition-colors">
+                View Lesson Plans
               </Link>
             </div>
             
@@ -1115,6 +1227,12 @@ const Dashboard = () => {
       <AnimatePresence>
         {viewingDoc && <DocumentViewerModal doc={viewingDoc} onClose={() => setViewingDoc(null)} />}
       </AnimatePresence>
+
+      {/* Guided Tour for new & returning teachers */}
+      <GuidedTourModal 
+        isOpen={showGuidedTour} 
+        onClose={() => setShowGuidedTour(false)} 
+      />
     </div>
   );
 };

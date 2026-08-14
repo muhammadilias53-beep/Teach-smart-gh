@@ -59,7 +59,8 @@ service cloud.firestore {
           'trialStartDate', 'trialResetApril2024Applied', 'trialResetMay2026Applied', 'subscriptionEndDate',
           'subscriptionStatus', 'lastLoginAt', 'isAnonymous', 'uid', 'createdAt',
           'lastGenerationAt', 'lastPaymentId', 'planType', 'plan', 'preferences',
-          'isTrialResetApplied', 'schoolType', 'grade', 'isBstemSchool'
+          'isTrialResetApplied', 'schoolType', 'grade', 'isBstemSchool',
+          'lastPaymentReference', 'lastPaymentDate'
         ])
       );
       allow delete: if isAdmin();

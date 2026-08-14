@@ -61,52 +61,22 @@ const Login = () => {
   }, []);
 
   const handleInstallClick = async () => {
-    const isIframe = window.self !== window.top;
-
     if (!deferredPrompt) {
       // No native prompt available; show instructions
-      setShowInstructions(prev => {
-        const next = !prev;
-        if (next) {
-          if (isIframe) {
-            toast.success("Ghana PWA Manual Installation Guide opened below! 🇬🇭 Note: Since you are viewing this within a workspace preview frame, click '[ Open in New Tab ]' or use your browser menu to install natively.", { 
-              duration: 8000, 
-              id: 'pwa-guide-iframe' 
-            });
-          } else {
-            toast.success("Ghana PWA Manual Installation Guide triggering below! 🇬🇭", { 
-              duration: 5000, 
-              id: 'pwa-guide-direct' 
-            });
-          }
-        }
-        return next;
-      });
+      setShowInstructions(prev => !prev);
       return;
     }
     
-    try {
-      // Show the native browser install prompt
-      await deferredPrompt.prompt();
-      
-      // Wait for the user to respond to the prompt
-      const { outcome } = await deferredPrompt.userChoice;
-      console.log(`User response to install prompt: ${outcome}`);
-      
-      if (outcome === 'accepted') {
-        setIsInstalled(true);
-        setDeferredPrompt(null);
-        toast.success("Thank you for accepting! TeachSmartGH installation initiated. 🇬🇭");
-      } else {
-        toast("Installation dismissed. You can still use the web version or follow the manual installation guide below anytime! 📶");
-      }
-    } catch (err) {
-      console.error("Native PWA install prompt failed inside this environment:", err);
-      setShowInstructions(true);
-      toast.error(
-        "Interactive install is constrained in this frame. Please click Open in New Tab or use your browser menu to install, or follow the guide below! 🇬🇭",
-        { duration: 7500, id: 'pwa-prompt-error' }
-      );
+    // Show the native browser install prompt
+    deferredPrompt.prompt();
+    
+    // Wait for the user to respond to the prompt
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log(`User response to install prompt: ${outcome}`);
+    
+    if (outcome === 'accepted') {
+      setIsInstalled(true);
+      setDeferredPrompt(null);
     }
   };
 
@@ -326,17 +296,19 @@ const Login = () => {
         const baseTrialStart = originalTrialStart ? getSafeDate(originalTrialStart) : new Date();
         const finalTrialStart = baseTrialStart < TRIAL_RESET_DATE ? TRIAL_RESET_DATE : baseTrialStart;
 
+        const hasCustomProfile = Boolean(school || subjectsTaught);
+
         const newProfile: any = {
           uid: newUser.uid,
           email,
           displayName: displayName || 'Teacher',
-          school: school || 'Ghana Education Service',
-          level: level,
-          subjectsTaught: subjectsTaught.split(',').map(s => s.trim()).filter(Boolean),
+          school: school || '',
+          level: level || 'JHS',
+          subjectsTaught: subjectsTaught ? subjectsTaught.split(',').map(s => s.trim()).filter(Boolean) : [],
           trialStartDate: finalTrialStart.toISOString(),
           subscriptionStatus: 'trial',
           trialResetMay2026Applied: true, // Mark reset applied to avoid overwriting their brand-new signup date
-          onboardingComplete: true, // Mark as complete since they filled it during registration
+          onboardingComplete: hasCustomProfile, // Marked complete if user opted to fill details, otherwise false so they can complete anytime
           createdAt: originalTrialStart ? new Date(originalTrialStart).toISOString() : serverTimestamp(),
         };
         
@@ -605,22 +577,20 @@ const Login = () => {
                           <User className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none" size={18} />
                           <input 
                             type="text" 
-                            placeholder="FULL NAME" 
+                            placeholder="FULL NAME (OPTIONAL)" 
                             className="w-full pl-14 pr-6 py-4 bg-slate-50/50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-deep/20 focus:border-emerald-deep transition-all text-xs font-bold tracking-widest uppercase outline-none"
                             value={displayName}
                             onChange={(e) => setDisplayName(e.target.value)}
-                            required={!isLogin}
                           />
                         </div>
                         <div className="relative">
                           <GraduationCap className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none" size={18} />
                           <input 
                             type="text" 
-                            placeholder="SCHOOL NAME" 
+                            placeholder="SCHOOL NAME (OPTIONAL)" 
                             className="w-full pl-14 pr-6 py-4 bg-slate-50/50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-deep/20 focus:border-emerald-deep transition-all text-xs font-bold tracking-widest uppercase outline-none"
                             value={school}
                             onChange={(e) => setSchool(e.target.value)}
-                            required={!isLogin}
                           />
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -638,11 +608,10 @@ const Login = () => {
                             <Zap className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none" size={16} />
                             <input 
                               type="text" 
-                              placeholder="SUBJECTS" 
+                              placeholder="MAIN SUBJECT (OPTIONAL)" 
                               className="w-full pl-12 pr-6 py-4 bg-slate-50/50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-deep/20 focus:border-emerald-deep transition-all text-xs font-bold tracking-widest uppercase outline-none"
                               value={subjectsTaught}
                               onChange={(e) => setSubjectsTaught(e.target.value)}
-                              required={!isLogin}
                             />
                           </div>
                         </div>

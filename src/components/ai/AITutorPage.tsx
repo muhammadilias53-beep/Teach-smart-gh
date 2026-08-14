@@ -5,7 +5,7 @@ import {
   HelpCircle, CheckCircle, ChevronRight, User, GraduationCap, 
   Copy, Check, FileText, Compass, AlertCircle, RefreshCw, Volume2 
 } from 'lucide-react';
-import { GoogleGenAI } from "@google/genai";
+import { getLanguageInstruction, generateWithProxy } from '../../lib/gemini';
 import { cn } from '../../lib/utils';
 import { subjects, levels, CLASSES_BY_LEVEL, SUBJECT_STRANDS } from '../../constants';
 import { useAuth } from '../../contexts/AuthContext';
@@ -13,7 +13,6 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { SafeMarkdown } from '../common/SafeMarkdown';
 import { safeLocalStorage, safeSessionStorage } from '../../lib/storage';
-import { getLanguageInstruction } from '../../lib/gemini';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -146,9 +145,6 @@ export default function AITutorPage() {
     setLoading(true);
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY as string });
-      const model = "gemini-3-flash-preview";
-      
       const historyPayload = messages.map(m => ({
         role: m.role,
         parts: [{ text: m.content }]
@@ -214,19 +210,16 @@ RESPONSE STYLE
 ==============
 Feel supportive, expert, encouraging and close to the Ghanaian context. Include local low-cost Teaching and Learning Materials (TLMs).`;
 
-      const response = await ai.models.generateContent({
-        model,
-        contents: [...historyPayload, { role: 'user', parts: [{ text: textToSend }] }],
-        config: {
-          systemInstruction: sysInstruction
-        }
-      });
+      const resText = await generateWithProxy(
+        [...historyPayload, { role: 'user', parts: [{ text: textToSend }] }],
+        sysInstruction
+      );
 
       if (currentSessionId !== requestSessionIdRef.current) {
         return;
       }
 
-      const reply = response.text || "I was unable to complete this query. Please try again.";
+      const reply = resText || "I was unable to complete this query. Please try again.";
       setMessages(prev => [...prev, { role: 'assistant', content: reply }]);
 
     } catch (err: any) {
