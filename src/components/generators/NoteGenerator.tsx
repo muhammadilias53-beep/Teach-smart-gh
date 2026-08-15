@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Sparkles, Save, Download, RefreshCw, ChevronRight, ChevronLeft, CheckCircle, BookOpen, MapPin, Quote, MessageSquare, Edit3, Check, Eye, Plus, Trash2, AlertCircle } from 'lucide-react';
+import { Sparkles, Save, Download, RefreshCw, ChevronRight, ChevronLeft, CheckCircle, BookOpen, MapPin, Quote, MessageSquare, Edit3, Check, Eye, Plus, Trash2, AlertCircle, Compass } from 'lucide-react';
 import { generateNote } from '../../lib/gemini';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { saveOffline } from '../../lib/indexedDB';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { CurriculumReferenceModal } from '../standards/CurriculumReferenceModal';
+import { CurriculumIndicatorItem } from '../../lib/curriculumDatabase';
 import { cn } from '../../lib/utils';
 import { SafeMarkdown } from '../common/SafeMarkdown';
 import 'highlight.js/styles/github.css';
@@ -83,8 +85,10 @@ const GHANAIAN_LANGUAGES_FOR_BILINGUAL = [
 const NoteGenerator = () => {
   const { user, profile } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
+  const [isStandardsModalOpen, setIsStandardsModalOpen] = useState(false);
   const [selectedCompetencies, setSelectedCompetencies] = useState<string[]>(["CP", "CC"]);
 
   // Helpers for context-aware lookup and fallbacks
@@ -217,6 +221,39 @@ const NoteGenerator = () => {
       bilingualLanguage: 'Twi',
     };
   });
+
+  // Handle preloaded indicator state from NaCCA Standards Database
+  useEffect(() => {
+    if (location.state?.preloaded) {
+      const p = location.state.preloaded;
+      setFormData(prev => ({
+        ...prev,
+        level: p.level || prev.level,
+        class: p.class || prev.class,
+        subject: p.subject || prev.subject,
+        strand: p.strand || prev.strand,
+        subStrand: p.subStrand || prev.subStrand,
+        contentStandard: p.contentStandard || prev.contentStandard,
+        indicator: p.indicator || prev.indicator,
+        objectives: p.indicator ? `Learners will be able to understand and apply: ${p.indicator}` : prev.objectives
+      }));
+      setStep(3); // Jump to Step 3 for review
+    }
+  }, [location.state]);
+
+  const handleIndicatorSelected = (item: CurriculumIndicatorItem) => {
+    setFormData(prev => ({
+      ...prev,
+      level: item.level || prev.level,
+      class: item.classLevel || prev.class,
+      subject: item.subject || prev.subject,
+      strand: item.strand,
+      subStrand: item.subStrand,
+      contentStandard: item.standardFull,
+      indicator: item.indicatorFull,
+      objectives: `Learners will be able to understand and apply: ${item.indicatorText}`
+    }));
+  };
 
   const [result, setResult] = useState<any>(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -1162,14 +1199,25 @@ const NoteGenerator = () => {
             exit={{ opacity: 0, x: -20 }}
             className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100"
           >
-             <div className="flex items-center gap-4 mb-8">
-                <div className="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600">
-                    <Sparkles size={24} />
+             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600">
+                      <Sparkles size={24} />
+                  </div>
+                  <div>
+                      <h2 className="text-xl font-bold">Step 3: Curriculum & Objectives</h2>
+                      <p className="text-sm text-slate-500">Define what students will learn based strictly on the NaCCA Standard-Based Syllabus</p>
+                  </div>
                 </div>
-                <div>
-                    <h2 className="text-xl font-bold">Step 3: Curriculum & Objectives</h2>
-                    <p className="text-sm text-slate-500">Define what students will learn based strictly on the NaCCA Standard-Based Syllabus</p>
-                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setIsStandardsModalOpen(true)}
+                  className="px-4 py-2.5 bg-[#006B3F] hover:bg-[#005230] text-white text-xs font-bold rounded-xl flex items-center justify-center gap-2 shadow-xs hover:shadow transition-all shrink-0"
+                >
+                  <Compass size={16} />
+                  Search NaCCA Standards DB
+                </button>
             </div>
 
              <div className="space-y-6">
@@ -1615,6 +1663,17 @@ const NoteGenerator = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <CurriculumReferenceModal
+        isOpen={isStandardsModalOpen}
+        onClose={() => setIsStandardsModalOpen(false)}
+        onSelectIndicator={handleIndicatorSelected}
+        initialLevel={formData.level}
+        initialClass={formData.class}
+        initialSubject={formData.subject}
+        initialStrand={formData.strand}
+        initialSubStrand={formData.subStrand}
+      />
     </div>
   );
 };

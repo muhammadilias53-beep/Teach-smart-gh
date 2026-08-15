@@ -22,6 +22,7 @@ import BstemLabGuide from './components/packs/BstemLabGuide';
 import BstemMathGuide from './components/packs/BstemMathGuide';
 import BstemTechGuide from './components/packs/BstemTechGuide';
 import AdminCommandCenter from './components/admin/AdminCommandCenter';
+import { CurriculumDatabase } from './components/standards/CurriculumDatabase';
 import { PWALifecycleTracker } from './components/PWALifecycleTracker';
 import ScrollToTop from './components/common/ScrollToTop';
 import ConnectivityToast from './components/common/ConnectivityToast';
@@ -63,6 +64,8 @@ function App() {
             
             <Route element={<AuthGuard />}>
               <Route path="/" element={<Dashboard />} />
+              <Route path="/standards" element={<CurriculumDatabase />} />
+              <Route path="/curriculum" element={<CurriculumDatabase />} />
               <Route path="/ai" element={<AITutorPage />} />
               <Route path="/lessons" element={<LessonPlanGenerator />} />
               <Route path="/notes" element={<NoteGenerator />} />

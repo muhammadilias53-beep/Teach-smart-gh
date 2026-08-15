@@ -288,6 +288,7 @@ const Dashboard = () => {
   const mastery = getMasteryLevel(stats.total);
 
   const quickActions = [
+    { icon: Compass, label: 'NaCCA Standards DB', path: '/standards', color: 'bg-[#006B3F]', bg: 'bg-emerald-50' },
     { icon: FileText, label: 'New Lesson Plan', path: '/lessons', color: 'bg-emerald-500', bg: 'bg-emerald-50' },
     { icon: BookOpen, label: 'Lesson Notes', path: '/notes', color: 'bg-teal-600', bg: 'bg-teal-50' },
     { icon: Calendar, label: 'Scheme of Work', path: '/schemes', color: 'bg-ghana-gold', bg: 'bg-amber-50' },

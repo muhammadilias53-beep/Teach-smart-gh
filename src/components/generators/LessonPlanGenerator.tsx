@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { Sparkles, Save, Download, RefreshCw, FileText, ChevronLeft, ChevronRight, CheckCircle, Users, Layout, AlignLeft, Layers, GraduationCap, MessageSquare, Edit3, Check, RotateCcw, FileEdit, AlertCircle } from 'lucide-react';
+import { Sparkles, Save, Download, RefreshCw, FileText, ChevronLeft, ChevronRight, CheckCircle, Users, Layout, AlignLeft, Layers, GraduationCap, MessageSquare, Edit3, Check, RotateCcw, FileEdit, AlertCircle, Compass, Search } from 'lucide-react';
+import { CurriculumReferenceModal } from '../standards/CurriculumReferenceModal';
+import { CurriculumIndicatorItem } from '../../lib/curriculumDatabase';
 import { generateLessonPlan } from '../../lib/gemini';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { saveOffline } from '../../lib/indexedDB';
@@ -82,8 +84,10 @@ const GHANAIAN_LANGUAGES_FOR_BILINGUAL = [
 const LessonPlanGenerator = () => {
   const { user, profile } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
+  const [isStandardsModalOpen, setIsStandardsModalOpen] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [result, setResult] = useState<any>(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -110,6 +114,39 @@ const LessonPlanGenerator = () => {
     language: 'English',
     bilingualLanguage: 'Twi',
   });
+
+  // Handle preloaded state from NaCCA Standards Database
+  useEffect(() => {
+    if (location.state?.preloaded) {
+      const p = location.state.preloaded;
+      setFormData(prev => ({
+        ...prev,
+        level: p.level || prev.level,
+        class: p.class || prev.class,
+        subject: p.subject || prev.subject,
+        strand: p.strand || prev.strand,
+        subStrand: p.subStrand || prev.subStrand,
+        contentStandard: p.contentStandard || prev.contentStandard,
+        indicator: p.indicator || prev.indicator,
+        mainObjective: p.mainObjective || prev.mainObjective,
+      }));
+      setStep(3); // Jump directly to Step 3 for review!
+    }
+  }, [location.state]);
+
+  const handleIndicatorSelected = (item: CurriculumIndicatorItem) => {
+    setFormData(prev => ({
+      ...prev,
+      level: item.level || prev.level,
+      class: item.classLevel || prev.class,
+      subject: item.subject || prev.subject,
+      strand: item.strand,
+      subStrand: item.subStrand,
+      contentStandard: item.standardFull,
+      indicator: item.indicatorFull,
+      mainObjective: `By the end of the lesson, the learner will be able to: ${item.indicatorText}`
+    }));
+  };
   
   const displaySubject = formData.subject === 'Ghanaian Language' && formData.ghanaianLanguage
     ? `Ghanaian Language (${formData.ghanaianLanguage})`
@@ -900,7 +937,20 @@ const LessonPlanGenerator = () => {
             exit={{ opacity: 0, x: -20 }}
             className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100"
           >
-             <h2 className="text-xl font-bold mb-6">Step 3: Curriculum Calibration</h2>
+             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+               <div>
+                 <h2 className="text-xl font-bold text-slate-900">Step 3: Curriculum Calibration</h2>
+                 <p className="text-xs text-slate-500">Align your lesson strictly with NaCCA syllabus standards</p>
+               </div>
+               <button
+                 type="button"
+                 onClick={() => setIsStandardsModalOpen(true)}
+                 className="px-4 py-2.5 bg-[#006B3F] hover:bg-[#005230] text-white text-xs font-bold rounded-xl flex items-center justify-center gap-2 shadow-xs hover:shadow transition-all shrink-0"
+               >
+                 <Compass size={16} />
+                 Search NaCCA Standards DB
+               </button>
+             </div>
              <div className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                    <div className="space-y-2">
@@ -1840,6 +1890,17 @@ const LessonPlanGenerator = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <CurriculumReferenceModal
+        isOpen={isStandardsModalOpen}
+        onClose={() => setIsStandardsModalOpen(false)}
+        onSelectIndicator={handleIndicatorSelected}
+        initialLevel={formData.level}
+        initialClass={formData.class}
+        initialSubject={formData.subject}
+        initialStrand={formData.strand}
+        initialSubStrand={formData.subStrand}
+      />
     </div>
   );
 };

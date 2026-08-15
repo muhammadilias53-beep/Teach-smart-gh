@@ -3,7 +3,7 @@ import {
   MessageSquare, MessageCircle, FileText, Calendar, BookOpen, PenTool, CheckCircle, Menu, X, 
   LogOut, LayoutDashboard, CreditCard, Zap, User, Package, Library, ShieldCheck, Bell, Shield, 
   Atom, Calculator, Cpu, Award, Users, Briefcase, FolderOpen, ChevronDown, ChevronRight,
-  ChevronLeft
+  ChevronLeft, Compass
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useSidebar } from '../../contexts/SidebarContext';
@@ -46,6 +46,7 @@ const menuGroups: MenuGroup[] = [
     title: 'Curriculum & Planning',
     icon: BookOpen,
     items: [
+      { icon: Compass, label: 'NaCCA Standards DB', path: '/standards' },
       { icon: FileText, label: 'Lesson Plans', path: '/lessons' },
       { icon: BookOpen, label: 'Lesson Notes', path: '/notes' },
       { icon: Calendar, label: 'Schemes of Work', path: '/schemes' },
