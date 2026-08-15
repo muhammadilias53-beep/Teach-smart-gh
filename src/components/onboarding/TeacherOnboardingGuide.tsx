@@ -43,14 +43,20 @@ export const TeacherOnboardingGuide = ({ isOpen: controlledIsOpen, onClose, forc
   const [savingProfile, setSavingProfile] = useState(false);
   const [internalIsOpen, setInternalIsOpen] = useState(false);
 
-  // Check if tour should show automatically
+  // Check if tour should show automatically or via event
   useEffect(() => {
+    const handleOpenEvent = () => {
+      setStep(1);
+      setInternalIsOpen(true);
+    };
+    window.addEventListener('open-teachsmart-tour', handleOpenEvent);
+
     if (forceOpen) {
       setInternalIsOpen(true);
-      return;
+      return () => window.removeEventListener('open-teachsmart-tour', handleOpenEvent);
     }
 
-    if (!user) return;
+    if (!user) return () => window.removeEventListener('open-teachsmart-tour', handleOpenEvent);
 
     // Check if user already saw or dismissed the tour
     const localSeen = localStorage.getItem(`teachsmart_tour_seen_${user.uid}`) === 'true';
@@ -60,9 +66,14 @@ export const TeacherOnboardingGuide = ({ isOpen: controlledIsOpen, onClose, forc
       // Auto-launch for new accounts after a slight delay
       const timer = setTimeout(() => {
         setInternalIsOpen(true);
-      }, 500);
-      return () => clearTimeout(timer);
+      }, 600);
+      return () => {
+        clearTimeout(timer);
+        window.removeEventListener('open-teachsmart-tour', handleOpenEvent);
+      };
     }
+
+    return () => window.removeEventListener('open-teachsmart-tour', handleOpenEvent);
   }, [user, profile, forceOpen]);
 
   const isOpen = controlledIsOpen !== undefined ? controlledIsOpen : internalIsOpen;

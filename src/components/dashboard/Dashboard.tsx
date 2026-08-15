@@ -22,7 +22,6 @@ import { Download, X, ExternalLink, Mail, Loader2, Send } from 'lucide-react';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { AdminNotificationPanel } from './AdminNotificationPanel';
-import { TeacherOnboardingGuide } from '../onboarding/TeacherOnboardingGuide';
 
 const AnimatedCounter = ({ value, duration = 1.5 }: { value: number, duration?: number }) => {
   const [displayValue, setDisplayValue] = useState(0);
@@ -64,7 +63,6 @@ const Dashboard = () => {
   const isAdmin = user?.email === 'muhammadilias53@gmail.com';
 
   const [subTimeLeft, setSubTimeLeft] = useState<string>('');
-  const [showTourModal, setShowTourModal] = useState(false);
   const [profileReminderDismissed, setProfileReminderDismissed] = useState(() => {
     return sessionStorage.getItem('ts_profile_reminder_dismissed') === 'true';
   });
@@ -76,6 +74,10 @@ const Dashboard = () => {
     try {
       sessionStorage.setItem('ts_profile_reminder_dismissed', 'true');
     } catch (_) {}
+  };
+
+  const handleOpenTour = () => {
+    window.dispatchEvent(new CustomEvent('open-teachsmart-tour'));
   };
 
   useEffect(() => {
@@ -310,13 +312,6 @@ const Dashboard = () => {
 
   return (
     <div className="space-y-12">
-      {/* Interactive Platform Onboarding Tour modal when triggered manually */}
-      <TeacherOnboardingGuide 
-        isOpen={showTourModal} 
-        onClose={() => setShowTourModal(false)} 
-        forceOpen={showTourModal} 
-      />
-
       {/* Header Info Banner */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between py-6 border-b border-slate-100 gap-6">
         <div className="flex flex-wrap items-center gap-3 text-[10px] font-black uppercase tracking-widest text-slate-400">
@@ -339,7 +334,7 @@ const Dashboard = () => {
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <button
-            onClick={() => setShowTourModal(true)}
+            onClick={handleOpenTour}
             className="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-full text-[10px] font-black uppercase tracking-[0.15em] transition-all"
             title="Re-open guided walkthrough"
           >
@@ -391,7 +386,7 @@ const Dashboard = () => {
               Later
             </button>
             <button
-              onClick={() => setShowTourModal(true)}
+              onClick={handleOpenTour}
               className="px-4 py-2.5 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-sm"
             >
               Take Tour
