@@ -16,6 +16,18 @@
     <meta name="apple-mobile-web-app-title" content="TeachSmart" />
     <link rel="apple-touch-icon" href="/icon-192.jpg" />
     
+    <script>
+      // Gracefully prevent non-fatal dev server websocket reconnection errors from bubbling
+      window.addEventListener('unhandledrejection', function (event) {
+        if (event.reason && (
+          (typeof event.reason === 'string' && event.reason.includes('WebSocket')) ||
+          (event.reason.message && event.reason.message.includes('WebSocket'))
+        )) {
+          event.preventDefault();
+        }
+      });
+    </script>
+    
     <!-- Google Adsense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7910254103007139" crossorigin="anonymous"></script>
   </head>
@@ -24,4 +36,3 @@
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-

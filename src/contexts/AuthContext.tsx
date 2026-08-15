@@ -276,8 +276,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     let profileUnsubscribe: (() => void) | null = null;
 
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      console.log(`[Auth] State changed: ${user ? 'User logged in (' + user.uid + ')' : 'No user session'}`);
-      
       // Clean up previous profile listener if it exists
       if (profileUnsubscribe) {
         profileUnsubscribe();

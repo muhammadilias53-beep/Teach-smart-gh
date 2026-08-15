@@ -151,7 +151,6 @@ const AuthGuard = () => {
   }
 
   if (!user) {
-    console.warn(`[AuthGuard] No user found, redirecting to login from ${location.pathname}. Loading state was: ${loading}`);
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 

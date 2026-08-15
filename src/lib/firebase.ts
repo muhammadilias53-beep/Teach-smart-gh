@@ -1,50 +1,42 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, setPersistence, browserLocalPersistence } from 'firebase/auth';
-import { initializeFirestore, doc, getDocFromServer, enableIndexedDbPersistence } from 'firebase/firestore';
+import { 
+  initializeFirestore, 
+  persistentLocalCache, 
+  persistentMultipleTabManager, 
+  doc, 
+  getDocFromServer 
+} from 'firebase/firestore';
 import firebaseConfig from '../../firebase-applet-config.json';
 
 const app = initializeApp(firebaseConfig);
+
+// Initialize Firestore with modern persistent cache settings (replaces deprecated enableIndexedDbPersistence)
 export const db = initializeFirestore(app, {
+  localCache: persistentLocalCache({
+    tabManager: persistentMultipleTabManager()
+  }),
   experimentalForceLongPolling: true,
-  // @ts-ignore
   useFetchStreams: false,
 } as any, firebaseConfig.firestoreDatabaseId);
+
 export const auth = getAuth(app);
 
-// Explicitly set persistence to ensure users stay logged in
-setPersistence(auth, browserLocalPersistence)
-  .then(() => {
-    console.log("Auth persistence set to LOCAL");
-  })
-  .catch((err) => {
-    console.error("Auth persistence error:", err);
-  });
-
-// Enable offline persistence
+// Explicitly set persistence to ensure users stay logged in across sessions
 if (typeof window !== 'undefined') {
-  enableIndexedDbPersistence(db).catch((err) => {
-    if (err.code === 'failed-precondition') {
-      // Multiple tabs open, persistence can only be enabled in one tab at a a time.
-      console.warn('Firestore persistence failed-precondition');
-    } else if (err.code === 'unimplemented') {
-      // The current browser does not support all of the features required to enable persistence
-      console.warn('Firestore persistence unimplemented');
-    }
-  });
+  setPersistence(auth, browserLocalPersistence).catch(() => {});
 }
 
 async function testConnection() {
   try {
-    // Try to reach the server, but don't blow up if we can't
-    console.log("Testing Firestore connection to database:", firebaseConfig.firestoreDatabaseId);
     await getDocFromServer(doc(db, 'test', 'connection'));
-    console.log("Firestore connection healthy.");
   } catch (error: any) {
     if (error?.message?.includes('the client is offline') || error?.code === 'unavailable') {
-      console.warn("Firestore is operating in offline mode. Changes will sync when online.");
-    } else {
-      console.error("Firestore connectivity error:", error?.code, error?.message);
+      // Offline mode active
     }
   }
 }
-testConnection();
+
+if (typeof window !== 'undefined') {
+  testConnection();
+}
