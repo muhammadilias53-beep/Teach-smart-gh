@@ -31,7 +31,6 @@
     "jspdf-autotable": "^5.0.7",
     "lucide-react": "^0.546.0",
     "motion": "^12.23.24",
-    "pdfjs-dist": "^5.7.284",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.6.0",
@@ -52,5 +51,9 @@
     "eslint": "^10.3.0",
     "tailwindcss": "^4.1.14",
     "typescript": "~5.8.2"
+  },
+  "overrides": {
+    "uuid": "^11.1.1",
+    "esbuild": "^0.28.1"
   }
 }

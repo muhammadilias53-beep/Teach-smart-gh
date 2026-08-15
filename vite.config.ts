@@ -20,6 +20,17 @@ export default defineConfig(({mode}) => {
       },
       dedupe: ['react', 'react-dom'],
     },
+    esbuild: {
+      target: 'esnext',
+    },
+    optimizeDeps: {
+      esbuildOptions: {
+        target: 'esnext',
+      },
+    },
+    build: {
+      target: 'esnext',
+    },
     server: {
       // HMR is disabled in AI Studio via DISABLE_HMR env var.
       // Do not modifyâfile watching is disabled to prevent flickering during agent edits.
