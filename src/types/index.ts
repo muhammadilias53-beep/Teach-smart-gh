@@ -29,6 +29,9 @@ export interface UserProfile {
   trialResetMay2026Applied?: boolean;
   isBstemSchool?: boolean;
   isAnonymous?: boolean;
+  hasSeenOnboardingTour?: boolean;
+  onboardingTourDismissed?: boolean;
+  profileCompleted?: boolean;
   createdAt?: any;
 }
 

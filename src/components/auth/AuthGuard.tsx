@@ -5,7 +5,7 @@ import { useSidebar } from '../../contexts/SidebarContext';
 import { cn } from '../../lib/utils';
 import Sidebar from '../layout/Sidebar';
 import { EduPulseBanner } from '../layout/EduPulseBanner';
-import { Onboarding } from '../profile/Onboarding';
+import { TeacherOnboardingGuide } from '../onboarding/TeacherOnboardingGuide';
 import { motion } from 'motion/react';
 import { differenceInDays } from 'date-fns';
 import { Lock, CreditCard, MessageCircle, CheckCircle2 } from 'lucide-react';
@@ -169,9 +169,6 @@ const AuthGuard = () => {
     );
   }
 
-  // Profile setup is completely OPTIONAL for newly registered accounts
-  // Users can explore tools immediately or complete setup anytime from Profile Settings
-
   // Trial/Subscription check using centralized logic
   const isAdmin = user?.email === 'muhammadilias53@gmail.com';
   const hasActiveSubscription = isSubscriptionActive();
@@ -186,6 +183,7 @@ const AuthGuard = () => {
     <div className="flex min-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
       <EduPulseBanner />
       <Sidebar />
+      <TeacherOnboardingGuide />
       <main className={cn(
         "flex-1 pt-24 lg:pt-10 overflow-x-hidden min-w-0 transition-all duration-300",
         isCollapsed ? "lg:ml-20" : "lg:ml-72"

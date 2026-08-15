@@ -17,6 +17,9 @@ interface AuthContextType {
   getTrialDaysLeft: () => number;
   daysLeft: number;
   completeOnboarding: (data: Partial<UserProfile>) => Promise<void>;
+  completeOnboardingTour: (data?: Partial<UserProfile>) => Promise<void>;
+  dismissOnboardingTour: () => Promise<void>;
+  updateProfileData: (data: Partial<UserProfile>) => Promise<void>;
   updateProfileEmail: (email: string) => Promise<void>;
 }
 
@@ -173,12 +176,82 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       // Optimistic update
       if (profile) {
-        setProfile({ ...profile, ...data, onboardingComplete: true });
+        setProfile({ ...profile, ...data, onboardingComplete: true, profileCompleted: true });
       }
       
       await setDoc(doc(db, 'users', user.uid), {
         ...data,
         onboardingComplete: true,
+        profileCompleted: true,
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+    } catch (err) {
+      handleFirestoreError(err, OperationType.WRITE, profilePath);
+    }
+  };
+
+  const completeOnboardingTour = async (optionalData?: Partial<UserProfile>) => {
+    if (!user) return;
+    const profilePath = `users/${user.uid}`;
+    try {
+      const updates: any = {
+        hasSeenOnboardingTour: true,
+        onboardingTourDismissed: true,
+        updatedAt: serverTimestamp(),
+      };
+
+      if (optionalData && Object.keys(optionalData).length > 0) {
+        Object.assign(updates, optionalData);
+        if (optionalData.school || optionalData.level || optionalData.subjectsTaught?.length) {
+          updates.profileCompleted = true;
+          updates.onboardingComplete = true;
+        }
+      }
+
+      if (profile) {
+        setProfile({ ...profile, ...updates });
+      }
+
+      try {
+        localStorage.setItem(`teachsmart_tour_seen_${user.uid}`, 'true');
+      } catch (_) {}
+
+      await setDoc(doc(db, 'users', user.uid), updates, { merge: true });
+    } catch (err) {
+      handleFirestoreError(err, OperationType.WRITE, profilePath);
+    }
+  };
+
+  const dismissOnboardingTour = async () => {
+    if (!user) return;
+    try {
+      try {
+        localStorage.setItem(`teachsmart_tour_seen_${user.uid}`, 'true');
+      } catch (_) {}
+
+      if (profile) {
+        setProfile({ ...profile, hasSeenOnboardingTour: true, onboardingTourDismissed: true });
+      }
+
+      await setDoc(doc(db, 'users', user.uid), {
+        hasSeenOnboardingTour: true,
+        onboardingTourDismissed: true,
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+    } catch (err) {
+      console.warn("Could not save tour dismissal to firestore:", err);
+    }
+  };
+
+  const updateProfileData = async (data: Partial<UserProfile>) => {
+    if (!user) return;
+    const profilePath = `users/${user.uid}`;
+    try {
+      if (profile) {
+        setProfile({ ...profile, ...data });
+      }
+      await setDoc(doc(db, 'users', user.uid), {
+        ...data,
         updatedAt: serverTimestamp()
       }, { merge: true });
     } catch (err) {
@@ -415,7 +488,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     <AuthContext.Provider value={{ 
       user, profile, loading, logout, refreshProfile, 
       canGenerate, isTrialActive, isSubscriptionActive, getTrialDaysLeft, daysLeft,
-      completeOnboarding, updateProfileEmail
+      completeOnboarding, completeOnboardingTour, dismissOnboardingTour, updateProfileData, updateProfileEmail
     }}>
       {children}
     </AuthContext.Provider>

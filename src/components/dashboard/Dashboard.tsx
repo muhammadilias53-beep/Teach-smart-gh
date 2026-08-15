@@ -4,8 +4,7 @@ import {
   FileText, Calendar, PenTool, BookOpen, ArrowRight, Zap, 
   Trophy, Package, Activity, Target, Award, TrendingUp, Clock, 
   ShieldCheck, Heart, CheckCircle, MessageSquare, MessageCircle,
-  Atom, Compass, Cpu, Layers, Lightbulb, Calculator, Users, Briefcase,
-  Sparkles, HelpCircle, UserCheck, Settings
+  Atom, Compass, Cpu, Layers, Lightbulb, Calculator, Users, Briefcase, Sparkles
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
@@ -23,7 +22,7 @@ import { Download, X, ExternalLink, Mail, Loader2, Send } from 'lucide-react';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { AdminNotificationPanel } from './AdminNotificationPanel';
-import { GuidedTourModal } from '../common/GuidedTourModal';
+import { TeacherOnboardingGuide } from '../onboarding/TeacherOnboardingGuide';
 
 const AnimatedCounter = ({ value, duration = 1.5 }: { value: number, duration?: number }) => {
   const [displayValue, setDisplayValue] = useState(0);
@@ -65,23 +64,19 @@ const Dashboard = () => {
   const isAdmin = user?.email === 'muhammadilias53@gmail.com';
 
   const [subTimeLeft, setSubTimeLeft] = useState<string>('');
-  const [showGuidedTour, setShowGuidedTour] = useState(false);
+  const [showTourModal, setShowTourModal] = useState(false);
+  const [profileReminderDismissed, setProfileReminderDismissed] = useState(() => {
+    return sessionStorage.getItem('ts_profile_reminder_dismissed') === 'true';
+  });
 
-  // Auto-launch guided tour once for newly registered users who haven't seen it yet
-  useEffect(() => {
-    if (user && !user.isAnonymous) {
-      const tourKey = `teachsmart_tour_seen_${user.uid}`;
-      const seen = localStorage.getItem(tourKey);
-      if (!seen) {
-        // Show after brief delay so dashboard mounts smoothly
-        const timer = setTimeout(() => {
-          setShowGuidedTour(true);
-          localStorage.setItem(tourKey, 'true');
-        }, 800);
-        return () => clearTimeout(timer);
-      }
-    }
-  }, [user]);
+  const isProfileIncomplete = !profile?.school || !profile?.subjectsTaught?.length;
+
+  const dismissReminder = () => {
+    setProfileReminderDismissed(true);
+    try {
+      sessionStorage.setItem('ts_profile_reminder_dismissed', 'true');
+    } catch (_) {}
+  };
 
   useEffect(() => {
     if (!profile?.subscriptionEndDate || !isSubscriptionActive()) {
@@ -315,6 +310,13 @@ const Dashboard = () => {
 
   return (
     <div className="space-y-12">
+      {/* Interactive Platform Onboarding Tour modal when triggered manually */}
+      <TeacherOnboardingGuide 
+        isOpen={showTourModal} 
+        onClose={() => setShowTourModal(false)} 
+        forceOpen={showTourModal} 
+      />
+
       {/* Header Info Banner */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between py-6 border-b border-slate-100 gap-6">
         <div className="flex flex-wrap items-center gap-3 text-[10px] font-black uppercase tracking-widest text-slate-400">
@@ -337,61 +339,69 @@ const Dashboard = () => {
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <button
-            onClick={() => setShowGuidedTour(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-emerald-50 dark:bg-slate-800 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-slate-700 rounded-full text-[10px] font-black uppercase tracking-[0.15em] transition-all border border-emerald-200 dark:border-slate-700 shadow-sm"
+            onClick={() => setShowTourModal(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-full text-[10px] font-black uppercase tracking-[0.15em] transition-all"
+            title="Re-open guided walkthrough"
           >
-            <Sparkles size={12} className="text-emerald-600 dark:text-emerald-400 shrink-0" />
+            <Sparkles size={12} className="text-emerald-600 shrink-0" />
             <span className="whitespace-nowrap">Platform Tour</span>
           </button>
           <div className="flex items-center gap-2 px-4 py-2 bg-emerald-900 text-ghana-gold rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-emerald-900/10">
             <ShieldCheck size={12} className="fill-current shrink-0" />
             <span className="whitespace-nowrap">Policy Compliant</span>
           </div>
-          <div className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 text-emerald-deep dark:text-white rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-md border border-slate-100 dark:border-slate-700">
+          <div className="flex items-center gap-2 px-4 py-2 bg-white text-emerald-deep rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-md border border-slate-100">
             <Zap size={12} className="text-ghana-gold shrink-0" />
             <span className="whitespace-nowrap">Live NaCCA Sync</span>
           </div>
         </div>
       </div>
 
-      {/* Optional Profile Setup Banner for users who haven't personalized their details yet */}
-      {(!profile?.school || !profile?.level || !profile?.subjectsTaught || profile?.subjectsTaught.length === 0) && (
+      {/* Optional Teaching Profile Completion Reminder */}
+      {isProfileIncomplete && !profileReminderDismissed && (
         <motion.div
-          initial={{ opacity: 0, y: 15 }}
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-[2rem] p-5 sm:p-6 bg-gradient-to-r from-blue-50/90 to-indigo-50/80 dark:from-slate-900 dark:to-slate-800 border border-blue-100 dark:border-slate-700 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4"
+          className="rounded-[2rem] p-5 sm:p-6 bg-gradient-to-r from-emerald-50/70 via-slate-50 to-amber-50/40 border border-emerald-100 shadow-sm flex flex-col md:flex-row items-center justify-between gap-5 relative overflow-hidden"
         >
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-blue-600/20 shrink-0">
-              <UserCheck size={22} />
+          <div className="flex items-start sm:items-center gap-4">
+            <div className="p-3 bg-emerald-600 text-white rounded-2xl shrink-0 shadow-md shadow-emerald-600/20">
+              <BookOpen size={22} />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300">
-                  Optional Setup
-                </span>
-                <h3 className="font-black text-xs uppercase tracking-wider text-slate-900 dark:text-white">
+                <h4 className="text-xs font-black uppercase tracking-wider text-slate-900">
                   Personalize Your Teaching Profile
-                </h3>
+                </h4>
+                <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[9px] font-black rounded uppercase tracking-wider">
+                  Optional
+                </span>
               </div>
-              <p className="text-xs text-slate-600 dark:text-slate-300 mt-1 max-w-xl font-medium leading-relaxed">
-                Add your school name and grade level so all your lesson plans and exams auto-populate with official headers. You can set this up anytime.
+              <p className="text-xs text-slate-600 font-medium mt-1 leading-relaxed max-w-2xl">
+                Add your school name and subjects whenever you like to automatically format and watermark all your generated lesson notes, schemes, and exam papers.
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-3 w-full md:w-auto shrink-0">
+
+          <div className="flex items-center gap-2.5 w-full md:w-auto shrink-0 justify-end">
             <button
-              onClick={() => setShowGuidedTour(true)}
-              className="flex-1 md:flex-initial px-4 py-2.5 rounded-xl bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 text-xs font-bold hover:bg-slate-50 dark:hover:bg-slate-700 transition-all text-center"
+              onClick={dismissReminder}
+              className="px-3.5 py-2.5 text-slate-400 hover:text-slate-600 text-[11px] font-bold uppercase tracking-wider transition-all"
+            >
+              Later
+            </button>
+            <button
+              onClick={() => setShowTourModal(true)}
+              className="px-4 py-2.5 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-sm"
             >
               Take Tour
             </button>
             <Link
               to="/profile"
-              className="flex-1 md:flex-initial px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-black uppercase tracking-wider transition-all shadow-md shadow-blue-600/20 text-center flex items-center justify-center gap-1.5"
+              className="px-5 py-2.5 bg-slate-900 hover:bg-black text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all shadow-md flex items-center gap-1.5"
             >
-              <Settings size={14} />
-              Set Up Profile
+              <span>Set Up Profile</span>
+              <ArrowRight size={14} />
             </Link>
           </div>
         </motion.div>
@@ -1227,12 +1237,6 @@ const Dashboard = () => {
       <AnimatePresence>
         {viewingDoc && <DocumentViewerModal doc={viewingDoc} onClose={() => setViewingDoc(null)} />}
       </AnimatePresence>
-
-      {/* Guided Tour for new & returning teachers */}
-      <GuidedTourModal 
-        isOpen={showGuidedTour} 
-        onClose={() => setShowGuidedTour(false)} 
-      />
     </div>
   );
 };

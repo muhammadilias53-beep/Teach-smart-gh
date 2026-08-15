@@ -133,6 +133,8 @@ export default function ProfileSettings() {
         ...formData,
         subjectsTaught: formData.subjectsTaught.split(',').map(s => s.trim()).filter(Boolean),
         teachingExperienceYears: formData.teachingExperienceYears ? Number(formData.teachingExperienceYears) : null,
+        onboardingComplete: Boolean(formData.school.trim()),
+        profileCompleted: Boolean(formData.school.trim()),
         updatedAt: new Date()
       });
       await refreshProfile();

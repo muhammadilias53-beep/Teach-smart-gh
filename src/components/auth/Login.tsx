@@ -99,6 +99,7 @@ const Login = () => {
   const [school, setSchool] = useState('');
   const [level, setLevel] = useState<string>('JHS');
   const [subjectsTaught, setSubjectsTaught] = useState('');
+  const [showOptionalProfileFields, setShowOptionalProfileFields] = useState(false);
   const [error, setError] = useState('');
   const [info, setInfo] = useState('');
   const [loading, setLoading] = useState(false);
@@ -296,19 +297,19 @@ const Login = () => {
         const baseTrialStart = originalTrialStart ? getSafeDate(originalTrialStart) : new Date();
         const finalTrialStart = baseTrialStart < TRIAL_RESET_DATE ? TRIAL_RESET_DATE : baseTrialStart;
 
-        const hasCustomProfile = Boolean(school || subjectsTaught);
-
         const newProfile: any = {
           uid: newUser.uid,
           email,
-          displayName: displayName || 'Teacher',
-          school: school || '',
+          displayName: displayName.trim() || 'Teacher',
+          school: school.trim() || '',
           level: level || 'JHS',
           subjectsTaught: subjectsTaught ? subjectsTaught.split(',').map(s => s.trim()).filter(Boolean) : [],
           trialStartDate: finalTrialStart.toISOString(),
           subscriptionStatus: 'trial',
           trialResetMay2026Applied: true, // Mark reset applied to avoid overwriting their brand-new signup date
-          onboardingComplete: hasCustomProfile, // Marked complete if user opted to fill details, otherwise false so they can complete anytime
+          onboardingComplete: Boolean(school.trim()), 
+          hasSeenOnboardingTour: false,
+          profileCompleted: Boolean(school.trim()),
           createdAt: originalTrialStart ? new Date(originalTrialStart).toISOString() : serverTimestamp(),
         };
         
@@ -577,43 +578,74 @@ const Login = () => {
                           <User className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none" size={18} />
                           <input 
                             type="text" 
-                            placeholder="FULL NAME (OPTIONAL)" 
+                            placeholder="FULL NAME" 
                             className="w-full pl-14 pr-6 py-4 bg-slate-50/50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-deep/20 focus:border-emerald-deep transition-all text-xs font-bold tracking-widest uppercase outline-none"
                             value={displayName}
                             onChange={(e) => setDisplayName(e.target.value)}
+                            required={!isLogin}
                           />
                         </div>
-                        <div className="relative">
-                          <GraduationCap className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none" size={18} />
-                          <input 
-                            type="text" 
-                            placeholder="SCHOOL NAME (OPTIONAL)" 
-                            className="w-full pl-14 pr-6 py-4 bg-slate-50/50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-deep/20 focus:border-emerald-deep transition-all text-xs font-bold tracking-widest uppercase outline-none"
-                            value={school}
-                            onChange={(e) => setSchool(e.target.value)}
-                          />
-                        </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          <select 
-                            className="w-full px-6 py-4 bg-slate-50/50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-deep/20 focus:border-emerald-deep transition-all text-xs font-bold tracking-widest uppercase outline-none h-[58px]"
-                            value={level}
-                            onChange={(e) => setLevel(e.target.value)}
+
+                        {/* Optional Profile Setup Toggle */}
+                        <div className="pt-1">
+                          <button
+                            type="button"
+                            onClick={() => setShowOptionalProfileFields(!showOptionalProfileFields)}
+                            className="w-full py-2.5 px-4 bg-slate-50 hover:bg-slate-100/80 border border-slate-200/60 rounded-xl flex items-center justify-between text-slate-600 transition-all text-[11px] font-bold"
                           >
-                            <option value="KG">KINDERGARTEN</option>
-                            <option value="Primary">PRIMARY SCHOOL</option>
-                            <option value="JHS">JUNIOR HIGH (JHS)</option>
-                            <option value="SHS">SENIOR HIGH (SHS)</option>
-                          </select>
-                          <div className="relative">
-                            <Zap className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none" size={16} />
-                            <input 
-                              type="text" 
-                              placeholder="MAIN SUBJECT (OPTIONAL)" 
-                              className="w-full pl-12 pr-6 py-4 bg-slate-50/50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-deep/20 focus:border-emerald-deep transition-all text-xs font-bold tracking-widest uppercase outline-none"
-                              value={subjectsTaught}
-                              onChange={(e) => setSubjectsTaught(e.target.value)}
-                            />
-                          </div>
+                            <span className="flex items-center gap-2">
+                              <GraduationCap size={14} className="text-emerald-deep" />
+                              <span>Teaching Profile Setup</span>
+                              <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[9px] font-black rounded uppercase tracking-wider">Optional</span>
+                            </span>
+                            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+                              {showOptionalProfileFields ? "Hide" : "Add Details"}
+                            </span>
+                          </button>
+
+                          {showOptionalProfileFields && (
+                            <motion.div
+                              initial={{ opacity: 0, y: -6 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              className="mt-3 space-y-3 p-4 bg-slate-50/60 border border-slate-100 rounded-2xl"
+                            >
+                              <p className="text-[10px] text-slate-500 font-medium">
+                                You can set this now or anytime from your profile settings later.
+                              </p>
+                              <div className="relative">
+                                <GraduationCap className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none" size={16} />
+                                <input 
+                                  type="text" 
+                                  placeholder="SCHOOL NAME (OPTIONAL)" 
+                                  className="w-full pl-11 pr-4 py-3 bg-white border border-slate-200/70 rounded-xl focus:ring-2 focus:ring-emerald-deep/20 focus:border-emerald-deep transition-all text-xs font-bold tracking-wider uppercase outline-none"
+                                  value={school}
+                                  onChange={(e) => setSchool(e.target.value)}
+                                />
+                              </div>
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <select 
+                                  className="w-full px-4 py-3 bg-white border border-slate-200/70 rounded-xl focus:ring-2 focus:ring-emerald-deep/20 focus:border-emerald-deep transition-all text-xs font-bold tracking-wider uppercase outline-none"
+                                  value={level}
+                                  onChange={(e) => setLevel(e.target.value)}
+                                >
+                                  <option value="KG">KINDERGARTEN</option>
+                                  <option value="Primary">PRIMARY SCHOOL</option>
+                                  <option value="JHS">JUNIOR HIGH (JHS)</option>
+                                  <option value="SHS">SENIOR HIGH (SHS)</option>
+                                </select>
+                                <div className="relative">
+                                  <Zap className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none" size={14} />
+                                  <input 
+                                    type="text" 
+                                    placeholder="MAIN SUBJECTS" 
+                                    className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200/70 rounded-xl focus:ring-2 focus:ring-emerald-deep/20 focus:border-emerald-deep transition-all text-xs font-bold tracking-wider uppercase outline-none"
+                                    value={subjectsTaught}
+                                    onChange={(e) => setSubjectsTaught(e.target.value)}
+                                  />
+                                </div>
+                              </div>
+                            </motion.div>
+                          )}
                         </div>
                       </motion.div>
                     )}
