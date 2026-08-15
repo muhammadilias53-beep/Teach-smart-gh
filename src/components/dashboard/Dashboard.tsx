@@ -21,7 +21,6 @@ import { toast } from 'react-hot-toast';
 import { Download, X, ExternalLink, Mail, Loader2, Send } from 'lucide-react';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { AdminNotificationPanel } from './AdminNotificationPanel';
 
 const AnimatedCounter = ({ value, duration = 1.5 }: { value: number, duration?: number }) => {
   const [displayValue, setDisplayValue] = useState(0);
@@ -403,9 +402,7 @@ const Dashboard = () => {
         </motion.div>
       )}
 
-      <AdminNotificationPanel />
-
-      {/* Automated Subscription & Motivation Notification Panel */}
+      {/* Subscription & Account Status Banner */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}

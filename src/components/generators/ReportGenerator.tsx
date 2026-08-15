@@ -5,7 +5,7 @@ import {
   Percent, Plus, Trash2, ShieldCheck, HelpCircle, Save, Users, 
   FileSpreadsheet, Check, Edit2, ChevronDown, BookOpen, AlertTriangle,
   ArrowUpDown, Search, FileText, CheckCircle2, UserPlus, Upload,
-  Edit3, Eye
+  Edit3, Eye, FileUp
 } from 'lucide-react';
 import { generateWithProxy } from '../../lib/gemini';
 import { useAuth } from '../../contexts/AuthContext';
@@ -13,6 +13,8 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { SafeMarkdown } from '../common/SafeMarkdown';
 import { safeLocalStorage } from '../../lib/storage';
+import { BulkStudentImportModal } from './BulkStudentImportModal';
+import { downloadSampleCSVTemplate } from '../../lib/csvParser';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
@@ -82,7 +84,6 @@ export default function ReportGenerator() {
 
   // Modals and Quick Inputs
   const [showBulkAddModal, setShowBulkAddModal] = useState(false);
-  const [bulkNamesText, setBulkNamesText] = useState('');
   const [newStudentName, setNewStudentName] = useState('');
   const [newStudentGender, setNewStudentGender] = useState<'male' | 'female'>('male');
   const [newStudentRoll, setNewStudentRoll] = useState('');
@@ -283,58 +284,46 @@ export default function ReportGenerator() {
     toast.success(`Added ${trimmedName} to roster! 🇬🇭`);
   };
 
-  // Quick Bulk Add Students (paste roster)
-  const handleBulkAdd = () => {
-    if (!bulkNamesText.trim()) {
-      toast.error('Please paste or type names first.');
+  // Bulk Import Students (CSV / Excel / TSV)
+  const handleImportStudents = (newStudents: StudentScore[], mode: 'append' | 'replace') => {
+    if (mode === 'replace') {
+      setStudents(newStudents);
+      saveRosterToStorage(newStudents);
       return;
     }
 
-    const lines = bulkNamesText
-      .split(/[\n,;]+/)
-      .map(n => n.replace(/^[\d.)\s-]+/, '').trim())
-      .filter(n => n.length > 1);
-
-    if (lines.length === 0) {
-      toast.error('No valid names detected.');
-      return;
-    }
-
+    // Append mode: merge unique names, and update existing if score data is provided
     const existingNames = new Set(students.map(s => s.name.toLowerCase()));
-    const newAdded: StudentScore[] = [];
+    const uniqueNew = newStudents.filter(s => !existingNames.has(s.name.toLowerCase()));
 
-    lines.forEach((name, index) => {
-      if (!existingNames.has(name.toLowerCase())) {
-        existingNames.add(name.toLowerCase());
-        const metrics = calculateMetrics(0, 0);
-        newAdded.push({
-          id: 'std_' + Date.now() + '_' + index + '_' + Math.random().toString(36).substring(2, 6),
-          name,
-          gender: 'male',
-          classScore: 0,
-          examScore: 0,
-          total: 0,
+    const updatedExisting = students.map(s => {
+      const match = newStudents.find(n => n.name.toLowerCase() === s.name.toLowerCase());
+      if (match) {
+        // If imported item has marks and existing has zero, fill in
+        const classScore = (s.classScore === 0 && match.classScore > 0) ? match.classScore : s.classScore;
+        const examScore = (s.examScore === 0 && match.examScore > 0) ? match.examScore : s.examScore;
+        const metrics = calculateMetrics(classScore, examScore);
+        return {
+          ...s,
+          rollNumber: s.rollNumber || match.rollNumber,
+          gender: match.gender || s.gender,
+          classScore,
+          examScore,
+          total: metrics.total,
           grade: metrics.grade,
           gradeDesc: metrics.gradeDesc,
-          remark: metrics.remark,
-          attendance: '—',
-          conduct: 'Good',
-          attitude: 'Attentive'
-        });
+          remark: s.remark && !s.remark.includes('Failed') ? s.remark : (match.remark || metrics.remark),
+          attendance: s.attendance !== '—' ? s.attendance : match.attendance,
+          conduct: s.conduct || match.conduct,
+          attitude: s.attitude || match.attitude
+        };
       }
+      return s;
     });
 
-    if (newAdded.length === 0) {
-      toast.error('All names entered are already in this roster.');
-      return;
-    }
-
-    const updated = [...students, ...newAdded];
-    setStudents(updated);
-    saveRosterToStorage(updated);
-    setBulkNamesText('');
-    setShowBulkAddModal(false);
-    toast.success(`Successfully imported ${newAdded.length} students to ${selectedClass}!`);
+    const combined = [...updatedExisting, ...uniqueNew];
+    setStudents(combined);
+    saveRosterToStorage(combined);
   };
 
   // Update Score for specific student
@@ -814,10 +803,10 @@ Rules:
               <div className="flex flex-wrap items-center gap-2">
                 <button
                   onClick={() => setShowBulkAddModal(true)}
-                  className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all"
+                  className="px-4 py-2.5 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/60 dark:hover:bg-emerald-900 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all shadow-2xs"
                 >
-                  <Upload size={14} />
-                  Bulk Import Names
+                  <FileUp size={14} />
+                  Bulk Import (CSV / Excel)
                 </button>
                 <button
                   onClick={handleManualSave}
@@ -946,16 +935,25 @@ Rules:
                     <Users size={28} />
                   </div>
                   <h3 className="text-lg font-black text-slate-900 dark:text-white">Roster is currently empty</h3>
-                  <p className="text-slate-500 text-xs max-w-sm mt-1">
-                    Add your students using the input box above, or click <strong className="text-slate-700 dark:text-slate-300">Bulk Import Names</strong> to paste your class list.
+                  <p className="text-slate-500 text-xs max-w-md mt-1">
+                    Add your students using the quick input box above, upload an official CSV / Excel sheet, or download our ready-made template.
                   </p>
-                  <button
-                    onClick={() => setShowBulkAddModal(true)}
-                    className="mt-5 px-4 py-2.5 bg-slate-900 hover:bg-black text-white text-xs font-black uppercase tracking-wider rounded-xl flex items-center gap-2 transition-all shadow-sm"
-                  >
-                    <Upload size={14} />
-                    Import Class List
-                  </button>
+                  <div className="flex flex-wrap items-center justify-center gap-3 mt-5">
+                    <button
+                      onClick={() => setShowBulkAddModal(true)}
+                      className="px-5 py-2.5 bg-slate-900 hover:bg-black text-white text-xs font-black uppercase tracking-wider rounded-xl flex items-center gap-2 transition-all shadow-md"
+                    >
+                      <FileUp size={15} />
+                      Bulk Import Students (CSV / Excel)
+                    </button>
+                    <button
+                      onClick={() => downloadSampleCSVTemplate(selectedClass.replace(/\s+/g, '_'), classWeight, examWeight)}
+                      className="px-4 py-2.5 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/60 dark:hover:bg-emerald-900 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 rounded-xl text-xs font-bold flex items-center gap-2 transition-all"
+                    >
+                      <Download size={14} />
+                      Download CSV Template
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
@@ -1592,57 +1590,19 @@ Rules:
         )}
       </AnimatePresence>
 
-      {/* Modal: Bulk Import Names */}
-      {showBulkAddModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <motion.div
-            initial={{ scale: 0.95, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl p-6 max-w-lg w-full space-y-4"
-          >
-            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
-              <h3 className="text-base font-black text-slate-900 dark:text-white flex items-center gap-2">
-                <Upload size={18} className="text-ghana-gold" />
-                Quick Import Student Names
-              </h3>
-              <button
-                onClick={() => setShowBulkAddModal(false)}
-                className="text-slate-400 hover:text-slate-600 text-sm font-bold"
-              >
-                ✕
-              </button>
-            </div>
-
-            <p className="text-xs text-slate-500">
-              Paste names from WhatsApp, Excel, Word, or an attendance sheet (one name per line or comma-separated):
-            </p>
-
-            <textarea
-              rows={8}
-              value={bulkNamesText}
-              onChange={(e) => setBulkNamesText(e.target.value)}
-              placeholder="1. Kwame Mensah&#10;2. Ama Serwaa&#10;3. Kofi Owusu&#10;4. Abena Korkor..."
-              className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-3.5 text-xs font-bold text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-900"
-            />
-
-            <div className="flex justify-end gap-2 pt-2">
-              <button
-                onClick={() => setShowBulkAddModal(false)}
-                className="px-4 py-2.5 text-xs font-bold text-slate-500 hover:text-slate-700 rounded-xl"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleBulkAdd}
-                className="px-5 py-2.5 bg-slate-900 hover:bg-black text-white text-xs font-black uppercase tracking-wider rounded-xl flex items-center gap-2 transition-all shadow-md"
-              >
-                <Plus size={15} />
-                Import Students
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      )}
+      {/* Modal: Bulk Import Students (CSV / Excel / TSV) */}
+      <BulkStudentImportModal
+        isOpen={showBulkAddModal}
+        onClose={() => setShowBulkAddModal(false)}
+        onImport={handleImportStudents}
+        currentStudentCount={students.length}
+        classWeight={classWeight}
+        examWeight={examWeight}
+        selectedClass={selectedClass}
+        selectedSubject={selectedSubject}
+        gradingSystem={gradingSystem}
+        calculateMetrics={calculateMetrics}
+      />
 
       {/* Modal: Clear Roster Confirmation */}
       {showClearConfirm && (

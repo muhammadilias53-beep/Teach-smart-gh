@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   MessageSquare, MessageCircle, FileText, Calendar, BookOpen, PenTool, CheckCircle, Menu, X, 
-  LogOut, LayoutDashboard, CreditCard, Zap, User, Package, Library, ShieldCheck, Bell, Shield, 
+  LogOut, LayoutDashboard, CreditCard, Zap, User, Package, Library, ShieldCheck, Shield, 
   Atom, Calculator, Cpu, Award, Users, Briefcase, FolderOpen, ChevronDown, ChevronRight,
   ChevronLeft, Compass
 } from 'lucide-react';
@@ -14,7 +14,6 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Logo } from '../common/Logo';
 import { ComplianceModal } from '../common/ComplianceModal';
 import { ConfirmationModal } from '../common/ConfirmationModal';
-import { NotificationCenter } from './NotificationCenter';
 import { PWAInstallButton } from '../common/PWAInstallButton';
 
 interface MenuItem {
@@ -176,11 +175,6 @@ const SidebarContent = ({ onCloseMobile, onShowCompliance, onShowLogoutConfirm, 
         isDesktopCollapsed ? "px-2 justify-center flex-col gap-2" : "px-5 justify-between"
       )}>
         <Logo iconOnly={isDesktopCollapsed} size={isDesktopCollapsed ? "sm" : "md"} />
-        {!isDesktopCollapsed && (
-          <div className="hidden lg:block">
-            <NotificationCenter />
-          </div>
-        )}
       </div>
 
       {/* Navigation Header / Title */}
@@ -569,7 +563,6 @@ const Sidebar = () => {
           <span className="font-black text-slate-900 text-sm uppercase tracking-tighter">TeachSmartGH</span>
         </div>
         <div className="flex items-center gap-2">
-          <NotificationCenter />
           <button 
             onClick={() => setIsMobileOpen(true)}
             className="p-2.5 bg-slate-100 rounded-xl text-slate-900"

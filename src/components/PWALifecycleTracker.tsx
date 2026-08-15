@@ -3,26 +3,10 @@ import { useAuth } from '../contexts/AuthContext';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { toast } from 'react-hot-toast';
-import { automateUserMessages } from '../lib/messageAutomator';
 
 export const PWALifecycleTracker: React.FC = () => {
-  const { user, profile, isSubscriptionActive, getTrialDaysLeft } = useAuth();
+  const { user, profile } = useAuth();
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
-
-  // Trigger automated curriculum scheduler/alerts for users
-  useEffect(() => {
-    if (user?.uid) {
-      const isSubActive = isSubscriptionActive ? isSubscriptionActive() : false;
-      const trialDays = getTrialDaysLeft ? getTrialDaysLeft() : 0;
-      automateUserMessages(
-        user.uid, 
-        user.email || undefined, 
-        isSubActive, 
-        trialDays, 
-        profile?.subscriptionStatus
-      ).catch(err => console.warn("Failed to generate automated messages:", err));
-    }
-  }, [user, profile]);
 
   useEffect(() => {
     // 1. Detect and Log Launch Mode (Standalone vs. Standard Tab)

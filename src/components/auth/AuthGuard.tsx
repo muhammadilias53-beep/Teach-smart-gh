@@ -4,7 +4,6 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useSidebar } from '../../contexts/SidebarContext';
 import { cn } from '../../lib/utils';
 import Sidebar from '../layout/Sidebar';
-import { EduPulseBanner } from '../layout/EduPulseBanner';
 import { TeacherOnboardingGuide } from '../onboarding/TeacherOnboardingGuide';
 import { motion } from 'motion/react';
 import { differenceInDays } from 'date-fns';
@@ -180,7 +179,6 @@ const AuthGuard = () => {
   
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
-      <EduPulseBanner />
       <Sidebar />
       <TeacherOnboardingGuide />
       <main className={cn(
