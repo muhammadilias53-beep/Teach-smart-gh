@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { PublicLayout } from './PublicLayout';
 import { ShieldCheck, Heart, Award, Users, ArrowRight, BookOpen, MapPin, Sparkles } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 export const About: React.FC = () => {
   const navigate = useNavigate();

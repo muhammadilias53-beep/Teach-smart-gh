@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Upload, FileText, CheckCircle, RefreshCw, Sparkles, Download, Info, Trash2, HelpCircle } from 'lucide-react';
 import { generateWithProxy } from '../../lib/gemini';
 import { useAuth } from '../../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { toast } from 'react-hot-toast';
 import { SafeMarkdown } from '../common/SafeMarkdown';
 

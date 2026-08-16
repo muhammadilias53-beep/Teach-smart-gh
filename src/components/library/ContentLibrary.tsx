@@ -41,7 +41,7 @@ import { toast } from 'react-hot-toast';
 import { SearchableDropdown } from '../ui/SearchableDropdown';
 import { ConfirmationModal } from '../common/ConfirmationModal';
 import { safeLocalStorage } from '../../lib/storage';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 const getSelectableStrands = (subj: string, lvl: string) => {
   if (subj === 'English' && lvl === 'JHS') {

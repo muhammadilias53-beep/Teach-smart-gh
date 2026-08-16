@@ -7,6 +7,20 @@ import './index.css';
 localStorage.setItem('theme', 'light');
 document.documentElement.classList.remove('dark');
 
+// Automatically reset route to Dashboard on page refresh / initial load unless on a public page
+try {
+  const rawHash = window.location.hash || '';
+  const currentPath = rawHash.replace(/^#\/?/, '/');
+  const publicPrefixes = ['/login', '/about', '/features', '/blog'];
+  const isPublicRoute = publicPrefixes.some(p => currentPath === p || currentPath.startsWith(`${p}/`) || currentPath.startsWith(`${p}?`));
+  
+  if (!isPublicRoute && currentPath !== '/' && currentPath !== '') {
+    window.location.hash = '#/';
+  }
+} catch (e) {
+  console.warn('[TeachSmart] Route reset check:', e);
+}
+
 // Register PWA Service Worker for offline asset caching and resilient routing
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {

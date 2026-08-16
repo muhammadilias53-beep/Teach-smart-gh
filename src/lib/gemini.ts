@@ -175,7 +175,38 @@ export const generateLessonPlan = async (
   `;
 
   const responseText = await generateWithProxy(prompt, systemInstruction, "application/json");
-  return parseAIResponse(responseText);
+  const parsed = parseAIResponse(responseText);
+
+  const normalizeString = (val: any): string => {
+    if (val === null || val === undefined) return '';
+    if (Array.isArray(val)) return val.map(v => typeof v === 'object' ? JSON.stringify(v) : String(v).trim()).filter(Boolean).join(', ');
+    if (typeof val === 'object') return JSON.stringify(val);
+    return String(val);
+  };
+
+  return {
+    ...parsed,
+    title: normalizeString(parsed.title),
+    weekEnding: normalizeString(parsed.weekEnding),
+    classSize: normalizeString(parsed.classSize),
+    strand: normalizeString(parsed.strand),
+    subStrand: normalizeString(parsed.subStrand),
+    indicatorCode: normalizeString(parsed.indicatorCode),
+    contentStandardCode: normalizeString(parsed.contentStandardCode),
+    performanceIndicator: normalizeString(parsed.performanceIndicator),
+    coreCompetencies: normalizeString(parsed.coreCompetencies),
+    keyWords: normalizeString(parsed.keyWords),
+    tlrs: normalizeString(parsed.tlrs),
+    references: normalizeString(parsed.references),
+    phase1: typeof parsed.phase1 === 'string' ? parsed.phase1 : normalizeString(parsed.phase1),
+    phase2: typeof parsed.phase2 === 'string' ? parsed.phase2 : normalizeString(parsed.phase2),
+    phase3: typeof parsed.phase3 === 'string' ? parsed.phase3 : normalizeString(parsed.phase3),
+    differentiation: parsed.differentiation || {
+      strugglingLearners: { activities: '', resources: '', assessments: '' },
+      averageLearners: { activities: '', resources: '', assessments: '' },
+      advancedLearners: { activities: '', resources: '', assessments: '' }
+    }
+  };
 };
 
 export const generateSchemeOfWork = async (

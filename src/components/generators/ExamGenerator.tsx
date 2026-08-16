@@ -23,7 +23,7 @@ import {
   Eye
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { generateExam } from '../../lib/gemini';
 import { db } from '../../lib/firebase';
 import { saveOffline } from '../../lib/indexedDB';

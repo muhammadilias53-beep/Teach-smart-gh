@@ -9,7 +9,7 @@ import { getLanguageInstruction, generateWithProxy } from '../../lib/gemini';
 import { cn } from '../../lib/utils';
 import { subjects, levels, CLASSES_BY_LEVEL, SUBJECT_STRANDS } from '../../constants';
 import { useAuth } from '../../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { toast } from 'react-hot-toast';
 import { SafeMarkdown } from '../common/SafeMarkdown';
 import { safeLocalStorage, safeSessionStorage } from '../../lib/storage';

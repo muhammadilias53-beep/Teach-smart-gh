@@ -3,7 +3,7 @@
  * Version: 1.0.1
  */
 import React from 'react';
-import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, Navigate } from 'react-router';
 import { AuthProvider } from './contexts/AuthContext';
 import AuthGuard from './components/auth/AuthGuard';
 import Login from './components/auth/Login';
@@ -25,6 +25,7 @@ import AdminCommandCenter from './components/admin/AdminCommandCenter';
 import { CurriculumDatabase } from './components/standards/CurriculumDatabase';
 import { PWALifecycleTracker } from './components/PWALifecycleTracker';
 import ScrollToTop from './components/common/ScrollToTop';
+import ResetToDashboardOnRefresh from './components/common/ResetToDashboardOnRefresh';
 import ConnectivityToast from './components/common/ConnectivityToast';
 
 // Public pages
@@ -51,6 +52,7 @@ function App() {
   return (
     <Router>
       <ScrollToTop />
+      <ResetToDashboardOnRefresh />
       <AuthProvider>
         <SidebarProvider>
           <PWALifecycleTracker />

@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { PublicLayout } from './PublicLayout';
 import { Calendar, BookOpen, ClipboardCheck, Sparkles, AlertCircle, CheckCircle2, FileSpreadsheet, ArrowRight, Layers, FileDown, Eye } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 export const Features: React.FC = () => {
   const navigate = useNavigate();

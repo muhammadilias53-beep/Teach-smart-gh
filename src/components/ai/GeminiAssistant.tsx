@@ -7,7 +7,7 @@ import { SafeMarkdown } from '../common/SafeMarkdown';
 import 'highlight.js/styles/github.css';
 import { toast } from 'react-hot-toast';
 import { useAuth } from '../../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { safeLocalStorage, safeSessionStorage } from '../../lib/storage';
 
 const DEFAULT_GEMINI_MSG = [

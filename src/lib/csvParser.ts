@@ -24,6 +24,20 @@ export interface CSVParseResult {
   validCount: number;
   hasScores: boolean;
   warnings: string[];
+  documentTitle?: string;
+}
+
+export interface CSVExportOptions {
+  title?: string;
+  schoolName?: string;
+  className?: string;
+  subjectName?: string;
+  termName?: string;
+  academicYear?: string;
+  classWeight?: number;
+  examWeight?: number;
+  gradingSystem?: 'ges_numeric' | 'letter';
+  includeMetadataBlock?: boolean;
 }
 
 /**
@@ -35,11 +49,12 @@ export function parseCSVToRows(rawText: string): string[][] {
   if (!cleanText) return [];
 
   // Determine delimiter: comma, tab, or semicolon
-  const firstLine = cleanText.split(/\r?\n/)[0] || '';
+  const lines = cleanText.split(/\r?\n/).filter(l => l.trim().length > 0 && !l.trim().startsWith('#'));
+  const firstDataLine = lines[0] || '';
   let delimiter = ',';
-  if (firstLine.includes('\t')) {
+  if (firstDataLine.includes('\t')) {
     delimiter = '\t';
-  } else if (firstLine.includes(';') && !firstLine.includes(',')) {
+  } else if (firstDataLine.includes(';') && !firstDataLine.includes(',')) {
     delimiter = ';';
   }
 
@@ -129,7 +144,8 @@ function matchHeaderField(header: string): string | null {
   // Class Score / SBA / Continuous Assessment
   if ([
     'classscore', 'classmark', 'sba', 'sbascore', 'continuousassessment', 'ca', 
-    'cascore', 'classassessment', 'continuousassessmentscore', '30score', 'classscore30', 'sba30'
+    'cascore', 'classassessment', 'continuousassessmentscore', '30score', 'classscore30', 'sba30',
+    'classscoremax30', 'classscoremax50'
   ].includes(norm)) {
     return 'classScore';
   }
@@ -137,7 +153,7 @@ function matchHeaderField(header: string): string | null {
   // Exam Score / End of Term Exam
   if ([
     'examscore', 'exammark', 'exam', 'endoftermexam', 'terminalexam', 
-    'endofterm', 'examination', 'exam70', 'examscore70'
+    'endofterm', 'examination', 'exam70', 'examscore70', 'examscoremax70', 'examscoremax50'
   ].includes(norm)) {
     return 'examScore';
   }
@@ -167,6 +183,7 @@ function matchHeaderField(header: string): string | null {
 
 /**
  * Parses raw text or CSV matrix into structured Student records.
+ * Supports metadata blocks, comment headers, and flexible table column layouts.
  */
 export function parseStudentCSV(
   csvText: string,
@@ -187,34 +204,55 @@ export function parseStudentCSV(
     };
   }
 
-  // Check if first row is a header
-  const firstRow = matrix[0];
-  const matchedFields = firstRow.map(h => matchHeaderField(h));
-  const hasRecognizedHeader = matchedFields.some(f => f !== null);
+  let documentTitle: string | undefined = undefined;
 
+  // Find the header row in case metadata/title lines precede the table
+  let headerRowIndex = -1;
   let headerMap: { [colIndex: number]: string } = {};
-  let dataRows = matrix;
 
-  if (hasRecognizedHeader) {
-    firstRow.forEach((h, idx) => {
-      const match = matchHeaderField(h);
-      if (match) headerMap[idx] = match;
-    });
-    dataRows = matrix.slice(1);
+  for (let r = 0; r < Math.min(matrix.length, 10); r++) {
+    const row = matrix[r];
+    
+    // Check if row is a metadata title row
+    const firstCell = (row[0] || '').trim();
+    if (firstCell.toLowerCase().startsWith('title:') || firstCell.toLowerCase().startsWith('# document title:')) {
+      documentTitle = firstCell.replace(/^(title:|# document title:)/i, '').trim();
+    }
+
+    const matchedFields = row.map(h => matchHeaderField(h));
+    const hasNameOrRoll = matchedFields.includes('name') || matchedFields.includes('rollNumber');
+    const matchedCount = matchedFields.filter(f => f !== null).length;
+
+    if (hasNameOrRoll && matchedCount >= 1) {
+      headerRowIndex = r;
+      row.forEach((h, idx) => {
+        const match = matchHeaderField(h);
+        if (match) headerMap[idx] = match;
+      });
+      break;
+    }
+  }
+
+  let dataRows: string[][] = [];
+
+  if (headerRowIndex >= 0) {
+    dataRows = matrix.slice(headerRowIndex + 1);
   } else {
-    // If no header found, assume standard layout:
-    // Col 0: Name (or Col 0 is Index/No and Col 1 is Name if Col 0 is purely numeric)
+    // If no explicit header row was detected, check the first row format:
+    // If first row has pure numbers in first column, assume [Roll, Name, Gender, ClassScore, ExamScore]
     if (matrix.length > 0 && /^\d+$/.test(matrix[0][0]) && matrix[0].length > 1) {
       headerMap[0] = 'rollNumber';
       headerMap[1] = 'name';
       if (matrix[0].length > 2) headerMap[2] = 'gender';
       if (matrix[0].length > 3) headerMap[3] = 'classScore';
       if (matrix[0].length > 4) headerMap[4] = 'examScore';
+      dataRows = matrix;
     } else {
       headerMap[0] = 'name';
       if (matrix[0].length > 1) headerMap[1] = 'gender';
       if (matrix[0].length > 2) headerMap[2] = 'classScore';
       if (matrix[0].length > 3) headerMap[3] = 'examScore';
+      dataRows = matrix;
     }
   }
 
@@ -222,8 +260,8 @@ export function parseStudentCSV(
   let hasScores = false;
 
   dataRows.forEach((row, rowIndex) => {
-    // Skip empty lines
-    if (row.length === 0 || row.every(cell => !cell.trim())) {
+    // Skip empty lines or comment/separator lines
+    if (row.length === 0 || row.every(cell => !cell.trim()) || row[0]?.startsWith('#') || row[0]?.startsWith('===')) {
       return;
     }
 
@@ -283,9 +321,12 @@ export function parseStudentCSV(
       }
     });
 
-    // Fallback: If name wasn't mapped via headers, use the first non-empty cell
+    // Fallback: If name wasn't mapped via headers, use the first non-numeric non-empty cell
     if (!name && row.length > 0) {
-      name = (row[0] || '').replace(/^[\d.)\s-]+/, '').trim();
+      const firstNonNum = row.find(c => c && isNaN(Number(c)));
+      if (firstNonNum) {
+        name = firstNonNum.replace(/^[\d.)\s-]+/, '').trim();
+      }
     }
 
     const isValid = name.length >= 2;
@@ -315,52 +356,168 @@ export function parseStudentCSV(
     totalParsed: parsedRows.length,
     validCount,
     hasScores,
-    warnings: Array.from(new Set(warnings))
+    warnings: Array.from(new Set(warnings)),
+    documentTitle
   };
 }
 
 /**
- * Generates an official downloadable CSV sample template for teachers.
+ * Generates an official, beautifully formatted CSV sample template for Ghanaian teachers.
+ * Includes official document title header and properly formatted cell values.
  */
-export function generateSampleRosterCSV(classWeight = 30, examWeight = 70): string {
+export function generateSampleRosterCSV(options: CSVExportOptions = {}): string {
+  const {
+    title = 'Terminal Continuous Assessment & Examination Broad Sheet',
+    schoolName = 'Ghana Model Basic School',
+    className = 'Basic 7',
+    subjectName = 'Integrated Science',
+    termName = 'Term 1',
+    academicYear = '2025/2026',
+    classWeight = 30,
+    examWeight = 70,
+    includeMetadataBlock = true
+  } = options;
+
+  const metadataLines: string[] = [];
+
+  if (includeMetadataBlock) {
+    metadataLines.push(`"DOCUMENT TITLE: ${title.replace(/"/g, '""')}"`);
+    metadataLines.push(`"SCHOOL: ${schoolName.replace(/"/g, '""')} | CLASS: ${className} | SUBJECT: ${subjectName} | TERM: ${termName} (${academicYear})"`);
+    metadataLines.push(`"ASSESSMENT WEIGHTS: Class Continuous Assessment (${classWeight}%) | End-of-Term Examination (${examWeight}%)"`);
+    metadataLines.push(`"CURRICULUM STANDARD: Official Ghana Education Service (GES) & NaCCA Continuous Assessment Framework"`);
+    metadataLines.push(''); // Blank line separator before tabular columns
+  }
+
   const headers = [
-    'Student Name',
-    'Gender',
     'Roll Number',
-    `Class Score (Max ${classWeight})`,
-    `Exam Score (Max ${examWeight})`,
-    'Attendance',
+    'Student Name',
+    'Gender (M/F)',
+    `Class Score [Max ${classWeight}%]`,
+    `Exam Score [Max ${examWeight}%]`,
+    'Attendance (e.g. 58/60)',
     'Conduct',
     'Attitude',
-    'Remarks'
+    'Teacher Remarks'
   ];
 
   const sampleRows = [
-    ['Kwame Mensah', 'Male', 'GH-001', '24.5', '58.0', '58/60', 'Very Good', 'Hardworking & Attentive', 'Consistently participates in class discussions.'],
-    ['Ama Serwaa', 'Female', 'GH-002', '27.0', '64.5', '60/60', 'Exemplary', 'Diligent & Dedicated', 'Outstanding problem-solving skills and leadership.'],
-    ['Kofi Owusu', 'Male', 'GH-003', '18.0', '42.0', '52/60', 'Satisfactory', 'Needs Guidance', 'Encouraged to submit all homework assignments on time.']
+    ['GH-001', 'Kwame Mensah', 'Male', '24.5', '58.0', '58/60', 'Very Good & Respectful', 'Hardworking & Attentive', 'Consistently participates in class discussions and shows strong analytical ability.'],
+    ['GH-002', 'Ama Serwaa', 'Female', '27.0', '64.5', '60/60', 'Exemplary', 'Diligent & Dedicated', 'Outstanding academic mastery with exceptional problem-solving skills and leadership.'],
+    ['GH-003', 'Kofi Owusu', 'Male', '18.0', '42.0', '52/60', 'Satisfactory', 'Needs Guidance', 'Good potential; encouraged to submit all homework assignments on time.'],
+    ['GH-004', 'Akosua Darko', 'Female', '26.0', '61.5', '59/60', 'Excellent', 'Inquisitive & Creative', 'Demonstrates thorough comprehension of practical science activities.'],
+    ['GH-005', 'Yaw Boateng', 'Male', '21.5', '49.0', '55/60', 'Good', 'Cooperative', 'Active in group tasks. Regular revision will elevate overall performance.']
   ];
 
-  const lines = [
-    headers.join(','),
-    ...sampleRows.map(row => row.map(cell => `"${cell.replace(/"/g, '""')}"`).join(','))
+  const formattedRows = sampleRows.map(row => 
+    row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')
+  );
+
+  const allLines = [
+    ...metadataLines,
+    headers.map(h => `"${h.replace(/"/g, '""')}"`).join(','),
+    ...formattedRows
   ];
 
-  return lines.join('\r\n');
+  return '\uFEFF' + allLines.join('\r\n'); // UTF-8 BOM for perfect Excel / spreadsheet formatting
 }
 
 /**
- * Triggers browser download of the sample CSV template.
+ * Generates an empty/blank roster template ready for teachers to fill in.
  */
-export function downloadSampleCSVTemplate(className = 'Basic_7', classWeight = 30, examWeight = 70) {
-  const content = generateSampleRosterCSV(classWeight, examWeight);
+export function generateBlankRosterCSV(options: CSVExportOptions = {}): string {
+  const {
+    title = 'Student Continuous Assessment & Examination Register',
+    schoolName = 'Ghana Model Basic School',
+    className = 'Basic 7',
+    subjectName = 'Integrated Science',
+    termName = 'Term 1',
+    academicYear = '2025/2026',
+    classWeight = 30,
+    examWeight = 70,
+    includeMetadataBlock = true
+  } = options;
+
+  const metadataLines: string[] = [];
+
+  if (includeMetadataBlock) {
+    metadataLines.push(`"DOCUMENT TITLE: ${title.replace(/"/g, '""')}"`);
+    metadataLines.push(`"SCHOOL: ${schoolName.replace(/"/g, '""')} | CLASS: ${className} | SUBJECT: ${subjectName} | TERM: ${termName} (${academicYear})"`);
+    metadataLines.push(`"ASSESSMENT WEIGHTS: Class Continuous Assessment (${classWeight}%) | End-of-Term Examination (${examWeight}%)"`);
+    metadataLines.push('');
+  }
+
+  const headers = [
+    'Roll Number',
+    'Student Name',
+    'Gender (M/F)',
+    `Class Score [Max ${classWeight}%]`,
+    `Exam Score [Max ${examWeight}%]`,
+    'Attendance',
+    'Conduct',
+    'Attitude',
+    'Teacher Remarks'
+  ];
+
+  // 10 placeholder empty rows with generated Roll Numbers
+  const emptyRows = Array.from({ length: 10 }, (_, i) => {
+    const roll = `GH-${String(i + 1).padStart(3, '0')}`;
+    return [`"${roll}"`, '""', '""', '""', '""', '""', '""', '""', '""'].join(',');
+  });
+
+  const allLines = [
+    ...metadataLines,
+    headers.map(h => `"${h.replace(/"/g, '""')}"`).join(','),
+    ...emptyRows
+  ];
+
+  return '\uFEFF' + allLines.join('\r\n');
+}
+
+/**
+ * Triggers browser download of the sample CSV template with custom title & school metadata.
+ */
+export function downloadSampleCSVTemplate(
+  className = 'Basic_7', 
+  classWeight = 30, 
+  examWeight = 70,
+  customTitle = 'Terminal Continuous Assessment & Examination Broad Sheet',
+  schoolName = 'Ghana Model Basic School',
+  subjectName = 'Integrated Science',
+  termName = 'Term 1',
+  academicYear = '2025/2026',
+  isTemplateBlank = false
+) {
+  const content = isTemplateBlank
+    ? generateBlankRosterCSV({
+        title: customTitle,
+        schoolName,
+        className,
+        subjectName,
+        termName,
+        academicYear,
+        classWeight,
+        examWeight
+      })
+    : generateSampleRosterCSV({
+        title: customTitle,
+        schoolName,
+        className,
+        subjectName,
+        termName,
+        academicYear,
+        classWeight,
+        examWeight
+      });
+
   const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.setAttribute('href', url);
-  link.setAttribute('download', `TeachSmartGH_${className}_Roster_Template.csv`);
+  const sanitizedTitle = customTitle.replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 30);
+  link.setAttribute('download', `TeachSmartGH_${sanitizedTitle}_${className}_Template.csv`);
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
 }
+

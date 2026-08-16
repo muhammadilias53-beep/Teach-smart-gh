@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import { Sparkles, Save, Download, RefreshCw, FileText, ChevronLeft, ChevronRight, CheckCircle, Users, Layout, AlignLeft, Layers, GraduationCap, MessageSquare, Edit3, Check, RotateCcw, FileEdit, AlertCircle, Compass, Search } from 'lucide-react';
 import { CurriculumReferenceModal } from '../standards/CurriculumReferenceModal';
@@ -40,6 +40,13 @@ import {
   subjectsByLevel
 } from '../../constants';
 import { SearchableDropdown } from '../ui/SearchableDropdown';
+
+const safeListItems = (val: any): string[] => {
+  if (!val) return [];
+  if (Array.isArray(val)) return val.map(v => typeof v === 'string' ? v.trim() : String(v)).filter(Boolean);
+  if (typeof val === 'string') return val.split(',').map(s => s.trim()).filter(Boolean);
+  return [String(val).trim()];
+};
 
 const GHANAIAN_LANGUAGES = [
   "Dagaare",
@@ -1614,9 +1621,9 @@ const LessonPlanGenerator = () => {
                       <section>
                         <h3 className="text-[10px] font-black text-emerald-deep uppercase tracking-widest mb-2">Key Words</h3>
                         <div className="flex flex-wrap gap-2 mt-2">
-                          {result.keyWords?.split(',').map((word: string, i: number) => (
+                          {safeListItems(result.keyWords).map((word: string, i: number) => (
                             <span key={i} className="px-2 py-1 bg-white border border-slate-200 rounded text-[10px] font-medium text-slate-600">
-                              {word.trim()}
+                              {word}
                             </span>
                           ))}
                         </div>
@@ -1800,9 +1807,9 @@ const LessonPlanGenerator = () => {
                       <div>
                         <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">TLRs / Learning Aids</span>
                         <div className="flex flex-wrap gap-1.5 mt-1.5">
-                          {result.tlrs?.split(',').map((item: string, idx: number) => (
+                          {safeListItems(result.tlrs).map((item: string, idx: number) => (
                             <span key={idx} className="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded text-xs font-bold border border-indigo-100">
-                              🧮 {item.trim()}
+                              🧮 {item}
                             </span>
                           ))}
                         </div>

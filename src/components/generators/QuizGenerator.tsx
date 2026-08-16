@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Sparkles, Download, RefreshCw, Printer, AlertCircle, FileText, CheckSquare, Plus, Trash2, HelpCircle, Edit3, Check, Eye, CheckCircle } from 'lucide-react';
 import { generateWithProxy } from '../../lib/gemini';
 import { useAuth } from '../../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { toast } from 'react-hot-toast';
 import { SafeMarkdown } from '../common/SafeMarkdown';
 import { levels, CLASSES_BY_LEVEL, subjectsByLevel } from '../../constants';

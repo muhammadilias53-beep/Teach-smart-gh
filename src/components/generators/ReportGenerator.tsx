@@ -5,16 +5,17 @@ import {
   Percent, Plus, Trash2, ShieldCheck, HelpCircle, Save, Users, 
   FileSpreadsheet, Check, Edit2, ChevronDown, BookOpen, AlertTriangle,
   ArrowUpDown, Search, FileText, CheckCircle2, UserPlus, Upload,
-  Edit3, Eye, FileUp
+  Edit3, Eye, FileUp, Filter, SlidersHorizontal, Tag, Heading, X
 } from 'lucide-react';
 import { generateWithProxy } from '../../lib/gemini';
 import { useAuth } from '../../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { toast } from 'react-hot-toast';
 import { SafeMarkdown } from '../common/SafeMarkdown';
 import { safeLocalStorage } from '../../lib/storage';
 import { BulkStudentImportModal } from './BulkStudentImportModal';
 import { downloadSampleCSVTemplate } from '../../lib/csvParser';
+import { exportRosterToExcel, exportTemplateToExcel } from '../../lib/excelExport';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
@@ -46,6 +47,14 @@ const DEFAULT_SUBJECTS = [
   'Religious & Moral Education (RME)', 'Ghanaian Language', 'French', 'Physical Education'
 ];
 
+const TITLE_PRESETS = [
+  'Terminal Continuous Assessment & Examination Broad Sheet',
+  'Continuous Assessment (SBA) Class Register',
+  'End-of-Term Examination Marks Sheet',
+  'Mid-Term Progress & Academic Evaluation Report',
+  'National Standardized Assessment Record'
+];
+
 export default function ReportGenerator() {
   const { user, canGenerate } = useAuth();
   const navigate = useNavigate();
@@ -53,6 +62,12 @@ export default function ReportGenerator() {
   // Mode: 'roster' (Student Marks & Score Sheet), 'comment' (AI Remarks Creator), 'single_card' (Individual Report Card Preview)
   const [activeTab, setActiveTab] = useState<'roster' | 'comment' | 'single_card'>('roster');
   const [loading, setLoading] = useState(false);
+
+  // Document Title with Custom Presets
+  const [documentTitle, setDocumentTitle] = useState<string>(() => 
+    safeLocalStorage.getItem('teachsmart_report_doc_title') || 'Terminal Continuous Assessment & Examination Broad Sheet'
+  );
+  const [isEditingTitle, setIsEditingTitle] = useState<boolean>(false);
 
   // Class & Academic Term Metadata
   const [schoolName, setSchoolName] = useState(() => safeLocalStorage.getItem('teachsmart_school_name') || 'Ghana Model Basic School');
@@ -69,6 +84,8 @@ export default function ReportGenerator() {
   // Search & Filter
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<'name' | 'rank' | 'total'>('rank');
+  const [gradeFilter, setGradeFilter] = useState<string>('ALL'); // 'ALL', '1'..'9', 'A'..'F', 'distinction', 'credit', 'pass', 'remedial'
+  const [showGradeFilterMenu, setShowGradeFilterMenu] = useState<boolean>(false);
 
   // Students list (NO AI generated or fake names by default - loaded from teacher storage)
   const storageKey = useMemo(() => {
@@ -207,9 +224,22 @@ export default function ReportGenerator() {
     return { total, grade, gradeDesc, remark };
   };
 
-  // Compute ranks for all students
+  // Grade Counts for Filter badges & breakdown
+  const gradeCounts = useMemo(() => {
+    const counts: Record<string, number> = { ALL: students.length, distinction: 0, credit: 0, pass: 0, remedial: 0 };
+    students.forEach(s => {
+      counts[s.grade] = (counts[s.grade] || 0) + 1;
+      if (['1', '2', 'A', 'B'].includes(s.grade)) counts.distinction++;
+      else if (['3', '4', 'C'].includes(s.grade)) counts.credit++;
+      else if (['5', '6', 'D'].includes(s.grade)) counts.pass++;
+      else counts.remedial++;
+    });
+    return counts;
+  }, [students]);
+
+  // Compute ranks for all students and apply filters
   const rankedStudents = useMemo(() => {
-    // Sort descending by total to assign ranks
+    // Sort descending by total to assign global ranks
     const sortedByTotal = [...students].sort((a, b) => b.total - a.total);
     const rankMap = new Map<string, number>();
 
@@ -223,11 +253,19 @@ export default function ReportGenerator() {
       }
     }
 
-    // Filter by search query
-    let filtered = students.filter(s => 
-      s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (s.rollNumber && s.rollNumber.toLowerCase().includes(searchQuery.toLowerCase()))
-    );
+    // Filter by search query and grade filter
+    let filtered = students.filter(s => {
+      const matchesSearch = s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (s.rollNumber && s.rollNumber.toLowerCase().includes(searchQuery.toLowerCase()));
+      if (!matchesSearch) return false;
+
+      if (gradeFilter === 'ALL') return true;
+      if (gradeFilter === 'distinction') return ['1', '2', 'A', 'B'].includes(s.grade);
+      if (gradeFilter === 'credit') return ['3', '4', 'C'].includes(s.grade);
+      if (gradeFilter === 'pass') return ['5', '6', 'D'].includes(s.grade);
+      if (gradeFilter === 'remedial') return ['7', '8', '9', 'E', 'F'].includes(s.grade);
+      return s.grade === gradeFilter;
+    });
 
     // Apply active sort
     if (sortBy === 'name') {
@@ -243,7 +281,7 @@ export default function ReportGenerator() {
       ...s,
       rank: rankMap.get(s.id) || 1
     }));
-  }, [students, searchQuery, sortBy]);
+  }, [students, searchQuery, sortBy, gradeFilter]);
 
   // Add Single Student
   const handleAddStudent = () => {
@@ -473,7 +511,7 @@ Rules:
 
       doc.setFontSize(11);
       doc.setTextColor(71, 85, 105);
-      doc.text(`TERMINAL CONTINUOUS ASSESSMENT & EXAMINATION BROAD SHEET`, pageWidth / 2, 25, { align: 'center' });
+      doc.text(documentTitle.toUpperCase(), pageWidth / 2, 25, { align: 'center' });
 
       doc.setFontSize(9);
       doc.setFont('helvetica', 'normal');
@@ -537,7 +575,8 @@ Rules:
       doc.setFontSize(7);
       doc.text(`Generated with TeachSmartGH • Catalyst Creative • Official NaCCA/GES Assessment Format`, pageWidth / 2, 202, { align: 'center' });
 
-      doc.save(`${selectedClass}_${selectedSubject}_${selectedTerm}_Terminal_Report.pdf`);
+      const sanitizedPdfTitle = documentTitle.replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 25);
+      doc.save(`${sanitizedPdfTitle}_${selectedClass}_${selectedSubject}.pdf`);
       toast.success('PDF Broad Sheet generated! 📄');
     } catch (err: any) {
       console.error(err);
@@ -545,35 +584,115 @@ Rules:
     }
   };
 
-  // Export CSV format
-  const handleExportCSV = () => {
-    if (students.length === 0) {
-      toast.error('No students in roster to export.');
+  // Export Rich Formatted Excel (.xlsx) with font styling, Ghana brand colors, custom alignments & statistical summary
+  const handleExportExcel = async (exportOnlyFiltered = false) => {
+    const listToExport = exportOnlyFiltered ? rankedStudents : [...students].map((s) => {
+      const sorted = [...students].sort((a, b) => b.total - a.total);
+      const r = sorted.findIndex(item => item.id === s.id) + 1;
+      return { ...s, rank: r };
+    });
+
+    if (listToExport.length === 0) {
+      toast.error('No students available to export.');
       return;
     }
 
-    const headers = ['Position', 'Student Name', 'Gender', `Class Score (${classWeight})`, `Exam Score (${examWeight})`, 'Total (100)', 'Grade', 'Description', 'Remarks'];
-    const rows = rankedStudents.map(s => [
-      s.rank,
+    try {
+      toast.loading('Generating beautifully styled Excel workbook...', { id: 'excel-export' });
+      await exportRosterToExcel(listToExport, {
+        documentTitle,
+        schoolName,
+        className: selectedClass,
+        subjectName: selectedSubject,
+        selectedTerm,
+        academicYear,
+        classWeight,
+        examWeight,
+        gradingSystem,
+        isFiltered: exportOnlyFiltered && gradeFilter !== 'ALL',
+        filterLabel: gradeFilter === 'ALL' ? 'All Grades' : `Grade: ${gradeFilter}`
+      });
+      toast.dismiss('excel-export');
+      toast.success('Formatted Excel Sheet (.xlsx) downloaded! 📊');
+    } catch (err) {
+      console.error('Failed to export Excel file:', err);
+      toast.dismiss('excel-export');
+      toast.error('Failed to generate Excel workbook.');
+    }
+  };
+
+  // Export CSV format with professional cell formats, custom title & metadata header, and UTF-8 BOM
+  const handleExportCSV = (exportOnlyFiltered = false) => {
+    const listToExport = exportOnlyFiltered ? rankedStudents : [...students].map((s) => {
+      const sorted = [...students].sort((a, b) => b.total - a.total);
+      const r = sorted.findIndex(item => item.id === s.id) + 1;
+      return { ...s, rank: r };
+    });
+
+    if (listToExport.length === 0) {
+      toast.error('No students available to export.');
+      return;
+    }
+
+    const metadataLines = [
+      `"DOCUMENT TITLE: ${documentTitle.replace(/"/g, '""')}"`,
+      `"SCHOOL: ${schoolName.replace(/"/g, '""')} | CLASS: ${selectedClass} | SUBJECT: ${selectedSubject} | TERM: ${selectedTerm} (${academicYear})"`,
+      `"ASSESSMENT WEIGHTS: Class Continuous Assessment (${classWeight}%) | End-of-Term Examination (${examWeight}%)"`,
+      `"GRADING SYSTEM: ${gradingSystem === 'ges_numeric' ? 'GES 1-9 Standard Numeric Scale' : 'Letter Scale (A-F)'} | FILTER: ${gradeFilter === 'ALL' ? 'All Grades' : 'Grade ' + gradeFilter}"`,
+      `"TOTAL ENROLMENT: ${students.length} Pupils | EXPORTED RECORDS: ${listToExport.length} Students"`,
+      `"ISSUED VIA: TeachSmartGH (Catalyst Creative) • NaCCA Curriculum Aligned Assessment"`,
+      ''
+    ];
+
+    const headers = [
+      'Rank / Position',
+      'Roll / Index Number',
+      'Student Full Name',
+      'Gender',
+      `Class Assessment [Max ${classWeight}%]`,
+      `End-of-Term Exam [Max ${examWeight}%]`,
+      'Total Score [100%]',
+      `Grade [${gradingSystem === 'ges_numeric' ? '1-9' : 'A-F'}]`,
+      'Performance Classification',
+      'Attendance',
+      'Conduct',
+      'Attitude',
+      "Teacher's Remarks"
+    ];
+
+    const rows = listToExport.map(s => [
+      s.rank ? `${s.rank}${getOrdinal(s.rank)}` : '—',
+      `"${(s.rollNumber || '').replace(/"/g, '""')}"`,
       `"${s.name.replace(/"/g, '""')}"`,
-      s.gender || 'male',
-      s.classScore,
-      s.examScore,
-      s.total,
+      s.gender === 'female' ? 'Female' : 'Male',
+      s.classScore.toFixed(1),
+      s.examScore.toFixed(1),
+      s.total.toFixed(1),
       s.grade,
       `"${s.gradeDesc}"`,
+      `"${(s.attendance || '—').replace(/"/g, '""')}"`,
+      `"${(s.conduct || 'Good').replace(/"/g, '""')}"`,
+      `"${(s.attitude || 'Attentive').replace(/"/g, '""')}"`,
       `"${(s.remark || '').replace(/"/g, '""')}"`
     ]);
 
-    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
-    const encodedUri = encodeURI(csvContent);
+    const csvContent = '\uFEFF' + [
+      ...metadataLines,
+      headers.map(h => `"${h.replace(/"/g, '""')}"`).join(','),
+      ...rows.map(e => e.join(','))
+    ].join('\r\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `${selectedClass}_${selectedSubject}_${selectedTerm}_Scores.csv`);
+    link.setAttribute('href', url);
+    const sanitizedTitle = documentTitle.replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 30);
+    link.setAttribute('download', `TeachSmartGH_${sanitizedTitle}_${selectedClass}_${selectedSubject}_Scores.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    toast.success('CSV score sheet downloaded! 📊');
+    URL.revokeObjectURL(url);
+    toast.success('Professional CSV score sheet exported! 📊');
   };
 
   // Helper for 1st, 2nd, 3rd
@@ -653,6 +772,80 @@ Rules:
             <Sparkles size={15} className="text-ghana-gold" />
             AI Remarks Creator
           </button>
+        </div>
+      </div>
+
+      {/* Document Title Header & Presets Bar */}
+      <div className="bg-white dark:bg-slate-900 p-5 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-ghana-gold/15 text-ghana-gold flex items-center justify-center font-black">
+              <Heading size={16} />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <label className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-wider">
+                  Document Title / Score Sheet Heading
+                </label>
+                <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-[10px] font-bold text-slate-500 rounded">
+                  Included in CSV & PDF Exports
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-400">
+                Customize the headline for your Terminal Broad Sheet, CSV downloads, and Report Cards.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                const nextPreset = TITLE_PRESETS[0];
+                setDocumentTitle(nextPreset);
+                safeLocalStorage.setItem('teachsmart_report_doc_title', nextPreset);
+                toast.success('Document title reset to default.');
+              }}
+              className="text-[11px] font-bold text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 px-2.5 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            >
+              Reset to Default
+            </button>
+          </div>
+        </div>
+
+        {/* Title Input & Quick Preset Select */}
+        <div className="flex flex-col sm:flex-row items-stretch gap-2.5">
+          <div className="relative flex-1">
+            <input
+              type="text"
+              value={documentTitle}
+              onChange={(e) => {
+                const val = e.target.value;
+                setDocumentTitle(val);
+                safeLocalStorage.setItem('teachsmart_report_doc_title', val);
+              }}
+              placeholder="e.g. Terminal Continuous Assessment & Examination Broad Sheet"
+              className="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs font-black text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-emerald-500"
+            />
+          </div>
+
+          <div className="relative sm:w-72 shrink-0">
+            <select
+              value={TITLE_PRESETS.includes(documentTitle) ? documentTitle : ''}
+              onChange={(e) => {
+                if (e.target.value) {
+                  setDocumentTitle(e.target.value);
+                  safeLocalStorage.setItem('teachsmart_report_doc_title', e.target.value);
+                }
+              }}
+              className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-xs font-bold text-slate-700 dark:text-slate-300 focus:outline-none"
+            >
+              <option value="" disabled>-- Quick Title Presets --</option>
+              {TITLE_PRESETS.map((t) => (
+                <option key={t} value={t}>{t}</option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
 
@@ -799,38 +992,80 @@ Rules:
                 </div>
               </div>
 
-              {/* Roster Actions */}
+              {/* Roster Actions & Template Downloads */}
               <div className="flex flex-wrap items-center gap-2">
                 <button
                   onClick={() => setShowBulkAddModal(true)}
                   className="px-4 py-2.5 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/60 dark:hover:bg-emerald-900 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all shadow-2xs"
                 >
                   <FileUp size={14} />
-                  Bulk Import (CSV / Excel)
+                  Bulk Import (Excel / CSV)
                 </button>
+
+                {/* Styled Templates Dropdown/Group */}
+                <div className="relative inline-flex items-center rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-0.5">
+                  <button
+                    onClick={() => exportTemplateToExcel({
+                      className: selectedClass,
+                      classWeight,
+                      examWeight,
+                      customTitle: documentTitle,
+                      schoolName,
+                      subjectName: selectedSubject,
+                      termName: selectedTerm,
+                      academicYear,
+                      isTemplateBlank: false
+                    })}
+                    className="px-3 py-2 text-[11px] font-bold text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 flex items-center gap-1.5 transition-colors"
+                    title="Download fully styled Excel (.xlsx) template with sample Ghanaian pupils"
+                  >
+                    <FileSpreadsheet size={13} className="text-emerald-600 dark:text-emerald-400" />
+                    Excel Template
+                  </button>
+                  <span className="h-4 w-px bg-slate-300 dark:bg-slate-600" />
+                  <button
+                    onClick={() => exportTemplateToExcel({
+                      className: selectedClass,
+                      classWeight,
+                      examWeight,
+                      customTitle: documentTitle,
+                      schoolName,
+                      subjectName: selectedSubject,
+                      termName: selectedTerm,
+                      academicYear,
+                      isTemplateBlank: true
+                    })}
+                    className="px-3 py-2 text-[11px] font-bold text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 flex items-center gap-1.5 transition-colors"
+                    title="Download blank styled Excel (.xlsx) template ready for manual score entry"
+                  >
+                    <FileText size={13} />
+                    Blank Excel
+                  </button>
+                </div>
+
                 <button
                   onClick={handleManualSave}
-                  className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all shadow-sm"
+                  className="px-3.5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all shadow-sm"
                 >
                   <Save size={14} />
-                  Save Roster
+                  Save
                 </button>
                 <button
                   onClick={handleExportPDF}
                   disabled={students.length === 0}
-                  className="px-4 py-2.5 bg-slate-900 hover:bg-black dark:bg-slate-100 dark:text-slate-900 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all disabled:opacity-40"
+                  className="px-3.5 py-2.5 bg-slate-900 hover:bg-black dark:bg-slate-100 dark:text-slate-900 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all disabled:opacity-40"
                 >
                   <Printer size={14} />
-                  Print Broad Sheet (PDF)
+                  PDF Broad Sheet
                 </button>
                 <button
-                  onClick={handleExportCSV}
+                  onClick={() => handleExportExcel(false)}
                   disabled={students.length === 0}
-                  className="px-3.5 py-2.5 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all disabled:opacity-40"
-                  title="Export to CSV"
+                  className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all disabled:opacity-40 shadow-sm"
+                  title="Export complete score sheet to beautifully formatted Excel (.xlsx) workbook"
                 >
-                  <Download size={14} />
-                  CSV
+                  <FileSpreadsheet size={14} />
+                  Export Excel (.xlsx)
                 </button>
               </div>
             </div>
@@ -881,9 +1116,10 @@ Rules:
 
             {/* Score Sheet Table & Controls */}
             <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
-              {/* Search and Table Tools */}
-              <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div className="flex items-center gap-3 w-full sm:w-auto">
+              {/* Search, Filter and Table Tools */}
+              <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4">
+                {/* Search & Counter */}
+                <div className="flex items-center gap-3 w-full lg:w-auto">
                   <div className="relative w-full sm:w-64">
                     <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                     <input
@@ -899,34 +1135,113 @@ Rules:
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
-                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Sort by:</span>
-                  <button
-                    onClick={() => setSortBy('rank')}
-                    className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
-                      sortBy === 'rank' ? 'bg-slate-900 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-600'
-                    }`}
-                  >
-                    Rank (Position)
-                  </button>
-                  <button
-                    onClick={() => setSortBy('name')}
-                    className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
-                      sortBy === 'name' ? 'bg-slate-900 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-600'
-                    }`}
-                  >
-                    Name
-                  </button>
-                  <button
-                    onClick={() => setSortBy('total')}
-                    className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
-                      sortBy === 'total' ? 'bg-slate-900 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-600'
-                    }`}
-                  >
-                    Total Mark
-                  </button>
+                {/* Grade Filter & Sorting Controls */}
+                <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto justify-start lg:justify-end">
+                  {/* Grade Column Quick Filter */}
+                  <div className="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-800 p-1 rounded-xl border border-slate-200 dark:border-slate-700">
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider px-1.5 flex items-center gap-1">
+                      <Filter size={11} className="text-ghana-gold" />
+                      Grade:
+                    </span>
+                    <select
+                      value={gradeFilter}
+                      onChange={(e) => setGradeFilter(e.target.value)}
+                      className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 text-xs font-bold text-slate-800 dark:text-slate-200 focus:outline-none"
+                    >
+                      <option value="ALL">All Grades ({students.length})</option>
+                      <optgroup label="Performance Groups">
+                        <option value="distinction">Distinction / High ({gradeCounts.distinction})</option>
+                        <option value="credit">Credit ({gradeCounts.credit})</option>
+                        <option value="pass">Pass ({gradeCounts.pass})</option>
+                        <option value="remedial">Remedial / Fail ({gradeCounts.remedial})</option>
+                      </optgroup>
+                      <optgroup label={gradingSystem === 'ges_numeric' ? 'GES Grades (1 - 9)' : 'Letter Grades (A - F)'}>
+                        {gradingSystem === 'ges_numeric' ? (
+                          ['1', '2', '3', '4', '5', '6', '7', '8', '9'].map(g => (
+                            <option key={g} value={g}>
+                              Grade {g} ({gradeCounts[g] || 0})
+                            </option>
+                          ))
+                        ) : (
+                          ['A', 'B', 'C', 'D', 'E', 'F'].map(g => (
+                            <option key={g} value={g}>
+                              Grade {g} ({gradeCounts[g] || 0})
+                            </option>
+                          ))
+                        )}
+                      </optgroup>
+                    </select>
+
+                    {gradeFilter !== 'ALL' && (
+                      <button
+                        onClick={() => setGradeFilter('ALL')}
+                        className="px-2 py-1 bg-amber-100 hover:bg-amber-200 dark:bg-amber-950 dark:hover:bg-amber-900 text-amber-900 dark:text-amber-200 rounded-lg text-[10px] font-black flex items-center gap-1 transition-colors"
+                        title="Clear Grade Filter"
+                      >
+                        <X size={10} />
+                        Clear
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Sort Controls */}
+                  <div className="flex items-center gap-1 bg-slate-50 dark:bg-slate-800 p-1 rounded-xl border border-slate-200 dark:border-slate-700">
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider px-1">Sort:</span>
+                    <button
+                      onClick={() => setSortBy('rank')}
+                      className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+                        sortBy === 'rank' ? 'bg-slate-900 text-white shadow-2xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900'
+                      }`}
+                    >
+                      Rank
+                    </button>
+                    <button
+                      onClick={() => setSortBy('name')}
+                      className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+                        sortBy === 'name' ? 'bg-slate-900 text-white shadow-2xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900'
+                      }`}
+                    >
+                      Name
+                    </button>
+                    <button
+                      onClick={() => setSortBy('total')}
+                      className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+                        sortBy === 'total' ? 'bg-slate-900 text-white shadow-2xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900'
+                      }`}
+                    >
+                      Total Mark
+                    </button>
+                  </div>
                 </div>
               </div>
+
+              {/* Active Filter Notification Bar */}
+              {gradeFilter !== 'ALL' && (
+                <div className="px-5 py-2.5 bg-amber-50 dark:bg-amber-950/40 border-b border-amber-200 dark:border-amber-900/60 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+                  <div className="flex items-center gap-2 text-amber-900 dark:text-amber-300 font-bold">
+                    <Filter size={13} className="text-ghana-gold" />
+                    <span>
+                      Filtered by <strong>Grade: {gradeFilter.toUpperCase()}</strong> — Showing {rankedStudents.length} student{rankedStudents.length === 1 ? '' : 's'}.
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => handleExportExcel(true)}
+                      className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-[10px] font-black uppercase flex items-center gap-1 transition-colors shadow-2xs"
+                      title="Export filtered records to formatted Excel spreadsheet"
+                    >
+                      <FileSpreadsheet size={11} />
+                      Export Filtered Excel (.xlsx)
+                    </button>
+                    <button
+                      onClick={() => setGradeFilter('ALL')}
+                      className="text-amber-800 dark:text-amber-400 hover:underline font-bold text-[11px]"
+                    >
+                      Show All
+                    </button>
+                  </div>
+                </div>
+              )}
 
               {/* Score Sheet Content */}
               {students.length === 0 ? (
@@ -936,24 +1251,72 @@ Rules:
                   </div>
                   <h3 className="text-lg font-black text-slate-900 dark:text-white">Roster is currently empty</h3>
                   <p className="text-slate-500 text-xs max-w-md mt-1">
-                    Add your students using the quick input box above, upload an official CSV / Excel sheet, or download our ready-made template.
+                    Add your students using the quick input box above, upload an official Excel / CSV sheet, or download our ready-made template.
                   </p>
                   <div className="flex flex-wrap items-center justify-center gap-3 mt-5">
                     <button
                       onClick={() => setShowBulkAddModal(true)}
-                      className="px-5 py-2.5 bg-slate-900 hover:bg-black text-white text-xs font-black uppercase tracking-wider rounded-xl flex items-center gap-2 transition-all shadow-md"
+                      className="px-5 py-2.5 bg-slate-900 hover:bg-black dark:bg-slate-100 dark:text-slate-900 text-white text-xs font-black uppercase tracking-wider rounded-xl flex items-center gap-2 transition-all shadow-md"
                     >
                       <FileUp size={15} />
-                      Bulk Import Students (CSV / Excel)
+                      Bulk Import (Excel / CSV)
                     </button>
                     <button
-                      onClick={() => downloadSampleCSVTemplate(selectedClass.replace(/\s+/g, '_'), classWeight, examWeight)}
-                      className="px-4 py-2.5 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/60 dark:hover:bg-emerald-900 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 rounded-xl text-xs font-bold flex items-center gap-2 transition-all"
+                      onClick={() => exportTemplateToExcel({
+                        className: selectedClass,
+                        classWeight,
+                        examWeight,
+                        customTitle: documentTitle,
+                        schoolName,
+                        subjectName: selectedSubject,
+                        termName: selectedTerm,
+                        academicYear,
+                        isTemplateBlank: false
+                      })}
+                      className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all shadow-sm"
                     >
-                      <Download size={14} />
-                      Download CSV Template
+                      <FileSpreadsheet size={14} />
+                      Download Excel Template (.xlsx)
+                    </button>
+                    <button
+                      onClick={() => exportTemplateToExcel({
+                        className: selectedClass,
+                        classWeight,
+                        examWeight,
+                        customTitle: documentTitle,
+                        schoolName,
+                        subjectName: selectedSubject,
+                        termName: selectedTerm,
+                        academicYear,
+                        isTemplateBlank: true
+                      })}
+                      className="px-4 py-2.5 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-600 rounded-xl text-xs font-bold flex items-center gap-2 transition-all"
+                    >
+                      <FileText size={14} />
+                      Download Blank Excel
                     </button>
                   </div>
+                </div>
+              ) : rankedStudents.length === 0 ? (
+                <div className="p-12 text-center flex flex-col items-center justify-center">
+                  <div className="w-14 h-14 bg-amber-50 dark:bg-amber-950/50 text-amber-600 rounded-3xl flex items-center justify-center mb-3">
+                    <Filter size={24} />
+                  </div>
+                  <h3 className="text-base font-black text-slate-900 dark:text-white">
+                    No students match the current filter
+                  </h3>
+                  <p className="text-slate-500 text-xs max-w-sm mt-1">
+                    {searchQuery ? `No matches for search "${searchQuery}"` : `No students found with Grade: ${gradeFilter}`}.
+                  </p>
+                  <button
+                    onClick={() => {
+                      setSearchQuery('');
+                      setGradeFilter('ALL');
+                    }}
+                    className="mt-4 px-4 py-2 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-xs font-bold rounded-xl transition-all"
+                  >
+                    Reset Search & Filters
+                  </button>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
@@ -966,7 +1329,12 @@ Rules:
                         <th className="p-4 text-center w-28">Class Score ({classWeight}%)</th>
                         <th className="p-4 text-center w-28">Exam Score ({examWeight}%)</th>
                         <th className="p-4 text-center w-24">Total (100)</th>
-                        <th className="p-4 text-center w-20">Grade</th>
+                        <th className={`p-4 text-center w-28 transition-colors ${gradeFilter !== 'ALL' ? 'bg-amber-100/60 dark:bg-amber-950/40 text-amber-900 dark:text-amber-300' : ''}`}>
+                          <div className="flex items-center justify-center gap-1">
+                            <span>Grade</span>
+                            <Filter size={11} className={gradeFilter !== 'ALL' ? 'text-amber-600' : 'text-slate-400'} />
+                          </div>
+                        </th>
                         <th className="p-4 min-w-[220px]">Teacher's Remark</th>
                         <th className="p-4 text-center w-28">Actions</th>
                       </tr>
@@ -1600,6 +1968,16 @@ Rules:
         examWeight={examWeight}
         selectedClass={selectedClass}
         selectedSubject={selectedSubject}
+        selectedTerm={selectedTerm}
+        academicYear={academicYear}
+        schoolName={schoolName}
+        documentTitle={documentTitle}
+        onTitleDetected={(detectedTitle) => {
+          if (detectedTitle && detectedTitle.trim()) {
+            setDocumentTitle(detectedTitle.trim());
+            safeLocalStorage.setItem('teachsmart_report_doc_title', detectedTitle.trim());
+          }
+        }}
         gradingSystem={gradingSystem}
         calculateMetrics={calculateMetrics}
       />

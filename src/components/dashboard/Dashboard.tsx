@@ -6,7 +6,7 @@ import {
   ShieldCheck, Heart, CheckCircle, MessageSquare, MessageCircle,
   Atom, Compass, Cpu, Layers, Lightbulb, Calculator, Users, Briefcase, Sparkles
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { useAuth } from '../../contexts/AuthContext';
 import { differenceInDays } from 'date-fns';
 import { cn } from '../../lib/utils';

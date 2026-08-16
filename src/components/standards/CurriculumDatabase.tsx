@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { 
   Search, BookOpen, Bookmark, BookmarkCheck, Copy, 
   ExternalLink, Sparkles, Filter, Layers, CheckCircle2, 

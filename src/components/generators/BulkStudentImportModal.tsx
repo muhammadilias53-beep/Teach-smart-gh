@@ -11,6 +11,7 @@ import {
   ParsedStudentRow, 
   CSVParseResult 
 } from '../../lib/csvParser';
+import { exportTemplateToExcel, parseExcelFileToCSV } from '../../lib/excelExport';
 import { StudentScore } from './ReportGenerator';
 import { toast } from 'react-hot-toast';
 
@@ -24,6 +25,11 @@ interface BulkStudentImportModalProps {
   selectedClass: string;
   selectedSubject: string;
   gradingSystem: 'ges_numeric' | 'letter';
+  documentTitle?: string;
+  schoolName?: string;
+  selectedTerm?: string;
+  academicYear?: string;
+  onTitleDetected?: (title: string) => void;
   calculateMetrics: (classScore: number, examScore: number, system?: 'ges_numeric' | 'letter') => {
     total: number;
     grade: string;
@@ -42,6 +48,11 @@ export const BulkStudentImportModal: React.FC<BulkStudentImportModalProps> = ({
   selectedClass,
   selectedSubject,
   gradingSystem,
+  documentTitle = 'Terminal Continuous Assessment & Examination Broad Sheet',
+  schoolName = 'Ghana Model Basic School',
+  selectedTerm = 'Term 1',
+  academicYear = '2025/2026',
+  onTitleDetected,
   calculateMetrics
 }) => {
   const [importTab, setImportTab] = useState<'upload' | 'paste'>('upload');
@@ -72,19 +83,35 @@ export const BulkStudentImportModal: React.FC<BulkStudentImportModalProps> = ({
       const kb = (size / 1024).toFixed(1);
       setFileSize(`${kb} KB`);
     }
+
+    if (result.documentTitle && onTitleDetected) {
+      onTitleDetected(result.documentTitle);
+    }
   };
 
   // Handle File selection via input
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const content = event.target?.result as string;
-      handleProcessText(content, file.name, file.size);
-    };
-    reader.readAsText(file);
+    try {
+      if (file.name.endsWith('.xlsx') || file.name.endsWith('.xls')) {
+        toast.loading('Reading Excel spreadsheet...', { id: 'excel-load' });
+        const csvText = await parseExcelFileToCSV(file);
+        toast.dismiss('excel-load');
+        handleProcessText(csvText, file.name, file.size);
+      } else {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const content = event.target?.result as string;
+          handleProcessText(content, file.name, file.size);
+        };
+        reader.readAsText(file);
+      }
+    } catch (err: any) {
+      toast.dismiss('excel-load');
+      toast.error(err?.message || 'Could not parse Excel document.');
+    }
   };
 
   // Drag & Drop handlers
@@ -98,19 +125,31 @@ export const BulkStudentImportModal: React.FC<BulkStudentImportModalProps> = ({
     }
   };
 
-  const handleDrop = (e: React.DragEvent) => {
+  const handleDrop = async (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
 
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const file = e.dataTransfer.files[0];
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const content = event.target?.result as string;
-        handleProcessText(content, file.name, file.size);
-      };
-      reader.readAsText(file);
+      try {
+        if (file.name.endsWith('.xlsx') || file.name.endsWith('.xls')) {
+          toast.loading('Reading Excel spreadsheet...', { id: 'excel-load' });
+          const csvText = await parseExcelFileToCSV(file);
+          toast.dismiss('excel-load');
+          handleProcessText(csvText, file.name, file.size);
+        } else {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            const content = event.target?.result as string;
+            handleProcessText(content, file.name, file.size);
+          };
+          reader.readAsText(file);
+        }
+      } catch (err: any) {
+        toast.dismiss('excel-load');
+        toast.error(err?.message || 'Could not parse uploaded file.');
+      }
     }
   };
 
@@ -201,16 +240,70 @@ export const BulkStudentImportModal: React.FC<BulkStudentImportModalProps> = ({
         {/* Modal Body */}
         <div className="p-6 overflow-y-auto space-y-6 flex-1">
           {/* Top Actions: Template Download & Tab Select */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50 dark:bg-slate-800/60 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-700">
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-slate-600 dark:text-slate-300">Need a template?</span>
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 bg-slate-50 dark:bg-slate-800/60 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-700">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-xs font-bold text-slate-600 dark:text-slate-300">Templates:</span>
+              
+              {/* Excel Styled Templates */}
               <button
                 type="button"
-                onClick={() => downloadSampleCSVTemplate(selectedClass.replace(/\s+/g, '_'), classWeight, examWeight)}
-                className="px-3 py-1.5 bg-white dark:bg-slate-800 hover:bg-emerald-50 dark:hover:bg-emerald-950 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-700 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-2xs transition-all"
+                onClick={() => exportTemplateToExcel({
+                  className: selectedClass,
+                  classWeight,
+                  examWeight,
+                  customTitle: documentTitle,
+                  schoolName,
+                  subjectName: selectedSubject,
+                  termName: selectedTerm,
+                  academicYear,
+                  isTemplateBlank: false
+                })}
+                className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black flex items-center gap-1.5 shadow-2xs transition-all"
+                title="Download formatted Excel (.xlsx) workbook with Ghana colors, styles and sample pupil marks"
+              >
+                <FileSpreadsheet size={13} />
+                Excel Template (.xlsx)
+              </button>
+
+              <button
+                type="button"
+                onClick={() => exportTemplateToExcel({
+                  className: selectedClass,
+                  classWeight,
+                  examWeight,
+                  customTitle: documentTitle,
+                  schoolName,
+                  subjectName: selectedSubject,
+                  termName: selectedTerm,
+                  academicYear,
+                  isTemplateBlank: true
+                })}
+                className="px-3 py-1.5 bg-white dark:bg-slate-800 hover:bg-emerald-50 dark:hover:bg-emerald-950 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-2xs transition-all"
+                title="Download blank styled Excel (.xlsx) roster ready for entering marks"
+              >
+                <FileSpreadsheet size={13} />
+                Blank Excel (.xlsx)
+              </button>
+
+              {/* CSV Fast Templates */}
+              <button
+                type="button"
+                onClick={() => downloadSampleCSVTemplate(
+                  selectedClass.replace(/\s+/g, '_'), 
+                  classWeight, 
+                  examWeight,
+                  documentTitle,
+                  schoolName,
+                  selectedSubject,
+                  selectedTerm,
+                  academicYear,
+                  false
+                )}
+                className="px-3 py-1.5 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-600 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-2xs transition-all"
+                title="Download CSV template"
               >
                 <Download size={13} />
-                Download CSV Sample Template
+                CSV Format
               </button>
             </div>
 
@@ -226,7 +319,7 @@ export const BulkStudentImportModal: React.FC<BulkStudentImportModalProps> = ({
                 }`}
               >
                 <Upload size={13} />
-                Upload CSV File
+                Upload Excel / CSV
               </button>
               <button
                 type="button"
@@ -238,7 +331,7 @@ export const BulkStudentImportModal: React.FC<BulkStudentImportModalProps> = ({
                 }`}
               >
                 <FileText size={13} />
-                Paste Text / Excel
+                Paste Text / Cells
               </button>
             </div>
           </div>
@@ -260,22 +353,23 @@ export const BulkStudentImportModal: React.FC<BulkStudentImportModalProps> = ({
               <input
                 ref={fileInputRef}
                 type="file"
-                accept=".csv, .tsv, .txt"
+                accept=".xlsx, .xls, .csv, .tsv, .txt"
                 onChange={handleFileChange}
                 className="hidden"
               />
               <div className="w-14 h-14 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 rounded-2xl flex items-center justify-center">
-                <Upload size={26} />
+                <FileSpreadsheet size={26} />
               </div>
               <div>
                 <p className="text-sm font-black text-slate-900 dark:text-white">
-                  Click to select or drag and drop your CSV file here
+                  Click to select or drag and drop your Excel (.xlsx) or CSV file here
                 </p>
                 <p className="text-xs text-slate-500 mt-1">
-                  Supports comma-separated (.csv), tab-separated (.tsv), and plain text lists (.txt)
+                  Supports Microsoft Excel (.xlsx, .xls), Comma-separated (.csv), Tab-separated (.tsv), and plain text (.txt)
                 </p>
               </div>
               <div className="flex flex-wrap gap-2 justify-center mt-2 text-[11px] font-bold text-slate-400">
+                <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded-md">Roll Number</span>
                 <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded-md">Student Name</span>
                 <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded-md">Gender</span>
                 <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded-md">Class Score ({classWeight}%)</span>

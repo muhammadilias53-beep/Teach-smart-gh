@@ -21,7 +21,7 @@ import {
   HelpCircle,
   Laptop
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { useAuth } from '../../contexts/AuthContext';
 import { subjects, levels, GHANA_REGIONS } from '../../constants';
 import { cn } from '../../lib/utils';
