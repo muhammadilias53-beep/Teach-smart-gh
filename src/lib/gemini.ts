@@ -1335,6 +1335,30 @@ export const suggestIndicatorCode = async (level: string, subject: string, stran
   return resText.trim();
 };
 
+const getClientApiKey = (): string => {
+  try {
+    if (typeof import.meta !== 'undefined' && (import.meta as any).env) {
+      if ((import.meta as any).env.VITE_GEMINI_API_KEY) return (import.meta as any).env.VITE_GEMINI_API_KEY;
+      if ((import.meta as any).env.GEMINI_API_KEY) return (import.meta as any).env.GEMINI_API_KEY;
+    }
+  } catch {}
+
+  try {
+    if (typeof process !== 'undefined' && (process as any).env) {
+      if ((process as any).env.VITE_GEMINI_API_KEY) return (process as any).env.VITE_GEMINI_API_KEY;
+      if ((process as any).env.GEMINI_API_KEY) return (process as any).env.GEMINI_API_KEY;
+    }
+  } catch {}
+
+  try {
+    if (typeof window !== 'undefined' && (window as any).__GEMINI_API_KEY__) {
+      return (window as any).__GEMINI_API_KEY__;
+    }
+  } catch {}
+
+  return '';
+};
+
 // Direct client-side Gemini fallback for static hostings or when /api/generate is unreachable
 async function generateClientFallback(
   apiKey: string,
@@ -1387,7 +1411,7 @@ export const generateWithProxy = async (
   responseMimeType?: string,
   preferredModel?: string
 ) => {
-  const clientApiKey = (import.meta as any).env?.VITE_GEMINI_API_KEY || (typeof process !== 'undefined' ? (process as any).env?.GEMINI_API_KEY : '');
+  const clientApiKey = getClientApiKey();
   
   const maxRetries = 2;
   let lastError: any = null;
