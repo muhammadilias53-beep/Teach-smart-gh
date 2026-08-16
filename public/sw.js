@@ -1,4 +1,4 @@
-const CACHE_NAME = 'teachsmartgh-v1';
+const CACHE_NAME = 'teachsmartgh-v2';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -7,12 +7,23 @@ const ASSETS_TO_CACHE = [
   '/icon-512.jpg'
 ];
 
-// Install Event - Pre-cache critical application shells
+// Install Event - Pre-cache critical application shells resiliently
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
+    caches.open(CACHE_NAME).then(async (cache) => {
       console.log('[Service Worker] Pre-caching static assets');
-      return cache.addAll(ASSETS_TO_CACHE);
+      // Fetch each asset individually to avoid entire install failure on single 404
+      const cachePromises = ASSETS_TO_CACHE.map(async (url) => {
+        try {
+          const response = await fetch(url);
+          if (response.ok) {
+            await cache.put(url, response);
+          }
+        } catch (err) {
+          console.warn('[Service Worker] Could not cache asset:', url, err);
+        }
+      });
+      await Promise.all(cachePromises);
     }).then(() => self.skipWaiting())
   );
 });

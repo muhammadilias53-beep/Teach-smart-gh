@@ -42,8 +42,8 @@ export const PWALifecycleTracker: React.FC = () => {
       }
 
       try {
-        // Pings the backend to output a pretty terminal log safely (without DB write)
-        await fetch('/api/analytics/pwa-launch', {
+        // Pings the backend if available
+        fetch('/api/analytics/pwa-launch', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -55,10 +55,9 @@ export const PWALifecycleTracker: React.FC = () => {
             email: user?.email || profile?.email || 'anonymous',
             language: window.navigator.language || 'en'
           }),
-        });
-      } catch (err) {
-        // Safe console message
-        console.warn('[PWA Tracker] server-side analytics ping failed:', err);
+        }).catch(() => {});
+      } catch {
+        // silent
       }
     };
 

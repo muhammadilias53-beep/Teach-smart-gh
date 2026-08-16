@@ -1,4 +1,5 @@
-// Gemini client helper using server-side proxy
+// Gemini client helper using server-side proxy with resilient client-side fallback
+import { GoogleGenAI } from '@google/genai';
 
 
 export const getLanguageInstruction = (language?: string, bilingualLanguage?: string) => {
@@ -1334,14 +1335,63 @@ export const suggestIndicatorCode = async (level: string, subject: string, stran
   return resText.trim();
 };
 
+// Direct client-side Gemini fallback for static hostings or when /api/generate is unreachable
+async function generateClientFallback(
+  apiKey: string,
+  prompt: string | any[],
+  systemInstruction?: string,
+  responseMimeType?: string,
+  preferredModel?: string
+): Promise<string> {
+  const candidateModels = preferredModel
+    ? [preferredModel, 'gemini-2.5-flash', 'gemini-flash-latest', 'gemini-3.7-flash', 'gemini-3.1-flash-lite']
+    : ['gemini-2.5-flash', 'gemini-flash-latest', 'gemini-3.7-flash', 'gemini-3.1-flash-lite'];
+
+  const modelsToTry = Array.from(new Set(candidateModels));
+  const ai = new GoogleGenAI({
+    apiKey,
+    httpOptions: {
+      headers: {
+        'User-Agent': 'aistudio-build-client',
+      }
+    }
+  });
+
+  let lastErr: any = null;
+  for (const modelName of modelsToTry) {
+    try {
+      const response = await ai.models.generateContent({
+        model: modelName,
+        contents: typeof prompt === 'string' ? prompt : prompt,
+        config: {
+          systemInstruction: systemInstruction || undefined,
+          responseMimeType: responseMimeType || undefined,
+          maxOutputTokens: 8192,
+        }
+      });
+      if (response && response.text) {
+        return response.text;
+      }
+    } catch (err: any) {
+      lastErr = err;
+      console.warn(`[Client Gemini Fallback] Model ${modelName} error:`, err?.message || err);
+      continue;
+    }
+  }
+  throw lastErr || new Error("Failed to generate AI response via client fallback.");
+}
+
 export const generateWithProxy = async (
   prompt: string | any[], 
   systemInstruction?: string, 
   responseMimeType?: string,
   preferredModel?: string
 ) => {
+  const clientApiKey = (import.meta as any).env?.VITE_GEMINI_API_KEY || (typeof process !== 'undefined' ? (process as any).env?.GEMINI_API_KEY : '');
+  
   const maxRetries = 2;
   let lastError: any = null;
+  let serverReturned404 = false;
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
@@ -1365,6 +1415,11 @@ export const generateWithProxy = async (
       });
 
       if (!response.ok) {
+        if (response.status === 404) {
+          serverReturned404 = true;
+          break; // Stop proxy retries on 404 and proceed to client fallback
+        }
+
         const errData = await response.json().catch(() => ({}));
         let rawMessage = errData.error || errData.details || `Server returned status ${response.status}`;
         
@@ -1400,9 +1455,27 @@ export const generateWithProxy = async (
       return data.text;
     } catch (error: any) {
       lastError = error;
-      if (attempt >= maxRetries) {
+      if (serverReturned404 || attempt >= maxRetries) {
         break;
       }
+    }
+  }
+
+  // Fallback to client-side GoogleGenAI if /api/generate is 404 (static hosting / SPA deployments)
+  if (serverReturned404 || (lastError && (lastError.message?.includes('Failed to fetch') || lastError.message?.includes('NetworkError')))) {
+    if (clientApiKey) {
+      console.log('[generateWithProxy] Backend /api/generate returned 404. Falling back to direct client-side Gemini generation...');
+      try {
+        return await generateClientFallback(clientApiKey, prompt, systemInstruction, responseMimeType, preferredModel);
+      } catch (clientErr: any) {
+        console.error('[generateWithProxy client fallback error]:', clientErr);
+        lastError = clientErr;
+      }
+    } else if (serverReturned404) {
+      throw new Error(
+        "Deployment Notice: The backend endpoint (/api/generate) returned 404 Not Found. " +
+        "If you deployed to a static host (Vercel, Netlify, Firebase Hosting, cPanel), please ensure your Node.js backend server is running ('npm start') or configure VITE_GEMINI_API_KEY in your hosting environment variables."
+      );
     }
   }
 

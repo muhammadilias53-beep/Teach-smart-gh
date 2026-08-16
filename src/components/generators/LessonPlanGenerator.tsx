@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
+import { toast } from 'react-hot-toast';
 import { Sparkles, Save, Download, RefreshCw, FileText, ChevronLeft, ChevronRight, CheckCircle, Users, Layout, AlignLeft, Layers, GraduationCap, MessageSquare, Edit3, Check, RotateCcw, FileEdit, AlertCircle, Compass, Search } from 'lucide-react';
 import { CurriculumReferenceModal } from '../standards/CurriculumReferenceModal';
 import { CurriculumIndicatorItem } from '../../lib/curriculumDatabase';
@@ -400,9 +401,11 @@ const LessonPlanGenerator = () => {
       
       setResult(data);
       setStep(4);
-    } catch (err) {
+      toast.success("Lesson plan generated successfully! 🇬🇭");
+    } catch (err: any) {
       console.error(err);
-      alert("Failed to generate lesson plan. Please try again.");
+      const errorMsg = err?.message || "Failed to generate lesson plan. Please try again.";
+      toast.error(errorMsg, { duration: 6000 });
     } finally {
       setLoading(false);
     }
@@ -445,18 +448,18 @@ const LessonPlanGenerator = () => {
       await saveOffline('lessonPlans', { ...payload, id: docRefId || undefined }, !!docRefId);
 
       if (docRefId) {
-        alert('Lesson plan saved successfully to your cloud library and cached offline! 🇬🇭');
+        toast.success('Lesson plan saved successfully to your cloud library and cached offline! 🇬🇭');
       } else {
-        alert('Lesson plan saved locally to your offline cabinet! TeachSmartGH will synchronize it once a stable connection is restored. 🇬🇭');
+        toast.success('Lesson plan saved locally to your offline cabinet! TeachSmartGH will synchronize it once a stable connection is restored. 🇬🇭');
       }
     } catch (err) {
       console.error("Failed to save lesson plan fully:", err);
       try {
         await saveOffline('lessonPlans', payload, false);
-        alert('Saved locally! Your lesson plan has been stored offline because of network fluctuations. 🇬🇭');
+        toast.success('Saved locally! Your lesson plan has been stored offline because of network fluctuations. 🇬🇭');
       } catch (offlineErr) {
         console.error("Local save fallback also failed:", offlineErr);
-        alert('Failed to save. Storage is locked or your browser lacks IndexedDB permissions.');
+        toast.error('Failed to save. Storage is locked or your browser lacks IndexedDB permissions.');
       }
     } finally {
       setSaving(false);
