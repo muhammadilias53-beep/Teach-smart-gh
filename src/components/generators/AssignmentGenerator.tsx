@@ -8,7 +8,9 @@ import { toast } from 'react-hot-toast';
 import { SafeMarkdown } from '../common/SafeMarkdown';
 import { levels, CLASSES_BY_LEVEL, subjectsByLevel } from '../../constants';
 import { SearchableDropdown } from '../ui/SearchableDropdown';
+import { cacheGeneratedDocument } from '../../lib/offlineDocumentCache';
 import jsPDF from 'jspdf';
+import { exportAssignmentToWord } from '../../lib/wordExport';
 
 export default function AssignmentGenerator() {
   const { canGenerate } = useAuth();
@@ -115,7 +117,24 @@ export default function AssignmentGenerator() {
       setGeneratedAssignment(assignText);
       setGeneratedRubric(rubText);
       setActiveTab('assignment');
-      toast.success('Assignment created successfully! 🇬🇭');
+
+      const userUid = (window as any)?.__teachsmart_user_id || undefined;
+      cacheGeneratedDocument({
+        id: `assign_${Date.now()}`,
+        authorId: userUid,
+        title: `${subject} - ${topic || 'Class Assignment'} (${assignmentType.toUpperCase()})`,
+        type: 'assignment',
+        subject: subject,
+        level: `${level} ${selectedClass}`.trim(),
+        class: selectedClass,
+        content: `### ASSIGNMENT\n\n${assignText}\n\n### RUBRIC & MARKING GUIDE\n\n${rubText}`,
+        assignmentText: assignText,
+        rubric: rubText,
+        createdAt: Date.now(),
+        synced: false
+      });
+
+      toast.success('Assignment created & cached offline! 🇬🇭');
     } catch (error: any) {
       console.error(error);
       toast.error(error.message || 'Failed to generate assignment.');
@@ -149,6 +168,28 @@ export default function AssignmentGenerator() {
 
     doc.save(`teachsmart_assignment_${subject.toLowerCase().replace(/\s+/g, '_')}.pdf`);
     toast.success('PDF downloaded successfully!');
+  };
+
+  const [exportingWord, setExportingWord] = useState(false);
+
+  const handleDownloadWord = async () => {
+    const textToPrint = activeTab === 'assignment' ? generatedAssignment : generatedRubric;
+    if (!textToPrint) return;
+    setExportingWord(true);
+    try {
+      await exportAssignmentToWord(textToPrint, {
+        subject,
+        classLevel: selectedClass,
+        level,
+        title: `${subject} - ${activeTab === 'assignment' ? 'Assignment Task' : 'Grading Rubric'} (${selectedClass})`,
+        documentType: activeTab === 'assignment' ? 'Homework & Assignment' : 'Assessment Rubric'
+      });
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to export to Word document.');
+    } finally {
+      setExportingWord(false);
+    }
   };
 
   return (
@@ -369,11 +410,20 @@ export default function AssignmentGenerator() {
                   </button>
                   <button
                     onClick={handleDownloadPDF}
-                    className="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-1.5 transition-all shadow-sm"
+                    className="px-3 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-1.5 transition-all shadow-sm"
                     title="Download as PDF"
                   >
                     <Download size={14} />
-                    Download PDF
+                    PDF
+                  </button>
+                  <button
+                    onClick={handleDownloadWord}
+                    disabled={exportingWord}
+                    className="px-3 py-2 bg-blue-700 hover:bg-blue-800 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-1.5 transition-all shadow-sm shadow-blue-700/20"
+                    title="Download as Word Document (.docx)"
+                  >
+                    <FileText size={14} />
+                    {exportingWord ? "Word..." : "Word (.docx)"}
                   </button>
                 </div>
               </div>

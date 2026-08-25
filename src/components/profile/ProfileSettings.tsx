@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { User, School, MapPin, Save, Shield, BadgeCheck, Loader2, Camera, Upload, BookOpen, GraduationCap, Users, Briefcase, Globe, Sun, Moon } from 'lucide-react';
+import { User, School, MapPin, Save, Shield, BadgeCheck, Loader2, Camera, Upload, BookOpen, GraduationCap, Users, Briefcase, Globe, Sun, Moon, ShieldCheck, FileText } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
@@ -8,6 +8,7 @@ import { cn } from '../../lib/utils';
 import { updateProfile } from 'firebase/auth';
 import { auth } from '../../lib/firebase';
 import { toast } from 'react-hot-toast';
+import { TermsAndConditionsModal } from '../legal/TermsAndConditionsModal';
 
 const regions = [
   "Greater Accra", "Ashanti", "Central", "Western", "Eastern", 
@@ -20,6 +21,7 @@ export default function ProfileSettings() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [showTermsModal, setShowTermsModal] = useState(false);
   
   const [formData, setFormData] = useState({
     displayName: profile?.displayName || '',
@@ -416,7 +418,20 @@ export default function ProfileSettings() {
             <div className="flex flex-wrap gap-3">
               <span className="px-3 py-1.5 bg-white/10 text-emerald-400 rounded-xl text-[10px] font-black uppercase tracking-widest border border-white/5">AES-256 Encrypted</span>
               <span className="px-3 py-1.5 bg-white/10 text-indigo-400 rounded-xl text-[10px] font-black uppercase tracking-widest border border-white/5">Act 843 Compliant</span>
+              <button
+                type="button"
+                onClick={() => setShowTermsModal(true)}
+                className="px-3.5 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5 transition-colors shadow-md cursor-pointer"
+              >
+                <ShieldCheck size={13} />
+                Responsible AI Terms Policy
+              </button>
             </div>
+            {profile?.acceptedTerms && (
+              <p className="text-[10px] text-slate-400 font-medium">
+                ✅ Responsible AI Terms v{profile.termsVersion || '2026.1'} accepted on {profile.acceptedTermsAt ? new Date(profile.acceptedTermsAt).toLocaleDateString('en-GB') : 'First Sign-in'}.
+              </p>
+            )}
           </div>
           <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-8 space-y-6">
             <h3 className="text-sm font-black text-white uppercase tracking-widest flex items-center gap-2">
@@ -439,6 +454,12 @@ export default function ProfileSettings() {
           </div>
         </div>
       </div>
+
+      <TermsAndConditionsModal
+        isOpen={showTermsModal}
+        onClose={() => setShowTermsModal(false)}
+        isMandatory={false}
+      />
     </div>
   );
 }

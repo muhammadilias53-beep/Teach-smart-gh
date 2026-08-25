@@ -8,7 +8,9 @@ import { toast } from 'react-hot-toast';
 import { SafeMarkdown } from '../common/SafeMarkdown';
 import { levels, CLASSES_BY_LEVEL, subjectsByLevel } from '../../constants';
 import { SearchableDropdown } from '../ui/SearchableDropdown';
+import { cacheGeneratedDocument } from '../../lib/offlineDocumentCache';
 import jsPDF from 'jspdf';
+import { exportQuizToWord } from '../../lib/wordExport';
 
 export default function QuizGenerator() {
   const { canGenerate, profile } = useAuth();
@@ -110,7 +112,24 @@ export default function QuizGenerator() {
       setGeneratedQuiz(quizText);
       setGeneratedScheme(schemeText);
       setActiveTab('quiz');
-      toast.success('Quiz generated successfully! 🇬🇭');
+
+      const userUid = (window as any)?.__teachsmart_user_id || undefined;
+      cacheGeneratedDocument({
+        id: `quiz_${Date.now()}`,
+        authorId: userUid,
+        title: `${subject} - Term ${term} Quiz (${selectedClass || level})`,
+        type: 'quiz',
+        subject: subject,
+        level: `${level} ${selectedClass}`.trim(),
+        class: selectedClass,
+        content: `### QUIZ / QUESTIONS\n\n${quizText}\n\n### MARKING SCHEME\n\n${schemeText}`,
+        questions: quizText,
+        markingScheme: schemeText,
+        createdAt: Date.now(),
+        synced: false
+      });
+
+      toast.success('Quiz generated & cached offline! 🇬🇭');
     } catch (error: any) {
       console.error(error);
       toast.error(error.message || 'Failed to generate quiz. Please try again.');
@@ -144,6 +163,28 @@ export default function QuizGenerator() {
 
     doc.save(`teachsmart_quiz_${subject.toLowerCase().replace(/\s+/g, '_')}.pdf`);
     toast.success('PDF downloaded successfully!');
+  };
+
+  const [exportingWord, setExportingWord] = useState(false);
+
+  const handleDownloadWord = async () => {
+    const textToPrint = activeTab === 'quiz' ? generatedQuiz : generatedScheme;
+    if (!textToPrint) return;
+    setExportingWord(true);
+    try {
+      await exportQuizToWord(textToPrint, {
+        subject,
+        classLevel: selectedClass,
+        level,
+        title: `${subject} - ${activeTab === 'quiz' ? 'Class Test & Quiz' : 'Quiz Answers & Marking'} (${selectedClass})`,
+        documentType: activeTab === 'quiz' ? 'Class Quiz & Test' : 'Quiz Marking Scheme'
+      });
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to export to Word document.');
+    } finally {
+      setExportingWord(false);
+    }
   };
 
   return (
@@ -354,11 +395,20 @@ export default function QuizGenerator() {
                   </button>
                   <button
                     onClick={handleDownloadPDF}
-                    className="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-1.5 transition-all shadow-sm"
+                    className="px-3 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-1.5 transition-all shadow-sm"
                     title="Download as PDF"
                   >
                     <Download size={14} />
-                    Download PDF
+                    PDF
+                  </button>
+                  <button
+                    onClick={handleDownloadWord}
+                    disabled={exportingWord}
+                    className="px-3 py-2 bg-blue-700 hover:bg-blue-800 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-1.5 transition-all shadow-sm shadow-blue-700/20"
+                    title="Download as Word Document (.docx)"
+                  >
+                    <FileText size={14} />
+                    {exportingWord ? "Word..." : "Word (.docx)"}
                   </button>
                 </div>
               </div>

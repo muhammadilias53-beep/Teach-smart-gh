@@ -27,6 +27,7 @@ import { useNavigate } from 'react-router';
 import { generateExam } from '../../lib/gemini';
 import { db } from '../../lib/firebase';
 import { saveOffline } from '../../lib/indexedDB';
+import { cacheGeneratedDocument } from '../../lib/offlineDocumentCache';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../../lib/utils';
@@ -35,6 +36,7 @@ import 'highlight.js/styles/github.css';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { toast } from 'react-hot-toast';
+import { exportExamToWord } from '../../lib/wordExport';
 import { subjects as sharedSubjects, levels, CLASSES_BY_LEVEL, subjectsByLevel } from '../../constants';
 import { SearchableDropdown } from '../ui/SearchableDropdown';
 
@@ -207,11 +209,30 @@ export default function ExamGenerator() {
         throw new Error("Unable to retrieve examination questions from AI. Please try again.");
       }
 
-      setResult({
+      const cleanedResult = {
         questions: cleanMarkdown(questions || "# Examination Paper\n\nQuestions available."),
         markingScheme: cleanMarkdown(markingScheme || "## Marking Scheme\n\nScoring guide available.")
-      });
-      toast.success("Examination generated successfully!");
+      };
+
+      setResult(cleanedResult);
+
+      if (user) {
+        cacheGeneratedDocument({
+          id: `exam_${Date.now()}`,
+          authorId: user.uid,
+          title: formData.title || `${displaySubject} - ${formData.topics}`,
+          type: 'exam',
+          subject: displaySubject,
+          level: `${formData.level} (${formData.classLevel})`,
+          classLevel: formData.classLevel,
+          questions: cleanedResult.questions,
+          markingScheme: cleanedResult.markingScheme,
+          createdAt: Date.now(),
+          synced: false
+        });
+      }
+
+      toast.success("Examination generated & cached offline! 🇬🇭");
     } catch (error: any) {
       console.error("Exam generation failed:", error);
       
@@ -425,7 +446,7 @@ export default function ExamGenerator() {
     }
 
     // Footer
-    const pageCount = (doc.internal as any).getNumberOfPages();
+    const pageCount = (typeof doc.getNumberOfPages === 'function' ? doc.getNumberOfPages() : 1) || 1;
     for(let i = 1; i <= pageCount; i++) {
         doc.setPage(i);
         doc.setDrawColor(200, 200, 200);
@@ -458,6 +479,27 @@ export default function ExamGenerator() {
     }
     
     doc.save(`${filename}.pdf`);
+  };
+
+  const [exportingWord, setExportingWord] = useState(false);
+
+  const downloadWord = async (type: 'exam' | 'marking') => {
+    if (!result) return;
+    setExportingWord(true);
+    try {
+      const content = type === 'exam' ? result.questions : result.markingScheme;
+      await exportExamToWord(content, type, {
+        title: formData.title || (type === 'exam' ? 'Examination Paper' : 'Marking Scheme'),
+        subject: displaySubject,
+        classLevel: formData.classLevel,
+        level: formData.level,
+      });
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to export to Word document.');
+    } finally {
+      setExportingWord(false);
+    }
   };
 
   return (
@@ -1140,11 +1182,29 @@ export default function ExamGenerator() {
                   Exam PDF
                 </button>
                 <button 
+                  onClick={() => downloadWord('exam')}
+                  disabled={exportingWord}
+                  className="px-3.5 py-2 sm:px-4 sm:py-2.5 bg-blue-700 text-white rounded-xl text-[11px] font-bold uppercase tracking-wider whitespace-nowrap shrink-0 flex items-center gap-1.5 hover:bg-blue-800 transition-all shadow-md shadow-blue-700/20"
+                  title="Download Exam Question Paper in Word (.docx)"
+                >
+                  <FileText size={14} />
+                  Exam Word
+                </button>
+                <button 
                   onClick={() => downloadPDF('marking')}
                   className="px-3.5 py-2 sm:px-4 sm:py-2.5 bg-emerald-500 text-white rounded-xl text-[11px] font-bold uppercase tracking-wider whitespace-nowrap shrink-0 flex items-center gap-1.5 hover:bg-emerald-400 transition-all shadow-md shadow-emerald-500/20"
                 >
                   <CheckCircle size={14} />
                   Scheme PDF
+                </button>
+                <button 
+                  onClick={() => downloadWord('marking')}
+                  disabled={exportingWord}
+                  className="px-3.5 py-2 sm:px-4 sm:py-2.5 bg-slate-800 text-emerald-300 border border-emerald-500/30 rounded-xl text-[11px] font-bold uppercase tracking-wider whitespace-nowrap shrink-0 flex items-center gap-1.5 hover:bg-slate-700 transition-all shadow-md"
+                  title="Download Marking Scheme in Word (.docx)"
+                >
+                  <FileText size={14} />
+                  Scheme Word
                 </button>
                 <a 
                   href={`https://api.whatsapp.com/send?text=${encodeURIComponent(

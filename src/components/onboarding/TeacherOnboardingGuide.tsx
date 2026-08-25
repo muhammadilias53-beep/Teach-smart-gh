@@ -61,6 +61,12 @@ export const TeacherOnboardingGuide = ({ isOpen: controlledIsOpen, onClose, forc
     // Check if user already saw or dismissed the tour
     const localSeen = localStorage.getItem(`teachsmart_tour_seen_${user.uid}`) === 'true';
     const profileSeen = profile?.hasSeenOnboardingTour === true || profile?.onboardingTourDismissed === true;
+    const termsAccepted = profile?.acceptedTerms === true || localStorage.getItem(`teachsmart_terms_accepted_${user.uid}`) === 'true';
+
+    if (!termsAccepted) {
+      // Must accept terms and conditions first
+      return () => window.removeEventListener('open-teachsmart-tour', handleOpenEvent);
+    }
 
     if (!localSeen && !profileSeen) {
       // Auto-launch for new accounts after a slight delay

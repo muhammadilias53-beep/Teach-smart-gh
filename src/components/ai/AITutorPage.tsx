@@ -53,7 +53,7 @@ const AITUTOR_GHANAIAN_LANGUAGES_FOR_BILINGUAL = [
 ];
 
 export default function AITutorPage() {
-  const { canGenerate, profile } = useAuth();
+  const { canGenerate, profile, user } = useAuth();
   const navigate = useNavigate();
   const chatEndRef = useRef<HTMLDivElement>(null);
 
@@ -412,16 +412,18 @@ Explain exactly how I can preemptively address and correct them during my instru
                           <SafeMarkdown>{msg.content}</SafeMarkdown>
                         </div>
 
-                        {/* Clipboard button */}
+                        {/* Action buttons */}
                         {!isUser && (
-                          <button
-                            type="button"
-                            onClick={() => copyToClipboard(msg.content, index)}
-                            className="absolute bottom-2 right-2 p-1.5 bg-white border border-slate-200 text-slate-500 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-slate-50"
-                            title="Copy response content"
-                          >
-                            {copiedIndex === index ? <Check size={14} className="text-emerald-600" /> : <Copy size={14} />}
-                          </button>
+                          <div className="absolute bottom-2 right-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button
+                              type="button"
+                              onClick={() => copyToClipboard(msg.content, index)}
+                              className="p-1.5 bg-white border border-slate-200 text-slate-500 rounded-lg hover:bg-slate-50 shadow-sm"
+                              title="Copy response content"
+                            >
+                              {copiedIndex === index ? <Check size={14} className="text-emerald-600" /> : <Copy size={14} />}
+                            </button>
+                          </div>
                         )}
                       </div>
                     </div>

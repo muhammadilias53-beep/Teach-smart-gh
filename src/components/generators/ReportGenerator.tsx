@@ -1056,7 +1056,7 @@ Rules:
                   className="px-3.5 py-2.5 bg-slate-900 hover:bg-black dark:bg-slate-100 dark:text-slate-900 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all disabled:opacity-40"
                 >
                   <Printer size={14} />
-                  PDF Broad Sheet
+                  PDF
                 </button>
                 <button
                   onClick={() => handleExportExcel(false)}
@@ -1065,7 +1065,7 @@ Rules:
                   title="Export complete score sheet to beautifully formatted Excel (.xlsx) workbook"
                 >
                   <FileSpreadsheet size={14} />
-                  Export Excel (.xlsx)
+                  Excel (.xlsx)
                 </button>
               </div>
             </div>

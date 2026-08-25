@@ -31,6 +31,13 @@
         "trialResetApril2024Applied": { "type": "boolean" },
         "trialResetMay2026Applied": { "type": "boolean" },
         "onboardingComplete": { "type": "boolean" },
+        "hasSeenOnboardingTour": { "type": "boolean" },
+        "onboardingTourDismissed": { "type": "boolean" },
+        "profileCompleted": { "type": "boolean" },
+        "acceptedTerms": { "type": "boolean", "description": "Whether the user accepted terms and responsible AI policy" },
+        "acceptedTermsAt": { "type": "string", "format": "date-time" },
+        "termsVersion": { "type": "string" },
+        "acceptedResponsibleAiTerms": { "type": "boolean", "description": "Explicit pledge to responsibly verify AI educational content" },
         "isAnonymous": { "type": "boolean" },
         "photoURL": { "type": "string", "description": "Base64 encoded profile picture" },
         "createdAt": { "type": "string", "format": "date-time" },
@@ -213,6 +220,37 @@
         "timestamp": { "type": "string", "format": "date-time" }
       },
       "required": ["displayMode"]
+    },
+    "GenerationFeedback": {
+      "title": "GenerationFeedback",
+      "description": "Teacher ratings and feedback on AI-generated educational content and NaCCA alignment quality",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "userEmail": { "type": "string" },
+        "userName": { "type": "string" },
+        "generatorType": { 
+          "type": "string", 
+          "enum": ["lessonPlan", "exam", "scheme", "note", "assignment", "quiz", "report", "other"] 
+        },
+        "documentTitle": { "type": "string" },
+        "subject": { "type": "string" },
+        "level": { "type": "string" },
+        "rating": { "type": "number", "description": "Overall 1-5 star rating" },
+        "naccaAccuracyRating": { "type": "number", "description": "NaCCA indicator & curriculum accuracy rating 1-5" },
+        "localContextRating": { "type": "number", "description": "Ghanaian context and local TLR relevance rating 1-5" },
+        "learnerCenteredRating": { "type": "number", "description": "3-phase structure and learner-centered rating 1-5" },
+        "selectedTags": { 
+          "type": "array", 
+          "items": { "type": "string" } 
+        },
+        "comments": { "type": "string" },
+        "school": { "type": "string" },
+        "region": { "type": "string" },
+        "district": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "generatorType", "rating"]
     }
   },
   "firestore": {
@@ -259,6 +297,10 @@
     "pwa_launches/{id}": {
       "schema": "PwaLaunch",
       "description": "PWA lifecycle launch and install events"
+    },
+    "generation_feedback/{id}": {
+      "schema": "GenerationFeedback",
+      "description": "Teacher ratings and feedback on NaCCA alignment quality"
     }
   }
 }

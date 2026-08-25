@@ -459,10 +459,11 @@ export function generateBlankRosterCSV(options: CSVExportOptions = {}): string {
   ];
 
   // 10 placeholder empty rows with generated Roll Numbers
-  const emptyRows = Array.from({ length: 10 }, (_, i) => {
+  const emptyRows: string[] = [];
+  for (let i = 0; i < 10; i++) {
     const roll = `GH-${String(i + 1).padStart(3, '0')}`;
-    return [`"${roll}"`, '""', '""', '""', '""', '""', '""', '""', '""'].join(',');
-  });
+    emptyRows.push([`"${roll}"`, '""', '""', '""', '""', '""', '""', '""', '""'].join(','));
+  }
 
   const allLines = [
     ...metadataLines,

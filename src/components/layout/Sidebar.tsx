@@ -3,7 +3,7 @@ import {
   MessageSquare, MessageCircle, FileText, Calendar, BookOpen, PenTool, CheckCircle, Menu, X, 
   LogOut, LayoutDashboard, CreditCard, Zap, User, Package, Library, ShieldCheck, Shield, 
   Atom, Calculator, Cpu, Award, Users, Briefcase, FolderOpen, ChevronDown, ChevronRight,
-  ChevronLeft, Compass
+  ChevronLeft, Compass, HardDrive
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useSidebar } from '../../contexts/SidebarContext';
@@ -15,6 +15,7 @@ import { Logo } from '../common/Logo';
 import { ComplianceModal } from '../common/ComplianceModal';
 import { ConfirmationModal } from '../common/ConfirmationModal';
 import { PWAInstallButton } from '../common/PWAInstallButton';
+import { TermsAndConditionsModal } from '../legal/TermsAndConditionsModal';
 
 interface MenuItem {
   icon: any;
@@ -37,6 +38,7 @@ const menuGroups: MenuGroup[] = [
     icon: LayoutDashboard,
     items: [
       { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
+      { icon: HardDrive, label: 'Offline Vault', path: '/offline-vault' },
       { icon: MessageSquare, label: 'AI Tutor', path: '/ai' },
     ]
   },
@@ -86,11 +88,12 @@ const menuGroups: MenuGroup[] = [
 interface SidebarContentProps {
   onCloseMobile: () => void;
   onShowCompliance: () => void;
+  onShowTerms: () => void;
   onShowLogoutConfirm: () => void;
   isMobile?: boolean;
 }
 
-const SidebarContent = ({ onCloseMobile, onShowCompliance, onShowLogoutConfirm, isMobile = false }: SidebarContentProps) => {
+const SidebarContent = ({ onCloseMobile, onShowCompliance, onShowTerms, onShowLogoutConfirm, isMobile = false }: SidebarContentProps) => {
   const { profile, isSubscriptionActive, user, daysLeft } = useAuth();
   const { isCollapsed, toggleCollapse } = useSidebar();
   const location = useLocation();
@@ -333,13 +336,25 @@ const SidebarContent = ({ onCloseMobile, onShowCompliance, onShowLogoutConfirm, 
         <div className="px-3 pt-2 pb-1 space-y-1.5 border-t border-slate-100 dark:border-slate-800">
           <PWAInstallButton />
 
-          <button
-            onClick={onShowCompliance}
-            className="flex items-center justify-center gap-2 w-full px-3 py-2 bg-emerald-50/80 dark:bg-emerald-950/30 text-emerald-800 dark:text-emerald-300 rounded-xl text-[10px] font-black uppercase tracking-wider border border-emerald-100 dark:border-emerald-900/50 hover:bg-emerald-100/80 transition-all group"
-          >
-            <ShieldCheck size={13} className="group-hover:rotate-12 transition-transform text-emerald-600" />
-            <span>Curriculum Compliance</span>
-          </button>
+          <div className="grid grid-cols-2 gap-1.5">
+            <button
+              onClick={onShowCompliance}
+              className="flex items-center justify-center gap-1.5 w-full px-2 py-2 bg-emerald-50/80 dark:bg-emerald-950/30 text-emerald-800 dark:text-emerald-300 rounded-xl text-[9px] font-black uppercase tracking-wider border border-emerald-100 dark:border-emerald-900/50 hover:bg-emerald-100/80 transition-all truncate"
+              title="Curriculum Compliance"
+            >
+              <ShieldCheck size={12} className="text-emerald-600 shrink-0" />
+              <span className="truncate">Compliance</span>
+            </button>
+
+            <button
+              onClick={onShowTerms}
+              className="flex items-center justify-center gap-1.5 w-full px-2 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl text-[9px] font-black uppercase tracking-wider hover:bg-slate-200 dark:hover:bg-slate-700 transition-all border border-slate-200/50 dark:border-slate-700 truncate"
+              title="Responsible AI Policy & Terms"
+            >
+              <Shield size={12} className="text-emerald-600 shrink-0" />
+              <span className="truncate">AI Terms</span>
+            </button>
+          </div>
 
           <div className="grid grid-cols-2 gap-1.5">
             <motion.div
@@ -387,6 +402,17 @@ const SidebarContent = ({ onCloseMobile, onShowCompliance, onShowLogoutConfirm, 
             <ShieldCheck size={18} />
             <div className="absolute left-full ml-3 px-3 py-1.5 bg-slate-900 text-white text-xs font-bold rounded-lg shadow-xl opacity-0 group-hover/comp:opacity-100 pointer-events-none transition-all duration-200 whitespace-nowrap z-[100]">
               Curriculum Compliance
+            </div>
+          </button>
+
+          <button
+            onClick={onShowTerms}
+            className="relative group/terms flex items-center justify-center w-11 h-11 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-all"
+            title="Responsible AI Terms"
+          >
+            <Shield size={18} className="text-emerald-600" />
+            <div className="absolute left-full ml-3 px-3 py-1.5 bg-slate-900 text-white text-xs font-bold rounded-lg shadow-xl opacity-0 group-hover/terms:opacity-100 pointer-events-none transition-all duration-200 whitespace-nowrap z-[100]">
+              Responsible AI Terms
             </div>
           </button>
 
@@ -546,6 +572,7 @@ const Sidebar = () => {
   const { isCollapsed } = useSidebar();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [showCompliance, setShowCompliance] = useState(false);
+  const [showTermsModal, setShowTermsModal] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   return (
@@ -580,6 +607,7 @@ const Sidebar = () => {
         <SidebarContent 
           onCloseMobile={() => setIsMobileOpen(false)}
           onShowCompliance={() => setShowCompliance(true)}
+          onShowTerms={() => setShowTermsModal(true)}
           onShowLogoutConfirm={() => setShowLogoutConfirm(true)}
           isMobile={false}
         />
@@ -606,6 +634,7 @@ const Sidebar = () => {
               <SidebarContent 
                 onCloseMobile={() => setIsMobileOpen(false)}
                 onShowCompliance={() => setShowCompliance(true)}
+                onShowTerms={() => setShowTermsModal(true)}
                 onShowLogoutConfirm={() => setShowLogoutConfirm(true)}
                 isMobile={true}
               />
@@ -620,6 +649,11 @@ const Sidebar = () => {
         )}
       </AnimatePresence>
       <ComplianceModal isOpen={showCompliance} onClose={() => setShowCompliance(false)} />
+      <TermsAndConditionsModal 
+        isOpen={showTermsModal} 
+        onClose={() => setShowTermsModal(false)} 
+        isMandatory={false} 
+      />
       <ConfirmationModal 
         isOpen={showLogoutConfirm}
         onClose={() => setShowLogoutConfirm(false)}

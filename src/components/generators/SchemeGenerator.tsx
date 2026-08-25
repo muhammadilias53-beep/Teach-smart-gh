@@ -21,6 +21,7 @@ import { useNavigate } from 'react-router';
 import { generateSchemeOfWork } from '../../lib/gemini';
 import { db } from '../../lib/firebase';
 import { saveOffline } from '../../lib/indexedDB';
+import { cacheGeneratedDocument } from '../../lib/offlineDocumentCache';
 import { collection, addDoc, serverTimestamp, query, where, getDocs, limit, orderBy } from 'firebase/firestore';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../../lib/utils';
@@ -29,6 +30,7 @@ import 'highlight.js/styles/github.css';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { toast } from 'react-hot-toast';
+import { exportSchemeToWord } from '../../lib/wordExport';
 import { subjects as sharedSubjects, levels, CLASSES_BY_LEVEL, SUBJECT_STRANDS, SUBJECT_SUB_STRANDS, subjectsByLevel } from '../../constants';
 import { SearchableDropdown } from '../ui/SearchableDropdown';
 
@@ -156,7 +158,24 @@ export default function SchemeGenerator() {
         }
       );
       setResult(content);
-      toast.success("Scheme generated successfully!");
+      
+      if (user) {
+        cacheGeneratedDocument({
+          id: `scheme_${Date.now()}`,
+          authorId: user.uid,
+          title: formData.title || `${displaySubject} - ${formData.type === 'yearly' ? 'Yearly' : 'Termly'} Scheme of Learning`,
+          type: 'scheme',
+          subject: displaySubject,
+          level: formData.level,
+          class: formData.class,
+          content: content,
+          includeLearningOutcomes: formData.includeLearningOutcomes,
+          createdAt: Date.now(),
+          synced: false
+        });
+      }
+
+      toast.success("Scheme generated & cached offline! 🇬🇭");
     } catch (error) {
       console.error("Scheme generation failed:", error);
       toast.error("Generation failed. Please try again.");
@@ -293,7 +312,6 @@ export default function SchemeGenerator() {
         alternateRowStyles: { fillColor: [248, 250, 252] },
         margin: { top: 35 },
         didDrawPage: (data) => {
-          const pageCount = (doc.internal as any).getNumberOfPages();
           const pageHeight = doc.internal.pageSize.height;
           doc.setDrawColor(200, 200, 200);
           doc.setLineWidth(0.5);
@@ -332,6 +350,28 @@ export default function SchemeGenerator() {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-').replace('T', '_').slice(0, 19);
     const filename = `${displaySubject}_${formData.level}_Scheme_${formData.type}_${timestamp}`.replace(/[\s\W]+/g, '_');
     doc.save(`${filename}.pdf`);
+  };
+
+  const [exportingWord, setExportingWord] = useState(false);
+
+  const downloadWord = async () => {
+    if (!result) return;
+    setExportingWord(true);
+    try {
+      await exportSchemeToWord(result, {
+        subject: displaySubject,
+        classLevel: formData.class,
+        level: formData.level,
+        term: formData.term,
+        documentType: `${formData.type === 'termly' ? 'Termly' : 'Yearly'} Scheme of Learning`,
+        orientation: 'landscape'
+      });
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to export Scheme of Learning to Word.');
+    } finally {
+      setExportingWord(false);
+    }
   };
 
   return (
@@ -648,7 +688,16 @@ export default function SchemeGenerator() {
                   className="btn-primary !bg-slate-900 py-2 px-4 sm:px-5 sm:py-2.5 text-xs font-bold whitespace-nowrap shrink-0 flex items-center justify-center gap-1.5"
                 >
                   <Download size={15} />
-                  Download PDF
+                  PDF
+                </button>
+                <button 
+                  onClick={downloadWord}
+                  disabled={exportingWord}
+                  className="py-2 px-4 sm:px-5 sm:py-2.5 bg-blue-700 hover:bg-blue-800 text-white rounded-xl font-bold text-xs whitespace-nowrap shrink-0 flex items-center justify-center gap-1.5 transition-all shadow-md shadow-blue-700/20"
+                  title="Download NaCCA 11-column Scheme of Learning Word Document (.docx)"
+                >
+                  <FileText size={15} />
+                  {exportingWord ? "Word..." : "Word (.docx)"}
                 </button>
                 <a 
                   href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
@@ -730,10 +779,10 @@ export default function SchemeGenerator() {
                     </button>
                     <button
                       onClick={downloadPDF}
-                      className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all shadow-md"
+                      className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all shadow-md"
                     >
                       <Download size={14} />
-                      Download Edited PDF
+                      PDF
                     </button>
                   </div>
                 </div>

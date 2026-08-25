@@ -94,7 +94,7 @@ export const generateLessonPlan = async (
     
     CURRICULUM INTEGRITY: You MUST maintain the EXACT names of Strands and Sub-strands provided in the prompt. Do NOT summarize or rephrase them. Use the official codes and titles exactly as they appear in the data provided. Specifically for Science, ensure the strand formerly known as "All Around Us" is always referred to as "Diversity of Matter".
     
-    LESSON OBJECTIVE RULE: You MUST automatically use the selected NaCCA Indicator as the main, primary, and sole Learning Objective of the lesson when generating. Ensure the performance indicator/learning objective is formulated as: 'By the end of the lesson, the learner will be able to: [indicator text].' Do not invent or add secondary goals.
+    PERFORMANCE INDICATOR RULE: You MUST automatically use the selected NaCCA Indicator as the Performance Indicator of the lesson when generating. Ensure the performance indicator is formulated ALWAYS starting with 'Learners can [action verb / indicator text]' (e.g., 'Learners can add two proper fractions with same denominators manually.'). Under NO circumstance should you start with 'By the end of the lesson' or 'The learner will be able to' - it MUST always begin with 'Learners can'. Do not invent or add secondary goals.
     
     STRAND PARITY & DISTRIBUTION: When generating schemes or multi-term content, ensure that each Strand of a subject is represented in every term. A bit of every strand should be taught in every term (Term 1, 2, and 3) to ensure continuous engagement.
     
@@ -113,11 +113,22 @@ export const generateLessonPlan = async (
     - Career Technology: Implement the NaCCA "Head, Heart, and Hands (3-H) Therapy" model, focusing primarily on practical skills, craftsmanship, and safety. Specify double-periods (100 continues minutes) for practical sessions where appropriate. Standardise lesson plans around local, accessible Ghanaian resources: compliant materials (paper, cardboard, fabric), resistant materials (wood, metal, plastic, clay/laterite), or local food commodities. For tools and processes, enforce safety routines (PPEs, safe handling of sharp-edged tools). Emphasize freehand sketching (2-D and 3-D), design briefs, and evaluation spanning: Concept/Ideas, Planning/Preparation, Process, Product/Artefact, and Presentation.
     
     NOMENCLATURE: ALWAYS use the "Basic" level format (e.g., B1-B6 for Primary, B7-B9 for Junior High, B10-B12 for Senior High). NEVER use JHS or SHS alone; always refer to them as Basic 7-9 or Basic 10-12. For Kindergarten, use KG1 and KG2.
-    INDICATORS: You MUST include and strictly follow the Indicator Code provided. Every activity must map back to these curriculum indicators.
+    
+    MULTI-INDICATOR MANDATE: 
+    When 2 or more indicators are specified (e.g., B7.1.1.1.1 and B7.1.1.1.2), the lesson plan MUST systematically and thoroughly address EVERY single indicator provided:
+    1. In "indicatorCode", list ALL indicator codes clearly separated by commas (e.g., "B7.1.1.1.1, B7.1.1.1.2").
+    2. In "performanceIndicator", provide numbered 'Learners can...' statements for each indicator (e.g. "1. Learners can...\n2. Learners can...").
+    3. In "phase2" (Main Activities), design coherent instructional steps that cover and assess each indicator with appropriate scaffolding and activities.
+    
+    MULTI-DAY DELIVERY MANDATE:
+    When 2 or more days/sessions are indicated (e.g., "Monday & Wednesday", "Tuesday & Thursday", or "Monday, Wednesday & Friday"):
+    1. For "phase1" (Starter), structure a distinct starter for each day with bold headers (e.g. "**DAY 1 ([Day Name]):** [Engaging prior knowledge activity/game]", "**DAY 2 ([Day Name]):** [Quick review challenge of previous lesson]").
+    2. For "phase2" (Main New Learning), clearly structure the activities day-by-day with distinct bold headers (e.g., "**DAY 1 ([Day Name]):** [Concept development & guided practice]", "**DAY 2 ([Day Name]):** [Review, independent application, hands-on tasks & assessment]"), ensuring logical pedagogical progression across all days.
+    3. For "phase3" (Plenary / Reflections), provide a tailored plenary for each day with bold headers (e.g., "**DAY 1 ([Day Name]):** [Exit ticket / key takeaway]", "**DAY 2 ([Day Name]):** [Comprehensive review quiz / reflection]").
     
     LESSON PLAN STRUCTURE (NaCCA CCP/SBC Standards):
     - Phase 1: Starter (Preparing the brain for learning) - 10 mins. Focus on prior knowledge.
-    - Phase 2: Main (New Learning including assessment) - 40 mins. Step-by-step teaching and learning activities using various techniques (think-pair-share, group work, etc.).
+    - Phase 2: Main (New Learning including assessment) - 40 mins (or multi-day distributed). Step-by-step teaching and learning activities using various techniques (think-pair-share, group work, etc.).
     - Phase 3: Plenary / Reflection - 10 mins. Summary and assessment.
     
     ${teacherInfo?.school ? `TEACHER CONTEXT:
@@ -145,7 +156,7 @@ export const generateLessonPlan = async (
       "subStrand": "The sub-strand from NaCCA",
       "indicatorCode": "The specific indicator code (e.g., B8.1.1.1.1)",
       "contentStandardCode": "The content standard code",
-      "performanceIndicator": "Detailed performance indicator",
+      "performanceIndicator": "Detailed performance indicator starting with 'Learners can ...'",
       "coreCompetencies": "Core competencies involved",
       "keyWords": "Important key words for the lesson",
       "tlrs": "Teaching and Learning Resources (Tailor these strictly to the LOCALITY provided - e.g., if Rural, prefer locally available items)",
@@ -829,7 +840,7 @@ INPUT DATA PROVIDED BY SYSTEM
 - Content Standard: ${formData.contentStandard}
 - Indicator(s): ${formData.indicator}
 ${formData.lessonTopic ? `- Lesson Topic: ${formData.lessonTopic}` : ''}
-- Learning Objectives: ${formData.objectives}
+- Performance Indicator: ${formData.objectives}
 - Locality Setting: ${formData.locality} setting ${formData.specificLocality ? `(${formData.specificLocality})` : ''}
 ${formData.differentiation ? `- Differentiation Strategy: ${formData.differentiation}` : ''}
 ${teacherInfo?.school ? `- School Name: ${teacherInfo.school}` : ''}
@@ -840,7 +851,7 @@ ${teacherInfo?.isBstemSchool ? `- BSTEM Aligned School: YES` : ''}
 ==================================================
 STRICT GENERATION RULES
 =======================
-1. Generate notes strictly based on the selected curriculum content. Automatically use the selected Indicator as the core learning objective. The learning objectives section inside the notes MUST strictly match and be formulated directly from the selected Indicator (phrased as "By the end of the lesson, the learner will be able to: [Indicator text]").
+1. Generate notes strictly based on the selected curriculum content. Automatically use the selected Indicator as the Performance Indicator. The Performance Indicators section inside the notes MUST strictly match and be formulated directly from the selected Indicator (ALWAYS phrased starting with "Learners can [action verb / indicator text]"). NEVER start with "By the end of the lesson" or "The learner will be able to".
 2. Use simple and clear language suitable for the learner’s level.
 3. Break difficult concepts into understandable explanations.
 4. Use practical and relatable examples.
@@ -895,7 +906,7 @@ To occupy the absolute minimum reasonable space, group these 5 fields (Subject, 
 
 Use small, concise headers (using ### instead of # or ##) for all subsequent sections, and keep the vertical spacing tight and reasonable:
 
-### 6. Learning Objectives
+### 6. Performance Indicators
 ### 7. Key Terms & Vocabulary
 ### 8. Main Lesson Notes & Explanation
 ### 9. Important Points to Remember
@@ -1368,8 +1379,8 @@ async function generateClientFallback(
   preferredModel?: string
 ): Promise<string> {
   const candidateModels = preferredModel
-    ? [preferredModel, 'gemini-2.5-flash', 'gemini-flash-latest', 'gemini-3.7-flash', 'gemini-3.1-flash-lite']
-    : ['gemini-2.5-flash', 'gemini-flash-latest', 'gemini-3.7-flash', 'gemini-3.1-flash-lite'];
+    ? [preferredModel, 'gemini-3.5-flash-lite', 'gemini-3.1-flash-lite', 'gemini-3.7-flash', 'gemini-3.6-flash', 'gemini-flash-latest', 'gemini-3.1-pro-preview', 'gemini-2.5-flash']
+    : ['gemini-3.5-flash-lite', 'gemini-3.1-flash-lite', 'gemini-3.7-flash', 'gemini-3.6-flash', 'gemini-flash-latest', 'gemini-3.1-pro-preview', 'gemini-2.5-flash'];
 
   const modelsToTry = Array.from(new Set(candidateModels));
   const ai = new GoogleGenAI({
@@ -1398,7 +1409,11 @@ async function generateClientFallback(
       }
     } catch (err: any) {
       lastErr = err;
-      console.warn(`[Client Gemini Fallback] Model ${modelName} error:`, err?.message || err);
+      const errMsg = err?.message || String(err);
+      console.warn(`[Client Gemini Fallback] Model ${modelName} error:`, errMsg);
+      if (errMsg.includes('503') || errMsg.includes('429') || errMsg.includes('high demand')) {
+        await new Promise(resolve => setTimeout(resolve, 400));
+      }
       continue;
     }
   }

@@ -860,9 +860,13 @@ export default function BstemMathGuide() {
 // Sub-Lab 1: Pick's Theorem Geoboard Simulator
 // ----------------------------------------------------
 function PicksTheoremGeoboard() {
-  const [grid, setGrid] = useState<('empty' | 'boundary' | 'interior')[][]>(
-    Array(5).fill(null).map(() => Array(5).fill('empty'))
-  );
+  const [grid, setGrid] = useState<('empty' | 'boundary' | 'interior')[][]>([
+    ['empty', 'empty', 'empty', 'empty', 'empty'],
+    ['empty', 'empty', 'empty', 'empty', 'empty'],
+    ['empty', 'empty', 'empty', 'empty', 'empty'],
+    ['empty', 'empty', 'empty', 'empty', 'empty'],
+    ['empty', 'empty', 'empty', 'empty', 'empty']
+  ]);
 
   const [insideCount, setInsideCount] = useState(4);
   const [boundaryCount, setBoundaryCount] = useState(9);
@@ -976,7 +980,13 @@ function PicksTheoremGeoboard() {
           </div>
         </div>
         <button 
-          onClick={() => setGrid(Array(5).fill(null).map(() => Array(5).fill('empty')))} 
+          onClick={() => setGrid([
+            ['empty', 'empty', 'empty', 'empty', 'empty'],
+            ['empty', 'empty', 'empty', 'empty', 'empty'],
+            ['empty', 'empty', 'empty', 'empty', 'empty'],
+            ['empty', 'empty', 'empty', 'empty', 'empty'],
+            ['empty', 'empty', 'empty', 'empty', 'empty']
+          ])} 
           className="mt-4 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500 hover:text-slate-800 flex items-center gap-1 bg-white border border-slate-200 rounded-md transition-colors"
         >
           <RotateCcw className="h-3 w-3" /> Clear Lattice Pegboards
@@ -990,7 +1000,7 @@ function PicksTheoremGeoboard() {
 // Sub-Lab 2: Snail Racing Simulator
 // ----------------------------------------------------
 function SnailRacingSimulator() {
-  const [snails, setSnails] = useState<number[]>(Array(13).fill(0)); // snails 1-12 (index 0 unused)
+  const [snails, setSnails] = useState<number[]>([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]); // snails 1-12 (index 0 unused)
   const [dice, setDice] = useState<[number, number]>([1, 1]);
   const [rollsCount, setRollsCount] = useState(0);
   const [winner, setWinner] = useState<number | null>(null);
@@ -1019,7 +1029,7 @@ function SnailRacingSimulator() {
   };
 
   const resetRace = () => {
-    setSnails(Array(13).fill(0));
+    setSnails([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
     setDice([1, 1]);
     setRollsCount(0);
     setWinner(null);
@@ -1101,8 +1111,7 @@ function SnailRacingSimulator() {
         </div>
 
         <div className="space-y-1.5 font-mono">
-          {Array(11).fill(null).map((_, i) => {
-            const snailNum = i + 2; // snails 2-12
+          {[2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((snailNum) => {
             const steps = snails[snailNum] || 0;
             return (
               <div key={snailNum} className="flex items-center gap-3">
@@ -1119,7 +1128,7 @@ function SnailRacingSimulator() {
                   </div>
 
                   <div className="flex gap-1 h-full items-center z-10 w-full">
-                    {Array(5).fill(null).map((_, idx) => (
+                    {[0, 1, 2, 3, 4].map((idx) => (
                       <div 
                         key={idx} 
                         className={cn(
@@ -1151,6 +1160,16 @@ function SnailRacingSimulator() {
   );
 }
 
+// Helper to safely construct Hanoi stack
+const createHanoiStack = (count: number): number[] => {
+  const safeCount = Math.floor(Math.max(1, Math.min(8, Number(count) || 3)));
+  const res: number[] = [];
+  for (let i = safeCount; i >= 1; i--) {
+    res.push(i);
+  }
+  return res;
+};
+
 // ----------------------------------------------------
 // Sub-Lab 3: Tower of Hanoi Calculator and Game
 // ----------------------------------------------------
@@ -1161,8 +1180,7 @@ function TowerOfHanoiLab() {
   const [movesCount, setMovesCount] = useState(0);
 
   useEffect(() => {
-    const list = Array.from({ length: discs }, (_, i) => discs - i);
-    setPegs([list, [], []]);
+    setPegs([createHanoiStack(discs), [], []]);
     setMovesCount(0);
     setSelectedPeg(null);
   }, [discs]);
@@ -1302,8 +1320,7 @@ function TowerOfHanoiLab() {
 
         <button 
           onClick={() => {
-            const list = Array.from({ length: discs }, (_, i) => discs - i);
-            setPegs([list, [], []]);
+            setPegs([createHanoiStack(discs), [], []]);
             setMovesCount(0);
             setSelectedPeg(null);
           }} 

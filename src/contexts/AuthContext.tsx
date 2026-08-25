@@ -19,6 +19,7 @@ interface AuthContextType {
   completeOnboarding: (data: Partial<UserProfile>) => Promise<void>;
   completeOnboardingTour: (data?: Partial<UserProfile>) => Promise<void>;
   dismissOnboardingTour: () => Promise<void>;
+  acceptTermsAndConditions: (termsVersion?: string) => Promise<void>;
   updateProfileData: (data: Partial<UserProfile>) => Promise<void>;
   updateProfileEmail: (email: string) => Promise<void>;
 }
@@ -240,6 +241,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }, { merge: true });
     } catch (err) {
       console.warn("Could not save tour dismissal to firestore:", err);
+    }
+  };
+
+  const acceptTermsAndConditions = async (termsVersion = '2026.1') => {
+    if (!user) return;
+    const profilePath = `users/${user.uid}`;
+    const now = new Date().toISOString();
+    const updates: Partial<UserProfile> & { updatedAt: any } = {
+      acceptedTerms: true,
+      acceptedTermsAt: now,
+      termsVersion,
+      acceptedResponsibleAiTerms: true,
+      updatedAt: serverTimestamp()
+    };
+
+    try {
+      try {
+        localStorage.setItem(`teachsmart_terms_accepted_${user.uid}`, 'true');
+      } catch (_) {}
+
+      if (profile) {
+        setProfile({
+          ...profile,
+          acceptedTerms: true,
+          acceptedTermsAt: now,
+          termsVersion,
+          acceptedResponsibleAiTerms: true
+        });
+      }
+
+      await setDoc(doc(db, 'users', user.uid), updates, { merge: true });
+    } catch (err) {
+      handleFirestoreError(err, OperationType.WRITE, profilePath);
     }
   };
 
@@ -469,7 +503,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
-  const logout = () => signOut(auth);
+  const logout = async () => {
+    try {
+      localStorage.removeItem('teachsmart_last_working_route');
+      sessionStorage.removeItem('teachsmart_fresh_login');
+    } catch (_) {}
+    return signOut(auth);
+  };
 
   const refreshProfile = async () => {
     if (user) {
@@ -486,7 +526,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     <AuthContext.Provider value={{ 
       user, profile, loading, logout, refreshProfile, 
       canGenerate, isTrialActive, isSubscriptionActive, getTrialDaysLeft, daysLeft,
-      completeOnboarding, completeOnboardingTour, dismissOnboardingTour, updateProfileData, updateProfileEmail
+      completeOnboarding, completeOnboardingTour, dismissOnboardingTour, acceptTermsAndConditions, updateProfileData, updateProfileEmail
     }}>
       {children}
     </AuthContext.Provider>

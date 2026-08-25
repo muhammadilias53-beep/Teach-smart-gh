@@ -40,10 +40,10 @@ async function startServer() {
       return res.status(500).json({ error: "Gemini API key is not configured on the server." });
     }
 
-    // Models in priority order with resilient multi-tier fallback
+    // Models in priority order with resilient multi-tier fallback (placing high-throughput lite models first to eliminate 503 high-demand spikes)
     const candidateModels = preferredModel 
-      ? [preferredModel, 'gemini-2.5-flash', 'gemini-flash-latest', 'gemini-3.7-flash', 'gemini-3.1-flash-lite']
-      : ['gemini-2.5-flash', 'gemini-flash-latest', 'gemini-3.7-flash', 'gemini-3.1-flash-lite'];
+      ? [preferredModel, 'gemini-3.5-flash-lite', 'gemini-3.1-flash-lite', 'gemini-3.7-flash', 'gemini-3.6-flash', 'gemini-flash-latest', 'gemini-3.1-pro-preview', 'gemini-2.5-flash']
+      : ['gemini-3.5-flash-lite', 'gemini-3.1-flash-lite', 'gemini-3.7-flash', 'gemini-3.6-flash', 'gemini-flash-latest', 'gemini-3.1-pro-preview', 'gemini-2.5-flash'];
 
     // Deduplicate models preserving order
     const modelsToTry = Array.from(new Set(candidateModels));
@@ -77,8 +77,11 @@ async function startServer() {
       } catch (error: any) {
         lastError = error;
         const errMsg = error?.message || String(error);
-        console.warn(`[Gemini Proxy] Model ${modelName} encountered error: ${errMsg}`);
-        // Immediately try the next candidate model in the cascade
+        console.info(`[Gemini Proxy] Fallback: Model ${modelName} returned error (${errMsg}), transitioning to next candidate...`);
+        // If high demand (503) or rate limit (429), pause briefly before trying next candidate model
+        if (errMsg.includes('503') || errMsg.includes('429') || errMsg.includes('high demand') || errMsg.includes('UNAVAILABLE')) {
+          await new Promise(resolve => setTimeout(resolve, 300));
+        }
         continue;
       }
     }

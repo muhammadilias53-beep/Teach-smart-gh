@@ -168,7 +168,7 @@ export const Features: React.FC = () => {
               </div>
               <div className="px-4 py-2 bg-slate-800 border border-slate-700 rounded-xl flex items-center gap-2">
                 <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">Export Format:</span>
-                <span className="text-[10px] font-bold text-white">PDF / Microsoft Word (.docx)</span>
+                <span className="text-[10px] font-bold text-white">PDF / Instant Print</span>
               </div>
             </div>
           </div>

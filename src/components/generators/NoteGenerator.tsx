@@ -1,20 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Sparkles, Save, Download, RefreshCw, ChevronRight, ChevronLeft, CheckCircle, BookOpen, MapPin, Quote, MessageSquare, Edit3, Check, Eye, Plus, Trash2, AlertCircle, Compass } from 'lucide-react';
+import { Sparkles, Save, Download, RefreshCw, ChevronRight, ChevronLeft, CheckCircle, BookOpen, MapPin, Quote, MessageSquare, Edit3, Check, Eye, Plus, Trash2, AlertCircle, Compass, FileText, ArrowRight } from 'lucide-react';
 import { generateNote } from '../../lib/gemini';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { saveOffline } from '../../lib/indexedDB';
+import { cacheGeneratedDocument } from '../../lib/offlineDocumentCache';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate, useLocation } from 'react-router';
 import { CurriculumReferenceModal } from '../standards/CurriculumReferenceModal';
 import { CurriculumIndicatorItem } from '../../lib/curriculumDatabase';
-import { cn } from '../../lib/utils';
+import { cn, formatPerformanceIndicator } from '../../lib/utils';
+import { filterStandardsForClass } from '../../lib/curriculumDatabase';
 import { SafeMarkdown } from '../common/SafeMarkdown';
 import 'highlight.js/styles/github.css';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { toast } from 'react-hot-toast';
+import { exportNoteToWord } from '../../lib/wordExport';
 import { 
   subjects, 
   levels,
@@ -90,6 +93,11 @@ const NoteGenerator = () => {
   const [step, setStep] = useState(1);
   const [isStandardsModalOpen, setIsStandardsModalOpen] = useState(false);
   const [selectedCompetencies, setSelectedCompetencies] = useState<string[]>(["CP", "CC"]);
+  const [result, setResult] = useState<any>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [hasEdited, setHasEdited] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [sourceLessonPlanTitle, setSourceLessonPlanTitle] = useState<string | null>(null);
 
   // Helpers for context-aware lookup and fallbacks
   const getSubjectStrands = (subj: string, lvl: string) => {
@@ -112,7 +120,7 @@ const NoteGenerator = () => {
   };
 
   const getLookupStrand = (subject: string, strand: string, level?: string) => {
-    const currentLevel = level || (typeof formData !== 'undefined' ? formData?.level : 'JHS');
+    const currentLevel = level || 'JHS';
     if (subject === 'Our World Our People') {
       if (strand === 'All Around Us') return 'All Around Us OWOP';
       if (strand === 'My Global Community') return 'My Global Community OWOP';
@@ -188,13 +196,14 @@ const NoteGenerator = () => {
     const lookupStrand = getLookupStrand(initialSubject, initialStrand, initialLevel);
     const initialSubStrands = getSubjectSubStrands(initialSubject, initialStrand, initialLevel);
     const initialSubStrand = initialSubStrands[0] || '';
-    const initialStandards = (
+    const rawInitialStandards = (
       SUB_STRAND_STANDARDS[lookupStrand]?.[initialSubStrand] || 
       SUB_STRAND_STANDARDS[initialStrand]?.[initialSubStrand] ||
       SUB_STRAND_STANDARDS[initialSubject]?.[initialSubStrand] ||
       SUB_STRAND_STANDARDS[initialSubject]?.[initialStrand] ||
       []
     );
+    const initialStandards = filterStandardsForClass(rawInitialStandards, initialClass, initialLevel);
     const initialStandard = initialStandards[0] || '';
     const initialIndicators = STANDARD_INDICATORS[initialStandard] || getFallbackIndicators(initialStandard);
     const initialIndicator = initialIndicators[0] || '';
@@ -222,7 +231,7 @@ const NoteGenerator = () => {
     };
   });
 
-  // Handle preloaded indicator state from NaCCA Standards Database
+  // Handle preloaded indicator state from NaCCA Standards Database or Lesson Plan Workflow
   useEffect(() => {
     if (location.state?.preloaded) {
       const p = location.state.preloaded;
@@ -231,13 +240,29 @@ const NoteGenerator = () => {
         level: p.level || prev.level,
         class: p.class || prev.class,
         subject: p.subject || prev.subject,
+        ghanaianLanguage: p.ghanaianLanguage || prev.ghanaianLanguage,
         strand: p.strand || prev.strand,
         subStrand: p.subStrand || prev.subStrand,
         contentStandard: p.contentStandard || prev.contentStandard,
         indicator: p.indicator || prev.indicator,
-        objectives: p.indicator ? `Learners will be able to understand and apply: ${p.indicator}` : prev.objectives
+        objectives: p.objectives || (p.indicator ? formatPerformanceIndicator(p.indicator) : prev.objectives),
+        duration: p.duration || prev.duration,
+        week: p.week || prev.week,
+        term: p.term || prev.term,
+        academicYear: p.academicYear || prev.academicYear,
+        locality: p.locality || prev.locality,
+        specificLocality: p.specificLocality || prev.specificLocality,
+        differentiation: p.differentiation || prev.differentiation,
+        language: p.language || prev.language,
+        bilingualLanguage: p.bilingualLanguage || prev.bilingualLanguage,
       }));
-      setStep(3); // Jump to Step 3 for review
+
+      if (location.state.sourceLessonTitle) {
+        setSourceLessonPlanTitle(location.state.sourceLessonTitle);
+        toast.success("Loaded lesson plan parameters! Ready to generate student notes. 🇬🇭", { duration: 4000 });
+      }
+
+      setStep(3); // Jump to Step 3 for review & generate
     }
   }, [location.state]);
 
@@ -251,14 +276,9 @@ const NoteGenerator = () => {
       subStrand: item.subStrand,
       contentStandard: item.standardFull,
       indicator: item.indicatorFull,
-      objectives: `Learners will be able to understand and apply: ${item.indicatorText}`
+      objectives: formatPerformanceIndicator(item.indicatorFull)
     }));
   };
-
-  const [result, setResult] = useState<any>(null);
-  const [isEditing, setIsEditing] = useState(false);
-  const [hasEdited, setHasEdited] = useState(false);
-  const [saving, setSaving] = useState(false);
 
   // Helper to find pre-defined lesson frames
   const getActiveFrame = () => {
@@ -285,13 +305,14 @@ const NoteGenerator = () => {
   const currentStrands = getSubjectStrands(formData.subject, formData.level);
   const lookupStrand = getLookupStrand(formData.subject, formData.strand);
   const currentSubStrands = getSubjectSubStrands(formData.subject, formData.strand, formData.level);
-  const currentStandards = (
+  const rawStandards = (
     SUB_STRAND_STANDARDS[lookupStrand]?.[formData.subStrand] || 
     SUB_STRAND_STANDARDS[formData.strand]?.[formData.subStrand] ||
     SUB_STRAND_STANDARDS[formData.subject]?.[formData.subStrand] ||
     SUB_STRAND_STANDARDS[formData.subject]?.[formData.strand] ||
     []
   );
+  const currentStandards = filterStandardsForClass(rawStandards, formData.class, formData.level);
   const currentIndicators = STANDARD_INDICATORS[formData.contentStandard] || getFallbackIndicators(formData.contentStandard);
 
   // Cascading Dropdown Selectors
@@ -316,13 +337,14 @@ const NoteGenerator = () => {
     const nextSubStrands = getSubjectSubStrands(nextSubject, nextStrand, newLevel);
     const nextSubStrand = nextSubStrands[0] || '';
 
-    const nextStandards = (
+    const rawNextStds = (
       SUB_STRAND_STANDARDS[lookupNextStrand]?.[nextSubStrand] || 
       SUB_STRAND_STANDARDS[nextStrand]?.[nextSubStrand] ||
       SUB_STRAND_STANDARDS[nextSubject]?.[nextSubStrand] ||
       SUB_STRAND_STANDARDS[nextSubject]?.[nextStrand] ||
       []
     );
+    const nextStandards = filterStandardsForClass(rawNextStds, firstClass, newLevel);
     const nextStandard = nextStandards[0] || '';
 
     const nextIndicators = STANDARD_INDICATORS[nextStandard] || getFallbackIndicators(nextStandard);
@@ -342,7 +364,25 @@ const NoteGenerator = () => {
   };
 
   const handleClassChange = (newClass: string) => {
-    setFormData(prev => ({ ...prev, class: newClass }));
+    const rawStds = (
+      SUB_STRAND_STANDARDS[lookupStrand]?.[formData.subStrand] || 
+      SUB_STRAND_STANDARDS[formData.strand]?.[formData.subStrand] ||
+      SUB_STRAND_STANDARDS[formData.subject]?.[formData.subStrand] ||
+      SUB_STRAND_STANDARDS[formData.subject]?.[formData.strand] ||
+      []
+    );
+    const nextStandards = filterStandardsForClass(rawStds, newClass, formData.level);
+    const nextStandard = nextStandards[0] || '';
+    const nextIndicators = STANDARD_INDICATORS[nextStandard] || getFallbackIndicators(nextStandard);
+    const nextIndicator = nextIndicators[0] || '';
+
+    setFormData(prev => ({ 
+      ...prev, 
+      class: newClass,
+      contentStandard: nextStandard,
+      indicator: nextIndicator,
+      objectives: ''
+    }));
   };
 
   const handleSubjectChange = (newSubject: string) => {
@@ -353,13 +393,14 @@ const NoteGenerator = () => {
     const nextSubStrands = getSubjectSubStrands(newSubject, nextStrand, formData.level);
     const nextSubStrand = nextSubStrands[0] || '';
 
-    const nextStandards = (
+    const rawNextStds = (
       SUB_STRAND_STANDARDS[lookupNextStrand]?.[nextSubStrand] || 
       SUB_STRAND_STANDARDS[nextStrand]?.[nextSubStrand] ||
       SUB_STRAND_STANDARDS[newSubject]?.[nextSubStrand] ||
       SUB_STRAND_STANDARDS[newSubject]?.[nextStrand] ||
       []
     );
+    const nextStandards = filterStandardsForClass(rawNextStds, formData.class, formData.level);
     const nextStandard = nextStandards[0] || '';
 
     const nextIndicators = STANDARD_INDICATORS[nextStandard] || getFallbackIndicators(nextStandard);
@@ -382,13 +423,14 @@ const NoteGenerator = () => {
     const nextSubStrands = getSubjectSubStrands(formData.subject, newStrand, formData.level);
     const nextSubStrand = nextSubStrands[0] || '';
 
-    const nextStandards = (
+    const rawNextStds = (
       SUB_STRAND_STANDARDS[lookupNewStrand]?.[nextSubStrand] || 
       SUB_STRAND_STANDARDS[newStrand]?.[nextSubStrand] ||
       SUB_STRAND_STANDARDS[formData.subject]?.[nextSubStrand] ||
       SUB_STRAND_STANDARDS[formData.subject]?.[newStrand] ||
       []
     );
+    const nextStandards = filterStandardsForClass(rawNextStds, formData.class, formData.level);
     const nextStandard = nextStandards[0] || '';
 
     const nextIndicators = STANDARD_INDICATORS[nextStandard] || getFallbackIndicators(nextStandard);
@@ -406,13 +448,14 @@ const NoteGenerator = () => {
 
   const handleSubStrandChange = (newSubStrand: string) => {
     const lookupCurrentStrand = getLookupStrand(formData.subject, formData.strand);
-    const nextStandards = (
+    const rawNextStds = (
       SUB_STRAND_STANDARDS[lookupCurrentStrand]?.[newSubStrand] || 
       SUB_STRAND_STANDARDS[formData.strand]?.[newSubStrand] ||
       SUB_STRAND_STANDARDS[formData.subject]?.[newSubStrand] ||
       SUB_STRAND_STANDARDS[formData.subject]?.[formData.strand] ||
       []
     );
+    const nextStandards = filterStandardsForClass(rawNextStds, formData.class, formData.level);
     const nextStandard = nextStandards[0] || '';
 
     const nextIndicators = STANDARD_INDICATORS[nextStandard] || getFallbackIndicators(nextStandard);
@@ -447,16 +490,14 @@ const NoteGenerator = () => {
     }));
   };
 
-  // Auto-population effect when Curriculum selects change to use the indicator as the primary learning objective
+  // Auto-population effect when Curriculum selects change to use the indicator as the Performance Indicator
   React.useEffect(() => {
     if (formData.indicator) {
-      const parts = formData.indicator.split(':');
-      const text = parts.length > 1 ? parts.slice(1).join(':').trim() : formData.indicator.trim();
-      if (text) {
-        const formattedText = text.charAt(0).toUpperCase() + text.slice(1);
+      const formatted = formatPerformanceIndicator(formData.indicator);
+      if (formatted) {
         setFormData(prev => ({
           ...prev,
-          objectives: `By the end of the lesson, the learner will be able to: ${formattedText}`
+          objectives: formatted
         }));
       }
     } else {
@@ -516,7 +557,25 @@ const NoteGenerator = () => {
 
       setResult(data);
       setStep(4);
-      toast.success("Lesson notes generated successfully!");
+
+      if (user) {
+        cacheGeneratedDocument({
+          id: `note_${Date.now()}`,
+          authorId: user.uid,
+          title: data.title || `${displaySubject} - ${formData.subStrand || formData.strand || 'Lesson Notes'}`,
+          type: 'note',
+          subject: displaySubject,
+          level: formData.level,
+          class: formData.class,
+          content: data.content,
+          summary: data.summary,
+          questions: data.questions,
+          createdAt: Date.now(),
+          synced: false
+        });
+      }
+
+      toast.success("Lesson notes generated & cached offline! 🇬🇭");
     } catch (err) {
       console.error(err);
       toast.error("Failed to generate notes. Please try again.");
@@ -864,7 +923,7 @@ const NoteGenerator = () => {
       i++;
     }
 
-    const pageCount = (doc.internal as any).getNumberOfPages();
+    const pageCount = (typeof doc.getNumberOfPages === 'function' ? doc.getNumberOfPages() : 1) || 1;
     for(let i = 1; i <= pageCount; i++) {
         doc.setPage(i);
         
@@ -904,6 +963,72 @@ const NoteGenerator = () => {
     doc.save(`${filename}.pdf`);
   };
 
+  const [exportingWord, setExportingWord] = useState(false);
+
+  const handleDownloadWord = async () => {
+    if (!result) return;
+    setExportingWord(true);
+    try {
+      // Build comprehensive markdown content from result
+      let fullContent = '';
+
+      if (result.title) {
+        fullContent += `# ${result.title}\n\n`;
+      }
+
+      if (result.content) {
+        fullContent += `${result.content}\n\n`;
+      } else if (result.notes) {
+        fullContent += `${result.notes}\n\n`;
+      }
+
+      // Add Key Takeaways if available and not already in content
+      if (Array.isArray(result.summary) && result.summary.length > 0) {
+        if (!fullContent.includes('### Key Lesson Takeaways') && !fullContent.includes('### 12. Summary') && !fullContent.includes('### Summary')) {
+          fullContent += `### Key Lesson Takeaways & Summary\n`;
+          result.summary.forEach((item: string, idx: number) => {
+            fullContent += `${idx + 1}. ${item}\n`;
+          });
+          fullContent += '\n';
+        }
+      } else if (typeof result.summary === 'string' && result.summary.trim()) {
+        if (!fullContent.includes(result.summary.slice(0, 30))) {
+          fullContent += `### Key Lesson Takeaways & Summary\n${result.summary}\n\n`;
+        }
+      }
+
+      // Add Review Questions if available and not already in content
+      if (Array.isArray(result.questions) && result.questions.length > 0) {
+        if (!fullContent.includes('### Review & Practice Questions') && !fullContent.includes('### 11. Practice Questions') && !fullContent.includes('### Review Questions')) {
+          fullContent += `### Review & Practice Questions\n`;
+          result.questions.forEach((q: string, idx: number) => {
+            fullContent += `${idx + 1}. ${q}\n`;
+          });
+          fullContent += '\n';
+        }
+      } else if (typeof result.questions === 'string' && result.questions.trim()) {
+        if (!fullContent.includes(result.questions.slice(0, 30))) {
+          fullContent += `### Review & Practice Questions\n${result.questions}\n\n`;
+        }
+      }
+
+      await exportNoteToWord(fullContent.trim() || result.content || result.notes || '', {
+        subject: displaySubject,
+        classLevel: formData.class,
+        level: formData.level,
+        strand: formData.strand,
+        subStrand: formData.subStrand,
+        indicator: formData.indicator,
+        title: `${displaySubject} - ${result.title || formData.subStrand || formData.strand || 'Lesson Notes'}`,
+      });
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to export Notes to Word.');
+    } finally {
+      setExportingWord(false);
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       <div className="flex items-center justify-between">
@@ -926,6 +1051,47 @@ const NoteGenerator = () => {
            ))}
         </div>
       </div>
+
+      {/* Linked Lesson Plan Workflow Banner */}
+      {sourceLessonPlanTitle && (
+        <div className="bg-gradient-to-r from-emerald-950 via-slate-900 to-teal-950 border border-emerald-500/40 rounded-2xl sm:rounded-3xl p-4 sm:p-5 text-white shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 animate-fadeIn">
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-400/30 text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
+              <Sparkles size={20} />
+            </div>
+            <div>
+              <div className="flex items-center gap-2 mb-0.5">
+                <span className="text-[10px] font-black uppercase tracking-wider bg-emerald-400/20 text-emerald-300 border border-emerald-400/30 px-2 py-0.5 rounded-full">
+                  Linked to Lesson Plan
+                </span>
+                <span className="text-xs text-slate-300 font-bold truncate max-w-sm">{sourceLessonPlanTitle}</span>
+              </div>
+              <p className="text-xs text-slate-300 max-w-xl leading-relaxed">
+                Strand, Sub-Strand, Content Standard, and Performance Indicators have been transferred from your lesson plan into this note generator.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 self-end sm:self-auto shrink-0">
+            {step !== 3 && (
+              <button
+                type="button"
+                onClick={() => setStep(3)}
+                className="px-3.5 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 rounded-xl text-xs font-bold transition-all shadow-sm"
+              >
+                Go to Step 3
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => setSourceLessonPlanTitle(null)}
+              className="text-slate-400 hover:text-white text-xs font-bold px-2 py-1.5 rounded-lg hover:bg-white/10 transition-all"
+              title="Dismiss link banner"
+            >
+              Dismiss
+            </button>
+          </div>
+        </div>
+      )}
 
       <AnimatePresence mode="wait">
         {step === 1 && (
@@ -1047,7 +1213,7 @@ const NoteGenerator = () => {
                   value={formData.week}
                   onChange={(e) => setFormData({...formData, week: e.target.value})}
                 >
-                  {Array.from({ length: 12 }, (_, i) => `Week ${i + 1}`).map(w => (
+                  {['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7', 'Week 8', 'Week 9', 'Week 10', 'Week 11', 'Week 12'].map(w => (
                     <option key={w} value={w}>{w}</option>
                   ))}
                   <option value="Revision Week">Revision Week</option>
@@ -1274,7 +1440,7 @@ const NoteGenerator = () => {
 
                 <div className="space-y-2">
                     <div className="flex justify-between items-center">
-                      <label className="text-sm font-bold text-gray-500 uppercase">Learning Objectives (Required)</label>
+                      <label className="text-sm font-bold text-gray-500 uppercase">Performance Indicator (Required)</label>
                       {getActiveFrame() && (
                         <button 
                           type="button"
@@ -1283,7 +1449,7 @@ const NoteGenerator = () => {
                             if (activeFrame) {
                               setFormData(prev => ({
                                 ...prev,
-                                objectives: `By the end of the lesson, the learner will be able to:\n1. State what is meant by the key concepts: ${activeFrame.keyWords?.slice(0, 3).join(', ')}.\n2. Participate in practical activities including: ${activeFrame.activities?.[0] || 'active group class tasks'}.\n3. Answer oral review questions and write short evaluation exercises.`
+                                objectives: `Learners can:\n1. State what is meant by key concepts: ${activeFrame.keyWords?.slice(0, 3).join(', ')}.\n2. Participate in practical class activities including: ${activeFrame.activities?.[0] || 'active group tasks'}.\n3. Answer review questions and complete evaluation exercises.`
                               }));
                               toast.success("Auto-populated from NaCCA resource framework!");
                             }
@@ -1297,7 +1463,7 @@ const NoteGenerator = () => {
                     <textarea 
                       required
                       className="input-field min-h-[100px]" 
-                      placeholder="e.g. By the end of the lesson, learners will be able to define an element and identify the first 10 elements on the periodic table."
+                      placeholder="e.g. Learners can define an element and identify the first 10 elements on the periodic table."
                       value={formData.objectives}
                       onChange={(e) => setFormData({...formData, objectives: e.target.value})}
                     />
@@ -1379,10 +1545,19 @@ const NoteGenerator = () => {
                 </button>
                 <button 
                   onClick={handleDownloadPDF} 
-                  className="bg-ghana-gold text-emerald-deep px-4 py-2 sm:px-4 sm:py-2.5 rounded-xl font-bold uppercase tracking-wider text-[11px] whitespace-nowrap shrink-0 flex items-center gap-1.5 hover:bg-opacity-90 shadow-md"
+                  className="bg-slate-900 text-white px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl font-bold uppercase tracking-wider text-[11px] whitespace-nowrap shrink-0 flex items-center gap-1.5 hover:bg-slate-800 shadow-md"
                 >
                   <Download size={14} />
-                  Download PDF
+                  PDF
+                </button>
+                <button 
+                  onClick={handleDownloadWord} 
+                  disabled={exportingWord}
+                  className="bg-blue-700 hover:bg-blue-800 text-white px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl font-bold uppercase tracking-wider text-[11px] whitespace-nowrap shrink-0 flex items-center gap-1.5 shadow-md shadow-blue-700/20 transition-all"
+                  title="Download Comprehensive Notes in Word (.docx)"
+                >
+                  <FileText size={14} />
+                  {exportingWord ? "Word..." : "Word (.docx)"}
                 </button>
                 <a 
                   href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
@@ -1593,10 +1768,19 @@ const NoteGenerator = () => {
                     </button>
                     <button
                       onClick={handleDownloadPDF}
-                      className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all shadow-md"
+                      className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all shadow-md"
                     >
                       <Download size={14} />
-                      Download Edited PDF
+                      PDF
+                    </button>
+                    <button
+                      onClick={handleDownloadWord}
+                      disabled={exportingWord}
+                      className="px-5 py-2.5 bg-blue-700 hover:bg-blue-800 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all shadow-md shadow-blue-700/20"
+                      title="Download Notes in Word (.docx)"
+                    >
+                      <FileText size={14} />
+                      {exportingWord ? "Word..." : "Word (.docx)"}
                     </button>
                   </div>
                 </div>
@@ -1658,6 +1842,78 @@ const NoteGenerator = () => {
                   </div>
                 </div>
               )}
+
+              {/* TEACHING WORKFLOW: NEXT ACTIONS */}
+              <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 text-white shadow-2xl space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-2xl bg-ghana-gold/20 text-ghana-gold flex items-center justify-center font-bold">
+                      <Sparkles size={20} />
+                    </div>
+                    <div>
+                      <h3 className="text-base font-bold text-white">Next Steps for this Topic</h3>
+                      <p className="text-xs text-slate-400">Continue building your classroom toolkit with matched resources</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                  <div 
+                    onClick={() => navigate('/assignments', {
+                      state: {
+                        preloaded: {
+                          level: formData.level,
+                          class: formData.class,
+                          subject: formData.subject,
+                          topic: formData.strand ? `${formData.strand} - ${formData.subStrand || ''}` : '',
+                          indicator: formData.indicator
+                        }
+                      }
+                    })}
+                    className="bg-slate-800/90 hover:bg-slate-800 border border-emerald-500/40 hover:border-emerald-500 p-4.5 rounded-2xl cursor-pointer transition-all flex items-start gap-3.5 group shadow-sm"
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                      <FileText size={20} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <h4 className="text-sm font-bold text-white group-hover:text-emerald-300 transition-colors">Create Homework Assignment</h4>
+                        <ArrowRight size={15} className="text-emerald-400 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                      <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                        Generate learner assignment worksheets and rubrics for this note.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div 
+                    onClick={() => navigate('/exams', {
+                      state: {
+                        preloaded: {
+                          level: formData.level,
+                          class: formData.class,
+                          subject: formData.subject,
+                          topics: `${formData.strand} - ${formData.subStrand || ''}`
+                        }
+                      }
+                    })}
+                    className="bg-slate-800/90 hover:bg-slate-800 border border-slate-700/60 hover:border-slate-600 p-4.5 rounded-2xl cursor-pointer transition-all flex items-start gap-3.5 group shadow-sm"
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                      <BookOpen size={20} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <h4 className="text-sm font-bold text-white group-hover:text-blue-300 transition-colors">Generate Assessment / Quiz</h4>
+                        <ArrowRight size={15} className="text-blue-400 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                      <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                        Create NaCCA / WAEC standard quiz and test items for this topic.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             )}
           </motion.div>

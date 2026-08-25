@@ -17,6 +17,7 @@ import {
   getBookmarkedIndicatorIds 
 } from '../../lib/curriculumDatabase';
 import { subjects, levels, CLASSES_BY_LEVEL, SUBJECT_STRANDS, SUBJECT_SUB_STRANDS } from '../../constants';
+import { formatPerformanceIndicator } from '../../lib/utils';
 import toast from 'react-hot-toast';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -101,7 +102,7 @@ export const CurriculumDatabase: React.FC = () => {
           subStrand: item.subStrand,
           contentStandard: item.standardFull,
           indicator: item.indicatorFull,
-          mainObjective: `By the end of the lesson, the learner will be able to: ${item.indicatorText}`
+          mainObjective: formatPerformanceIndicator(item.indicatorText || item.indicatorFull)
         }
       }
     });

@@ -1,28 +1,61 @@
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from './firebase';
 
-const DB_NAME = 'teachsmart-offline';
-const DB_VERSION = 1;
+const DB_NAME = 'teachsmart-offline-v2';
+const DB_VERSION = 2;
 
 export interface OfflineDocument {
   id: string; // Document ID (Firestore ID, or custom local ID)
-  authorId: string;
-  createdAt: any; // Date object or timestamp
+  authorId?: string;
+  userId?: string;
+  createdAt: any; // Date object, timestamp number, or Firestore Timestamp
+  updatedAt?: any;
   synced: boolean;
-  type: 'lessonPlan' | 'note' | 'scheme' | 'exam';
+  type: 'lessonPlan' | 'note' | 'scheme' | 'exam' | 'assignment' | 'quiz' | 'report' | 'bstem' | 'other';
+  title?: string;
+  subject?: string;
+  level?: string;
+  class?: string;
+  term?: string | number;
+  strand?: string;
+  subStrand?: string;
+  indicator?: string;
+  content?: any;
+  phase1?: string;
+  phase2?: string;
+  phase3?: string;
+  questions?: any;
+  markingScheme?: string;
+  rubric?: string;
+  summary?: string[];
+  offlineAvailable?: boolean;
+  cachedAt?: number;
   [key: string]: any; // Store all other keys matching each document's structure
 }
 
+export const ALL_STORES = [
+  'lessonPlans',
+  'notes',
+  'schemes',
+  'exams',
+  'assignments',
+  'quizzes',
+  'reports',
+  'recent_docs'
+] as const;
+
+export type StoreName = (typeof ALL_STORES)[number];
+
 export function initDB(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
-    if (typeof window === 'undefined') {
-      reject(new Error('IndexedDB is not available on server-side'));
+    if (typeof window === 'undefined' || !window.indexedDB) {
+      reject(new Error('IndexedDB is not available in this environment'));
       return;
     }
     const request = window.indexedDB.open(DB_NAME, DB_VERSION);
 
     request.onerror = () => {
-      console.error('IndexedDB opening error');
+      console.warn('[IndexedDB] Opening error:', request.error);
       reject(request.error);
     };
 
@@ -31,13 +64,14 @@ export function initDB(): Promise<IDBDatabase> {
     };
 
     request.onupgradeneeded = (event: any) => {
-      const db = event.target.result;
+      const dbInstance = event.target.result;
       
-      // Create stores for lessonPlans, notes, schemes, exams
-      const stores = ['lessonPlans', 'notes', 'schemes', 'exams'];
-      stores.forEach(storeName => {
-        if (!db.objectStoreNames.contains(storeName)) {
-          db.createObjectStore(storeName, { keyPath: 'id' });
+      ALL_STORES.forEach(storeName => {
+        if (!dbInstance.objectStoreNames.contains(storeName)) {
+          const store = dbInstance.createObjectStore(storeName, { keyPath: 'id' });
+          store.createIndex('createdAt', 'createdAt', { unique: false });
+          store.createIndex('authorId', 'authorId', { unique: false });
+          store.createIndex('type', 'type', { unique: false });
         }
       });
     };
@@ -47,7 +81,10 @@ export function initDB(): Promise<IDBDatabase> {
 /**
  * Cache an array of documents retrieved from Firestore to IndexedDB
  */
-export async function cacheFirestoreItems(storeName: 'lessonPlans' | 'notes' | 'schemes' | 'exams', items: any[]): Promise<void> {
+export async function cacheFirestoreItems(
+  storeName: StoreName, 
+  items: any[]
+): Promise<void> {
   try {
     const dbInstance = await initDB();
     const transaction = dbInstance.transaction(storeName, 'readwrite');
@@ -56,7 +93,6 @@ export async function cacheFirestoreItems(storeName: 'lessonPlans' | 'notes' | '
     for (const item of items) {
       if (!item.id) continue;
       
-      // Standardize the createdAt field to a plain timestamp or string if it is a Firestore Timestamp
       let createdAtValue = Date.now();
       if (item.createdAt) {
         if (typeof item.createdAt.toMillis === 'function') {
@@ -68,18 +104,30 @@ export async function cacheFirestoreItems(storeName: 'lessonPlans' | 'notes' | '
         }
       }
 
+      const docType = item.type || (
+        storeName === 'lessonPlans' ? 'lessonPlan' :
+        storeName === 'notes' ? 'note' :
+        storeName === 'schemes' ? 'scheme' :
+        storeName === 'exams' ? 'exam' :
+        storeName === 'assignments' ? 'assignment' :
+        storeName === 'quizzes' ? 'quiz' :
+        storeName === 'reports' ? 'report' : 'other'
+      );
+
       const docToStore: OfflineDocument = {
         ...item,
         id: item.id,
-        synced: true, // Marked as synced because it was retrieved from Firestore server-side
+        synced: true,
         createdAt: createdAtValue,
-        type: storeName === 'lessonPlans' ? 'lessonPlan' : storeName === 'notes' ? 'note' : storeName === 'schemes' ? 'scheme' : 'exam'
+        type: docType,
+        cachedAt: Date.now(),
+        offlineAvailable: true
       };
 
       store.put(docToStore);
     }
   } catch (error) {
-    console.error(`Failed to cache Firestore items to IndexedDB ${storeName}:`, error);
+    console.warn(`[IndexedDB] Failed to cache Firestore items to ${storeName}:`, error);
   }
 }
 
@@ -87,7 +135,7 @@ export async function cacheFirestoreItems(storeName: 'lessonPlans' | 'notes' | '
  * Save an item locally in IndexedDB (offline-first)
  */
 export async function saveOffline(
-  storeName: 'lessonPlans' | 'notes' | 'schemes' | 'exams',
+  storeName: StoreName,
   item: any,
   synced = false
 ): Promise<OfflineDocument> {
@@ -96,9 +144,8 @@ export async function saveOffline(
     const transaction = dbInstance.transaction(storeName, 'readwrite');
     const store = transaction.objectStore(storeName);
 
-    const id = item.id || `local_${storeName}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const id = item.id || `local_${storeName}_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
     
-    // Process createdAt
     let createdAt = Date.now();
     if (item.createdAt) {
       if (typeof item.createdAt.toMillis === 'function') {
@@ -110,17 +157,37 @@ export async function saveOffline(
       }
     }
 
+    const docType = item.type || (
+      storeName === 'lessonPlans' ? 'lessonPlan' :
+      storeName === 'notes' ? 'note' :
+      storeName === 'schemes' ? 'scheme' :
+      storeName === 'exams' ? 'exam' :
+      storeName === 'assignments' ? 'assignment' :
+      storeName === 'quizzes' ? 'quiz' :
+      storeName === 'reports' ? 'report' : 'other'
+    );
+
     const offlineDoc: OfflineDocument = {
       ...item,
       id,
       synced,
       createdAt,
-      type: storeName === 'lessonPlans' ? 'lessonPlan' : storeName === 'notes' ? 'note' : storeName === 'schemes' ? 'scheme' : 'exam'
+      type: docType,
+      cachedAt: Date.now(),
+      offlineAvailable: true
     };
 
     const request = store.put(offlineDoc);
 
     request.onsuccess = () => {
+      // Also maintain in recent_docs store for fast dashboard retrieval
+      if (storeName !== 'recent_docs') {
+        try {
+          const recTx = dbInstance.transaction('recent_docs', 'readwrite');
+          const recStore = recTx.objectStore('recent_docs');
+          recStore.put(offlineDoc);
+        } catch (_) {}
+      }
       resolve(offlineDoc);
     };
 
@@ -134,66 +201,105 @@ export async function saveOffline(
  * Get all saved offline documents for a specific store
  */
 export async function getOffline(
-  storeName: 'lessonPlans' | 'notes' | 'schemes' | 'exams',
+  storeName: StoreName,
   authorId?: string
 ): Promise<OfflineDocument[]> {
-  const dbInstance = await initDB();
-  return new Promise((resolve, reject) => {
-    const transaction = dbInstance.transaction(storeName, 'readonly');
-    const store = transaction.objectStore(storeName);
-    const request = store.getAll();
+  try {
+    const dbInstance = await initDB();
+    return new Promise((resolve, reject) => {
+      const transaction = dbInstance.transaction(storeName, 'readonly');
+      const store = transaction.objectStore(storeName);
+      const request = store.getAll();
 
-    request.onsuccess = () => {
-      let results = request.result || [];
-      if (authorId) {
-        results = results.filter(doc => doc.authorId === authorId);
+      request.onsuccess = () => {
+        let results: OfflineDocument[] = request.result || [];
+        if (authorId) {
+          results = results.filter(doc => (doc.authorId === authorId || doc.userId === authorId));
+        }
+        // Sort newest first
+        results.sort((a, b) => (b.createdAt || b.cachedAt || 0) - (a.createdAt || a.cachedAt || 0));
+        resolve(results);
+      };
+
+      request.onerror = () => {
+        reject(request.error);
+      };
+    });
+  } catch (err) {
+    console.warn(`[IndexedDB] Could not retrieve from store ${storeName}:`, err);
+    return [];
+  }
+}
+
+/**
+ * Get all offline documents across all stores
+ */
+export async function getAllOfflineDocuments(authorId?: string): Promise<OfflineDocument[]> {
+  try {
+    const promises = ALL_STORES.map(store => getOffline(store, authorId).catch(() => []));
+    const allResults = await Promise.all(promises);
+    
+    // Deduplicate by ID
+    const map = new Map<string, OfflineDocument>();
+    allResults.flat().forEach(doc => {
+      if (doc && doc.id) {
+        map.set(doc.id, doc);
       }
-      // Sort newest first
-      results.sort((a, b) => b.createdAt - a.createdAt);
-      resolve(results);
-    };
+    });
 
-    request.onerror = () => {
-      reject(request.error);
-    };
-  });
+    const combined = Array.from(map.values());
+    combined.sort((a, b) => (b.createdAt || b.cachedAt || 0) - (a.createdAt || a.cachedAt || 0));
+    return combined;
+  } catch (err) {
+    console.warn('[IndexedDB] getAllOfflineDocuments failed:', err);
+    return [];
+  }
 }
 
 /**
  * Delete a document from IndexedDB
  */
 export async function deleteOffline(
-  storeName: 'lessonPlans' | 'notes' | 'schemes' | 'exams',
+  storeName: StoreName,
   id: string
 ): Promise<void> {
-  const dbInstance = await initDB();
-  return new Promise((resolve, reject) => {
-    const transaction = dbInstance.transaction(storeName, 'readwrite');
-    const store = transaction.objectStore(storeName);
-    const request = store.delete(id);
+  try {
+    const dbInstance = await initDB();
+    return new Promise((resolve, reject) => {
+      const transaction = dbInstance.transaction(storeName, 'readwrite');
+      const store = transaction.objectStore(storeName);
+      const request = store.delete(id);
 
-    request.onsuccess = () => {
-      resolve();
-    };
+      request.onsuccess = () => {
+        // Also remove from recent_docs
+        try {
+          const recTx = dbInstance.transaction('recent_docs', 'readwrite');
+          recTx.objectStore('recent_docs').delete(id);
+        } catch (_) {}
+        resolve();
+      };
 
-    request.onerror = () => {
-      reject(request.error);
-    };
-  });
+      request.onerror = () => {
+        reject(request.error);
+      };
+    });
+  } catch (err) {
+    console.warn(`[IndexedDB] deleteOffline error on ${storeName}:`, err);
+  }
 }
 
 /**
- * Push pending unsynced documents from IndexedDB up to Firestore
+ * Push pending unsynced documents from IndexedDB up to Firestore when internet returns
  */
 export async function syncPendingToFirebase(authorId: string): Promise<number> {
   if (typeof window === 'undefined' || !navigator.onLine) {
     return 0; // Offline, can't sync
   }
 
-  const stores: Array<'lessonPlans' | 'notes' | 'schemes' | 'exams'> = ['lessonPlans', 'notes', 'schemes', 'exams'];
+  const syncableStores: StoreName[] = ['lessonPlans', 'notes', 'schemes', 'exams', 'assignments', 'quizzes'];
   let syncedCount = 0;
 
-  for (const storeName of stores) {
+  for (const storeName of syncableStores) {
     try {
       const allItems = await getOffline(storeName, authorId);
       const unsyncedItems = allItems.filter(item => !item.synced);
@@ -201,18 +307,15 @@ export async function syncPendingToFirebase(authorId: string): Promise<number> {
       if (unsyncedItems.length === 0) continue;
 
       for (const item of unsyncedItems) {
-        // Strip off custom local status fields to match firestore schema
-        const { id, synced, type, ...firebasePayload } = item;
+        const { id, synced, type, cachedAt, offlineAvailable, ...firebasePayload } = item;
         
-        // Use current server timestamp
         firebasePayload.createdAt = serverTimestamp();
         firebasePayload.authorId = authorId;
 
-        // Save to firestore
-        const collectionName = storeName; // matched
+        const collectionName = storeName;
         const docRef = await addDoc(collection(db, collectionName), firebasePayload);
         
-        // Remove locally stored local_ item and save the synced document with official Firestore doc.id
+        // Remove locally generated local_ ID and save official Firestore doc.id
         await deleteOffline(storeName, id);
         await saveOffline(storeName, {
           ...firebasePayload,
@@ -223,7 +326,7 @@ export async function syncPendingToFirebase(authorId: string): Promise<number> {
         syncedCount++;
       }
     } catch (error) {
-      console.warn(`Sync failed for store ${storeName}:`, error);
+      console.warn(`[IndexedDB] Sync failed for store ${storeName}:`, error);
     }
   }
 

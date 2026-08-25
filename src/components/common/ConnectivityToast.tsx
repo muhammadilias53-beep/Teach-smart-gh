@@ -1,22 +1,21 @@
 import React, { useEffect, useRef } from 'react';
 import { toast } from 'react-hot-toast';
-import { Wifi, WifiOff } from 'lucide-react';
 
 export default function ConnectivityToast() {
   const isFirstMount = useRef(true);
 
   useEffect(() => {
-    // If the browser starts offline, show a quiet warning
+    // If the browser starts offline, show a quiet notice
     if (!navigator.onLine) {
-      toast.error('You are currently offline. Relying on local cached data. AI generation is disabled.', {
+      toast('🇬🇭 Offline Mode: Your cached lesson plans, schemes, and notes are available in your Offline Vault.', {
         id: 'connectivity-status',
-        duration: 5000,
-        icon: '⚠️'
+        duration: 6000,
+        icon: '📦'
       });
     }
 
     const handleOnline = () => {
-      toast.success('Your connection is restored! Premium AI generation has been re-enabled.', {
+      toast.success('Connection restored! All features & cloud synchronization active. 🇬🇭', {
         id: 'connectivity-status',
         duration: 4000,
         icon: '🟢'
@@ -24,10 +23,10 @@ export default function ConnectivityToast() {
     };
 
     const handleOffline = () => {
-      toast.error('Connection lost. You are now relying on cached data. AI generation is disabled.', {
+      toast('Poor or lost connection: TeachSmartGH is in Offline Mode. All your cached documents remain accessible in your Vault.', {
         id: 'connectivity-status',
-        duration: Infinity, // keep active until reconnected
-        icon: '🔴'
+        duration: 7000,
+        icon: '📦'
       });
     };
 

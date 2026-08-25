@@ -12,10 +12,11 @@ import {
   updateProfile as firebaseUpdateProfile
 } from 'firebase/auth';
 import { motion } from 'motion/react';
-import { GraduationCap, Mail, Lock, User, Chrome, Zap, Info, Eye, EyeOff, FastForward, ArrowRight, CheckCircle2, Clock, BookOpen, Sparkles, Download } from 'lucide-react';
+import { GraduationCap, Mail, Lock, User, Chrome, Zap, Info, Eye, EyeOff, FastForward, ArrowRight, CheckCircle2, Clock, BookOpen, Sparkles, Download, ShieldCheck } from 'lucide-react';
 import { doc, getDoc, setDoc, serverTimestamp, collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { toast } from 'react-hot-toast';
+import { TermsAndConditionsModal } from '../legal/TermsAndConditionsModal';
 
 import { Logo } from '../common/Logo';
 
@@ -105,16 +106,17 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [showGuestEmailModal, setShowGuestEmailModal] = useState(false);
   const [guestEmail, setGuestEmail] = useState('');
+  const [showTermsModal, setShowTermsModal] = useState(false);
 
   useEffect(() => {
     if (user) {
-      if (location.state?.from) {
-        navigate(location.state.from);
-      } else {
-        navigate('/');
-      }
+      try {
+        sessionStorage.setItem('teachsmart_fresh_login', 'true');
+        localStorage.setItem('teachsmart_last_working_route', '/');
+      } catch (_) {}
+      navigate('/', { replace: true });
     }
-  }, [user, navigate, location]);
+  }, [user, navigate]);
 
   const getSafeDate = (d: any) => {
     if (!d) return new Date();
@@ -742,6 +744,22 @@ const Login = () => {
                       </>
                     )}
                   </button>
+
+                  {/* Responsible AI & Terms Notice */}
+                  <div className="pt-2 text-center">
+                    <p className="text-[10px] text-slate-400 font-medium leading-relaxed">
+                      By continuing, you agree to the TeachSmartGH{' '}
+                      <button
+                        type="button"
+                        onClick={() => setShowTermsModal(true)}
+                        className="text-emerald-700 underline font-bold hover:text-emerald-900 transition-colors inline-flex items-center gap-0.5"
+                      >
+                        <ShieldCheck size={11} className="inline" />
+                        Responsible AI Terms & Conditions
+                      </button>
+                      . All generated content must be human-verified for classroom delivery.
+                    </p>
+                  </div>
                 </form>
               </div>
 
@@ -918,6 +936,12 @@ const Login = () => {
           </motion.div>
         </div>
       )}
+
+      <TermsAndConditionsModal
+        isOpen={showTermsModal}
+        onClose={() => setShowTermsModal(false)}
+        isMandatory={false}
+      />
     </div>
   );
 };

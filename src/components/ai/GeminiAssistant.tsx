@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { MessageSquare, Send, X, Bot, User, Loader2, Mic, RotateCcw, Lock } from 'lucide-react';
+import { MessageSquare, Send, X, Bot, User, Loader2, Mic, RotateCcw, Lock, FileText, Copy, Check } from 'lucide-react';
 import { generateWithProxy } from '../../lib/gemini';
 import { cn } from '../../lib/utils';
 import { SafeMarkdown } from '../common/SafeMarkdown';
@@ -28,6 +28,7 @@ const GeminiAssistant = () => {
   });
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isListening, setIsListening] = useState(false);
   const requestSessionIdRef = React.useRef<number>(0);
 
   React.useEffect(() => {
@@ -269,8 +270,6 @@ Transform the sidebar assistant into a powerful AI Tutor that acts as a trusted 
     }
   };
 
-  const [isListening, setIsListening] = useState(false);
-
   const toggleVoice = () => {
     // Basic simulation for voice UI
     if (!isListening) {
@@ -348,10 +347,27 @@ Transform the sidebar assistant into a powerful AI Tutor that acts as a trusted 
                </div>
 
                {messages.map((m, i) => (
-                 <div key={i} className={cn("flex flex-col gap-2", m.role === 'user' ? "items-end" : "items-start")}>
-                    <p className={cn("text-[9px] font-black uppercase tracking-widest opacity-50", m.role === 'user' ? "text-ghana-gold" : "text-emerald-text")}>
-                        {m.role === 'user' ? "Teacher" : "AI Tutor"}
-                    </p>
+                 <div key={i} className={cn("flex flex-col gap-2 group relative", m.role === 'user' ? "items-end" : "items-start")}>
+                    <div className="flex items-center justify-between w-full">
+                      <p className={cn("text-[9px] font-black uppercase tracking-widest opacity-50", m.role === 'user' ? "text-ghana-gold" : "text-emerald-text")}>
+                          {m.role === 'user' ? "Teacher" : "AI Tutor"}
+                      </p>
+                      {m.role === 'assistant' && (
+                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              navigator.clipboard.writeText(m.content);
+                              toast.success("Copied!");
+                            }}
+                            className="p-1 rounded bg-white/10 hover:bg-white/20 text-slate-300 text-[10px]"
+                            title="Copy text"
+                          >
+                            <Copy size={11} />
+                          </button>
+                        </div>
+                      )}
+                    </div>
                     <div className={cn(
                         "markdown-body max-w-[90%] p-4 rounded-xl text-xs leading-relaxed",
                         m.role === 'user' ? "bg-emerald-deep/40 border border-emerald-500/20 text-white rounded-tr-none" : "bg-white/10 text-slate-200 rounded-tl-none italic"

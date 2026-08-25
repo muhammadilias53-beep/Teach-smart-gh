@@ -18,6 +18,7 @@ interface CurriculumReferenceModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectIndicator?: (indicator: CurriculumIndicatorItem) => void;
+  onSelectIndicators?: (indicators: CurriculumIndicatorItem[]) => void;
   initialLevel?: string;
   initialClass?: string;
   initialSubject?: string;
@@ -29,6 +30,7 @@ export const CurriculumReferenceModal: React.FC<CurriculumReferenceModalProps> =
   isOpen,
   onClose,
   onSelectIndicator,
+  onSelectIndicators,
   initialLevel,
   initialClass,
   initialSubject,
@@ -43,6 +45,7 @@ export const CurriculumReferenceModal: React.FC<CurriculumReferenceModalProps> =
   const [bookmarkedIds, setBookmarkedIds] = useState<string[]>(() => getBookmarkedIndicatorIds());
   const [activeTab, setActiveTab] = useState<'all' | 'saved'>('all');
   const [selectedDetail, setSelectedDetail] = useState<CurriculumIndicatorItem | null>(null);
+  const [multiSelectedItems, setMultiSelectedItems] = useState<CurriculumIndicatorItem[]>([]);
 
   // Sync initial props when opened
   React.useEffect(() => {
@@ -51,6 +54,7 @@ export const CurriculumReferenceModal: React.FC<CurriculumReferenceModalProps> =
       if (initialSubject) setSelectedSubject(initialSubject);
       if (initialClass) setSelectedClass(initialClass);
       if (initialStrand) setSelectedStrand(initialStrand);
+      setMultiSelectedItems([]);
     }
   }, [isOpen, initialLevel, initialSubject, initialClass, initialStrand]);
 
@@ -100,8 +104,36 @@ export const CurriculumReferenceModal: React.FC<CurriculumReferenceModalProps> =
     toast.success('Indicator code copied to clipboard!');
   };
 
+  const handleToggleMultiSelect = (item: CurriculumIndicatorItem) => {
+    setMultiSelectedItems(prev => {
+      const exists = prev.some(i => i.id === item.id);
+      if (exists) {
+        return prev.filter(i => i.id !== item.id);
+      } else {
+        return [...prev, item];
+      }
+    });
+  };
+
+  const handleApplyMultiSelected = () => {
+    if (multiSelectedItems.length === 0) return;
+    if (onSelectIndicators) {
+      onSelectIndicators(multiSelectedItems);
+      toast.success(`Selected ${multiSelectedItems.length} indicators for lesson plan! 🇬🇭`);
+      onClose();
+    } else if (onSelectIndicator && multiSelectedItems.length > 0) {
+      onSelectIndicator(multiSelectedItems[0]);
+      toast.success(`Selected ${multiSelectedItems[0].indicatorCode} for lesson plan!`);
+      onClose();
+    }
+  };
+
   const handleSelect = (item: CurriculumIndicatorItem) => {
-    if (onSelectIndicator) {
+    if (onSelectIndicators) {
+      onSelectIndicators([item]);
+      toast.success(`Selected ${item.indicatorCode} for lesson planning!`);
+      onClose();
+    } else if (onSelectIndicator) {
       onSelectIndicator(item);
       toast.success(`Selected ${item.indicatorCode} for lesson planning!`);
       onClose();
@@ -278,14 +310,27 @@ export const CurriculumReferenceModal: React.FC<CurriculumReferenceModalProps> =
             <div className="grid grid-cols-1 gap-3">
               {searchResults.slice(0, 100).map((item) => {
                 const isBookmarked = bookmarkedIds.includes(item.id);
+                const isMultiSelected = multiSelectedItems.some(i => i.id === item.id);
                 return (
                   <div
                     key={item.id}
-                    className="p-4 bg-white rounded-xl border border-slate-200/80 hover:border-[#006B3F]/40 hover:shadow-md transition-all group"
+                    onClick={() => handleToggleMultiSelect(item)}
+                    className={`p-4 bg-white rounded-xl border-2 transition-all cursor-pointer group ${
+                      isMultiSelected 
+                        ? 'border-[#006B3F] bg-emerald-50/20 shadow-md ring-2 ring-[#006B3F]/20' 
+                        : 'border-slate-200/80 hover:border-[#006B3F]/40 hover:shadow-sm'
+                    }`}
                   >
                     {/* Header Info */}
                     <div className="flex items-start justify-between gap-3 mb-2">
                       <div className="flex flex-wrap items-center gap-1.5">
+                        <div className={`w-5 h-5 rounded flex items-center justify-center border transition-all ${
+                          isMultiSelected 
+                            ? 'bg-[#006B3F] border-[#006B3F] text-white' 
+                            : 'border-slate-300 bg-white group-hover:border-slate-400'
+                        }`}>
+                          {isMultiSelected && <Check size={12} strokeWidth={3} />}
+                        </div>
                         <span className="px-2 py-0.5 rounded-md text-xs font-bold bg-[#0A192F] text-white tracking-wide">
                           {item.indicatorCode || item.standardCode}
                         </span>
@@ -297,7 +342,7 @@ export const CurriculumReferenceModal: React.FC<CurriculumReferenceModalProps> =
                         </span>
                       </div>
 
-                      <div className="flex items-center gap-1 shrink-0">
+                      <div className="flex items-center gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>
                         <button
                           onClick={(e) => handleBookmarkToggle(e, item.id)}
                           className="p-1.5 text-slate-400 hover:text-amber-500 hover:bg-amber-50 rounded-lg transition-colors"
@@ -352,14 +397,26 @@ export const CurriculumReferenceModal: React.FC<CurriculumReferenceModalProps> =
                     </div>
 
                     {/* Action Bar */}
-                    {onSelectIndicator && (
-                      <div className="flex justify-end pt-1">
+                    {(onSelectIndicator || onSelectIndicators) && (
+                      <div className="flex justify-end items-center gap-2 pt-1" onClick={(e) => e.stopPropagation()}>
                         <button
+                          type="button"
+                          onClick={() => handleToggleMultiSelect(item)}
+                          className={`px-3 py-1.5 text-xs font-semibold rounded-lg border transition-all ${
+                            isMultiSelected
+                              ? 'bg-emerald-100 border-emerald-300 text-emerald-900'
+                              : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
+                          }`}
+                        >
+                          {isMultiSelected ? '✓ Selected' : '+ Add to Selection'}
+                        </button>
+                        <button
+                          type="button"
                           onClick={() => handleSelect(item)}
                           className="px-3.5 py-1.5 bg-[#006B3F] hover:bg-[#005230] text-white text-xs font-bold rounded-lg flex items-center gap-1.5 shadow-xs hover:shadow transition-all"
                         >
                           <Check size={14} />
-                          Use in Lesson Plan
+                          Select Solo
                         </button>
                       </div>
                     )}
@@ -376,17 +433,46 @@ export const CurriculumReferenceModal: React.FC<CurriculumReferenceModalProps> =
           )}
         </div>
 
-        {/* Modal Footer */}
-        <div className="p-3.5 sm:p-4 border-t border-slate-100 bg-white flex items-center justify-between text-xs text-slate-500">
-          <div>
-            Showing <strong className="text-slate-800">{Math.min(searchResults.length, 100)}</strong> of <strong className="text-slate-800">{searchResults.length}</strong> indicators
+        {/* Modal Footer with Multi-Select Action Bar */}
+        <div className="p-3.5 sm:p-4 border-t border-slate-100 bg-white flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+          <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-start">
+            <span>
+              Showing <strong className="text-slate-800">{Math.min(searchResults.length, 100)}</strong> of <strong className="text-slate-800">{searchResults.length}</strong> indicators
+            </span>
+            {multiSelectedItems.length > 0 && (
+              <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold text-xs border border-emerald-300">
+                {multiSelectedItems.length} selected
+              </span>
+            )}
           </div>
-          <button
-            onClick={onClose}
-            className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl transition-colors"
-          >
-            Close Reference
-          </button>
+          
+          <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+            {multiSelectedItems.length > 0 && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => setMultiSelectedItems([])}
+                  className="px-3 py-2 text-slate-500 hover:text-slate-800 font-medium transition-colors"
+                >
+                  Clear ({multiSelectedItems.length})
+                </button>
+                <button
+                  type="button"
+                  onClick={handleApplyMultiSelected}
+                  className="px-4 py-2 bg-[#006B3F] hover:bg-[#005230] text-white font-bold rounded-xl flex items-center gap-2 shadow-sm transition-all animate-pulse"
+                >
+                  <Check size={16} />
+                  Use Selected ({multiSelectedItems.length}) Indicators
+                </button>
+              </>
+            )}
+            <button
+              onClick={onClose}
+              className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl transition-colors"
+            >
+              Close
+            </button>
+          </div>
         </div>
       </div>
     </div>

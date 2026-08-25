@@ -13,6 +13,8 @@ import { cn } from '../../lib/utils';
 import { collection, query, where, orderBy, limit, getDocs, getCountFromServer, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { getOffline, syncPendingToFirebase, cacheFirestoreItems } from '../../lib/indexedDB';
+import { getOfflineDocuments, cacheBatchFirestoreItems } from '../../lib/offlineDocumentCache';
+import OfflineDocumentsVault from '../common/OfflineDocumentsVault';
 import { handleFirestoreError, OperationType } from '../../lib/firestore-errors';
 import { Logo } from '../common/Logo';
 import { SafeMarkdown } from '../common/SafeMarkdown';
@@ -44,6 +46,8 @@ const Dashboard = () => {
   const [recentDocs, setRecentDocs] = useState<any[]>([]);
   const [loadingDocs, setLoadingDocs] = useState(true);
   const [viewingDoc, setViewingDoc] = useState<any>(null);
+  const [isOfflineVaultOpen, setIsOfflineVaultOpen] = useState(false);
+  const [offlineDocsCount, setOfflineDocsCount] = useState(0);
   const [stats, setStats] = useState({
     lessonPlans: 0,
     exams: 0,
@@ -222,18 +226,18 @@ const Dashboard = () => {
 
         const [lpSnap, exSnap, scSnap, ntSnap, pkSnap, countLp, countEx, countSc, countNt, countPk] = results;
         
-        // Cache fetched items to IndexedDB in background
+        // Cache fetched items to IndexedDB and Service Worker in background
         if (lpSnap) {
-          cacheFirestoreItems('lessonPlans', lpSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+          cacheBatchFirestoreItems('lessonPlans', lpSnap.docs.map(doc => ({ id: doc.id, ...doc.data(), type: 'lessonPlan' })));
         }
         if (exSnap) {
-          cacheFirestoreItems('exams', exSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+          cacheBatchFirestoreItems('exams', exSnap.docs.map(doc => ({ id: doc.id, ...doc.data(), type: 'exam' })));
         }
         if (scSnap) {
-          cacheFirestoreItems('schemes', scSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+          cacheBatchFirestoreItems('schemes', scSnap.docs.map(doc => ({ id: doc.id, ...doc.data(), type: 'scheme' })));
         }
         if (ntSnap) {
-          cacheFirestoreItems('notes', ntSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+          cacheBatchFirestoreItems('notes', ntSnap.docs.map(doc => ({ id: doc.id, ...doc.data(), type: 'note' })));
         }
 
         const docs: any[] = [];
@@ -250,6 +254,20 @@ const Dashboard = () => {
             return tB - tA;
           });
           setRecentDocs(docs.slice(0, 5));
+        } else {
+          // If Firestore returned 0 docs or is inaccessible offline, read from Service Worker & IndexedDB cache!
+          const offlineDocs = await getOfflineDocuments(user.uid);
+          if (offlineDocs.length > 0) {
+            setRecentDocs(offlineDocs.slice(0, 5).map(od => ({
+              ...od,
+              type: od.type === 'lessonPlan' ? 'Lesson Plan' :
+                    od.type === 'exam' ? 'Exam' :
+                    od.type === 'scheme' ? 'Scheme' :
+                    od.type === 'note' ? 'Note' :
+                    od.type === 'assignment' ? 'Assignment' :
+                    od.type === 'quiz' ? 'Quiz' : 'Document'
+            })));
+          }
         }
 
         const lpCount = countLp?.data().count || 0;
@@ -267,8 +285,25 @@ const Dashboard = () => {
           total: lpCount + exCount + scCount + ntCount + pkCount
         });
 
+        // Update offline cached documents count
+        const allCached = await getOfflineDocuments(user.uid);
+        setOfflineDocsCount(allCached.length);
+
       } catch (err) {
-        console.error("Error fetching dashboard data:", err);
+        console.warn("Firestore dashboard read failed (offline/error), retrieving cached documents:", err);
+        const offlineDocs = await getOfflineDocuments(user?.uid);
+        if (offlineDocs.length > 0) {
+          setRecentDocs(offlineDocs.slice(0, 5).map(od => ({
+            ...od,
+            type: od.type === 'lessonPlan' ? 'Lesson Plan' :
+                  od.type === 'exam' ? 'Exam' :
+                  od.type === 'scheme' ? 'Scheme' :
+                  od.type === 'note' ? 'Note' :
+                  od.type === 'assignment' ? 'Assignment' :
+                  od.type === 'quiz' ? 'Quiz' : 'Document'
+          })));
+          setOfflineDocsCount(offlineDocs.length);
+        }
       } finally {
         setLoadingDocs(false);
       }
@@ -1155,14 +1190,30 @@ const Dashboard = () => {
           "bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden flex flex-col shadow-sm transition-all duration-500",
           recentDocs.length === 0 && !loadingDocs ? "card-fancy" : ""
         )}>
-            <div className="p-8 border-b border-slate-50 flex justify-between items-center bg-slate-50/30">
+            <div className="p-8 border-b border-slate-50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-50/30">
               <div>
-                <h2 className="text-lg font-black text-slate-900 tracking-tight">Recent Documents</h2>
+                <div className="flex items-center gap-2">
+                  <h2 className="text-lg font-black text-slate-900 tracking-tight">Recent Documents</h2>
+                  {offlineDocsCount > 0 && (
+                    <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-black uppercase rounded-full border border-emerald-200">
+                      ⚡ {offlineDocsCount} Offline Cached
+                    </span>
+                  )}
+                </div>
                 <p className="text-xs text-slate-500 font-medium italic mt-0.5">Your most recently generated educational materials</p>
               </div>
-              <Link to="/lessons" className="text-xs font-black uppercase tracking-widest text-emerald-deep hover:text-emerald-light transition-colors">
-                View Lesson Plans
-              </Link>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setIsOfflineVaultOpen(true)}
+                  className="flex items-center gap-2 px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-[10px] font-black uppercase tracking-wider transition-all shadow-sm active:scale-95"
+                >
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>Offline Vault ({offlineDocsCount})</span>
+                </button>
+                <Link to="/lessons" className="text-xs font-black uppercase tracking-widest text-emerald-deep hover:text-emerald-light transition-colors">
+                  View Lesson Plans
+                </Link>
+              </div>
             </div>
             
             <div className="overflow-x-auto min-h-[400px] custom-scrollbar">
@@ -1230,6 +1281,17 @@ const Dashboard = () => {
       <AnimatePresence>
         {viewingDoc && <DocumentViewerModal doc={viewingDoc} onClose={() => setViewingDoc(null)} />}
       </AnimatePresence>
+
+      <OfflineDocumentsVault
+        isOpen={isOfflineVaultOpen}
+        onClose={() => {
+          setIsOfflineVaultOpen(false);
+          getOfflineDocuments(user?.uid).then(d => setOfflineDocsCount(d.length));
+        }}
+        onSelectDocument={(doc) => {
+          setViewingDoc(doc);
+        }}
+      />
     </div>
   );
 };
@@ -1364,7 +1426,7 @@ const DocumentViewerModal = ({ doc, onClose }: { doc: any, onClose: () => void }
     }
 
     // Footer on all pages
-    const pageCount = (pdf.internal as any).getNumberOfPages();
+    const pageCount = (typeof pdf.getNumberOfPages === 'function' ? pdf.getNumberOfPages() : 1) || 1;
     for(let pageNum = 1; pageNum <= pageCount; pageNum++) {
         pdf.setPage(pageNum);
         pdf.setDrawColor(200, 200, 200);

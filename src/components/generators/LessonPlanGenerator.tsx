@@ -2,19 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import { toast } from 'react-hot-toast';
-import { Sparkles, Save, Download, RefreshCw, FileText, ChevronLeft, ChevronRight, CheckCircle, Users, Layout, AlignLeft, Layers, GraduationCap, MessageSquare, Edit3, Check, RotateCcw, FileEdit, AlertCircle, Compass, Search } from 'lucide-react';
+import { Sparkles, Save, Download, RefreshCw, FileText, ChevronLeft, ChevronRight, CheckCircle, Users, Layout, AlignLeft, Layers, GraduationCap, MessageSquare, Edit3, Check, RotateCcw, FileEdit, AlertCircle, Compass, Search, BookOpen, ArrowRight } from 'lucide-react';
 import { CurriculumReferenceModal } from '../standards/CurriculumReferenceModal';
 import { CurriculumIndicatorItem } from '../../lib/curriculumDatabase';
 import { generateLessonPlan } from '../../lib/gemini';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { saveOffline } from '../../lib/indexedDB';
+import { cacheGeneratedDocument } from '../../lib/offlineDocumentCache';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../contexts/AuthContext';
-import { cn } from '../../lib/utils';
+import { cn, formatPerformanceIndicator, formatMultiplePerformanceIndicators, getUpcomingFriday, getSchoolWeekDaysFromWeekEnding, calculateLessonDateFromWeekEnding, formatWeekLessonPlanTitle, SchoolWeekDays } from '../../lib/utils';
+import { filterStandardsForClass } from '../../lib/curriculumDatabase';
 import { SafeMarkdown } from '../common/SafeMarkdown';
 import 'highlight.js/styles/github.css';
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
+import { exportLessonPlanToPDF } from '../../lib/lessonPlanPdfExport';
+import { exportLessonPlanToWord } from '../../lib/wordExport';
+import { buildMultiDayLessonPhases } from '../../lib/multiDayParser';
 import { 
   subjects, 
   levels, 
@@ -89,6 +92,13 @@ const GHANAIAN_LANGUAGES_FOR_BILINGUAL = [
   "Nzema"
 ];
 
+export const formatDaysString = (days: string[]): string => {
+  if (!days || days.length === 0) return 'Monday';
+  if (days.length === 1) return days[0];
+  if (days.length === 2) return `${days[0]} & ${days[1]}`;
+  return `${days.slice(0, -1).join(', ')} & ${days[days.length - 1]}`;
+};
+
 const LessonPlanGenerator = () => {
   const { user, profile } = useAuth();
   const navigate = useNavigate();
@@ -101,24 +111,35 @@ const LessonPlanGenerator = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [hasEdited, setHasEdited] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [customIndicatorInput, setCustomIndicatorInput] = useState('');
+  const initialFriday = getUpcomingFriday();
+  const initialDate = calculateLessonDateFromWeekEnding(initialFriday, ['Monday']);
+
   const [formData, setFormData] = useState({
     level: 'JHS',
     class: 'Basic 7',
     subject: 'English',
     ghanaianLanguage: '',
+    weekNumber: '1',
+    day: 'Monday',
+    selectedDays: ['Monday'] as string[],
+    date: initialDate,
+    period: '1 & 2 (60 mins)',
+    lesson: '1 of 3',
     strand: '',
     subStrand: '',
     contentStandard: '',
     indicator: '',
+    selectedIndicators: [] as string[],
     mainObjective: '',
     duration: '60 minutes',
     classSize: '40',
-    weekEnding: new Date().toISOString().split('T')[0],
+    weekEnding: initialFriday,
     locality: 'Urban',
     specificLocality: profile?.town || '',
     differentiationStrategies: '',
     customGuidance: '',
-    layoutStyle: 'comprehensive' as 'minimalist' | 'comprehensive' | 'primary-focused',
+    layoutStyle: 'ges-standard' as 'ges-standard' | 'minimalist' | 'comprehensive' | 'primary-focused',
     language: 'English',
     bilingualLanguage: 'Twi',
   });
@@ -127,14 +148,17 @@ const LessonPlanGenerator = () => {
   useEffect(() => {
     if (location.state?.preloaded) {
       const p = location.state.preloaded;
+      const initialIndicators = p.indicator ? [p.indicator] : [];
       setFormData(prev => ({
         ...prev,
         level: p.level || prev.level,
         class: p.class || prev.class,
         subject: p.subject || prev.subject,
+        weekNumber: p.weekNumber || p.week || prev.weekNumber || '1',
         strand: p.strand || prev.strand,
         subStrand: p.subStrand || prev.subStrand,
         contentStandard: p.contentStandard || prev.contentStandard,
+        selectedIndicators: initialIndicators,
         indicator: p.indicator || prev.indicator,
         mainObjective: p.mainObjective || prev.mainObjective,
       }));
@@ -143,33 +167,188 @@ const LessonPlanGenerator = () => {
   }, [location.state]);
 
   const handleIndicatorSelected = (item: CurriculumIndicatorItem) => {
+    const indString = item.indicatorFull || `${item.indicatorCode}: ${item.indicatorText}`;
+    setFormData(prev => {
+      const updatedIndicators = [indString];
+      return {
+        ...prev,
+        level: item.level || prev.level,
+        class: item.classLevel || prev.class,
+        subject: item.subject || prev.subject,
+        strand: item.strand,
+        subStrand: item.subStrand,
+        contentStandard: item.standardFull,
+        selectedIndicators: updatedIndicators,
+        indicator: item.indicatorCode || item.indicatorFull,
+        mainObjective: formatPerformanceIndicator(item.indicatorText || item.indicatorFull)
+      };
+    });
+  };
+
+  const handleMultipleIndicatorsSelectedFromModal = (items: CurriculumIndicatorItem[]) => {
+    if (items.length === 0) return;
+    const first = items[0];
+    const newIndStrings = items.map(item => item.indicatorFull || `${item.indicatorCode}: ${item.indicatorText}`);
+    
+    setFormData(prev => {
+      // Merge unique indicators
+      const mergedIndicators = Array.from(new Set([...(prev.selectedIndicators || []), ...newIndStrings]));
+      const codes = mergedIndicators.map(i => i.split(':')[0].trim()).join(', ');
+      const newObj = formatMultiplePerformanceIndicators(mergedIndicators);
+      return {
+        ...prev,
+        level: first.level || prev.level,
+        class: first.classLevel || prev.class,
+        subject: first.subject || prev.subject,
+        strand: first.strand || prev.strand,
+        subStrand: first.subStrand || prev.subStrand,
+        contentStandard: first.standardFull || prev.contentStandard,
+        selectedIndicators: mergedIndicators,
+        indicator: codes,
+        mainObjective: newObj || prev.mainObjective
+      };
+    });
+  };
+
+  const handleWeekEndingChange = (newWeekEnding: string) => {
+    setFormData(prev => {
+      const activeDays = prev.selectedDays && prev.selectedDays.length > 0
+        ? prev.selectedDays
+        : [prev.day || 'Monday'];
+      const calculatedDate = calculateLessonDateFromWeekEnding(newWeekEnding, activeDays);
+      return {
+        ...prev,
+        weekEnding: newWeekEnding,
+        date: calculatedDate
+      };
+    });
+  };
+
+  const handleToggleDay = (dayName: string) => {
+    setFormData(prev => {
+      const current = prev.selectedDays || [prev.day || 'Monday'];
+      let updated: string[];
+      if (current.includes(dayName)) {
+        if (current.length === 1) {
+          updated = current; // Preserve at least one day
+        } else {
+          updated = current.filter(d => d !== dayName);
+        }
+      } else {
+        const order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+        updated = [...current, dayName].sort((a, b) => order.indexOf(a) - order.indexOf(b));
+      }
+      const dayStr = formatDaysString(updated);
+      const calculatedDate = calculateLessonDateFromWeekEnding(prev.weekEnding, updated);
+      return {
+        ...prev,
+        selectedDays: updated,
+        day: dayStr,
+        date: calculatedDate
+      };
+    });
+  };
+
+  const handleSetDayPreset = (days: string[]) => {
     setFormData(prev => ({
       ...prev,
-      level: item.level || prev.level,
-      class: item.classLevel || prev.class,
-      subject: item.subject || prev.subject,
-      strand: item.strand,
-      subStrand: item.subStrand,
-      contentStandard: item.standardFull,
-      indicator: item.indicatorFull,
-      mainObjective: `By the end of the lesson, the learner will be able to: ${item.indicatorText}`
+      selectedDays: days,
+      day: formatDaysString(days),
+      date: calculateLessonDateFromWeekEnding(prev.weekEnding, days)
     }));
+  };
+
+  const handleRecalculateDate = () => {
+    const activeDays = formData.selectedDays && formData.selectedDays.length > 0
+      ? formData.selectedDays
+      : [formData.day || 'Monday'];
+    const calculatedDate = calculateLessonDateFromWeekEnding(formData.weekEnding, activeDays);
+    setFormData(prev => ({
+      ...prev,
+      date: calculatedDate
+    }));
+    toast.success(`Lesson date synced: ${calculatedDate}`);
+  };
+
+  const handleToggleIndicator = (indicatorStr: string) => {
+    setFormData(prev => {
+      const current = prev.selectedIndicators && prev.selectedIndicators.length > 0
+        ? prev.selectedIndicators
+        : (prev.indicator ? [prev.indicator] : []);
+      
+      let updated: string[];
+      if (current.includes(indicatorStr)) {
+        updated = current.filter(i => i !== indicatorStr);
+      } else {
+        updated = [...current, indicatorStr];
+      }
+
+      const codes = updated.map(i => i.split(':')[0].trim()).join(', ');
+      const newObjective = formatMultiplePerformanceIndicators(updated);
+
+      return {
+        ...prev,
+        selectedIndicators: updated,
+        indicator: codes,
+        mainObjective: newObjective || prev.mainObjective
+      };
+    });
+  };
+
+  const handleSelectAllIndicators = (indicators: string[]) => {
+    setFormData(prev => {
+      const codes = indicators.map(i => i.split(':')[0].trim()).join(', ');
+      const newObjective = formatMultiplePerformanceIndicators(indicators);
+      return {
+        ...prev,
+        selectedIndicators: indicators,
+        indicator: codes,
+        mainObjective: newObjective || prev.mainObjective
+      };
+    });
+  };
+
+  const handleClearIndicators = () => {
+    setFormData(prev => ({
+      ...prev,
+      selectedIndicators: [],
+      indicator: '',
+      mainObjective: ''
+    }));
+  };
+
+  const handleAddCustomIndicator = () => {
+    if (!customIndicatorInput.trim()) return;
+    const cleanInd = customIndicatorInput.trim();
+    setFormData(prev => {
+      const current = prev.selectedIndicators || [];
+      if (current.includes(cleanInd)) return prev;
+      const updated = [...current, cleanInd];
+      const codes = updated.map(i => i.split(':')[0].trim()).join(', ');
+      const newObj = formatMultiplePerformanceIndicators(updated);
+      return {
+        ...prev,
+        selectedIndicators: updated,
+        indicator: codes,
+        mainObjective: newObj || prev.mainObjective
+      };
+    });
+    setCustomIndicatorInput('');
+    toast.success('Indicator added to lesson plan!');
   };
   
   const displaySubject = formData.subject === 'Ghanaian Language' && formData.ghanaianLanguage
     ? `Ghanaian Language (${formData.ghanaianLanguage})`
     : formData.subject;
 
-  // Automatically use the indicator as the main learning objective when selected
+  // Automatically use the indicator as the Performance Indicator when selected
   React.useEffect(() => {
     if (formData.indicator) {
-      const parts = formData.indicator.split(':');
-      const text = parts.length > 1 ? parts.slice(1).join(':').trim() : formData.indicator.trim();
-      if (text) {
-        const formattedText = text.charAt(0).toUpperCase() + text.slice(1);
+      const formatted = formatPerformanceIndicator(formData.indicator);
+      if (formatted) {
         setFormData(prev => ({
           ...prev,
-          mainObjective: `By the end of the lesson, the learner will be able to: ${formattedText}`
+          mainObjective: formatted
         }));
       }
     } else {
@@ -203,9 +382,10 @@ const LessonPlanGenerator = () => {
       if (!formData.strand) newErrors.strand = "Required";
       if (!formData.subStrand) newErrors.subStrand = "Required";
       if (!formData.contentStandard) newErrors.contentStandard = "Required";
-      if (!formData.indicator) newErrors.indicator = "Required";
+      const hasIndicator = (formData.selectedIndicators && formData.selectedIndicators.length > 0) || Boolean(formData.indicator);
+      if (!hasIndicator) newErrors.indicator = "Please select or enter at least one indicator";
       if (!formData.mainObjective || formData.mainObjective.length < 10) {
-        newErrors.mainObjective = "Please provide a detailed objective (min 10 chars)";
+        newErrors.mainObjective = "Please provide performance indicator statement(s) starting with 'Learners can' (min 10 chars)";
       }
     }
 
@@ -314,13 +494,14 @@ const LessonPlanGenerator = () => {
   const currentStrands = getSubjectStrands(formData.subject, formData.level);
   const lookupStrand = getLookupStrand(formData.subject, formData.strand);
   const currentSubStrands = getSubjectSubStrands(formData.subject, formData.strand, formData.level);
-  const currentStandards = (
+  const rawStandards = (
     SUB_STRAND_STANDARDS[lookupStrand]?.[formData.subStrand] || 
     SUB_STRAND_STANDARDS[formData.strand]?.[formData.subStrand] ||
     SUB_STRAND_STANDARDS[formData.subject]?.[formData.subStrand] ||
     SUB_STRAND_STANDARDS[formData.subject]?.[formData.strand] ||
     []
   );
+  const currentStandards = filterStandardsForClass(rawStandards, formData.class, formData.level);
   const currentIndicators = STANDARD_INDICATORS[formData.contentStandard] || getFallbackIndicators(formData.contentStandard);
 
   const handleGenerate = async () => {
@@ -328,8 +509,20 @@ const LessonPlanGenerator = () => {
 
     setLoading(true);
     try {
-      // Find potential curriculum frame for additional guidance
-      const indicatorId = formData.indicator.split(':')[0].trim();
+      const activeIndicators = formData.selectedIndicators && formData.selectedIndicators.length > 0
+        ? formData.selectedIndicators
+        : (formData.indicator ? [formData.indicator] : []);
+
+      const activeDays = formData.selectedDays && formData.selectedDays.length > 0
+        ? formData.selectedDays
+        : [formData.day || 'Monday'];
+
+      const daysDescription = formatDaysString(activeDays);
+      const isMultiDay = activeDays.length > 1;
+      const isMultiIndicator = activeIndicators.length > 1;
+      const indicatorCodesString = activeIndicators.map(i => i.split(':')[0].trim()).join(', ');
+
+      // Find potential curriculum frames for additional guidance
       let frameDetails = "";
       
       const allFrames = {
@@ -350,15 +543,18 @@ const LessonPlanGenerator = () => {
         ...RME_LESSON_FRAMES
       };
 
-      const foundFrame = allFrames[indicatorId];
-      if (foundFrame) {
-        frameDetails = `
-        LESSON FRAME CONTEXT (From Official Document):
-        - Approved Topic: ${foundFrame.topic}
-        - Key Activities to Include: ${foundFrame.activities.join(', ')}
-        - Mandatory Key Words: ${foundFrame.keyWords.join(', ')}
-        - Suggested TLRs: ${foundFrame.resources.join(', ')}
-        `;
+      for (const ind of activeIndicators) {
+        const indicatorId = ind.split(':')[0].trim();
+        const foundFrame = (allFrames as Record<string, any>)[indicatorId];
+        if (foundFrame) {
+          frameDetails += `
+          LESSON FRAME CONTEXT (${indicatorId} - ${foundFrame.topic}):
+          - Approved Topic: ${foundFrame.topic}
+          - Key Activities to Include: ${foundFrame.activities.join(', ')}
+          - Mandatory Key Words: ${foundFrame.keyWords.join(', ')}
+          - Suggested TLRs: ${foundFrame.resources.join(', ')}
+          `;
+        }
       }
 
       let layoutStyleInstruction = "";
@@ -370,18 +566,39 @@ const LessonPlanGenerator = () => {
         layoutStyleInstruction = "LAYOUT STYLE REQUIREMENT (COMPREHENSIVE): Please write a deeply detailed, highly structured, and extensive instructional roadmap. Detail complete step-by-step teacher and learner actions. Ensure core competencies, formative checkpoint milestones, rich teaching/learning resources, and references are fully elaborated.";
       }
 
+      const indicatorsSection = isMultiIndicator
+        ? `MULTI-INDICATOR TARGETS (${activeIndicators.length} Total):\n${activeIndicators.map((ind, i) => `${i + 1}. ${ind}`).join('\n')}`
+        : `Indicator: ${activeIndicators[0] || formData.indicator}`;
+
+      const multiDayInstruction = isMultiDay
+        ? `MULTI-DAY LESSON DELIVERY (${activeDays.length} DAYS - ${daysDescription}):
+        This lesson is scheduled for multiple distinct days (${daysDescription}).
+        1. Phase 1 (Starter): Provide a dedicated, distinct Starter activity for each day with bold headers (e.g., "**DAY 1 (${activeDays[0]}):** [Starter activity]" and "**DAY 2 (${activeDays[1] || ''}):** [Starter activity]").
+        2. Phase 2 (Main New Learning): Explicitly structure the instructional steps across each day with bold headers (e.g., "**DAY 1 (${activeDays[0]}):** [Activities covering initial concept]" and "**DAY 2 (${activeDays[1] || ''}):** [Progression, deep practice, hands-on activities, and assessment]").
+        3. Phase 3 (Plenary / Reflections): Provide a dedicated Plenary / Exit Ticket for each day with bold headers (e.g., "**DAY 1 (${activeDays[0]}):** [Plenary summary]" and "**DAY 2 (${activeDays[1] || ''}):** [End of lesson reflection]").`
+        : `Day of Week: ${formData.day}.`;
+
+      const multiIndicatorInstruction = isMultiIndicator
+        ? `MULTI-INDICATOR CURRICULUM COVERAGE: The teacher is preparing on ${activeIndicators.length} indicators simultaneously (${indicatorCodesString}). Ensure all indicator codes are clearly referenced, performance indicators are numbered for each, and the Phase 2 learning activities systematically provide instructional coverage and mastery for every selected indicator.`
+        : ``;
+
       const prompt = `Generate a NaCCA-compliant lesson plan for ${formData.class} (${formData.level}) ${displaySubject} strictly following the Standard-Based Curriculum (SBC). 
+      Term Week: ${formData.weekNumber || '1'} (${formatWeekLessonPlanTitle(formData.weekNumber || '1')}).
       Strand: ${formData.strand}.
       Sub-Strand: ${formData.subStrand}.
       Content Standard: ${formData.contentStandard}.
-      Indicator: ${formData.indicator}.
-      Main Objective: ${formData.mainObjective}.
+      ${indicatorsSection}
+      Performance Indicator(s): ${formData.mainObjective}.
       Duration: ${formData.duration}.
       Class Size: ${formData.classSize} learners.
       Week Ending: ${formData.weekEnding}.
+      Scheduled Day(s): ${daysDescription}.
       Locality: ${formData.locality} (${formData.specificLocality}). 
       
       ${frameDetails}
+
+      ${multiDayInstruction}
+      ${multiIndicatorInstruction}
 
       LAYOUT GUIDELINE: ${layoutStyleInstruction}
 
@@ -401,7 +618,33 @@ const LessonPlanGenerator = () => {
       
       setResult(data);
       setStep(4);
-      toast.success("Lesson plan generated successfully! 🇬🇭");
+
+      // Auto-cache immediately for offline resilience in rural classrooms
+      if (user) {
+        const autoDoc = {
+          id: `lp_${Date.now()}`,
+          authorId: user.uid,
+          title: `${displaySubject} - ${formData.subStrand || formData.strand || 'Lesson Plan'}`,
+          type: 'lessonPlan' as const,
+          subject: displaySubject,
+          level: formData.level,
+          class: formData.class,
+          strand: formData.strand,
+          subStrand: formData.subStrand,
+          contentStandard: formData.contentStandard,
+          indicator: formData.indicator,
+          phase1: data.phase1,
+          phase2: data.phase2,
+          phase3: data.phase3,
+          coreCompetencies: data.coreCompetencies,
+          assessment: data.assessment,
+          createdAt: Date.now(),
+          synced: false
+        };
+        cacheGeneratedDocument(autoDoc);
+      }
+
+      toast.success("Lesson plan generated successfully & cached offline! 🇬🇭");
     } catch (err: any) {
       console.error(err);
       const errorMsg = err?.message || "Failed to generate lesson plan. Please try again.";
@@ -411,13 +654,48 @@ const LessonPlanGenerator = () => {
     }
   };
 
+  const handleGenerateLessonNotes = () => {
+    navigate('/notes', {
+      state: {
+        fromLessonPlan: true,
+        sourceLessonTitle: result?.title || `${displaySubject} - ${formData.strand || 'Lesson'} (${formData.class})`,
+        preloaded: {
+          level: formData.level,
+          class: formData.class,
+          subject: formData.subject,
+          ghanaianLanguage: formData.ghanaianLanguage,
+          strand: formData.strand,
+          subStrand: formData.subStrand,
+          contentStandard: formData.contentStandard,
+          indicator: formData.indicator,
+          objectives: formData.mainObjective || (formData.indicator ? formatPerformanceIndicator(formData.indicator) : ''),
+          duration: formData.duration || '60 minutes',
+          week: 'Week 1',
+          term: 'Term 1',
+          academicYear: '2025/2026',
+          locality: formData.locality,
+          specificLocality: formData.specificLocality,
+          language: formData.language,
+          bilingualLanguage: formData.bilingualLanguage,
+          differentiation: formData.differentiationStrategies || '',
+          coreCompetencies: result?.coreCompetencies || 'Critical Thinking and Problem Solving (CP), Communication and Collaboration (CC)',
+        }
+      }
+    });
+  };
+
   const handleSave = async () => {
     if (!result || !user) return;
     setSaving(true);
 
+    const weekTitle = formatWeekLessonPlanTitle(result.weekNumber || formData.weekNumber || '1');
     const payload = {
       ...result,
       authorId: user.uid,
+      title: result.title || `${weekTitle} - ${displaySubject} (${formData.class})`,
+      weekNumber: result.weekNumber || formData.weekNumber || '1',
+      week: `Week ${result.weekNumber || formData.weekNumber || '1'}`,
+      weekEnding: result.weekEnding || formData.weekEnding,
       level: formData.level,
       class: formData.class,
       subject: displaySubject,
@@ -468,131 +746,122 @@ const LessonPlanGenerator = () => {
 
   const handleDownloadPDF = () => {
     if (!result) return;
-    const doc = new jsPDF();
-    
-    // Choose theme colors based on layoutStyle
-    let primaryColor = [0, 28, 61];     // Deep Blue
-    let accentColor = [252, 209, 22];   // Ghana Gold
-    let tableHeadColor = [0, 107, 63];   // Ghana Green
-    let labelText = 'OFFICIAL NaCCA CURRICULUM COMPLIANT LESSON PLAN';
-    
-    if (formData.layoutStyle === 'minimalist') {
-      primaryColor = [71, 85, 105];       // Slate 600
-      accentColor = [203, 213, 225];      // Slate 300
-      tableHeadColor = [100, 116, 139];   // Slate 500
-      labelText = 'MINIMALIST SCHEME - CONCISE LESSON PLAN REFERENCE';
-    } else if (formData.layoutStyle === 'primary-focused') {
-      primaryColor = [217, 119, 6];       // Amber 600
-      accentColor = [252, 211, 77];       // Amber 300
-      tableHeadColor = [245, 158, 11];    // Amber 500
-      labelText = '🎈 PRIMARY-GRADE PLAY-BASED LESSON PLAN (KG-B6) 🎒';
+    try {
+      const activeIndicators = formData.selectedIndicators && formData.selectedIndicators.length > 0
+        ? formData.selectedIndicators
+        : (formData.indicator ? [formData.indicator] : []);
+      
+      const indicatorCodes = activeIndicators.map(i => i.split(':')[0].trim()).join(', ');
+      const indicatorFull = activeIndicators.join('\n');
+
+      const doc = exportLessonPlanToPDF({
+        title: formatWeekLessonPlanTitle(result.weekNumber || formData.weekNumber || '1'),
+        weekNumber: result.weekNumber || formData.weekNumber || '1',
+        week: `Week ${result.weekNumber || formData.weekNumber || '1'}`,
+        subject: displaySubject,
+        ghanaianLanguage: formData.ghanaianLanguage,
+        level: formData.level,
+        class: formData.class,
+        classSize: result.classSize || formData.classSize,
+        weekEnding: result.weekEnding || formData.weekEnding,
+        day: formData.day,
+        date: formData.date || formData.weekEnding,
+        period: formData.period,
+        lesson: formData.lesson,
+        duration: formData.duration,
+        strand: result.strand || formData.strand,
+        subStrand: result.subStrand || formData.subStrand,
+        indicatorCode: result.indicatorCode || indicatorCodes || formData.indicator,
+        contentStandardCode: result.contentStandardCode || formData.contentStandard,
+        indicator: indicatorFull || formData.indicator,
+        contentStandard: formData.contentStandard,
+        performanceIndicator: result.performanceIndicator || formData.mainObjective,
+        coreCompetencies: result.coreCompetencies,
+        keyWords: result.keyWords,
+        tlrs: result.tlrs,
+        references: result.references,
+        phase1: result.phase1,
+        phase2: result.phase2,
+        phase3: result.phase3,
+        assessment: result.assessment,
+        remarks: result.remarks,
+        differentiation: result.differentiation,
+        locality: formData.locality,
+        specificLocality: formData.specificLocality,
+      });
+
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-').replace('T', '_').slice(0, 19);
+      const filename = `${displaySubject}_${formData.strand || 'Lesson'}_${formData.subStrand || 'Plan'}_${timestamp}`.replace(/[\s\W]+/g, '_');
+      doc.save(`${filename}.pdf`);
+      toast.success("Official GES / NaCCA Lesson Plan downloaded! 🇬🇭");
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to generate PDF. Please try again.");
     }
-    
-    // Custom Header Branding
-    doc.setFillColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-    doc.rect(0, 0, 210, 40, 'F');
-    
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(22);
-    doc.setFont('helvetica', 'bold');
-    doc.text('TEACHSMART GHANA', 105, 18, { align: 'center' });
-    
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
-    doc.text(labelText, 105, 26, { align: 'center' });
-    
-    doc.setDrawColor(accentColor[0], accentColor[1], accentColor[2]);
-    doc.setLineWidth(1);
-    doc.line(40, 32, 170, 32);
+  };
 
-    doc.setTextColor(0, 0, 0);
-    doc.setFontSize(9);
-    doc.text(`CLASS: ${formData.class.toUpperCase()} (${formData.level}) | SUBJECT: ${displaySubject.toUpperCase()} | LOCALITY: ${formData.locality.toUpperCase()} | TEMPLATE: ${formData.layoutStyle.toUpperCase()}`, 105, 48, { align: 'center' });
-    doc.setFontSize(12);
-    doc.setFont('helvetica', 'bold');
-    doc.text(`${formData.strand} - ${formData.subStrand}`.toUpperCase(), 105, 56, { align: 'center' });
+  const [exportingWord, setExportingWord] = useState(false);
 
-    const tableData = [
-      ['Week Ending', result.weekEnding || formData.weekEnding],
-      ['Class Size', result.classSize || formData.classSize],
-      ['Locality', formData.locality + (formData.specificLocality ? ` (${formData.specificLocality})` : '')],
-      ['Strand', formData.strand],
-      ['Sub-Strand', formData.subStrand],
-      ['Content Standard', formData.contentStandard],
-      ['Indicator', formData.indicator],
-      ['Primary Objective', result.performanceIndicator || formData.mainObjective],
-      ['Core Competencies', result.coreCompetencies],
-      ['Key Words', result.keyWords],
-      ['Teaching & Learning Resources (TLRs)', result.tlrs],
-      ['References', result.references],
-      ['Phase 1: Starter', result.phase1],
-      ['Phase 2: Main', result.phase2],
-      ['Phase 3: Plenary / Reflections', result.phase3],
-      ['Differentiation (Struggling)', result.differentiation?.strugglingLearners?.activities],
-      ['Differentiation (Advanced)', result.differentiation?.advancedLearners?.activities],
-    ];
+  const handleDownloadWord = async () => {
+    if (!result) return;
+    setExportingWord(true);
+    try {
+      const activeIndicators = formData.selectedIndicators && formData.selectedIndicators.length > 0
+        ? formData.selectedIndicators
+        : (formData.indicator ? [formData.indicator] : []);
+      
+      const indicatorCodes = activeIndicators.map(i => i.split(':')[0].trim()).join(', ');
+      const indicatorFull = activeIndicators.join('\n');
 
-    autoTable(doc, {
-      startY: 65,
-      head: [['Curriculum Component', 'Details & Activities']],
-      body: tableData,
-      theme: 'grid',
-      headStyles: { 
-        fillColor: tableHeadColor as any,
-        textColor: [255, 255, 255],
-        fontSize: 10,
-        fontStyle: 'bold'
-      },
-      columnStyles: {
-        0: { cellWidth: 50, fontStyle: 'bold', fillColor: [245, 245, 245] },
-        1: { cellWidth: 'auto' }
-      },
-      styles: {
-        fontSize: 9,
-        lineColor: [200, 200, 200],
-        lineWidth: 0.1,
-      },
-      didDrawPage: (data) => {
-        const pageCount = doc.getNumberOfPages();
-        const pageSize = doc.internal.pageSize;
-        const pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
-        
-        // Footer Line
-        doc.setDrawColor(200, 200, 200);
-        doc.setLineWidth(0.5);
-        doc.line(10, pageHeight - 20, 200, pageHeight - 20);
-
-        // Compliance Footer
-        doc.setFontSize(7);
-        doc.setTextColor(100);
-        doc.setFont('helvetica', 'italic');
-        const complianceMsg = [
-          'NaCCA COMPLIANCE NOTE: This lesson plan is structured based on the Standard-Based Curriculum (SBC) framework as mandated by the National Council for Curriculum and Assessment (NaCCA) Ghana.',
-          'Teachers are encouraged to adapt the content to suit their learner\'s diverse needs while maintaining core competency targets and SBC learning indicators.',
-          'Verification of specific indicators against official NaCCA curriculum handbooks is strongly recommended for classroom fidelity.'
-        ];
-        
-        let footerY = pageHeight - 16;
-        complianceMsg.forEach(msg => {
-          doc.text(msg, 105, footerY, { align: 'center' });
-          footerY += 3.5;
-        });
-        
-        // Brand Mark
-        doc.setFont('helvetica', 'bold');
-        doc.setTextColor(0, 107, 63); // Green
-        doc.text('TEACHSMART GHANA • AI-POWERED NaCCA COMPLIANT TOOLS', 10, pageHeight - 5);
-        
-        // Page Numbering
-        doc.setTextColor(150);
-        doc.setFont('helvetica', 'normal');
-        doc.text(`Page ${pageCount}`, 200, pageHeight - 5, { align: 'right' });
-      }
-    });
-
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').replace('T', '_').slice(0, 19);
-    const filename = `${displaySubject}_${formData.strand}_${formData.subStrand}_LessonPlan_${timestamp}`.replace(/[\s\W]+/g, '_');
-    doc.save(`${filename}.pdf`);
+      await exportLessonPlanToWord({
+        title: formatWeekLessonPlanTitle(result.weekNumber || formData.weekNumber || '1'),
+        weekNumber: result.weekNumber || formData.weekNumber || '1',
+        week: `Week ${result.weekNumber || formData.weekNumber || '1'}`,
+        subject: displaySubject,
+        ghanaianLanguage: formData.ghanaianLanguage,
+        level: formData.level,
+        class: formData.class,
+        classSize: result.classSize || formData.classSize,
+        weekEnding: result.weekEnding || formData.weekEnding,
+        day: formData.day,
+        date: formData.date || formData.weekEnding,
+        period: formData.period,
+        lesson: formData.lesson,
+        duration: formData.duration,
+        strand: result.strand || formData.strand,
+        subStrand: result.subStrand || formData.subStrand,
+        indicatorCode: result.indicatorCode || indicatorCodes || formData.indicator,
+        contentStandardCode: result.contentStandardCode || formData.contentStandard,
+        indicator: indicatorFull || formData.indicator,
+        contentStandard: formData.contentStandard,
+        performanceIndicator: result.performanceIndicator || formData.mainObjective,
+        coreCompetencies: result.coreCompetencies,
+        keyWords: result.keyWords,
+        tlrs: result.tlrs,
+        references: result.references,
+        phase1: result.phase1,
+        phase2: result.phase2,
+        phase3: result.phase3,
+        assessment: result.assessment,
+        remarks: result.remarks,
+        differentiation: result.differentiation,
+        locality: formData.locality,
+        specificLocality: formData.specificLocality,
+      }, {
+        subject: displaySubject,
+        classLevel: formData.class,
+        level: formData.level,
+        week: result.weekNumber || formData.weekNumber || '1',
+        strand: result.strand || formData.strand,
+        subStrand: result.subStrand || formData.subStrand,
+        indicator: indicatorCodes || formData.indicator,
+      });
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to export Word document. Please try again.");
+    } finally {
+      setExportingWord(false);
+    }
   };
 
   return (
@@ -682,7 +951,13 @@ const LessonPlanGenerator = () => {
                 <select 
                   className={cn("input-field", errors.class && "border-red-400 ring-4 ring-red-50")}
                   value={formData.class}
-                  onChange={(e) => setFormData({...formData, class: e.target.value})}
+                  onChange={(e) => setFormData({
+                    ...formData, 
+                    class: e.target.value,
+                    contentStandard: '',
+                    indicator: '',
+                    mainObjective: ''
+                  })}
                 >
                   {(CLASSES_BY_LEVEL[formData.level] || []).map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
@@ -760,15 +1035,268 @@ const LessonPlanGenerator = () => {
                 />
                 {errors.classSize && <p className="text-[10px] text-red-500 font-bold uppercase tracking-wider">{errors.classSize}</p>}
               </div>
+
+              {/* Term Week Number & Official Title Card */}
+              <div className="space-y-3 sm:col-span-2 bg-gradient-to-br from-emerald-50/70 via-slate-50 to-white p-4.5 rounded-2xl border border-emerald-200/90 shadow-xs">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <label className="text-sm font-black text-slate-900 uppercase tracking-wider">
+                      Term Week Number
+                    </label>
+                    <span className="text-[10px] font-black uppercase tracking-wider bg-emerald-600 text-white px-2 py-0.5 rounded-full shadow-xs">
+                      Official Header
+                    </span>
+                  </div>
+                  
+                  {/* Live formatted title badge */}
+                  <div className="flex items-center gap-1.5 self-start sm:self-auto bg-slate-900 text-white px-3 py-1 rounded-xl shadow-xs">
+                    <span className="text-[10px] text-emerald-400 font-mono uppercase font-bold">Header:</span>
+                    <span className="text-xs font-black tracking-wide text-amber-300">
+                      "{formatWeekLessonPlanTitle(formData.weekNumber)}"
+                    </span>
+                  </div>
+                </div>
+
+                <p className="text-[11px] text-slate-600">
+                  Select or enter the instructional week number. This automatically formats the official title (e.g. <strong className="text-slate-900">"WEEK ONE (1) LESSON PLAN"</strong>) on your notebook page and PDF export.
+                </p>
+
+                {/* Quick Week Preset Buttons */}
+                <div className="flex flex-wrap gap-1.5 pt-1">
+                  {[
+                    { label: 'Week 1', val: '1' },
+                    { label: 'Week 2', val: '2' },
+                    { label: 'Week 3', val: '3' },
+                    { label: 'Week 4', val: '4' },
+                    { label: 'Week 5', val: '5' },
+                    { label: 'Week 6', val: '6' },
+                    { label: 'Week 7', val: '7' },
+                    { label: 'Week 8', val: '8' },
+                    { label: 'Week 9', val: '9' },
+                    { label: 'Week 10', val: '10' },
+                    { label: 'Week 11 (Rev)', val: '11' },
+                    { label: 'Week 12 (Assess)', val: '12' },
+                  ].map(w => {
+                    const isSelected = String(formData.weekNumber).trim() === w.val || String(formData.weekNumber).trim() === w.label;
+                    return (
+                      <button
+                        key={w.val}
+                        type="button"
+                        onClick={() => setFormData({ ...formData, weekNumber: w.val })}
+                        className={cn(
+                          "px-2.5 py-1.5 text-xs font-bold rounded-xl border transition-all shadow-2xs cursor-pointer",
+                          isSelected
+                            ? "bg-slate-900 text-amber-300 border-slate-900 font-extrabold ring-2 ring-emerald-500/40"
+                            : "bg-white text-slate-700 border-slate-200 hover:bg-slate-100 hover:border-slate-300"
+                        )}
+                      >
+                        {w.label}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Custom Week Input */}
+                <div className="pt-1 flex flex-col sm:flex-row sm:items-center gap-2">
+                  <div className="flex-1">
+                    <input 
+                      type="text"
+                      className="input-field text-xs font-bold py-2 bg-white"
+                      value={formData.weekNumber}
+                      onChange={(e) => setFormData({ ...formData, weekNumber: e.target.value })}
+                      placeholder="e.g. 1, 2, Week 3, Week 11 - Revision"
+                    />
+                  </div>
+                  <span className="text-[11px] font-medium text-slate-500">
+                    Type any week number or custom title label
+                  </span>
+                </div>
+              </div>
+
               <div className="space-y-2">
-                <label className="text-sm font-bold text-gray-500 uppercase">Week Ending Date</label>
+                <div className="flex items-center justify-between">
+                  <label className="text-sm font-bold text-gray-500 uppercase">Week Ending Date</label>
+                  <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider bg-emerald-50 px-2 py-0.5 rounded-md">
+                    Friday of School Week
+                  </span>
+                </div>
                 <input 
                   type="date"
-                  className={cn("input-field", errors.weekEnding && "border-red-400 ring-4 ring-red-50")}
+                  className={cn("input-field font-semibold", errors.weekEnding && "border-red-400 ring-4 ring-red-50")}
                   value={formData.weekEnding}
-                  onChange={(e) => setFormData({...formData, weekEnding: e.target.value})}
+                  onChange={(e) => handleWeekEndingChange(e.target.value)}
                 />
                 {errors.weekEnding && <p className="text-[10px] text-red-500 font-bold uppercase tracking-wider">{errors.weekEnding}</p>}
+                <p className="text-[11px] text-slate-500">
+                  Selecting a week ending automatically calculates exact dates for Monday–Friday.
+                </p>
+              </div>
+              <div className="space-y-3 sm:col-span-2 bg-slate-50/80 p-4 rounded-2xl border border-slate-200">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div>
+                    <label className="text-xs font-black text-slate-800 uppercase tracking-wider flex items-center gap-2">
+                      <span>Scheduled Day(s) of Lesson</span>
+                      <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">
+                        {(formData.selectedDays || [formData.day]).length} {(formData.selectedDays || [formData.day]).length === 1 ? 'Day' : 'Days'} Selected
+                      </span>
+                    </label>
+                    <p className="text-[11px] text-slate-500">Tap days to prepare for single or multi-day lesson delivery</p>
+                  </div>
+
+                  {/* Quick Preset Buttons */}
+                  <div className="flex flex-wrap gap-1.5">
+                    {[
+                      { label: 'Single Day', days: ['Monday'] },
+                      { label: 'Mon & Wed', days: ['Monday', 'Wednesday'] },
+                      { label: 'Tue & Thu', days: ['Tuesday', 'Thursday'] },
+                      { label: 'Mon, Wed & Fri', days: ['Monday', 'Wednesday', 'Friday'] },
+                      { label: 'All Week (Mon-Fri)', days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'] }
+                    ].map(preset => (
+                      <button
+                        key={preset.label}
+                        type="button"
+                        onClick={() => handleSetDayPreset(preset.days)}
+                        className="px-2.5 py-1 text-[10px] font-bold bg-white hover:bg-slate-100 text-slate-700 rounded-lg border border-slate-200 shadow-xs transition-colors"
+                      >
+                        {preset.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Day Selection Pills with Auto-Calculated Dates */}
+                {(() => {
+                  const weekDays = getSchoolWeekDaysFromWeekEnding(formData.weekEnding);
+                  return (
+                    <div className="grid grid-cols-5 gap-2 pt-1">
+                      {(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'] as Array<keyof SchoolWeekDays>).map(d => {
+                        const isSelected = formData.selectedDays?.includes(d) || (formData.day === d && (!formData.selectedDays || formData.selectedDays.length <= 1));
+                        const calculatedDayDate = weekDays[d];
+                        const dateFormatted = calculatedDayDate ? calculatedDayDate.split('-').slice(1).join('/') : '';
+                        return (
+                          <button
+                            key={d}
+                            type="button"
+                            onClick={() => handleToggleDay(d)}
+                            className={cn(
+                              "py-2 px-1 text-xs font-bold rounded-xl border transition-all flex flex-col items-center justify-center gap-0.5",
+                              isSelected
+                                ? "bg-emerald-600 text-white border-emerald-600 shadow-md shadow-emerald-600/20"
+                                : "bg-white text-slate-700 border-slate-200 hover:border-slate-300 hover:bg-slate-50"
+                            )}
+                          >
+                            <span className="font-extrabold">{d.slice(0, 3)}</span>
+                            <span className={cn("text-[10px] font-mono", isSelected ? "text-emerald-100 font-bold" : "text-slate-500")}>
+                              {dateFormatted}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  );
+                })()}
+
+                {/* Formatted Text Box */}
+                <div className="pt-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider whitespace-nowrap">Day Header Display:</span>
+                    <input
+                      type="text"
+                      className="input-field text-xs font-semibold py-1.5"
+                      value={formData.day}
+                      onChange={(e) => {
+                        const newDay = e.target.value;
+                        const calculatedDate = calculateLessonDateFromWeekEnding(formData.weekEnding, newDay);
+                        setFormData({ ...formData, day: newDay, date: calculatedDate });
+                      }}
+                      placeholder="e.g. Monday & Wednesday"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Lesson Date with Auto-Calculated Sync */}
+              <div className="space-y-2 sm:col-span-2 bg-emerald-50/50 p-4 rounded-2xl border border-emerald-200/80">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
+                  <div className="flex items-center gap-2">
+                    <label className="text-sm font-bold text-slate-900 uppercase">Lesson Date</label>
+                    <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-emerald-800 bg-emerald-100 border border-emerald-200 px-2 py-0.5 rounded-full">
+                      <span>⚡ Auto-Calculated</span>
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleRecalculateDate}
+                    className="text-[11px] font-bold text-emerald-700 hover:text-emerald-900 hover:underline flex items-center gap-1 self-start sm:self-auto"
+                  >
+                    <RefreshCw size={12} />
+                    <span>Re-sync with Week Ending</span>
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                  <div>
+                    <input 
+                      type="text"
+                      className="input-field font-mono text-xs sm:text-sm font-bold bg-white text-emerald-950"
+                      value={formData.date}
+                      onChange={(e) => setFormData({...formData, date: e.target.value})}
+                      placeholder="e.g. 2026-08-24 or 2026-08-24 & 2026-08-26"
+                    />
+                    <p className="text-[10px] text-slate-500 mt-1">
+                      Computed automatically for {formData.day} using Week Ending ({formData.weekEnding}).
+                    </p>
+                  </div>
+
+                  {/* Quick Active Days Date Badges */}
+                  <div className="flex flex-wrap items-center gap-1.5 bg-white p-2.5 rounded-xl border border-emerald-100">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block w-full mb-0.5">
+                      Scheduled Delivery Date(s):
+                    </span>
+                    {(() => {
+                      const weekDays = getSchoolWeekDaysFromWeekEnding(formData.weekEnding);
+                      const activeDays = formData.selectedDays && formData.selectedDays.length > 0
+                        ? formData.selectedDays
+                        : [formData.day || 'Monday'];
+                      
+                      return activeDays.map(dName => {
+                        const matchKey = (['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'] as Array<keyof SchoolWeekDays>).find(
+                          k => k.toLowerCase() === dName.toLowerCase() || dName.toLowerCase().includes(k.toLowerCase().slice(0, 3))
+                        );
+                        const dayDate = matchKey ? weekDays[matchKey] : '';
+                        return (
+                          <span
+                            key={dName}
+                            className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-emerald-50 text-emerald-900 text-xs font-semibold border border-emerald-200"
+                          >
+                            <span className="font-bold">{dName}:</span>
+                            <span className="font-mono text-[11px] font-bold text-emerald-700">{dayDate || formData.date}</span>
+                          </span>
+                        );
+                      });
+                    })()}
+                  </div>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-gray-500 uppercase">Period / Time</label>
+                <input 
+                  type="text"
+                  className="input-field"
+                  placeholder="e.g. 1 & 2 (60 mins)"
+                  value={formData.period}
+                  onChange={(e) => setFormData({...formData, period: e.target.value})}
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-gray-500 uppercase">Lesson Number</label>
+                <input 
+                  type="text"
+                  className="input-field"
+                  placeholder="e.g. 1 of 3 or 1"
+                  value={formData.lesson}
+                  onChange={(e) => setFormData({...formData, lesson: e.target.value})}
+                />
               </div>
             </div>
             <button onClick={nextStep} className="btn-primary mt-8 flex items-center gap-2 group">
@@ -843,8 +1371,26 @@ const LessonPlanGenerator = () => {
                   <p className="text-xs text-slate-400 mt-0.5 font-medium">Select a structural layout style suitable for your classroom target.</p>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {[
+                    {
+                      id: 'ges-standard',
+                      name: 'Official GES / NaCCA Notebook',
+                      badge: '⭐ Official GES Standard (Photo Match)',
+                      badgeBg: 'bg-emerald-100 text-emerald-900 border border-emerald-300',
+                      icon: Layers,
+                      iconColor: 'text-emerald-700',
+                      description: '100% exact replica of the official Ghana Education Service (GES) Lesson Notebook page with full metadata grid and 3-phase delivery table.'
+                    },
+                    {
+                      id: 'comprehensive',
+                      name: 'Comprehensive Blueprint',
+                      badge: 'Detailed NaCCA Standard',
+                      badgeBg: 'bg-blue-50 text-blue-700 border border-blue-100',
+                      icon: Layers,
+                      iconColor: 'text-blue-600',
+                      description: 'Elaborated lesson notes with granular step-by-step actions, active strategies, clear competencies, and full references.'
+                    },
                     {
                       id: 'minimalist',
                       name: 'Minimalist Theme',
@@ -853,15 +1399,6 @@ const LessonPlanGenerator = () => {
                       icon: AlignLeft,
                       iconColor: 'text-slate-500',
                       description: 'High-density format focusing on objective codes and brief phase descriptions. Perfect for quick referencing by experienced teachers.'
-                    },
-                    {
-                      id: 'comprehensive',
-                      name: 'Comprehensive Blueprint',
-                      badge: 'Full NaCCA Standard',
-                      badgeBg: 'bg-emerald-50 text-emerald-700 border border-emerald-100',
-                      icon: Layers,
-                      iconColor: 'text-emerald-600',
-                      description: 'Elaborated lesson notes with granular step-by-step actions, active strategies, clear competencies, and full references.'
                     },
                     {
                       id: 'primary-focused',
@@ -1016,7 +1553,19 @@ const LessonPlanGenerator = () => {
                         <select 
                           className={cn("input-field", errors.contentStandard && "border-red-400 ring-4 ring-red-50")}
                           value={formData.contentStandard}
-                          onChange={(e) => setFormData({...formData, contentStandard: e.target.value, indicator: ''})}
+                          onChange={(e) => {
+                            const newCs = e.target.value;
+                            const newIndicators = STANDARD_INDICATORS[newCs] || getFallbackIndicators(newCs);
+                            const firstInd = newIndicators[0] || '';
+                            const newSelected = firstInd ? [firstInd] : [];
+                            setFormData({
+                              ...formData, 
+                              contentStandard: newCs, 
+                              selectedIndicators: newSelected,
+                              indicator: firstInd ? firstInd.split(':')[0].trim() : '',
+                              mainObjective: firstInd ? formatPerformanceIndicator(firstInd) : formData.mainObjective
+                            });
+                          }}
                         >
                           <option value="">Select Content Standard...</option>
                           {currentStandards.map(cs => <option key={cs} value={cs}>{cs}</option>)}
@@ -1033,35 +1582,181 @@ const LessonPlanGenerator = () => {
                       {errors.contentStandard && <p className="text-[10px] text-red-500 font-bold uppercase tracking-wider">{errors.contentStandard}</p>}
                   </div>
 
-                  <div className="space-y-2">
-                      <label className="text-sm font-bold text-gray-500 uppercase">Indicator</label>
-                      {currentIndicators.length > 0 ? (
-                        <select 
-                          className={cn("input-field", errors.indicator && "border-red-400 ring-4 ring-red-50")}
-                          value={formData.indicator}
-                          onChange={(e) => setFormData({...formData, indicator: e.target.value})}
-                        >
-                          <option value="">Select Indicator...</option>
-                          {currentIndicators.map(ind => <option key={ind} value={ind}>{ind}</option>)}
-                        </select>
-                      ) : (
+                  {/* Multi-Indicator Interactive Selection Cards */}
+                  <div className="space-y-3 pt-2">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                      <div>
+                        <label className="text-xs font-black text-slate-800 uppercase tracking-wider flex items-center gap-2">
+                          <span>Target Indicator(s)</span>
+                          <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">
+                            {(formData.selectedIndicators || []).length} Selected
+                          </span>
+                        </label>
+                        <p className="text-[11px] text-slate-500">Select one or multiple indicators for this lesson plan</p>
+                      </div>
+
+                      {currentIndicators.length > 0 && (
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => handleSelectAllIndicators(currentIndicators)}
+                            className="px-2.5 py-1 text-[10px] font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition-colors"
+                          >
+                            Select All ({currentIndicators.length})
+                          </button>
+                          {(formData.selectedIndicators || []).length > 0 && (
+                            <button
+                              type="button"
+                              onClick={handleClearIndicators}
+                              className="px-2.5 py-1 text-[10px] font-bold bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition-colors"
+                            >
+                              Clear
+                            </button>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Checkbox Card List for Current Standard */}
+                    {currentIndicators.length > 0 ? (
+                      <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
+                        {currentIndicators.map((ind) => {
+                          const isSelected = (formData.selectedIndicators || []).includes(ind) || formData.indicator === ind;
+                          const code = ind.includes(':') ? ind.split(':')[0].trim() : ind.slice(0, 10);
+                          const text = ind.includes(':') ? ind.slice(ind.indexOf(':') + 1).trim() : ind;
+
+                          return (
+                            <div
+                              key={ind}
+                              onClick={() => handleToggleIndicator(ind)}
+                              className={cn(
+                                "p-3 rounded-2xl border transition-all cursor-pointer flex items-start gap-3 select-none",
+                                isSelected
+                                  ? "bg-emerald-50/70 border-emerald-500 ring-2 ring-emerald-500/20"
+                                  : "bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50/50"
+                              )}
+                            >
+                              <div className={cn(
+                                "w-5 h-5 rounded-lg border flex items-center justify-center shrink-0 mt-0.5 transition-all",
+                                isSelected
+                                  ? "bg-emerald-600 border-emerald-600 text-white shadow-xs"
+                                  : "border-slate-300 bg-white"
+                              )}>
+                                {isSelected && <Check size={12} strokeWidth={3} />}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2 mb-0.5">
+                                  <span className="font-mono text-[11px] font-black px-2 py-0.5 rounded bg-slate-900 text-emerald-300 tracking-wider">
+                                    {code}
+                                  </span>
+                                  {isSelected && (
+                                    <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-widest bg-emerald-100 px-1.5 py-0.2 rounded">
+                                      Active
+                                    </span>
+                                  )}
+                                </div>
+                                <p className="text-xs text-slate-700 font-medium leading-relaxed">
+                                  {text}
+                                </p>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
                         <input 
                           type="text" 
                           placeholder="e.g. B7.1.1.1.1: Use place value to count"
                           className={cn("input-field", errors.indicator && "border-red-400 ring-4 ring-red-50")}
                           value={formData.indicator}
-                          onChange={(e) => setFormData({...formData, indicator: e.target.value})}
+                          onChange={(e) => {
+                            const newInd = e.target.value;
+                            setFormData({
+                              ...formData, 
+                              indicator: newInd,
+                              selectedIndicators: newInd ? [newInd] : [],
+                              mainObjective: newInd ? formatPerformanceIndicator(newInd) : formData.mainObjective
+                            });
+                          }}
                         />
-                      )}
-                      {errors.indicator && <p className="text-[10px] text-red-500 font-bold uppercase tracking-wider">{errors.indicator}</p>}
+                      </div>
+                    )}
+                    {errors.indicator && <p className="text-[10px] text-red-500 font-bold uppercase tracking-wider">{errors.indicator}</p>}
+
+                    {/* Active Selected Indicators Summary Badges */}
+                    {(formData.selectedIndicators || []).length > 0 && (
+                      <div className="bg-slate-900 text-white p-3.5 rounded-2xl space-y-2 shadow-sm">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+                            Included in Lesson ({(formData.selectedIndicators || []).length}):
+                          </span>
+                          <span className="text-[10px] font-bold text-emerald-400">
+                            Coherent Multi-Indicator Plan
+                          </span>
+                        </div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {(formData.selectedIndicators || []).map((item) => {
+                            const code = item.split(':')[0].trim();
+                            return (
+                              <span
+                                key={item}
+                                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white/10 text-xs font-mono font-bold text-emerald-300 border border-white/10"
+                              >
+                                <span>{code}</span>
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleToggleIndicator(item);
+                                  }}
+                                  className="text-slate-400 hover:text-white rounded-full w-4 h-4 flex items-center justify-center hover:bg-white/20 transition-colors"
+                                  title="Remove indicator"
+                                >
+                                  ×
+                                </button>
+                              </span>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Add Custom / Other Indicator Section */}
+                    <div className="flex items-center gap-2 pt-1">
+                      <input
+                        type="text"
+                        placeholder="Add custom indicator (e.g. B7.1.1.1.3: Compare whole numbers)"
+                        className="input-field text-xs py-2 flex-1"
+                        value={customIndicatorInput}
+                        onChange={(e) => setCustomIndicatorInput(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            handleAddCustomIndicator();
+                          }
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={handleAddCustomIndicator}
+                        disabled={!customIndicatorInput.trim()}
+                        className="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 disabled:opacity-40 text-white text-xs font-bold rounded-xl transition-all whitespace-nowrap shrink-0"
+                      >
+                        + Add
+                      </button>
+                    </div>
                   </div>
                 </div>
 
                 <div className="space-y-2 pt-4 border-t border-slate-50">
-                    <label className="text-sm font-bold text-gray-500 uppercase tracking-tighter">Main Learning Objective</label>
+                    <div className="flex items-center justify-between">
+                      <label className="text-sm font-bold text-gray-500 uppercase tracking-tighter">Performance Indicator(s)</label>
+                      <span className="text-[10px] text-slate-400 italic">Auto-formatted with 'Learners can...'</span>
+                    </div>
                     <textarea 
-                      className={cn("input-field min-h-[100px]", errors.mainObjective && "border-red-400 ring-4 ring-red-50")}
-                      placeholder="e.g. By the end of the lesson, learners will be able to add two proper fractions with same denominators manually."
+                      className={cn("input-field min-h-[110px] text-xs sm:text-sm font-medium leading-relaxed", errors.mainObjective && "border-red-400 ring-4 ring-red-50")}
+                      placeholder="e.g. 1. Learners can count, read, and write whole numbers up to 10,000 using place value.&#10;2. Learners can compare and order whole numbers up to 10,000 using comparison symbols."
                       value={formData.mainObjective}
                       onChange={(e) => setFormData({...formData, mainObjective: e.target.value})}
                     />
@@ -1137,6 +1832,14 @@ const LessonPlanGenerator = () => {
                   Re-generate
                 </button>
                 <button 
+                  onClick={handleGenerateLessonNotes}
+                  className="px-3.5 py-2 sm:px-4 sm:py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold uppercase tracking-wider text-[11px] whitespace-nowrap shrink-0 rounded-xl transition-all flex items-center gap-1.5 shadow-md shadow-emerald-600/20"
+                  title="Generate student lesson notes for this plan"
+                >
+                  <BookOpen size={14} />
+                  <span>Generate Notes</span>
+                </button>
+                <button 
                   onClick={handleSave} 
                   disabled={saving}
                   className="px-3.5 py-2 sm:px-4 sm:py-2.5 bg-blue-600 text-white rounded-xl font-bold uppercase tracking-wider text-[11px] whitespace-nowrap shrink-0 hover:bg-blue-700 transition-all flex items-center gap-1.5 shadow-md shadow-blue-600/20"
@@ -1146,10 +1849,19 @@ const LessonPlanGenerator = () => {
                 </button>
                 <button 
                   onClick={handleDownloadPDF} 
-                  className="px-4 py-2 sm:px-4 sm:py-2.5 bg-emerald-500 text-white rounded-xl font-bold uppercase tracking-wider text-[11px] whitespace-nowrap shrink-0 hover:bg-emerald-600 transition-all border-none flex items-center gap-1.5 shadow-md shadow-emerald-500/20"
+                  className="px-3.5 py-2 sm:px-4 sm:py-2.5 bg-emerald-600 text-white rounded-xl font-bold uppercase tracking-wider text-[11px] whitespace-nowrap shrink-0 hover:bg-emerald-700 transition-all border-none flex items-center gap-1.5 shadow-md shadow-emerald-600/20"
                 >
                   <Download size={14} />
-                  Download PDF
+                  PDF
+                </button>
+                <button 
+                  onClick={handleDownloadWord} 
+                  disabled={exportingWord}
+                  className="px-3.5 py-2 sm:px-4 sm:py-2.5 bg-blue-700 hover:bg-blue-800 text-white rounded-xl font-bold uppercase tracking-wider text-[11px] whitespace-nowrap shrink-0 transition-all border-none flex items-center gap-1.5 shadow-md shadow-blue-700/20"
+                  title="Download NaCCA-compliant Word Document (.docx)"
+                >
+                  <FileText size={14} />
+                  {exportingWord ? "Word..." : "Word (.docx)"}
                 </button>
                 <a 
                   href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
@@ -1176,6 +1888,34 @@ const LessonPlanGenerator = () => {
               </div>
             )}
 
+            {/* TEACHER WORKFLOW BANNER: NEXT STEP LESSON NOTES */}
+            <div className="bg-gradient-to-r from-emerald-950 via-slate-900 to-teal-950 border border-emerald-500/30 rounded-2xl sm:rounded-3xl p-4 sm:p-5 text-white shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-emerald-400 shrink-0 mt-0.5">
+                  <BookOpen size={20} />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <span className="text-[10px] font-black uppercase tracking-wider bg-emerald-400/20 text-emerald-300 border border-emerald-400/30 px-2 py-0.5 rounded-full">
+                      Workflow Progression
+                    </span>
+                    <span className="text-xs text-slate-400 font-medium">Step 2: Lesson Notes</span>
+                  </div>
+                  <h4 className="text-sm sm:text-base font-bold text-white">Generate Pupil Lesson Notes for this Lesson Plan</h4>
+                  <p className="text-xs text-slate-300 max-w-2xl mt-0.5 leading-relaxed">
+                    Instantly transfer this lesson's NaCCA indicators, Ghanaian context, and TLMs into pupil-ready lesson notes with structured summaries and chalkboard exercises.
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={handleGenerateLessonNotes}
+                className="w-full sm:w-auto px-4 py-2.5 sm:px-5 sm:py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs uppercase tracking-wider rounded-xl sm:rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25 transition-all shrink-0 hover:scale-[1.02] active:scale-[0.98]"
+              >
+                <span>Generate Notes Now</span>
+                <ArrowRight size={15} />
+              </button>
+            </div>
+
             {/* EDIT MODE FORM */}
             {isEditing ? (
               <div className="bg-white p-6 lg:p-8 rounded-3xl shadow-xl border border-amber-200/80 space-y-6">
@@ -1198,16 +1938,128 @@ const LessonPlanGenerator = () => {
                   </button>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <div className="md:col-span-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-3">
+                  <div>
                     <label className="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5">
-                      Lesson Plan Title
+                      Week No.
                     </label>
                     <input
                       type="text"
-                      value={result.title || ''}
+                      value={formData.weekNumber}
                       onChange={(e) => {
-                        setResult((prev: any) => ({ ...prev, title: e.target.value }));
+                        const newW = e.target.value;
+                        setFormData((prev) => ({ ...prev, weekNumber: newW }));
+                        setResult((prev: any) => ({ ...prev, weekNumber: newW }));
+                        setHasEdited(true);
+                      }}
+                      placeholder="e.g. 1, 2"
+                      className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 focus:bg-white focus:border-emerald-500 focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5">
+                      Day(s)
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.day}
+                      onChange={(e) => {
+                        const newDay = e.target.value;
+                        const calculatedDate = calculateLessonDateFromWeekEnding(formData.weekEnding, newDay);
+                        setFormData((prev) => ({ ...prev, day: newDay, date: calculatedDate }));
+                        setHasEdited(true);
+                      }}
+                      className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 focus:bg-white focus:border-emerald-500 focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5">
+                      Week Ending
+                    </label>
+                    <input
+                      type="date"
+                      value={result.weekEnding || formData.weekEnding}
+                      onChange={(e) => {
+                        const newWE = e.target.value;
+                        const calculatedDate = calculateLessonDateFromWeekEnding(newWE, formData.selectedDays || [formData.day]);
+                        setResult((prev: any) => ({ ...prev, weekEnding: newWE }));
+                        setFormData((prev) => ({ ...prev, weekEnding: newWE, date: calculatedDate }));
+                        setHasEdited(true);
+                      }}
+                      className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 focus:bg-white focus:border-emerald-500 focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5">
+                      Date(s)
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.date}
+                      onChange={(e) => {
+                        setFormData((prev) => ({ ...prev, date: e.target.value }));
+                        setHasEdited(true);
+                      }}
+                      className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 focus:bg-white focus:border-emerald-500 focus:outline-none font-mono"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5">
+                      Period / Duration
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.period}
+                      onChange={(e) => {
+                        setFormData((prev) => ({ ...prev, period: e.target.value }));
+                        setHasEdited(true);
+                      }}
+                      className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 focus:bg-white focus:border-emerald-500 focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5">
+                      Lesson No.
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.lesson}
+                      onChange={(e) => {
+                        setFormData((prev) => ({ ...prev, lesson: e.target.value }));
+                        setHasEdited(true);
+                      }}
+                      className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 focus:bg-white focus:border-emerald-500 focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div>
+                    <label className="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5">
+                      Strand
+                    </label>
+                    <input
+                      type="text"
+                      value={result.strand || formData.strand || ''}
+                      onChange={(e) => {
+                        setResult((prev: any) => ({ ...prev, strand: e.target.value }));
+                        setFormData((prev) => ({ ...prev, strand: e.target.value }));
+                        setHasEdited(true);
+                      }}
+                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-800 focus:bg-white focus:border-emerald-500 focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5">
+                      Sub-Strand
+                    </label>
+                    <input
+                      type="text"
+                      value={result.subStrand || formData.subStrand || ''}
+                      onChange={(e) => {
+                        setResult((prev: any) => ({ ...prev, subStrand: e.target.value }));
+                        setFormData((prev) => ({ ...prev, subStrand: e.target.value }));
                         setHasEdited(true);
                       }}
                       className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-800 focus:bg-white focus:border-emerald-500 focus:outline-none"
@@ -1220,9 +2072,24 @@ const LessonPlanGenerator = () => {
                     </label>
                     <input
                       type="text"
-                      value={result.indicatorCode || ''}
+                      value={result.indicatorCode || formData.indicator || ''}
                       onChange={(e) => {
                         setResult((prev: any) => ({ ...prev, indicatorCode: e.target.value }));
+                        setHasEdited(true);
+                      }}
+                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-800 focus:bg-white focus:border-emerald-500 focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5">
+                      Content Standard Code
+                    </label>
+                    <input
+                      type="text"
+                      value={result.contentStandardCode || formData.contentStandard || ''}
+                      onChange={(e) => {
+                        setResult((prev: any) => ({ ...prev, contentStandardCode: e.target.value }));
                         setHasEdited(true);
                       }}
                       className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold text-slate-800 focus:bg-white focus:border-emerald-500 focus:outline-none"
@@ -1246,7 +2113,7 @@ const LessonPlanGenerator = () => {
 
                   <div className="md:col-span-2">
                     <label className="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1.5">
-                      Primary Learning Objective (Performance Indicator)
+                      Performance Indicator
                     </label>
                     <textarea
                       rows={2}
@@ -1421,10 +2288,19 @@ const LessonPlanGenerator = () => {
                     </button>
                     <button
                       onClick={handleDownloadPDF}
-                      className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all shadow-md"
+                      className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all shadow-md"
                     >
                       <Download size={14} />
-                      Export Edited PDF
+                      PDF
+                    </button>
+                    <button
+                      onClick={handleDownloadWord}
+                      disabled={exportingWord}
+                      className="px-5 py-2.5 bg-blue-700 hover:bg-blue-800 text-white rounded-xl text-xs font-black uppercase tracking-wider flex items-center gap-2 transition-all shadow-md"
+                      title="Download NaCCA-compliant Word Document (.docx)"
+                    >
+                      <FileText size={14} />
+                      {exportingWord ? "Word..." : "Word (.docx)"}
                     </button>
                   </div>
                 </div>
@@ -1439,10 +2315,11 @@ const LessonPlanGenerator = () => {
                 <Layout size={16} className="text-emerald-750 font-bold" />
                 <span className="text-xs font-bold text-slate-700">Preview Layout Theme Style:</span>
               </div>
-              <div className="flex bg-white p-1 rounded-xl border border-slate-150 gap-1 self-start md:self-auto">
+              <div className="flex flex-wrap bg-white p-1 rounded-xl border border-slate-150 gap-1 self-start md:self-auto">
                 {[
+                  { id: 'ges-standard', name: '⭐ Official GES Notebook', icon: Layers },
+                  { id: 'comprehensive', name: 'Comprehensive', icon: Layers },
                   { id: 'minimalist', name: 'Minimalist Format', icon: AlignLeft },
-                  { id: 'comprehensive', name: 'Comprehensive Blueprint', icon: Layers },
                   { id: 'primary-focused', name: 'Primary/Play-grade', icon: GraduationCap }
                 ].map(opt => {
                   const Icon = opt.icon;
@@ -1465,6 +2342,385 @@ const LessonPlanGenerator = () => {
                 })}
               </div>
             </div>
+
+            {/* OFFICIAL GES / NACCA NOTEBOOK PREVIEW (EXACT 1:1 PHOTO MATCH) */}
+            {formData.layoutStyle === 'ges-standard' && (
+              <div className="bg-white p-4 sm:p-6 lg:p-8 rounded-2xl shadow-md border-2 border-slate-800 space-y-6 text-slate-900 font-sans">
+                {/* TeachSmartGH Top Branding Banner */}
+                <div className="bg-[#001C3D] text-white p-3 sm:p-4 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-sm border-b-2 border-[#FCD116]">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-extrabold text-base tracking-tight text-white">
+                        TeachSmart<span className="text-[#FCD116]">GH</span>
+                      </span>
+                      <span className="text-[10px] text-slate-300 border-l border-slate-700 pl-2 hidden md:inline">
+                        AI-Powered Teaching. Smarter Tomorrow.
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-slate-400 font-medium mt-0.5">
+                      Parent Brand: Catalyst Creative • Official Lesson Preparation Suite
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#006B3F]/30 border border-[#006B3F] text-[#FCD116] text-[11px] font-bold">
+                      <span>🇬🇭</span> NaCCA / GES Curriculum Aligned
+                    </span>
+                  </div>
+                </div>
+
+                {/* Official GES Header Block */}
+                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b pb-4 border-slate-300">
+                  <div className="flex-1">
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-xs font-black uppercase tracking-wider text-slate-900">SUBJECT:</span>
+                      <span className="text-sm font-bold uppercase underline decoration-slate-400 underline-offset-4 text-slate-900">
+                        {displaySubject}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <div className="text-center flex-1">
+                    <h2 className="text-xl sm:text-2xl font-black uppercase tracking-wider text-slate-900">
+                      {formatWeekLessonPlanTitle(result.weekNumber || formData.weekNumber || result.week || '1')}
+                    </h2>
+                  </div>
+
+                  <div className="flex flex-col items-start md:items-end flex-1 gap-1 text-xs font-bold">
+                    <div className="flex items-center gap-2">
+                      <span className="text-slate-900 font-black uppercase">CLASS:</span>
+                      <span className="underline decoration-slate-400 underline-offset-4 uppercase">{formData.class}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-slate-900 font-black uppercase">CLASS SIZE:</span>
+                      <span className="underline decoration-slate-400 underline-offset-4">{result.classSize || formData.classSize}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Table 1: Metadata & Curriculum Structure Grid */}
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse border-2 border-slate-900 text-xs">
+                    <tbody>
+                      {/* Row 1: Day | WEEK ENDING: | Date | Period | Lesson */}
+                      <tr className="border-b-2 border-slate-900 divide-x-2 divide-slate-900">
+                        <td className="p-2.5 font-bold bg-slate-50 w-24 text-center">
+                          <div className="text-[10px] font-black text-slate-900 uppercase tracking-wider">Day</div>
+                          <div className="text-sm font-extrabold text-slate-900">{formData.day}</div>
+                        </td>
+                        <td className="p-2.5 font-bold">
+                          <div className="text-[10px] font-black text-slate-900 uppercase tracking-wider">WEEK ENDING:</div>
+                          <div className="text-sm font-extrabold text-slate-900">{result.weekEnding || formData.weekEnding}</div>
+                        </td>
+                        <td className="p-2.5 font-bold bg-slate-50 w-32 text-center">
+                          <div className="text-[10px] font-black text-slate-900 uppercase tracking-wider">Date</div>
+                          <div className="text-sm font-extrabold text-slate-900">{formData.date || formData.weekEnding}</div>
+                        </td>
+                        <td className="p-2.5 font-bold bg-slate-50 w-28 text-center">
+                          <div className="text-[10px] font-black text-slate-900 uppercase tracking-wider">Period</div>
+                          <div className="text-sm font-extrabold text-slate-900">{formData.period || formData.duration}</div>
+                        </td>
+                        <td className="p-2.5 font-bold bg-slate-50 w-28 text-center">
+                          <div className="text-[10px] font-black text-slate-900 uppercase tracking-wider">Lesson</div>
+                          <div className="text-sm font-extrabold text-slate-900">{formData.lesson || '1'}</div>
+                        </td>
+                      </tr>
+
+                      {/* Row 2: Strand | Sub-strand */}
+                      <tr className="border-b-2 border-slate-900 divide-x-2 divide-slate-900">
+                        <td colSpan={2} className="p-3 align-top">
+                          <div className="text-[10px] font-black uppercase text-slate-900 tracking-wider">Strand</div>
+                          <div className="text-sm font-bold text-slate-900 mt-0.5">{result.strand || formData.strand || 'N/A'}</div>
+                        </td>
+                        <td colSpan={3} className="p-3 align-top">
+                          <div className="text-[10px] font-black uppercase text-slate-900 tracking-wider">Sub-strand</div>
+                          <div className="text-sm font-bold text-slate-900 mt-0.5">{result.subStrand || formData.subStrand || 'N/A'}</div>
+                        </td>
+                      </tr>
+
+                      {/* Row 3: Indicator (code) | Content standard (code) */}
+                      <tr className="border-b-2 border-slate-900 divide-x-2 divide-slate-900">
+                        <td colSpan={2} className="p-3 align-top">
+                          <div className="text-[10px] font-black uppercase text-slate-900 tracking-wider">Indicator (code)</div>
+                          <div className="text-sm font-bold text-slate-900 font-mono mt-0.5">{result.indicatorCode || formData.indicator || 'N/A'}</div>
+                        </td>
+                        <td colSpan={3} className="p-3 align-top">
+                          <div className="text-[10px] font-black uppercase text-slate-900 tracking-wider">Content standard (code)</div>
+                          <div className="text-sm font-bold text-slate-900 font-mono mt-0.5">{result.contentStandardCode || formData.contentStandard || 'N/A'}</div>
+                        </td>
+                      </tr>
+
+                      {/* Row 4: Performance indicator (Full Width) */}
+                      <tr className="border-b-2 border-slate-900">
+                        <td colSpan={5} className="p-3 align-top">
+                          <div className="text-[10px] font-black uppercase text-slate-900 tracking-wider">Performance indicator</div>
+                          <div className="text-sm text-slate-900 font-medium mt-0.5 leading-relaxed">
+                            {result.performanceIndicator || formData.mainObjective || 'Learners can demonstrate mastery of stated indicators.'}
+                          </div>
+                        </td>
+                      </tr>
+
+                      {/* Row 5: Core competencies | Key words */}
+                      <tr className="border-b-2 border-slate-900 divide-x-2 divide-slate-900">
+                        <td colSpan={3} className="p-3 align-top">
+                          <div className="text-[10px] font-black uppercase text-slate-900 tracking-wider">Core competencies</div>
+                          <div className="text-xs text-slate-800 font-medium mt-0.5 leading-relaxed">
+                            {result.coreCompetencies || 'Critical Thinking and Problem Solving (CP), Communication and Collaboration (CC)'}
+                          </div>
+                        </td>
+                        <td colSpan={2} className="p-3 align-top">
+                          <div className="text-[10px] font-black uppercase text-slate-900 tracking-wider">Key words</div>
+                          <div className="text-xs text-slate-800 font-medium mt-0.5 leading-relaxed">
+                            {result.keyWords || 'N/A'}
+                          </div>
+                        </td>
+                      </tr>
+
+                      {/* Row 6: T.L.R.(s): | Ref: */}
+                      <tr className="divide-x-2 border-b-2 border-slate-900">
+                        <td colSpan={3} className="p-3 align-top">
+                          <div className="text-[10px] font-black uppercase text-slate-900 tracking-wider">T.L.R.(s):</div>
+                          <div className="text-xs text-slate-800 font-medium mt-0.5 leading-relaxed">
+                            {result.tlrs || 'Curriculum Handbooks, Realia, Chalkboard illustrations'}
+                          </div>
+                        </td>
+                        <td colSpan={2} className="p-3 align-top">
+                          <div className="text-[10px] font-black uppercase text-slate-900 tracking-wider">Ref:</div>
+                          <div className="text-xs text-slate-800 font-medium mt-0.5 leading-relaxed">
+                            {result.references || 'NaCCA Standard-Based Curriculum Guidelines'}
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Table 2: 3-Phase Delivery Table */}
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse border-2 border-slate-900 text-xs">
+                    <thead>
+                      <tr className="border-b-2 border-slate-900 bg-slate-100 divide-x-2 divide-slate-900">
+                        <th className="p-2.5 text-center font-black uppercase w-24 text-slate-900 tracking-wider">DAY</th>
+                        <th className="p-2.5 text-left font-black uppercase text-slate-900 w-1/4">
+                          <div className="font-black text-xs text-slate-900 uppercase tracking-wide">Phase 1: Starter</div>
+                          <span className="font-bold text-[10px] text-slate-600 block mt-0.5">(preparing the brain for learning):</span>
+                        </th>
+                        <th className="p-2.5 text-left font-black uppercase text-slate-900 w-5/12">
+                          <div className="font-black text-xs text-slate-900 uppercase tracking-wide">Phase 2: Main</div>
+                          <span className="font-bold text-[10px] text-slate-600 block mt-0.5">(new learning including assessment):</span>
+                        </th>
+                        <th className="p-2.5 text-left font-black uppercase text-slate-900 w-1/4">
+                          <div className="font-black text-xs text-slate-900 uppercase tracking-wide">Phase 3: Plenary</div>
+                          <span className="font-bold text-[10px] text-slate-600 block mt-0.5">(Plenary / Reflections):</span>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {(() => {
+                        const dayPhases = buildMultiDayLessonPhases({
+                          day: formData.day,
+                          weekEnding: result.weekEnding || formData.weekEnding,
+                          duration: formData.duration,
+                          phase1: result.phase1,
+                          phase2: result.phase2,
+                          phase3: result.phase3,
+                          differentiation: result.differentiation
+                        });
+
+                        return dayPhases.map((phase, pIdx) => (
+                          <tr key={pIdx} className="divide-x-2 border-b-2 border-slate-900 align-top">
+                            <td className="p-3 text-center bg-slate-50 font-bold w-24">
+                              <div className="text-sm text-slate-900 font-extrabold">{phase.dayName}</div>
+                              {phase.dayDate && (
+                                <div className="text-[10px] text-slate-500 font-semibold mt-0.5">{phase.dayDate}</div>
+                              )}
+                              <div className="text-[11px] text-slate-600 font-bold mt-1">({phase.duration || formData.duration || '60 mins'})</div>
+                            </td>
+                            <td className="p-3 text-slate-800 leading-relaxed prose prose-xs max-w-none">
+                              <SafeMarkdown>{phase.starter}</SafeMarkdown>
+                            </td>
+                            <td className="p-3 text-slate-800 leading-relaxed prose prose-xs max-w-none space-y-3">
+                              <SafeMarkdown>{phase.main}</SafeMarkdown>
+                              
+                              {/* Differentiation inside Main Phase if available */}
+                              {phase.differentiation && (
+                                <div className="mt-4 pt-3 border-t border-slate-200 text-[11px] not-prose space-y-1.5 bg-slate-50 p-2.5 rounded-lg">
+                                  <span className="font-black uppercase text-[10px] text-emerald-900 block tracking-wider">Inclusive Differentiation:</span>
+                                  {phase.differentiation.strugglingLearners?.activities && (
+                                    <p><strong className="text-red-700 font-black">Remedial / Struggling:</strong> {phase.differentiation.strugglingLearners.activities}</p>
+                                  )}
+                                  {phase.differentiation.averageLearners?.activities && (
+                                    <p><strong className="text-emerald-700 font-black">Core Class:</strong> {phase.differentiation.averageLearners.activities}</p>
+                                  )}
+                                  {phase.differentiation.advancedLearners?.activities && (
+                                    <p><strong className="text-blue-700 font-black">Advanced / Extension:</strong> {phase.differentiation.advancedLearners.activities}</p>
+                                  )}
+                                </div>
+                              )}
+                            </td>
+                            <td className="p-3 text-slate-800 leading-relaxed prose prose-xs max-w-none">
+                              <SafeMarkdown>{phase.plenary}</SafeMarkdown>
+                            </td>
+                          </tr>
+                        ));
+                      })()}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* OFFICIAL GES TEACHER & HEADTEACHER SIGNATURE / ENDORSEMENT SECTION */}
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse border-2 border-slate-900 text-xs">
+                    <thead>
+                      <tr className="border-b-2 border-slate-900 bg-slate-100 divide-x-2 divide-slate-900">
+                        <th className="p-2.5 text-left font-black uppercase text-slate-900 w-1/2 tracking-wider">
+                          TEACHER DECLARATION / SUBMISSION
+                        </th>
+                        <th className="p-2.5 text-left font-black uppercase text-slate-900 w-1/2 tracking-wider">
+                          HEADTEACHER / SUPERVISOR VETTING & ENDORSEMENT
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="divide-x-2 border-slate-900 align-top">
+                        <td className="p-3.5 text-slate-800 space-y-2 bg-white">
+                          <div>
+                            <span className="text-[10px] font-black uppercase text-slate-900 block tracking-wider">Teacher's Name</span>
+                            <div className="border-b border-dashed border-slate-400 h-5 mt-0.5" />
+                          </div>
+                          <div className="grid grid-cols-2 gap-3 pt-1">
+                            <div>
+                              <span className="text-[10px] font-black uppercase text-slate-900 block tracking-wider">Signature</span>
+                              <div className="border-b border-dashed border-slate-400 h-5 mt-0.5" />
+                            </div>
+                            <div>
+                              <span className="text-[10px] font-black uppercase text-slate-900 block tracking-wider">Date</span>
+                              <div className="border-b border-dashed border-slate-400 h-5 mt-0.5" />
+                            </div>
+                          </div>
+                          <div className="text-[10px] text-slate-600 font-bold pt-1 flex items-center gap-4">
+                            <label className="flex items-center gap-1.5 cursor-pointer">
+                              <input type="checkbox" className="rounded text-emerald-600 focus:ring-emerald-500" />
+                              <span>Submitted on Time</span>
+                            </label>
+                            <label className="flex items-center gap-1.5 cursor-pointer">
+                              <input type="checkbox" className="rounded text-amber-600 focus:ring-amber-500" />
+                              <span>Revision Required</span>
+                            </label>
+                          </div>
+                        </td>
+                        <td className="p-3.5 text-slate-800 space-y-2 bg-white">
+                          <div>
+                            <span className="text-[10px] font-black uppercase text-slate-900 block tracking-wider">Headteacher / Supervisor Name</span>
+                            <div className="border-b border-dashed border-slate-400 h-5 mt-0.5" />
+                          </div>
+                          <div className="grid grid-cols-2 gap-3 pt-1">
+                            <div>
+                              <span className="text-[10px] font-black uppercase text-slate-900 block tracking-wider">Signature / Stamp</span>
+                              <div className="border-b border-dashed border-slate-400 h-5 mt-0.5" />
+                            </div>
+                            <div>
+                              <span className="text-[10px] font-black uppercase text-slate-900 block tracking-wider">Date</span>
+                              <div className="border-b border-dashed border-slate-400 h-5 mt-0.5" />
+                            </div>
+                          </div>
+                          <div className="text-[10px] text-slate-500 pt-1 flex items-center gap-4">
+                            <label className="flex items-center gap-1.5 cursor-pointer">
+                              <input type="checkbox" className="rounded text-emerald-600 focus:ring-emerald-500" />
+                              <span>Approved for Delivery</span>
+                            </label>
+                            <label className="flex items-center gap-1.5 cursor-pointer">
+                              <input type="checkbox" className="rounded text-blue-600 focus:ring-blue-500" />
+                              <span>Inspected & Monitored</span>
+                            </label>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* TEACHING WORKFLOW ACTIONS HUB */}
+                <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 text-white shadow-xl space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
+                        <Sparkles size={20} />
+                      </div>
+                      <div>
+                        <h3 className="text-base font-bold text-white">Next Step in Lesson Preparation</h3>
+                        <p className="text-xs text-slate-400">Continue your teaching workflow with matched curriculum materials</p>
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <button
+                        onClick={handleDownloadPDF}
+                        className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm"
+                      >
+                        <Download size={14} />
+                        Download Official GES PDF
+                      </button>
+                      <button
+                        onClick={handleDownloadWord}
+                        disabled={exportingWord}
+                        className="px-4 py-2 bg-blue-700 hover:bg-blue-600 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm"
+                        title="Download NaCCA-compliant Word Document (.docx)"
+                      >
+                        <FileText size={14} />
+                        {exportingWord ? "Exporting Word..." : "Word (.docx)"}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                    <div 
+                      onClick={handleGenerateLessonNotes}
+                      className="bg-slate-800/90 hover:bg-slate-800 border border-emerald-500/40 hover:border-emerald-500 p-4.5 rounded-2xl cursor-pointer transition-all flex items-start gap-3.5 group shadow-sm hover:shadow-md"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                        <BookOpen size={20} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between">
+                          <h4 className="text-sm font-bold text-white group-hover:text-emerald-300 transition-colors">Generate Student Lesson Notes</h4>
+                          <ArrowRight size={15} className="text-emerald-400 group-hover:translate-x-1 transition-transform" />
+                        </div>
+                        <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                          Create pupil notes, chalkboard summaries, key definitions, and practice exercises for this lesson.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div 
+                      onClick={() => navigate('/assignments', {
+                        state: {
+                          preloaded: {
+                            level: formData.level,
+                            class: formData.class,
+                            subject: formData.subject,
+                            topic: formData.strand ? `${formData.strand} - ${formData.subStrand || ''}` : '',
+                            indicator: formData.indicator
+                          }
+                        }
+                      })}
+                      className="bg-slate-800/90 hover:bg-slate-800 border border-slate-700/60 hover:border-slate-600 p-4.5 rounded-2xl cursor-pointer transition-all flex items-start gap-3.5 group shadow-sm hover:shadow-md"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                        <FileText size={20} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between">
+                          <h4 className="text-sm font-bold text-white group-hover:text-blue-300 transition-colors">Create Homework / Assignment</h4>
+                          <ArrowRight size={15} className="text-blue-400 group-hover:translate-x-1 transition-transform" />
+                        </div>
+                        <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                          Generate an assessment rubric and take-home assignment matching this lesson's indicator.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* MINIMALIST THEME PREVIEW */}
             {formData.layoutStyle === 'minimalist' && (
@@ -1497,7 +2753,7 @@ const LessonPlanGenerator = () => {
                     <span className="text-slate-700 font-medium font-mono">{result.indicatorCode || formData.indicator.split(':')[0]}</span>
                   </div>
                   <div>
-                    <span className="font-bold text-slate-400 block uppercase text-[9px] tracking-wider">Primary Objective</span>
+                    <span className="font-bold text-slate-400 block uppercase text-[9px] tracking-wider">Performance Indicator</span>
                     <span className="text-slate-700 font-medium line-clamp-2">{formData.mainObjective || result.performanceIndicator}</span>
                   </div>
                 </div>
@@ -1892,6 +3148,69 @@ const LessonPlanGenerator = () => {
                       <SafeMarkdown>{result.phase3}</SafeMarkdown>
                     </div>
                   </section>
+
+                  {/* NEXT ACTIONS IN TEACHING WORKFLOW */}
+                  <section className="bg-slate-900 border border-slate-800 rounded-3xl p-6 text-white shadow-2xl space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
+                          <Sparkles size={20} />
+                        </div>
+                        <div>
+                          <h3 className="text-base font-bold text-white">Next Step in Lesson Preparation</h3>
+                          <p className="text-xs text-slate-400">Continue your teaching workflow with matched curriculum materials</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                      <div 
+                        onClick={handleGenerateLessonNotes}
+                        className="bg-slate-800/90 hover:bg-slate-800 border border-emerald-500/40 hover:border-emerald-500 p-4.5 rounded-2xl cursor-pointer transition-all flex items-start gap-3.5 group shadow-sm hover:shadow-md"
+                      >
+                        <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                          <BookOpen size={20} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between">
+                            <h4 className="text-sm font-bold text-white group-hover:text-emerald-300 transition-colors">Generate Student Lesson Notes</h4>
+                            <ArrowRight size={15} className="text-emerald-400 group-hover:translate-x-1 transition-transform" />
+                          </div>
+                          <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                            Create pupil notes, chalkboard summaries, key definitions, and practice exercises for this lesson.
+                          </p>
+                        </div>
+                      </div>
+
+                      <div 
+                        onClick={() => navigate('/assignments', {
+                          state: {
+                            preloaded: {
+                              level: formData.level,
+                              class: formData.class,
+                              subject: formData.subject,
+                              topic: formData.strand ? `${formData.strand} - ${formData.subStrand || ''}` : '',
+                              indicator: formData.indicator
+                            }
+                          }
+                        })}
+                        className="bg-slate-800/90 hover:bg-slate-800 border border-slate-700/60 hover:border-slate-600 p-4.5 rounded-2xl cursor-pointer transition-all flex items-start gap-3.5 group shadow-sm hover:shadow-md"
+                      >
+                        <div className="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                          <FileText size={20} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between">
+                            <h4 className="text-sm font-bold text-white group-hover:text-blue-300 transition-colors">Create Homework / Assignment</h4>
+                            <ArrowRight size={15} className="text-blue-400 group-hover:translate-x-1 transition-transform" />
+                          </div>
+                          <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                            Generate an assessment rubric and take-home assignment matching this lesson's indicator.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
                 </div>
               </div>
             )}
@@ -1905,6 +3224,7 @@ const LessonPlanGenerator = () => {
         isOpen={isStandardsModalOpen}
         onClose={() => setIsStandardsModalOpen(false)}
         onSelectIndicator={handleIndicatorSelected}
+        onSelectIndicators={handleMultipleIndicatorsSelectedFromModal}
         initialLevel={formData.level}
         initialClass={formData.class}
         initialSubject={formData.subject}

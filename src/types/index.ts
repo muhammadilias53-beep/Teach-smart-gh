@@ -32,6 +32,10 @@ export interface UserProfile {
   hasSeenOnboardingTour?: boolean;
   onboardingTourDismissed?: boolean;
   profileCompleted?: boolean;
+  acceptedTerms?: boolean;
+  acceptedTermsAt?: string;
+  termsVersion?: string;
+  acceptedResponsibleAiTerms?: boolean;
   createdAt?: any;
 }
 
@@ -41,6 +45,8 @@ export interface LessonPlan {
   title: string;
   level: string;
   subject: string;
+  week?: string;
+  weekNumber?: string;
   weekEnding?: string;
   classSize?: string;
   day?: string;

@@ -60,7 +60,9 @@ service cloud.firestore {
           'subscriptionStatus', 'lastLoginAt', 'isAnonymous', 'uid', 'createdAt',
           'lastGenerationAt', 'lastPaymentId', 'planType', 'plan', 'preferences',
           'isTrialResetApplied', 'schoolType', 'grade', 'isBstemSchool',
-          'lastPaymentReference', 'lastPaymentDate'
+          'lastPaymentReference', 'lastPaymentDate',
+          'hasSeenOnboardingTour', 'onboardingTourDismissed', 'profileCompleted',
+          'acceptedTerms', 'acceptedTermsAt', 'termsVersion', 'acceptedResponsibleAiTerms'
         ])
       );
       allow delete: if isAdmin();
@@ -150,6 +152,20 @@ service cloud.firestore {
       allow get: if isAdmin();
       allow create: if isValidPwaLaunch(incoming());
       allow update, delete: if false;
+    }
+
+    // 9. Generation Feedback & NaCCA Alignment Ratings
+    match /generation_feedback/{id} {
+      function isValidFeedback(data) {
+        return data.userId == request.auth.uid &&
+               data.rating is number &&
+               data.rating >= 1 && data.rating <= 5 &&
+               data.generatorType is string;
+      }
+      allow list, get: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if isSignedIn() && isValidFeedback(incoming());
+      allow update: if (isSignedIn() && existing().userId == request.auth.uid && isValidFeedback(incoming())) || isAdmin();
+      allow delete: if isAdmin();
     }
 
     // Connection Test

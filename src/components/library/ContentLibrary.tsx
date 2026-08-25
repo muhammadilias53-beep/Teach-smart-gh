@@ -249,7 +249,7 @@ const OFFICIAL_SYSTEM_RESOURCES: Omit<Resource, 'createdAt'>[] = [
     type: 'note',
     resourceCategory: 'AI-Generated Lesson Notes',
     term: 'Term 1',
-    content: `### Pure and Impure Substances\n**Subject:** Science | **Class:** Basic 7 | **Strand:** Diversity of Matter | **Sub-Strand:** Materials\n\n--- \n### 6. Learning Objectives\n- Define pure and impure substances with local examples.\n- Perform simple chromatography to separate mixtures.\n\n### 7. Key Terms\n- **Pure Substance:** Made of only one type of particle (e.g., distilled water).\n- **Impure Substance:** Contains two or more different substances mixed together (e.g., muddy tap water).\n\n### 8. Explanation\nIn Science, matter can be classified based on its purity...\n\n### 9. Guided Practice:\nShow students pure water and dissolved salt water. Discuss how we can reclaim the salt via evaporation or retrieve pure water via distillation.`
+    content: `### Pure and Impure Substances\n**Subject:** Science | **Class:** Basic 7 | **Strand:** Diversity of Matter | **Sub-Strand:** Materials\n\n--- \n### 6. Performance Indicators\n- Learners can define pure and impure substances with local examples.\n- Learners can perform simple chromatography to separate mixtures.\n\n### 7. Key Terms\n- **Pure Substance:** Made of only one type of particle (e.g., distilled water).\n- **Impure Substance:** Contains two or more different substances mixed together (e.g., muddy tap water).\n\n### 8. Explanation\nIn Science, matter can be classified based on its purity...\n\n### 9. Guided Practice:\nShow students pure water and dissolved salt water. Discuss how we can reclaim the salt via evaporation or retrieve pure water via distillation.`
   },
   {
     id: 'system-student-notes-math-b4',
@@ -264,7 +264,7 @@ const OFFICIAL_SYSTEM_RESOURCES: Omit<Resource, 'createdAt'>[] = [
     type: 'note',
     resourceCategory: 'AI-Generated Student Notes',
     term: 'Term 1',
-    content: `### Introduction to Fractions\n**Subject:** Mathematics | **Class:** Basic 4 | **Strand:** Number\n\n--- \n### 1. Learning Objectives\n- Identify numerator and denominator.\n- Represent fractions using circles and rectangles.\n\n### 2. What is a Fraction?\nA fraction represents a part of a whole. It has two parts:\n- **Numerator (Top):** How many parts we have.\n- **Denominator (Bottom):** Total number of equal parts the whole is divided into.\n\n### 3. Quick Check\nIf you slice a round pizza into 4 equal slices and eat 1 slice, you consumed 1/4 of the pizza!`
+    content: `### Introduction to Fractions\n**Subject:** Mathematics | **Class:** Basic 4 | **Strand:** Number\n\n--- \n### 1. Performance Indicators\n- Learners can identify numerator and denominator.\n- Learners can represent fractions using circles and rectangles.\n\n### 2. What is a Fraction?\nA fraction represents a part of a whole. It has two parts:\n- **Numerator (Top):** How many parts we have.\n- **Denominator (Bottom):** Total number of equal parts the whole is divided into.\n\n### 3. Quick Check\nIf you slice a round pizza into 4 equal slices and eat 1 slice, you consumed 1/4 of the pizza!`
   },
   {
     id: 'system-scheme-science-b7',
@@ -367,7 +367,7 @@ const OFFICIAL_SYSTEM_RESOURCES: Omit<Resource, 'createdAt'>[] = [
     type: 'note',
     resourceCategory: 'AI-Generated Lesson Notes',
     term: 'Term 1',
-    content: `### Career Pathways in Physical Education & Health\n**Subject:** Physical Education & Health (Core) | **Class:** SHS 1 | **Strand:** Physical Activity and Health | **Sub-Strand:** Career Pathways in Physical Activity and Sports\n\n--- \n### 1. Learning Objectives\n- Differentiate between a career and a profession. \n- Identify four core career pathways in Ghanaian Physical Education and Health.\n- Discuss professional attributes and mindsets required for these roles.\n\n### 2. Definitions\n- **Career:** The progressive journey of a person's working life, including various jobs and roles.\n- **Profession:** An occupation that requires specialized training, credentials, and formal qualifications (e.g., a sports doctor or coach).\n\n### 3. Key Career Pathways in Ghana\n- **Physical Education Teacher:** Teaching sports, health, and wellness concepts in schools.\n- **Sport Administrator:** Organizing sporting events, leagues, and operations at school or district levels.\n- **Sports Coach:** Guiding athletes from basic training to professional competitions.\n- **Fitness Trainer:** Running fitness classes or wellness coaching in community and private settings.\n\n### 4. Classroom Activity (Think-Pair-Share)\nDiscuss with your partner why choosing a sports career that aligns with your interest, skills, and passion leads to better long-term success.`
+    content: `### Career Pathways in Physical Education & Health\n**Subject:** Physical Education & Health (Core) | **Class:** SHS 1 | **Strand:** Physical Activity and Health | **Sub-Strand:** Career Pathways in Physical Activity and Sports\n\n--- \n### 1. Performance Indicators\n- Learners can differentiate between a career and a profession. \n- Learners can identify four core career pathways in Ghanaian Physical Education and Health.\n- Learners can discuss professional attributes and mindsets required for these roles.\n\n### 2. Definitions\n- **Career:** The progressive journey of a person's working life, including various jobs and roles.\n- **Profession:** An occupation that requires specialized training, credentials, and formal qualifications (e.g., a sports doctor or coach).\n\n### 3. Key Career Pathways in Ghana\n- **Physical Education Teacher:** Teaching sports, health, and wellness concepts in schools.\n- **Sport Administrator:** Organizing sporting events, leagues, and operations at school or district levels.\n- **Sports Coach:** Guiding athletes from basic training to professional competitions.\n- **Fitness Trainer:** Running fitness classes or wellness coaching in community and private settings.\n\n### 4. Classroom Activity (Think-Pair-Share)\nDiscuss with your partner why choosing a sports career that aligns with your interest, skills, and passion leads to better long-term success.`
   },
   {
     id: 'system-lesson-notes-art-design-shs1',
@@ -382,7 +382,7 @@ const OFFICIAL_SYSTEM_RESOURCES: Omit<Resource, 'createdAt'>[] = [
     type: 'note',
     resourceCategory: 'AI-Generated Lesson Notes',
     term: 'Term 1',
-    content: `### Intellectual Property & Copyright Laws in Ghana\n**Subject:** Art and Design Studio | **Class:** SHS 1 | **Strand:** Art and Design Theories and Application | **Sub-Strand:** Professional Practice and Ethics\n\n--- \n### 1. Learning Objectives\n- Define intellectual property and copyright.\n- Explain the importance of the Copyright Act of Ghana, 2005 (Act 690).\n- Discuss the ethical rules for using other artists' works as inspiration or references.\n\n### 2. What is Intellectual Property (IP)?\n- Intellectual property refers to creations of the mind: inventions, literary and artistic works, designs, symbols, names, and images used in commerce.\n- It is protected in law through **Patents**, **Copyright**, and **Trademarks**, which enable creators to earn recognition or financial benefit from what they invent or create.\n\n### 3. Key Legislative Acts in Ghana\n- **Copyright Act, 2005 (Act 690):** Protects literary, artistic, musical, sound recordings, and broadcasts from unauthorized copying and distribution.\n- **Patent Act, 2003 (Act 657):** Covers technical inventions and processes.\n- **Trademarks Act, 2004 (Act 664):** Protects brand names, logos, and symbols.\n- **Companies Act, 2019 (Act 992):** Governs registration of art and design businesses.\n\n### 4. Ethical Use of Others' Artworks\n- Always attribute/credit the original source when reproducing or building upon existing forms.\n- Transform secondary materials significantly to establish original ownership and avoid plagiarism.\n- Request written permission/licensing before industrializing or commercializing another person's creative work.`
+    content: `### Intellectual Property & Copyright Laws in Ghana\n**Subject:** Art and Design Studio | **Class:** SHS 1 | **Strand:** Art and Design Theories and Application | **Sub-Strand:** Professional Practice and Ethics\n\n--- \n### 1. Performance Indicators\n- Learners can define intellectual property and copyright.\n- Learners can explain the importance of the Copyright Act of Ghana, 2005 (Act 690).\n- Learners can discuss the ethical rules for using other artists' works as inspiration or references.\n\n### 2. What is Intellectual Property (IP)?\n- Intellectual property refers to creations of the mind: inventions, literary and artistic works, designs, symbols, names, and images used in commerce.\n- It is protected in law through **Patents**, **Copyright**, and **Trademarks**, which enable creators to earn recognition or financial benefit from what they invent or create.\n\n### 3. Key Legislative Acts in Ghana\n- **Copyright Act, 2005 (Act 690):** Protects literary, artistic, musical, sound recordings, and broadcasts from unauthorized copying and distribution.\n- **Patent Act, 2003 (Act 657):** Covers technical inventions and processes.\n- **Trademarks Act, 2004 (Act 664):** Protects brand names, logos, and symbols.\n- **Companies Act, 2019 (Act 992):** Governs registration of art and design businesses.\n\n### 4. Ethical Use of Others' Artworks\n- Always attribute/credit the original source when reproducing or building upon existing forms.\n- Transform secondary materials significantly to establish original ownership and avoid plagiarism.\n- Request written permission/licensing before industrializing or commercializing another person's creative work.`
   }
 ];
 
@@ -909,7 +909,7 @@ export default function ContentLibrary() {
     return trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('www.');
   };
 
-  const handleResourceDownload = (resource: Resource) => {
+  const handleResourceDownload = async (resource: Resource) => {
     const content = resource.content;
     const title = resource.title || 'Resource';
     const cleanTitle = title.replace(/\s+/g, '_');
@@ -943,24 +943,24 @@ export default function ContentLibrary() {
         
         if (isBase64Pdf) {
           let blob: Blob;
-          if (content.startsWith('data:application/pdf')) {
-            const arr = content.split(',');
-            const mime = arr[0].match(/:(.*?);/)?.[1] || 'application/pdf';
-            const bstr = atob(arr[1]);
-            let n = bstr.length;
-            const u8arr = new Uint8Array(n);
-            while (n--) {
-              u8arr[n] = bstr.charCodeAt(n);
+          try {
+            const dataUri = content.startsWith('data:') ? content : `data:application/pdf;base64,${content}`;
+            const res = await fetch(dataUri);
+            blob = await res.blob();
+          } catch (decodeErr) {
+            console.error("Failed to decode base64 PDF via fetch, falling back to manual decode:", decodeErr);
+            try {
+              const base64Clean = content.replace(/^data:[^;]+;base64,/, '').replace(/\s+/g, '');
+              const bstr = atob(base64Clean);
+              const safeLen = Math.max(0, bstr.length);
+              const u8arr = new Uint8Array(safeLen);
+              for (let i = 0; i < safeLen; i++) {
+                u8arr[i] = bstr.charCodeAt(i);
+              }
+              blob = new Blob([u8arr], { type: 'application/pdf' });
+            } catch (fallbackErr) {
+              blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
             }
-            blob = new Blob([u8arr], { type: mime });
-          } else {
-            const bstr = atob(content);
-            let n = bstr.length;
-            const u8arr = new Uint8Array(n);
-            while (n--) {
-              u8arr[n] = bstr.charCodeAt(n);
-            }
-            blob = new Blob([u8arr], { type: 'application/pdf' });
           }
           
           const blobUrl = URL.createObjectURL(blob);

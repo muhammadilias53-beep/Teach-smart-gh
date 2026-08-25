@@ -389,7 +389,7 @@ export default function ResourcePacks() {
     }
 
     // Footer on all pages
-    const pageCount = (pdf.internal as any).getNumberOfPages();
+    const pageCount = (typeof pdf.getNumberOfPages === 'function' ? pdf.getNumberOfPages() : 1) || 1;
     for(let pageNum = 1; pageNum <= pageCount; pageNum++) {
         pdf.setPage(pageNum);
         pdf.setDrawColor(200, 200, 200);

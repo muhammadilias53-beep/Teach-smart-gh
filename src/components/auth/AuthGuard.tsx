@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navigate, Outlet, useLocation, Link } from 'react-router';
 import { useAuth } from '../../contexts/AuthContext';
 import { useSidebar } from '../../contexts/SidebarContext';
 import { cn } from '../../lib/utils';
 import Sidebar from '../layout/Sidebar';
 import { TeacherOnboardingGuide } from '../onboarding/TeacherOnboardingGuide';
+import { TermsAndConditionsModal } from '../legal/TermsAndConditionsModal';
 import { motion } from 'motion/react';
 import { differenceInDays } from 'date-fns';
 import { Lock, CreditCard, MessageCircle, CheckCircle2 } from 'lucide-react';
@@ -150,7 +151,7 @@ const AuthGuard = () => {
   }
 
   if (!user) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    return <Navigate to="/login" replace />;
   }
 
   // If user is logged in, but profile isn't loaded yet, keep loading
@@ -177,9 +178,14 @@ const AuthGuard = () => {
   const publicPaths = ['/billing', '/profile'];
   const isPublicPath = publicPaths.includes(location.pathname);
   
+  // Check terms and conditions acceptance
+  const localTermsAccepted = typeof window !== 'undefined' && localStorage.getItem(`teachsmart_terms_accepted_${user.uid}`) === 'true';
+  const termsAccepted = profile?.acceptedTerms === true || localTermsAccepted;
+
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
       <Sidebar />
+      <TermsAndConditionsModal isOpen={!termsAccepted} isMandatory={true} />
       <TeacherOnboardingGuide />
       <main className={cn(
         "flex-1 pt-24 lg:pt-10 overflow-x-hidden min-w-0 transition-all duration-300",

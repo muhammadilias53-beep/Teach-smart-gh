@@ -22,10 +22,11 @@ import BstemLabGuide from './components/packs/BstemLabGuide';
 import BstemMathGuide from './components/packs/BstemMathGuide';
 import BstemTechGuide from './components/packs/BstemTechGuide';
 import AdminCommandCenter from './components/admin/AdminCommandCenter';
+import OfflineVaultPage from './components/pages/OfflineVaultPage';
 import { CurriculumDatabase } from './components/standards/CurriculumDatabase';
 import { PWALifecycleTracker } from './components/PWALifecycleTracker';
 import ScrollToTop from './components/common/ScrollToTop';
-import ResetToDashboardOnRefresh from './components/common/ResetToDashboardOnRefresh';
+import RouteStateManager from './components/common/RouteStateManager';
 import ConnectivityToast from './components/common/ConnectivityToast';
 
 // Public pages
@@ -52,8 +53,8 @@ function App() {
   return (
     <Router>
       <ScrollToTop />
-      <ResetToDashboardOnRefresh />
       <AuthProvider>
+        <RouteStateManager />
         <SidebarProvider>
           <PWALifecycleTracker />
           <Toaster position="top-right" />
@@ -79,6 +80,7 @@ function App() {
               <Route path="/assignments" element={<AssignmentGenerator />} />
               <Route path="/reports" element={<ReportGenerator />} />
               <Route path="/billing" element={<Billing />} />
+              <Route path="/offline-vault" element={<OfflineVaultPage />} />
               <Route path="/profile" element={<ProfileSettings />} />
               <Route path="/admin" element={<AdminCommandCenter />} />
             </Route>
