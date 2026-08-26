@@ -6,17 +6,18 @@ if (!fs.existsSync(publicDir)){
     fs.mkdirSync(publicDir, { recursive: true });
 }
 
-// Find the latest generated logo in src/assets/images/
+// Find the generated image in src/assets/images/
 const imagesDir = path.join(process.cwd(), 'src/assets/images');
 let sourceFile = '';
 
 if (fs.existsSync(imagesDir)) {
     const files = fs.readdirSync(imagesDir);
-    const logoFiles = files.filter(f => f.startsWith('app_logo') && (f.endsWith('.jpg') || f.endsWith('.png')));
-    if (logoFiles.length > 0) {
-        // Sort to get newest
-        logoFiles.sort().reverse();
-        sourceFile = path.join(imagesDir, logoFiles[0]);
+    const faviconFile = files.find(f => f.startsWith('teachsmart_favicon') && f.endsWith('.jpg'));
+    const logoFile = files.find(f => f.startsWith('app_logo_512') && f.endsWith('.jpg'));
+    if (faviconFile) {
+        sourceFile = path.join(imagesDir, faviconFile);
+    } else if (logoFile) {
+        sourceFile = path.join(imagesDir, logoFile);
     }
 }
 
@@ -25,20 +26,18 @@ if (!sourceFile) {
     process.exit(1);
 }
 
-// Copy to all icon and favicon targets in public
-const targets = [
-    'icon-512.jpg',
-    'icon-192.jpg',
-    'icon-512.png',
-    'icon-192.png',
-    'app_logo.png',
-    'favicon.ico',
-    'favicon.png',
-    'apple-touch-icon.png'
-];
+// Copy to icon-512.jpg, icon-192.jpg, favicon.png, favicon.ico, and app_logo.png in public
+fs.copyFileSync(sourceFile, path.join(publicDir, 'icon-512.jpg'));
+fs.copyFileSync(sourceFile, path.join(publicDir, 'icon-192.jpg'));
+fs.copyFileSync(sourceFile, path.join(publicDir, 'favicon.png'));
+fs.copyFileSync(sourceFile, path.join(publicDir, 'favicon.ico'));
+fs.copyFileSync(sourceFile, path.join(publicDir, 'app_logo.png'));
 
-targets.forEach(target => {
-    fs.copyFileSync(sourceFile, path.join(publicDir, target));
-});
+// Check for and copy app_logo.png if possible
+const artifactLogo = path.join(process.cwd(), 'artifact_backup', 'app_logo.png');
+if (fs.existsSync(artifactLogo)) {
+    fs.copyFileSync(artifactLogo, path.join(publicDir, 'app_logo.png'));
+    console.log("Copied app_logo.png from artifact_backup");
+}
 
-console.log("Successfully copied PWA and favicon icons to public folder.");
+console.log("Successfully copied PWA icons to public folder.");
