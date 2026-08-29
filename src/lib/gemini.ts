@@ -221,6 +221,209 @@ export const generateLessonPlan = async (
   };
 };
 
+import { getSupportedKGBlockDuration, reconcileKGBlocks } from '../config/kgTimetable';
+
+export const generateKGDailyLessonPlan = async (
+  prompt: string,
+  teacherInfo?: {
+    school?: string;
+    town?: string;
+    district?: string;
+    region?: string;
+    isBstemSchool?: boolean;
+  },
+  language?: string,
+  bilingualLanguage?: string,
+  dayOfWeek?: string
+) => {
+  const targetDayHint = dayOfWeek || 'the selected day';
+  const systemInstruction = `
+    You are an expert Ghanaian Early Childhood Education (ECE) curriculum specialist and NaCCA instructional planning advisor, adhering strictly to the official NaCCA Kindergarten Curriculum (KG1 & KG2) and the specialized Universal Kindergarten Daily Lesson Plan standards of the Nanumba South District Education Directorate.
+
+    CRITICAL PEDAGOGICAL PILLARS FOR KINDERGARTEN (KG1 & KG2):
+    1. PLAY-BASED & ACTIVITY-BASED: All teaching and learning must be actively rooted in guided play, sensory manipulation, storytelling, rhymes, songs, movement, role-play, and practical games.
+    2. CONCRETE & MANIPULATIVE-RICH: Young learners need concrete, low-cost, locally available materials (bottle caps, pebbles, clean sand/soil trays, clay/plasticine, wooden blocks, picture charts, flashcards, local realia).
+    3. INTEGRATED THEMATIC LEARNING: Integrate Literacy, Numeracy, Our World and Our People (OWOP), and Creative Arts seamlessly around the selected Strand, Sub-Strand, and Content Standard from the curriculum.
+    4. DETERMINISTIC DIRECTORATE TIMETABLE STRUCTURE (${targetDayHint}): Follow the exact daily timetable sequence from the Nanumba South District Education Directorate with all 9 blocks:
+       - MONDAY, TUESDAY, THURSDAY:
+         1. Assembly / Registration
+         2. Circle Time (30 minutes)
+         3. Group Activity 1 (Indoor/Outdoor) (1 hour)
+         4. Break
+         5. Group Activity 2 (Indoor/Outdoor) (1 hour)
+         6. Phonics Time (30 minutes) [STANDALONE - Connected to lesson vocabulary/letter sounds]
+         7. Break
+         8. Learning Centres / Choice Time [STANDALONE - Child-directed exploration in interest corners]
+         9. Story Sharing [STANDALONE - Short theme-related interactive story with learner participation]
+       - WEDNESDAY:
+         1. Assembly / Registration
+         2. Worship [STANDALONE - Age-appropriate moral devotion, song, or spiritual reflection]
+         3. Circle Time 1 (30 minutes)
+         4. Break
+         5. Group Activity 1 (Indoor/Outdoor) (1 hour)
+         6. Phonics Time (30 minutes) [STANDALONE]
+         7. Break
+         8. Learning Centres / Choice Time [STANDALONE]
+         9. Story Sharing [STANDALONE]
+       - FRIDAY:
+         1. Assembly / Registration
+         2. Outdoor [Gross-motor movement, structured games, physical balance]
+         3. Outdoor [Obstacle courses, sensory outdoor exploration]
+         4. Break
+         5. Group Activity 2 (Indoor) (1 hour)
+         6. Phonics Time (30 minutes) [STANDALONE]
+         7. Break
+         8. Learning Centres / Choice Time [STANDALONE]
+         9. Story Sharing [STANDALONE]
+
+    CRITICAL RULE FOR ALL 9 BLOCKS:
+    You MUST output all 9 blocks for ${targetDayHint}. Never omit non-instructional blocks (Assembly or Break). For Break blocks, provide simple hygiene/rest routines (e.g., Handwashing with soap, healthy snack, and supervised rest).
+
+    5. SEPARATION OF INDICATOR AND PERFORMANCE INDICATOR:
+       - 'indicator': The official NaCCA syllabus indicator code and text from the curriculum.
+       - 'performanceIndicator': The learner-centered, observable demonstration starting with "Learners can..." (e.g., "Learners can identify, sort, and count 5 concrete objects...").
+    6. LESSON FOCUS: A succinct, child-friendly thematic daily focus.
+    7. POST-LESSON REFLECTION (AFTER TIMETABLE, NOT A TIMETABLE BLOCK):
+       - 'assessmentEvidence': Concrete observable demonstrations used to assess learning.
+       - 'learnersNeedingSupport': Specific multi-sensory support strategies for struggling learners.
+       - 'teacherReflection': 2-3 reflective evaluative questions/prompts for the teacher to answer AFTER delivery (e.g. '1. How well did the concrete manipulatives engage the learners? 2. Which letter sounds need reinforcement tomorrow? 3. What instructional adaptations are needed?'). Do NOT invent fake pre-recorded teaching outcomes.
+
+    ${teacherInfo?.school ? `TEACHER CONTEXT:
+    School: ${teacherInfo.school}
+    Town: ${teacherInfo.town || 'N/A'}
+    District: ${teacherInfo.district || 'Nanumba South'}
+    Region: ${teacherInfo.region || 'N/A'}` : ''}
+
+    The response MUST be a JSON object with this exact schema:
+    {
+      "title": "Topic / Lesson Focus Title",
+      "classLevel": "KG 1 or KG 2",
+      "weekEnding": "Date string",
+      "weekNumber": "Week number",
+      "classSize": "Class size",
+      "strand": "Official Strand",
+      "subStrand": "Official Sub-strand",
+      "contentStandard": "Official Content Standard text",
+      "contentStandardCode": "Content Standard Code (e.g., K1.1.1.1)",
+      "indicator": "Official NaCCA Indicator (code and full text)",
+      "indicatorCode": "Indicator Code (e.g., K1.1.1.1.1)",
+      "lessonFocus": "Specific, child-friendly daily lesson focus",
+      "performanceIndicator": "Detailed performance indicator starting with 'Learners can ...'",
+      "coreCompetencies": "e.g., Communication and Collaboration (CC), Personal Development and Leadership (PL), Cultural Identity and Global Citizenship (CG), Critical Thinking and Problem Solving (CP)",
+      "keyWords": "List of 4-6 key vocabulary words suitable for KG learners",
+      "tlrs": "List of concrete, low-cost, locally available Ghanaian Teaching & Learning Resources",
+      "references": "NaCCA Kindergarten Curriculum Guide (KG1-KG2)",
+      "phase1": "Summary of Opening / Circle Time routines",
+      "phase2": "Summary of Group Activities, Phonics, and Learning Centres",
+      "phase3": "Summary of Story Sharing and Closing",
+      "blocks": [
+        {
+          "periodNumber": 1,
+          "time": "",
+          "blockName": "Assembly / Registration",
+          "isInstructional": false,
+          "teacherActivities": "Learner welcoming, registration, and health/hygiene inspection routines.",
+          "learnerActivities": "Assemble, respond to attendance, place bags, greet peers.",
+          "playBasedTechnique": "Welcoming songs and hygiene check.",
+          "resources": "Attendance register, name tags",
+          "coreCompetency": "Personal Development and Hygiene",
+          "assessment": "Punctuality and personal cleanliness check"
+        },
+        {
+          "periodNumber": 2,
+          "time": "30 mins",
+          "blockName": "Circle Time",
+          "isInstructional": true,
+          "teacherActivities": "Guides calendar and weather check, leads theme song with actions, introduces daily focus.",
+          "learnerActivities": "Sing action rhymes, point to weather chart, participate in news sharing.",
+          "playBasedTechnique": "Action rhyme and gesture game",
+          "resources": "Weather chart, calendar chart, picture flashcards",
+          "coreCompetency": "Communication and Collaboration",
+          "assessment": "Oral participation during rhyme and discussion"
+        }
+      ],
+      "differentiation": {
+        "strugglingLearners": {
+          "activities": "Multi-sensory tactile support with larger concrete manipulatives and one-on-one peer buddy pairing",
+          "resources": "Large colorful tactile flashcards, textured counting objects",
+          "assessments": "Observation during concrete play and oral demonstration"
+        },
+        "averageLearners": {
+          "activities": "Standard play-based group activities and guided manipulative tasks",
+          "resources": "Standard classroom counters, picture charts, drawing paper",
+          "assessments": "Group participation and informal checklist"
+        },
+        "advancedLearners": {
+          "activities": "Extension tasks: pattern extension, storytelling to peers, helping classmates in centers",
+          "resources": "Higher quantity counters, detailed picture story cards",
+          "assessments": "Demonstration of higher-order grouping or creative storytelling"
+        }
+      },
+      "assessmentEvidence": "Learner demonstrations, oral responses, and manipulative usage during group activities and learning centres.",
+      "learnersNeedingSupport": "Targeted tactile guidance and peer pairing for learners who struggle with target sounds or counting.",
+      "teacherReflection": "1. Did the play-based manipulatives effectively engage all learners?\n2. Which phonics letter sounds require reinforcement tomorrow?\n3. What adjustments are needed for the next session?",
+      "headteacherRemarks": "Headteacher / Supervisor vetting notes and instructional remarks."
+    }
+  `;
+
+  const responseText = await generateWithProxy(prompt, systemInstruction, "application/json");
+  const parsed = parseAIResponse(responseText);
+
+  const normalizeString = (val: any): string => {
+    if (val === null || val === undefined) return '';
+    if (Array.isArray(val)) return val.map(v => typeof v === 'object' ? JSON.stringify(v) : String(v).trim()).filter(Boolean).join(', ');
+    if (typeof val === 'object') return JSON.stringify(val);
+    return String(val);
+  };
+
+  return {
+    ...parsed,
+    title: normalizeString(parsed.title),
+    classLevel: normalizeString(parsed.classLevel || 'KG 1'),
+    weekEnding: normalizeString(parsed.weekEnding),
+    classSize: normalizeString(parsed.classSize),
+    strand: normalizeString(parsed.strand),
+    subStrand: normalizeString(parsed.subStrand),
+    indicatorCode: normalizeString(parsed.indicatorCode),
+    contentStandardCode: normalizeString(parsed.contentStandardCode),
+    indicator: normalizeString(parsed.indicator),
+    lessonFocus: normalizeString(parsed.lessonFocus),
+    performanceIndicator: normalizeString(parsed.performanceIndicator),
+    coreCompetencies: normalizeString(parsed.coreCompetencies),
+    keyWords: normalizeString(parsed.keyWords),
+    tlrs: normalizeString(parsed.tlrs),
+    references: normalizeString(parsed.references),
+    phase1: typeof parsed.phase1 === 'string' ? parsed.phase1 : normalizeString(parsed.phase1),
+    phase2: typeof parsed.phase2 === 'string' ? parsed.phase2 : normalizeString(parsed.phase2),
+    phase3: typeof parsed.phase3 === 'string' ? parsed.phase3 : normalizeString(parsed.phase3),
+    blocks: reconcileKGBlocks(
+      Array.isArray(parsed.blocks) ? parsed.blocks.map((b: any, i: number) => ({
+        ...b,
+        periodNumber: b.periodNumber || i + 1,
+        blockName: normalizeString(b.blockName),
+        time: getSupportedKGBlockDuration(b.blockName),
+        teacherActivities: normalizeString(b.teacherActivities),
+        learnerActivities: normalizeString(b.learnerActivities),
+        playBasedTechnique: normalizeString(b.playBasedTechnique),
+        resources: normalizeString(b.resources),
+        coreCompetency: normalizeString(b.coreCompetency),
+        assessment: normalizeString(b.assessment)
+      })) : [],
+      dayOfWeek || parsed.day || 'Monday'
+    ),
+    differentiation: parsed.differentiation || {
+      strugglingLearners: { activities: '', resources: '', assessments: '' },
+      averageLearners: { activities: '', resources: '', assessments: '' },
+      advancedLearners: { activities: '', resources: '', assessments: '' }
+    },
+    assessmentEvidence: normalizeString(parsed.assessmentEvidence),
+    learnersNeedingSupport: normalizeString(parsed.learnersNeedingSupport),
+    teacherReflection: normalizeString(parsed.teacherReflection),
+    headteacherRemarks: normalizeString(parsed.headteacherRemarks),
+    isKgPlan: true
+  };
+};
+
 export const generateSchemeOfWork = async (
   subject: string, 
   level: string, 

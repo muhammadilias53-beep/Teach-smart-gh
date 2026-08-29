@@ -5,7 +5,8 @@ import { toast } from 'react-hot-toast';
 import { Sparkles, Save, Download, RefreshCw, FileText, ChevronLeft, ChevronRight, CheckCircle, Users, Layout, AlignLeft, Layers, GraduationCap, MessageSquare, Edit3, Check, RotateCcw, FileEdit, AlertCircle, Compass, Search, BookOpen, ArrowRight } from 'lucide-react';
 import { CurriculumReferenceModal } from '../standards/CurriculumReferenceModal';
 import { CurriculumIndicatorItem } from '../../lib/curriculumDatabase';
-import { generateLessonPlan } from '../../lib/gemini';
+import { generateLessonPlan, generateKGDailyLessonPlan } from '../../lib/gemini';
+import { getKGScheduleForDay, reconcileKGBlocks } from '../../config/kgTimetable';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { saveOffline } from '../../lib/indexedDB';
 import { cacheGeneratedDocument } from '../../lib/offlineDocumentCache';
@@ -522,6 +523,85 @@ const LessonPlanGenerator = () => {
       const isMultiIndicator = activeIndicators.length > 1;
       const indicatorCodesString = activeIndicators.map(i => i.split(':')[0].trim()).join(', ');
 
+      // Specialized Kindergarten (KG) Generation Workflow
+      if (formData.level === 'KG' || formData.class?.startsWith('KG')) {
+        const selectedDay = formData.day || 'Monday';
+        const kgPrompt = `Generate a Kindergarten (KG) Daily Lesson Plan designed to align with NaCCA/GES Early Childhood Curriculum requirements and the Nanumba South District Education Directorate Timetable for ${selectedDay}.
+        Class Level: ${formData.class}
+        Subject / Learning Area: ${displaySubject}
+        Week Number: ${formData.weekNumber || '1'} (${formatWeekLessonPlanTitle(formData.weekNumber || '1')})
+        Week Ending: ${formData.weekEnding}
+        Scheduled Day: ${selectedDay}
+        Class Size: ${formData.classSize} learners
+        Strand / Thematic Unit: ${formData.strand}
+        Sub-Strand: ${formData.subStrand}
+        Content Standard: ${formData.contentStandard}
+        ${isMultiIndicator ? `Official NaCCA Indicators: ${activeIndicators.join('; ')}` : `Official NaCCA Indicator: ${activeIndicators[0] || formData.indicator}`}
+        Daily Lesson Focus / Objectives: ${formData.mainObjective || 'Engaging child-centered play and discovery'}
+        Locality Context: ${formData.locality} (${formData.specificLocality || profile?.town || 'Ghana'})
+        Special Teaching Guidance / Differentiation: ${formData.differentiationStrategies || formData.customGuidance || 'Use local Ghanaian manipulatives and play-based pedagogy.'}`;
+
+        const kgData = await generateKGDailyLessonPlan(kgPrompt, {
+          school: profile?.school,
+          district: profile?.district,
+          town: formData.specificLocality || profile?.town,
+          region: profile?.region,
+          isBstemSchool: profile?.isBstemSchool
+        }, formData.language, formData.bilingualLanguage, selectedDay);
+
+        const kgResult = {
+          ...kgData,
+          isKgPlan: true,
+          level: 'KG',
+          class: formData.class,
+          subject: displaySubject,
+          weekNumber: formData.weekNumber,
+          weekEnding: formData.weekEnding,
+          day: daysDescription,
+          date: formData.date || formData.weekEnding,
+          locality: formData.locality,
+          specificLocality: formData.specificLocality,
+          strand: kgData.strand || formData.strand,
+          subStrand: kgData.subStrand || formData.subStrand,
+          indicatorCode: kgData.indicatorCode || indicatorCodesString || formData.indicator,
+          indicator: kgData.indicator || activeIndicators.join('\n') || formData.indicator,
+          contentStandard: kgData.contentStandard || formData.contentStandard,
+          performanceIndicator: kgData.performanceIndicator || formData.mainObjective,
+          lessonFocus: kgData.lessonFocus || formData.mainObjective,
+          kgBlocks: reconcileKGBlocks(kgData.blocks, formData.day || 'Monday')
+        };
+
+        setResult(kgResult);
+        setStep(4);
+
+        if (user) {
+          const autoDoc = {
+            id: `lp_kg_${Date.now()}`,
+            authorId: user.uid,
+            title: `${displaySubject} (KG) - ${formData.subStrand || formData.strand || 'Daily Lesson Plan'}`,
+            type: 'lessonPlan' as const,
+            subject: displaySubject,
+            level: 'KG',
+            class: formData.class,
+            strand: formData.strand,
+            subStrand: formData.subStrand,
+            contentStandard: formData.contentStandard,
+            indicator: formData.indicator,
+            phase1: kgData.phase1,
+            phase2: kgData.phase2,
+            phase3: kgData.phase3,
+            coreCompetencies: kgData.coreCompetencies,
+            assessment: kgData.assessment || 'Observation during play corners and checklist',
+            createdAt: Date.now(),
+            synced: false
+          };
+          cacheGeneratedDocument(autoDoc);
+        }
+
+        toast.success("KG Daily Lesson Plan generated successfully & cached offline! 🇬🇭");
+        return;
+      }
+
       // Find potential curriculum frames for additional guidance
       let frameDetails = "";
       
@@ -753,8 +833,10 @@ const LessonPlanGenerator = () => {
       
       const indicatorCodes = activeIndicators.map(i => i.split(':')[0].trim()).join(', ');
       const indicatorFull = activeIndicators.join('\n');
+      const isKg = result.isKgPlan || formData.level === 'KG' || formData.class?.startsWith('KG');
 
       const doc = exportLessonPlanToPDF({
+        isKgPlan: isKg,
         title: formatWeekLessonPlanTitle(result.weekNumber || formData.weekNumber || '1'),
         weekNumber: result.weekNumber || formData.weekNumber || '1',
         week: `Week ${result.weekNumber || formData.weekNumber || '1'}`,
@@ -776,6 +858,7 @@ const LessonPlanGenerator = () => {
         indicator: indicatorFull || formData.indicator,
         contentStandard: formData.contentStandard,
         performanceIndicator: result.performanceIndicator || formData.mainObjective,
+        lessonFocus: result.lessonFocus || formData.mainObjective,
         coreCompetencies: result.coreCompetencies,
         keyWords: result.keyWords,
         tlrs: result.tlrs,
@@ -788,12 +871,15 @@ const LessonPlanGenerator = () => {
         differentiation: result.differentiation,
         locality: formData.locality,
         specificLocality: formData.specificLocality,
+        kgBlocks: result.blocks || result.kgBlocks,
+        teacherReflection: result.teacherReflection,
+        headteacherRemarks: result.headteacherRemarks
       });
 
       const timestamp = new Date().toISOString().replace(/[:.]/g, '-').replace('T', '_').slice(0, 19);
       const filename = `${displaySubject}_${formData.strand || 'Lesson'}_${formData.subStrand || 'Plan'}_${timestamp}`.replace(/[\s\W]+/g, '_');
       doc.save(`${filename}.pdf`);
-      toast.success("Official GES / NaCCA Lesson Plan downloaded! 🇬🇭");
+      toast.success(isKg ? "TeachSmartGH KG Daily Lesson Plan downloaded! 🇬🇭" : "TeachSmartGH Lesson Plan downloaded! 🇬🇭");
     } catch (err) {
       console.error(err);
       toast.error("Failed to generate PDF. Please try again.");
@@ -812,8 +898,10 @@ const LessonPlanGenerator = () => {
       
       const indicatorCodes = activeIndicators.map(i => i.split(':')[0].trim()).join(', ');
       const indicatorFull = activeIndicators.join('\n');
+      const isKg = result.isKgPlan || formData.level === 'KG' || formData.class?.startsWith('KG');
 
       await exportLessonPlanToWord({
+        isKgPlan: isKg,
         title: formatWeekLessonPlanTitle(result.weekNumber || formData.weekNumber || '1'),
         weekNumber: result.weekNumber || formData.weekNumber || '1',
         week: `Week ${result.weekNumber || formData.weekNumber || '1'}`,
@@ -835,6 +923,7 @@ const LessonPlanGenerator = () => {
         indicator: indicatorFull || formData.indicator,
         contentStandard: formData.contentStandard,
         performanceIndicator: result.performanceIndicator || formData.mainObjective,
+        lessonFocus: result.lessonFocus || formData.mainObjective,
         coreCompetencies: result.coreCompetencies,
         keyWords: result.keyWords,
         tlrs: result.tlrs,
@@ -847,6 +936,9 @@ const LessonPlanGenerator = () => {
         differentiation: result.differentiation,
         locality: formData.locality,
         specificLocality: formData.specificLocality,
+        kgBlocks: result.blocks || result.kgBlocks,
+        teacherReflection: result.teacherReflection,
+        headteacherRemarks: result.headteacherRemarks
       }, {
         subject: displaySubject,
         classLevel: formData.class,
@@ -2310,38 +2402,393 @@ const LessonPlanGenerator = () => {
             {/* Quick Layout Preview Switcher */}
             {!isEditing && (
             <>
-            <div className="bg-slate-50 p-3 rounded-2xl border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-sm">
-              <div className="flex items-center gap-2 pl-2">
-                <Layout size={16} className="text-emerald-750 font-bold" />
-                <span className="text-xs font-bold text-slate-700">Preview Layout Theme Style:</span>
-              </div>
-              <div className="flex flex-wrap bg-white p-1 rounded-xl border border-slate-150 gap-1 self-start md:self-auto">
-                {[
-                  { id: 'ges-standard', name: '⭐ Official GES Notebook', icon: Layers },
-                  { id: 'comprehensive', name: 'Comprehensive', icon: Layers },
-                  { id: 'minimalist', name: 'Minimalist Format', icon: AlignLeft },
-                  { id: 'primary-focused', name: 'Primary/Play-grade', icon: GraduationCap }
-                ].map(opt => {
-                  const Icon = opt.icon;
-                  const isActive = formData.layoutStyle === opt.id;
-                  return (
-                    <button
-                      key={opt.id}
-                      onClick={() => setFormData(p => ({ ...p, layoutStyle: opt.id as any }))}
-                      className={cn(
-                        "px-3.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all",
-                        isActive 
-                          ? "bg-slate-900 text-white shadow-sm" 
-                          : "text-slate-500 hover:text-slate-800 hover:bg-slate-100"
-                      )}
+            {(result?.isKgPlan || (result?.blocks && result.blocks.length > 0) || formData.level === 'KG' || formData.class?.startsWith('KG')) ? (
+              <div className="bg-white p-4 sm:p-6 lg:p-8 rounded-2xl shadow-md border-2 border-slate-800 space-y-6 text-slate-900 font-sans">
+                {/* TeachSmartGH Top Branding Banner */}
+                <div className="bg-[#001C3D] text-white p-3 sm:p-4 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-sm border-b-2 border-[#FCD116]">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-extrabold text-base tracking-tight text-white">
+                        TeachSmart<span className="text-[#FCD116]">GH</span>
+                      </span>
+                      <span className="text-[10px] text-emerald-300 font-bold border-l border-slate-700 pl-2">
+                        SPECIALIZED KINDERGARTEN DAILY LESSON PLANNER
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-slate-300 font-medium mt-0.5">
+                      Parent Brand: Catalyst Creative • Designed for NaCCA/GES ECE Alignment
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#006B3F]/40 border border-[#006B3F] text-[#FCD116] text-[11px] font-bold">
+                      <span>🇬🇭</span> Nanumba South District Directorate Standard
+                    </span>
+                  </div>
+                </div>
+
+                {/* Official KG Header Block */}
+                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b pb-4 border-slate-300">
+                  <div className="flex-1">
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-xs font-black uppercase tracking-wider text-slate-900">SUBJECT:</span>
+                      <span className="text-sm font-bold uppercase underline decoration-slate-400 underline-offset-4 text-slate-900">
+                        {displaySubject} (Integrated Curriculum)
+                      </span>
+                    </div>
+                    {profile?.school && (
+                      <div className="text-[11px] text-slate-600 font-semibold mt-0.5">
+                        School: {profile.school} {profile.district ? `(${profile.district})` : ''}
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="text-center flex-1">
+                    <h2 className="text-xl sm:text-2xl font-black uppercase tracking-wider text-slate-900">
+                      {formatWeekLessonPlanTitle(result.weekNumber || formData.weekNumber || result.week || '1')}
+                    </h2>
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                      Day-Specific Directorate Timetable Model
+                    </span>
+                  </div>
+
+                  <div className="flex flex-col items-start md:items-end flex-1 gap-1 text-xs font-bold">
+                    <div className="flex items-center gap-2">
+                      <span className="text-slate-900 font-black uppercase">CLASS:</span>
+                      <span className="underline decoration-slate-400 underline-offset-4 uppercase">{formData.class}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-slate-900 font-black uppercase">CLASS SIZE:</span>
+                      <span className="underline decoration-slate-400 underline-offset-4">{result.classSize || formData.classSize}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Table 1: KG Metadata & Curriculum Structure Grid */}
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse border-2 border-slate-900 text-xs">
+                    <tbody>
+                      {/* Row 1: Day | Date | Week Ending | Class | Class Size */}
+                      <tr className="border-b-2 border-slate-900 divide-x-2 divide-slate-900">
+                        <td className="p-2.5 font-bold bg-slate-50 w-24 text-center">
+                          <div className="text-[10px] font-black text-slate-900 uppercase tracking-wider">Day</div>
+                          <div className="text-sm font-extrabold text-slate-900">{formData.day}</div>
+                        </td>
+                        <td className="p-2.5 font-bold bg-slate-50 w-32 text-center">
+                          <div className="text-[10px] font-black text-slate-900 uppercase tracking-wider">Date</div>
+                          <div className="text-sm font-extrabold text-slate-900">{result.date || formData.date || formData.weekEnding}</div>
+                        </td>
+                        <td className="p-2.5 font-bold">
+                          <div className="text-[10px] font-black text-slate-900 uppercase tracking-wider">WEEK ENDING:</div>
+                          <div className="text-sm font-extrabold text-slate-900">{result.weekEnding || formData.weekEnding}</div>
+                        </td>
+                        <td className="p-2.5 font-bold bg-slate-50 w-24 text-center">
+                          <div className="text-[10px] font-black text-slate-900 uppercase tracking-wider">Class</div>
+                          <div className="text-sm font-extrabold text-slate-900">{formData.class}</div>
+                        </td>
+                        <td className="p-2.5 font-bold bg-slate-50 w-24 text-center">
+                          <div className="text-[10px] font-black text-slate-900 uppercase tracking-wider">Class Size</div>
+                          <div className="text-sm font-extrabold text-slate-900">{result.classSize || formData.classSize}</div>
+                        </td>
+                      </tr>
+
+                      {/* Row 2: Strand (Thematic Unit) | Sub-Strand */}
+                      <tr className="border-b-2 border-slate-900 divide-x-2 divide-slate-900">
+                        <td colSpan={2} className="p-3 align-top">
+                          <div className="text-[10px] font-black uppercase text-slate-900 tracking-wider">Strand (Thematic Unit)</div>
+                          <div className="text-sm font-bold text-slate-900 mt-0.5">{result.strand || formData.strand}</div>
+                        </td>
+                        <td colSpan={3} className="p-3 align-top">
+                          <div className="text-[10px] font-black uppercase text-slate-900 tracking-wider">Sub-Strand</div>
+                          <div className="text-sm font-bold text-slate-900 mt-0.5">{result.subStrand || formData.subStrand}</div>
+                        </td>
+                      </tr>
+
+                      {/* Row 3: Content Standard */}
+                      <tr className="border-b-2 border-slate-900">
+                        <td colSpan={5} className="p-3 align-top">
+                          <div className="text-[10px] font-black uppercase text-slate-900 tracking-wider">Content Standard</div>
+                          <div className="text-sm font-semibold text-slate-900 mt-0.5 leading-relaxed">
+                            {result.contentStandard || formData.contentStandard}
+                          </div>
+                        </td>
+                      </tr>
+
+                      {/* Row 4: Indicator (Code & Full Text) */}
+                      <tr className="border-b-2 border-slate-900">
+                        <td colSpan={5} className="p-3 align-top">
+                          <div className="text-[10px] font-black uppercase text-slate-900 tracking-wider">Indicator (NaCCA SBC Target)</div>
+                          <div className="text-sm font-bold text-slate-900 mt-0.5 leading-relaxed">
+                            <span className="font-mono text-emerald-800 mr-2">[{result.indicatorCode || formData.indicator.split(':')[0]}]</span>
+                            {result.indicator || formData.indicator}
+                          </div>
+                        </td>
+                      </tr>
+
+                      {/* Row 5: Performance Indicator ("Learners can...") */}
+                      <tr className="border-b-2 border-slate-900">
+                        <td colSpan={5} className="p-3 align-top bg-emerald-50/40">
+                          <div className="text-[10px] font-black uppercase text-emerald-950 tracking-wider">Performance Indicator</div>
+                          <div className="text-sm text-slate-900 font-bold mt-0.5 leading-relaxed">
+                            {result.performanceIndicator || formData.mainObjective || 'Learners can demonstrate observable skills and competencies through child-centered play.'}
+                          </div>
+                        </td>
+                      </tr>
+
+                      {/* Row 6: Daily Lesson Focus */}
+                      <tr className="border-b-2 border-slate-900">
+                        <td colSpan={5} className="p-3 align-top">
+                          <div className="text-[10px] font-black uppercase text-slate-900 tracking-wider">Daily Lesson Focus</div>
+                          <div className="text-sm text-slate-900 font-semibold mt-0.5 leading-relaxed">
+                            {result.lessonFocus || formData.mainObjective || 'Active child-centered play and concrete discovery.'}
+                          </div>
+                        </td>
+                      </tr>
+
+                      {/* Row 7: Core Competencies | Key Words */}
+                      <tr className="border-b-2 border-slate-900 divide-x-2 divide-slate-900">
+                        <td colSpan={3} className="p-3 align-top">
+                          <div className="text-[10px] font-black uppercase text-slate-900 tracking-wider">Core Competencies</div>
+                          <div className="text-xs text-slate-800 font-medium mt-0.5 leading-relaxed">
+                            {result.coreCompetencies || 'Communication and Collaboration (CC), Critical Thinking and Problem Solving (CP), Personal Development and Leadership (PL)'}
+                          </div>
+                        </td>
+                        <td colSpan={2} className="p-3 align-top">
+                          <div className="text-[10px] font-black uppercase text-slate-900 tracking-wider">Key Words / Vocabulary</div>
+                          <div className="text-xs text-slate-800 font-medium mt-0.5 leading-relaxed">
+                            {result.keyWords || 'N/A'}
+                          </div>
+                        </td>
+                      </tr>
+
+                      {/* Row 8: Concrete TLRs | References */}
+                      <tr className="divide-x-2 border-b-2 border-slate-900">
+                        <td colSpan={3} className="p-3 align-top">
+                          <div className="text-[10px] font-black uppercase text-slate-900 tracking-wider">Teaching & Learning Resources (Concrete / Realia)</div>
+                          <div className="text-xs text-slate-800 font-medium mt-0.5 leading-relaxed">
+                            {result.tlrs || 'Bottle caps, pebbles, clean sand tray, big picture books, realia, flashcards, crayons'}
+                          </div>
+                        </td>
+                        <td colSpan={2} className="p-3 align-top">
+                          <div className="text-[10px] font-black uppercase text-slate-900 tracking-wider">References</div>
+                          <div className="text-xs text-slate-800 font-medium mt-0.5 leading-relaxed">
+                            {result.references || 'NaCCA Kindergarten Curriculum Guide (KG1-KG2)'}
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Table 2: Day-Specific Directorate KG Timetable Table */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xs font-black uppercase tracking-wider text-slate-900 flex items-center gap-2">
+                      <span>{formData.day || result.day || 'Daily'} Timetable Schedule</span>
+                      <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">Nanumba South Directorate Standard</span>
+                    </h3>
+                  </div>
+
+                  <div className="overflow-x-auto">
+                    <table className="w-full border-collapse border-2 border-slate-900 text-xs">
+                      <thead>
+                        <tr className="border-b-2 border-slate-900 bg-slate-100 divide-x-2 divide-slate-900">
+                          <th className="p-2 text-center font-black uppercase text-slate-900 w-24 tracking-wider">PERIOD / TIME</th>
+                          <th className="p-2 text-left font-black uppercase text-slate-900 w-44 tracking-wider">ACTIVITY BLOCK</th>
+                          <th className="p-2 text-left font-black uppercase text-slate-900 tracking-wider">TEACHER'S FACILITATION ROLE</th>
+                          <th className="p-2 text-left font-black uppercase text-slate-900 tracking-wider">LEARNERS' PLAY ACTIVITIES</th>
+                          <th className="p-2 text-left font-black uppercase text-slate-900 w-40 tracking-wider">RESOURCES / TLMs</th>
+                          <th className="p-2 text-left font-black uppercase text-slate-900 w-36 tracking-wider">ASSESSMENT</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {reconcileKGBlocks(result.blocks || result.kgBlocks, formData.day || result.day || 'Monday').map((block: any, bIdx: number) => (
+                          <tr key={bIdx} className="divide-x-2 border-b-2 border-slate-900 align-top hover:bg-slate-50/60 transition-colors">
+                            <td className="p-2 text-center bg-slate-50 font-bold w-24">
+                              <div className="text-[11px] text-slate-900 font-extrabold font-mono">{block.time || block.duration}</div>
+                              <div className="text-[9px] text-slate-500 font-bold uppercase mt-0.5">
+                                {block.periodNumber ? `Period ${block.periodNumber}` : `Block ${block.blockNumber || bIdx + 1}`}
+                              </div>
+                            </td>
+                            <td className="p-2.5 font-bold text-slate-900 bg-emerald-50/20">
+                              <div className="text-xs font-black text-slate-900">{block.blockName}</div>
+                              {block.curricularArea && (
+                                <span className="inline-block mt-1 text-[9px] font-bold text-emerald-800 bg-emerald-100 px-1.5 py-0.5 rounded">
+                                  {block.curricularArea}
+                                </span>
+                              )}
+                            </td>
+                            <td className="p-2.5 text-slate-800 leading-relaxed prose prose-xs max-w-none">
+                              <SafeMarkdown>{block.teacherActivities || block.teacherActivity || 'Facilitates and guides learners with responsive feedback.'}</SafeMarkdown>
+                            </td>
+                            <td className="p-2.5 text-slate-800 leading-relaxed prose prose-xs max-w-none">
+                              <SafeMarkdown>{block.learnerActivities || block.learnerActivity || 'Actively engage in play and hands-on tasks.'}</SafeMarkdown>
+                            </td>
+                            <td className="p-2 text-slate-800 text-[11px] space-y-1.5">
+                              {(block.playTechnique || block.strategy) && (
+                                <div>
+                                  <span className="font-bold text-[9px] uppercase tracking-wider text-slate-500 block">Strategy:</span>
+                                  <span className="font-semibold text-slate-800">{block.playTechnique || block.strategy}</span>
+                                </div>
+                              )}
+                              {(block.resources || block.tlrs) && (
+                                <div>
+                                  <span className="font-bold text-[9px] uppercase tracking-wider text-slate-500 block">TLRs:</span>
+                                  <span className="text-slate-700">{block.resources || block.tlrs}</span>
+                                </div>
+                              )}
+                            </td>
+                            <td className="p-2 text-slate-800 text-[11px]">
+                              <span className="font-bold text-[9px] uppercase tracking-wider text-slate-500 block">Checkpoint:</span>
+                              <span className="text-slate-800">{block.assessmentCheckpoint || block.assessment || 'Observation of learner participation.'}</span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {/* Post-Lesson Reflection & Evaluation */}
+                <div className="border-2 border-slate-900 p-4 rounded-xl bg-white space-y-3">
+                  <span className="text-[10px] font-black uppercase text-slate-900 tracking-wider block">
+                    Post-Lesson Reflection & Evaluation
+                  </span>
+                  
+                  {result.assessmentEvidence && (
+                    <div className="text-xs">
+                      <span className="font-bold text-slate-900 uppercase text-[10px] block">Assessment Evidence & Observable Outcomes:</span>
+                      <p className="text-slate-700 mt-0.5 leading-relaxed">{result.assessmentEvidence}</p>
+                    </div>
+                  )}
+
+                  {result.learnersNeedingSupport && (
+                    <div className="text-xs">
+                      <span className="font-bold text-slate-900 uppercase text-[10px] block">Learners Needing Additional Support / Next Steps:</span>
+                      <p className="text-slate-700 mt-0.5 leading-relaxed">{result.learnersNeedingSupport}</p>
+                    </div>
+                  )}
+
+                  <div className="text-xs text-slate-800 leading-relaxed italic border-t border-slate-100 pt-2">
+                    <span className="font-bold text-slate-900 not-italic uppercase text-[10px] block mb-0.5">Teacher's Self-Reflection & Remarks:</span>
+                    {result.teacherReflection || 'Learners actively participated during circle time and hands-on numeracy manipulatives. Identified learners requiring focused phonetic reinforcement during learning centers tomorrow.'}
+                  </div>
+                </div>
+
+                {/* TEACHING WORKFLOW ACTIONS HUB */}
+                <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 text-white shadow-xl space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
+                        <Sparkles size={20} />
+                      </div>
+                      <div>
+                        <h3 className="text-base font-bold text-white">Kindergarten Next Steps</h3>
+                        <p className="text-xs text-slate-400">Download or continue preparing classroom materials</p>
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <button
+                        onClick={handleDownloadPDF}
+                        className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm"
+                      >
+                        <Download size={14} />
+                        Download Official KG PDF
+                      </button>
+                      <button
+                        onClick={handleDownloadWord}
+                        disabled={exportingWord}
+                        className="px-4 py-2 bg-blue-700 hover:bg-blue-600 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm"
+                        title="Download NaCCA-compliant Word Document (.docx)"
+                      >
+                        <FileText size={14} />
+                        {exportingWord ? "Exporting Word..." : "Word (.docx)"}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                    <div 
+                      onClick={handleGenerateLessonNotes}
+                      className="bg-slate-800/90 hover:bg-slate-800 border border-emerald-500/40 hover:border-emerald-500 p-4.5 rounded-2xl cursor-pointer transition-all flex items-start gap-3.5 group shadow-sm hover:shadow-md"
                     >
-                      <Icon size={14} />
-                      {opt.name}
-                    </button>
-                  );
-                })}
+                      <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                        <BookOpen size={20} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between">
+                          <h4 className="text-sm font-bold text-white group-hover:text-emerald-300 transition-colors">Generate KG Student Notes</h4>
+                          <ArrowRight size={15} className="text-emerald-400 group-hover:translate-x-1 transition-transform" />
+                        </div>
+                        <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                          Create illustrated flashcard summaries, nursery rhymes, and play-based center guides for this day.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div 
+                      onClick={() => navigate('/assignments', {
+                        state: {
+                          preloaded: {
+                            level: 'KG',
+                            class: formData.class,
+                            subject: formData.subject,
+                            topic: formData.strand ? `${formData.strand} - ${formData.subStrand || ''}` : '',
+                            indicator: formData.indicator
+                          }
+                        }
+                      })}
+                      className="bg-slate-800/90 hover:bg-slate-800 border border-slate-700/60 hover:border-slate-600 p-4.5 rounded-2xl cursor-pointer transition-all flex items-start gap-3.5 group shadow-sm hover:shadow-md"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                        <FileText size={20} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between">
+                          <h4 className="text-sm font-bold text-white group-hover:text-blue-300 transition-colors">Create Home Activity / Task</h4>
+                          <ArrowRight size={15} className="text-blue-400 group-hover:translate-x-1 transition-transform" />
+                        </div>
+                        <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                          Generate parent-involved fun coloring, tracing, and object counting activities.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
+            ) : (
+              <>
+              <div className="bg-slate-50 p-3 rounded-2xl border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-sm">
+                <div className="flex items-center gap-2 pl-2">
+                  <Layout size={16} className="text-emerald-750 font-bold" />
+                  <span className="text-xs font-bold text-slate-700">Preview Layout Theme Style:</span>
+                </div>
+                <div className="flex flex-wrap bg-white p-1 rounded-xl border border-slate-150 gap-1 self-start md:self-auto">
+                  {[
+                    { id: 'ges-standard', name: '⭐ Official GES Notebook', icon: Layers },
+                    { id: 'comprehensive', name: 'Comprehensive', icon: Layers },
+                    { id: 'minimalist', name: 'Minimalist Format', icon: AlignLeft },
+                    { id: 'primary-focused', name: 'Primary/Play-grade', icon: GraduationCap }
+                  ].map(opt => {
+                    const Icon = opt.icon;
+                    const isActive = formData.layoutStyle === opt.id;
+                    return (
+                      <button
+                        key={opt.id}
+                        onClick={() => setFormData(p => ({ ...p, layoutStyle: opt.id as any }))}
+                        className={cn(
+                          "px-3.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all",
+                          isActive 
+                            ? "bg-slate-900 text-white shadow-sm" 
+                            : "text-slate-500 hover:text-slate-800 hover:bg-slate-100"
+                        )}
+                      >
+                        <Icon size={14} />
+                        {opt.name}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
 
             {/* OFFICIAL GES / NACCA NOTEBOOK PREVIEW (EXACT 1:1 PHOTO MATCH) */}
             {formData.layoutStyle === 'ges-standard' && (
@@ -3213,6 +3660,8 @@ const LessonPlanGenerator = () => {
                   </section>
                 </div>
               </div>
+            )}
+            </>
             )}
             </>
             )}

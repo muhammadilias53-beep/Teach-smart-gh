@@ -2,6 +2,7 @@ import jsPDF from 'jspdf';
 import autoTable, { RowInput } from 'jspdf-autotable';
 import { formatWeekLessonPlanTitle } from './utils';
 import { buildMultiDayLessonPhases } from './multiDayParser';
+import { getKGScheduleForDay, getSupportedKGBlockDuration, reconcileKGBlocks } from '../config/kgTimetable';
 
 export interface LessonPlanExportData {
   title?: string;
@@ -24,6 +25,7 @@ export interface LessonPlanExportData {
   contentStandardCode?: string;
   indicator?: string;
   contentStandard?: string;
+  lessonFocus?: string;
   performanceIndicator?: string;
   mainObjective?: string;
   coreCompetencies?: string;
@@ -35,6 +37,10 @@ export interface LessonPlanExportData {
   phase3?: string;
   assessment?: string;
   remarks?: string;
+  teacherReflection?: string;
+  headteacherRemarks?: string;
+  isKgPlan?: boolean;
+  kgBlocks?: any[];
   locality?: string;
   specificLocality?: string;
   differentiation?: {
@@ -69,6 +75,11 @@ function cleanMarkdownForPDF(text: string | undefined | null): string {
  * Ensures bold component preservation, distinct aligned rows per day, multi-page continuous flow, and crisp TeachSmartGH branding.
  */
 export function exportLessonPlanToPDF(data: LessonPlanExportData): jsPDF {
+  const isKg = data.isKgPlan || data.level === 'KG' || data.class?.toUpperCase().includes('KG');
+  if (isKg) {
+    return exportKGLessonPlanToPDF(data);
+  }
+
   const doc = new jsPDF({
     orientation: 'portrait',
     unit: 'mm',
@@ -515,6 +526,340 @@ export function exportLessonPlanToPDF(data: LessonPlanExportData): jsPDF {
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(100, 116, 139);
     doc.text('  |  Official GES & NaCCA Standard Lesson Plan Format  |  Catalyst Creative', leftMargin + 21, footerY);
+
+    doc.text(
+      `Page ${i} of ${totalPages}`,
+      pageWidth - rightMargin,
+      footerY,
+      { align: 'right' }
+    );
+  }
+
+  return doc;
+}
+
+/**
+ * Specialized Kindergarten Daily Lesson Plan PDF Generator
+ * Adheres strictly to the Nanumba South District Education Directorate
+ * and NaCCA Early Childhood Education (KG1 & KG2) Universal Timetable standards.
+ */
+export function exportKGLessonPlanToPDF(data: LessonPlanExportData): jsPDF {
+  const doc = new jsPDF({
+    orientation: 'portrait',
+    unit: 'mm',
+    format: 'a4'
+  });
+
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const leftMargin = 12;
+  const rightMargin = 12;
+  const contentWidth = pageWidth - leftMargin - rightMargin; // 186mm
+
+  const className = (data.class || data.level || 'KG 1').toUpperCase();
+  const classSize = data.classSize || '35';
+  const weekEnding = data.weekEnding || new Date().toISOString().split('T')[0];
+  const day = data.day || 'Monday';
+  const date = data.date || weekEnding;
+  const weekNumber = data.weekNumber || data.week || '1';
+  const officialTitle = `KINDERGARTEN DAILY LESSON PLAN - WEEK ${weekNumber}`;
+
+  const strand = data.strand || 'All About Me';
+  const subStrand = data.subStrand || 'I Am a Special Child';
+  const csCode = data.contentStandardCode || data.contentStandard || 'K1.1.1.1';
+  const csText = data.contentStandard || csCode;
+  const indCode = data.indicatorCode || data.indicator || 'K1.1.1.1.1';
+  const indText = data.indicator || indCode;
+  const lessonFocus = data.lessonFocus || data.title || 'Parts of My Body: Head, Hands and Feet';
+  const performanceIndicator = data.performanceIndicator || data.mainObjective || 'Learners can touch and name body parts during a play song.';
+  const coreCompetencies = cleanMarkdownForPDF(data.coreCompetencies) || 'Communication and Collaboration (CC), Personal Development (PL)';
+  const keyWords = cleanMarkdownForPDF(data.keyWords) || 'Head, Eyes, Nose, Hands, Special';
+  const tlrs = cleanMarkdownForPDF(data.tlrs) || 'Body chart, Mirror, Soft toys, Flashcards, Bottle caps';
+  const references = cleanMarkdownForPDF(data.references) || 'NaCCA Kindergarten Curriculum Guide (KG1-KG2)';
+
+  // ==========================================
+  // TOP BRANDING BANNER (Page 1)
+  // ==========================================
+  doc.setFillColor(0, 28, 61); // Deep Navy Blue
+  doc.rect(0, 0, pageWidth, 16.5, 'F');
+
+  // Gold & Green Trim Ribbon
+  doc.setFillColor(252, 209, 22); // Ghana Gold
+  doc.rect(0, 16.5, pageWidth, 1.2, 'F');
+  doc.setFillColor(0, 107, 63); // Ghana Green
+  doc.rect(0, 17.7, pageWidth, 0.6, 'F');
+
+  // Brand Name & Tagline (Left)
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(13);
+  doc.setFont('helvetica', 'bold');
+  doc.text('TeachSmart', leftMargin, 9.5);
+  doc.setTextColor(252, 209, 22);
+  doc.text('GH', leftMargin + 25.5, 9.5);
+
+  doc.setFontSize(7.5);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(226, 232, 240);
+  doc.text('AI-Powered Early Childhood Teaching  |  Catalyst Creative', leftMargin, 14);
+
+  // Right Side: Standard Badge
+  doc.setFillColor(0, 107, 63);
+  doc.roundedRect(pageWidth - rightMargin - 62, 4, 62, 9.5, 1.5, 1.5, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(7);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Designed for NaCCA/GES ECE Alignment', pageWidth - rightMargin - 31, 8.5, { align: 'center' });
+  doc.setFontSize(6);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(226, 232, 240);
+  doc.text('Universal KG Timetable Model', pageWidth - rightMargin - 31, 12, { align: 'center' });
+
+  // ==========================================
+  // NOTEBOOK HEADER ROW
+  // ==========================================
+  const topMargin = 25.5;
+
+  doc.setFontSize(12.5);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(15, 23, 42); // slate-900
+  doc.text(officialTitle, pageWidth / 2, topMargin - 2.5, { align: 'center' });
+
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(71, 85, 105);
+  doc.text('INTEGRATED CURRICULUM (KG 1 & KG 2)  •  PLAY-BASED & LEARNER-CENTRED PEDAGOGY', pageWidth / 2, topMargin + 2, { align: 'center' });
+
+  // ==========================================
+  // TABLE 1: KG METADATA & CURRICULUM COMPONENTS
+  // ==========================================
+  const startTableY = topMargin + 5.5;
+
+  autoTable(doc, {
+    startY: startTableY,
+    margin: { top: 14, bottom: 15, left: leftMargin, right: rightMargin },
+    tableWidth: contentWidth,
+    theme: 'grid',
+    pageBreak: 'auto',
+    rowPageBreak: 'avoid',
+    columnStyles: {
+      0: { cellWidth: 32 },
+      1: { cellWidth: 44 },
+      2: { cellWidth: 35 },
+      3: { cellWidth: 35 },
+      4: { cellWidth: 40 },
+    },
+    styles: {
+      fontSize: 8,
+      cellPadding: 2.2,
+      lineColor: [30, 41, 59],
+      lineWidth: 0.35,
+      textColor: [15, 23, 42],
+      font: 'helvetica',
+      overflow: 'linebreak',
+    },
+    body: [
+      // Row 1: Day | Date | Class | Class Size | Week Ending
+      [
+        { content: `DAY:\n${day}`, styles: { fontStyle: 'bold', fillColor: [248, 250, 252] } },
+        { content: `DATE:\n${date}`, styles: { fontStyle: 'bold' } },
+        { content: `CLASS:\n${className}`, styles: { fontStyle: 'bold', fillColor: [248, 250, 252] } },
+        { content: `CLASS SIZE:\n${classSize}`, styles: { fontStyle: 'bold' } },
+        { content: `WEEK ENDING:\n${weekEnding}`, styles: { fontStyle: 'bold', fillColor: [248, 250, 252] } },
+      ],
+      // Row 2: Strand | Sub-strand
+      [
+        { colSpan: 2, content: `STRAND:\n${strand}`, styles: { fontStyle: 'bold' } },
+        { colSpan: 3, content: `SUB-STRAND:\n${subStrand}`, styles: { fontStyle: 'bold' } }
+      ],
+      // Row 3: Content Standard | Indicator
+      [
+        { colSpan: 2, content: `CONTENT STANDARD (CODE & TEXT):\n${csText}`, styles: { fontStyle: 'bold' } },
+        { colSpan: 3, content: `INDICATOR (CODE & TEXT):\n${indText}`, styles: { fontStyle: 'bold' } }
+      ],
+      // Row 4: Lesson Focus (Full Width)
+      [
+        { 
+          colSpan: 5, 
+          content: `LESSON FOCUS / THEMATIC TOPIC:\n${lessonFocus}`, 
+          styles: { fontStyle: 'bold', fillColor: [241, 245, 249] } 
+        }
+      ],
+      // Row 5: Performance Indicator (Full Width)
+      [
+        { 
+          colSpan: 5, 
+          content: `PERFORMANCE INDICATOR (Observable Learner Demonstration):\n${performanceIndicator}`, 
+          styles: { fontStyle: 'bold' } 
+        }
+      ],
+      // Row 6: Core Competencies | Key Vocabulary
+      [
+        { colSpan: 3, content: `CORE COMPETENCIES & VALUES:\n${coreCompetencies}`, styles: { fontStyle: 'bold' } },
+        { colSpan: 2, content: `KEY VOCABULARY / WORDS:\n${keyWords}`, styles: { fontStyle: 'bold' } }
+      ],
+      // Row 7: TLRs | References
+      [
+        { colSpan: 3, content: `TEACHING & LEARNING RESOURCES (TLRs - Local Materials):\n${tlrs}`, styles: { fontStyle: 'bold' } },
+        { colSpan: 2, content: `REFERENCES:\n${references}`, styles: { fontStyle: 'bold' } }
+      ],
+    ],
+  });
+
+  const finalYTable1 = (doc as any).lastAutoTable.finalY || 105;
+
+  // ==========================================
+  // TABLE 2: UNIVERSAL KG TIMETABLE DELIVERY TABLE
+  // ==========================================
+  const blocksToUse = reconcileKGBlocks(data.kgBlocks || (data as any).blocks, day);
+
+  const table2BodyRows: RowInput[] = blocksToUse.map((blk: any, idx: number) => {
+    const periodDisplay = blk.periodNumber ? `Period ${blk.periodNumber}` : `Period ${idx + 1}`;
+    const rawBlockName = blk.blockName || periodDisplay;
+    const cleanBlockName = rawBlockName
+      .replace(/\(?\b\d{1,2}:\d{2}\s*(-|–|to)\s*\d{1,2}:\d{2}\b\)?/gi, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+    const durationDisplay = getSupportedKGBlockDuration(cleanBlockName);
+    const timeAndBlock = `${cleanBlockName}${durationDisplay ? `\n(${durationDisplay})` : ''}`;
+    
+    let activitiesText = '';
+    if (blk.isInstructional === false && !blk.teacherActivities && !blk.learnerActivities) {
+      activitiesText = cleanMarkdownForPDF(blk.defaultDescription || blk.activities || 'Routine school activity.');
+    } else if (blk.teacherActivities || blk.learnerActivities) {
+      activitiesText = `• Teacher Facilitation: ${cleanMarkdownForPDF(blk.teacherActivities || '')}\n\n• Learner Play Activities: ${cleanMarkdownForPDF(blk.learnerActivities || '')}`;
+      if (blk.playBasedTechnique) {
+        activitiesText += `\n\n• Play Technique: ${cleanMarkdownForPDF(blk.playBasedTechnique)}`;
+      }
+    } else {
+      activitiesText = cleanMarkdownForPDF(blk.activities || blk.description || 'Play-based interactive engagement.');
+    }
+
+    const tlrText = cleanMarkdownForPDF(blk.resources || blk.tlrs || 'Local materials');
+    const compText = cleanMarkdownForPDF(blk.assessment || blk.coreCompetency || blk.formativeCheck || 'Active Observation');
+
+    return [
+      {
+        content: timeAndBlock,
+        styles: { fontStyle: 'bold', halign: 'center', fillColor: [248, 250, 252], valign: 'top' }
+      },
+      {
+        content: activitiesText,
+        styles: { fontStyle: 'normal', valign: 'top', halign: 'left' }
+      },
+      {
+        content: tlrText,
+        styles: { fontStyle: 'normal', valign: 'top', halign: 'left' }
+      },
+      {
+        content: compText,
+        styles: { fontStyle: 'normal', valign: 'top', halign: 'left' }
+      }
+    ];
+  });
+
+  autoTable(doc, {
+    startY: finalYTable1 + 4,
+    margin: { top: 14, bottom: 15, left: leftMargin, right: rightMargin },
+    tableWidth: contentWidth,
+    theme: 'grid',
+    showHead: 'everyPage',
+    pageBreak: 'auto',
+    rowPageBreak: 'avoid',
+    columnStyles: {
+      0: { cellWidth: 34 },
+      1: { cellWidth: 88 },
+      2: { cellWidth: 32 },
+      3: { cellWidth: 32 },
+    },
+    styles: {
+      fontSize: 7.5,
+      cellPadding: 2.5,
+      lineColor: [30, 41, 59],
+      lineWidth: 0.35,
+      textColor: [15, 23, 42],
+      font: 'helvetica',
+      overflow: 'linebreak',
+    },
+    head: [[
+      { content: 'TIMETABLE BLOCK & TIME', styles: { halign: 'center', fontStyle: 'bold', fillColor: [241, 245, 249], textColor: [15, 23, 42], fontSize: 8 } },
+      { content: 'TEACHING & LEARNING ACTIVITIES (PLAY-BASED & LEARNER-CENTRED)', styles: { halign: 'left', fontStyle: 'bold', fillColor: [241, 245, 249], textColor: [15, 23, 42], fontSize: 8 } },
+      { content: 'RESOURCES / TLMs', styles: { halign: 'left', fontStyle: 'bold', fillColor: [241, 245, 249], textColor: [15, 23, 42], fontSize: 8 } },
+      { content: 'ASSESSMENT', styles: { halign: 'left', fontStyle: 'bold', fillColor: [241, 245, 249], textColor: [15, 23, 42], fontSize: 8 } },
+    ]],
+    body: table2BodyRows,
+  });
+
+  const finalYTable2 = (doc as any).lastAutoTable.finalY || 180;
+
+  // ==========================================
+  // POST-LESSON REFLECTION & EVALUATION
+  // ==========================================
+  const assessmentEvidence = cleanMarkdownForPDF((data as any).assessmentEvidence) || 'Evidence gathered via direct observation and manipulative handling during activities.';
+  const learnersNeedingSupport = cleanMarkdownForPDF((data as any).learnersNeedingSupport) || 'Targeted multi-sensory support for learners experiencing difficulties.';
+  const teacherReflection = cleanMarkdownForPDF(data.teacherReflection || data.remarks) || '1. Did the play-based manipulatives effectively engage learners?\n2. Which sounds/concepts need reinforcement tomorrow?\n3. What adjustments are needed?';
+
+  autoTable(doc, {
+    startY: finalYTable2 + 3.5,
+    margin: { top: 14, bottom: 15, left: leftMargin, right: rightMargin },
+    tableWidth: contentWidth,
+    theme: 'grid',
+    showHead: 'everyPage',
+    pageBreak: 'auto',
+    rowPageBreak: 'avoid',
+    columnStyles: {
+      0: { cellWidth: contentWidth },
+    },
+    styles: {
+      fontSize: 7.5,
+      cellPadding: 2.8,
+      lineColor: [30, 41, 59],
+      lineWidth: 0.35,
+      textColor: [15, 23, 42],
+      font: 'helvetica',
+      overflow: 'linebreak',
+    },
+    head: [[
+      { content: 'POST-LESSON REFLECTION & EVALUATION', styles: { halign: 'left', fontStyle: 'bold', fillColor: [241, 245, 249], textColor: [15, 23, 42], fontSize: 8 } },
+    ]],
+    body: [[
+      {
+        content: `• Assessment Evidence:\n${assessmentEvidence}\n\n• Learners Needing Support:\n${learnersNeedingSupport}\n\n• Teacher Reflection Prompts:\n${teacherReflection}`,
+        styles: { fontSize: 7.2, cellPadding: 3, textColor: [30, 41, 59] }
+      }
+    ]],
+  });
+
+  // Multi-page header and footer
+  const totalPages = doc.getNumberOfPages();
+  for (let i = 1; i <= totalPages; i++) {
+    doc.setPage(i);
+
+    if (i > 1) {
+      doc.setFillColor(0, 28, 61);
+      doc.rect(0, 0, pageWidth, 9, 'F');
+      doc.setFillColor(252, 209, 22);
+      doc.rect(0, 9, pageWidth, 0.8, 'F');
+
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(7.5);
+      doc.setFont('helvetica', 'bold');
+      doc.text(`TeachSmartGH - ${officialTitle} (${className})`, leftMargin, 6);
+      doc.setTextColor(226, 232, 240);
+      doc.text(`Week Ending: ${weekEnding}`, pageWidth - rightMargin, 6, { align: 'right' });
+    }
+
+    const footerY = pageHeight - 6;
+    doc.setDrawColor(226, 232, 240);
+    doc.setLineWidth(0.3);
+    doc.line(leftMargin, footerY - 2.5, pageWidth - rightMargin, footerY - 2.5);
+
+    doc.setFontSize(6.8);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(0, 28, 61);
+    doc.text('TeachSmartGH', leftMargin, footerY);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(100, 116, 139);
+    doc.text('  |  TeachSmartGH Kindergarten Daily Lesson Plan — Designed to Align with NaCCA/GES Requirements  |  Catalyst Creative', leftMargin + 21, footerY);
 
     doc.text(
       `Page ${i} of ${totalPages}`,

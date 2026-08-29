@@ -6675,231 +6675,10 @@ export const FRENCH_B4_B6_LESSON_FRAMES: Record<string, any> = {
   },
   "B6.1.3.2": {
     topic: "Pr√©senter quelqu'un (Presenting someone else)",
-    keyWords: ["Voici", "Il/Elle s'appelle", "Il/Elle est n√©(e) le", "Son num√©ro de t√©l√©phone"],
-    activities: [
-      "Present a famous Ghanaian historical figure in French",
-      "Create a mini-biography including date of birth and address",
-      "Role-play a douane (customs) scene where you provide information for someone else",
-      "Practice dictation of phone numbers in French"
-    ],
-    resources: ["Biographies of heroes", "Mock phone/sim cards", "Passport templates"]
-  }
-};
-
-export const GHANAIAN_LANGUAGE_B1_B3_LESSON_FRAMES: Record<string, any> = {
-  "B1.1.1.1": {
-    topic: "Songs: Singing Familiar Songs and Recognising Place Names",
-    keyWords: ["Akom", "Fontomfrom", "Language", "Melody", "Place names"],
-    activities: [
-      "Use a recorder to play some popular songs in the community",
-      "Ask learners to sing popular songs and dance with gestures",
-      "Lead learners to mention names of people and animals heard in the songs",
-      "Discuss the meaning of the songs with learners"
-    ],
-    resources: ["Audio recorder", "Musical instruments", "Song books", "Flashcards"]
-  },
-  "B1.1.6.1": {
-    topic: "Conversation: Greetings and Appropriate Address Terms",
-    keyWords: ["Anopa Akye", "Maakye", "Elders", "Peers", "Respect"],
-    activities: [
-      "Discuss different categories of people in the community (elders, peers, etc.)",
-      "Demonstrate appropriate greetings for each category using correct terms",
-      "Role-play greetings in various settings (morning at home, arriving at school)",
-      "Practice using address terms like 'Papa', 'Maame', 'Nana'"
-    ],
-    resources: ["Role-play cards", "Pictures of community members", "Videos of social greetings"]
-  },
-  "B2.1.1.1": {
-    topic: "Work and Play Songs",
-    keyWords: ["Occupations", "Fatigue", "Unity", "Rhythm", "Boredom"],
-    activities: [
-      "Revise traditional occupations and their associated work songs (fishing, farming)",
-      "Teach a new play song and demonstrate how the accompanying game is performed",
-      "Discuss the importance of work songs in reducing fatigue and improving productivity",
-      "Perform a moonlight play in groups while singing"
-    ],
-    resources: ["Pictures of people at work", "Playground equipment", "Drums/Percussion"]
-  },
-  "B3.1.2.1": {
-    topic: "Rhymes: Recognising and Producing Rhyming Words",
-    keyWords: ["Rhyme", "Sound patterns", "Couplet", "Poetry", "Verse"],
-    activities: [
-      "Read aloud a familiar rhyme and let learners identify words that sound the same",
-      "Model how to write a simple two-line rhyme",
-      "Encourage learners to produce their own rhyming words for given objects",
-      "Play a 'Rhyme Chain' game where each learner adds a word that rhymes with the previous one"
-    ],
-    resources: ["Rhyme books", "Word cards", "Chart with rhyming words"]
-  },
-  "B3.5.7.1": {
-    topic: "Spelling: Four, Five, and Six Letter Words",
-    keyWords: ["Spelling", "Consonant", "Vowel", "Syllable", "Accuracy"],
-    activities: [
-      "Practice spelling four and five letter words using flashcards",
-      "Engage in a spelling bee competition among groups",
-      "Write lists of six-letter words related to common objects in the environment",
-      "Use target words in simple sentences to demonstrate meaning"
-    ],
-    resources: ["Letter cards", "Sand trays", "Chalkboard", "Exercise books"]
-  },
-  "B4.1.1.1": {
-    topic: "Traditional and Occupational Songs",
-    keyWords: ["Occupations", "Lyrics", "Melody", "Rhythm", "Context"],
-    activities: [
-      "Sing a familiar traditional song with the class",
-      "Watch a video of a traditional song being performed",
-      "Discuss the lyrics and the specific occupation it relates to",
-      "Identify the importance of these songs in the workplace"
-    ],
-    resources: ["Video of traditional dance", "Audio recorder", "Song texts"]
-  },
-  "B4.3.1.1": {
-    topic: "Punctuation: Full Stops, Commas and Question Marks",
-    keyWords: ["Punctuation", "Sentence structure", "Pause", "Clarity", "Tone"],
-    activities: [
-      "Identify punctuation marks in a given paragraph",
-      "Practice placing full stops at the end of complete thoughts",
-      "Use commas to separate items in a list",
-      "Convert statements into questions using appropriate marks"
-    ],
-    resources: ["Punctuation charts", "Worksheets", "Flashcards"]
-  },
-  "B5.1.1.1": {
-    topic: "Cradle Songs and Lullabies",
-    keyWords: ["Lullaby", "Cradle", "Soothing", "Role-play", "Rhythm"],
-    activities: [
-      "Listen to recordings of traditional lullabies",
-      "Discuss the soothing nature and purpose of cradle songs",
-      "Role-play a mother or caretaker singing to a child",
-      "Analyze the lyrics for common themes of love and protection"
-    ],
-    resources: ["Audio recordings of lullabies", "Dolls for role-play", "Lyrics sheets"]
-  },
-  "B6.1.1.1": {
-    topic: "Investigating Traditional Dances and Songs",
-    keyWords: ["Traditional dance", "Investigation", "Heritage", "Performance", "Rhythm"],
-    activities: [
-      "Research a specific traditional dance from a chosen region in Ghana",
-      "Perform the corresponding songs using the correct rhythms",
-      "Demonstrate basic dance steps associated with the songs",
-      "Discuss the cultural significance and history of the dance"
-    ],
-    resources: ["Drums", "Traditional costumes (props)", "Videos of cultural festivals"]
-  },
-  "B6.3.1.1": {
-    topic: "Writing Sentences: Joint Scripts and Capitalisation",
-    keyWords: ["Handwriting", "Joint script", "Capitalisation", "Legibility", "Fluency"],
-    activities: [
-      "Practice writing sentences using joint/cursive handwriting",
-      "Focus on the correct formation of ascending and descending letters",
-      "Apply rules of capitalisation for proper nouns and sentence beginnings",
-      "Peer-review writing for legibility and accuracy"
-    ],
-    resources: ["Joint script templates", "Writing guides", "Specially ruled exercise books"]
-  }
-};
-
-export const KG_INTEGRATED_LESSON_FRAMES: Record<string, any> = {
-  "K1.1.1.1": {
-    topic: "I am a wonderful and unique creation",
-    keyWords: ["Unique", "Wonderful", "Body parts", "Special"],
-    activities: [
-      "Guide learners to look at each other and talk about their unique features (height, skin colour, etc.)",
-      "Sing action songs about parts of the body",
-      "Learners draw and colour a picture of themselves",
-      "Identify parts of a book (front, back, spine)"
-    ],
-    resources: ["Mirror", "Crayons", "Charts of body parts", "Big Books"]
-  },
-  "K2.1.1.1": {
-    topic: "I am a wonderful and unique creation (Review and Extend)",
-    keyWords: ["Unique", "Special", "Features", "Confidence"],
-    activities: [
-      "Think-Pair-Share: Talk about what makes each member of the pair special",
-      "Draw and label simple parts of the body",
-      "Shared reading of a story about a unique child",
-      "Practice using positive words to describe oneself"
-    ],
-    resources: ["Story books", "Drawing sheets", "Word cards", "Mirror"]
-  },
-  "K1.2.1.1": {
-    topic: "My Family Members and Roles",
-    keyWords: ["Father", "Mother", "Siblings", "Love", "Roles"],
-    activities: [
-      "Mention names of family members",
-      "Role-play family activities (cooking, cleaning, etc.)",
-      "Sing songs about the family",
-      "Discuss the importance of helping at home"
-    ],
-    resources: ["Family pictures", "Dolls", "Role-play props"]
-  }
-};
-
-export const RME_LESSON_FRAMES: Record<string, any> = {
-  "B1.1.1.1.1": {
-    topic: "Exploring God's Creation",
-    keyWords: ["Creation", "Environment", "Living things", "Non-living things"],
-    activities: [
-      "Go on a nature walk around the school compound",
-      "Identify and mention names of things seen (trees, birds, stones)",
-      "Draw one thing that God has created",
-      "Sing songs that praise God for His creation"
-    ],
-    resources: ["Nature", "Drawing books", "Pencils", "Crayons"]
-  },
-  "B2.1.2.1.1": {
-    topic: "Caring for the Environment",
-    keyWords: ["Stewardship", "Responsibility", "Sanitation", "Hygiene"],
-    activities: [
-      "Discuss why we need to keep our surroundings clean",
-      "Demonstrate proper waste disposal techniques",
-      "Participate in a clean-up exercise in the classroom",
-      "Create posters about protecting the environment"
-    ],
-    resources: ["Brooms", "Dustbins", "Poster sheets", "Markers"]
-  },
-  "B3.1.3.1.1": {
-    topic: "Purpose of God's Creation",
-    keyWords: ["Purpose", "Utility", "Benefits", "Environment"],
-    activities: [
-      "Identify various things God created in the community",
-      "Discuss the uses of some specific things (e.g., water for drinking, trees for shade)",
-      "Draw something God created and write one use for it",
-      "Role-play how humans benefit from God's creation"
-    ],
-    resources: ["Pictures of creation", "Worksheets", "Coloured pencils"]
-  },
-  "B4.3.1.1.1": {
-    topic: "Early Life and Call of religious leaders",
-    keyWords: ["Call", "Prophecy", "Vision", "Enlightenment", "Leaders"],
-    activities: [
-      "Watch a video about the early life of a religious leader (e.g. Jesus, Muhammad)",
-      "Role-play the scenes of the 'Call' of a chosen leader",
-      "Discuss the qualities demonstrated by these leaders during their childhood",
-      "Identify common themes in the calls of the different leaders"
-    ],
-    resources: ["Video clips", "Costumes for role-play", "Storybooks"]
-  },
-  "B5.3.1.1.1": {
-    topic: "Ministry and latter lives of religions leaders",
-    keyWords: ["Ministry", "Service", "Teachings", "Legacy", "Sacrifice"],
-    activities: [
-      "Discuss the major teachings of a specific religious leader",
-      "Identify the key miracles or signficant events in their ministry",
-      "Narrate the events leading to the latter lives of the leaders",
-      "Make a group presentation on the moral lessons from their lives"
-    ],
-    resources: ["Flashcards", "Chart with timeline of leaders", "Relevant scriptures"]
-  },
-  "B6.2.1.1.1": {
-    topic: "Types and Importance of Religious Festivals",
-    keyWords: ["Eid", "Easter", "Christmas", "Hogbetsotso", "Celebration"],
-    activities: [
-      "List different religious festivals celebrated in Ghana",
-      "Describe how one specific festival is celebrated",
-      "Discuss why people celebrate these festivals (thanksgiving, remembrance)",
-      "Design a greeting card for a chosen religious festival"
-    ],
-    resources: ["Festival pictures", "Cardboard", "Coloured pencils", "Glue"]
-  }
-};
+    keyWords: ["Voici", "Il s'appelle", "ElxúîWkè⁄8˝>ø¬‚Kw%h’ŒJ[Õ>$ÜaÍ@Yòn?¨™ëì‚éG∂ÕÆ˙ﬂ˜‹kiê:âÄ}_Á‹s/F	ˇBVï2Fı˙¢7z°|Ö-Ö,ÙOÍÁﬁß˛ô¿èLÉ^Î†ïøˇ;BÙÓ ‡lVßJH±tZïô∞N§Fz_»†D∞"‰*æ!t)Æù*”º◊ﬂ›ˇ‡ï®tjß<ŒîOùN`ñtk|)[{qìÀRjYäJ9oKi8úΩµèN√Á˘‡·U‡I˘÷à.W#r2ç(Të(∑ø8ì.ËTW2¢¨§vÉçuO¢B\0%ÉF=2-ç]’»˜∂u¡	[ªîÀ“ªF¢y*]ÊÖ]~¶Ë]G˜ªåÈ≠≈6R·É”ïÔ}Ç—Øg_;;S_*ÎÇHm	<nná”·›p˙x?úﬁ|ﬁå/_?^û?ﬁèã˜”«Î˘p2^\àπJ≠À~'[Â™è*6ä?ƒ∞Ÿª|˝í{¸,Pnƒq!zÔù4‚^ñ´ZÆîàÖ-WûòÁM¡%‹W~wn[ª'’|ÑCŒ=û¶úfŒñuôj.s
+◊ÑC!/NrjAP'3M◊[Zî/\ë™ç…|L†ƒÑ ™¬ãç9]Ö_ùäú´äÅá¬ÆUˆ◊Ô2<Íe√ÈÿÜr$øæ≠ç÷ÈST÷ô∂xã —tÑËfÂ⁄rQEöÉÉ¸xÂÍ¬øö)ó÷ﬁSô}∆ÕÀ71ú+INÄﬁ,∑•¢DáâfS>Ü{ØBPn∞∞5Üﬁ€ùg8F1¥øÌF~5˜∆EcåLùDíΩŸ:í8ﬁÊh÷lv§±)ÍÒ≈KCz‚…ã√“∫BÑç∞çê;•ÜÛä ÌoNdHÛ]õâÿè0†KDHÆ‚•h˘8Ç±fÒ:'ÕÈÏÅömÌ/€¶ÔBu˛Ú¸ T$R™Ö.*£ƒ¢£UbbQ'¿≥˙PìÕ–W°ﬁ7ñ¨th3⁄Bñ §6“5ﬂÀKÕ·ûDåPÊÉ¬«‡|ù|Vi¨ïK:™*B5ì§fF/;†çl’àR…ÄOñŒåpbQùÿàï≥’æí$…˚{˜2QÜ$vÂd¡Õí⁄Ç¶PÂWπ5 áÚ≠µ¨9ä‚º6*Í˙I{
+≈>ﬁÄ>ó„w7èw”áÒÕ|¯0æ˙~wLÑá∆à!uBLâã0iƒ•ÕöL7±E«2‚>µûÁ˜≠,#]GË2ë–˝S†œ,Ü$ıµU)ÁŒ}/kDVS2b§]
+V<hb-‹xÂ‰1À’…Iπ^ÂˇL¯%Uó‡è{¿xØ§+Ÿ.¿p›Q~•
+¶"M‰-eHπ7 ÜŒ;TJó*R [YqÏúv«ô0—ŒYG•°ínì‰vé›-+Vc6Bıs≤Aùû~wL~Å“l≠°/Gr´L≈˝¯∂%”<:∏≤iàÒÃ¨—©äÇ+‚ßÈûT8	‹‹5®ål∏W¢˜<z¶ÍfË$(E*∂G\Ÿ›y⁄!¨Ö£…2ë4b-ù¶]E_*û?í?e˜}—È˜∫á˝ØÄRµã¢P#3ô6Ë≈ X5Ï(X#Î.¯WÑ~\û:ﬁJ◊¥ÕÃQP¡èÙÎ|2˛ëUÈ◊#]zc3nâëâ±Ë2‘⁄ãaÄï§Í‚ÔãRW6Ü!‚S‹*#…T+Êã†6î^Æôà„r≠±HÒjräW⁄”¶ “≠©›jÂwî;Ì1ı æ∏Û˚g⁄Á∞:´V)≤›m¡ÒúFèÂv#Ú∫ê%\@qSíåb(≈v+€¡&§ßá
+◊	Õém>›ÆN®°U»5ç¸çlx.‚ ˜\Z’…˙(9n-¶À%9a≈£ßøWq*„–o«4/bÉµˆ5Ìí¶]≤„ò~{t£Çpq'\„˚ê^SP›F ®$í˜ÿ∑∂∞ÀÈlPõ¡µ. ¥ﬂÈ
+#RHc_%*xãøì ÅSÛØ‚π6¥∏æ^ØJΩDUi¢A∏˘µcrπÀ°€∏EEP∆˚XÂ†Á¨˘^‚+L©>¡º)hãå¨°çrÉ„8bAπfgë€˚•‰¢≈MÚﬁGC√b≤Ω+∞’d‚∏ÏL…4"ˆíVì®	;#†ñ≈Ì(Ñ∞÷D Ï@]¿I˛  ˇˇ (/”£

@@ -45,6 +45,7 @@ export interface LessonPlan {
   title: string;
   level: string;
   subject: string;
+  class?: string;
   week?: string;
   weekNumber?: string;
   weekEnding?: string;
@@ -53,10 +54,15 @@ export interface LessonPlan {
   date?: string;
   period?: string;
   lessonNumber?: string;
+  lesson?: string;
+  duration?: string;
   strand: string;
   subStrand: string;
+  indicator?: string;
   indicatorCode: string;
+  contentStandard?: string;
   contentStandardCode: string;
+  lessonFocus?: string;
   performanceIndicator: string;
   coreCompetencies: string;
   keyWords: string;
@@ -65,6 +71,13 @@ export interface LessonPlan {
   phase1: string;
   phase2: string;
   phase3: string;
+  assessment?: string;
+  remarks?: string;
+  teacherReflection?: string;
+  headteacherRemarks?: string;
+  isKgPlan?: boolean;
+  kgBlocks?: any[];
+  differentiation?: any;
   createdAt: any;
 }
 

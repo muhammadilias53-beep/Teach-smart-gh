@@ -20,6 +20,7 @@ import {
 import { toast } from 'react-hot-toast';
 import { formatWeekLessonPlanTitle } from './utils';
 import { buildMultiDayLessonPhases } from './multiDayParser';
+import { getKGScheduleForDay, getSupportedKGBlockDuration, reconcileKGBlocks } from '../config/kgTimetable';
 
 export interface DocumentExportMetadata {
   title?: string;
@@ -201,7 +202,7 @@ function createFormattedParagraphs(
  * Creates the official TeachSmartGH top header banner table for Word Documents
  */
 function createBrandHeaderBanner(meta: DocumentExportMetadata): Table {
-  const school = meta.schoolName || 'Ghana Education Service (GES) Accredited School';
+  const school = meta.schoolName || 'Ghana Basic School';
   const academicYear = meta.academicYear || '2025/2026 Academic Year';
 
   return new Table({
@@ -266,6 +267,89 @@ function createBrandHeaderBanner(meta: DocumentExportMetadata): Table {
                 children: [
                   new TextRun({
                     text: `${school.toUpperCase()}  •  ${academicYear.toUpperCase()}`,
+                    size: 15,
+                    color: 'E2E8F0',
+                    font: 'Calibri'
+                  })
+                ]
+              })
+            ]
+          })
+        ]
+      })
+    ]
+  });
+}
+
+/**
+ * Dedicated Kindergarten Top Brand Banner Table
+ */
+function createKGBrandHeaderBanner(meta: DocumentExportMetadata): Table {
+  const school = meta.schoolName || 'Basic School / Early Childhood Centre';
+  const academicYear = meta.academicYear || '2025/2026 Academic Year';
+
+  return new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    rows: [
+      new TableRow({
+        cantSplit: true,
+        children: [
+          new TableCell({
+            width: { size: 100, type: WidthType.PERCENTAGE },
+            shading: { type: ShadingType.CLEAR, fill: BRAND_COLORS.NAVY_DARK },
+            margins: { top: 140, bottom: 140, left: 200, right: 200 },
+            borders: {
+              top: { style: BorderStyle.NONE },
+              bottom: { style: BorderStyle.SINGLE, size: 18, color: BRAND_COLORS.GHANA_GOLD },
+              left: { style: BorderStyle.NONE },
+              right: { style: BorderStyle.NONE }
+            },
+            children: [
+              new Paragraph({
+                alignment: AlignmentType.CENTER,
+                spacing: { before: 0, after: 40 },
+                children: [
+                  new TextRun({
+                    text: 'TeachSmart',
+                    bold: true,
+                    size: 26,
+                    color: BRAND_COLORS.WHITE,
+                    font: 'Calibri'
+                  }),
+                  new TextRun({
+                    text: 'GH',
+                    bold: true,
+                    size: 26,
+                    color: BRAND_COLORS.GHANA_GOLD,
+                    font: 'Calibri'
+                  }),
+                  new TextRun({
+                    text: '  |  CATALYST CREATIVE',
+                    size: 20,
+                    color: 'CBD5E1',
+                    font: 'Calibri'
+                  })
+                ]
+              }),
+              new Paragraph({
+                alignment: AlignmentType.CENTER,
+                spacing: { before: 0, after: 40 },
+                children: [
+                  new TextRun({
+                    text: '🇬🇭 AI-POWERED EARLY CHILDHOOD TEACHING  •  DESIGNED FOR NaCCA/GES ECE ALIGNMENT',
+                    size: 16,
+                    color: BRAND_COLORS.GHANA_GOLD,
+                    bold: true,
+                    font: 'Calibri'
+                  })
+                ]
+              }),
+              new Paragraph({
+                alignment: AlignmentType.CENTER,
+                spacing: { before: 0, after: 0 },
+                children: [
+                  new TextRun({
+                    text: `${school.toUpperCase()}  •  ${academicYear.toUpperCase()}  •  UNIVERSAL KG TIMETABLE MODEL`,
                     size: 15,
                     color: 'E2E8F0',
                     font: 'Calibri'
@@ -656,7 +740,7 @@ function createRunningHeaderAndFooter(documentType: string) {
         alignment: AlignmentType.RIGHT,
         children: [
           new TextRun({
-            text: `TeachSmartGH • ${documentType.toUpperCase()} • Official NaCCA SBC Framework`,
+            text: `TeachSmartGH • ${documentType.toUpperCase()} • Curriculum Aligned`,
             size: 14,
             color: BRAND_COLORS.SLATE_MUTED,
             font: 'Calibri'
@@ -686,7 +770,7 @@ function createRunningHeaderAndFooter(documentType: string) {
                   new Paragraph({
                     children: [
                       new TextRun({
-                        text: 'TeachSmartGH by Catalyst Creative • NaCCA & GES Curriculum Aligned • Verified Classroom Fidelity',
+                        text: 'TeachSmartGH by Catalyst Creative • NaCCA & GES Curriculum Aligned',
                         size: 14,
                         color: BRAND_COLORS.SLATE_MUTED,
                         italics: true,
@@ -727,18 +811,99 @@ function createRunningHeaderAndFooter(documentType: string) {
 }
 
 /**
+ * Dedicated Kindergarten Running Header and Footer with Safe Branding
+ */
+function createKGRunningHeaderAndFooter(weekNumber: string, className: string) {
+  const header = new Header({
+    children: [
+      new Paragraph({
+        alignment: AlignmentType.RIGHT,
+        children: [
+          new TextRun({
+            text: `TeachSmartGH • KINDERGARTEN DAILY LESSON PLAN - WEEK ${weekNumber} (${className}) • Designed for NaCCA/GES ECE Alignment`,
+            size: 14,
+            color: BRAND_COLORS.SLATE_MUTED,
+            font: 'Calibri'
+          })
+        ]
+      })
+    ]
+  });
+
+  const footer = new Footer({
+    children: [
+      new Table({
+        width: { size: 100, type: WidthType.PERCENTAGE },
+        rows: [
+          new TableRow({
+            cantSplit: true,
+            children: [
+              new TableCell({
+                width: { size: 75, type: WidthType.PERCENTAGE },
+                borders: { 
+                  top: { style: BorderStyle.SINGLE, size: 4, color: BRAND_COLORS.BORDER_SUBTLE }, 
+                  bottom: { style: BorderStyle.NONE }, 
+                  left: { style: BorderStyle.NONE }, 
+                  right: { style: BorderStyle.NONE } 
+                },
+                children: [
+                  new Paragraph({
+                    children: [
+                      new TextRun({
+                        text: 'TeachSmartGH | TeachSmartGH Kindergarten Daily Lesson Plan — Designed to Align with NaCCA/GES Requirements | Catalyst Creative',
+                        size: 13,
+                        color: BRAND_COLORS.SLATE_MUTED,
+                        font: 'Calibri'
+                      })
+                    ]
+                  })
+                ]
+              }),
+              new TableCell({
+                width: { size: 25, type: WidthType.PERCENTAGE },
+                borders: { 
+                  top: { style: BorderStyle.SINGLE, size: 4, color: BRAND_COLORS.BORDER_SUBTLE }, 
+                  bottom: { style: BorderStyle.NONE }, 
+                  left: { style: BorderStyle.NONE }, 
+                  right: { style: BorderStyle.NONE } 
+                },
+                children: [
+                  new Paragraph({
+                    alignment: AlignmentType.RIGHT,
+                    children: [
+                      new TextRun({ text: 'Page ', size: 14, color: BRAND_COLORS.SLATE_MUTED }),
+                      new TextRun({ children: [PageNumber.CURRENT], size: 14, color: BRAND_COLORS.SLATE_MUTED, bold: true }),
+                      new TextRun({ text: ' of ', size: 14, color: BRAND_COLORS.SLATE_MUTED }),
+                      new TextRun({ children: [PageNumber.TOTAL_PAGES], size: 14, color: BRAND_COLORS.SLATE_MUTED, bold: true }),
+                    ]
+                  })
+                ]
+              })
+            ]
+          })
+        ]
+      })
+    ]
+  });
+
+  return { header, footer };
+}
+
+/**
  * Triggers file download in the browser
  */
 async function downloadDocxBlob(doc: Document, filename: string, successMessage = 'Word document (.docx) downloaded successfully! 📝'): Promise<void> {
   const blob = await Packer.toBlob(doc);
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  if (typeof document !== 'undefined') {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
 
   toast.success(successMessage);
 }
@@ -822,6 +987,11 @@ export async function exportLessonPlanToWord(
   planData: any,
   metadata: DocumentExportMetadata = {}
 ): Promise<void> {
+  const isKg = planData.isKgPlan || planData.level === 'KG' || planData.class?.toUpperCase().includes('KG');
+  if (isKg) {
+    return exportKGLessonPlanToWord(planData, metadata);
+  }
+
   const displaySubject = planData.subject === 'Ghanaian Language' && planData.ghanaianLanguage
     ? `GHANAIAN LANGUAGE (${planData.ghanaianLanguage.toUpperCase()})`
     : (planData.subject || metadata.subject || 'GENERAL SUBJECT').toUpperCase();
@@ -1406,6 +1576,521 @@ export async function exportLessonPlanToWord(
   const filename = `TeachSmartGH_LessonPlan_Week_${cleanWeek}_${cleanSubject}_${cleanClass}.docx`;
 
   await downloadDocxBlob(doc, filename, 'NaCCA Lesson Plan (.docx) downloaded successfully! 📝');
+}
+
+/**
+ * Dedicated Kindergarten Daily Lesson Plan Word Exporter
+ * Generates the Official GES / NaCCA KG Notebook Format in Microsoft Word (.docx format):
+ * - Table 1: KG Metadata & Header Grid (Day, Date, Class, Class Size, Week Ending, Strand, Sub-strand, Content Standard, Indicator, Lesson Focus, Performance Indicator, Core Competencies, Key Words, TLRs, References)
+ * - Table 2: Universal KG Timetable Delivery Table (8 Schedule Blocks from 07:30 to 12:30)
+ * - Table 3: Inclusive Differentiation (Remedial, Average, Advanced)
+ * - Table 4: Teacher Post-Lesson Reflection & Headteacher / Supervisor Endorsement
+ */
+export async function exportKGLessonPlanToWord(
+  planData: any,
+  metadata: DocumentExportMetadata = {}
+): Promise<void> {
+  const className = (planData.class || planData.level || metadata.classLevel || 'KG 1').toUpperCase();
+  const classSize = planData.classSize || '35';
+  const weekNumber = planData.weekNumber || planData.week || metadata.week || '1';
+  const officialTitle = `KINDERGARTEN DAILY LESSON PLAN - WEEK ${weekNumber}`;
+  const weekEnding = planData.weekEnding || new Date().toISOString().split('T')[0];
+  const day = planData.day || 'Monday';
+  const date = planData.date || weekEnding;
+
+  const strand = planData.strand || metadata.strand || 'All About Me';
+  const subStrand = planData.subStrand || metadata.subStrand || 'I Am a Special Child';
+  const csCode = planData.contentStandardCode || planData.contentStandard || metadata.contentStandard || 'K1.1.1.1';
+  const csText = planData.contentStandard || csCode;
+  const indCode = planData.indicatorCode || planData.indicator || metadata.indicator || 'K1.1.1.1.1';
+  const indText = planData.indicator || indCode;
+  const lessonFocus = planData.lessonFocus || planData.title || 'Parts of My Body: Head, Hands and Feet';
+  const performanceIndicator = planData.performanceIndicator || planData.mainObjective || 'Learners can touch and name body parts during a play song.';
+  const coreCompetencies = cleanMarkdownText(planData.coreCompetencies) || 'Communication and Collaboration (CC), Personal Development (PL)';
+  const keyWords = cleanMarkdownText(planData.keyWords) || 'Head, Eyes, Nose, Hands, Special';
+  const tlrs = cleanMarkdownText(planData.tlrs) || 'Body chart, Mirror, Soft toys, Flashcards, Bottle caps';
+  const references = cleanMarkdownText(planData.references) || 'NaCCA Kindergarten Curriculum Guide (KG1-KG2)';
+  const teacherReflection = cleanMarkdownText(planData.teacherReflection || planData.remarks) || '1. Did the play-based manipulatives effectively engage learners?\n2. Which sounds/concepts need reinforcement tomorrow?\n3. What adjustments are needed?';
+
+  const table1CellBorder = {
+    top: { style: BorderStyle.SINGLE, size: 6, color: BRAND_COLORS.SLATE_BORDER },
+    bottom: { style: BorderStyle.SINGLE, size: 6, color: BRAND_COLORS.SLATE_BORDER },
+    left: { style: BorderStyle.SINGLE, size: 6, color: BRAND_COLORS.SLATE_BORDER },
+    right: { style: BorderStyle.SINGLE, size: 6, color: BRAND_COLORS.SLATE_BORDER }
+  };
+
+  // Table 1: KG Metadata & Header Grid
+  const table1Rows: TableRow[] = [
+    // Row 1: Day | Date | Class | Class Size | Week Ending
+    new TableRow({
+      cantSplit: true,
+      children: [
+        new TableCell({
+          width: { size: 18, type: WidthType.PERCENTAGE },
+          shading: { type: ShadingType.CLEAR, fill: BRAND_COLORS.SLATE_HEADER_BG },
+          borders: table1CellBorder,
+          margins: { top: 80, bottom: 80, left: 100, right: 100 },
+          children: [
+            new Paragraph({
+              alignment: AlignmentType.CENTER,
+              children: [
+                new TextRun({ text: 'DAY\n', bold: true, size: 16, color: BRAND_COLORS.NAVY_DARK }),
+                new TextRun({ text: day, bold: true, size: 17, color: BRAND_COLORS.NAVY_DARK })
+              ]
+            })
+          ]
+        }),
+        new TableCell({
+          width: { size: 22, type: WidthType.PERCENTAGE },
+          borders: table1CellBorder,
+          margins: { top: 80, bottom: 80, left: 100, right: 100 },
+          children: [
+            new Paragraph({
+              alignment: AlignmentType.CENTER,
+              children: [
+                new TextRun({ text: 'DATE\n', bold: true, size: 16, color: BRAND_COLORS.NAVY_DARK }),
+                new TextRun({ text: date, bold: true, size: 17, color: BRAND_COLORS.NAVY_DARK })
+              ]
+            })
+          ]
+        }),
+        new TableCell({
+          width: { size: 20, type: WidthType.PERCENTAGE },
+          shading: { type: ShadingType.CLEAR, fill: BRAND_COLORS.SLATE_HEADER_BG },
+          borders: table1CellBorder,
+          margins: { top: 80, bottom: 80, left: 100, right: 100 },
+          children: [
+            new Paragraph({
+              alignment: AlignmentType.CENTER,
+              children: [
+                new TextRun({ text: 'CLASS\n', bold: true, size: 16, color: BRAND_COLORS.NAVY_DARK }),
+                new TextRun({ text: className, bold: true, size: 17, color: BRAND_COLORS.NAVY_DARK })
+              ]
+            })
+          ]
+        }),
+        new TableCell({
+          width: { size: 18, type: WidthType.PERCENTAGE },
+          borders: table1CellBorder,
+          margins: { top: 80, bottom: 80, left: 100, right: 100 },
+          children: [
+            new Paragraph({
+              alignment: AlignmentType.CENTER,
+              children: [
+                new TextRun({ text: 'CLASS SIZE\n', bold: true, size: 16, color: BRAND_COLORS.NAVY_DARK }),
+                new TextRun({ text: classSize, bold: true, size: 17, color: BRAND_COLORS.NAVY_DARK })
+              ]
+            })
+          ]
+        }),
+        new TableCell({
+          width: { size: 22, type: WidthType.PERCENTAGE },
+          shading: { type: ShadingType.CLEAR, fill: BRAND_COLORS.SLATE_HEADER_BG },
+          borders: table1CellBorder,
+          margins: { top: 80, bottom: 80, left: 100, right: 100 },
+          children: [
+            new Paragraph({
+              alignment: AlignmentType.CENTER,
+              children: [
+                new TextRun({ text: 'WEEK ENDING\n', bold: true, size: 16, color: BRAND_COLORS.NAVY_DARK }),
+                new TextRun({ text: weekEnding, bold: true, size: 17, color: BRAND_COLORS.NAVY_DARK })
+              ]
+            })
+          ]
+        })
+      ]
+    }),
+    // Row 2: Strand | Sub-strand
+    new TableRow({
+      cantSplit: true,
+      children: [
+        new TableCell({
+          width: { size: 45, type: WidthType.PERCENTAGE },
+          columnSpan: 2,
+          borders: table1CellBorder,
+          margins: { top: 90, bottom: 90, left: 100, right: 100 },
+          children: [
+            new Paragraph({
+              children: [
+                new TextRun({ text: 'STRAND:\n', bold: true, size: 16, color: BRAND_COLORS.NAVY_DARK }),
+                new TextRun({ text: strand, size: 17, color: BRAND_COLORS.TEXT_BODY })
+              ]
+            })
+          ]
+        }),
+        new TableCell({
+          width: { size: 55, type: WidthType.PERCENTAGE },
+          columnSpan: 3,
+          borders: table1CellBorder,
+          margins: { top: 90, bottom: 90, left: 100, right: 100 },
+          children: [
+            new Paragraph({
+              children: [
+                new TextRun({ text: 'SUB-STRAND:\n', bold: true, size: 16, color: BRAND_COLORS.NAVY_DARK }),
+                new TextRun({ text: subStrand, size: 17, color: BRAND_COLORS.TEXT_BODY })
+              ]
+            })
+          ]
+        })
+      ]
+    }),
+    // Row 3: Content Standard | Indicator
+    new TableRow({
+      cantSplit: true,
+      children: [
+        new TableCell({
+          width: { size: 45, type: WidthType.PERCENTAGE },
+          columnSpan: 2,
+          borders: table1CellBorder,
+          margins: { top: 90, bottom: 90, left: 100, right: 100 },
+          children: [
+            new Paragraph({
+              children: [
+                new TextRun({ text: 'CONTENT STANDARD (CODE & TEXT):\n', bold: true, size: 16, color: BRAND_COLORS.NAVY_DARK }),
+                new TextRun({ text: csText, size: 17, color: BRAND_COLORS.TEXT_BODY })
+              ]
+            })
+          ]
+        }),
+        new TableCell({
+          width: { size: 55, type: WidthType.PERCENTAGE },
+          columnSpan: 3,
+          borders: table1CellBorder,
+          margins: { top: 90, bottom: 90, left: 100, right: 100 },
+          children: [
+            new Paragraph({
+              children: [
+                new TextRun({ text: 'INDICATOR (CODE & TEXT):\n', bold: true, size: 16, color: BRAND_COLORS.NAVY_DARK }),
+                new TextRun({ text: indText, size: 17, color: BRAND_COLORS.TEXT_BODY })
+              ]
+            })
+          ]
+        })
+      ]
+    }),
+    // Row 4: Lesson Focus (Full Width)
+    new TableRow({
+      cantSplit: true,
+      children: [
+        new TableCell({
+          width: { size: 100, type: WidthType.PERCENTAGE },
+          columnSpan: 5,
+          shading: { type: ShadingType.CLEAR, fill: BRAND_COLORS.SLATE_HEADER_BG },
+          borders: table1CellBorder,
+          margins: { top: 90, bottom: 90, left: 100, right: 100 },
+          children: [
+            new Paragraph({
+              children: [
+                new TextRun({ text: 'LESSON FOCUS / THEMATIC TOPIC: ', bold: true, size: 16, color: BRAND_COLORS.NAVY_DARK }),
+                new TextRun({ text: lessonFocus, bold: true, size: 17, color: BRAND_COLORS.GHANA_GREEN })
+              ]
+            })
+          ]
+        })
+      ]
+    }),
+    // Row 5: Performance Indicator (Full Width)
+    new TableRow({
+      cantSplit: true,
+      children: [
+        new TableCell({
+          width: { size: 100, type: WidthType.PERCENTAGE },
+          columnSpan: 5,
+          borders: table1CellBorder,
+          margins: { top: 90, bottom: 90, left: 100, right: 100 },
+          children: [
+            new Paragraph({
+              children: [
+                new TextRun({ text: 'PERFORMANCE INDICATOR (Observable Learner Demonstration):\n', bold: true, size: 16, color: BRAND_COLORS.NAVY_DARK }),
+                new TextRun({ text: performanceIndicator, size: 17, color: BRAND_COLORS.TEXT_BODY })
+              ]
+            })
+          ]
+        })
+      ]
+    }),
+    // Row 6: Core Competencies | Key Words
+    new TableRow({
+      cantSplit: true,
+      children: [
+        new TableCell({
+          width: { size: 55, type: WidthType.PERCENTAGE },
+          columnSpan: 3,
+          borders: table1CellBorder,
+          margins: { top: 90, bottom: 90, left: 100, right: 100 },
+          children: [
+            new Paragraph({
+              children: [
+                new TextRun({ text: 'CORE COMPETENCIES & VALUES:\n', bold: true, size: 16, color: BRAND_COLORS.NAVY_DARK }),
+                new TextRun({ text: coreCompetencies, size: 17, color: BRAND_COLORS.TEXT_BODY })
+              ]
+            })
+          ]
+        }),
+        new TableCell({
+          width: { size: 45, type: WidthType.PERCENTAGE },
+          columnSpan: 2,
+          borders: table1CellBorder,
+          margins: { top: 90, bottom: 90, left: 100, right: 100 },
+          children: [
+            new Paragraph({
+              children: [
+                new TextRun({ text: 'KEY VOCABULARY / WORDS:\n', bold: true, size: 16, color: BRAND_COLORS.NAVY_DARK }),
+                new TextRun({ text: keyWords, size: 17, color: BRAND_COLORS.TEXT_BODY })
+              ]
+            })
+          ]
+        })
+      ]
+    }),
+    // Row 7: TLRs | References
+    new TableRow({
+      cantSplit: true,
+      children: [
+        new TableCell({
+          width: { size: 55, type: WidthType.PERCENTAGE },
+          columnSpan: 3,
+          borders: table1CellBorder,
+          margins: { top: 90, bottom: 90, left: 100, right: 100 },
+          children: [
+            new Paragraph({
+              children: [
+                new TextRun({ text: 'TEACHING & LEARNING RESOURCES (TLRs - Local Materials):\n', bold: true, size: 16, color: BRAND_COLORS.NAVY_DARK }),
+                new TextRun({ text: tlrs, size: 17, color: BRAND_COLORS.TEXT_BODY })
+              ]
+            })
+          ]
+        }),
+        new TableCell({
+          width: { size: 45, type: WidthType.PERCENTAGE },
+          columnSpan: 2,
+          borders: table1CellBorder,
+          margins: { top: 90, bottom: 90, left: 100, right: 100 },
+          children: [
+            new Paragraph({
+              children: [
+                new TextRun({ text: 'REFERENCES:\n', bold: true, size: 16, color: BRAND_COLORS.NAVY_DARK }),
+                new TextRun({ text: references, size: 17, color: BRAND_COLORS.TEXT_BODY })
+              ]
+            })
+          ]
+        })
+      ]
+    })
+  ];
+
+  const table1 = new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    rows: table1Rows
+  });
+
+  // Table 2: Universal KG Timetable Delivery Table
+  const blocksToUse = reconcileKGBlocks(planData.kgBlocks || (planData as any).blocks, day);
+
+  const table2HeaderRow = new TableRow({
+    tableHeader: true,
+    cantSplit: true,
+    children: [
+      new TableCell({
+        width: { size: 18, type: WidthType.PERCENTAGE },
+        shading: { type: ShadingType.CLEAR, fill: BRAND_COLORS.SLATE_HEADER_BG },
+        borders: table1CellBorder,
+        margins: { top: 80, bottom: 80, left: 100, right: 100 },
+        children: [new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: 'TIMETABLE BLOCK & TIME', bold: true, size: 16, color: BRAND_COLORS.NAVY_DARK })] })]
+      }),
+      new TableCell({
+        width: { size: 46, type: WidthType.PERCENTAGE },
+        shading: { type: ShadingType.CLEAR, fill: BRAND_COLORS.SLATE_HEADER_BG },
+        borders: table1CellBorder,
+        margins: { top: 80, bottom: 80, left: 100, right: 100 },
+        children: [new Paragraph({ children: [new TextRun({ text: 'TEACHING & LEARNING ACTIVITIES (PLAY-BASED & LEARNER-CENTRED)', bold: true, size: 16, color: BRAND_COLORS.NAVY_DARK })] })]
+      }),
+      new TableCell({
+        width: { size: 18, type: WidthType.PERCENTAGE },
+        shading: { type: ShadingType.CLEAR, fill: BRAND_COLORS.SLATE_HEADER_BG },
+        borders: table1CellBorder,
+        margins: { top: 80, bottom: 80, left: 100, right: 100 },
+        children: [new Paragraph({ children: [new TextRun({ text: 'RESOURCES / TLMs', bold: true, size: 16, color: BRAND_COLORS.NAVY_DARK })] })]
+      }),
+      new TableCell({
+        width: { size: 18, type: WidthType.PERCENTAGE },
+        shading: { type: ShadingType.CLEAR, fill: BRAND_COLORS.SLATE_HEADER_BG },
+        borders: table1CellBorder,
+        margins: { top: 80, bottom: 80, left: 100, right: 100 },
+        children: [new Paragraph({ children: [new TextRun({ text: 'ASSESSMENT', bold: true, size: 16, color: BRAND_COLORS.NAVY_DARK })] })]
+      })
+    ]
+  });
+
+  const table2DataRows = blocksToUse.map((blk: any, idx: number) => {
+    const periodDisplay = blk.periodNumber ? `Period ${blk.periodNumber}` : `Period ${idx + 1}`;
+    const rawBlockName = blk.blockName || periodDisplay;
+    const cleanBlockName = rawBlockName
+      .replace(/\(?\b\d{1,2}:\d{2}\s*(-|–|to)\s*\d{1,2}:\d{2}\b\)?/gi, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+    const durationDisplay = getSupportedKGBlockDuration(cleanBlockName);
+    let actRuns: TextRun[] = [];
+
+    if (blk.isInstructional === false && !blk.teacherActivities && !blk.learnerActivities) {
+      actRuns = [new TextRun({ text: cleanMarkdownText(blk.defaultDescription || blk.activities || 'Routine school activity.'), size: 16, color: BRAND_COLORS.TEXT_BODY })];
+    } else if (blk.teacherActivities || blk.learnerActivities) {
+      actRuns = [
+        new TextRun({ text: '• Teacher Facilitation: ', bold: true, size: 16, color: BRAND_COLORS.NAVY_DARK }),
+        new TextRun({ text: `${cleanMarkdownText(blk.teacherActivities)}\n\n`, size: 16, color: BRAND_COLORS.TEXT_BODY }),
+        new TextRun({ text: '• Learner Play Activities: ', bold: true, size: 16, color: BRAND_COLORS.GHANA_GREEN }),
+        new TextRun({ text: `${cleanMarkdownText(blk.learnerActivities)}`, size: 16, color: BRAND_COLORS.TEXT_BODY })
+      ];
+      if (blk.playBasedTechnique) {
+        actRuns.push(new TextRun({ text: `\n\n• Play Technique: `, bold: true, size: 15, color: BRAND_COLORS.NAVY_DARK }));
+        actRuns.push(new TextRun({ text: cleanMarkdownText(blk.playBasedTechnique), size: 15, color: BRAND_COLORS.TEXT_MUTED }));
+      }
+    } else {
+      actRuns = [new TextRun({ text: cleanMarkdownText(blk.activities || blk.description || 'Play-based interactive engagement.'), size: 16, color: BRAND_COLORS.TEXT_BODY })];
+    }
+
+    return new TableRow({
+      cantSplit: true,
+      children: [
+        new TableCell({
+          width: { size: 18, type: WidthType.PERCENTAGE },
+          shading: { type: ShadingType.CLEAR, fill: BRAND_COLORS.SLATE_LIGHT_BG },
+          borders: table1CellBorder,
+          margins: { top: 80, bottom: 80, left: 100, right: 100 },
+          children: [
+            new Paragraph({
+              alignment: AlignmentType.CENTER,
+              children: [
+                new TextRun({ text: cleanBlockName, bold: true, size: 16, color: BRAND_COLORS.GHANA_GREEN }),
+                ...(durationDisplay ? [new TextRun({ text: `(${durationDisplay})`, bold: true, size: 14, color: BRAND_COLORS.NAVY_DARK, break: 1 })] : [])
+              ]
+            })
+          ]
+        }),
+        new TableCell({
+          width: { size: 46, type: WidthType.PERCENTAGE },
+          borders: table1CellBorder,
+          margins: { top: 80, bottom: 80, left: 100, right: 100 },
+          children: [new Paragraph({ children: actRuns })]
+        }),
+        new TableCell({
+          width: { size: 18, type: WidthType.PERCENTAGE },
+          borders: table1CellBorder,
+          margins: { top: 80, bottom: 80, left: 100, right: 100 },
+          children: [new Paragraph({ children: [new TextRun({ text: cleanMarkdownText(blk.resources || blk.tlrs || 'Local materials'), size: 16, color: BRAND_COLORS.TEXT_BODY })] })]
+        }),
+        new TableCell({
+          width: { size: 18, type: WidthType.PERCENTAGE },
+          borders: table1CellBorder,
+          margins: { top: 80, bottom: 80, left: 100, right: 100 },
+          children: [new Paragraph({ children: [new TextRun({ text: cleanMarkdownText(blk.assessment || blk.coreCompetency || blk.formativeCheck || 'Active Observation'), size: 16, color: BRAND_COLORS.TEXT_BODY })] })]
+        })
+      ]
+    });
+  });
+
+  const table2 = new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    rows: [table2HeaderRow, ...table2DataRows]
+  });
+
+  // Table 4: Post-Lesson Reflection & Evaluation
+  const assessmentEvidence = cleanMarkdownText(planData.assessmentEvidence) || 'Evidence gathered via direct observation and manipulative handling during activities.';
+  const learnersNeedingSupport = cleanMarkdownText(planData.learnersNeedingSupport) || 'Targeted multi-sensory support for learners experiencing difficulties.';
+
+  const table4 = new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    rows: [
+      new TableRow({
+        tableHeader: true,
+        cantSplit: true,
+        children: [
+          new TableCell({
+            width: { size: 100, type: WidthType.PERCENTAGE },
+            shading: { type: ShadingType.CLEAR, fill: BRAND_COLORS.SLATE_HEADER_BG },
+            borders: table1CellBorder,
+            margins: { top: 70, bottom: 70, left: 100, right: 100 },
+            children: [new Paragraph({ children: [new TextRun({ text: 'POST-LESSON REFLECTION & EVALUATION', bold: true, size: 16, color: BRAND_COLORS.NAVY_DARK })] })]
+          })
+        ]
+      }),
+      new TableRow({
+        cantSplit: true,
+        children: [
+          new TableCell({
+            width: { size: 100, type: WidthType.PERCENTAGE },
+            borders: table1CellBorder,
+            margins: { top: 90, bottom: 90, left: 100, right: 100 },
+            children: [
+              new Paragraph({
+                spacing: { before: 40, after: 40 },
+                children: [
+                  new TextRun({ text: '• Assessment Evidence:\n', bold: true, size: 15, color: BRAND_COLORS.NAVY_DARK }),
+                  new TextRun({ text: `${assessmentEvidence}\n\n`, size: 15, color: BRAND_COLORS.TEXT_BODY }),
+                  new TextRun({ text: '• Learners Needing Support:\n', bold: true, size: 15, color: BRAND_COLORS.NAVY_DARK }),
+                  new TextRun({ text: `${learnersNeedingSupport}\n\n`, size: 15, color: BRAND_COLORS.TEXT_BODY }),
+                  new TextRun({ text: '• Teacher Reflection Prompts / Evaluation:\n', bold: true, size: 15, color: BRAND_COLORS.NAVY_DARK }),
+                  new TextRun({ text: `${teacherReflection}`, size: 15, color: BRAND_COLORS.TEXT_BODY })
+                ]
+              })
+            ]
+          })
+        ]
+      })
+    ]
+  });
+
+  const { header, footer } = createKGRunningHeaderAndFooter(weekNumber, className);
+
+  const brandHeader = createKGBrandHeaderBanner({
+    ...metadata,
+    title: officialTitle,
+    documentType: 'TeachSmartGH Kindergarten Daily Lesson Plan — Designed to Align with NaCCA/GES Requirements',
+    subject: 'Integrated Curriculum (KG1 / KG2)',
+    classLevel: className
+  });
+
+  const doc = new Document({
+    creator: 'TeachSmartGH (Catalyst Creative)',
+    title: `${officialTitle} - ${className}`,
+    description: 'TeachSmartGH Kindergarten Daily Lesson Plan — Designed to Align with NaCCA/GES Requirements',
+    sections: [
+      {
+        properties: {
+          page: {
+            size: { orientation: PageOrientation.PORTRAIT },
+            margin: { top: 600, bottom: 600, left: 600, right: 600 }
+          }
+        },
+        headers: { default: header },
+        footers: { default: footer },
+        children: [
+          brandHeader,
+          new Paragraph({
+            alignment: AlignmentType.CENTER,
+            spacing: { before: 120, after: 60 },
+            children: [new TextRun({ text: officialTitle, bold: true, size: 26, color: BRAND_COLORS.NAVY_DARK, font: 'Calibri' })]
+          }),
+          new Paragraph({
+            alignment: AlignmentType.CENTER,
+            spacing: { before: 0, after: 100 },
+            children: [new TextRun({ text: 'INTEGRATED CURRICULUM • UNIVERSAL KG TIMETABLE MODEL', size: 16, color: BRAND_COLORS.GHANA_GREEN, bold: true, font: 'Calibri' })]
+          }),
+          table1,
+          new Paragraph({ spacing: { after: 120 } }),
+          table2,
+          new Paragraph({ spacing: { after: 120 } }),
+          table4
+        ]
+      }
+    ]
+  });
+
+  const cleanClass = className.replace(/[^a-zA-Z0-9_-]/g, '_');
+  const cleanWeek = (weekNumber || '1').replace(/[^a-zA-Z0-9_-]/g, '_');
+  const filename = `TeachSmartGH_KG_DailyLessonPlan_Week_${cleanWeek}_${cleanClass}.docx`;
+
+  await downloadDocxBlob(doc, filename, 'KG Daily Lesson Plan (.docx) downloaded successfully! 📝');
 }
 
 /**
