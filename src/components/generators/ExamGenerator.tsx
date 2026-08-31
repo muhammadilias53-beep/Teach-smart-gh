@@ -339,7 +339,7 @@ export default function ExamGenerator() {
     
     doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
-    doc.text('OFFICIAL NaCCA CURRICULUM COMPLIANT ASSESSMENT', 105, 26, { align: 'center' });
+    doc.text('DESIGNED TO ALIGN WITH NaCCA/GES CURRICULUM REQUIREMENTS', 105, 26, { align: 'center' });
     
     doc.setDrawColor(252, 209, 22); // Ghana Gold
     doc.setLineWidth(1);
@@ -449,33 +449,26 @@ export default function ExamGenerator() {
     const pageCount = (typeof doc.getNumberOfPages === 'function' ? doc.getNumberOfPages() : 1) || 1;
     for(let i = 1; i <= pageCount; i++) {
         doc.setPage(i);
-        doc.setDrawColor(200, 200, 200);
+        doc.setDrawColor(220, 220, 220);
         doc.setLineWidth(0.5);
-        doc.line(10, pageHeight - 20, 200, pageHeight - 20);
+        doc.line(10, pageHeight - 12, 200, pageHeight - 12);
 
-        doc.setFontSize(7);
-        doc.setTextColor(100);
-        doc.setFont('helvetica', 'italic');
-        const complianceMsg = [
-          'NaCCA COMPLIANCE NOTE: This assessment is structured based on the Standard-Based Curriculum (SBC) framework as mandated by the National Council for Curriculum and Assessment (NaCCA) Ghana.',
-          'Teachers are encouraged to adapt the content to suit their learner\'s diverse needs while maintaining core competency targets and SBC learning indicators.',
-          'Verification of specific indicators against official NaCCA curriculum handbooks is strongly recommended for classroom fidelity.'
-        ];
-        
-        let footerY = pageHeight - 16;
-        complianceMsg.forEach(msg => {
-          doc.text(msg, 105, footerY, { align: 'center' });
-          footerY += 3.5;
-        });
+        if (i === 1) {
+          doc.setFontSize(6.5);
+          doc.setTextColor(120);
+          doc.setFont('helvetica', 'italic');
+          doc.text('Note: Teachers should review and adapt generated material to the needs of their learners.', 105, pageHeight - 7.5, { align: 'center' });
+        }
 
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(0, 107, 63); // Ghana Green
-        doc.setFontSize(8);
-        doc.text('TEACHSMART GHANA • AI-POWERED NaCCA COMPLIANT TOOLS', 105, pageHeight - 5, { align: 'center' });
+        doc.setFontSize(7.5);
+        doc.text('TEACHSMART GHANA • CURRICULUM-ALIGNED TEACHING AND LEARNING SUPPORT', 10, pageHeight - 4);
         
-        doc.setTextColor(150);
+        doc.setTextColor(140);
         doc.setFont('helvetica', 'normal');
-        doc.text(`Page ${i} of ${pageCount}`, 200, pageHeight - 5, { align: 'right' });
+        doc.setFontSize(7.5);
+        doc.text(`Page ${i} of ${pageCount}`, 200, pageHeight - 4, { align: 'right' });
     }
     
     doc.save(`${filename}.pdf`);

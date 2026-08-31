@@ -395,6 +395,26 @@ export function extractClassFromStandardCode(standard: string): string | null {
       if (/^SHS\s*3$/i.test(t)) return 'Basic 12';
       return t;
     }
+    // Also check direct code without colon like "B4.3.5.1.1" or "B1.5.4.1"
+    const directMatch = standard.trim().match(/^([A-Za-z0-9.]+)/);
+    if (directMatch) {
+      const directCode = directMatch[1].trim();
+      const bDirectMatch = directCode.match(/^B(\d+)/i);
+      if (bDirectMatch) {
+        const num = parseInt(bDirectMatch[1], 10);
+        return `Basic ${num}`;
+      }
+      const kDirectMatch = directCode.match(/^K(?:G)?(\d+)/i);
+      if (kDirectMatch) {
+        const num = parseInt(kDirectMatch[1], 10);
+        return `KG ${num}`;
+      }
+      const sDirectMatch = directCode.match(/^(?:SHS|S)(\d+)/i);
+      if (sDirectMatch) {
+        const num = parseInt(sDirectMatch[1], 10);
+        return num === 1 ? 'Basic 10' : num === 2 ? 'Basic 11' : num === 3 ? 'Basic 12' : `Basic ${num}`;
+      }
+    }
     return null;
   }
   const code = match[1].trim();
@@ -456,12 +476,22 @@ export function matchStandardToClass(standard: string, selectedClass: string, se
 
 /**
  * Filters a list of standards down to only those matching the selected class.
- * If no standards match the class specifically (e.g. general sub-strands),
+ * If standards contain identifiable class codes (e.g. B1..B6, B7..B9, SHS),
+ * only standards matching the selected class are returned (returning [] if none match, preventing cross-class leakage).
+ * If all standards in the list are genuinely class-neutral (no detected class codes),
  * it safely falls back to the original list so the user is never locked out.
  */
 export function filterStandardsForClass(standards: string[], selectedClass: string, selectedLevel?: string): string[] {
   if (!standards || !Array.isArray(standards) || standards.length === 0) return [];
   if (!selectedClass || selectedClass === 'All') return standards;
   const matched = standards.filter(s => matchStandardToClass(s, selectedClass, selectedLevel));
-  return matched.length > 0 ? matched : standards;
+  if (matched.length > 0) return matched;
+
+  // If standards contain identifiable class codes (e.g. B1, B4, B7), do NOT fall back to other classes' standards
+  const hasClassSpecificCodes = standards.some(s => extractClassFromStandardCode(s) !== null);
+  if (hasClassSpecificCodes) {
+    return [];
+  }
+
+  return standards;
 }

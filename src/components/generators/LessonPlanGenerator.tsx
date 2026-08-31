@@ -13,7 +13,7 @@ import { cacheGeneratedDocument } from '../../lib/offlineDocumentCache';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../contexts/AuthContext';
 import { cn, formatPerformanceIndicator, formatMultiplePerformanceIndicators, getUpcomingFriday, getSchoolWeekDaysFromWeekEnding, calculateLessonDateFromWeekEnding, formatWeekLessonPlanTitle, SchoolWeekDays } from '../../lib/utils';
-import { filterStandardsForClass } from '../../lib/curriculumDatabase';
+import { filterStandardsForClass, matchStandardToClass } from '../../lib/curriculumDatabase';
 import { SafeMarkdown } from '../common/SafeMarkdown';
 import 'highlight.js/styles/github.css';
 import { exportLessonPlanToPDF } from '../../lib/lessonPlanPdfExport';
@@ -383,8 +383,22 @@ const LessonPlanGenerator = () => {
       if (!formData.strand) newErrors.strand = "Required";
       if (!formData.subStrand) newErrors.subStrand = "Required";
       if (!formData.contentStandard) newErrors.contentStandard = "Required";
+      if (formData.contentStandard && formData.class) {
+        if (!matchStandardToClass(formData.contentStandard, formData.class, formData.level)) {
+          newErrors.contentStandard = `The selected curriculum standard does not match ${formData.class}.`;
+        }
+      }
       const hasIndicator = (formData.selectedIndicators && formData.selectedIndicators.length > 0) || Boolean(formData.indicator);
       if (!hasIndicator) newErrors.indicator = "Please select or enter at least one indicator";
+      if (formData.class) {
+        const activeInds = (formData.selectedIndicators && formData.selectedIndicators.length > 0)
+          ? formData.selectedIndicators
+          : (formData.indicator ? [formData.indicator] : []);
+        const mismatched = activeInds.find(ind => ind && !matchStandardToClass(ind, formData.class, formData.level));
+        if (mismatched) {
+          newErrors.indicator = `The selected indicator does not match ${formData.class}.`;
+        }
+      }
       if (!formData.mainObjective || formData.mainObjective.length < 10) {
         newErrors.mainObjective = "Please provide performance indicator statement(s) starting with 'Learners can' (min 10 chars)";
       }
@@ -405,9 +419,20 @@ const LessonPlanGenerator = () => {
   };
 
   // Helpers for context-aware lookup and fallbacks
-  const getSubjectStrands = (subj: string, lvl: string) => {
-    if (subj === 'English' && lvl === 'JHS') {
-      return ["Oral Language", "Reading", "Grammar Usage", "Writing", "Literature"];
+  const getSubjectStrands = (subj: string, lvl: string, cls?: string) => {
+    if (subj === 'English') {
+      if (lvl === 'JHS') {
+        return ["Oral Language", "Reading", "Grammar Usage", "Writing", "Literature"];
+      }
+      if (lvl === 'Primary') {
+        // Lower Primary (Basic 1 - Basic 3) vs Upper Primary (Basic 4 - Basic 6)
+        if (cls === 'Basic 1' || cls === 'Basic 2' || cls === 'Basic 3') {
+          return ["Oral Language", "Reading", "Writing", "Writing Conventions and Grammar Usage", "Extensive Reading"];
+        }
+        if (cls === 'Basic 4' || cls === 'Basic 5' || cls === 'Basic 6') {
+          return ["Oral Language", "Reading", "Grammar Usage at Word and Phrase Levels", "Writing", "Writing Conventions and Grammar Usage", "Extensive Reading"];
+        }
+      }
     }
     if (subj === 'Ghanaian Language' && lvl === 'JHS') {
       return ["Customs and Institutions", "Listening and Speaking", "Reading", "Language and Usage", "Composition Writing", "Literature"];
@@ -492,7 +517,7 @@ const LessonPlanGenerator = () => {
   };
 
   // Helper selectors from constants
-  const currentStrands = getSubjectStrands(formData.subject, formData.level);
+  const currentStrands = getSubjectStrands(formData.subject, formData.level, formData.class);
   const lookupStrand = getLookupStrand(formData.subject, formData.strand);
   const currentSubStrands = getSubjectSubStrands(formData.subject, formData.strand, formData.level);
   const rawStandards = (
@@ -507,6 +532,29 @@ const LessonPlanGenerator = () => {
 
   const handleGenerate = async () => {
     if (!validateStep(3)) return;
+
+    // Defensive Curriculum Class Isolation Check
+    if (formData.contentStandard && formData.class) {
+      const isStandardMatch = matchStandardToClass(formData.contentStandard, formData.class, formData.level);
+      if (!isStandardMatch) {
+        toast.error(`The selected curriculum item does not match ${formData.class}. Please select a valid curriculum standard.`);
+        return;
+      }
+    }
+
+    const activeIndicators = formData.selectedIndicators && formData.selectedIndicators.length > 0
+      ? formData.selectedIndicators
+      : (formData.indicator ? [formData.indicator] : []);
+
+    for (const ind of activeIndicators) {
+      if (ind && formData.class) {
+        const isIndicatorMatch = matchStandardToClass(ind, formData.class, formData.level);
+        if (!isIndicatorMatch) {
+          toast.error(`The selected indicator does not match ${formData.class}. Please select a valid curriculum indicator.`);
+          return;
+        }
+      }
+    }
 
     setLoading(true);
     try {
@@ -735,22 +783,31 @@ const LessonPlanGenerator = () => {
   };
 
   const handleGenerateLessonNotes = () => {
+    const isKg = result?.isKgPlan || formData.level === 'KG' || formData.class?.startsWith('KG');
+    const activeIndicators = formData.selectedIndicators && formData.selectedIndicators.length > 0
+      ? formData.selectedIndicators
+      : (formData.indicator ? [formData.indicator] : []);
+    const indicatorCodes = activeIndicators.map(i => i.split(':')[0].trim()).join(', ');
+    const indicatorFull = activeIndicators.join('\n');
+
     navigate('/notes', {
       state: {
         fromLessonPlan: true,
+        autoGenerate: true,
         sourceLessonTitle: result?.title || `${displaySubject} - ${formData.strand || 'Lesson'} (${formData.class})`,
         preloaded: {
           level: formData.level,
           class: formData.class,
           subject: formData.subject,
           ghanaianLanguage: formData.ghanaianLanguage,
-          strand: formData.strand,
-          subStrand: formData.subStrand,
-          contentStandard: formData.contentStandard,
-          indicator: formData.indicator,
-          objectives: formData.mainObjective || (formData.indicator ? formatPerformanceIndicator(formData.indicator) : ''),
+          strand: result?.strand || formData.strand,
+          subStrand: result?.subStrand || formData.subStrand,
+          contentStandard: result?.contentStandardCode || formData.contentStandard,
+          indicator: result?.indicatorCode || indicatorCodes || formData.indicator || indicatorFull,
+          lessonTopic: result?.lessonFocus || result?.title || formData.mainObjective || '',
+          objectives: result?.performanceIndicator || formData.mainObjective || (formData.indicator ? formatPerformanceIndicator(formData.indicator) : ''),
           duration: formData.duration || '60 minutes',
-          week: 'Week 1',
+          week: `Week ${result?.weekNumber || formData.weekNumber || '1'}`,
           term: 'Term 1',
           academicYear: '2025/2026',
           locality: formData.locality,
@@ -759,6 +816,15 @@ const LessonPlanGenerator = () => {
           bilingualLanguage: formData.bilingualLanguage,
           differentiation: formData.differentiationStrategies || '',
           coreCompetencies: result?.coreCompetencies || 'Critical Thinking and Problem Solving (CP), Communication and Collaboration (CC)',
+          sourceLessonContext: {
+            keyWords: result?.keyWords,
+            lessonFocus: result?.lessonFocus,
+            tlrs: result?.tlrs,
+            coreCompetencies: result?.coreCompetencies,
+            performanceIndicator: result?.performanceIndicator,
+            phase2Summary: result?.phase2 ? (typeof result.phase2 === 'string' ? result.phase2 : JSON.stringify(result.phase2)) : undefined,
+            isKgPlan: isKg
+          }
         }
       }
     });
@@ -1043,13 +1109,21 @@ const LessonPlanGenerator = () => {
                 <select 
                   className={cn("input-field", errors.class && "border-red-400 ring-4 ring-red-50")}
                   value={formData.class}
-                  onChange={(e) => setFormData({
-                    ...formData, 
-                    class: e.target.value,
-                    contentStandard: '',
-                    indicator: '',
-                    mainObjective: ''
-                  })}
+                  onChange={(e) => {
+                    const newClass = e.target.value;
+                    const validStrands = getSubjectStrands(formData.subject, formData.level, newClass);
+                    const isStrandValid = validStrands.includes(formData.strand);
+                    setFormData({
+                      ...formData, 
+                      class: newClass,
+                      strand: isStrandValid ? formData.strand : '',
+                      subStrand: isStrandValid ? formData.subStrand : '',
+                      contentStandard: '',
+                      indicator: '',
+                      selectedIndicators: [],
+                      mainObjective: ''
+                    });
+                  }}
                 >
                   {(CLASSES_BY_LEVEL[formData.level] || []).map(c => <option key={c} value={c}>{c}</option>)}
                 </select>

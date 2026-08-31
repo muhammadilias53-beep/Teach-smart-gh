@@ -1314,7 +1314,7 @@ const DocumentViewerModal = ({ doc, onClose }: { doc: any, onClose: () => void }
     
     pdf.setFontSize(10);
     pdf.setFont('helvetica', 'normal');
-    pdf.text('OFFICIAL NaCCA CURRICULUM COMPLIANT DOCUMENT', 105, 26, { align: 'center' });
+    pdf.text('DESIGNED TO ALIGN WITH NaCCA/GES CURRICULUM REQUIREMENTS', 105, 26, { align: 'center' });
     
     pdf.setDrawColor(252, 209, 22); // Ghana Gold
     pdf.setLineWidth(1);
@@ -1429,32 +1429,26 @@ const DocumentViewerModal = ({ doc, onClose }: { doc: any, onClose: () => void }
     const pageCount = (typeof pdf.getNumberOfPages === 'function' ? pdf.getNumberOfPages() : 1) || 1;
     for(let pageNum = 1; pageNum <= pageCount; pageNum++) {
         pdf.setPage(pageNum);
-        pdf.setDrawColor(200, 200, 200);
+        pdf.setDrawColor(220, 220, 220);
         pdf.setLineWidth(0.5);
-        pdf.line(10, pageHeight - 20, 200, pageHeight - 20);
+        pdf.line(10, pageHeight - 12, 200, pageHeight - 12);
 
-        pdf.setFontSize(7);
-        pdf.setTextColor(100);
-        pdf.setFont('helvetica', 'italic');
-        const complianceMsg = [
-          'NaCCA COMPLIANCE NOTE: This document is aligned with the official National Council for Curriculum and Assessment (NaCCA) standard-based curriculum of Ghana.',
-          'Teachers are encouraged to adapt the content to suit their learner\'s diverse needs while maintaining core competency targets and SBC learning indicators.'
-        ];
-        
-        let footerY = pageHeight - 16;
-        complianceMsg.forEach(msg => {
-          pdf.text(msg, 105, footerY, { align: 'center' });
-          footerY += 3.5;
-        });
+        if (pageNum === 1) {
+          pdf.setFontSize(6.5);
+          pdf.setTextColor(120);
+          pdf.setFont('helvetica', 'italic');
+          pdf.text('Note: Teachers should review and adapt generated material to the needs of their learners.', 105, pageHeight - 7.5, { align: 'center' });
+        }
 
         pdf.setFont('helvetica', 'bold');
         pdf.setTextColor(0, 107, 63); // Ghana Green
-        pdf.setFontSize(8);
-        pdf.text('TEACHSMART GHANA • AI-POWERED NaCCA COMPLIANT TOOLS', 105, pageHeight - 5, { align: 'center' });
+        pdf.setFontSize(7.5);
+        pdf.text('TEACHSMART GHANA • CURRICULUM-ALIGNED TEACHING AND LEARNING SUPPORT', 10, pageHeight - 4);
         
-        pdf.setTextColor(150);
+        pdf.setTextColor(140);
         pdf.setFont('helvetica', 'normal');
-        pdf.text(`Page ${pageNum} of ${pageCount}`, 200, pageHeight - 5, { align: 'right' });
+        pdf.setFontSize(7.5);
+        pdf.text(`Page ${pageNum} of ${pageCount}`, 200, pageHeight - 4, { align: 'right' });
     }
 
     pdf.save(`${title.replace(/\s+/g, '_')}_TeachSmart.pdf`);

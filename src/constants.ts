@@ -107,14 +107,14 @@ export const SUBJECT_STRANDS: Record<string, string[]> = {
     "Nature of Management",
     "Legal Environment of Business"
   ],
-  "French": ["L'Identit√©", "Parler de son Environnement", "Exprimer ses Go√ªts et ses Pr√©f√©rences", "Les Activit√©s"],
+  "French": ["L'Identit√É¬©", "Parler de son Environnement", "Exprimer ses Go√É¬ªts et ses Pr√É¬©f√É¬©rences", "Les Activit√É¬©s"],
   "Ghanaian Language": ["Oral Language (GL)", "Reading (GL)", "Writing (GL)", "Writing Conventions and Usage (GL)", "Extensive Reading (GL)", "Composition Writing", "Customs and Institutions", "Literature (GL)"],
   "Agricultural Science": ["Introduction to Agriculture", "Soil Science", "Crop Science", "Animal Science", "Agricultural Economics and Extension"],
   "Economics": [
     "Consumers' Rational Decision Making",
-    "Consumers‚Äô Rational Decision Making",
+    "Consumers√¢‚Ç¨‚Ñ¢ Rational Decision Making",
     "Firms' Innovative Decision Making",
-    "Firms‚Äô Innovative Decision Making",
+    "Firms√¢‚Ç¨‚Ñ¢ Innovative Decision Making",
     "Price Analysis and Prediction in the Modern Economy",
     "Government Economic Policy and Trade"
   ],
@@ -376,9 +376,9 @@ export const SUBJECT_SUB_STRANDS: Record<string, string[]> = {
   ],
 
   "Consumers' Rational Decision Making": ["Introduction to the Subject Economics", "Demand for Goods and Services", "Consumer Behaviour"],
-  "Consumers‚Äô Rational Decision Making": ["Introduction to the Subject Economics", "Demand for Goods and Services", "Consumer Behaviour"],
+  "Consumers√¢‚Ç¨‚Ñ¢ Rational Decision Making": ["Introduction to the Subject Economics", "Demand for Goods and Services", "Consumer Behaviour"],
   "Firms' Innovative Decision Making": ["Production of Goods and Services", "Supply of Goods and Services", "Market Analysis"],
-  "Firms‚Äô Innovative Decision Making": ["Production of Goods and Services", "Supply of Goods and Services", "Market Analysis"],
+  "Firms√¢‚Ç¨‚Ñ¢ Innovative Decision Making": ["Production of Goods and Services", "Supply of Goods and Services", "Market Analysis"],
   "Price Analysis and Prediction in the Modern Economy": ["Price and Equilibrium Analysis"],
   "Government Economic Policy and Trade": [
     "Macroeconomic Variables (GDP, Inflation, Unemployment, Exchange Rate)", 
@@ -434,7 +434,7 @@ export const SUBJECT_SUB_STRANDS: Record<string, string[]> = {
   "Literature JHS": ["Narrative, Drama and Poetry"],
   
   // History
-  "History as a Subject": ["Why and how we study history", "The learner‚Äôs own history", "Family History", "Community History"],
+  "History as a Subject": ["Why and how we study history", "The learner√¢‚Ç¨‚Ñ¢s own history", "Family History", "Community History"],
   "My Country Ghana": ["The People of Ghana", "Inter-Group Relations", "How Ghana got its name", "Major Historical locations", "Some selected Individuals"],
   "Europeans in Ghana": ["Arrival of Europeans", "International trade including Slave Trade", "Missionary Activities", "Impact of European presence"],
   "Colonisation and Developments under Colonial Rule in Ghana": ["Establishing Colonial rule in Ghana", "Social Development", "Economic Development", "Political Development"],
@@ -518,10 +518,10 @@ export const SUBJECT_SUB_STRANDS: Record<string, string[]> = {
   "Literature (GL)": ["Oral and written literature"],
 
   // French
-  "L'Identit√©": ["Saluer et prendre cong√©", "Se pr√©senter", "Pr√©senter quelqu'un", "D√©crire quelqu'un", "D√©crire la famille et les liens familiaux"],
-  "Parler de son Environnement": ["Parler de sa maison", "Parler de son √©cole"],
-  "Exprimer ses Go√ªts et ses Pr√©f√©rences": ["Dire ce que l‚Äôon aime", "Dire ce que l‚Äôon n‚Äôaime pas"],
-  "Les Activit√©s": ["Compter et faire des calculs simples", "Demander et donner l‚Äôheure", "Parler des jours de la semaine", "Situer les mois et les saisons dans le temps", "Entrer en contact par t√©l√©phone", "Inviter quelqu‚Äôun et accepter une invitation", "Identifier les professions et les m√©tiers", "Demander et expliquer la position de personnes ou d‚Äôobjets", "Donner et r√©pondre √† des ordres"],
+  "L'Identit√É¬©": ["Saluer et prendre cong√É¬©", "Se pr√É¬©senter", "Pr√É¬©senter quelqu'un", "D√É¬©crire quelqu'un", "D√É¬©crire la famille et les liens familiaux"],
+  "Parler de son Environnement": ["Parler de sa maison", "Parler de son √É¬©cole"],
+  "Exprimer ses Go√É¬ªts et ses Pr√É¬©f√É¬©rences": ["Dire ce que l√¢‚Ç¨‚Ñ¢on aime", "Dire ce que l√¢‚Ç¨‚Ñ¢on n√¢‚Ç¨‚Ñ¢aime pas"],
+  "Les Activit√É¬©s": ["Compter et faire des calculs simples", "Demander et donner l√¢‚Ç¨‚Ñ¢heure", "Parler des jours de la semaine", "Situer les mois et les saisons dans le temps", "Entrer en contact par t√É¬©l√É¬©phone", "Inviter quelqu√¢‚Ç¨‚Ñ¢un et accepter une invitation", "Identifier les professions et les m√É¬©tiers", "Demander et expliquer la position de personnes ou d√¢‚Ç¨‚Ñ¢objets", "Donner et r√É¬©pondre √É¬† des ordres"],
 
   "Thermal Physics": ["Heat Transfer", "Thermodynamics"],
 
@@ -1229,7 +1229,7 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
   },
   "Consumers' Rational Decision Making": {
     "Introduction to the Subject Economics": [
-      "B10.1.1.1: Use relevant information gathered from learners‚Äô home, school and community through observation to carefully define economics and stimulate their interest in the subject.",
+      "B10.1.1.1: Use relevant information gathered from learners√¢‚Ç¨‚Ñ¢ home, school and community through observation to carefully define economics and stimulate their interest in the subject.",
       "B11.1.1.1: Use the appropriate economics tools to explain everyday economic issues.",
       "B12.1.1.1: Exhibit knowledge of advanced economic methodologies and tools."
     ],
@@ -1244,9 +1244,9 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B12.1.3.1: Use information from the environment to explain income and substitution effects."
     ]
   },
-  "Consumers‚Äô Rational Decision Making": {
+  "Consumers√¢‚Ç¨‚Ñ¢ Rational Decision Making": {
     "Introduction to the Subject Economics": [
-      "B10.1.1.1: Use relevant information gathered from learners‚Äô home, school and community through observation to carefully define economics and stimulate their interest in the subject.",
+      "B10.1.1.1: Use relevant information gathered from learners√¢‚Ç¨‚Ñ¢ home, school and community through observation to carefully define economics and stimulate their interest in the subject.",
       "B11.1.1.1: Use the appropriate economics tools to explain everyday economic issues.",
       "B12.1.1.1: Exhibit knowledge of advanced economic methodologies and tools."
     ],
@@ -1278,7 +1278,7 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B12.2.3.1: Explain the methods, agencies, problems and solutions of distribution."
     ]
   },
-  "Firms‚Äô Innovative Decision Making": {
+  "Firms√¢‚Ç¨‚Ñ¢ Innovative Decision Making": {
     "Production of Goods and Services": [
       "B10.2.1.1: Evaluate the relevance of factors of production.",
       "B11.2.1.1: Use information gathered from the environment to determine the time periods, TP, AP, MP, labour and capital-intensive methods and the cost of production.",
@@ -1466,7 +1466,7 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
     "Promoting Democracy and Political Stability": [
       "B9.4.5.1: Show understanding of how to promote democracy and political stability",
       "B9.4.5.2: Demonstrate understanding of the District Assembly concept in Ghana",
-      "B9.4.5.3: Evaluate the importance of political stability in Ghana‚Äôs development"
+      "B9.4.5.3: Evaluate the importance of political stability in Ghana√¢‚Ç¨‚Ñ¢s development"
     ]
   },
   "Socio-Economic Development": {
@@ -1554,12 +1554,12 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B9.4.3.1: Show an understanding of conversion and conservation of energy and their application to life"
     ],
     "Force and Motion": [
-      "B7.4.4.1: Examine the concept of motion, Newton‚Äôs first law of motion, magnetic force in relation to motion and understand their applications to life",
+      "B7.4.4.1: Examine the concept of motion, Newton√¢‚Ç¨‚Ñ¢s first law of motion, magnetic force in relation to motion and understand their applications to life",
       "B7.4.4.2: Recognise some simple machines, and show understanding of their efficiency in doing work",
-      "B8.4.4.1: Demonstrate the production of magnet, domestic and industrial application of Magnetic force and its relationship with Newton‚Äôs Second law of motion and in everyday life",
+      "B8.4.4.1: Demonstrate the production of magnet, domestic and industrial application of Magnetic force and its relationship with Newton√¢‚Ç¨‚Ñ¢s Second law of motion and in everyday life",
       "B8.4.4.2: Demonstrate understanding of complex machines and how they work",
       "B9.4.4.1: Demonstrate understanding of the concept of pressure and explain how pressure acts in everyday life",
-      "B9.4.4.2: Demonstrate an understanding of Newton‚Äôs Third Law of Motion and its application in everyday life"
+      "B9.4.4.2: Demonstrate an understanding of Newton√¢‚Ç¨‚Ñ¢s Third Law of Motion and its application in everyday life"
     ],
     "Agricultural Tools": [
       "B7.4.5.1: Demonstrate knowledge and skills in handling and maintenance of basic and simple agricultural tools",
@@ -2026,7 +2026,7 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
   },
   "History as a Subject": {
     "Why and how we study history": ["B1.1.1.1: History as part of everyday life", "B4.1.1.1: Importance of studying history", "B4.1.1.2: Sources for writing history"],
-    "The learner‚Äôs own history": ["B1.1.2.1: Recall own history"],
+    "The learner√¢‚Ç¨‚Ñ¢s own history": ["B1.1.2.1: Recall own history"],
     "Family History": ["B1.1.3.1: Family history and ancestry"],
     "Community History": ["B1.1.4.1: History of the local community", "B1.1.4.2: Communities similarities and differences"]
   },
@@ -2061,64 +2061,64 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
   },
 
   // French
-  "L'Identit√©": {
-    "Saluer et prendre cong√©": [
-      "B4.1.1.1: √âcouter et comprendre des salutations",
-      "B4.1.1.2: Saluer et r√©pondre oralement",
+  "L'Identit√É¬©": {
+    "Saluer et prendre cong√É¬©": [
+      "B4.1.1.1: √É‚Ä∞couter et comprendre des salutations",
+      "B4.1.1.2: Saluer et r√É¬©pondre oralement",
       "B4.1.1.3: Lire et comprendre des salutations",
-      "B4.1.1.4: √âcrire des mots de salutation",
-      "B5.1.1.1: √âcouter et comprendre des salutations",
-      "B5.1.1.2: Saluer et r√©pondre oralement",
+      "B4.1.1.4: √É‚Ä∞crire des mots de salutation",
+      "B5.1.1.1: √É‚Ä∞couter et comprendre des salutations",
+      "B5.1.1.2: Saluer et r√É¬©pondre oralement",
       "B5.1.1.3: Lire et comprendre des salutations",
-      "B5.1.1.4: √âcrire des mots de salutation",
-      "B6.1.1.1: √âcouter et comprendre des salutations",
-      "B6.1.1.2: Saluer et r√©pondre oralement",
+      "B5.1.1.4: √É‚Ä∞crire des mots de salutation",
+      "B6.1.1.1: √É‚Ä∞couter et comprendre des salutations",
+      "B6.1.1.2: Saluer et r√É¬©pondre oralement",
       "B6.1.1.3: Lire et comprendre des salutations",
-      "B6.1.1.4: √âcrire des mots de salutation"
+      "B6.1.1.4: √É‚Ä∞crire des mots de salutation"
     ],
-    "Se pr√©senter": [
-      "B4.1.2.1: √âcouter et comprendre des pr√©sentations",
-      "B4.1.2.2: Se pr√©senter oralement",
-      "B4.1.2.3: Lire et comprendre des pr√©sentations",
-      "B4.1.2.4: Se pr√©senter par √©crit",
-      "B5.1.2.1: √âcouter et comprendre des pr√©sentations",
-      "B5.1.2.2: Se pr√©senter oralement",
-      "B5.1.2.3: Lire et comprendre des pr√©sentations",
-      "B5.1.2.4: Se pr√©senter par √©crit",
-      "B6.1.2.1: √âcouter et comprendre des pr√©sentations",
-      "B6.1.2.2: Se pr√©senter oralement",
-      "B6.1.2.3: Lire et comprendre des pr√©sentations",
-      "B6.1.2.4: Se pr√©senter par √©crit"
+    "Se pr√É¬©senter": [
+      "B4.1.2.1: √É‚Ä∞couter et comprendre des pr√É¬©sentations",
+      "B4.1.2.2: Se pr√É¬©senter oralement",
+      "B4.1.2.3: Lire et comprendre des pr√É¬©sentations",
+      "B4.1.2.4: Se pr√É¬©senter par √É¬©crit",
+      "B5.1.2.1: √É‚Ä∞couter et comprendre des pr√É¬©sentations",
+      "B5.1.2.2: Se pr√É¬©senter oralement",
+      "B5.1.2.3: Lire et comprendre des pr√É¬©sentations",
+      "B5.1.2.4: Se pr√É¬©senter par √É¬©crit",
+      "B6.1.2.1: √É‚Ä∞couter et comprendre des pr√É¬©sentations",
+      "B6.1.2.2: Se pr√É¬©senter oralement",
+      "B6.1.2.3: Lire et comprendre des pr√É¬©sentations",
+      "B6.1.2.4: Se pr√É¬©senter par √É¬©crit"
     ],
-    "Pr√©senter quelqu'un": [
-      "B4.1.3.1: √âcouter et comprendre la pr√©sentation de quelqu'un",
-      "B4.1.3.2: Pr√©senter quelqu'un oralement",
-      "B4.1.3.3: Lire et comprendre la pr√©sentation de quelqu'un",
-      "B4.1.3.4: Pr√©senter quelqu'un par √©crit",
-      "B5.1.3.1: √âcouter et comprendre la pr√©sentation de quelqu'un",
-      "B5.1.3.2: Pr√©senter quelqu'un oralement",
-      "B5.1.3.3: Lire et comprendre la pr√©sentation de quelqu'un",
-      "B5.1.3.4: Pr√©senter quelqu'un par √©crit",
-      "B6.1.3.1: √âcouter et comprendre la pr√©sentation de quelqu'un",
-      "B6.1.3.2: Pr√©senter quelqu'un oralement",
-      "B6.1.3.3: Lire et comprendre la pr√©sentation de quelqu'un",
-      "B6.1.3.4: Pr√©senter quelqu'un par √©crit"
+    "Pr√É¬©senter quelqu'un": [
+      "B4.1.3.1: √É‚Ä∞couter et comprendre la pr√É¬©sentation de quelqu'un",
+      "B4.1.3.2: Pr√É¬©senter quelqu'un oralement",
+      "B4.1.3.3: Lire et comprendre la pr√É¬©sentation de quelqu'un",
+      "B4.1.3.4: Pr√É¬©senter quelqu'un par √É¬©crit",
+      "B5.1.3.1: √É‚Ä∞couter et comprendre la pr√É¬©sentation de quelqu'un",
+      "B5.1.3.2: Pr√É¬©senter quelqu'un oralement",
+      "B5.1.3.3: Lire et comprendre la pr√É¬©sentation de quelqu'un",
+      "B5.1.3.4: Pr√É¬©senter quelqu'un par √É¬©crit",
+      "B6.1.3.1: √É‚Ä∞couter et comprendre la pr√É¬©sentation de quelqu'un",
+      "B6.1.3.2: Pr√É¬©senter quelqu'un oralement",
+      "B6.1.3.3: Lire et comprendre la pr√É¬©sentation de quelqu'un",
+      "B6.1.3.4: Pr√É¬©senter quelqu'un par √É¬©crit"
     ],
-    "D√©crire quelqu'un": [
-      "B4.1.4.1: √âcouter et comprendre la description de quelqu'un",
-      "B4.1.4.2: D√©crire quelqu'un oralement",
+    "D√É¬©crire quelqu'un": [
+      "B4.1.4.1: √É‚Ä∞couter et comprendre la description de quelqu'un",
+      "B4.1.4.2: D√É¬©crire quelqu'un oralement",
       "B4.1.4.3: Lire et comprendre la description de quelqu'un",
-      "B4.1.4.4: D√©crire quelqu'un par √©crit",
-      "B5.1.4.1: √âcouter et comprendre la description de quelqu'un",
-      "B5.1.4.2: D√©crire quelqu'un oralement",
+      "B4.1.4.4: D√É¬©crire quelqu'un par √É¬©crit",
+      "B5.1.4.1: √É‚Ä∞couter et comprendre la description de quelqu'un",
+      "B5.1.4.2: D√É¬©crire quelqu'un oralement",
       "B5.1.4.3: Lire et comprendre la description de quelqu'un",
-      "B5.1.4.4: D√©crire quelqu'un par √©crit",
-      "B6.1.4.1: √âcouter et comprendre la description de quelqu'un",
-      "B6.1.4.2: D√©crire quelqu'un oralement",
+      "B5.1.4.4: D√É¬©crire quelqu'un par √É¬©crit",
+      "B6.1.4.1: √É‚Ä∞couter et comprendre la description de quelqu'un",
+      "B6.1.4.2: D√É¬©crire quelqu'un oralement",
       "B6.1.4.3: Lire et comprendre la description de quelqu'un",
-      "B6.1.4.4: D√©crire quelqu'un par √©crit"
+      "B6.1.4.4: D√É¬©crire quelqu'un par √É¬©crit"
     ],
-    "D√©crire la famille et les liens familiaux": [
+    "D√É¬©crire la famille et les liens familiaux": [
       "B7.1.1.1: Describe family members and relationships"
     ]
   },
@@ -2126,127 +2126,127 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
     "Parler de sa maison": [
       "B7.2.1.1: Describe different rooms and parts of a house in French"
     ],
-    "Parler de son √©cole": [
-      "B4.2.2.1: √âcouter et comprendre l'environnement scolaire",
-      "B4.2.2.2: Parler de l'√©cole oralement",
-      "B4.2.2.3: Lire sur l'√©cole",
-      "B4.2.2.4: √âcrire sur l'√©cole",
-      "B5.2.2.1: √âcouter et comprendre l'environnement scolaire",
-      "B5.2.2.2: Parler de l'√©cole oralement",
-      "B5.2.2.3: Lire sur l'√©cole",
-      "B5.2.2.4: √âcrire sur l'√©cole",
-      "B6.2.2.1: √âcouter et comprendre l'environnement scolaire",
-      "B6.2.2.2: Parler de l'√©cole oralement",
-      "B6.2.2.3: Lire sur l'√©cole",
-      "B6.2.2.4: √âcrire sur l'√©cole"
+    "Parler de son √É¬©cole": [
+      "B4.2.2.1: √É‚Ä∞couter et comprendre l'environnement scolaire",
+      "B4.2.2.2: Parler de l'√É¬©cole oralement",
+      "B4.2.2.3: Lire sur l'√É¬©cole",
+      "B4.2.2.4: √É‚Ä∞crire sur l'√É¬©cole",
+      "B5.2.2.1: √É‚Ä∞couter et comprendre l'environnement scolaire",
+      "B5.2.2.2: Parler de l'√É¬©cole oralement",
+      "B5.2.2.3: Lire sur l'√É¬©cole",
+      "B5.2.2.4: √É‚Ä∞crire sur l'√É¬©cole",
+      "B6.2.2.1: √É‚Ä∞couter et comprendre l'environnement scolaire",
+      "B6.2.2.2: Parler de l'√É¬©cole oralement",
+      "B6.2.2.3: Lire sur l'√É¬©cole",
+      "B6.2.2.4: √É‚Ä∞crire sur l'√É¬©cole"
     ]
   },
-  "Exprimer ses Go√ªts et ses Pr√©f√©rences": {
-    "Dire ce que l‚Äôon aime": [
-      "B4.3.1.1: √âcouter et comprendre les go√ªts",
-      "B4.3.1.2: Exprimer ses go√ªts oralement",
-      "B4.3.1.3: Lire sur les go√ªts",
-      "B4.3.1.4: √âcrire sur ses go√ªts",
-      "B5.3.1.1: √âcouter et comprendre les go√ªts",
-      "B5.3.1.2: Exprimer ses go√ªts oralement",
-      "B5.3.1.3: Lire sur les go√ªts",
-      "B5.3.1.4: √âcrire sur ses go√ªts",
-      "B6.3.1.1: √âcouter et comprendre les go√ªts",
-      "B6.3.1.2: Exprimer ses go√ªts oralement",
-      "B6.3.1.3: Lire sur les go√ªts",
-      "B6.3.1.4: √âcrire sur ses go√ªts"
+  "Exprimer ses Go√É¬ªts et ses Pr√É¬©f√É¬©rences": {
+    "Dire ce que l√¢‚Ç¨‚Ñ¢on aime": [
+      "B4.3.1.1: √É‚Ä∞couter et comprendre les go√É¬ªts",
+      "B4.3.1.2: Exprimer ses go√É¬ªts oralement",
+      "B4.3.1.3: Lire sur les go√É¬ªts",
+      "B4.3.1.4: √É‚Ä∞crire sur ses go√É¬ªts",
+      "B5.3.1.1: √É‚Ä∞couter et comprendre les go√É¬ªts",
+      "B5.3.1.2: Exprimer ses go√É¬ªts oralement",
+      "B5.3.1.3: Lire sur les go√É¬ªts",
+      "B5.3.1.4: √É‚Ä∞crire sur ses go√É¬ªts",
+      "B6.3.1.1: √É‚Ä∞couter et comprendre les go√É¬ªts",
+      "B6.3.1.2: Exprimer ses go√É¬ªts oralement",
+      "B6.3.1.3: Lire sur les go√É¬ªts",
+      "B6.3.1.4: √É‚Ä∞crire sur ses go√É¬ªts"
     ],
     "Dire ce que l'on aime": [
-      "B4.3.1.1: √âcouter et comprendre les go√ªts",
-      "B4.3.1.2: Exprimer ses go√ªts oralement",
-      "B4.3.1.3: Lire sur les go√ªts",
-      "B4.3.1.4: √âcrire sur ses go√ªts",
-      "B5.3.1.1: √âcouter et comprendre les go√ªts",
-      "B5.3.1.2: Exprimer ses go√ªts oralement",
-      "B5.3.1.3: Lire sur les go√ªts",
-      "B5.3.1.4: √âcrire sur ses go√ªts",
-      "B6.3.1.1: √âcouter et comprendre les go√ªts",
-      "B6.3.1.2: Exprimer ses go√ªts oralement",
-      "B6.3.1.3: Lire sur les go√ªts",
-      "B6.3.1.4: √âcrire sur ses go√ªts"
+      "B4.3.1.1: √É‚Ä∞couter et comprendre les go√É¬ªts",
+      "B4.3.1.2: Exprimer ses go√É¬ªts oralement",
+      "B4.3.1.3: Lire sur les go√É¬ªts",
+      "B4.3.1.4: √É‚Ä∞crire sur ses go√É¬ªts",
+      "B5.3.1.1: √É‚Ä∞couter et comprendre les go√É¬ªts",
+      "B5.3.1.2: Exprimer ses go√É¬ªts oralement",
+      "B5.3.1.3: Lire sur les go√É¬ªts",
+      "B5.3.1.4: √É‚Ä∞crire sur ses go√É¬ªts",
+      "B6.3.1.1: √É‚Ä∞couter et comprendre les go√É¬ªts",
+      "B6.3.1.2: Exprimer ses go√É¬ªts oralement",
+      "B6.3.1.3: Lire sur les go√É¬ªts",
+      "B6.3.1.4: √É‚Ä∞crire sur ses go√É¬ªts"
     ],
-    "Dire ce que l‚Äôon n‚Äôaime pas": [
+    "Dire ce que l√¢‚Ç¨‚Ñ¢on n√¢‚Ç¨‚Ñ¢aime pas": [
       "B7.3.1.1: Express dislikes in French"
     ],
     "Dire ce que l'on n'aime pas": [
       "B7.3.1.1: Express dislikes in French"
     ]
   },
-  "Les Activit√©s": {
+  "Les Activit√É¬©s": {
     "Compter et faire des calculs simples": [
-      "B4.4.1.1: √âcouter et comprendre les nombres",
-      "B4.4.1.2: Compter √† haute voix",
+      "B4.4.1.1: √É‚Ä∞couter et comprendre les nombres",
+      "B4.4.1.2: Compter √É¬† haute voix",
       "B4.4.1.3: Lire les nombres",
-      "B4.4.1.4: √âcrire les nombres et faire des calculs",
-      "B5.4.1.1: √âcouter et comprendre les nombres",
-      "B5.4.1.2: Compter √† haute voix",
+      "B4.4.1.4: √É‚Ä∞crire les nombres et faire des calculs",
+      "B5.4.1.1: √É‚Ä∞couter et comprendre les nombres",
+      "B5.4.1.2: Compter √É¬† haute voix",
       "B5.4.1.3: Lire les nombres",
-      "B5.4.1.4: √âcrire les nombres et faire des calculs",
-      "B6.4.1.1: √âcouter et comprendre les nombres",
-      "B6.4.1.2: Compter √† haute voix",
+      "B5.4.1.4: √É‚Ä∞crire les nombres et faire des calculs",
+      "B6.4.1.1: √É‚Ä∞couter et comprendre les nombres",
+      "B6.4.1.2: Compter √É¬† haute voix",
       "B6.4.1.3: Lire les nombres",
-      "B6.4.1.4: √âcrire les nombres et faire des calculs"
+      "B6.4.1.4: √É‚Ä∞crire les nombres et faire des calculs"
     ],
-    "Demander et donner l‚Äôheure": [
-      "B4.4.2.1: √âcouter et comprendre l'heure",
+    "Demander et donner l√¢‚Ç¨‚Ñ¢heure": [
+      "B4.4.2.1: √É‚Ä∞couter et comprendre l'heure",
       "B4.4.2.2: Demander et donner l'heure oralement",
       "B4.4.2.3: Lire l'heure",
-      "B4.4.2.4: √âcrire l'heure",
-      "B5.4.2.1: √âcouter et comprendre l'heure",
+      "B4.4.2.4: √É‚Ä∞crire l'heure",
+      "B5.4.2.1: √É‚Ä∞couter et comprendre l'heure",
       "B5.4.2.2: Demander et donner l'heure oralement",
       "B5.4.2.3: Lire l'heure",
-      "B5.4.2.4: √âcrire l'heure",
-      "B6.4.2.1: √âcouter et comprendre l'heure",
+      "B5.4.2.4: √É‚Ä∞crire l'heure",
+      "B6.4.2.1: √É‚Ä∞couter et comprendre l'heure",
       "B6.4.2.2: Demander et donner l'heure oralement",
       "B6.4.2.3: Lire l'heure",
-      "B6.4.2.4: √âcrire l'heure"
+      "B6.4.2.4: √É‚Ä∞crire l'heure"
     ],
     "Demander et donner l'heure": [
-      "B4.4.2.1: √âcouter et comprendre l'heure",
+      "B4.4.2.1: √É‚Ä∞couter et comprendre l'heure",
       "B4.4.2.2: Demander et donner l'heure oralement",
       "B4.4.2.3: Lire l'heure",
-      "B4.4.2.4: √âcrire l'heure",
-      "B5.4.2.1: √âcouter et comprendre l'heure",
+      "B4.4.2.4: √É‚Ä∞crire l'heure",
+      "B5.4.2.1: √É‚Ä∞couter et comprendre l'heure",
       "B5.4.2.2: Demander et donner l'heure oralement",
       "B5.4.2.3: Lire l'heure",
-      "B5.4.2.4: √âcrire l'heure",
-      "B6.4.2.1: √âcouter et comprendre l'heure",
+      "B5.4.2.4: √É‚Ä∞crire l'heure",
+      "B6.4.2.1: √É‚Ä∞couter et comprendre l'heure",
       "B6.4.2.2: Demander et donner l'heure oralement",
       "B6.4.2.3: Lire l'heure",
-      "B6.4.2.4: √âcrire l'heure"
+      "B6.4.2.4: √É‚Ä∞crire l'heure"
     ],
     "Parler des jours de la semaine": [
-      "B4.4.3.1: √âcouter et comprendre les jours",
+      "B4.4.3.1: √É‚Ä∞couter et comprendre les jours",
       "B4.4.3.2: Parler des jours oralement",
       "B4.4.3.3: Lire les jours",
-      "B4.4.3.4: √âcrire les jours",
-      "B5.4.3.1: √âcouter et comprendre les jours",
+      "B4.4.3.4: √É‚Ä∞crire les jours",
+      "B5.4.3.1: √É‚Ä∞couter et comprendre les jours",
       "B5.4.3.2: Parler des jours oralement",
       "B5.4.3.3: Lire les jours",
-      "B5.4.3.4: √âcrire les days",
-      "B6.4.3.1: √âcouter et comprendre les jours",
+      "B5.4.3.4: √É‚Ä∞crire les days",
+      "B6.4.3.1: √É‚Ä∞couter et comprendre les jours",
       "B6.4.3.2: Parler des jours oralement",
       "B6.4.3.3: Lire les jours",
-      "B6.4.3.4: √âcrire les jours"
+      "B6.4.3.4: √É‚Ä∞crire les jours"
     ],
-    "Identifier les professions et les m√©tiers": [
-      "B4.4.7.1: √âcouter et comprendre les professions",
+    "Identifier les professions et les m√É¬©tiers": [
+      "B4.4.7.1: √É‚Ä∞couter et comprendre les professions",
       "B4.4.7.2: Parler des professions oralement",
       "B4.4.7.3: Lire les professions",
-      "B4.4.7.4: √âcrire les professions",
-      "B5.4.7.1: √âcouter et comprendre les professions",
+      "B4.4.7.4: √É‚Ä∞crire les professions",
+      "B5.4.7.1: √É‚Ä∞couter et comprendre les professions",
       "B5.4.7.2: Parler des professions oralement",
       "B5.4.7.3: Lire les professions",
-      "B5.4.7.4: √âcrire les professions",
-      "B6.4.7.1: √âcouter et comprendre les professions",
+      "B5.4.7.4: √É‚Ä∞crire les professions",
+      "B6.4.7.1: √É‚Ä∞couter et comprendre les professions",
       "B6.4.7.2: Parler des professions oralement",
       "B6.4.7.3: Lire les professions",
-      "B6.4.7.4: √âcrire les professions"
+      "B6.4.7.4: √É‚Ä∞crire les professions"
     ]
   },
   
@@ -2580,7 +2580,7 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
     ],
     "Response to Colonial Rule": [
       "2.3.4.CS.1: Demonstrate understanding of the nature and activities of Nationalist Movements including their efforts in resisting colonial domination in the Gold Coast.",
-      "3.3.4.CS.1: Demonstrate understanding of Africans‚Äô resistance against colonial rule."
+      "3.3.4.CS.1: Demonstrate understanding of Africans√¢‚Ç¨‚Ñ¢ resistance against colonial rule."
     ],
     "Socio-Economic and Political Developments in Ghana (1957 - 2007)": [
       "2.4.1.CS.1: Demonstrate understanding of the socio-economic and political developments in Ghana from 1957 - 2007."
@@ -2659,10 +2659,10 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
     ],
     "The nature of God and His creation": [
       "2.1.2.CS.1: Demonstrate understanding of the nature of Allah (God) in Islam and indicate how to apply the moral values in them to life.",
-      "3.1.2.CS.1: Demonstrate understanding of creation stories of Islam and assess how humans‚Äô disobedience has affected the disposition of humankind"
+      "3.1.2.CS.1: Demonstrate understanding of creation stories of Islam and assess how humans√¢‚Ç¨‚Ñ¢ disobedience has affected the disposition of humankind"
     ],
     "The major beliefs of Islam": [
-      "1.2.1.CS.1: Demonstrate knowledge and understanding of the beliefs of Islam and AIR‚Äôs influence and critically assess the varied interpretations of these beliefs."
+      "1.2.1.CS.1: Demonstrate knowledge and understanding of the beliefs of Islam and AIR√¢‚Ç¨‚Ñ¢s influence and critically assess the varied interpretations of these beliefs."
     ],
     "Worship and Moral Values for Development": [
       "2.2.2.CS.1: Demonstrate the understanding of worship in Islam and elements of its influence, to deduce and apply values inherent in them.",
@@ -3347,7 +3347,7 @@ export const STANDARD_INDICATORS: Record<string, string[]> = {
     "1.4.2.LI.4: Write the connotative meanings of English words in an Arabic text."
   ],
   "1.4.3.CS.1: Demonstrate knowledge and application of strategies of composing straightforward descriptive essay on a range of familiar subjects within your field of interest.": [
-    "1.4.3.LI.1: Compose an essay to describe someone close to you with whom you‚Äôve shared an experience in the past.",
+    "1.4.3.LI.1: Compose an essay to describe someone close to you with whom you√¢‚Ç¨‚Ñ¢ve shared an experience in the past.",
     "1.4.3.LI.2: Compose an essay to describe something that has sentimental value for you."
   ],
   "1.4.3.CS.2: Demonstrate knowledge and creativity in adopting famous quotations as a specific theme to recount real stories using simple narrative style.": [
@@ -3376,7 +3376,7 @@ export const STANDARD_INDICATORS: Record<string, string[]> = {
   ],
   "1.1.1.CS.2: Explain reaction energetics, enthalpy changes, and rate parameters.": [
     "1.1.1.LI.13: Explain chemical energy, endothermic/exothermic profiles, and state standard enthalpy definitions (formation, combustion).",
-    "1.1.1.LI.14: Calculate reaction enthalpy changes using calorimetry relationships (q = mcŒîT) and experimental results.",
+    "1.1.1.LI.14: Calculate reaction enthalpy changes using calorimetry relationships (q = mc√é‚ÄùT) and experimental results.",
     "1.1.1.LI.15: State Hess's law of constant heat summation and construct energy cycles to determine unknown enthalpies.",
     "1.1.1.LI.16: Use Born-Haber cycles to calculate lattice energy, electron affinity, and ionization energy properties.",
     "1.1.1.LI.17: Discuss bond energy as a measure of bond strength and calculate reaction enthalpies.",
@@ -3611,7 +3611,7 @@ export const STANDARD_INDICATORS: Record<string, string[]> = {
   ],
   "3.2.1.CS.2: Demonstrate knowledge, understanding and skills in the application of scientific principles in developing recipes.": [
     "3.2.1.LI.3: Explain the scientific principles involved in recipe development (protein, carbohydrate, fat interactions, moist/dry/combination cooking methods).",
-    "3.2.1.LI.4: Develop and modify recipes using scientific principles to improve taste, texture, nutritional content and presentation (r√©chauff√©/leftover design rules)."
+    "3.2.1.LI.4: Develop and modify recipes using scientific principles to improve taste, texture, nutritional content and presentation (r√É¬©chauff√É¬©/leftover design rules)."
   ],
   "1.2.2.CS.1: Demonstrate knowledge, understanding, and skills in applying scientific principles to beverage production.": [
     "1.2.2.LI.1: Discuss the types of beverages and their uses (alcoholic vs non-alcoholic: stimulants, nourishing, refreshing, hydration, nutrition, energy).",
@@ -4054,7 +4054,7 @@ export const STANDARD_INDICATORS: Record<string, string[]> = {
   ],
 
   // Economics Standard Indicators
-  "B10.1.1.1: Use relevant information gathered from learners‚Äô home, school and community through observation to carefully define economics and stimulate their interest in the subject.": [
+  "B10.1.1.1: Use relevant information gathered from learners√¢‚Ç¨‚Ñ¢ home, school and community through observation to carefully define economics and stimulate their interest in the subject.": [
     "B10.1.1.1.1: Brainstorm in mixed ability groups to define Economics based on everyday experiences.",
     "B10.1.1.1.2: Research career options (finance, policy, academia) available to Economics graduates."
   ],
@@ -4132,7 +4132,7 @@ export const STANDARD_INDICATORS: Record<string, string[]> = {
 
   // English - Oral Language
   "B1.1.1.1: Listen to and sing familiar songs": ["B1.1.1.1.1: Listen to and sing familiar songs with appropriate expressions", "B1.1.1.1.2: Identify some familiar songs"],
-  "B2.1.1.1: Interpret familiar songs": ["B2.1.1.1.1: Identify some familiar songs from learners‚Äô locality", "B2.1.1.1.2: Have learners interpret the songs in their own words"],
+  "B2.1.1.1: Interpret familiar songs": ["B2.1.1.1.1: Identify some familiar songs from learners√¢‚Ç¨‚Ñ¢ locality", "B2.1.1.1.2: Have learners interpret the songs in their own words"],
   "B3.1.1.1: Talk about the benefits of songs": ["B3.1.1.1.1: Identify some familiar songs e.g. patriotic songs", "B3.1.1.1.2: Identify and talk about the moral lessons in the songs", "B3.1.1.1.3: Think-pair-share the benefits of songs"],
   "B4.1.1.1: Listen attentively to songs and sing them": ["B4.1.1.1.1: Listen attentively to songs and sing them with appropriate stress", "B4.1.1.1.2: Identify and discuss values in songs"],
   "B5.1.1.1: Explain the central messages in songs": ["B5.1.1.1.1: Explain the central messages in songs", "B5.1.1.1.2: Relate values in songs to real life experiences"],
@@ -4141,7 +4141,7 @@ export const STANDARD_INDICATORS: Record<string, string[]> = {
   // English - Reading
   "B1.2.2.1: Identify the alphabet in order": ["B1.2.2.1.1: Identify the alphabet in order (aA-zZ)", "B1.2.2.1.2: Recognise and produce letter names and sounds randomly"],
   "B4.2.2.1: Match sounds to their corresponding letter patterns": ["B4.2.2.1.1: Match sounds to their corresponding letter patterns", "B4.2.2.1.2: Read single-syllable-words with taught consonant digraphs"],
-  "B5.2.2.1: Apply common phonic generalisations": ["B5.2.2.1.1: Apply common phonic generalisations (e.g. hard and soft ‚Äúc‚Äù and ‚Äúg‚Äù)", "B5.2.2.1.2: Read two syllable words with suffixes and 'r' controlled words"],
+  "B5.2.2.1: Apply common phonic generalisations": ["B5.2.2.1.1: Apply common phonic generalisations (e.g. hard and soft √¢‚Ç¨≈ìc√¢‚Ç¨ÔøΩ and √¢‚Ç¨≈ìg√¢‚Ç¨ÔøΩ)", "B5.2.2.1.2: Read two syllable words with suffixes and 'r' controlled words"],
   "B6.2.2.1: Read words with specific ending sounds": ["B6.2.2.1.1: Read words with ending sounds like 'sure', 'ture' and 'tch'", "B6.2.2.1.2: Read ccvcc, cccvc words and multisyllabic words"],
 
   // English - Writing
@@ -4659,10 +4659,10 @@ export const STANDARD_INDICATORS: Record<string, string[]> = {
     "B9.4.3.1.1: Describe how energy can be converted from one form to another and show how conservation occurs",
     "B9.4.3.1.2: Describe how conversion and conservation of energy are applied in life"
   ],
-  "B7.4.4.1: Examine the concept of motion, Newton‚Äôs first law of motion, magnetic force in relation to motion and understand their applications to life": [
+  "B7.4.4.1: Examine the concept of motion, Newton√¢‚Ç¨‚Ñ¢s first law of motion, magnetic force in relation to motion and understand their applications to life": [
     "B7.4.4.1.1: Understand that unbalanced forces acting on an object cause it to move",
-    "B7.4.4.1.2: State and explain Newton‚Äôs First Law of motion",
-    "B7.4.4.1.3: Examine the application of Newton‚Äôs First Law of motion in life",
+    "B7.4.4.1.2: State and explain Newton√¢‚Ç¨‚Ñ¢s First Law of motion",
+    "B7.4.4.1.3: Examine the application of Newton√¢‚Ç¨‚Ñ¢s First Law of motion in life",
     "B7.4.4.1.4: Demonstrate the behaviour of magnet and its use to life"
   ],
   "B7.4.4.2: Recognise some simple machines, and show understanding of their efficiency in doing work": [
@@ -4670,19 +4670,19 @@ export const STANDARD_INDICATORS: Record<string, string[]> = {
     "B7.4.4.2.2: Describe the types and functions of levers",
     "B7.4.4.2.3: Know work input, and output and efficiency as they apply to machines"
   ],
-  "B8.4.4.1: Demonstrate the production of magnet, domestic and industrial application of Magnetic force and its relationship with Newton‚Äôs Second law of motion and in everyday life": [
+  "B8.4.4.1: Demonstrate the production of magnet, domestic and industrial application of Magnetic force and its relationship with Newton√¢‚Ç¨‚Ñ¢s Second law of motion and in everyday life": [
     "B8.4.4.1.1: Demonstrate simple ways of making magnets and show how magnetic force can be applied",
-    "B8.4.4.1.2: Explain the relationship between magnetic force and Newton‚Äôs Second Law of motion"
+    "B8.4.4.1.2: Explain the relationship between magnetic force and Newton√¢‚Ç¨‚Ñ¢s Second Law of motion"
   ],
   "B8.4.4.2: Demonstrate understanding of complex machines and how they work": [
     "B8.4.4.2.1: Identify complex machines and describe their functions in life"
   ],
   "B9.4.4.1: Demonstrate understanding of the concept of pressure and explain how pressure acts in everyday life": [
     "B9.4.4.1.1: Explain the concept of pressure and show how pressure relates to force",
-    "B9.4.4.1.2: Demonstrate the application of Newton‚Äôs Third Law of motion in life"
+    "B9.4.4.1.2: Demonstrate the application of Newton√¢‚Ç¨‚Ñ¢s Third Law of motion in life"
   ],
-  "B9.4.4.2: Demonstrate an understanding of Newton‚Äôs Third Law of Motion and its application in everyday life": [
-    "B9.4.4.2.1: Explain Newton‚Äôs Laws of Motion and their applications to daily life"
+  "B9.4.4.2: Demonstrate an understanding of Newton√¢‚Ç¨‚Ñ¢s Third Law of Motion and its application in everyday life": [
+    "B9.4.4.2.1: Explain Newton√¢‚Ç¨‚Ñ¢s Laws of Motion and their applications to daily life"
   ],
   "B7.4.5.1: Demonstrate knowledge and skills in handling and maintenance of basic and simple agricultural tools": [
     "B7.4.5.1.1: Explain the basic rules in handling and maintaining simple agricultural tools",
@@ -4826,7 +4826,7 @@ export const STANDARD_INDICATORS: Record<string, string[]> = {
   // English - Oral Language
   "B7.1.1.1: Demonstrate use of appropriate language orally in specific situations": [
     "B7.1.1.1.1: Use appropriate register in everyday communication with diverse partners on grade-level topics",
-    "B7.1.1.1.2: Ask questions that elicit elaboration and respond to others‚Äô questions in conversation",
+    "B7.1.1.1.2: Ask questions that elicit elaboration and respond to others√¢‚Ç¨‚Ñ¢ questions in conversation",
     "B7.1.1.1.3: Use appropriate language orally to describe experiences about oneself and others",
     "B7.1.1.1.4: Listen to and give accurate directions to familiar places",
     "B7.1.1.1.5: Use techniques (voice modulation and eye contact) for effective oral communication"
@@ -4840,7 +4840,7 @@ export const STANDARD_INDICATORS: Record<string, string[]> = {
   ],
   "B9.1.1.1: Demonstrate the use of appropriate language orally in specific situations": [
     "B9.1.1.1.1: Use appropriate register in everyday communication with diverse partners",
-    "B9.1.1.1.2: Ask questions that link the ideas of several speakers and respond to others‚Äô questions in a discussion",
+    "B9.1.1.1.2: Ask questions that link the ideas of several speakers and respond to others√¢‚Ç¨‚Ñ¢ questions in a discussion",
     "B9.1.1.1.3: Use appropriate language and open-ended questions to discuss grade-level national and global issues",
     "B9.1.1.1.4: Demonstrate appropriate turn taking and use techniques for effective argument (debating)"
   ],
@@ -5202,7 +5202,7 @@ export const STANDARD_INDICATORS: Record<string, string[]> = {
   "B9.4.4.1: Assess the role of peace and security in national development": ["B9.4.4.1.1. Examine the relevance of peace and security in our community"],
   "B9.4.5.1: Show understanding of how to promote democracy and political stability": ["B9.4.5.1.1. Examine election as a way of promoting democracy and political stability"],
   "B9.4.5.2: Demonstrate understanding of the District Assembly concept in Ghana": ["B9.4.5.2.1. Examine the role of the District Assembly in promoting decentralisation"],
-  "B9.4.5.3: Evaluate the importance of political stability in Ghana‚Äôs development": ["B9.4.5.3.1. Assess the significance of political stability in national development"],
+  "B9.4.5.3: Evaluate the importance of political stability in Ghana√¢‚Ç¨‚Ñ¢s development": ["B9.4.5.3.1. Assess the significance of political stability in national development"],
 
   // Social Studies - Socio-Economic Development
   "B7.5.1.1: Demonstrate knowledge of human resource development in Ghana": ["B7.5.1.1.1. Mention ways of developing human resource in Ghana"],
@@ -5214,7 +5214,7 @@ export const STANDARD_INDICATORS: Record<string, string[]> = {
   "B9.5.4.1: Analyse the contribution of science and technology to national development": ["B9.5.4.1.1. Examine how science and technology can be used to promote development"],
 
   // Social Studies - Nationhood
-  "B7.6.1.1: Demonstrate understanding of how Ghana became an independent nation": ["B7.6.1.1.1. Explain how events after the 1948 riots accelerated the move towards independence", "B7.6.1.1.2 Recount the formation of the Convention People‚Äôs Party (CPP) in 1949", "B7.6.1.1.3 Discuss the recommendations of the Coussey Committee and the outcomes of the 1951, 1954 and 1956 elections", "B7.6.1.1.4 Analyse the nature of government from 1957 to 1960"],
+  "B7.6.1.1: Demonstrate understanding of how Ghana became an independent nation": ["B7.6.1.1.1. Explain how events after the 1948 riots accelerated the move towards independence", "B7.6.1.1.2 Recount the formation of the Convention People√¢‚Ç¨‚Ñ¢s Party (CPP) in 1949", "B7.6.1.1.3 Discuss the recommendations of the Coussey Committee and the outcomes of the 1951, 1954 and 1956 elections", "B7.6.1.1.4 Analyse the nature of government from 1957 to 1960"],
   "B8.6.2.1: Analyse the main developments in the Republics between 1960 and 1972": ["B8.6.2.1.1. Explain how the First Republic came into being", "B8.6.2.1.2. Explain political developments under the first republic", "B8.6.2.1.3. Explain how the Second Republic came into being.", "B8.6.2.1.4. Explain political developments under the Second Republic"],
   "B9.6.2.1: Demonstrate understanding that Ghana had two republics between 1979 and 2000": ["B9.6.2.1.1. Explain how the Third Republic came into being (1979-1981)", "B9.6.2.1.2. Explain political developments under the Third Republic", "B9.6.2.1.3. Explain how the Fourth Republic came into being", "B9.6.2.1.4. Explain political developments under the Fourth Republic"],
 
@@ -5228,9 +5228,9 @@ export const STANDARD_INDICATORS: Record<string, string[]> = {
   "B5.2.1.1: Ancient life vs modern life": ["B5.2.1.1.1: Describe how our ancestors lived in ancient times (before the 15th century) and compare it with how we live today", "B5.2.1.1.2: Describe some ancient towns in Ghana"],
   "B3.2.2.1: Nature of exchanges among groups": ["B3.2.2.1.1: Discuss the nature of exchanges among the ethnic groups", "B3.2.2.1.2: Name some of the items exchanged among the various groups", "B3.2.2.1.3: Describe the conflicts and alliances that existed among the ethnic groups in Ghana"],
   "B1.2.3.1: From Gold Coast to Ghana": ["B1.2.3.1.1: Explain why, in the past, Ghana was known as the Gold Coast", "B1.2.3.1.2: Recall when the name Ghana came into formal use"],
-  "B2.2.4.1: History of major locations": ["B2.2.4.1.1: Discuss the history of Ghana‚Äôs major historical locations"],
+  "B2.2.4.1: History of major locations": ["B2.2.4.1.1: Discuss the history of Ghana√¢‚Ç¨‚Ñ¢s major historical locations"],
   "B3.2.4.1: Forts and castles along the coast": ["B3.2.4.1.1: Identify the forts and castles built along the coast of Ghana"],
-  "B4.1.4.1: History of specific historical sites": ["B4.1.4.1.1: Describe the history of Ghana‚Äôs major historical locations, specifically, Flagstaff house, Burma camp, James Town light house, Gbewa Palace, Larabanga Mosque etc."],
+  "B4.1.4.1: History of specific historical sites": ["B4.1.4.1.1: Describe the history of Ghana√¢‚Ç¨‚Ñ¢s major historical locations, specifically, Flagstaff house, Burma camp, James Town light house, Gbewa Palace, Larabanga Mosque etc."],
   "B1.2.5.1: Selected individuals and contributions": ["B1.2.5.1.1: Identify Ghanaians of diverse fields who have contributed significantly to national development"],
   "B2.2.5.1: Ghanaian women and national development": ["B2.2.5.1.1: Identify Ghanaian women who have made significant contributions to national development"],
   "B3.2.5.1: Outstanding Ghanaian entrepreneurs": ["B3.2.5.1.1: Describe Ghanaian entrepreneurs who have made significant contributions"],
@@ -5243,10 +5243,10 @@ export const STANDARD_INDICATORS: Record<string, string[]> = {
   "B4.3.3.1: Missionary societies and impact": ["B4.3.3.1.1: Describe European missionary activities in Ghana"],
   "B6.3.4.1: Assessing changes brought by Europeans": ["B6.3.4.1.1: Assess the changes that the European presence brought to Ghana"],
   "B4.4.1.1: The Bond of 1844": ["B4.4.1.1.1: Examine the Bond of 1844"],
-  "B4.4.1.2: Formation of the Gold Coast territory": ["B4.4.1.2.1: Describe how the different areas ‚Äì The Colony, Asante, The Northern Territories and The British Mandated Togoland‚Äì became one territory known as the Gold Coast"],
+  "B4.4.1.2: Formation of the Gold Coast territory": ["B4.4.1.2.1: Describe how the different areas √¢‚Ç¨‚Äú The Colony, Asante, The Northern Territories and The British Mandated Togoland√¢‚Ç¨‚Äú became one territory known as the Gold Coast"],
   "B5.4.2.1: Educational, Health and Housing developments": ["B5.4.2.1.1: Identify the developments in education during the colonial era (1874-1957)", "B5.4.2.1.2: Identify some of the health facilities and housing projects in the colonial period"],
   "B5.4.3.1: Economic policies and projects": ["B5.4.3.1.1: Describe the economic measures introduced during the colonial period including transport and communication projects"],
-  "B6.4.4.1: Features of British colonial rule": ["B6.4.4.1.1: Describe the features of British colonial rule in Ghana including ‚Äòdirect‚Äô and ‚Äòindirect‚Äô rule, 1874-1957"],
+  "B6.4.4.1: Features of British colonial rule": ["B6.4.4.1.1: Describe the features of British colonial rule in Ghana including √¢‚Ç¨Àúdirect√¢‚Ç¨‚Ñ¢ and √¢‚Ç¨Àúindirect√¢‚Ç¨‚Ñ¢ rule, 1874-1957"],
   "B5.5.1.1: Protest movements before 1945": ["B5.5.1.1.1: Identify the early protest movements in Ghana before 1945", "B5.5.1.1.2: Examine sources of evidence about the role of Joseph Mensah Sarbah"],
   "B6.5.2.1: Role of UGCC and CPP": ["B6.5.2.1.1: Describe the role played by the leaders of the two major political parties (UGCC and CPP) in the independence struggle"],
   "B5.5.3.1: Events leading to 1948 riots": ["B5.5.3.1.1: Explain why people were unhappy in the country after the Second World War", "B5.5.3.1.2: Examine sources of evidence about what happened during the 1948 riots"],
@@ -5254,30 +5254,30 @@ export const STANDARD_INDICATORS: Record<string, string[]> = {
   "B1.6.1.1: Presidents since 1960": ["B1.6.1.1.1: Identify the Presidents Ghana has had since 1960"],
   "B4.6.1.1: The four Republics": ["B4.6.1.1.1: Explain that Ghana up to June 1960, though independent, had the Queen of The UK as Head of State", "B4.6.1.1.2: State the dates and names of the leaders of the four Republics of Ghana since 1960"],
   "B6.6.1.1: Emergence of the Fourth Republic": ["B6.6.1.1.1: Describe the events leading to the emergence of the Fourth Republic", "B6.6.1.1.2: Identify the political parties that have governed the country under the Fourth Republic"],
-  "B6.6.2.1: Military takeovers since 1966": ["B6.6.2.1.1: Identify the leaders of the coup d‚Äô√©tats and names of their regimes", "B6.6.2.1.2: Assess the consequences of military takeovers on Ghana‚Äôs development"],
+  "B6.6.2.1: Military takeovers since 1966": ["B6.6.2.1.1: Identify the leaders of the coup d√¢‚Ç¨‚Ñ¢√É¬©tats and names of their regimes", "B6.6.2.1.2: Assess the consequences of military takeovers on Ghana√¢‚Ç¨‚Ñ¢s development"],
   // French - Indicators
-  "B4.1.1.1: √âcouter et comprendre des salutations": ["B4.1.1.1.1: √âcouter et regarder un document audio-visuel o√π deux personnes se saluent"],
-  "B4.1.1.2: Saluer et r√©pondre oralement": ["B4.1.1.1.2: Saluer et r√©pondre oralement aux salutations"],
-  "B4.1.1.3: Lire et comprendre des salutations": ["B4.1.1.1.3: Lire et comprendre un texte/image d√©crivant une sc√®ne de salutation"],
-  "B4.1.1.4: √âcrire des mots de salutation": ["B4.1.1.1.4: √âcrire des mots de salutation simples"],
-  "B5.1.1.1: √âcouter et comprendre des salutations": ["B5.1.1.1.1: √âcouter/Regarder un document audio-visuel de salutations"],
-  "B5.1.1.2: Saluer et r√©pondre oralement": ["B5.1.1.1.2: Saluer et r√©pondre oralement en respectant les codes"],
-  "B6.1.1.1: √âcouter et comprendre des salutations": ["B6.1.1.1.1: √âcouter et comprendre des √©changes de salutations complexes"],
-  "B4.1.2.1: √âcouter et comprendre des pr√©sentations": ["B4.1.2.1.1: √âcouter et comprendre un dialogue de pr√©sentation"],
-  "B4.1.2.2: Se pr√©senter oralement": ["B4.1.2.2.1: Poser et r√©pondre √† des questions sur le nom, pr√©nom et nationalit√©"],
-  "B5.1.2.1: √âcouter et comprendre des pr√©sentations": ["B5.1.2.1.1: √âcouter un dialogue entre deux personnes qui se pr√©sentent"],
-  "B5.1.2.2: Se pr√©senter oralement": ["B5.1.2.2.1: Poser et r√©pondre √† des questions sur l'√¢ge, profession and adresse"],
-  "B4.4.1.1: √âcouter et comprendre les nombres": ["B4.4.1.1.1: √âcouter/Regarder un document audio-visuel sur les nombres"],
-  "B4.4.1.2: Compter √† haute voix": ["B4.4.1.2.1: Compter √† haute voix des objets et personnes"],
-  "B4.4.1.4: √âcrire les nombres et faire des calculs": ["B4.4.1.4.1: Faire des calculs simples √† l'√©crit avec chiffres en lettres"],
-  "B5.4.1.1: √âcouter et comprendre les nombres": ["B5.4.1.1.1: √âcouter un document audiovisuel sur les nombres √©tendus"],
-  "B5.4.1.4: √âcrire les nombres et faire des calculs": ["B5.4.1.4.1: Faire des calculs mentaux et √©crits complexes"],
-  "B4.4.2.1: √âcouter et comprendre l'heure": ["B4.4.2.1.1: √âcouter un document audio-visuel on les horaires"],
-  "B4.4.2.2: Demander et donner l'heure oralement": ["B4.4.2.2.1: Poser et r√©pondre √† des questions sur l'heure qu'il est"],
-  "B5.4.2.1: √âcouter et comprendre l'heure": ["B5.4.2.1.1: √âcouter des horaires de restaurant, train, avion"],
+  "B4.1.1.1: √É‚Ä∞couter et comprendre des salutations": ["B4.1.1.1.1: √É‚Ä∞couter et regarder un document audio-visuel o√É¬π deux personnes se saluent"],
+  "B4.1.1.2: Saluer et r√É¬©pondre oralement": ["B4.1.1.1.2: Saluer et r√É¬©pondre oralement aux salutations"],
+  "B4.1.1.3: Lire et comprendre des salutations": ["B4.1.1.1.3: Lire et comprendre un texte/image d√É¬©crivant une sc√É¬®ne de salutation"],
+  "B4.1.1.4: √É‚Ä∞crire des mots de salutation": ["B4.1.1.1.4: √É‚Ä∞crire des mots de salutation simples"],
+  "B5.1.1.1: √É‚Ä∞couter et comprendre des salutations": ["B5.1.1.1.1: √É‚Ä∞couter/Regarder un document audio-visuel de salutations"],
+  "B5.1.1.2: Saluer et r√É¬©pondre oralement": ["B5.1.1.1.2: Saluer et r√É¬©pondre oralement en respectant les codes"],
+  "B6.1.1.1: √É‚Ä∞couter et comprendre des salutations": ["B6.1.1.1.1: √É‚Ä∞couter et comprendre des √É¬©changes de salutations complexes"],
+  "B4.1.2.1: √É‚Ä∞couter et comprendre des pr√É¬©sentations": ["B4.1.2.1.1: √É‚Ä∞couter et comprendre un dialogue de pr√É¬©sentation"],
+  "B4.1.2.2: Se pr√É¬©senter oralement": ["B4.1.2.2.1: Poser et r√É¬©pondre √É¬† des questions sur le nom, pr√É¬©nom et nationalit√É¬©"],
+  "B5.1.2.1: √É‚Ä∞couter et comprendre des pr√É¬©sentations": ["B5.1.2.1.1: √É‚Ä∞couter un dialogue entre deux personnes qui se pr√É¬©sentent"],
+  "B5.1.2.2: Se pr√É¬©senter oralement": ["B5.1.2.2.1: Poser et r√É¬©pondre √É¬† des questions sur l'√É¬¢ge, profession and adresse"],
+  "B4.4.1.1: √É‚Ä∞couter et comprendre les nombres": ["B4.4.1.1.1: √É‚Ä∞couter/Regarder un document audio-visuel sur les nombres"],
+  "B4.4.1.2: Compter √É¬† haute voix": ["B4.4.1.2.1: Compter √É¬† haute voix des objets et personnes"],
+  "B4.4.1.4: √É‚Ä∞crire les nombres et faire des calculs": ["B4.4.1.4.1: Faire des calculs simples √É¬† l'√É¬©crit avec chiffres en lettres"],
+  "B5.4.1.1: √É‚Ä∞couter et comprendre les nombres": ["B5.4.1.1.1: √É‚Ä∞couter un document audiovisuel sur les nombres √É¬©tendus"],
+  "B5.4.1.4: √É‚Ä∞crire les nombres et faire des calculs": ["B5.4.1.4.1: Faire des calculs mentaux et √É¬©crits complexes"],
+  "B4.4.2.1: √É‚Ä∞couter et comprendre l'heure": ["B4.4.2.1.1: √É‚Ä∞couter un document audio-visuel on les horaires"],
+  "B4.4.2.2: Demander et donner l'heure oralement": ["B4.4.2.2.1: Poser et r√É¬©pondre √É¬† des questions sur l'heure qu'il est"],
+  "B5.4.2.1: √É‚Ä∞couter et comprendre l'heure": ["B5.4.2.1.1: √É‚Ä∞couter des horaires de restaurant, train, avion"],
   "B5.4.2.2: Demander et donner l'heure oralement": ["B5.4.2.2.1: Se renseigner sur l'heure d'un rendez-vous"],
-  "B4.4.7.1: √âcouter et comprendre les professions": ["B4.4.7.1.1: √âcouter un document audiovisuel sur les m√©tiers"],
-  "B4.4.7.2: Parler des professions oralement": ["B4.4.7.2.1: Poser et r√©pondre √† des questions sur les m√©tiers de la famille", "B4.4.7.2.2: Dire la profession que l'on veut exercer"],
+  "B4.4.7.1: √É‚Ä∞couter et comprendre les professions": ["B4.4.7.1.1: √É‚Ä∞couter un document audiovisuel sur les m√É¬©tiers"],
+  "B4.4.7.2: Parler des professions oralement": ["B4.4.7.2.1: Poser et r√É¬©pondre √É¬† des questions sur les m√É¬©tiers de la famille", "B4.4.7.2.2: Dire la profession que l'on veut exercer"],
   
   // KG Integrated Curriculum Indicators
   // Theme 1: All About Me - KG 1
@@ -5594,7 +5594,7 @@ export const STANDARD_INDICATORS: Record<string, string[]> = {
     "2.2.2.LI.1: Mass media and democratic state development.",
     "2.2.2.LI.2: Discuss party systems.",
     "2.2.2.LI.3: Assess the significance of the EC in Ghana's democratic practice.",
-    "2.2.2.LI.4: Describe Decentralization, types, and structure of Ghana‚Äôs local government system.",
+    "2.2.2.LI.4: Describe Decentralization, types, and structure of Ghana√¢‚Ç¨‚Ñ¢s local government system.",
     "2.2.2.LI.5: Describe the Public Service.",
     "2.2.2.LI.6: Distinguish between E-government and E-governance."
   ],
@@ -5718,13 +5718,13 @@ export const STANDARD_INDICATORS: Record<string, string[]> = {
     "2.3.4.LI.4: Identify nationalist movements in Ghana after the WWII.",
     "2.3.4.LI.5: Examine post-WWII nationalist struggles in Ghana that led to the attainment of Independence."
   ],
-  "3.3.4.CS.1: Demonstrate understanding of Africans‚Äô resistance against colonial rule.": [
+  "3.3.4.CS.1: Demonstrate understanding of Africans√¢‚Ç¨‚Ñ¢ resistance against colonial rule.": [
     "3.3.4.LI.1: Discuss the conditions that led to African resistance to colonial rule.",
     "3.3.4.LI.2: Analyse the nature of African resistance against colonial rule."
   ],
   "2.4.1.CS.1: Demonstrate understanding of the socio-economic and political developments in Ghana from 1957 - 2007.": [
-    "2.4.1.LI.1: Examine the nature of the diarchic system of government in Ghana from 1957 ‚Äì 1960.",
-    "2.4.1.LI.2: Assess the Socio-economic and political developments in Ghana from 1957 ‚Äì 1969.",
+    "2.4.1.LI.1: Examine the nature of the diarchic system of government in Ghana from 1957 √¢‚Ç¨‚Äú 1960.",
+    "2.4.1.LI.2: Assess the Socio-economic and political developments in Ghana from 1957 √¢‚Ç¨‚Äú 1969.",
     "2.4.1.LI.3: Examine Ghana's socio-economic and political developments from 1969 - 1981.",
     "2.4.1.LI.4: Analyse the processes leading to the birth of the Fourth Republic.",
     "2.4.1.LI.5: Assess the socio-economic and political developments in Ghana from 1993 to 2007."
@@ -5817,15 +5817,15 @@ export const STANDARD_INDICATORS: Record<string, string[]> = {
     "2.1.2.LI.1: Explain how the natural environment reveals the nature of Allah.",
     "2.1.2.LI.2: Analyse the nature of Allah through His attributes as espoused by Islam",
     "2.1.2.LI.3: Examine theological approaches and debates over the nature of Allah in Islam",
-    "2.1.2.LI.4: Compare and contrast Islam‚Äôs understanding of the nature of Allah",
+    "2.1.2.LI.4: Compare and contrast Islam√¢‚Ç¨‚Ñ¢s understanding of the nature of Allah",
     "2.1.2.LI.5: Apply the moral values in the attributes of Allah in Islam"
   ],
-  "3.1.2.CS.1: Demonstrate understanding of creation stories of Islam and assess how humans‚Äô disobedience has affected the disposition of humankind": [
-    "3.1.2.LI.1: Examine the Creation story in the Qur‚Äôan",
-    "3.1.2.LI.2: Discuss the disobedience of Adam and Hawa in the Qur‚Äôan",
+  "3.1.2.CS.1: Demonstrate understanding of creation stories of Islam and assess how humans√¢‚Ç¨‚Ñ¢ disobedience has affected the disposition of humankind": [
+    "3.1.2.LI.1: Examine the Creation story in the Qur√¢‚Ç¨‚Ñ¢an",
+    "3.1.2.LI.2: Discuss the disobedience of Adam and Hawa in the Qur√¢‚Ç¨‚Ñ¢an",
     "3.1.2.LI.3: Critically examine the philosophical underpinnings associated with the disobedience of humankind"
   ],
-  "1.2.1.CS.1: Demonstrate knowledge and understanding of the beliefs of Islam and AIR‚Äôs influence and critically assess the varied interpretations of these beliefs.": [
+  "1.2.1.CS.1: Demonstrate knowledge and understanding of the beliefs of Islam and AIR√¢‚Ç¨‚Ñ¢s influence and critically assess the varied interpretations of these beliefs.": [
     "1.2.1.LI.1: Identify the nature or form of Islamic monotheism (Tawhid)",
     "1.2.1.LI.2: Examine the six articles of faith in Islam",
     "1.2.1.LI.3: Assess the concept of Shariah and its interpretations",
@@ -6102,504 +6102,254 @@ export const PE_LESSON_FRAMES: Record<string, any> = {
 
 export const OWOP_B4_B6_LESSON_FRAMES: Record<string, any> = {
   "B4.1.1.1.1": {
-    topic: "The Uniqueness of Mankind",
-    keyWords: ["Unique", "Aspirations", "Talent", "Special"],
+    topic: "My Cultural Identity: Traditional Musical Instruments",
+    keyWords: ["Membranophones", "Idiophones", "Chordophones", "Aerophones", "Fontomfrom"],
     activities: [
-      "Learners identify ways they are different from classmates (height, mass, skills)",
-      "Role-play: Demonstrate a gift/talent they have that others may not",
-      "Draft a poster titled 'I am Special' listing their unique qualities"
+      "Listen to an audio recording of traditional drumming (Fontomfrom/Kete/Agbadza)",
+      "Learners identify and classify instruments by how sound is produced",
+      "Improvise and perform rhythm using table tops and improvised rattles",
+      "Teacher models the historical importance of musical instruments in chieftaincy"
     ],
-    resources: ["Mirror", "Paper/Markers", "Success stories of Ghanaians"]
-  },
-  "B5.1.2.1.1": {
-    topic: "Adolescent Changes",
-    keyWords: ["Adolescence", "Puberty", "Physical", "Emotional"],
-    activities: [
-      "Group discussion (boys/girls separate then together) on body changes",
-      "Teacher explains hormones and emotional shifts (shyness, excitement)",
-      "Match-the-change game: Primary cards with adolescent outcomes"
-    ],
-    resources: ["Body change charts", "Guest health worker", "Video clips"]
-  },
-  "B5.4.2.2.1": {
-    topic: "Introduction to Democracy",
-    keyWords: ["Democracy", "Election", "Accountability", "Leadership"],
-    activities: [
-      "Organize a mock class election for a project leader",
-      "Discuss the features of democracy: transparency, voting, majority rule",
-      "Watch a video of a Ghanaian parliamentary session"
-    ],
-    resources: ["Ballot box", "Ghanaian Constitution (simplified)", "News clips"]
-  },
-  "B6.4.6.1.1": {
-    topic: "Agribusiness and Job Opportunities",
-    keyWords: ["Value Chain", "Processing", "Logistics", "Revenue"],
-    activities: [
-      "Draw a flow-map from Cocoa Farm to Chocolate Bar",
-      "List jobs at each stage: Farmer, Driver, Factory worker, Marketer",
-      "Debate: 'Is farming better than white-collar jobs?'"
-    ],
-    resources: ["Career brochures", "Food samples", "Local farmer interview"]
-  },
-  "B4.3.2.1.1": {
-    topic: "Ghanaian Festivals and Heritage",
-    keyWords: ["Aboakyer", "Homowo", "Eid", "Heritage"],
-    activities: [
-      "Identify festivals celebrated in the local community",
-      "Role-play the arrival of chiefs at a durbar",
-      "Write a short essay on why festivals are important for unity"
-    ],
-    resources: ["Festival pictures", "Traditional items (kente, beads)", "Videos"]
+    resources: ["Audio recordings of drumming", "Improvised shakers", "Pictures of instruments"]
   },
   "B5.2.1.1.1": {
-    topic: "Greenhouse Gases and Human Activity",
-    keyWords: ["Greenhouse", "Carbon Dioxide", "Emission", "Global Warming"],
+    topic: "Our Environment: Protecting Water Bodies",
+    keyWords: ["Pollution", "Turbidity", "Buffer zone", "Water table", "Ecosystem"],
     activities: [
-      "Brainstorm human activities that produce smoke (vehicles, bush burning)",
-      "Diagram: How greenhouse gases trap heat in the atmosphere",
-      "Survey: Group walk to find signs of smoke emission in the community"
+      "Show before-and-after photographs of a clean vs polluted river (e.g. Pra or Birim)",
+      "Learners engage in think-pair-share on how local human activities damage water sources",
+      "Draw a flow diagram showing the journey of water from rainfall to household tap",
+      "Create a classroom poster advocating for clean water protection in the community"
     ],
-    resources: ["Diagrams", "Local environment", "Fact sheets"]
+    resources: ["Photographs of polluted rivers", "Clear water samples", "Manila cards", "Crayons"]
   },
-  "B6.2.3.1.1": {
-    topic: "Political Regions of Ghana",
-    keyWords: ["Regions", "Capitals", "Administrative", "Boundary"],
+  "B6.4.1.1.1": {
+    topic: "Basic Computing: Identifying Input and Output Devices",
+    keyWords: ["Peripheral", "Microphone", "Projector", "Scanner", "Processing Unit"],
     activities: [
-      "Locate the 16 regions on a political map of Ghana",
-      "Memory game: Matching regions to their administrative capitals",
-      "Colouring project: Shading regions correctly on a blank map"
+      "Display physical computer peripherals or printed flashcards of devices",
+      "Learners sort devices into two groups: Input vs Output",
+      "Simulate data entry: One learner acts as keyboard (input), another processes, third displays (monitor)",
+      "Fill in a worksheet matching device names with their specific functions"
     ],
-    resources: ["Blank maps", "Wall map of Ghana", "Puzzle games"]
+    resources: ["Old keyboard, mouse, or pictures", "Device sorting flashcards", "Worksheets"]
   }
 };
 
 export const MATH_B1_B3_LESSON_FRAMES: Record<string, any> = {
   "B1.1.1.1.1": {
-    topic: "Counting in 1s, 2s and 10s",
-    keyWords: ["Counting", "Forward", "Backward", "Sequence"],
+    topic: "Number Sense: Counting Quantities up to 20",
+    keyWords: ["Count", "Forward", "Quantity", "Numeral", "One-to-one correspondence"],
     activities: [
-      "Learners count sticks or stones in 1s up to 50",
-      "Game: 'Skip and Jump' - counting in 2s while jumping in the yard",
-      "Use bundles of 10 to practice counting in tens",
-      "Identify missing numbers in a sequence on the board"
+      "Learners gather 10-20 bottle caps or pebbles from the math corner",
+      "Count objects aloud in groups of five, pointing to each object once",
+      "Match numeral cards (1 to 20) with corresponding concrete sets of objects",
+      "Sing a Ghanaian counting rhyme to reinforce number order"
     ],
-    resources: ["Stones", "Bundles of sticks", "100-number chart"]
+    resources: ["Bottle caps", "Pebbles", "Numeral flashcards (1-20)", "Counting frame/Abacus"]
   },
-  "B2.1.1.1.4.1": {
-    topic: "Place Value: Tens and Ones",
-    keyWords: ["Tens", "Ones", "Digit", "Value"],
+  "B2.1.2.1.1": {
+    topic: "Addition within 50: Adding Two 2-Digit Numbers without Regrouping",
+    keyWords: ["Addition", "Sum", "Tens", "Ones", "Place value", "Combine"],
     activities: [
-      "Use base-ten blocks (flats and units) to represent numbers like 42",
-      "Decompose numbers: 57 = 5 tens and 2 ones",
-      "Interactive: Learners move units to the 'Tens' house when they reach 10",
-      "Writing numbers in expanded form: 40 + 8 = 48"
+      "Represent numbers using bundle-of-ten sticks and loose single sticks",
+      "Add tens first, then add ones using a place value mat",
+      "Solve 3 horizontal addition problems using expanded notation (e.g. 23 + 14 = 20+10 + 3+4)",
+      "Work in pairs to solve word problems based on market shopping scenarios"
     ],
-    resources: ["Base-ten blocks", "Place value mats", "Number cards"]
+    resources: ["Base-ten blocks/Bundle of sticks", "Place value charts", "Grid paper"]
   },
-  "B3.1.2.5.1": {
-    topic: "Intro to Multiplication: Equal Groups",
-    keyWords: ["Groups", "Multiplier", "Product", "Total"],
+  "B3.1.2.2.1": {
+    topic: "Multiplication: Understanding Equal Groups and Repeated Addition",
+    keyWords: ["Groups of", "Array", "Repeated addition", "Times", "Product"],
     activities: [
-      "Arrange 12 bottle caps into 3 groups of 4",
-      "Link grouping to addition: 4 + 4 + 4 = 12",
-      "Learner drawing: 'Draw 5 trees with 2 mangoes on each'",
-      "Introduce the 'x' symbol as shorthand for 'groups of'"
+      "Arrange counters into 3 equal rows of 4 objects each",
+      "Write the corresponding repeated addition sentence: 4 + 4 + 4 = 12",
+      "Translate repeated addition into a multiplication sentence: 3 √É‚Äî 4 = 12",
+      "Draw arrays representing given multiplication facts on mini chalkboards"
     ],
-    resources: ["Bottle caps", "Drawing sheets", "Multiplication chart"]
+    resources: ["Egg cartons", "Pebbles/Bottle tops", "Mini slates/chalk"]
   }
 };
 
 export const MATH_B4_B6_LESSON_FRAMES: Record<string, any> = {
-  "B4.1.1.2.1": {
-    topic: "Introduction to Roman Numerals (1-30)",
-    keyWords: ["Roman Numerals", "I, V, X", "Symbols", "Conversion"],
+  "B4.1.2.1.1": {
+    topic: "Fractions: Identifying Equivalent Fractions with Visual Models",
+    keyWords: ["Numerator", "Denominator", "Equivalent", "Fraction strip", "Simplify"],
     activities: [
-      "Show a clock with Roman Numerals and discuss the symbols",
-      "Teacher demonstrates symbols: I=1, V=5, X=10",
-      "Game: Call out a number and learners form the Roman symbol with their fingers or sticks",
-      "Match word cards of Hindu-Arabic numbers to Roman cards"
+      "Fold paper strips into halves, fourths, and eighths to observe equal shaded lengths",
+      "Identify that 1/2 = 2/4 = 4/8 using fraction bars",
+      "Solve practice problems converting fractions by multiplying numerator and denominator by the same number",
+      "Group game: 'Fraction Match' pairing equivalent visual and numerical fraction cards"
     ],
-    resources: ["Roman Numeral chart", "Matches/Sticks", "Clock face"]
+    resources: ["Paper strips for folding", "Fraction chart", "Fraction dominoes/cards"]
   },
-  "B4.1.2.5.1": {
-    topic: "Division as Repeated Subtraction",
-    keyWords: ["Division", "Subtraction", "Quotient", "Efficient"],
+  "B5.1.2.3.1": {
+    topic: "Percentages: Converting Simple Fractions to Percentages",
+    keyWords: ["Percent", "Out of 100", "Conversion", "Proportion", "Hundredths"],
     activities: [
-      "Use 25 straws and take groups of 5 away until none are left",
-      "Model the long division frame on the board",
-      "Practice dividing 2-digit numbers by 1-digit (e.g., 48 √∑ 4)",
-      "Peer teaching: One learner explains the 'Big 7' method to another"
+      "Shade parts of a 10x10 hundred grid to visualize percentages (e.g. 50 out of 100 = 50%)",
+      "Convert benchmark fractions (1/2, 1/4, 3/4, 1/10) to percentages using equivalent denominators of 100",
+      "Solve practical word problems calculating discount percentages from a local shop scenario",
+      "Pair discussion on where percentages appear in daily life (phone battery, test scores)"
     ],
-    resources: ["Straws", "Division frames", "Worksheets"]
+    resources: ["100-grid sheets", "Calculators for verification", "Price tags/Store receipts"]
   },
-  "B5.3.3.3.2": {
-    topic: "Measuring Angles with a Protractor",
-    keyWords: ["Protractor", "Degrees", "Acute", "Obtuse", "Right Angle"],
+  "B6.2.1.1.1": {
+    topic: "Algebraic Expressions: Forming Linear Equations from Word Descriptions",
+    keyWords: ["Variable", "Unknown", "Expression", "Equation", "Constant"],
     activities: [
-      "Demonstrate how to align the midpoint of the protractor with the vertex",
-      "Learners draw various 'V' shapes and measure the opening in degrees",
-      "Sort measured angles into Acute (< 90), Obtuse (> 90), and Right (90)",
-      "Treasure Hunt: Find angles in the classroom (e.g., door hinge) and measure them"
+      "Introduce mystery number problems: 'I think of a number, add 5, result is 12'",
+      "Represent unknown quantities with letters (e.g. x + 5 = 12)",
+      "Translate word sentences into algebraic equations in groups of three",
+      "Verify solutions by substituting values back into the equation"
     ],
-    resources: ["Protractors", "Rulers", "Angle charts"]
-  },
-  "B6.1.3.1.2": {
-    topic: "Adding Mixed Fractions",
-    keyWords: ["Mixed Fractions", "Improper", "LCD", "Denominator"],
-    activities: [
-      "Use folded paper circles to show 1 1/2 + 2 1/2",
-      "Convert mixed fractions to improper fractions (2 1/3 = 7/3)",
-      "Find the Lowest Common Denominator (LCD) for unlike fractions",
-      "Solve real-life problems: 'Add 2 1/2 bags of cement to 1 1/4 bags'"
-    ],
-    resources: ["Fraction circles", "Grid paper", "Fraction wall"]
-  },
-  "B6.1.4.1.1": {
-    topic: "Understanding Ratios",
-    keyWords: ["Ratio", "Comparison", "Proportion", "Simplest Form"],
-    activities: [
-      "Compare quantities of items: 4 red pens to 2 blue pens (4:2)",
-      "Simplify ratios by dividing by HCF (4:2 = 2:1)",
-      "Model with area: 'Shape A is 1/4 the size of Shape B'",
-      "Recipe scaling: '3 cups of water to 1 cup of rice'"
-    ],
-    resources: ["Pens/Stones", "Measuring cups", "Area blocks"]
+    resources: ["Algebra balance scales", "Expression cards", "Whiteboard and markers"]
   }
 };
 
 export const OWOP_B1_B3_LESSON_FRAMES: Record<string, any> = {
-  "B1.1.1.1.1": {
-    topic: "Our Relationship with the Creator",
-    keyWords: ["God", "Creator", "Creation", "Faith"],
+  "B1.1.1.1": {
+    topic: "All About Me - Myself and My Family",
+    keyWords: ["Identity", "Family", "Parents", "Sibling", "Care"],
     activities: [
-      "Learners talk about God's creation using pictures and real things from the environment",
-      "Retell the creation story through role-play",
-      "Draw and colour animals, trees, and stars as part of God's creation"
+      "Share names and birth orders in small circles",
+      "Draw picture of own family members engaged in an activity",
+      "Discuss good manners and respecting elders at home",
+      "Sing family-themed rhymes in local dialect"
     ],
-    resources: ["Pictures", "Drawing sheets", "Environment"]
+    resources: ["Drawing sheets", "Color pencils", "Family tree template"]
   },
-  "B2.2.2.1.1": {
-    topic: "Important Plants in our Community",
-    keyWords: ["Plants", "Crops", "Cocoa", "Food"],
+  "B2.2.1.1": {
+    topic: "Our Environment - Keeping School Clean",
+    keyWords: ["Sanitation", "Litter", "Sweeping", "Dustbin", "Hygiene"],
     activities: [
-      "Nature walk to observe and talk about different plants in the environment",
-      "Identify uses of plants (food, medicine, shade)",
-      "Draw and label a plant found in the community"
+      "Walk around the school compound identifying clean and dirty spots",
+      "Practice sorting waste into organic and plastic waste bins",
+      "Role-play proper hand washing after cleaning chores",
+      "Draft simple class sanitation rules"
     ],
-    resources: ["Garden", "Plant samples", "Crayons"]
-  },
-  "B3.2.1.1.1": {
-    topic: "Problems with Use of Land and Water",
-    keyWords: ["Pollution", "Degradation", "Land", "Water"],
-    activities: [
-      "Discuss activities like Galamsey and bush burning through pictures",
-      "Trip to observe a local water body (if safe)",
-      "Brainstorm ways to protect our land and water sources"
-    ],
-    resources: ["Videos/Photos of illegal mining", "Local environment"]
+    resources: ["Brooms", "Dustbins", "Soap and Veronica bucket", "Sanitation chart"]
   }
 };
 
 export const PEDAGOGICAL_PHASES = {
-  starter: {
-    duration: "10 minutes",
-    goal: "Preparing the brain for learning",
-    description: "A starter should stimulate curiosity and open mindedness. Review and reinforcement of previous content.",
-    activities: [
-      "Mental maths games (fast-paced)",
-      "Skip counting forward/backwards",
-      "Number facts review",
-      "Review related previous knowledge",
-      "Short reinforcement activities"
-    ]
-  },
-  main: {
-    duration: "35 minutes",
-    goal: "New learning including assessment",
-    description: "Activities to explore new learning content for the day, including at least 20 minutes of independent or collaborative problem solving.",
-    activities: [
-      "Explore new learning areas",
-      "Work in pairs or groups on differentiated tasks",
-      "Work with resources or tools",
-      "Share and discuss results and strategies"
-    ]
-  },
-  plenary: {
-    duration: "5 minutes",
-    goal: "Plenary/Reflections (Learner and teacher)",
-    description: "Reflect, recap and consolidate the learning that has happened in the day's lesson.",
-    activities: [
-      "Recap on learning outcomes",
-      "Learning progress voting (e.g., 5-finger scale)",
-      "Identify and correct misconceptions",
-      "Direct learners to the next phase of learning"
-    ]
-  }
+  phase1: "Phase 1: Starter (Introduction & Engaging Prior Knowledge)",
+  phase2: "Phase 2: Main / New Learning (Teacher Facilitation, Guided & Independent Practice)",
+  phase3: "Phase 3: Reflection & Plenary (Assessment, Summary & Homework)"
 };
 
 export const FORMATIVE_ASSESSMENT_STRATEGIES = [
-  {
-    name: "Think-Pair-Share",
-    description: "Learners think for 30s-1min, brainstorm in pairs for 2-3 mins, then share with the whole class."
-  },
-  {
-    name: "2 Stars and a Wish",
-    description: "Peer assessment: 2 things that are good (stars) and 1 thing to improve (wish)."
-  },
-  {
-    name: "Traffic Lights",
-    description: "Visual signal of understanding: Red (struggling), Amber (not quite sure), Green (fully understand)."
-  },
-  {
-    name: "Hand Signals",
-    description: "Thumbs up/down or 5-finger scale to determine acknowledged understanding."
-  },
-  {
-    name: "Show and Tell",
-    description: "Use mini-whiteboards or slates for every learner to write/draw their answer simultaneously."
-  },
-  {
-    name: "K-W-L Grid",
-    description: "What they Know, What they Want to know, and at end, What they Have Learnt."
-  }
+  "Think-Pair-Share (Oral reflection)",
+  "Exit Tickets (1-minute quick check)",
+  "Traffic Light Self-Assessment (Red/Yellow/Green)",
+  "Two Stars and a Wish (Peer feedback)",
+  "Mini-Whiteboard Check",
+  "Thumbs Up / Thumbs Down / Sideways",
+  "Chalkboard Splash (Simultaneous writing)",
+  "Observation with Checklists"
 ];
 
 export const MATH_B7_LESSON_FRAMES: Record<string, any> = {
   "B7.1.1.1": {
-    topic: "Number and Numerals - Whole numbers up to 10,000,000,000",
-    keyWords: ["Model", "place value", "strategy", "rounding up/down/off", "less/greater than"],
+    topic: "Sets and Operations on Sets",
+    keyWords: ["Venn diagram", "Intersection", "Union", "Universal set", "Complement"],
     activities: [
-      "Read and write numbers using words and numerals",
-      "Skip counting forward/backwards in 10,000s, 100,000s, etc.",
-      "Model 8-digit numbers using graph sheets and multi-base blocks",
-      "Rounding whole numbers to the nearest hundred-thousand, ten-thousands, etc."
+      "Define sets and list elements of finite and infinite sets",
+      "Draw 2-set Venn diagrams to represent union and intersection",
+      "Find cardinal numbers and complements of sets",
+      "Solve practical word problems involving two sets"
     ],
-    resources: ["Flash cards (4-7 digit numbers)", "Graph sheets", "Multi-base ten materials", "Place value chart"]
+    resources: ["Venn diagram charts", "Set cards", "Graph paper", "Worksheets"]
   },
   "B7.1.2.1": {
-    topic: "Number Operations ‚Äì Mental Mathematics Strategies",
-    keyWords: ["halving", "doubling", "distributive property"],
+    topic: "Fractions, Decimals and Percentages",
+    keyWords: ["Recurring decimal", "Terminating decimal", "Simplification", "Equivalent"],
     activities: [
-      "Recall multiplication and related division facts",
-      "Apply halving and doubling to determine products (e.g., 28 x 5 ‚Üí 14 x 10)",
-      "Solve mental maths word problems involving basic operations"
+      "Convert between common fractions, decimals and percentages",
+      "Compare and order fractions with unlike denominators",
+      "Perform arithmetic operations on mixed fractions",
+      "Solve word problems on real-world profit and loss percentages"
     ],
-    resources: ["Multiplication chart", "Place value chart", "Abacus"]
-  },
-  "B7.1.2.2": {
-    topic: "Number Operations ‚Äì Basic Operations on Whole and Decimal Numbers",
-    keyWords: ["Addition", "subtraction", "multiplication", "division", "decimals"],
-    activities: [
-      "Use partitioning and place value system for addition/subtraction",
-      "Multiply or divide multi-digit numbers by 1- and 2-digit numbers",
-      "Solve story problems involving decimals"
-    ],
-    resources: ["Place value chart", "Multiplication chart", "Calculator (for checking)"]
-  },
-  "B7.1.2.3": {
-    topic: "Number Operations ‚Äì Powers of Numbers",
-    keyWords: ["Power", "base", "index", "indices", "simplify", "exponent"],
-    activities: [
-      "Explain the meaning of repeated factors",
-      "Solve for the value of a number written in index form",
-      "Apply product of primes to find HCF"
-    ],
-    resources: ["Index cards", "Indices dominos", "Counters"]
-  },
-  "B7.1.3.1": {
-    topic: "Fractions ‚Äì Comparing Fractions",
-    keyWords: ["Numerator", "denominator", "benchmark fractions", "percentages", "decimals"],
-    activities: [
-      "Work out common, decimal and percent equivalences of benchmark fractions",
-      "Change fractions to same denominator to compare using < or >",
-      "Order a set of fractions, decimals and percentages"
-    ],
-    resources: ["Square grid paper", "Benchmark fractions chart", "Geodot paper"]
-  },
-  "B7.3.1.1": {
-    topic: "Geometry and Measurement ‚Äì Angles",
-    keyWords: ["Acute", "Right", "Obtuse", "Reflex", "Supplementary", "Complementary"],
-    activities: [
-      "Watch short clips of construction sites to see angles in use",
-      "Classify angles based on measured sizes",
-      "Apply facts about complementary (90¬∞) and supplementary (180¬∞) angles",
-      "Solve problems using adjacent and vertically opposite angles"
-    ],
-    resources: ["Protractor", "Ruler", "Geostrips (or straws)", "Geometry sets"]
-  },
-  "B7.3.2.1": {
-    topic: "Measurement ‚Äì Perimeter of Plane Shapes Including Circles",
-    keyWords: ["Perimeter", "Dimension", "Circle", "Diameter", "Pi (œÄ)"],
-    activities: [
-      "Calculate perimeter using multiple units (e.g., cm and mm)",
-      "Measure diameter and circumference of circular objects",
-      "Deduce the formula for circumference by observing C √∑ D ratio"
-    ],
-    resources: ["Circular objects (cans, bowls)", "String", "Ruler", "Square grid paper"]
-  },
-  "B7.4.1.1": {
-    topic: "Handling Data - Data Collection",
-    keyWords: ["Survey", "Questionnaire", "Interview", "Observation", "Quantitative", "Qualitative"],
-    activities: [
-      "Select and justify methods for data collection",
-      "Design and administer a simple questionnaire",
-      "Organise survey data into frequency tables and charts"
-    ],
-    resources: ["Sticker papers", "Permanent markers", "Sample survey forms"]
-  },
-  "B7.4.2.1": {
-    topic: "Handling Data - Probability",
-    keyWords: ["Impossible", "Possible", "Certain", "Sample space", "Random"],
-    activities: [
-      "Classify events from personal contexts as impossible, possible, or certain",
-      "Calculate simple probabilities for single event experiments",
-      "Express probabilities as fractions, decimals, percentages, and ratios"
-    ],
-    resources: ["Dice", "Coins", "Fractions/Decimals flash cards"]
+    resources: ["Fraction chart", "Percentage grid", "Ruler", "Word problem cards"]
   }
 };
 
 export const SCIENCE_B7_LESSON_FRAMES: Record<string, any> = {
   "B7.1.1.1": {
-    topic: "Materials - Recognise materials as important resources",
-    keyWords: ["Resources", "Solid", "Liquid", "Gas", "Water Vapour"],
+    topic: "Cells and Organisation of Life",
+    keyWords: ["Plant cell", "Animal cell", "Cell membrane", "Cytoplasm", "Nucleus", "Organelles"],
     activities: [
-      "Name and describe materials from environment (texture, appearance, color)",
-      "Group materials into liquids, solids and gases with reasons",
-      "Discuss differences between the three states of matter",
-      "Demonstrate the presence of air (gas) by heating water"
+      "Observe plant and animal cells under a light microscope",
+      "Draw and label generalized plant and animal cells",
+      "Compare structures of plant and animal cells in a summary table",
+      "Explain the levels of cellular organisation (Cell √¢‚Ä†‚Äô Tissue √¢‚Ä†‚Äô Organ √¢‚Ä†‚Äô System √¢‚Ä†‚Äô Organism)"
     ],
-    resources: ["Water", "Oil", "Sand", "Gravel", "Vinegar", "Source of heat"]
+    resources: ["Microscope", "Prepared slides of onion epidermal and cheek cells", "Cell charts", "Modeling clay"]
   },
   "B7.1.2.1": {
-    topic: "Living Cells - Structure and function of animal cells",
-    keyWords: ["Organelle", "Mitochondrion", "Nucleus", "Cell Wall", "Epidermis"],
+    topic: "Matter - Particulate nature of matter",
+    keyWords: ["Atom", "Molecule", "Ion", "Solid", "Liquid", "Gas", "Diffusion"],
     activities: [
-      "Identify and describe animal cell structure from videos and charts",
-      "Discuss functions of organelles (nucleus, mitochondrion, etc.)",
-      "Draw and label an animal cell",
-      "Develop a model of an animal cell using local materials"
+      "Demonstrate Brownian motion using smoke cell or pollen grains in water",
+      "Perform diffusion experiments using potassium permanganate crystals in water",
+      "Draw particle arrangement diagrams for solids, liquids and gases",
+      "Classify common substances into elements, compounds and mixtures"
     ],
-    resources: ["Microscope", "Slides", "Magnifier", "Models", "Charts"]
-  },
-  "B7.2.1.1": {
-    topic: "Earth Science - The Water Cycle",
-    keyWords: ["Transpiration", "Condensation", "Precipitation", "Evaporation", "Collection"],
-    activities: [
-      "Discuss origin of Earth's water",
-      "List and explain the stages of the water cycle",
-      "Draw a flow chart showing links between water cycle stages",
-      "Identify community situations that illustrate the water cycle"
-    ],
-    resources: ["Videos", "Pictures", "Pop bottles", "Ice crystals", "Charts"]
-  },
-  "B7.4.1.1": {
-    topic: "Energy - Forms of energy and daily applications",
-    keyWords: ["Kinetic", "Potential", "Mechanical", "Heat", "Sound", "Nuclear"],
-    activities: [
-      "List various forms of energy (Solar, Electrical, Chemical, etc.)",
-      "Demonstrate Potential Energy (PE) vs Kinetic Energy (KE)",
-      "Use PE = mgh and KE = 1/2mv¬≤ to solve mechanical energy problems",
-      "Match energy forms to daily appliances/gadgets"
-    ],
-    resources: ["Pictures", "Videos", "Objects for dropping", "Energy charts"]
-  },
-  "B7.4.2.2": {
-    topic: "Electricity and Electronics - Basic electronic components",
-    keyWords: ["Electronic", "Diode", "Capacitor", "Resistor", "Inductor", "LED"],
-    activities: [
-      "Examine electronic components (LEDs, Resistors, Capacitors)",
-      "Dismantle and assemble spoilt electronic gadgets (Radio, TV)",
-      "Identify P and N regions of a P-N junction diode",
-      "Construct a simple electronic circuit with a 3V battery, switch and LED"
-    ],
-    resources: ["P-N Junction diodes", "Resistors", "Capacitors", "LEDs", "3V Battery"]
+    resources: ["Potassium permanganate", "Beakers", "Water", "Perfume/Incense stick", "Charts"]
   }
 };
 
 export const ENGLISH_B1_B6_LESSON_FRAMES: Record<string, any> = {
-  "B1.2.2.1": {
-    topic: "Alphabet Sounds and Blending",
-    keyWords: ["Vowels", "Consonants", "Blending", "Phonemes"],
+  "B1.1.1.1": {
+    topic: "Oral Language - Listening and Speaking",
+    keyWords: ["Phonics", "Rhymes", "Greetings", "Pronunciation"],
     activities: [
-      "Sing the alphabet song and identify each letter name and sound",
-      "Use letter cards to form simple three-letter words",
-      "Clap the syllables of common words identified in the classroom",
-      "Practice blending vowel and consonant sounds to form words like 'at', 'am', 'man'"
+      "Sing nursery rhymes and action songs",
+      "Practice polite greetings and farewells in pairs",
+      "Identify beginning sounds in familiar words",
+      "Engage in storytelling and listening comprehension"
     ],
-    resources: ["Alphabet charts", "Letter cards", "Sound recordings", "Word trees"]
+    resources: ["Letter flashcards", "Puppets", "Picture books", "Audio recorder"]
   },
-  "B4.3.1.1": {
-    topic: "Types of Nouns",
-    keyWords: ["Common Noun", "Proper Noun", "Collective Noun", "Abstract Noun"],
+  "B4.1.1.1": {
+    topic: "Reading - Comprehension and Vocabulary",
+    keyWords: ["Main idea", "Context clues", "Inference", "Vocabulary", "Summary"],
     activities: [
-      "Identify objects in the classroom and categorize them as common nouns",
-      "List names of cities and countries in Ghana as proper nouns",
-      "Play 'Lucky Dip' with collective noun cards (e.g., 'a flock of sheep')",
-      "Discuss abstract concepts like 'honesty' and 'patience' as nouns"
+      "Read short narrative passages aloud with correct pauses and expression",
+      "Identify unfamiliar words and infer meanings using context clues",
+      "Answer direct and inferential comprehension questions",
+      "Write a 3-sentence summary of the main event in the text"
     ],
-    resources: ["Noun charts", "Sentence strips", "Globe or Map", "Worksheets"]
-  },
-  "B6.2.2.1": {
-    topic: "Phonics: Ending Sounds and Multisyllabic Words",
-    keyWords: ["Suffixes", "Multisyllabic", "Ending Sounds", "CCVCC"],
-    activities: [
-      "Identify words with ending sounds like 'sure', 'ture' and 'tch'",
-      "Read multisyllabic words like 'communication' and 'immediate' independently",
-      "Practice reading words with CCVCC and CCCVC patterns (e.g., 'trust', 'scrap')",
-      "Play the 'Pick and Read' game with target phonics patterns"
-    ],
-    resources: ["Phonics cards", "Short story texts", "Digital literacy tools", "Word games"]
+    resources: ["Comprehension readers", "Dictionary", "Sentence strips"]
   }
 };
 
 export const ENGLISH_B7_LESSON_FRAMES: Record<string, any> = {
   "B7.1.1.1": {
-    topic: "Greetings and Introductions",
-    keyWords: ["Salutations", "Formal", "Informal", "Self-introduction"],
+    topic: "Grammar - Parts of Speech in Context",
+    keyWords: ["Nouns", "Pronouns", "Verbs", "Adjectives", "Adverbs", "Prepositions"],
     activities: [
-      "Role-play different greeting scenarios (morning, afternoon, formal meetings)",
-      "Practice introducing oneself and others using correct pronouns",
-      "Discuss the importance of eye contact and posture during greetings",
-      "Listen to recordings of greetings in various contexts"
+      "Identify parts of speech in selected literary excerpts",
+      "Construct compound and complex sentences using proper conjunctions",
+      "Analyze functions of nouns and verbs in subject-verb agreement",
+      "Engage in peer-editing of written paragraphs"
     ],
-    resources: ["Audio recordings", "Flashcards", "Role-play cards", "Videos of social interactions"]
-  },
-  "B7.2.1.1": {
-    topic: "Reading for Comprehension",
-    keyWords: ["Skimming", "Scanning", "Main Idea", "Context Clues"],
-    activities: [
-      "Read short passages and identify the primary theme",
-      "Practice skimming for overview and scanning for specific facts",
-      "Use context clues to determine the meaning of unfamiliar words",
-      "Summarize paragraphs in one sentence"
-    ],
-    resources: ["Newspaper clippings", "Short story books", "Dictionaries", "Worksheets"]
+    resources: ["Grammar charts", "Reading passages", "Editing checklists"]
   }
 };
 
 export const SCIENCE_B8_LESSON_FRAMES: Record<string, any> = {
   "B8.1.1.1": {
-    topic: "Physical Properties of Materials",
-    keyWords: ["Purity", "Density", "Melting Point", "Boiling Point"],
+    topic: "Photosynthesis and Respiration",
+    keyWords: ["Chlorophyll", "Stomata", "Glucose", "Aerobic", "Anaerobic"],
     activities: [
-      "Discuss physical properties of materials (boiling point, density)",
-      "Carry out experiments to distinguish between pure and impure substances",
-      "Demonstrate the effects of impurities on boiling and melting points",
-      "Calculate density of various solid objects"
+      "Investigate the presence of starch in green leaves",
+      "Demonstrate that light and carbon dioxide are needed for photosynthesis",
+      "Compare equations for photosynthesis and cellular respiration",
+      "Explain the importance of green plants in the carbon cycle"
     ],
-    resources: ["Thermometers", "Pure water", "Salt", "Beakers", "Weighing scales"]
-  },
-  "B8.1.2.1": {
-    topic: "Plant Cells - Structure and function",
-    keyWords: ["Chloroplast", "Vacuole", "Cell Wall", "Cytoplasm"],
-    activities: [
-      "Identify and describe plant cell structure under a microscope",
-      "Compare and contrast plant and animal cells",
-      "Discuss the functions of unique plant cell organelles",
-      "Prepare slides of onion epidermal cells for observation"
-    ],
-    resources: ["Microscope", "Onions", "Iodine solution", "Cover slips", "Charts"]
+    resources: ["Iodine solution", "Ethanol", "Boiling water bath", "Variegated leaves", "Test tubes"]
   }
 };
 
@@ -6625,6 +6375,103 @@ export const SCIENCE_B9_LESSON_FRAMES: Record<string, any> = {
       "Construct a simple DNA model"
     ],
     resources: ["Charts", "Videos", "Mirror", "Paper for traits chart", "Model building kits"]
+  }
+};
+
+export const GHANAIAN_LANGUAGE_B1_B3_LESSON_FRAMES: Record<string, any> = {
+  "B1.1.1.1": {
+    topic: "Oral Language - Songs and Rhymes",
+    keyWords: ["Songs", "Rhymes", "Rhythm", "Clapping", "Actions"],
+    activities: [
+      "Sing traditional Ghanaian children songs with appropriate actions",
+      "Recite simple rhymes and clap to the rhythm",
+      "Identify rhyming words in familiar local songs",
+      "Perform group singing and dramatization"
+    ],
+    resources: ["Audio recordings of traditional songs", "Percussion instruments", "Song charts"]
+  },
+  "B2.1.1.1": {
+    topic: "Oral Language - Storytelling and Discussion",
+    keyWords: ["Ananse stories", "Moral values", "Characters", "Listening", "Retelling"],
+    activities: [
+      "Listen attentively to a folklore story narrated by teacher or peer",
+      "Answer factual and inferential questions based on the story",
+      "Retell the story in sequence using own words in the Ghanaian language",
+      "Role-play key characters and dramatize the moral lesson"
+    ],
+    resources: ["Story books in Ghanaian languages", "Puppets", "Picture cards"]
+  },
+  "B3.2.1.1": {
+    topic: "Reading and Comprehension - Simple Texts",
+    keyWords: ["Phonics", "Sight words", "Fluency", "Vocabulary", "Punctuation"],
+    activities: [
+      "Read grade-level decodable passages with correct pronunciation",
+      "Identify new vocabulary words and infer meanings from context",
+      "Answer guided reading comprehension questions",
+      "Illustrate the main idea of the passage"
+    ],
+    resources: ["Graded readers", "Word walls", "Flashcards", "Sentence strips"]
+  }
+};
+
+export const KG_INTEGRATED_LESSON_FRAMES: Record<string, any> = {
+  "KG1.1.1.1": {
+    topic: "All About Me - Parts of My Body",
+    keyWords: ["Head", "Eyes", "Nose", "Mouth", "Hands", "Feet"],
+    activities: [
+      "Sing action songs like 'Head, Shoulders, Knees and Toes' in local and English languages",
+      "Point to and name parts of the body during guided circle time",
+      "Trace and colour outlines of body parts",
+      "Engage in sensory discovery games (taste, touch, smell, hearing, sight)"
+    ],
+    resources: ["Body part charts", "Mirror", "Crayons", "Large paper for tracing"]
+  },
+  "KG2.1.1.1": {
+    topic: "My Family and Community",
+    keyWords: ["Father", "Mother", "Brother", "Sister", "Family", "Love"],
+    activities: [
+      "Show family photographs and talk about members of the household",
+      "Role-play family roles and chores in the dramatic play corner",
+      "Draw family members and dictate simple descriptions to the teacher",
+      "Sing songs honoring family love and unity"
+    ],
+    resources: ["Family pictures", "Dramatic play props", "Drawing paper", "Crayons"]
+  }
+};
+
+export const RME_LESSON_FRAMES: Record<string, any> = {
+  "B1.1.1.1": {
+    topic: "God the Creator and His Creation",
+    keyWords: ["God", "Creation", "Sun", "Moon", "Stars", "Plants", "Animals"],
+    activities: [
+      "Observe natural objects around the school environment (plants, sky, stones)",
+      "Recite poems and sing songs appreciating God's creation",
+      "Draw and color things created by God",
+      "Discuss ways of caring for God's creation"
+    ],
+    resources: ["Nature walk observations", "Creation charts", "Crayons", "Pictures of nature"]
+  },
+  "B4.1.1.1": {
+    topic: "Religious Festivals in Ghana",
+    keyWords: ["Christmas", "Eid-ul-Fitr", "Eid-ul-Adha", "Homowo", "Hogbetsotso", "Odwira"],
+    activities: [
+      "Identify major Christian, Islamic, and Traditional festivals celebrated in Ghana",
+      "Describe the significance and moral values taught by each festival",
+      "Compare how different religious communities celebrate their festive seasons",
+      "Present short dramatizations or poems on religious tolerance and peace"
+    ],
+    resources: ["Festival pictures and videos", "Costumes", "Cultural artifacts", "Resource persons"]
+  },
+  "B7.1.1.1": {
+    topic: "The Nature of God and His Attributes",
+    keyWords: ["Omnipotent", "Omnipresent", "Omniscient", "Sovereign", "Names of God"],
+    activities: [
+      "List indigenous Ghanaian names and attributes of God (Onyankopon, Mawu, Naawuni)",
+      "Analyze the meaning of various religious names of God across Christian, Islamic, and Traditional beliefs",
+      "Discuss how belief in God's attributes influences personal moral conduct",
+      "Compose reflective essays or poems on the greatness of God"
+    ],
+    resources: ["Holy Scriptures (Bible, Quran)", "Charts of God's attributes", "Reference texts"]
   }
 };
 
@@ -6675,10 +6522,13 @@ export const FRENCH_B4_B6_LESSON_FRAMES: Record<string, any> = {
   },
   "B6.1.3.2": {
     topic: "Pr√©senter quelqu'un (Presenting someone else)",
-    keyWords: ["Voici", "Il s'appelle", "ElxúîWkè⁄8˝>ø¬‚Kw%h’ŒJ[Õ>$ÜaÍ@Yòn?¨™ëì‚éG∂ÕÆ˙ﬂ˜‹kiê:âÄ}_Á‹s/F	ˇBVï2Fı˙¢7z°|Ö-Ö,ÙOÍÁﬁß˛ô¿èLÉ^Î†ïøˇ;BÙÓ ‡lVßJH±tZïô∞N§Fz_»†D∞"‰*æ!t)Æù*”º◊ﬂ›ˇ‡ï®tjß<ŒîOùN`ñtk|)[{qìÀRjYäJ9oKi8úΩµèN√Á˘‡·U‡I˘÷à.W#r2ç(Të(∑ø8ì.ËTW2¢¨§vÉçuO¢B\0%ÉF=2-ç]’»˜∂u¡	[ªîÀ“ªF¢y*]ÊÖ]~¶Ë]G˜ªåÈ≠≈6R·É”ïÔ}Ç—Øg_;;S_*ÎÇHm	<nná”·›p˙x?úﬁ|ﬁå/_?^û?ﬁèã˜”«Î˘p2^\àπJ≠À~'[Â™è*6ä?ƒ∞Ÿª|˝í{¸,Pnƒq!zÔù4‚^ñ´ZÆîàÖ-WûòÁM¡%‹W~wn[ª'’|ÑCŒ=û¶úfŒñuôj.s
-◊ÑC!/NrjAP'3M◊[Zî/\ë™ç…|L†ƒÑ ™¬ãç9]Ö_ùäú´äÅá¬ÆUˆ◊Ô2<Íe√ÈÿÜr$øæ≠ç÷ÈST÷ô∂xã —tÑËfÂ⁄rQEöÉÉ¸xÂÍ¬øö)ó÷ﬁSô}∆ÕÀ71ú+INÄﬁ,∑•¢DáâfS>Ü{ØBPn∞∞5Üﬁ€ùg8F1¥øÌF~5˜∆EcåLùDíΩŸ:í8ﬁÊh÷lv§±)ÍÒ≈KCz‚…ã√“∫BÑç∞çê;•ÜÛä ÌoNdHÛ]õâÿè0†KDHÆ‚•h˘8Ç±fÒ:'ÕÈÏÅömÌ/€¶ÔBu˛Ú¸ T$R™Ö.*£ƒ¢£UbbQ'¿≥˙PìÕ–W°ﬁ7ñ¨th3⁄Bñ §6“5ﬂÀKÕ·ûDåPÊÉ¬«‡|ù|Vi¨ïK:™*B5ì§fF/;†çl’àR…ÄOñŒåpbQùÿàï≥’æí$…˚{˜2QÜ$vÂd¡Õí⁄Ç¶PÂWπ5 áÚ≠µ¨9ä‚º6*Í˙I{
-≈>ﬁÄ>ó„w7èw”áÒÕ|¯0æ˙~wLÑá∆à!uBLâã0iƒ•ÕöL7±E«2‚>µûÁ˜≠,#]GË2ë–˝S†œ,Ü$ıµU)ÁŒ}/kDVS2b§]
-V<hb-‹xÂ‰1À’…Iπ^ÂˇL¯%Uó‡è{¿xØ§+Ÿ.¿p›Q~•
-¶"M‰-eHπ7 ÜŒ;TJó*R [YqÏúv«ô0—ŒYG•°ínì‰vé›-+Vc6Bıs≤Aùû~wL~Å“l≠°/Gr´L≈˝¯∂%”<:∏≤iàÒÃ¨—©äÇ+‚ßÈûT8	‹‹5®ål∏W¢˜<z¶ÍfË$(E*∂G\Ÿ›y⁄!¨Ö£…2ë4b-ù¶]E_*û?í?e˜}—È˜∫á˝ØÄRµã¢P#3ô6Ë≈ X5Ï(X#Î.¯WÑ~\û:ﬁJ◊¥ÕÃQP¡èÙÎ|2˛ëUÈ◊#]zc3nâëâ±Ë2‘⁄ãaÄï§Í‚ÔãRW6Ü!‚S‹*#…T+Êã†6î^Æôà„r≠±HÒjräW⁄”¶ “≠©›jÂwî;Ì1ı æ∏Û˚g⁄Á∞:´V)≤›m¡ÒúFèÂv#Ú∫ê%\@qSíåb(≈v+€¡&§ßá
-◊	Õém>›ÆN®°U»5ç¸çlx.‚ ˜\Z’…˙(9n-¶À%9a≈£ßøWq*„–o«4/bÉµˆ5Ìí¶]≤„ò~{t£Çpq'\„˚ê^SP›F ®$í˜ÿ∑∂∞ÀÈlPõ¡µ. ¥ﬂÈ
-#RHc_%*xãøì ÅSÛØ‚π6¥∏æ^ØJΩDUi¢A∏˘µcrπÀ°€∏EEP∆˚XÂ†Á¨˘^‚+L©>¡º)hãå¨°çrÉ„8bAπfgë€˚•‰¢≈MÚﬁGC√b≤Ω+∞’d‚∏ÏL…4"ˆíVì®	;#†ñ≈Ì(Ñ∞÷D Ï@]¿I˛  ˇˇ (/”£
+    keyWords: ["Voici", "Il s'appelle", "Elle s'appelle", "Mon ami(e)", "Son nom est"],
+    activities: [
+      "Introduce a friend or classmate to the rest of the class in French",
+      "Describe someone's physical appearance or characteristics",
+      "Draw and present a family member with a short French caption",
+      "Engage in pair work introducing each other"
+    ],
+    resources: ["Pictures of friends/family", "Flashcards", "Drawing paper and crayons"]
+  }
+};

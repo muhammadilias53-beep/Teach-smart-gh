@@ -250,7 +250,7 @@ export default function OfflineDocumentsVault({
       
       pdf.setFontSize(9);
       pdf.setFont('helvetica', 'normal');
-      pdf.text('OFFICIAL NaCCA CURRICULUM COMPLIANT TEACHING DOCUMENT', 105, 24, { align: 'center' });
+      pdf.text('DESIGNED TO ALIGN WITH NaCCA/GES CURRICULUM REQUIREMENTS', 105, 24, { align: 'center' });
       
       pdf.setDrawColor(252, 209, 22); // Ghana Gold
       pdf.setLineWidth(1);

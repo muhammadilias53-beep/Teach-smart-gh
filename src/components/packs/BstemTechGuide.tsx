@@ -419,7 +419,7 @@ export default function BstemTechGuide() {
     // Simulate smart curation aligned with Catalyst Creative brand
     setTimeout(() => {
       const template = `=== CATALYST CREATIVE / TEACHSMART GHANA ===
-OFFICIAL NaCCA COMPLIANT JHS TEACHING PLAN & LESSON SHEET
+CURRICULUM-ALIGNED JHS TEACHING PLAN & LESSON SHEET
 ------------------------------------------------------------
 SUBJECT: JHS DESIGN AND TECHNOLOGY
 STRAND: STRAND 6: LOW-COST ENGINEERING PROBLEM SOLVING

@@ -525,7 +525,7 @@ export function exportLessonPlanToPDF(data: LessonPlanExportData): jsPDF {
     doc.text('TeachSmartGH', leftMargin, footerY);
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(100, 116, 139);
-    doc.text('  |  Official GES & NaCCA Standard Lesson Plan Format  |  Catalyst Creative', leftMargin + 21, footerY);
+    doc.text('  |  TeachSmartGH Lesson Plan — Designed to Align with NaCCA/GES Curriculum Requirements  |  Catalyst Creative', leftMargin + 21, footerY);
 
     doc.text(
       `Page ${i} of ${totalPages}`,

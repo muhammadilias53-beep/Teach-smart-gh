@@ -160,7 +160,7 @@ export const generateLessonPlan = async (
       "coreCompetencies": "Core competencies involved",
       "keyWords": "Important key words for the lesson",
       "tlrs": "Teaching and Learning Resources (Tailor these strictly to the LOCALITY provided - e.g., if Rural, prefer locally available items)",
-      "references": "Textbooks and other reference materials",
+      "references": "Verified curriculum guidelines and resources (e.g. NaCCA Primary Curriculum Guide, Teacher Resource Pack). Do not invent fictitious textbook titles or unverified page numbers.",
       "phase1": "Phase 1: Starter (preparing the brain for learning) - Detailed activities",
       "phase2": "Phase 2: Main (new learning including assessment) - Step-by-step teaching and learning activities",
       "phase3": "Phase 3: Plenary / Reflections - Closing activities and reflections",
@@ -973,6 +973,15 @@ export const generateNote = async (
     differentiation?: string;
     language?: string;
     bilingualLanguage?: string;
+    sourceLessonContext?: {
+      keyWords?: string;
+      lessonFocus?: string;
+      tlrs?: string;
+      coreCompetencies?: string;
+      performanceIndicator?: string;
+      phase2Summary?: string;
+      isKgPlan?: boolean;
+    };
   },
   teacherInfo?: { school?: string, district?: string, region?: string, town?: string, locality?: string, isBstemSchool?: boolean }
 ) => {
@@ -988,6 +997,10 @@ export const generateNote = async (
       }
     }
   }
+
+  const isKg = formData.level === 'KG' || formData.class.toLowerCase().includes('kg') || !!formData.sourceLessonContext?.isKgPlan;
+  const isLowerPrimary = formData.level === 'Primary' && (formData.class.includes('1') || formData.class.includes('2') || formData.class.includes('3'));
+  const isUpperPrimary = formData.level === 'Primary' && (formData.class.includes('4') || formData.class.includes('5') || formData.class.includes('6'));
 
   const systemInstruction = `
 You are an advanced NaCCA-aligned student learning note generation engine designed specifically for Ghanaian learners.
@@ -1052,6 +1065,97 @@ ${teacherInfo?.region ? `- Region Name: ${teacherInfo.region}` : ''}
 ${teacherInfo?.isBstemSchool ? `- BSTEM Aligned School: YES` : ''}
 
 ==================================================
+LEVEL-SPECIFIC PEDAGOGICAL STRUCTURE
+==================================================
+${isKg ? `
+KG LEVEL SPECIAL INSTRUCTION (EARLY CHILDHOOD / FOUNDATIONAL NOTES):
+- Notes for Kindergarten (KG1/KG2) must be EXTREMELY SHORT, ORAL & ACTIVITY SUPPORT ORIENTED, using simple words and phrases.
+- DO NOT generate lengthy textbook pages, formal essays, or complex lecture notes.
+- DO NOT copy teacher timetable slots, period times, teacher reflection prompts, or assessment guidelines.
+- The returned markdown content MUST strictly use this exact compact structure for KG:
+
+### LESSON OVERVIEW
+**Subject:** ${formData.subject} | **Class:** ${formData.class} | **Strand:** ${formData.strand} | **Topic:** ${formData.lessonTopic || formData.subStrand}
+
+### 1. Key Words & Sounds to Practice
+- 3 to 5 simple phonics sounds, letters, or vocabulary words from the lesson (e.g., sound /s/, ball, red).
+
+### 2. What We Discovered Today (Spoken Points)
+- 2 to 3 very simple, encouraging bullet points written in child-friendly spoken language.
+
+### 3. Look & Say (Examples Around Us)
+- 2 to 3 concrete Ghanaian everyday objects or actions learners can point to and name.
+
+### 4. Fun Hands-On Discovery Activity
+- 1 simple, playful home/center discovery activity using local materials (e.g., stones, bottle caps, sand tracing, or drawing).
+
+### 5. Song / Story / Rhyme Memory Clue
+- 1 short, memorable rhyme line or memory trigger summarizing the day's discovery.
+` : isLowerPrimary ? `
+LOWER PRIMARY SPECIAL INSTRUCTION (BASIC 1 - 3):
+- Use very short, simple sentences (under 10 words per sentence for Basic 1) and clear, large, friendly bullet points.
+- Use familiar Ghanaian names (Kofi, Ama, Kwame, Esi, Yaw) and local everyday objects/activities (playing ampe, eating jollof/fufu, going to market, fetching water).
+- Keep writing and reading load developmentally light and accessible.
+- STRICTLY DO NOT INCLUDE: Exam Tips, teacher facilitation, teacher reflection, lesson-plan phases, administrative boxes, or complex academic terminology.
+- The returned markdown content MUST strictly follow this exact 8-part Lower Primary structure:
+
+### LESSON OVERVIEW
+**Subject:** ${formData.subject} | **Class:** ${formData.class} | **Strand:** ${formData.strand} | **Sub-Strand:** ${formData.subStrand} | **Topic:** ${formData.lessonTopic || formData.subStrand}
+
+### 1. Topic
+${formData.lessonTopic || formData.subStrand}
+
+### 2. What We Will Learn
+- 1 to 2 very short, child-friendly statements starting with "Learners can..." or "We will learn..." (e.g. "We will learn what action words are.").
+
+### 3. Key Words
+- 3 to 4 simple, high-frequency words with easy meanings or actions (e.g., run, jump, clap).
+
+### 4. Simple Explanation
+- 2 to 3 very short, clear sentences explaining the main idea using familiar Ghanaian everyday situations.
+
+### 5. Examples
+- 3 clear, simple Ghanaian examples (e.g., "Ama jumps over the rope.", "Kofi claps his hands.", "The goat eats grass.").
+
+### 6. Let's Practise
+- 2 to 3 short, fun, developmentally appropriate practice questions (e.g., circle the word, choose the correct action, fill in the missing word).
+
+### 7. Remember
+- 1 short, memorable rule or sentence to help young learners remember the main idea.
+
+### 8. Home Activity
+- 1 simple, playful activity to do at home with family or using local items.
+` : isUpperPrimary ? `
+UPPER PRIMARY SPECIAL INSTRUCTION (BASIC 4 - 6):
+- Provide clear, structured explanations, definitions, and realistic Ghanaian context examples.
+- Include step-by-step worked examples where applicable, key takeaways, and 3 thought-provoking practice questions.
+- Maintain an engaging, student-friendly tone without teacher-facing administrative clutter.
+` : `
+JHS / SHS LEVEL SPECIAL INSTRUCTION (BASIC 7 - 9 & SENIOR HIGH):
+- Provide comprehensive, academically rigorous, curriculum-aligned notes with exact subject terminology.
+- Include deep explanations, step-by-step worked problems, 3 real-world Ghanaian problem-solving exercises, revision summaries, and practical exam tips.
+`}
+
+==================================================
+TRANSFORM TEACHER LESSON TO LEARNER STUDY NOTES
+==================================================
+CRITICAL RULE: NEVER output teacher-facing instructional or administrative language.
+- REMOVE: "Teacher Facilitation", "Teacher asks...", "Teacher demonstrates...", "Teacher divides learners...", "Teacher assesses...", "Assessment Evidence", "Learners Needing Support", "Teacher Reflection", "Headteacher Remarks", "Period: 60 mins", or classroom management directives.
+- TRANSFORM all concepts into clean, student-facing explanations that a Ghanaian pupil can read, understand, revise from, and practice independently.
+
+${formData.sourceLessonContext ? `
+==================================================
+SOURCE LESSON CONTEXT (TRANSFER TO STUDENT MATERIAL)
+==================================================
+- Lesson Focus / Topic: ${formData.sourceLessonContext.lessonFocus || formData.lessonTopic || 'N/A'}
+- Vocabulary / Key Terms: ${formData.sourceLessonContext.keyWords || 'N/A'}
+- Targeted Core Competencies: ${formData.sourceLessonContext.coreCompetencies || 'N/A'}
+- Performance Indicator: ${formData.sourceLessonContext.performanceIndicator || formData.objectives || 'N/A'}
+${formData.sourceLessonContext.phase2Summary ? `- Lesson Concept Highlights: ${formData.sourceLessonContext.phase2Summary.slice(0, 500)}` : ''}
+Use these source lesson concepts to ensure 100% alignment with what was taught in class, while rewriting everything strictly as student study notes.
+` : ''}
+
+==================================================
 STRICT GENERATION RULES
 =======================
 1. Generate notes strictly based on the selected curriculum content. Automatically use the selected Indicator as the Performance Indicator. The Performance Indicators section inside the notes MUST strictly match and be formulated directly from the selected Indicator (ALWAYS phrased starting with "Learners can [action verb / indicator text]"). NEVER start with "By the end of the lesson" or "The learner will be able to".
@@ -1102,6 +1206,11 @@ Avoid:
 ==================================================
 GENERATE NOTES USING THIS EXACT STRUCTURE
 =========================================
+${isKg ? `
+For Kindergarten, follow the 5-part KG structure detailed above.
+` : isLowerPrimary ? `
+For Lower Primary (Basic 1 - 3), strictly follow the 8-part Lower Primary structure detailed above (1. Topic, 2. What We Will Learn, 3. Key Words, 4. Simple Explanation, 5. Examples, 6. Let's Practise, 7. Remember, 8. Home Activity). Do not include exam tips or secondary headers.
+` : `
 The returned "content" must be in beautifully written Markdown styled to consume minimal vertical space. It must strictly contain the following sections in order:
 
 ### LESSON OVERVIEW (COMPACT METADATA BLOCK)
@@ -1109,17 +1218,18 @@ To occupy the absolute minimum reasonable space, group these 5 fields (Subject, 
 
 Use small, concise headers (using ### instead of # or ##) for all subsequent sections, and keep the vertical spacing tight and reasonable:
 
-### 6. Performance Indicators
-### 7. Key Terms & Vocabulary
-### 8. Main Lesson Notes & Explanation
-### 9. Important Points to Remember
-### 10. Worked Examples (where necessary)
-### 11. Practice Questions & Exercises
-### 12. Summary & Revision Notes
-### 13. Exam Tips (optional)
-### 14. Homework / Practice Activity
+### 1. Performance Indicators
+### 2. Key Terms & Vocabulary
+### 3. Main Lesson Notes & Explanation
+### 4. Important Points to Remember
+### 5. Worked Examples (where necessary)
+### 6. Practice Questions & Exercises
+### 7. Summary & Revision Notes
+${isUpperPrimary ? `### 8. Homework / Practice Activity` : `### 8. Exam Tips (optional)
+### 9. Homework / Practice Activity`}
 
 All sub-headers must be styled cleanly with small headings (###) to maintain a professional, space-efficient, and easy-to-follow layout. Do NOT use huge headings or redundant horizontal lines between every section.
+`}
 
 ==================================================
 ENGAGEMENT REQUIREMENTS
@@ -1168,7 +1278,7 @@ CRITICAL JSON FORMATTING RULES:
 You MUST return a JSON object with this exact structure:
 {
   "title": "A short and compelling lesson topic/title",
-  "content": "The full lesson note in Markdown formatted strictly with the 14-part structure specified in the 'GENERATE NOTES USING THIS EXACT STRUCTURE' section.",
+  "content": "The full lesson note in Markdown formatted strictly with the structure specified above.",
   "summary": [
     "A list of 3-5 concise, direct key takeaways of the lesson for student review"
   ],

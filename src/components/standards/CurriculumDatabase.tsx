@@ -165,7 +165,7 @@ export const CurriculumDatabase: React.FC = () => {
     
     doc.setFontSize(9);
     doc.setFont('helvetica', 'normal');
-    doc.text('OFFICIAL NaCCA CURRICULUM STANDARDS & INDICATORS DIRECTORY', 105, 24, { align: 'center' });
+    doc.text('CURRICULUM STANDARDS & INDICATORS DIRECTORY', 105, 24, { align: 'center' });
     
     doc.setDrawColor(252, 209, 22); // Ghana Gold
     doc.setLineWidth(0.8);

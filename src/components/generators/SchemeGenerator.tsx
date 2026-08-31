@@ -265,7 +265,7 @@ export default function SchemeGenerator() {
     
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
-    doc.text('OFFICIAL NaCCA CURRICULUM COMPLIANT SCHEME OF LEARNING', 148.5, 22, { align: 'center' });
+    doc.text('DESIGNED TO ALIGN WITH NaCCA/GES CURRICULUM REQUIREMENTS', 148.5, 22, { align: 'center' });
     
     doc.setDrawColor(252, 209, 22); // Ghana Gold
     doc.setLineWidth(0.8);
@@ -313,23 +313,26 @@ export default function SchemeGenerator() {
         margin: { top: 35 },
         didDrawPage: (data) => {
           const pageHeight = doc.internal.pageSize.height;
-          doc.setDrawColor(200, 200, 200);
+          doc.setDrawColor(220, 220, 220);
           doc.setLineWidth(0.5);
-          doc.line(10, pageHeight - 20, 287, pageHeight - 20);
+          doc.line(10, pageHeight - 12, 287, pageHeight - 12);
 
-          doc.setFontSize(7);
-          doc.setTextColor(100);
-          doc.setFont('helvetica', 'italic');
-          const complianceMsg = 'NaCCA COMPLIANCE: This Scheme of Learning is strictly based on the Standard-Based Curriculum (SBC) framework mandated by NaCCA Ghana. Teachers should adapt for learner diversity.';
-          doc.text(complianceMsg, 148.5, pageHeight - 15, { align: 'center' });
+          if (data.pageNumber === 1) {
+            doc.setFontSize(6.5);
+            doc.setTextColor(120);
+            doc.setFont('helvetica', 'italic');
+            doc.text('Note: Teachers should review and adapt generated material to the needs of their learners.', 148.5, pageHeight - 7.5, { align: 'center' });
+          }
 
           doc.setFont('helvetica', 'bold');
           doc.setTextColor(0, 107, 63); // Green
-          doc.text('TEACHSMART GHANA • AI-POWERED NaCCA COMPLIANT TOOLS', 10, pageHeight - 5);
+          doc.setFontSize(7.5);
+          doc.text('TEACHSMART GHANA • CURRICULUM-ALIGNED TEACHING AND LEARNING SUPPORT', 10, pageHeight - 4);
           
-          doc.setTextColor(150);
+          doc.setTextColor(140);
           doc.setFont('helvetica', 'normal');
-          doc.text(`Page ${data.pageNumber}`, 287, pageHeight - 5, { align: 'right' });
+          doc.setFontSize(7.5);
+          doc.text(`Page ${data.pageNumber}`, 287, pageHeight - 4, { align: 'right' });
         }
       });
     }
