@@ -31,6 +31,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { toast } from 'react-hot-toast';
 import { exportSchemeToWord } from '../../lib/wordExport';
+import { registerUnicodeFonts } from '../../lib/fonts/unicodeFonts';
 import { subjects as sharedSubjects, levels, CLASSES_BY_LEVEL, SUBJECT_STRANDS, SUBJECT_SUB_STRANDS, subjectsByLevel } from '../../constants';
 import { SearchableDropdown } from '../ui/SearchableDropdown';
 
@@ -251,6 +252,7 @@ export default function SchemeGenerator() {
   const downloadPDF = () => {
     if (!result) return;
     const doc = new jsPDF('l', 'mm', 'a4'); // Landscape for tables
+    const fontName = registerUnicodeFonts(doc);
     const displayType = formData.type === 'yearly' ? 'YEARLY' : `TERM ${formData.term} - TERMLY`;
     const mainTitle = `STRATEGIC ${displayType} SCHEME OF LEARNING`;
     
@@ -259,12 +261,12 @@ export default function SchemeGenerator() {
     doc.rect(0, 0, 297, 30, 'F');
     
     doc.setTextColor(255, 255, 255);
-    doc.setFont("helvetica", "bold");
+    doc.setFont(fontName, "bold");
     doc.setFontSize(22);
     doc.text(mainTitle, 148.5, 15, { align: 'center' });
     
     doc.setFontSize(10);
-    doc.setFont("helvetica", "normal");
+    doc.setFont(fontName, "normal");
     doc.text('DESIGNED TO ALIGN WITH NaCCA/GES CURRICULUM REQUIREMENTS', 148.5, 22, { align: 'center' });
     
     doc.setDrawColor(252, 209, 22); // Ghana Gold
@@ -273,7 +275,7 @@ export default function SchemeGenerator() {
 
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(11);
-    doc.setFont("helvetica", "normal");
+    doc.setFont(fontName, "normal");
     const metaText = `Subject: ${displaySubject.toUpperCase()} | Class: ${formData.class.toUpperCase()} (${formData.level.toUpperCase()})`;
     doc.text(metaText, 148.5, 40, { align: 'center' });
 
@@ -307,8 +309,8 @@ export default function SchemeGenerator() {
         body: tableData,
         startY: 50,
         theme: 'grid',
-        styles: { fontSize: 8, cellPadding: 3, valign: 'middle' },
-        headStyles: { fillColor: [30, 41, 59], textColor: 255, fontStyle: 'bold', halign: 'center' },
+        styles: { font: fontName, fontSize: 8, cellPadding: 3, valign: 'middle' },
+        headStyles: { font: fontName, fillColor: [30, 41, 59], textColor: 255, fontStyle: 'bold', halign: 'center' },
         alternateRowStyles: { fillColor: [248, 250, 252] },
         margin: { top: 35 },
         didDrawPage: (data) => {
@@ -320,17 +322,17 @@ export default function SchemeGenerator() {
           if (data.pageNumber === 1) {
             doc.setFontSize(6.5);
             doc.setTextColor(120);
-            doc.setFont('helvetica', 'italic');
+            doc.setFont(fontName, 'normal');
             doc.text('Note: Teachers should review and adapt generated material to the needs of their learners.', 148.5, pageHeight - 7.5, { align: 'center' });
           }
 
-          doc.setFont('helvetica', 'bold');
+          doc.setFont(fontName, 'bold');
           doc.setTextColor(0, 107, 63); // Green
           doc.setFontSize(7.5);
-          doc.text('TEACHSMART GHANA • CURRICULUM-ALIGNED TEACHING AND LEARNING SUPPORT', 10, pageHeight - 4);
+          doc.text('TEACHSMART GHANA • DESIGNED TO ALIGN WITH NaCCA/GES CURRICULUM REQUIREMENTS', 10, pageHeight - 4);
           
           doc.setTextColor(140);
-          doc.setFont('helvetica', 'normal');
+          doc.setFont(fontName, 'normal');
           doc.setFontSize(7.5);
           doc.text(`Page ${data.pageNumber}`, 287, pageHeight - 4, { align: 'right' });
         }
@@ -345,7 +347,7 @@ export default function SchemeGenerator() {
       // If footer would overflow, add a new page
       if (lastY > 180) doc.addPage();
       doc.setFontSize(9);
-      doc.setFont("helvetica", "bold");
+      doc.setFont(fontName, "bold");
       const footerY = doc.internal.pageSize.height - 20;
       doc.text(finalFooter, 20, footerY);
     }

@@ -3,6 +3,7 @@ import autoTable, { RowInput } from 'jspdf-autotable';
 import { formatWeekLessonPlanTitle } from './utils';
 import { buildMultiDayLessonPhases } from './multiDayParser';
 import { getKGScheduleForDay, getSupportedKGBlockDuration, reconcileKGBlocks } from '../config/kgTimetable';
+import { registerUnicodeFonts } from './fonts/unicodeFonts';
 
 export interface LessonPlanExportData {
   title?: string;
@@ -86,6 +87,8 @@ export function exportLessonPlanToPDF(data: LessonPlanExportData): jsPDF {
     format: 'a4'
   });
 
+  const fontName = registerUnicodeFonts(doc);
+
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
   const leftMargin = 12;
@@ -141,13 +144,13 @@ export function exportLessonPlanToPDF(data: LessonPlanExportData): jsPDF {
   // Brand Name & Tagline (Left)
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(13);
-  doc.setFont('helvetica', 'bold');
+  doc.setFont(fontName, 'bold');
   doc.text('TeachSmart', leftMargin, 9.5);
   doc.setTextColor(252, 209, 22);
   doc.text('GH', leftMargin + 25.5, 9.5);
 
   doc.setFontSize(7.5);
-  doc.setFont('helvetica', 'normal');
+  doc.setFont(fontName, 'normal');
   doc.setTextColor(226, 232, 240);
   doc.text('AI-Powered Teaching. Smarter Tomorrow.  |  Catalyst Creative', leftMargin, 14);
 
@@ -156,10 +159,10 @@ export function exportLessonPlanToPDF(data: LessonPlanExportData): jsPDF {
   doc.roundedRect(pageWidth - rightMargin - 46, 4, 46, 9.5, 1.5, 1.5, 'F');
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(7.5);
-  doc.setFont('helvetica', 'bold');
+  doc.setFont(fontName, 'bold');
   doc.text('NaCCA / GES Aligned', pageWidth - rightMargin - 23, 8.5, { align: 'center' });
   doc.setFontSize(6);
-  doc.setFont('helvetica', 'normal');
+  doc.setFont(fontName, 'normal');
   doc.setTextColor(226, 232, 240);
   doc.text('Standard-Based Curriculum', pageWidth - rightMargin - 23, 12, { align: 'center' });
 
@@ -171,16 +174,16 @@ export function exportLessonPlanToPDF(data: LessonPlanExportData): jsPDF {
   // Center Main Title - Official GES Week Lesson Plan Title
   const officialTitle = formatWeekLessonPlanTitle(data.weekNumber || data.week || '1');
   doc.setFontSize(13);
-  doc.setFont('helvetica', 'bold');
+  doc.setFont(fontName, 'bold');
   doc.setTextColor(15, 23, 42); // slate-900
   doc.text(officialTitle, pageWidth / 2, topMargin - 2.5, { align: 'center' });
 
   // Top Left: SUBJECT
   doc.setFontSize(8.5);
-  doc.setFont('helvetica', 'bold');
+  doc.setFont(fontName, 'bold');
   doc.setTextColor(15, 23, 42);
   doc.text('SUBJECT:', leftMargin, topMargin);
-  doc.setFont('helvetica', 'bold');
+  doc.setFont(fontName, 'bold');
   doc.text(` ${displaySubject}`, leftMargin + 18, topMargin);
   
   // Underline under subject
@@ -189,16 +192,16 @@ export function exportLessonPlanToPDF(data: LessonPlanExportData): jsPDF {
   doc.line(leftMargin + 18, topMargin + 1, leftMargin + 65, topMargin + 1);
 
   // Top Right: CLASS and CLASS SIZE
-  doc.setFont('helvetica', 'bold');
+  doc.setFont(fontName, 'bold');
   doc.setFontSize(8.5);
   doc.text('CLASS:', 148, topMargin - 2);
-  doc.setFont('helvetica', 'bold');
+  doc.setFont(fontName, 'bold');
   doc.text(` ${className}`, 163, topMargin - 2);
   doc.line(163, topMargin - 1, pageWidth - rightMargin, topMargin - 1);
 
-  doc.setFont('helvetica', 'bold');
+  doc.setFont(fontName, 'bold');
   doc.text('CLASS SIZE:', 148, topMargin + 3.5);
-  doc.setFont('helvetica', 'bold');
+  doc.setFont(fontName, 'bold');
   doc.text(` ${classSize}`, 171, topMargin + 3.5);
   doc.line(171, topMargin + 4.5, pageWidth - rightMargin, topMargin + 4.5);
 
@@ -231,7 +234,7 @@ export function exportLessonPlanToPDF(data: LessonPlanExportData): jsPDF {
       lineColor: [30, 41, 59],
       lineWidth: 0.35,
       textColor: [15, 23, 42],
-      font: 'helvetica',
+      font: fontName,
       overflow: 'linebreak',
     },
     body: [
@@ -507,7 +510,7 @@ export function exportLessonPlanToPDF(data: LessonPlanExportData): jsPDF {
 
       doc.setTextColor(255, 255, 255);
       doc.setFontSize(7.5);
-      doc.setFont('helvetica', 'bold');
+      doc.setFont(fontName, 'bold');
       doc.text(`TeachSmartGH - ${officialTitle} (${displaySubject} - ${className})`, leftMargin, 6);
       doc.setTextColor(226, 232, 240);
       doc.text(`Week Ending: ${weekEnding}`, pageWidth - rightMargin, 6, { align: 'right' });
@@ -519,14 +522,13 @@ export function exportLessonPlanToPDF(data: LessonPlanExportData): jsPDF {
     doc.setLineWidth(0.3);
     doc.line(leftMargin, footerY - 2.5, pageWidth - rightMargin, footerY - 2.5);
 
-    doc.setFontSize(6.8);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(0, 28, 61);
-    doc.text('TeachSmartGH', leftMargin, footerY);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(100, 116, 139);
-    doc.text('  |  TeachSmartGH Lesson Plan — Designed to Align with NaCCA/GES Curriculum Requirements  |  Catalyst Creative', leftMargin + 21, footerY);
+    doc.setFontSize(7);
+    doc.setFont(fontName, 'bold');
+    doc.setTextColor(0, 107, 63);
+    doc.text('TEACHSMART GHANA • DESIGNED TO ALIGN WITH NaCCA/GES CURRICULUM REQUIREMENTS', leftMargin, footerY);
 
+    doc.setFont(fontName, 'normal');
+    doc.setTextColor(140);
     doc.text(
       `Page ${i} of ${totalPages}`,
       pageWidth - rightMargin,
@@ -549,6 +551,8 @@ export function exportKGLessonPlanToPDF(data: LessonPlanExportData): jsPDF {
     unit: 'mm',
     format: 'a4'
   });
+
+  const fontName = registerUnicodeFonts(doc);
 
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
@@ -592,13 +596,13 @@ export function exportKGLessonPlanToPDF(data: LessonPlanExportData): jsPDF {
   // Brand Name & Tagline (Left)
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(13);
-  doc.setFont('helvetica', 'bold');
+  doc.setFont(fontName, 'bold');
   doc.text('TeachSmart', leftMargin, 9.5);
   doc.setTextColor(252, 209, 22);
   doc.text('GH', leftMargin + 25.5, 9.5);
 
   doc.setFontSize(7.5);
-  doc.setFont('helvetica', 'normal');
+  doc.setFont(fontName, 'normal');
   doc.setTextColor(226, 232, 240);
   doc.text('AI-Powered Early Childhood Teaching  |  Catalyst Creative', leftMargin, 14);
 
@@ -607,10 +611,10 @@ export function exportKGLessonPlanToPDF(data: LessonPlanExportData): jsPDF {
   doc.roundedRect(pageWidth - rightMargin - 62, 4, 62, 9.5, 1.5, 1.5, 'F');
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(7);
-  doc.setFont('helvetica', 'bold');
+  doc.setFont(fontName, 'bold');
   doc.text('Designed for NaCCA/GES ECE Alignment', pageWidth - rightMargin - 31, 8.5, { align: 'center' });
   doc.setFontSize(6);
-  doc.setFont('helvetica', 'normal');
+  doc.setFont(fontName, 'normal');
   doc.setTextColor(226, 232, 240);
   doc.text('Universal KG Timetable Model', pageWidth - rightMargin - 31, 12, { align: 'center' });
 
@@ -620,12 +624,12 @@ export function exportKGLessonPlanToPDF(data: LessonPlanExportData): jsPDF {
   const topMargin = 25.5;
 
   doc.setFontSize(12.5);
-  doc.setFont('helvetica', 'bold');
+  doc.setFont(fontName, 'bold');
   doc.setTextColor(15, 23, 42); // slate-900
   doc.text(officialTitle, pageWidth / 2, topMargin - 2.5, { align: 'center' });
 
   doc.setFontSize(8);
-  doc.setFont('helvetica', 'normal');
+  doc.setFont(fontName, 'normal');
   doc.setTextColor(71, 85, 105);
   doc.text('INTEGRATED CURRICULUM (KG 1 & KG 2)  •  PLAY-BASED & LEARNER-CENTRED PEDAGOGY', pageWidth / 2, topMargin + 2, { align: 'center' });
 
@@ -654,7 +658,7 @@ export function exportKGLessonPlanToPDF(data: LessonPlanExportData): jsPDF {
       lineColor: [30, 41, 59],
       lineWidth: 0.35,
       textColor: [15, 23, 42],
-      font: 'helvetica',
+      font: fontName,
       overflow: 'linebreak',
     },
     body: [
@@ -777,7 +781,7 @@ export function exportKGLessonPlanToPDF(data: LessonPlanExportData): jsPDF {
       lineColor: [30, 41, 59],
       lineWidth: 0.35,
       textColor: [15, 23, 42],
-      font: 'helvetica',
+      font: fontName,
       overflow: 'linebreak',
     },
     head: [[
@@ -815,7 +819,7 @@ export function exportKGLessonPlanToPDF(data: LessonPlanExportData): jsPDF {
       lineColor: [30, 41, 59],
       lineWidth: 0.35,
       textColor: [15, 23, 42],
-      font: 'helvetica',
+      font: fontName,
       overflow: 'linebreak',
     },
     head: [[
@@ -842,7 +846,7 @@ export function exportKGLessonPlanToPDF(data: LessonPlanExportData): jsPDF {
 
       doc.setTextColor(255, 255, 255);
       doc.setFontSize(7.5);
-      doc.setFont('helvetica', 'bold');
+      doc.setFont(fontName, 'bold');
       doc.text(`TeachSmartGH - ${officialTitle} (${className})`, leftMargin, 6);
       doc.setTextColor(226, 232, 240);
       doc.text(`Week Ending: ${weekEnding}`, pageWidth - rightMargin, 6, { align: 'right' });
@@ -853,14 +857,13 @@ export function exportKGLessonPlanToPDF(data: LessonPlanExportData): jsPDF {
     doc.setLineWidth(0.3);
     doc.line(leftMargin, footerY - 2.5, pageWidth - rightMargin, footerY - 2.5);
 
-    doc.setFontSize(6.8);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(0, 28, 61);
-    doc.text('TeachSmartGH', leftMargin, footerY);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(100, 116, 139);
-    doc.text('  |  TeachSmartGH Kindergarten Daily Lesson Plan — Designed to Align with NaCCA/GES Requirements  |  Catalyst Creative', leftMargin + 21, footerY);
+    doc.setFontSize(7);
+    doc.setFont(fontName, 'bold');
+    doc.setTextColor(0, 107, 63);
+    doc.text('TEACHSMART GHANA • DESIGNED TO ALIGN WITH NaCCA/GES CURRICULUM REQUIREMENTS', leftMargin, footerY);
 
+    doc.setFont(fontName, 'normal');
+    doc.setTextColor(140);
     doc.text(
       `Page ${i} of ${totalPages}`,
       pageWidth - rightMargin,

@@ -37,6 +37,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { toast } from 'react-hot-toast';
 import { exportExamToWord } from '../../lib/wordExport';
+import { registerUnicodeFonts } from '../../lib/fonts/unicodeFonts';
 import { subjects as sharedSubjects, levels, CLASSES_BY_LEVEL, subjectsByLevel } from '../../constants';
 import { SearchableDropdown } from '../ui/SearchableDropdown';
 
@@ -324,6 +325,7 @@ export default function ExamGenerator() {
   const downloadPDF = (type: 'exam' | 'marking') => {
     if (!result) return;
     const doc = new jsPDF();
+    const fontName = registerUnicodeFonts(doc);
     const title = type === 'exam' ? formData.title || 'Examination Paper' : `Marking Scheme: ${formData.title || 'Examination'}`;
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-').replace('T', '_').slice(0, 19);
     const filename = `${displaySubject}_${formData.level}_${formData.classLevel}_${type === 'exam' ? 'Exam' : 'Marking'}_${timestamp}`.replace(/[\s\W]+/g, '_');
@@ -334,11 +336,11 @@ export default function ExamGenerator() {
     
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(22);
-    doc.setFont('helvetica', 'bold');
+    doc.setFont(fontName, 'bold');
     doc.text('TEACHSMART GHANA', 105, 18, { align: 'center' });
     
     doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
+    doc.setFont(fontName, 'normal');
     doc.text('DESIGNED TO ALIGN WITH NaCCA/GES CURRICULUM REQUIREMENTS', 105, 26, { align: 'center' });
     
     doc.setDrawColor(252, 209, 22); // Ghana Gold
@@ -347,11 +349,11 @@ export default function ExamGenerator() {
 
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(14);
-    doc.setFont('helvetica', 'bold');
+    doc.setFont(fontName, 'bold');
     doc.text(title.toUpperCase(), 105, 55, { align: 'center' });
     
     doc.setFontSize(10);
-    doc.setFont("helvetica", "normal");
+    doc.setFont(fontName, "normal");
     doc.text(`SUBJECT: ${displaySubject.toUpperCase()} | LEVEL: ${formData.level.toUpperCase()} (${formData.classLevel.toUpperCase()}) | DIFFICULTY: ${formData.difficulty.toUpperCase()}`, 105, 62, { align: 'center' });
     
     doc.setLineWidth(0.5);
@@ -415,8 +417,8 @@ export default function ExamGenerator() {
               body: bodyRows,
               startY: cursorY + 2,
               theme: 'grid',
-              styles: { fontSize: 8.5, cellPadding: 3.5, valign: 'middle' },
-              headStyles: { fillColor: [0, 28, 61], textColor: 255, fontStyle: 'bold', halign: 'center' },
+              styles: { font: fontName, fontSize: 8.5, cellPadding: 3.5, valign: 'middle' },
+              headStyles: { font: fontName, fillColor: [0, 28, 61], textColor: 255, fontStyle: 'bold', halign: 'center' },
               alternateRowStyles: { fillColor: [248, 250, 252] },
               margin: { left: marginX, right: marginX },
             });
@@ -428,7 +430,7 @@ export default function ExamGenerator() {
       }
 
       // Standard text line
-      doc.setFont("helvetica", "normal");
+      doc.setFont(fontName, "normal");
       doc.setFontSize(10.5);
       
       const cleanLine = origLine.replace(/[#*]/g, '');
@@ -456,17 +458,17 @@ export default function ExamGenerator() {
         if (i === 1) {
           doc.setFontSize(6.5);
           doc.setTextColor(120);
-          doc.setFont('helvetica', 'italic');
+          doc.setFont(fontName, 'normal');
           doc.text('Note: Teachers should review and adapt generated material to the needs of their learners.', 105, pageHeight - 7.5, { align: 'center' });
         }
 
-        doc.setFont('helvetica', 'bold');
+        doc.setFont(fontName, 'bold');
         doc.setTextColor(0, 107, 63); // Ghana Green
         doc.setFontSize(7.5);
-        doc.text('TEACHSMART GHANA • CURRICULUM-ALIGNED TEACHING AND LEARNING SUPPORT', 10, pageHeight - 4);
+        doc.text('TEACHSMART GHANA • DESIGNED TO ALIGN WITH NaCCA/GES CURRICULUM REQUIREMENTS', 10, pageHeight - 4);
         
         doc.setTextColor(140);
-        doc.setFont('helvetica', 'normal');
+        doc.setFont(fontName, 'normal');
         doc.setFontSize(7.5);
         doc.text(`Page ${i} of ${pageCount}`, 200, pageHeight - 4, { align: 'right' });
     }

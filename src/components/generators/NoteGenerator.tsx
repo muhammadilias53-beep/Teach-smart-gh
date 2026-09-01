@@ -11,13 +11,21 @@ import { useNavigate, useLocation } from 'react-router';
 import { CurriculumReferenceModal } from '../standards/CurriculumReferenceModal';
 import { CurriculumIndicatorItem } from '../../lib/curriculumDatabase';
 import { cn, formatPerformanceIndicator } from '../../lib/utils';
-import { filterStandardsForClass, matchStandardToClass } from '../../lib/curriculumDatabase';
+import { 
+  filterStandardsForClass, 
+  matchStandardToClass,
+  getCurriculumStrands,
+  getCurriculumSubStrands,
+  getCurriculumStandards,
+  getCurriculumIndicators
+} from '../../lib/curriculumDatabase';
 import { SafeMarkdown } from '../common/SafeMarkdown';
 import 'highlight.js/styles/github.css';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { toast } from 'react-hot-toast';
 import { exportNoteToWord } from '../../lib/wordExport';
+import { registerUnicodeFonts } from '../../lib/fonts/unicodeFonts';
 import { 
   subjects, 
   levels,
@@ -401,18 +409,10 @@ const NoteGenerator = () => {
   const displaySubject = formData.subject === 'Ghanaian Language' && formData.ghanaianLanguage
     ? `Ghanaian Language (${formData.ghanaianLanguage})`
     : formData.subject;
-  const currentStrands = getSubjectStrands(formData.subject, formData.level, formData.class);
-  const lookupStrand = getLookupStrand(formData.subject, formData.strand);
-  const currentSubStrands = getSubjectSubStrands(formData.subject, formData.strand, formData.level);
-  const rawStandards = (
-    SUB_STRAND_STANDARDS[lookupStrand]?.[formData.subStrand] || 
-    SUB_STRAND_STANDARDS[formData.strand]?.[formData.subStrand] ||
-    SUB_STRAND_STANDARDS[formData.subject]?.[formData.subStrand] ||
-    SUB_STRAND_STANDARDS[formData.subject]?.[formData.strand] ||
-    []
-  );
-  const currentStandards = filterStandardsForClass(rawStandards, formData.class, formData.level);
-  const currentIndicators = STANDARD_INDICATORS[formData.contentStandard] || getFallbackIndicators(formData.contentStandard);
+  const currentStrands = getCurriculumStrands(formData.subject, formData.level, formData.class);
+  const currentSubStrands = getCurriculumSubStrands(formData.subject, formData.strand, formData.level);
+  const currentStandards = getCurriculumStandards(formData.subject, formData.strand, formData.subStrand, formData.level, formData.class);
+  const currentIndicators = getCurriculumIndicators(formData.contentStandard, formData.subject, formData.class);
 
   // Cascading Dropdown Selectors
   const handleLevelChange = (newLevel: string) => {
@@ -429,24 +429,13 @@ const NoteGenerator = () => {
       }
     }
 
-    const nextStrands = getSubjectStrands(nextSubject, newLevel, firstClass);
+    const nextStrands = getCurriculumStrands(nextSubject, newLevel, firstClass);
     const nextStrand = nextStrands[0] || '';
-    const lookupNextStrand = getLookupStrand(nextSubject, nextStrand, newLevel);
-
-    const nextSubStrands = getSubjectSubStrands(nextSubject, nextStrand, newLevel);
+    const nextSubStrands = getCurriculumSubStrands(nextSubject, nextStrand, newLevel);
     const nextSubStrand = nextSubStrands[0] || '';
-
-    const rawNextStds = (
-      SUB_STRAND_STANDARDS[lookupNextStrand]?.[nextSubStrand] || 
-      SUB_STRAND_STANDARDS[nextStrand]?.[nextSubStrand] ||
-      SUB_STRAND_STANDARDS[nextSubject]?.[nextSubStrand] ||
-      SUB_STRAND_STANDARDS[nextSubject]?.[nextStrand] ||
-      []
-    );
-    const nextStandards = filterStandardsForClass(rawNextStds, firstClass, newLevel);
+    const nextStandards = getCurriculumStandards(nextSubject, nextStrand, nextSubStrand, newLevel, firstClass);
     const nextStandard = nextStandards[0] || '';
-
-    const nextIndicators = STANDARD_INDICATORS[nextStandard] || getFallbackIndicators(nextStandard);
+    const nextIndicators = getCurriculumIndicators(nextStandard, nextSubject, firstClass);
     const nextIndicator = nextIndicators[0] || '';
 
     setFormData(prev => ({
@@ -463,24 +452,15 @@ const NoteGenerator = () => {
   };
 
   const handleClassChange = (newClass: string) => {
-    const nextStrands = getSubjectStrands(formData.subject, formData.level, newClass);
+    const nextStrands = getCurriculumStrands(formData.subject, formData.level, newClass);
     const isCurrentStrandValid = nextStrands.includes(formData.strand);
     const activeStrand = isCurrentStrandValid ? formData.strand : (nextStrands[0] || '');
-    const lookupStrandVal = getLookupStrand(formData.subject, activeStrand, formData.level);
-    const nextSubStrands = getSubjectSubStrands(formData.subject, activeStrand, formData.level);
+    const nextSubStrands = getCurriculumSubStrands(formData.subject, activeStrand, formData.level);
     const isSubStrandValid = isCurrentStrandValid && nextSubStrands.includes(formData.subStrand);
     const activeSubStrand = isSubStrandValid ? formData.subStrand : (nextSubStrands[0] || '');
-
-    const rawStds = (
-      SUB_STRAND_STANDARDS[lookupStrandVal]?.[activeSubStrand] || 
-      SUB_STRAND_STANDARDS[activeStrand]?.[activeSubStrand] ||
-      SUB_STRAND_STANDARDS[formData.subject]?.[activeSubStrand] ||
-      SUB_STRAND_STANDARDS[formData.subject]?.[activeStrand] ||
-      []
-    );
-    const nextStandards = filterStandardsForClass(rawStds, newClass, formData.level);
+    const nextStandards = getCurriculumStandards(formData.subject, activeStrand, activeSubStrand, formData.level, newClass);
     const nextStandard = nextStandards[0] || '';
-    const nextIndicators = STANDARD_INDICATORS[nextStandard] || getFallbackIndicators(nextStandard);
+    const nextIndicators = getCurriculumIndicators(nextStandard, formData.subject, newClass);
     const nextIndicator = nextIndicators[0] || '';
 
     setFormData(prev => ({ 
@@ -495,24 +475,13 @@ const NoteGenerator = () => {
   };
 
   const handleSubjectChange = (newSubject: string) => {
-    const nextStrands = getSubjectStrands(newSubject, formData.level, formData.class);
+    const nextStrands = getCurriculumStrands(newSubject, formData.level, formData.class);
     const nextStrand = nextStrands[0] || '';
-    const lookupNextStrand = getLookupStrand(newSubject, nextStrand, formData.level);
-
-    const nextSubStrands = getSubjectSubStrands(newSubject, nextStrand, formData.level);
+    const nextSubStrands = getCurriculumSubStrands(newSubject, nextStrand, formData.level);
     const nextSubStrand = nextSubStrands[0] || '';
-
-    const rawNextStds = (
-      SUB_STRAND_STANDARDS[lookupNextStrand]?.[nextSubStrand] || 
-      SUB_STRAND_STANDARDS[nextStrand]?.[nextSubStrand] ||
-      SUB_STRAND_STANDARDS[newSubject]?.[nextSubStrand] ||
-      SUB_STRAND_STANDARDS[newSubject]?.[nextStrand] ||
-      []
-    );
-    const nextStandards = filterStandardsForClass(rawNextStds, formData.class, formData.level);
+    const nextStandards = getCurriculumStandards(newSubject, nextStrand, nextSubStrand, formData.level, formData.class);
     const nextStandard = nextStandards[0] || '';
-
-    const nextIndicators = STANDARD_INDICATORS[nextStandard] || getFallbackIndicators(nextStandard);
+    const nextIndicators = getCurriculumIndicators(nextStandard, newSubject, formData.class);
     const nextIndicator = nextIndicators[0] || '';
 
     setFormData(prev => ({
@@ -528,21 +497,11 @@ const NoteGenerator = () => {
   };
 
   const handleStrandChange = (newStrand: string) => {
-    const lookupNewStrand = getLookupStrand(formData.subject, newStrand);
-    const nextSubStrands = getSubjectSubStrands(formData.subject, newStrand, formData.level);
+    const nextSubStrands = getCurriculumSubStrands(formData.subject, newStrand, formData.level);
     const nextSubStrand = nextSubStrands[0] || '';
-
-    const rawNextStds = (
-      SUB_STRAND_STANDARDS[lookupNewStrand]?.[nextSubStrand] || 
-      SUB_STRAND_STANDARDS[newStrand]?.[nextSubStrand] ||
-      SUB_STRAND_STANDARDS[formData.subject]?.[nextSubStrand] ||
-      SUB_STRAND_STANDARDS[formData.subject]?.[newStrand] ||
-      []
-    );
-    const nextStandards = filterStandardsForClass(rawNextStds, formData.class, formData.level);
+    const nextStandards = getCurriculumStandards(formData.subject, newStrand, nextSubStrand, formData.level, formData.class);
     const nextStandard = nextStandards[0] || '';
-
-    const nextIndicators = STANDARD_INDICATORS[nextStandard] || getFallbackIndicators(nextStandard);
+    const nextIndicators = getCurriculumIndicators(nextStandard, formData.subject, formData.class);
     const nextIndicator = nextIndicators[0] || '';
 
     setFormData(prev => ({
@@ -556,18 +515,9 @@ const NoteGenerator = () => {
   };
 
   const handleSubStrandChange = (newSubStrand: string) => {
-    const lookupCurrentStrand = getLookupStrand(formData.subject, formData.strand);
-    const rawNextStds = (
-      SUB_STRAND_STANDARDS[lookupCurrentStrand]?.[newSubStrand] || 
-      SUB_STRAND_STANDARDS[formData.strand]?.[newSubStrand] ||
-      SUB_STRAND_STANDARDS[formData.subject]?.[newSubStrand] ||
-      SUB_STRAND_STANDARDS[formData.subject]?.[formData.strand] ||
-      []
-    );
-    const nextStandards = filterStandardsForClass(rawNextStds, formData.class, formData.level);
+    const nextStandards = getCurriculumStandards(formData.subject, formData.strand, newSubStrand, formData.level, formData.class);
     const nextStandard = nextStandards[0] || '';
-
-    const nextIndicators = STANDARD_INDICATORS[nextStandard] || getFallbackIndicators(nextStandard);
+    const nextIndicators = getCurriculumIndicators(nextStandard, formData.subject, formData.class);
     const nextIndicator = nextIndicators[0] || '';
 
     setFormData(prev => ({
@@ -763,6 +713,7 @@ const NoteGenerator = () => {
   const handleDownloadPDF = () => {
     if (!result) return;
     const doc = new jsPDF();
+    const fontName = registerUnicodeFonts(doc);
     
     const marginX = 20;
     let cursorY = 70;
@@ -782,11 +733,11 @@ const NoteGenerator = () => {
       
       doc.setTextColor(255, 255, 255);
       doc.setFontSize(20);
-      doc.setFont('helvetica', 'bold');
+      doc.setFont(fontName, 'bold');
       doc.text('TEACHSMART GHANA', 105, 15, { align: 'center' });
       
       doc.setFontSize(9);
-      doc.setFont('helvetica', 'normal');
+      doc.setFont(fontName, 'normal');
       doc.text('DESIGNED TO ALIGN WITH NaCCA/GES CURRICULUM REQUIREMENTS', 105, 23, { align: 'center' });
       
       doc.setDrawColor(252, 209, 22); // Ghana Gold
@@ -796,16 +747,16 @@ const NoteGenerator = () => {
       // Metadata Title Block
       doc.setTextColor(0, 0, 0);
       doc.setFontSize(12);
-      doc.setFont('helvetica', 'bold');
+      doc.setFont(fontName, 'bold');
       const docTitle = (result.title || 'LESSON NOTES').toUpperCase();
       doc.text(docTitle, 105, 43, { align: 'center' });
       
       doc.setFontSize(8);
-      doc.setFont('helvetica', 'bold');
+      doc.setFont(fontName, 'bold');
       doc.setTextColor(40, 40, 40);
       doc.text(`SUBJECT: ${displaySubject.toUpperCase()} | LEVEL: ${formData.level.toUpperCase()} | CLASS: ${formData.class.toUpperCase()}`, 105, 49, { align: 'center' });
       
-      doc.setFont('helvetica', 'normal');
+      doc.setFont(fontName, 'normal');
       doc.setFontSize(7.5);
       doc.setTextColor(80, 80, 80);
       const metadataLine2 = `STRAND: ${formData.strand.toUpperCase()} | SUB-STRAND: ${formData.subStrand.toUpperCase()}`;
@@ -896,7 +847,7 @@ const NoteGenerator = () => {
       const allowedWidth = pageWidth - x - marginX;
 
       const getWordWidth = (fw: FormattedWord, isFirstOnLine: boolean): number => {
-        doc.setFont('helvetica', fw.bold ? (fw.italic ? 'bolditalic' : 'bold') : (fw.italic ? 'italic' : 'normal'));
+        doc.setFont(fontName, fw.bold ? 'bold' : 'normal');
         doc.setFontSize(10);
         const wordW = doc.getTextWidth(fw.text);
         if (fw.precededBySpace && !isFirstOnLine) {
@@ -932,7 +883,7 @@ const NoteGenerator = () => {
 
       // 4. Draw list prefix if list item
       if (isList && prefixStr) {
-        doc.setFont('helvetica', 'bold');
+        doc.setFont(fontName, 'bold');
         doc.setFontSize(10);
         doc.setTextColor(0, 28, 61);
         doc.text(prefixStr, x - 5, cursorY);
@@ -974,7 +925,7 @@ const NoteGenerator = () => {
         if (curChunk) chunks.push(curChunk);
 
         chunks.forEach(chunk => {
-          doc.setFont('helvetica', chunk.bold ? (chunk.italic ? 'bolditalic' : 'bold') : (chunk.italic ? 'italic' : 'normal'));
+          doc.setFont(fontName, chunk.bold ? 'bold' : 'normal');
           doc.setFontSize(10);
           doc.setTextColor(chunk.bold ? 0 : 50);
           doc.text(chunk.text, currentX, cursorY);
@@ -1032,8 +983,8 @@ const NoteGenerator = () => {
               body: bodyRows,
               startY: cursorY + 2,
               theme: 'grid',
-              styles: { fontSize: 8, cellPadding: 3, valign: 'middle' },
-              headStyles: { fillColor: [0, 28, 61], textColor: 255, fontStyle: 'bold', halign: 'center' },
+              styles: { font: fontName, fontSize: 8, cellPadding: 3, valign: 'middle' },
+              headStyles: { font: fontName, fillColor: [0, 28, 61], textColor: 255, fontStyle: 'bold', halign: 'center' },
               alternateRowStyles: { fillColor: [248, 250, 252] },
               margin: { left: marginX, right: marginX },
             });
@@ -1051,7 +1002,7 @@ const NoteGenerator = () => {
       // Headers
       if (line.startsWith('# ')) {
         const text = line.substring(2).trim();
-        doc.setFont('helvetica', 'bold');
+        doc.setFont(fontName, 'bold');
         doc.setFontSize(13);
         doc.setTextColor(0, 28, 61);
         cursorY += 4;
@@ -1061,7 +1012,7 @@ const NoteGenerator = () => {
         continue;
       } else if (line.startsWith('## ')) {
         const text = line.substring(3).trim();
-        doc.setFont('helvetica', 'bold');
+        doc.setFont(fontName, 'bold');
         doc.setFontSize(11);
         doc.setTextColor(0, 28, 61);
         cursorY += 3;
@@ -1071,7 +1022,7 @@ const NoteGenerator = () => {
         continue;
       } else if (line.startsWith('### ')) {
         const text = line.substring(4).trim();
-        doc.setFont('helvetica', 'bold');
+        doc.setFont(fontName, 'bold');
         doc.setFontSize(10);
         doc.setTextColor(50, 50, 50);
         cursorY += 2;
@@ -1134,18 +1085,18 @@ const NoteGenerator = () => {
       if (i === 1) {
         doc.setFontSize(6.5);
         doc.setTextColor(120);
-        doc.setFont('helvetica', 'italic');
+        doc.setFont(fontName, 'normal');
         doc.text('Note: Teachers should review and adapt generated material to the needs of their learners.', 105, pageHeight - 7.5, { align: 'center' });
       }
 
       // Brand Footer
-      doc.setFont('helvetica', 'bold');
+      doc.setFont(fontName, 'bold');
       doc.setTextColor(0, 107, 63); // Ghana Green
       doc.setFontSize(7.5);
-      doc.text('TEACHSMART GHANA • CURRICULUM-ALIGNED TEACHING AND LEARNING SUPPORT', 10, pageHeight - 4);
+      doc.text('TEACHSMART GHANA • DESIGNED TO ALIGN WITH NaCCA/GES CURRICULUM REQUIREMENTS', 10, pageHeight - 4);
       
       doc.setTextColor(140);
-      doc.setFont('helvetica', 'normal');
+      doc.setFont(fontName, 'normal');
       doc.setFontSize(7.5);
       doc.text(`Page ${i} of ${pageCount}`, 200, pageHeight - 4, { align: 'right' });
     }
@@ -1161,6 +1112,12 @@ const NoteGenerator = () => {
     if (!result) return;
     setExportingWord(true);
     try {
+      const isLowerPrimary = formData.level === 'Primary' && (
+        formData.class.includes('1') || formData.class.includes('2') || formData.class.includes('3') ||
+        ['Basic 1', 'Basic 2', 'Basic 3', 'B1', 'B2', 'B3'].includes(formData.class)
+      );
+      const isKg = formData.level === 'KG' || formData.class.toLowerCase().includes('kg');
+
       // Build comprehensive markdown content from result
       let fullContent = '';
 
@@ -1174,33 +1131,37 @@ const NoteGenerator = () => {
         fullContent += `${result.notes}\n\n`;
       }
 
-      // Add Key Takeaways if available and not already in content
-      if (Array.isArray(result.summary) && result.summary.length > 0) {
-        if (!fullContent.includes('### Key Lesson Takeaways') && !fullContent.includes('### 12. Summary') && !fullContent.includes('### Summary')) {
-          fullContent += `### Key Lesson Takeaways & Summary\n`;
-          result.summary.forEach((item: string, idx: number) => {
-            fullContent += `${idx + 1}. ${item}\n`;
-          });
-          fullContent += '\n';
-        }
-      } else if (typeof result.summary === 'string' && result.summary.trim()) {
-        if (!fullContent.includes(result.summary.slice(0, 30))) {
-          fullContent += `### Key Lesson Takeaways & Summary\n${result.summary}\n\n`;
-        }
-      }
+      // For Upper Primary (Basic 4-6), JHS (Basic 7-9), and SHS:
+      // Only append summary or review questions if equivalent sections are NOT ALREADY present in the generated content.
+      // For Lower Primary (Basic 1-3) and KG: strictly do NOT synthesize/append additional takeaway/review sections.
+      if (!isLowerPrimary && !isKg) {
+        const hasSummarySection = /#{1,4}\s*(?:\d+\.?\s*)?(?:Summary|Revision\s+Notes|Key\s+Lesson\s+Takeaways|Key\s+Takeaway|Takeaway|Important\s+Points|Conclusion)/i.test(fullContent);
+        const hasQuestionSection = /#{1,4}\s*(?:\d+\.?\s*)?(?:Practice\s+Questions|Questions\s+&|Review\s+Questions|Review\s+&\s+Practice|Practice\s+Exercises|Assessment|Homework|Let's\s+Practise|Home\s+Activity)/i.test(fullContent);
 
-      // Add Review Questions if available and not already in content
-      if (Array.isArray(result.questions) && result.questions.length > 0) {
-        if (!fullContent.includes('### Review & Practice Questions') && !fullContent.includes('### 11. Practice Questions') && !fullContent.includes('### Review Questions')) {
-          fullContent += `### Review & Practice Questions\n`;
-          result.questions.forEach((q: string, idx: number) => {
-            fullContent += `${idx + 1}. ${q}\n`;
-          });
-          fullContent += '\n';
+        // Add Key Takeaways if available and not already in content
+        if (!hasSummarySection) {
+          if (Array.isArray(result.summary) && result.summary.length > 0) {
+            fullContent += `### Key Lesson Takeaways & Summary\n`;
+            result.summary.forEach((item: string, idx: number) => {
+              fullContent += `${idx + 1}. ${item}\n`;
+            });
+            fullContent += '\n';
+          } else if (typeof result.summary === 'string' && result.summary.trim()) {
+            fullContent += `### Key Lesson Takeaways & Summary\n${result.summary}\n\n`;
+          }
         }
-      } else if (typeof result.questions === 'string' && result.questions.trim()) {
-        if (!fullContent.includes(result.questions.slice(0, 30))) {
-          fullContent += `### Review & Practice Questions\n${result.questions}\n\n`;
+
+        // Add Review Questions if available and not already in content
+        if (!hasQuestionSection) {
+          if (Array.isArray(result.questions) && result.questions.length > 0) {
+            fullContent += `### Review & Practice Questions\n`;
+            result.questions.forEach((q: string, idx: number) => {
+              fullContent += `${idx + 1}. ${q}\n`;
+            });
+            fullContent += '\n';
+          } else if (typeof result.questions === 'string' && result.questions.trim()) {
+            fullContent += `### Review & Practice Questions\n${result.questions}\n\n`;
+          }
         }
       }
 
@@ -1210,7 +1171,9 @@ const NoteGenerator = () => {
         level: formData.level,
         strand: formData.strand,
         subStrand: formData.subStrand,
+        contentStandard: formData.contentStandard,
         indicator: formData.indicator,
+        topic: formData.lessonTopic || (result as any).topic || '',
         title: `${displaySubject} - ${result.title || formData.subStrand || formData.strand || 'Lesson Notes'}`,
       });
     } catch (err) {

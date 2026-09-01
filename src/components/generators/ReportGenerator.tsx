@@ -18,6 +18,7 @@ import { downloadSampleCSVTemplate } from '../../lib/csvParser';
 import { exportRosterToExcel, exportTemplateToExcel } from '../../lib/excelExport';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { registerUnicodeFonts } from '../../lib/fonts/unicodeFonts';
 
 export interface StudentScore {
   id: string;
@@ -491,6 +492,7 @@ Rules:
 
     try {
       const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+      const fontName = registerUnicodeFonts(doc);
       const pageWidth = doc.internal.pageSize.getWidth();
 
       // Top decorative stripe (Ghana colors)
@@ -504,7 +506,7 @@ Rules:
       doc.rect((2 * pageWidth) / 3, 5, pageWidth / 3, 2, 'F');
 
       // School & Header Info
-      doc.setFont('helvetica', 'bold');
+      doc.setFont(fontName, 'bold');
       doc.setFontSize(16);
       doc.setTextColor(15, 23, 42);
       doc.text(schoolName.toUpperCase(), pageWidth / 2, 18, { align: 'center' });
@@ -514,7 +516,7 @@ Rules:
       doc.text(documentTitle.toUpperCase(), pageWidth / 2, 25, { align: 'center' });
 
       doc.setFontSize(9);
-      doc.setFont('helvetica', 'normal');
+      doc.setFont(fontName, 'normal');
       doc.text(`Class: ${selectedClass}  |  Subject: ${selectedSubject}  |  ${selectedTerm} (${academicYear})  |  Weights: Class (${classWeight}%) + Exam (${examWeight}%)`, pageWidth / 2, 31, { align: 'center' });
 
       // Table columns and rows
@@ -535,7 +537,13 @@ Rules:
         body: tableData,
         startY: 36,
         theme: 'grid',
+        styles: {
+          font: fontName,
+          fontSize: 8,
+          textColor: [30, 41, 59]
+        },
         headStyles: {
+          font: fontName,
           fillColor: [15, 23, 42],
           textColor: [255, 255, 255],
           fontStyle: 'bold',
@@ -543,6 +551,7 @@ Rules:
           halign: 'center'
         },
         bodyStyles: {
+          font: fontName,
           fontSize: 8,
           textColor: [30, 41, 59]
         },
@@ -566,14 +575,17 @@ Rules:
       const finalY = (doc as any).lastAutoTable?.finalY || 160;
       const signatureY = Math.min(finalY + 18, 185);
 
+      doc.setFont(fontName, 'normal');
       doc.setFontSize(8);
       doc.setTextColor(100, 116, 139);
       doc.text('Subject Teacher: _______________________      Date: ____________', 20, signatureY);
       doc.text('Headteacher: _______________________      Signature & Stamp: ____________', pageWidth - 140, signatureY);
 
       // Footer
-      doc.setFontSize(7);
-      doc.text(`Generated with TeachSmartGH • Catalyst Creative • Official NaCCA/GES Assessment Format`, pageWidth / 2, 202, { align: 'center' });
+      doc.setFont(fontName, 'bold');
+      doc.setFontSize(7.5);
+      doc.setTextColor(0, 107, 63);
+      doc.text(`TEACHSMART GHANA • DESIGNED TO ALIGN WITH NaCCA/GES CURRICULUM REQUIREMENTS`, pageWidth / 2, 202, { align: 'center' });
 
       const sanitizedPdfTitle = documentTitle.replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 25);
       doc.save(`${sanitizedPdfTitle}_${selectedClass}_${selectedSubject}.pdf`);

@@ -11,6 +11,7 @@ import { SearchableDropdown } from '../ui/SearchableDropdown';
 import { cacheGeneratedDocument } from '../../lib/offlineDocumentCache';
 import jsPDF from 'jspdf';
 import { exportAssignmentToWord } from '../../lib/wordExport';
+import { registerUnicodeFonts } from '../../lib/fonts/unicodeFonts';
 
 export default function AssignmentGenerator() {
   const { canGenerate } = useAuth();
@@ -149,21 +150,78 @@ export default function AssignmentGenerator() {
 
   const handleDownloadPDF = () => {
     const doc = new jsPDF();
+    const fontName = registerUnicodeFonts(doc);
     const textToPrint = activeTab === 'assignment' ? generatedAssignment : generatedRubric;
+    const docTitle = activeTab === 'assignment' ? 'ASSIGNMENT & HOMEWORK TASK' : 'ASSESSMENT & GRADING RUBRIC';
     
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(12);
+    // Header Branding
+    doc.setFillColor(0, 28, 61); // TeachSmart Deep Blue
+    doc.rect(0, 0, 210, 25, 'F');
+    
+    doc.setTextColor(255, 255, 255);
+    doc.setFont(fontName, 'bold');
+    doc.setFontSize(16);
+    doc.text(docTitle, 105, 12, { align: 'center' });
+    
+    doc.setFontSize(8.5);
+    doc.setFont(fontName, 'normal');
+    doc.text('DESIGNED TO ALIGN WITH NaCCA/GES CURRICULUM REQUIREMENTS', 105, 18, { align: 'center' });
+    
+    doc.setDrawColor(252, 209, 22); // Ghana Gold
+    doc.setLineWidth(0.8);
+    doc.line(30, 21, 180, 21);
+
+    // Meta bar
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(9.5);
+    doc.setFont(fontName, 'bold');
+    const metaLine = `Subject: ${subject.toUpperCase()} | Class: ${selectedClass.toUpperCase()} (${level.toUpperCase()}) | Term: ${term}`;
+    doc.text(metaLine, 105, 31, { align: 'center' });
+    if (topic) {
+      doc.setFont(fontName, 'normal');
+      doc.setFontSize(8.5);
+      doc.setTextColor(70, 70, 70);
+      doc.text(`Topic: ${topic}`, 105, 36, { align: 'center' });
+    }
+
+    doc.setTextColor(20, 20, 20);
+    doc.setFont(fontName, 'normal');
+    doc.setFontSize(10);
     
     const lines = doc.splitTextToSize(textToPrint, 180);
-    let y = 15;
+    let y = topic ? 42 : 38;
+    const pageHeight = doc.internal.pageSize.height;
     
+    const drawFooter = (pageDoc: typeof doc, pageNum: number) => {
+      pageDoc.setDrawColor(220, 220, 220);
+      pageDoc.setLineWidth(0.5);
+      pageDoc.line(15, pageHeight - 12, 195, pageHeight - 12);
+
+      pageDoc.setFont(fontName, 'bold');
+      pageDoc.setTextColor(0, 107, 63);
+      pageDoc.setFontSize(7.5);
+      pageDoc.text('TEACHSMART GHANA • DESIGNED TO ALIGN WITH NaCCA/GES CURRICULUM REQUIREMENTS', 15, pageHeight - 6);
+
+      pageDoc.setTextColor(140);
+      pageDoc.setFont(fontName, 'normal');
+      pageDoc.setFontSize(7.5);
+      pageDoc.text(`Page ${pageNum}`, 195, pageHeight - 6, { align: 'right' });
+    };
+
+    drawFooter(doc, 1);
+    let currentPage = 1;
+
     lines.forEach((line: string) => {
-      if (y > 280) {
+      if (y > pageHeight - 18) {
         doc.addPage();
-        y = 15;
+        currentPage++;
+        drawFooter(doc, currentPage);
+        y = 20;
       }
+      doc.setTextColor(20, 20, 20);
+      doc.setFont(fontName, 'normal');
       doc.text(line, 15, y);
-      y += 6;
+      y += 5.5;
     });
 
     doc.save(`teachsmart_assignment_${subject.toLowerCase().replace(/\s+/g, '_')}.pdf`);

@@ -13,7 +13,14 @@ import { cacheGeneratedDocument } from '../../lib/offlineDocumentCache';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../contexts/AuthContext';
 import { cn, formatPerformanceIndicator, formatMultiplePerformanceIndicators, getUpcomingFriday, getSchoolWeekDaysFromWeekEnding, calculateLessonDateFromWeekEnding, formatWeekLessonPlanTitle, SchoolWeekDays } from '../../lib/utils';
-import { filterStandardsForClass, matchStandardToClass } from '../../lib/curriculumDatabase';
+import { 
+  filterStandardsForClass, 
+  matchStandardToClass,
+  getCurriculumStrands,
+  getCurriculumSubStrands,
+  getCurriculumStandards,
+  getCurriculumIndicators
+} from '../../lib/curriculumDatabase';
 import { SafeMarkdown } from '../common/SafeMarkdown';
 import 'highlight.js/styles/github.css';
 import { exportLessonPlanToPDF } from '../../lib/lessonPlanPdfExport';
@@ -516,19 +523,11 @@ const LessonPlanGenerator = () => {
     return [`${standard}.1: Practice and discuss this core content standard.`];
   };
 
-  // Helper selectors from constants
-  const currentStrands = getSubjectStrands(formData.subject, formData.level, formData.class);
-  const lookupStrand = getLookupStrand(formData.subject, formData.strand);
-  const currentSubStrands = getSubjectSubStrands(formData.subject, formData.strand, formData.level);
-  const rawStandards = (
-    SUB_STRAND_STANDARDS[lookupStrand]?.[formData.subStrand] || 
-    SUB_STRAND_STANDARDS[formData.strand]?.[formData.subStrand] ||
-    SUB_STRAND_STANDARDS[formData.subject]?.[formData.subStrand] ||
-    SUB_STRAND_STANDARDS[formData.subject]?.[formData.strand] ||
-    []
-  );
-  const currentStandards = filterStandardsForClass(rawStandards, formData.class, formData.level);
-  const currentIndicators = STANDARD_INDICATORS[formData.contentStandard] || getFallbackIndicators(formData.contentStandard);
+  // Helper selectors from centralized curriculum database
+  const currentStrands = getCurriculumStrands(formData.subject, formData.level, formData.class);
+  const currentSubStrands = getCurriculumSubStrands(formData.subject, formData.strand, formData.level);
+  const currentStandards = getCurriculumStandards(formData.subject, formData.strand, formData.subStrand, formData.level, formData.class);
+  const currentIndicators = getCurriculumIndicators(formData.contentStandard, formData.subject, formData.class);
 
   const handleGenerate = async () => {
     if (!validateStep(3)) return;
@@ -1721,7 +1720,7 @@ const LessonPlanGenerator = () => {
                           value={formData.contentStandard}
                           onChange={(e) => {
                             const newCs = e.target.value;
-                            const newIndicators = STANDARD_INDICATORS[newCs] || getFallbackIndicators(newCs);
+                            const newIndicators = getCurriculumIndicators(newCs, formData.subject, formData.class);
                             const firstInd = newIndicators[0] || '';
                             const newSelected = firstInd ? [firstInd] : [];
                             setFormData({

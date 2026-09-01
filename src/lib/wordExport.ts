@@ -13,7 +13,6 @@ import {
   Header, 
   Footer, 
   PageOrientation, 
-  PageNumber, 
   ShadingType,
   VerticalAlign
 } from 'docx';
@@ -33,6 +32,7 @@ export interface DocumentExportMetadata {
   subStrand?: string;
   contentStandard?: string;
   indicator?: string;
+  topic?: string;
   schoolName?: string;
   teacherName?: string;
   academicYear?: string;
@@ -253,7 +253,7 @@ function createBrandHeaderBanner(meta: DocumentExportMetadata): Table {
                 spacing: { before: 0, after: 40 },
                 children: [
                   new TextRun({
-                    text: '🇬🇭 AI-POWERED TEACHING. SMARTER TOMORROW.  •  NaCCA / GES CURRICULUM ALIGNED',
+                    text: '🇬🇭 AI-POWERED TEACHING. SMARTER TOMORROW.  •  DESIGNED TO ALIGN WITH NaCCA/GES CURRICULUM REQUIREMENTS',
                     size: 16,
                     color: BRAND_COLORS.GHANA_GOLD,
                     bold: true,
@@ -381,8 +381,14 @@ function createMetadataStripTable(meta: DocumentExportMetadata): Table {
   if (meta.subStrand) {
     fields.push({ label: 'SUB-STRAND', val: meta.subStrand });
   }
+  if (meta.contentStandard) {
+    fields.push({ label: 'CONTENT STANDARD', val: meta.contentStandard });
+  }
   if (meta.indicator) {
     fields.push({ label: 'INDICATOR', val: meta.indicator });
+  }
+  if (meta.topic) {
+    fields.push({ label: 'TOPIC', val: meta.topic });
   }
   if (meta.locality) {
     fields.push({ label: 'LOCALITY CONTEXT', val: meta.locality });
@@ -740,7 +746,7 @@ function createRunningHeaderAndFooter(documentType: string) {
         alignment: AlignmentType.RIGHT,
         children: [
           new TextRun({
-            text: `TeachSmartGH • ${documentType.toUpperCase()} • Curriculum Aligned`,
+            text: `TeachSmartGH • ${documentType.toUpperCase()} • Designed to Align with NaCCA/GES Curriculum Requirements`,
             size: 14,
             color: BRAND_COLORS.SLATE_MUTED,
             font: 'Calibri'
@@ -759,7 +765,7 @@ function createRunningHeaderAndFooter(documentType: string) {
             cantSplit: true,
             children: [
               new TableCell({
-                width: { size: 70, type: WidthType.PERCENTAGE },
+                width: { size: 100, type: WidthType.PERCENTAGE },
                 borders: { 
                   top: { style: BorderStyle.SINGLE, size: 4, color: BRAND_COLORS.BORDER_SUBTLE }, 
                   bottom: { style: BorderStyle.NONE }, 
@@ -768,34 +774,15 @@ function createRunningHeaderAndFooter(documentType: string) {
                 },
                 children: [
                   new Paragraph({
+                    alignment: AlignmentType.CENTER,
                     children: [
                       new TextRun({
-                        text: 'TeachSmartGH by Catalyst Creative • NaCCA & GES Curriculum Aligned',
+                        text: 'TeachSmartGH by Catalyst Creative • Designed to Align with NaCCA/GES Curriculum Requirements',
                         size: 14,
                         color: BRAND_COLORS.SLATE_MUTED,
                         italics: true,
                         font: 'Calibri'
                       })
-                    ]
-                  })
-                ]
-              }),
-              new TableCell({
-                width: { size: 30, type: WidthType.PERCENTAGE },
-                borders: { 
-                  top: { style: BorderStyle.SINGLE, size: 4, color: BRAND_COLORS.BORDER_SUBTLE }, 
-                  bottom: { style: BorderStyle.NONE }, 
-                  left: { style: BorderStyle.NONE }, 
-                  right: { style: BorderStyle.NONE } 
-                },
-                children: [
-                  new Paragraph({
-                    alignment: AlignmentType.RIGHT,
-                    children: [
-                      new TextRun({ text: 'Page ', size: 14, color: BRAND_COLORS.SLATE_MUTED }),
-                      new TextRun({ children: [PageNumber.CURRENT], size: 14, color: BRAND_COLORS.SLATE_MUTED, bold: true }),
-                      new TextRun({ text: ' of ', size: 14, color: BRAND_COLORS.SLATE_MUTED }),
-                      new TextRun({ children: [PageNumber.TOTAL_PAGES], size: 14, color: BRAND_COLORS.SLATE_MUTED, bold: true }),
                     ]
                   })
                 ]
@@ -839,7 +826,7 @@ function createKGRunningHeaderAndFooter(weekNumber: string, className: string) {
             cantSplit: true,
             children: [
               new TableCell({
-                width: { size: 75, type: WidthType.PERCENTAGE },
+                width: { size: 100, type: WidthType.PERCENTAGE },
                 borders: { 
                   top: { style: BorderStyle.SINGLE, size: 4, color: BRAND_COLORS.BORDER_SUBTLE }, 
                   bottom: { style: BorderStyle.NONE }, 
@@ -848,6 +835,7 @@ function createKGRunningHeaderAndFooter(weekNumber: string, className: string) {
                 },
                 children: [
                   new Paragraph({
+                    alignment: AlignmentType.CENTER,
                     children: [
                       new TextRun({
                         text: 'TeachSmartGH | TeachSmartGH Kindergarten Daily Lesson Plan — Designed to Align with NaCCA/GES Requirements | Catalyst Creative',
@@ -855,26 +843,6 @@ function createKGRunningHeaderAndFooter(weekNumber: string, className: string) {
                         color: BRAND_COLORS.SLATE_MUTED,
                         font: 'Calibri'
                       })
-                    ]
-                  })
-                ]
-              }),
-              new TableCell({
-                width: { size: 25, type: WidthType.PERCENTAGE },
-                borders: { 
-                  top: { style: BorderStyle.SINGLE, size: 4, color: BRAND_COLORS.BORDER_SUBTLE }, 
-                  bottom: { style: BorderStyle.NONE }, 
-                  left: { style: BorderStyle.NONE }, 
-                  right: { style: BorderStyle.NONE } 
-                },
-                children: [
-                  new Paragraph({
-                    alignment: AlignmentType.RIGHT,
-                    children: [
-                      new TextRun({ text: 'Page ', size: 14, color: BRAND_COLORS.SLATE_MUTED }),
-                      new TextRun({ children: [PageNumber.CURRENT], size: 14, color: BRAND_COLORS.SLATE_MUTED, bold: true }),
-                      new TextRun({ text: ' of ', size: 14, color: BRAND_COLORS.SLATE_MUTED }),
-                      new TextRun({ children: [PageNumber.TOTAL_PAGES], size: 14, color: BRAND_COLORS.SLATE_MUTED, bold: true }),
                     ]
                   })
                 ]
@@ -939,7 +907,7 @@ export async function exportMarkdownToWord(
   const doc = new Document({
     creator: 'TeachSmartGH (Catalyst Creative)',
     title: `${title} - TeachSmartGH`,
-    description: 'AI-Generated NaCCA-Aligned Curriculum Document',
+    description: 'AI-Generated Curriculum Document Designed to Align with NaCCA/GES Curriculum Requirements',
     sections: [
       {
         properties: {
@@ -2148,11 +2116,15 @@ export async function exportNoteToWord(
 ): Promise<void> {
   const subject = metadata.subject || 'Subject';
   const classLevel = metadata.classLevel || 'Basic 7';
+  const isLowerPrimary = ['Basic 1', 'Basic 2', 'Basic 3', 'B1', 'B2', 'B3'].includes(classLevel) ||
+    (metadata.level === 'Primary' && ['1', '2', '3'].includes(classLevel.replace(/\D/g, '')));
+
+  const docType = isLowerPrimary ? 'Lower Primary Learner Notes' : 'Comprehensive Lesson Notes';
 
   await exportMarkdownToWord(noteContent, {
     ...metadata,
-    title: `${subject} - Comprehensive Lesson Notes (${classLevel})`,
-    documentType: 'Comprehensive Lesson Notes',
+    title: `${subject} - ${docType} (${classLevel})`,
+    documentType: docType,
     subject,
     classLevel,
     orientation: 'portrait'

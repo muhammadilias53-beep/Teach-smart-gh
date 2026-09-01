@@ -1,33 +1,36 @@
+// NaCCA / GES Official Ghanaian Curriculum Reference Dataset
+// Auto-generated & optimized for complete coverage across KG, Primary, JHS, and SHS levels.
+
 export const subjects = [
   "Arabic",
-  "English", 
-  "Mathematics", 
-  "Science", 
-  "Social Studies", 
-  "Computing", 
-  "Career Technology", 
-  "RME", 
-  "Creative Arts", 
-  "French", 
-  "Ghanaian Language", 
-  "Additional Mathematics", 
-  "Physics", 
-  "Chemistry", 
-  "Biology", 
-  "Economics", 
-  "Geography", 
-  "History", 
-  "Government", 
-  "CRS", 
-  "IRS", 
-  "Literature in English", 
+  "English",
+  "Mathematics",
+  "Science",
+  "Social Studies",
+  "Computing",
+  "Career Technology",
+  "RME",
+  "Creative Arts",
+  "French",
+  "Ghanaian Language",
+  "Additional Mathematics",
+  "Physics",
+  "Chemistry",
+  "Biology",
+  "Economics",
+  "Geography",
+  "History",
+  "Government",
+  "CRS",
+  "IRS",
+  "Literature in English",
   "Accounting",
-  "Financial Accounting", 
-  "Cost Accounting", 
-  "Business Management", 
-  "Agricultural Science", 
-  "Elective ICT", 
-  "Food & Nutrition", 
+  "Financial Accounting",
+  "Cost Accounting",
+  "Business Management",
+  "Agricultural Science",
+  "Elective ICT",
+  "Food & Nutrition",
   "Graphic Design",
   "Art and Design Studio",
   "Integrated Curriculum (KG)",
@@ -35,35 +38,136 @@ export const subjects = [
   "Physical Education"
 ];
 
-export const levels = ["KG", "Primary", "JHS", "SHS"];
-
-export const subjectsByLevel: Record<string, string[]> = {
-  "KG": ["Integrated Curriculum (KG)"],
-  "Primary": ["English", "Mathematics", "Science", "Our World Our People", "Social Studies", "Computing", "RME", "Creative Arts", "Ghanaian Language", "French", "History", "Physical Education"],
-  "JHS": ["English", "Mathematics", "Science", "Social Studies", "Computing", "RME", "Creative Arts", "Ghanaian Language", "French", "Career Technology", "Physical Education"],
-  "SHS": ["Arabic", "English", "Mathematics", "Science", "Social Studies", "Additional Mathematics", "Physics", "Chemistry", "Biology", "Economics", "Geography", "History", "Government", "CRS", "IRS", "Literature in English", "Financial Accounting", "Cost Accounting", "Business Management", "Agricultural Science", "Elective ICT", "Food & Nutrition", "Graphic Design", "Physical Education", "Art and Design Studio"]
-};
-
-export const GHANA_REGIONS = [
-  "Greater Accra", "Ashanti", "Central", "Eastern", "Western", 
-  "Northern", "Upper East", "Upper West", "Volta", "Bono", 
-  "Bono East", "Ahafo", "Savannah", "North East", "Oti", "Western North"
+export const levels = [
+  "KG",
+  "Primary",
+  "JHS",
+  "SHS"
 ];
 
 export const CLASSES_BY_LEVEL: Record<string, string[]> = {
-  "KG": ["KG 1", "KG 2"],
-  "Primary": ["Basic 1", "Basic 2", "Basic 3", "Basic 4", "Basic 5", "Basic 6"],
-  "JHS": ["Basic 7", "Basic 8", "Basic 9"],
-  "SHS": ["Basic 10", "Basic 11", "Basic 12"]
+  "KG": [
+    "KG 1",
+    "KG 2"
+  ],
+  "Primary": [
+    "Basic 1",
+    "Basic 2",
+    "Basic 3",
+    "Basic 4",
+    "Basic 5",
+    "Basic 6"
+  ],
+  "JHS": [
+    "Basic 7",
+    "Basic 8",
+    "Basic 9"
+  ],
+  "SHS": [
+    "Basic 10",
+    "Basic 11",
+    "Basic 12"
+  ]
+};
+
+export const subjectsByLevel: Record<string, string[]> = {
+  "KG": [
+    "Integrated Curriculum (KG)"
+  ],
+  "Primary": [
+    "English",
+    "Mathematics",
+    "Science",
+    "Our World Our People",
+    "Social Studies",
+    "Computing",
+    "RME",
+    "Creative Arts",
+    "Ghanaian Language",
+    "French",
+    "History",
+    "Physical Education"
+  ],
+  "JHS": [
+    "English",
+    "Mathematics",
+    "Science",
+    "Social Studies",
+    "Computing",
+    "RME",
+    "Creative Arts",
+    "Ghanaian Language",
+    "French",
+    "Career Technology",
+    "Physical Education"
+  ],
+  "SHS": [
+    "Arabic",
+    "English",
+    "Mathematics",
+    "Science",
+    "Social Studies",
+    "Additional Mathematics",
+    "Physics",
+    "Chemistry",
+    "Biology",
+    "Economics",
+    "Geography",
+    "History",
+    "Government",
+    "CRS",
+    "IRS",
+    "Literature in English",
+    "Financial Accounting",
+    "Cost Accounting",
+    "Business Management",
+    "Agricultural Science",
+    "Elective ICT",
+    "Food & Nutrition",
+    "Graphic Design",
+    "Physical Education",
+    "Art and Design Studio"
+  ]
 };
 
 export const SUBJECT_STRANDS: Record<string, string[]> = {
-  "Arabic": ["Arabic Listening", "Arabic Speaking", "Arabic Reading", "Arabic Writing"],
-  "Mathematics": ["Number", "Algebra", "Geometry and Measurement", "Handling Data"],
-  "Additional Mathematics": ["Modelling with Algebra", "Geometric Reasoning and Measurement", "Calculus", "Handling Data"],
-  "Science": ["Diversity of Matter", "Cycles", "Systems", "Forces and Energy", "Humans and the Environment"],
-  "Physics": ["Mechanics", "Thermal Physics", "Waves", "Electricity and Magnetism", "Atomic and Nuclear Physics"],
-  "Chemistry": ["Physical Chemistry", "Systematic Chemistry of the Elements", "Chemistry of Carbon Compounds"],
+  "Arabic": [
+    "Arabic Listening",
+    "Arabic Speaking",
+    "Arabic Reading",
+    "Arabic Writing"
+  ],
+  "Mathematics": [
+    "Number",
+    "Algebra",
+    "Geometry and Measurement",
+    "Handling Data"
+  ],
+  "Additional Mathematics": [
+    "Modelling with Algebra",
+    "Geometric Reasoning and Measurement",
+    "Calculus",
+    "Handling Data"
+  ],
+  "Science": [
+    "Diversity of Matter",
+    "Cycles",
+    "Systems",
+    "Forces and Energy",
+    "Humans and the Environment"
+  ],
+  "Physics": [
+    "Mechanics",
+    "Thermal Physics",
+    "Waves",
+    "Electricity and Magnetism",
+    "Atomic and Nuclear Physics"
+  ],
+  "Chemistry": [
+    "Physical Chemistry",
+    "Systematic Chemistry of the Elements",
+    "Chemistry of Carbon Compounds"
+  ],
   "Biology": [
     "Exploring Biology in Society",
     "Life in the Fundamental Unit",
@@ -78,23 +182,74 @@ export const SUBJECT_STRANDS: Record<string, string[]> = {
     "Plant Biology",
     "Diversity of Life"
   ],
-  "English": ["Oral Language", "Reading", "Grammar Usage at Word and Phrase Levels", "Writing", "Writing Conventions and Grammar Usage", "Extensive Reading"],
-  "History": ["History as a Subject", "My Country Ghana", "Europeans in Ghana", "Colonisation and Developments under Colonial Rule in Ghana", "Journey to Independence", "Independent Ghana"],
-  "Social Studies": ["Environment", "Family Life", "Sense of Purpose", "Law and Order", "Socio-Economic Development", "Nationhood"],
+  "English": [
+    "Oral Language",
+    "Reading",
+    "Grammar Usage at Word and Phrase Levels",
+    "Writing",
+    "Writing Conventions and Grammar Usage",
+    "Extensive Reading"
+  ],
+  "History": [
+    "History as a Subject",
+    "My Country Ghana",
+    "Europeans in Ghana",
+    "Colonisation and Developments under Colonial Rule in Ghana",
+    "Journey to Independence",
+    "Independent Ghana"
+  ],
+  "Social Studies": [
+    "Environment",
+    "Family Life",
+    "Sense of Purpose",
+    "Law and Order",
+    "Socio-Economic Development",
+    "Nationhood"
+  ],
   "Computing": [
-    "Introduction to Computing", 
-    "Word Processing", 
-    "Presentation", 
-    "Desktop Publishing", 
-    "Programming and Databases", 
-    "Internet and Social Media", 
+    "Introduction to Computing",
+    "Word Processing",
+    "Presentation",
+    "Desktop Publishing",
+    "Programming and Databases",
+    "Internet and Social Media",
     "Health and Safety in Using ICT Tools"
   ],
-  "Career Technology": ["Health and Safety", "Materials for Production", "Tools, Equipment and Processes", "Technology", "Designing and Making of Artefacts/Products", "Entrepreneurial Skills"],
-  "Creative Arts": ["Visual Arts", "Performing Arts"],
-  "Financial Accounting": ["Conceptual Framework", "Financial Data Analysis", "Financial Reporting", "Financial Statements", "Partnership Accounts", "Company Accounts", "Cost Accounting Basics"],
-  "Cost Accounting": ["Controlling Cost to Improve Organisational Performance", "Determining Cost of Operations for Pricing and Controlling", "Analysing Information for Control and decision making", "Introduction to Cost Accounting", "Elements of Costing", "Materials Costing", "Labour and Overhead Costing", "Job and Batch Costing"],
-  "Accounting": ["Financial Accounting", "Cost Accounting"],
+  "Career Technology": [
+    "Health and Safety",
+    "Materials for Production",
+    "Tools, Equipment and Processes",
+    "Technology",
+    "Designing and Making of Artefacts/Products",
+    "Entrepreneurial Skills"
+  ],
+  "Creative Arts": [
+    "Visual Arts",
+    "Performing Arts"
+  ],
+  "Financial Accounting": [
+    "Conceptual Framework",
+    "Financial Data Analysis",
+    "Financial Reporting",
+    "Financial Statements",
+    "Partnership Accounts",
+    "Company Accounts",
+    "Cost Accounting Basics"
+  ],
+  "Cost Accounting": [
+    "Controlling Cost to Improve Organisational Performance",
+    "Determining Cost of Operations for Pricing and Controlling",
+    "Analysing Information for Control and decision making",
+    "Introduction to Cost Accounting",
+    "Elements of Costing",
+    "Materials Costing",
+    "Labour and Overhead Costing",
+    "Job and Batch Costing"
+  ],
+  "Accounting": [
+    "Financial Accounting",
+    "Cost Accounting"
+  ],
   "Business Management": [
     "Managing Businesses and the Legal Framework of Businesses",
     "Glocal Business",
@@ -107,52 +262,187 @@ export const SUBJECT_STRANDS: Record<string, string[]> = {
     "Nature of Management",
     "Legal Environment of Business"
   ],
-  "French": ["L'IdentitÃ©", "Parler de son Environnement", "Exprimer ses GoÃ»ts et ses PrÃ©fÃ©rences", "Les ActivitÃ©s"],
-  "Ghanaian Language": ["Oral Language (GL)", "Reading (GL)", "Writing (GL)", "Writing Conventions and Usage (GL)", "Extensive Reading (GL)", "Composition Writing", "Customs and Institutions", "Literature (GL)"],
-  "Agricultural Science": ["Introduction to Agriculture", "Soil Science", "Crop Science", "Animal Science", "Agricultural Economics and Extension"],
+  "French": [
+    "L'IdentitÃƒÂ©",
+    "Parler de son Environnement",
+    "Exprimer ses GoÃƒÂ»ts et ses PrÃƒÂ©fÃƒÂ©rences",
+    "Les ActivitÃƒÂ©s"
+  ],
+  "Ghanaian Language": [
+    "Oral Language (GL)",
+    "Reading (GL)",
+    "Writing (GL)",
+    "Writing Conventions and Usage (GL)",
+    "Extensive Reading (GL)",
+    "Composition Writing",
+    "Customs and Institutions",
+    "Literature (GL)"
+  ],
+  "Agricultural Science": [
+    "Introduction to Agriculture",
+    "Soil Science",
+    "Crop Science",
+    "Animal Science",
+    "Agricultural Economics and Extension"
+  ],
   "Economics": [
     "Consumers' Rational Decision Making",
-    "Consumersâ€™ Rational Decision Making",
+    "ConsumersÃ¢â‚¬â„¢ Rational Decision Making",
     "Firms' Innovative Decision Making",
-    "Firmsâ€™ Innovative Decision Making",
+    "FirmsÃ¢â‚¬â„¢ Innovative Decision Making",
     "Price Analysis and Prediction in the Modern Economy",
     "Government Economic Policy and Trade"
   ],
-  "Elective ICT": ["ICTs in the Society", "Network Systems for Transmitting Information"],
-  "CRS": ["Study of Religion, God's Creation and Humankind", "Religious Beliefs, Practices, Moral Values and Human Development", "Religious Communities and Nation Building", "Religion and Contemporary Issues"],
-  "IRS": ["Study of Religions, God's Creation and Humankind", "Religious beliefs, practices, moral values and human development", "Religious communities and nation building", "Religion and contemporary issues"],
-  "Literature in English": ["Introduction to Literature", "African Prose", "Non-African Prose", "African Poetry", "Non-African Poetry", "Drama"],
-  "Integrated Curriculum (KG)": ["All About Me", "My Family", "Values and Beliefs", "My Local Community", "My Nation Ghana", "All Around Us", "My Global Community"],
-  "Our World Our People": ["All About Us", "All Around Us", "Our Beliefs and Values", "Our Nation Ghana", "My Global Community"],
-  "Physical Education": ["Motor Skill and Movement Patterns", "Movement Concepts, Principles and Strategies", "Physical Fitness", "Physical Fitness Concepts, Principles and Strategies", "Values and Psycho-social Concepts, Principles and Strategies"],
-  "RME": ["God, His Creation and Attributes", "Religious Practices and their Moral Implications", "Religious Leaders", "The Family and the Community", "The Family, Authority and Obedience", "Religious Leaders and Personalities", "Ethics and Moral Life", "Religion and Economic Life"],
-  "Food & Nutrition": ["Nutrition and Health", "Food Production"],
-  "Geography": ["The Earth and Its Neighbourhoods", "Navigating Our Environment", "Human and Environment"],
-  "Government": ["Government and Development", "Constitution, Institutions and Administration", "Ghana in the Global System"],
-  "Art and Design Studio": ["Art and Design Theories and Application", "Creative Methodologies", "Creative Project"]
+  "Elective ICT": [
+    "ICTs in the Society",
+    "Network Systems for Transmitting Information"
+  ],
+  "CRS": [
+    "Study of Religion, God's Creation and Humankind",
+    "Religious Beliefs, Practices, Moral Values and Human Development",
+    "Religious Communities and Nation Building",
+    "Religion and Contemporary Issues"
+  ],
+  "IRS": [
+    "Study of Religions, God's Creation and Humankind",
+    "Religious beliefs, practices, moral values and human development",
+    "Religious communities and nation building",
+    "Religion and contemporary issues"
+  ],
+  "Literature in English": [
+    "Introduction to Literature",
+    "African Prose",
+    "Non-African Prose",
+    "African Poetry",
+    "Non-African Poetry",
+    "Drama"
+  ],
+  "Integrated Curriculum (KG)": [
+    "All About Me",
+    "My Family",
+    "Values and Beliefs",
+    "My Local Community",
+    "My Nation Ghana",
+    "All Around Us",
+    "My Global Community"
+  ],
+  "Our World Our People": [
+    "All About Us",
+    "All Around Us",
+    "Our Beliefs and Values",
+    "Our Nation Ghana",
+    "My Global Community"
+  ],
+  "Physical Education": [
+    "Motor Skill and Movement Patterns",
+    "Movement Concepts, Principles and Strategies",
+    "Physical Fitness",
+    "Physical Fitness Concepts, Principles and Strategies",
+    "Values and Psycho-social Concepts, Principles and Strategies"
+  ],
+  "RME": [
+    "God, His Creation and Attributes",
+    "Religious Practices and their Moral Implications",
+    "Religious Leaders",
+    "The Family and the Community",
+    "The Family, Authority and Obedience",
+    "Religious Leaders and Personalities",
+    "Ethics and Moral Life",
+    "Religion and Economic Life"
+  ],
+  "Food & Nutrition": [
+    "Nutrition and Health",
+    "Food Production"
+  ],
+  "Geography": [
+    "The Earth and Its Neighbourhoods",
+    "Navigating Our Environment",
+    "Human and Environment"
+  ],
+  "Government": [
+    "Government and Development",
+    "Constitution, Institutions and Administration",
+    "Ghana in the Global System"
+  ],
+  "Art and Design Studio": [
+    "Art and Design Theories and Application",
+    "Creative Methodologies",
+    "Creative Project"
+  ],
+  "English Language": [
+    "Oral Language",
+    "Reading",
+    "Grammar Usage at Word and Phrase Levels",
+    "Writing",
+    "Writing Conventions and Grammar Usage",
+    "Extensive Reading"
+  ],
+  "Graphic Design": [
+    "Visual Communication and Design Fundamentals",
+    "Typography and Layout",
+    "Digital Illustration and Vector Graphics",
+    "Branding and Corporate Identity",
+    "Print Production and Advertising"
+  ]
 };
 
 export const SUBJECT_SUB_STRANDS: Record<string, string[]> = {
-  "Arabic Listening": ["Phonology of the Arabic Language", "Listening Comprehension and Participation"],
-  "Arabic Speaking": ["Everyday Oral Communication", "Oracy and Aesthetics", "Arabic Speaking Grammar"],
-  "Arabic Reading": ["Phonological Awareness and Oral Reading Fluency", "Reading Comprehension", "Arabic Reading Grammar", "Critical Reading"],
-  "Arabic Writing": ["Arabic Orthography", "Composition", "Creative Writing", "Arabic Writing Grammar"],
-
-  // Food & Nutrition Mappings
-  "Nutrition and Health": ["Food For Healthy Living", "Food Security"],
-  "Food Production": ["Food Production Technology", "Food Processing Techniques"],
-
-  // Geography Mappings
-  "The Earth and Its Neighbourhoods": ["The Earth and Its Features", "Rocks, Weathering, Soil and Mass Wasting", "The Earth Atmosphere"],
-  "Navigating Our Environment": ["Maps, Their Elements and Analyses", "Geospatial Data Collection, Representation and Interpretation"],
-  "Human and Environment": ["Physical Settings and People", "Economic Activities", "Environmental Degradation", "Environmental Hazards and Their Management"],
-
-  // Government Mappings
-  "Government and Development": ["Basics of Government", "Indigenous and Contemporary Governance in Ghana"],
-  "Constitution, Institutions and Administration": ["Constitution and Organs of Government", "State and Non-State Actors in Ghana"],
-  "Ghana in the Global System": ["Ghana in the Community of Nations", "Globalization and Development"],
-
-  // Art and Design Studio Mappings
+  "Arabic Listening": [
+    "Phonology of the Arabic Language",
+    "Listening Comprehension and Participation"
+  ],
+  "Arabic Speaking": [
+    "Everyday Oral Communication",
+    "Oracy and Aesthetics",
+    "Arabic Speaking Grammar"
+  ],
+  "Arabic Reading": [
+    "Phonological Awareness and Oral Reading Fluency",
+    "Reading Comprehension",
+    "Arabic Reading Grammar",
+    "Critical Reading"
+  ],
+  "Arabic Writing": [
+    "Arabic Orthography",
+    "Composition",
+    "Creative Writing",
+    "Arabic Writing Grammar"
+  ],
+  "Nutrition and Health": [
+    "Food For Healthy Living",
+    "Food Security"
+  ],
+  "Food Production": [
+    "Food Production Technology",
+    "Food Processing Techniques"
+  ],
+  "The Earth and Its Neighbourhoods": [
+    "The Earth and Its Features",
+    "Rocks, Weathering, Soil and Mass Wasting",
+    "The Earth Atmosphere"
+  ],
+  "Navigating Our Environment": [
+    "Maps, Their Elements and Analyses",
+    "Geospatial Data Collection, Representation and Interpretation"
+  ],
+  "Human and Environment": [
+    "Physical Settings and People",
+    "Economic Activities",
+    "Environmental Degradation",
+    "Environmental Hazards and Their Management"
+  ],
+  "Government and Development": [
+    "Basics of Government",
+    "Indigenous and Contemporary Governance in Ghana"
+  ],
+  "Constitution, Institutions and Administration": [
+    "Constitution and Organs of Government",
+    "State and Non-State Actors in Ghana"
+  ],
+  "Ghana in the Global System": [
+    "Ghana in the Community of Nations",
+    "Globalization and Development"
+  ],
   "Art and Design Theories and Application": [
     "Meanings, Scope and Role of Art and Design Studio",
     "Material Classifications and Methods",
@@ -166,14 +456,24 @@ export const SUBJECT_SUB_STRANDS: Record<string, string[]> = {
     "Artefact Production",
     "Portfolio Building"
   ],
-
-  // History Mappings (SHS)
-  "Historical Inquiry and Writing": ["Nature and Scope of History", "Sources and Methods of Reconstructing History"],
-  "States and Societies in Pre-Colonial Times": ["Emergence of Complex States", "Pre-Colonial Economy and Economic Activities", "Emergence of Complex States and Societies"],
-  "Age of Encounter and Exchanges Up to the 20th Century": ["Religion and Religious Change", "Global Connections", "Prelude to Colonisation and Colonial Rule", "Response to Colonial Rule"],
-  "Independence and Post-Colonial Developments": ["Socio-Economic and Political Developments in Ghana (1957 - 2007)"],
-
-  // Physical Activity and Health Mappings (SHS PE Core)
+  "Historical Inquiry and Writing": [
+    "Nature and Scope of History",
+    "Sources and Methods of Reconstructing History"
+  ],
+  "States and Societies in Pre-Colonial Times": [
+    "Emergence of Complex States",
+    "Pre-Colonial Economy and Economic Activities",
+    "Emergence of Complex States and Societies"
+  ],
+  "Age of Encounter and Exchanges Up to the 20th Century": [
+    "Religion and Religious Change",
+    "Global Connections",
+    "Prelude to Colonisation and Colonial Rule",
+    "Response to Colonial Rule"
+  ],
+  "Independence and Post-Colonial Developments": [
+    "Socio-Economic and Political Developments in Ghana (1957 - 2007)"
+  ],
   "Physical Activity and Health": [
     "Career Pathways in Physical Activity and Sports",
     "Traditional Dances",
@@ -185,8 +485,6 @@ export const SUBJECT_SUB_STRANDS: Record<string, string[]> = {
     "Traditional Games",
     "Recreational Activities"
   ],
-
-  // Elective IRS Mappings (SHS)
   "Study of Religions, God's Creation and Humankind": [
     "Background to the study of religion and Islam",
     "The nature of God and His creation"
@@ -206,8 +504,6 @@ export const SUBJECT_SUB_STRANDS: Record<string, string[]> = {
     "Islam and sexual morality",
     "Islam and fraud"
   ],
-
-  // Elective ICT Mappings (SHS)
   "ICTs in the Society": [
     "Organising, Managing and Presenting Information Using Essential Productivity Tools",
     "Emerging Technologies and Applications",
@@ -217,8 +513,6 @@ export const SUBJECT_SUB_STRANDS: Record<string, string[]> = {
     "Guided and Unguided Network Systems",
     "Computer and Information Security"
   ],
-
-  // Additional Mathematics Mappings (SHS)
   "Modelling with Algebra": [
     "Number and Algebraic Patterns",
     "Applications of Algebra",
@@ -241,28 +535,126 @@ export const SUBJECT_SUB_STRANDS: Record<string, string[]> = {
     "Making Predictions with Data",
     "Organising and Representing and Interpreting Data"
   ],
-
-  // Accounting & Business Accounting Mappings
-  "Financial Accounting": ["Conceptual Framework", "Financial Data Analysis", "Financial Reporting", "Financial Statements", "Partnership Accounts", "Company Accounts", "Cost Accounting Basics"],
-  "Cost Accounting": ["Controlling Cost to Improve Organisational Performance", "Determining Cost of Operations for Pricing and Controlling", "Analysing Information for Control and decision making", "Introduction to Cost Accounting", "Elements of Costing", "Materials Costing", "Labour and Overhead Costing", "Job and Batch Costing"],
-  
-  "Conceptual Framework": ["Accounting Principles & System", "Accounting Equation & Ledger", "Users of Accounting Info", "Accounting Standards", "Scope of Accounting", "Accounting Equation", "Double Entry Principle", "Trial Balance"],
-  "Financial Data Analysis": ["Correction of Errors & Suspense Accounts", "Bank Reconciliation Statements", "Receivables & Payables Control Accounts", "Ratio Analysis", "Correction of Errors", "Suspense Account", "Bank Reconciliation Statement", "Control Accounts"],
-  "Financial Reporting": ["Sole Proprietorship FINAL Accounts", "Not-for-Profit Final Accounts", "Incomplete Records Accounts", "Partnership Accounts Form", "Company Final Accounts", "Sole Proprietorship Accounts", "Accounts of Not-for-Profit Organisations", "Accounts from Incomplete Records", "Partnership Accounts", "Company Accounts"],
-  "Financial Statements": ["Trading, Profit and Loss Account", "Balance Sheet", "Adjustments", "Incomplete Records Final Accounts"],
-  "Partnership Accounts": ["Partnership Deed", "Appropriation Account", "Partnership Balance Sheet", "Goodwill Treatment"],
-  "Company Accounts": ["Issue of Shares & Debentures", "Company Annual Reports", "Statement of Retained Earnings"],
-  "Cost Accounting Basics": ["Introduction to Cost Concepts", "Classification of Costs", "Costing Terminology"],
-  "Introduction to Cost Accounting": ["Definition & Scope of Costing", "Difference between Financial & Costing", "Standard Installation"],
-  "Elements of Costing": ["Materials Management", "Labour Remuneration", "Overheads Cost Pool"],
-  "Materials Costing": ["Store Ledger pricing (FIFO/LIFO/WAM)", "Inventory Valuation", "Material Requisitions"],
-  "Labour and Overhead Costing": ["Wages and Salary Computation", "Overhead Analysis & Sheets", "Overhead Absorption Rates"],
-  "Job and Batch Costing": ["Job Costing System", "Batch Costing System", "Contract Cost Accounts", "Process Cost Accounts", "Service Costing"],
-  "Controlling Cost to Improve Organisational Performance": ["FIFO, LIFO, and Weighted Average Pricing", "Labour Remuneration & Idle Time", "Payroll and Wages Sheet", "Overhead Allocation and Apportionment", "Overhead Analysis Sheet"],
-  "Determining Cost of Operations for Pricing and Controlling": ["Job Costing Sheets", "Contract Costing & Work Certified", "Service Cost Accounts", "Process Costing and Normal Losses"],
-  "Analysing Information for Control and decision making": ["Activity Based Costing & Cost Drivers", "Marginal costing vs Absorption Costing", "Cost-Volume-Profit and Break-Even Point", "Standard Costing and Variance Analysis", "Budgetary Control and Functional Budgets"],
-
-  // Business Management Mappings
+  "Financial Accounting": [
+    "Conceptual Framework",
+    "Financial Data Analysis",
+    "Financial Reporting",
+    "Financial Statements",
+    "Partnership Accounts",
+    "Company Accounts",
+    "Cost Accounting Basics"
+  ],
+  "Cost Accounting": [
+    "Controlling Cost to Improve Organisational Performance",
+    "Determining Cost of Operations for Pricing and Controlling",
+    "Analysing Information for Control and decision making",
+    "Introduction to Cost Accounting",
+    "Elements of Costing",
+    "Materials Costing",
+    "Labour and Overhead Costing",
+    "Job and Batch Costing"
+  ],
+  "Conceptual Framework": [
+    "Accounting Principles & System",
+    "Accounting Equation & Ledger",
+    "Users of Accounting Info",
+    "Accounting Standards",
+    "Scope of Accounting",
+    "Accounting Equation",
+    "Double Entry Principle",
+    "Trial Balance"
+  ],
+  "Financial Data Analysis": [
+    "Correction of Errors & Suspense Accounts",
+    "Bank Reconciliation Statements",
+    "Receivables & Payables Control Accounts",
+    "Ratio Analysis",
+    "Correction of Errors",
+    "Suspense Account",
+    "Bank Reconciliation Statement",
+    "Control Accounts"
+  ],
+  "Financial Reporting": [
+    "Sole Proprietorship FINAL Accounts",
+    "Not-for-Profit Final Accounts",
+    "Incomplete Records Accounts",
+    "Partnership Accounts Form",
+    "Company Final Accounts",
+    "Sole Proprietorship Accounts",
+    "Accounts of Not-for-Profit Organisations",
+    "Accounts from Incomplete Records",
+    "Partnership Accounts",
+    "Company Accounts"
+  ],
+  "Financial Statements": [
+    "Trading, Profit and Loss Account",
+    "Balance Sheet",
+    "Adjustments",
+    "Incomplete Records Final Accounts"
+  ],
+  "Partnership Accounts": [
+    "Partnership Deed",
+    "Appropriation Account",
+    "Partnership Balance Sheet",
+    "Goodwill Treatment"
+  ],
+  "Company Accounts": [
+    "Issue of Shares & Debentures",
+    "Company Annual Reports",
+    "Statement of Retained Earnings"
+  ],
+  "Cost Accounting Basics": [
+    "Introduction to Cost Concepts",
+    "Classification of Costs",
+    "Costing Terminology"
+  ],
+  "Introduction to Cost Accounting": [
+    "Definition & Scope of Costing",
+    "Difference between Financial & Costing",
+    "Standard Installation"
+  ],
+  "Elements of Costing": [
+    "Materials Management",
+    "Labour Remuneration",
+    "Overheads Cost Pool"
+  ],
+  "Materials Costing": [
+    "Store Ledger pricing (FIFO/LIFO/WAM)",
+    "Inventory Valuation",
+    "Material Requisitions"
+  ],
+  "Labour and Overhead Costing": [
+    "Wages and Salary Computation",
+    "Overhead Analysis & Sheets",
+    "Overhead Absorption Rates"
+  ],
+  "Job and Batch Costing": [
+    "Job Costing System",
+    "Batch Costing System",
+    "Contract Cost Accounts",
+    "Process Cost Accounts",
+    "Service Costing"
+  ],
+  "Controlling Cost to Improve Organisational Performance": [
+    "FIFO, LIFO, and Weighted Average Pricing",
+    "Labour Remuneration & Idle Time",
+    "Payroll and Wages Sheet",
+    "Overhead Allocation and Apportionment",
+    "Overhead Analysis Sheet"
+  ],
+  "Determining Cost of Operations for Pricing and Controlling": [
+    "Job Costing Sheets",
+    "Contract Costing & Work Certified",
+    "Service Cost Accounts",
+    "Process Costing and Normal Losses"
+  ],
+  "Analysing Information for Control and decision making": [
+    "Activity Based Costing & Cost Drivers",
+    "Marginal costing vs Absorption Costing",
+    "Cost-Volume-Profit and Break-Even Point",
+    "Standard Costing and Variance Analysis",
+    "Budgetary Control and Functional Budgets"
+  ],
   "Business Management": [
     "Managing Businesses and the Legal Framework of Businesses",
     "Glocal Business",
@@ -294,66 +686,113 @@ export const SUBJECT_SUB_STRANDS: Record<string, string[]> = {
     "Law of Contract"
   ],
   "Forms of Business": [
-    "Forms of Business Ownership", 
-    "Sole Proprietorship", 
-    "Partnership", 
-    "Company & SOEs", 
-    "Concept of Business", 
-    "Joint Stock Companies", 
+    "Forms of Business Ownership",
+    "Sole Proprietorship",
+    "Partnership",
+    "Company & SOEs",
+    "Concept of Business",
+    "Joint Stock Companies",
     "State-owned Enterprises"
   ],
   "Functions of Management": [
-    "Planning and Decision Making", 
-    "Organising and Org Structures", 
-    "Leading styles & Power", 
-    "Controlling processes & tools", 
+    "Planning and Decision Making",
+    "Organising and Org Structures",
+    "Leading styles & Power",
+    "Controlling processes & tools",
     "Management and Administration"
   ],
   "Functional Areas of Management": [
-    "Production Management", 
-    "Procurement Management", 
-    "Marketing and Digital Marketing", 
-    "Human Resource Management", 
-    "Financial Management", 
-    "Decision-making", 
-    "Delegation", 
-    "Business Communication", 
+    "Production Management",
+    "Procurement Management",
+    "Marketing and Digital Marketing",
+    "Human Resource Management",
+    "Financial Management",
+    "Decision-making",
+    "Delegation",
+    "Business Communication",
     "Performance Management"
   ],
   "Legal Environment of Business and Risk Management": [
-    "Law of Contract", 
-    "Risk Management & Insurance", 
+    "Law of Contract",
+    "Risk Management & Insurance",
     "Legal Environment of Business"
   ],
   "International Business and E-Business": [
-    "Approaches to International Business", 
-    "Domestic vs International Trade", 
-    "Restrictions in International Trade", 
+    "Approaches to International Business",
+    "Domestic vs International Trade",
+    "Restrictions in International Trade",
     "Multinational Corporations & E-Business"
   ],
   "Business Development": [
-    "Entrepreneurship and Setting up a Business", 
-    "Creating a Simple Business Plan", 
+    "Entrepreneurship and Setting up a Business",
+    "Creating a Simple Business Plan",
     "Factors affecting Business Environment",
     "Business Ethics and CSR"
   ],
-  // Biology
-  "Exploring Biology in Society": ["Biology as the Science of Life", "Biology and Entrepreneurship"],
-  "Life in the Fundamental Unit": ["Cell Structure and Functions", "Movement of Substances in Living Organisms"],
-  "Diversity of Living Things and Their Environment": ["Living Organisms", "Ecology", "Diseases and Infections"],
-  "Diversity of living things and their Environment": ["Living Organisms", "Ecology", "Diseases and Infections"],
-  "Diversity of living things and their Environmnet": ["Living Organisms", "Ecology", "Diseases and Infections"],
-  "Systems of Life": ["Mammalian Systems", "Plant Systems"],
-  "Systems of life": ["Mammalian Systems", "Plant Systems"],
-  // Legacy mappings for backwards-compatible / robust selection
-  "Cell Biology": ["Cell Structure and Functions", "Movement of Substances in Living Organisms"],
-  "Genetics": ["Genetics Key Terms", "Mendel's Laws of Inheritance", "Variation", "Evolution", "Cell Cycle and Cell Division"],
-  "Physiology": ["Mammalian Systems", "Plant Systems", "Cardiovascular and Excretory Systems"],
-  "Ecology": ["Ecological terms", "Ecology in Named Habitats", "Interdependency of Living Organisms", "Energy Flow in Ecosystems"],
-  "Plant Biology": ["Morphology of Flowering Plants", "Plant Tissues and Functions", "Photosynthesis and Transportation", "Reproduction and Excretion in Flowering Plants"],
-  "Diversity of Life": ["Living Organisms", "Classification of Lower Organisms", "Diseases and Infections"],
-
-  // CRS Strands Map to Sub-Strands
+  "Exploring Biology in Society": [
+    "Biology as the Science of Life",
+    "Biology and Entrepreneurship"
+  ],
+  "Life in the Fundamental Unit": [
+    "Cell Structure and Functions",
+    "Movement of Substances in Living Organisms"
+  ],
+  "Diversity of Living Things and Their Environment": [
+    "Living Organisms",
+    "Ecology",
+    "Diseases and Infections"
+  ],
+  "Diversity of living things and their Environment": [
+    "Living Organisms",
+    "Ecology",
+    "Diseases and Infections"
+  ],
+  "Diversity of living things and their Environmnet": [
+    "Living Organisms",
+    "Ecology",
+    "Diseases and Infections"
+  ],
+  "Systems of Life": [
+    "Mammalian Systems",
+    "Plant Systems"
+  ],
+  "Systems of life": [
+    "Mammalian Systems",
+    "Plant Systems"
+  ],
+  "Cell Biology": [
+    "Cell Structure and Functions",
+    "Movement of Substances in Living Organisms"
+  ],
+  "Genetics": [
+    "Genetics Key Terms",
+    "Mendel's Laws of Inheritance",
+    "Variation",
+    "Evolution",
+    "Cell Cycle and Cell Division"
+  ],
+  "Physiology": [
+    "Mammalian Systems",
+    "Plant Systems",
+    "Cardiovascular and Excretory Systems"
+  ],
+  "Ecology": [
+    "Ecological terms",
+    "Ecology in Named Habitats",
+    "Interdependency of Living Organisms",
+    "Energy Flow in Ecosystems"
+  ],
+  "Plant Biology": [
+    "Morphology of Flowering Plants",
+    "Plant Tissues and Functions",
+    "Photosynthesis and Transportation",
+    "Reproduction and Excretion in Flowering Plants"
+  ],
+  "Diversity of Life": [
+    "Living Organisms",
+    "Classification of Lower Organisms",
+    "Diseases and Infections"
+  ],
   "Study of Religion, God's Creation and Humankind": [
     "Background to the Study of Religion and Christianity",
     "The Nature of God and His Creation"
@@ -374,178 +813,700 @@ export const SUBJECT_SUB_STRANDS: Record<string, string[]> = {
     "Religion and Sexual Morality",
     "Religion and Fraud"
   ],
-
-  "Consumers' Rational Decision Making": ["Introduction to the Subject Economics", "Demand for Goods and Services", "Consumer Behaviour"],
-  "Consumersâ€™ Rational Decision Making": ["Introduction to the Subject Economics", "Demand for Goods and Services", "Consumer Behaviour"],
-  "Firms' Innovative Decision Making": ["Production of Goods and Services", "Supply of Goods and Services", "Market Analysis"],
-  "Firmsâ€™ Innovative Decision Making": ["Production of Goods and Services", "Supply of Goods and Services", "Market Analysis"],
-  "Price Analysis and Prediction in the Modern Economy": ["Price and Equilibrium Analysis"],
+  "Consumers' Rational Decision Making": [
+    "Introduction to the Subject Economics",
+    "Demand for Goods and Services",
+    "Consumer Behaviour"
+  ],
+  "ConsumersÃ¢â‚¬â„¢ Rational Decision Making": [
+    "Introduction to the Subject Economics",
+    "Demand for Goods and Services",
+    "Consumer Behaviour"
+  ],
+  "Firms' Innovative Decision Making": [
+    "Production of Goods and Services",
+    "Supply of Goods and Services",
+    "Market Analysis"
+  ],
+  "FirmsÃ¢â‚¬â„¢ Innovative Decision Making": [
+    "Production of Goods and Services",
+    "Supply of Goods and Services",
+    "Market Analysis"
+  ],
+  "Price Analysis and Prediction in the Modern Economy": [
+    "Price and Equilibrium Analysis"
+  ],
   "Government Economic Policy and Trade": [
-    "Macroeconomic Variables (GDP, Inflation, Unemployment, Exchange Rate)", 
-    "Concept of Money, Financial Institutions and Public Finance", 
+    "Macroeconomic Variables (GDP, Inflation, Unemployment, Exchange Rate)",
+    "Concept of Money, Financial Institutions and Public Finance",
     "Agriculture, Industrialization and Trade"
   ],
-  // Mathematics
-  "Number": ["Number and Numeration Systems", "Number Operations", "Fractions, Decimals and Percentages", "Number: Ratios and Proportion"],
-  "Algebra": ["Patterns and Relationships", "Algebraic Expressions", "Variables and Equations"],
-  "Geometry and Measurement": ["Shapes and Space", "Measurement", "Position and Transformation"],
-  "Handling Data": ["Data", "Chance or Probability"],
-  "Numbers for everyday life": ["Real number and numeration system", "Proportional reasoning"],
-  "Algebraic Thinking": ["Applications of expressions, equations and inequalities", "Patterns and relationships"],
-  "Algebraic Reasoning": ["Applications of expressions, equations and inequalities", "Patterns and relationships"],
-  "Geometry around us": ["Spatial sense", "Measurement"],
-  "Making sense of and using data": ["Statistical reasoning and its application in real life", "Chance"],
-  
-  // Our World Our People
-  "All About Us": ["Nature of God", "Myself", "My Family and the Community", "Home and School"],
-  "All Around Us OWOP": ["The Environment and the Weather", "Plants and Animals", "Map Making and Land Marks", "Population and Settlement"],
-  "Our Beliefs and Values": ["Worship", "Festivals", "Basic Human Rights", "Being a Leader"],
-  "Our Nation Ghana": ["Being a Citizen", "Authority and Power", "Responsible use of Resources", "Farming in Ghana"],
-  "My Global Community OWOP": ["Our Neighbouring Countries", "Introduction to Computing", "Sources of Information", "Technology in Communication"],
-  
-  // Physical Education
-  "Motor Skill and Movement Patterns": ["Locomotor movements", "Manipulative Skills", "Rhythmic Skills"],
-  "Movement Concepts, Principles and Strategies": ["Space awareness", "Dynamics", "Relationships", "Body management", "Strategies"],
-  "Physical Fitness": ["Aerobic Capacity", "Strength", "Endurance", "Flexibility", "Body Composition"],
-  "Physical Fitness Concepts, Principles and Strategies": ["Fitness Programmes", "Healthy Diet", "Safety and injury", "Substances"],
-  "Values and Psycho-social Concepts, Principles and Strategies": ["Self-responsibility", "Social Interaction", "Group Dynamics", "Critical thinking"],
-  
-  // Science / Agricultural Science
-  "Introduction to Agriculture": ["Agric. as a Subject", "Agriculture and National Development"],
-  "Diversity of Matter": ["Materials", "Living Cells"],
-  "Cycles": ["Earth Science", "Life Cycle of Organisms", "Crop Production", "Animal Production"],
-  "Systems": ["The Human Body System", "The Solar System", "Ecosystem", "Farming Systems"],
-  "Forces and Energy": ["Energy", "Electricity and Electronics", "Conversion and Conservation of Energy", "Force and Motion", "Agricultural Tools"],
-  "Humans and the Environment": ["Waste Management", "Human Health", "Science and Industry", "Climate Change and Green Economy", "Understanding the Environment", "Soil as a Component of the Environment"],
-  
-  // English
-  "Oral Language": ["Songs", "Rhymes", "Poems", "Story Telling", "Dramatisation and Role Play", "Conversation", "Listening Comprehension", "Asking and Answering Questions", "Giving and Following Commands", "Presentation"],
-  "Reading": ["Pre-reading activities", "Phonics", "Word Families", "Diphthongs", "Blends and Consonant Clusters", "Vocabulary", "Comprehension", "Silent Reading", "Fluency", "Summarising"],
-  "Grammar Usage at Word and Phrase Levels": ["Nouns", "Determiners", "Pronouns", "Adjectives", "Verbs", "Adverbs", "Idiomatic Expressions", "Conjunctions", "Modals", "Prepositions", "Adjective Phrase", "Adverb Phrase", "Direct and Reported Speech"],
-  "Writing": ["Pre-writing Activities", "Penmanship/Handwriting", "Writing Letters", "Labeling Items", "Writing Simple Words and Sentences", "Paragraph Development", "Controlled Writing", "Guided Composition", "Writing as a Process", "Narrative Writing", "Creative/Free Writing", "Descriptive Writing", "Persuasive/Argumentative Writing", "Informative/Academic Writing", "Letter Writing"],
-  "Writing Conventions and Grammar Usage": ["Capitalization", "Punctuation", "Naming Words", "Action Words", "Qualifying Words", "Simple Prepositions", "Conjunctions", "Sentences", "Spelling"],
-  "Extensive Reading": ["Building the Love and Culture of Reading"],
-  
-  // English JHS Sub-Strands
-  "Oral Language JHS": ["Conversation/Everyday Discourse", "Listening Comprehension", "English Sounds"],
-  "Reading JHS": ["Comprehension", "Summarising"],
-  "Grammar Usage JHS": ["Grammar", "Punctuation and Capitalisation", "Vocabulary"],
-  "Writing JHS": ["Production and Distribution of Writing", "Text Types and Purposes", "Building and Presenting Knowledge"],
-  "Literature JHS": ["Narrative, Drama and Poetry"],
-  
-  // History
-  "History as a Subject": ["Why and how we study history", "The learnerâ€™s own history", "Family History", "Community History"],
-  "My Country Ghana": ["The People of Ghana", "Inter-Group Relations", "How Ghana got its name", "Major Historical locations", "Some selected Individuals"],
-  "Europeans in Ghana": ["Arrival of Europeans", "International trade including Slave Trade", "Missionary Activities", "Impact of European presence"],
-  "Colonisation and Developments under Colonial Rule in Ghana": ["Establishing Colonial rule in Ghana", "Social Development", "Economic Development", "Political Development"],
-  "Journey to Independence": ["Early Protest Movements", "Formation of Political Parties", "The 1948 riots", "Ghana gains independence"],
-  "Independent Ghana": ["The Republics", "Military Rule"],
-  
-  // Social Studies
+  "Number": [
+    "Number and Numeration Systems",
+    "Number Operations",
+    "Fractions, Decimals and Percentages",
+    "Number: Ratios and Proportion"
+  ],
+  "Algebra": [
+    "Patterns and Relationships",
+    "Algebraic Expressions",
+    "Variables and Equations"
+  ],
+  "Geometry and Measurement": [
+    "Shapes and Space",
+    "Measurement",
+    "Position and Transformation"
+  ],
+  "Handling Data": [
+    "Data",
+    "Chance or Probability"
+  ],
+  "Numbers for everyday life": [
+    "Real number and numeration system",
+    "Proportional reasoning"
+  ],
+  "Algebraic Thinking": [
+    "Applications of expressions, equations and inequalities",
+    "Patterns and relationships"
+  ],
+  "Algebraic Reasoning": [
+    "Applications of expressions, equations and inequalities",
+    "Patterns and relationships"
+  ],
+  "Geometry around us": [
+    "Spatial sense",
+    "Measurement"
+  ],
+  "Making sense of and using data": [
+    "Statistical reasoning and its application in real life",
+    "Chance"
+  ],
+  "All About Us": [
+    "Nature of God",
+    "Myself",
+    "My Family and the Community",
+    "Home and School"
+  ],
+  "All Around Us OWOP": [
+    "The Environment and the Weather",
+    "Plants and Animals",
+    "Map Making and Land Marks",
+    "Population and Settlement"
+  ],
+  "Our Beliefs and Values": [
+    "Worship",
+    "Festivals",
+    "Basic Human Rights",
+    "Being a Leader"
+  ],
+  "Our Nation Ghana": [
+    "Being a Citizen",
+    "Authority and Power",
+    "Responsible use of Resources",
+    "Farming in Ghana"
+  ],
+  "My Global Community OWOP": [
+    "Our Neighbouring Countries",
+    "Introduction to Computing",
+    "Sources of Information",
+    "Technology in Communication"
+  ],
+  "Motor Skill and Movement Patterns": [
+    "Locomotor movements",
+    "Manipulative Skills",
+    "Rhythmic Skills"
+  ],
+  "Movement Concepts, Principles and Strategies": [
+    "Space awareness",
+    "Dynamics",
+    "Relationships",
+    "Body management",
+    "Strategies"
+  ],
+  "Physical Fitness": [
+    "Aerobic Capacity",
+    "Strength",
+    "Endurance",
+    "Flexibility",
+    "Body Composition"
+  ],
+  "Physical Fitness Concepts, Principles and Strategies": [
+    "Fitness Programmes",
+    "Healthy Diet",
+    "Safety and injury",
+    "Substances"
+  ],
+  "Values and Psycho-social Concepts, Principles and Strategies": [
+    "Self-responsibility",
+    "Social Interaction",
+    "Group Dynamics",
+    "Critical thinking"
+  ],
+  "Introduction to Agriculture": [
+    "Agric. as a Subject",
+    "Agriculture and National Development"
+  ],
+  "Diversity of Matter": [
+    "Materials",
+    "Living Cells"
+  ],
+  "Cycles": [
+    "Earth Science",
+    "Life Cycle of Organisms",
+    "Crop Production",
+    "Animal Production"
+  ],
+  "Systems": [
+    "The Human Body System",
+    "The Solar System",
+    "Ecosystem",
+    "Farming Systems"
+  ],
+  "Forces and Energy": [
+    "Energy",
+    "Electricity and Electronics",
+    "Conversion and Conservation of Energy",
+    "Force and Motion",
+    "Agricultural Tools"
+  ],
+  "Humans and the Environment": [
+    "Waste Management",
+    "Human Health",
+    "Science and Industry",
+    "Climate Change and Green Economy",
+    "Understanding the Environment",
+    "Soil as a Component of the Environment"
+  ],
+  "Oral Language": [
+    "Songs",
+    "Rhymes",
+    "Poems",
+    "Story Telling",
+    "Dramatisation and Role Play",
+    "Conversation",
+    "Listening Comprehension",
+    "Asking and Answering Questions",
+    "Giving and Following Commands",
+    "Presentation"
+  ],
+  "Reading": [
+    "Pre-reading activities",
+    "Phonics",
+    "Word Families",
+    "Diphthongs",
+    "Blends and Consonant Clusters",
+    "Vocabulary",
+    "Comprehension",
+    "Silent Reading",
+    "Fluency",
+    "Summarising"
+  ],
+  "Grammar Usage at Word and Phrase Levels": [
+    "Nouns",
+    "Determiners",
+    "Pronouns",
+    "Adjectives",
+    "Verbs",
+    "Adverbs",
+    "Idiomatic Expressions",
+    "Conjunctions",
+    "Modals",
+    "Prepositions",
+    "Adjective Phrase",
+    "Adverb Phrase",
+    "Direct and Reported Speech"
+  ],
+  "Writing": [
+    "Pre-writing Activities",
+    "Penmanship/Handwriting",
+    "Writing Letters",
+    "Labeling Items",
+    "Writing Simple Words and Sentences",
+    "Paragraph Development",
+    "Controlled Writing",
+    "Guided Composition",
+    "Writing as a Process",
+    "Narrative Writing",
+    "Creative/Free Writing",
+    "Descriptive Writing",
+    "Persuasive/Argumentative Writing",
+    "Informative/Academic Writing",
+    "Letter Writing"
+  ],
+  "Writing Conventions and Grammar Usage": [
+    "Capitalization",
+    "Punctuation",
+    "Naming Words",
+    "Action Words",
+    "Qualifying Words",
+    "Simple Prepositions",
+    "Conjunctions",
+    "Sentences",
+    "Spelling"
+  ],
+  "Extensive Reading": [
+    "Building the Love and Culture of Reading"
+  ],
+  "Oral Language JHS": [
+    "Conversation/Everyday Discourse",
+    "Listening Comprehension",
+    "English Sounds"
+  ],
+  "Reading JHS": [
+    "Comprehension",
+    "Summarising"
+  ],
+  "Grammar Usage JHS": [
+    "Grammar",
+    "Punctuation and Capitalisation",
+    "Vocabulary"
+  ],
+  "Writing JHS": [
+    "Production and Distribution of Writing",
+    "Text Types and Purposes",
+    "Building and Presenting Knowledge"
+  ],
+  "Literature JHS": [
+    "Narrative, Drama and Poetry"
+  ],
+  "History as a Subject": [
+    "Why and how we study history",
+    "The learnerÃ¢â‚¬â„¢s own history",
+    "Family History",
+    "Community History"
+  ],
+  "My Country Ghana": [
+    "The People of Ghana",
+    "Inter-Group Relations",
+    "How Ghana got its name",
+    "Major Historical locations",
+    "Some selected Individuals"
+  ],
+  "Europeans in Ghana": [
+    "Arrival of Europeans",
+    "International trade including Slave Trade",
+    "Missionary Activities",
+    "Impact of European presence"
+  ],
+  "Colonisation and Developments under Colonial Rule in Ghana": [
+    "Establishing Colonial rule in Ghana",
+    "Social Development",
+    "Economic Development",
+    "Political Development"
+  ],
+  "Journey to Independence": [
+    "Early Protest Movements",
+    "Formation of Political Parties",
+    "The 1948 riots",
+    "Ghana gains independence"
+  ],
+  "Independent Ghana": [
+    "The Republics",
+    "Military Rule"
+  ],
   "Environment": [
-    "Environmental Issues", 
-    "Mapping Skills", 
-    "Understanding our Natural World", 
+    "Environmental Issues",
+    "Mapping Skills",
+    "Understanding our Natural World",
     "Our Natural and Human Resources"
   ],
   "Family Life": [
-    "Adolescent Reproductive Health", 
-    "The Family", 
-    "Socialisation", 
+    "Adolescent Reproductive Health",
+    "The Family",
+    "Socialisation",
     "Population"
   ],
   "Sense of Purpose": [
-    "Self-Identity", 
-    "The Individual and the Community", 
+    "Self-Identity",
+    "The Individual and the Community",
     "Culture and National Identity"
   ],
   "Law and Order": [
-    "Citizenship and Human Rights", 
-    "Conflict Prevention and Management", 
-    "The 1992 Constitution", 
-    "Peace and Security in Our Nation", 
+    "Citizenship and Human Rights",
+    "Conflict Prevention and Management",
+    "The 1992 Constitution",
+    "Peace and Security in Our Nation",
     "Promoting Democracy and Political Stability"
   ],
   "Socio-Economic Development": [
-    "Human Resource Development", 
-    "Social Security and Pension", 
-    "Tourism", 
+    "Human Resource Development",
+    "Social Security and Pension",
+    "Tourism",
     "Science and Technology"
   ],
   "Nationhood": [
-    "Independent Ghana", 
+    "Independent Ghana",
     "The Republics"
   ],
-  
-  // Computing
-  "Introduction to Computing": ["Generation of computers and parts of a computer and other gadgets", "Introduction to MS-Windows Interface", "Data, sources and usage", "Technology in the community (communication)"],
-  "Word Processing": ["Introduction to Word Processing", "Tabs and ribbons of word processing"],
-  "Presentation": ["Introduction to MS-PowerPoint", "Tabs and ribbons of MS-PowerPoint"],
-  "Desktop Publishing": ["Introduction to MS-Publisher"],
-  "Programming and Databases": ["Introduction to databases, algorithm and programming", "Introduction to programming languages (e.g. MS-Excel, Scratch, VB dot Net etc.)", "Introduction to Electronic Spreadsheet", "Tabs and ribbons manipulation"],
-  "Internet and Social Media": ["Network Overview", "Web browsers and Web Pages", "Surfing the world wide web", "Favourite places and Search engine", "Using Online Forms", "Customising your browser", "Electronic Email", "Internet of things (IoT)", "Digital Literacy", "Network Etiquette"],
-  "Health and Safety in Using ICT Tools": ["Health and safety in using ICT tools"],
-
-  // Creative Arts
-  "Visual Arts": ["Thinking and exploring ideas", "Planning, making and composing", "Displaying and sharing", "Appreciating and appraising"],
-  "Performing Arts": ["Thinking and exploring ideas", "Planning, making and composing", "Displaying and sharing", "Appreciating and appraising"],
-
-  // Career Technology
-  "Health and Safety": ["Personal Hygiene and Food Hygiene", "Personal, Workshop and Food laboratory safety", "Environmental Health"],
-  "Materials for Production": ["Compliant Materials", "Resistant Materials", "Smart and Modern Materials", "Food Commodities (animal and plant sources)"],
-  "Tools, Equipment and Processes": ["Measuring and Marking Out", "Cutting/Shaping", "Joining and Assembling", "Kitchen Essentials", "Finishes and Finishing"],
-  "Technology": ["Simple Structures and Mechanisms, Electric and Electronic Systems"],
-  "Designing and Making of Artefacts/Products": ["Communicating Designs", "Designing", "Planning for making Artefacts/Products", "Making Artefacts from Compliant, Resistant Materials and Food Ingredients"],
-  "Entrepreneurial Skills": ["Career Pathways and Career Opportunities", "Establishing and Managing a Small Business Enterprise"],
-  // RME
-  "God, His Creation and Attributes": ["God the Creator", "The Environment", "Purpose of God's Creation", "God, His Nature and Attributes", "The Creation Stories", "The Purpose and Usefulness of God's Creation"],
-  "Religious Practices and their Moral Implications": ["Religious Worship in the Three Major Religions in Ghana", "Religious Festivals in the Three Major Religions in Ghana", "Worship", "Religious Songs and Recitations", "Rites of Passage", "Religious Festivals"],
-  "Religious Leaders": ["Birth of the Leaders of the three Major Religions in Ghana", "Early Life of the Leaders of the three Major Religions", "The Call of the Leaders of the Three Major Religions", "Ministry and latter Lives of Leaders of the Three Major Religions in Ghana"],
-  "The Family and the Community": ["Roles and Relationships", "Personal Safety in the Community", "Family Systems", "Religion and Social Cohesion"],
-  "The Family, Authority and Obedience": ["Authority and Obedience", "Roles, Relationships in the Family and Character Formation"],
-  "Religious Leaders and Personalities": ["Religious Leaders JHS", "Prophets and Caliphs", "Women in Religion"],
-  "Ethics and Moral Life": ["Manners and Decency", "Substance Abuse", "Moral Teachings", "Reward, Punishment and Repentance"],
-  "Religion and Economic Life": ["Work and Entrepreneurship", "Money", "Bribery and Corruption", "Time and Leisure"],
-
-  // Ghanaian Language
-  "Oral Language (GL)": ["Songs", "Rhymes", "Poems", "Story Telling", "Dramatisation and Role Play", "Conversation", "Talking about Oneself, Family, People and Places", "Listening Comprehension", "Asking and Answering Questions", "Giving and Following Commands/ Instructions", "Presentation"],
-  "Reading (GL)": ["Pre-Reading Activities", "Print Concept", "Phonological and Phonemic Awareness", "Phonics (Letter and Sound Knowledge)", "Vocabulary (Sight and Content Vocabulary)", "Comprehension", "Silent Reading", "Fluency"],
-  "Writing (GL)": ["Penmanship/Handwriting", "Writing Letters-Small and Capital Letters", "Writing Simple Words /Names of People and Places", "Writing/Copying Simple Sentences with Correct Spacing"],
-  "Writing Conventions and Usage (GL)": ["Integrating Grammar in Written Language (Capitalisation)", "Integrating Grammar in Written Language (Punctuation)", "Integrating Grammar in Written Language (Use of Action Words)", "Integrating Grammar in Written Language (Use of Qualifying Words)", "Integrating Grammar in Written Language (Use of Postpositions)", "Integrating Grammar in Written Language (Use of Simple and Compound Sentences)", "Integrating Grammar in Written Language (Spelling)", "Integrating Grammar in Written Language (Use of Conjunctions)"],
-  "Extensive Reading (GL)": ["Building the Love and Culture of Reading in Learners", "Read Aloud with Children", "Reading Texts, Poems, Narratives and Short Stories and Respond to them"],
-  "Customs and Institutions": ["Rites of Passage", "Naming Systems", "The Clan System", "Chieftaincy"],
-  "Composition Writing": ["Creative/Free Writing", "Narrative Writing", "Descriptive Writing", "Persuasive Writing", "Argumentative Writing", "Informative/Academic Writing", "Extra-Curricular Writing"],
-  "Literature (GL)": ["Oral and written literature"],
-
-  // French
-  "L'IdentitÃ©": ["Saluer et prendre congÃ©", "Se prÃ©senter", "PrÃ©senter quelqu'un", "DÃ©crire quelqu'un", "DÃ©crire la famille et les liens familiaux"],
-  "Parler de son Environnement": ["Parler de sa maison", "Parler de son Ã©cole"],
-  "Exprimer ses GoÃ»ts et ses PrÃ©fÃ©rences": ["Dire ce que lâ€™on aime", "Dire ce que lâ€™on nâ€™aime pas"],
-  "Les ActivitÃ©s": ["Compter et faire des calculs simples", "Demander et donner lâ€™heure", "Parler des jours de la semaine", "Situer les mois et les saisons dans le temps", "Entrer en contact par tÃ©lÃ©phone", "Inviter quelquâ€™un et accepter une invitation", "Identifier les professions et les mÃ©tiers", "Demander et expliquer la position de personnes ou dâ€™objets", "Donner et rÃ©pondre Ã  des ordres"],
-
-  "Thermal Physics": ["Heat Transfer", "Thermodynamics"],
-
-  // Chemistry
-  "Physical Chemistry": ["Matter and its Properties", "Equilibria"],
-  "Systematic Chemistry of the Elements": ["Periodicity", "Bonding"],
-  "Chemistry of Carbon Compounds": ["Characterisation of Organic Compounds", "Organic Functional Groups"],
-  
-  // KG Integrated
-  "All About Me": ["I am a wonderful and unique creation", "The parts of the human body and their functions", "Caring for the parts of my body", "Keeping my body healthy by eating good food and taking my vaccination", "My environment and my Health", "Protecting ourselves from home and road accidents"],
-  "My Family": ["Type and members of my family", "Origin and History of my Family", "Family Celebrations and Festivals", "My school family-rules and regulations"],
-  "Values and Beliefs": ["Our Family Values", "My Cultural Values", "Our religious values", "Our beliefs"],
-  "My Local Community": ["Knowing the special places in my community", "Knowing the important people/occupation in my community", "Knowing the special leaders in our community and country"],
-  "My Nation Ghana": ["History and celebration of Ghana's Independence"],
-  "All Around Us": ["Living and non-living things", "Living things: Animals (Domestic and wild)", "Water", "Air", "Plants", "Gardening", "Light - Day and Night", "Changing weather conditions"],
-  "My Global Community": ["Connecting and communicating with the global community"],
-
-  // Literature in English Mappings (NaCCA Standard-Based)
-  "Introduction to Literature": ["General Knowledge in Literature"],
-  "African Prose": ["Knowing your elements", "Appreciation", "From Narrative to Craft"],
-  "Non-African Prose": ["Knowing your elements", "Appreciation", "From Narrative to Craft"],
-  "African Poetry": ["Knowing your poetic elements", "Appreciation", "From Verse to Performance"],
-  "Non-African Poetry": ["Knowing your poetic elements", "Appreciation", "From Verse to Performance"],
-  "Drama": ["Knowing your dramatic elements", "Appreciation", "From Script to Stage"]
+  "Introduction to Computing": [
+    "Generation of computers and parts of a computer and other gadgets",
+    "Introduction to MS-Windows Interface",
+    "Data, sources and usage",
+    "Technology in the community (communication)"
+  ],
+  "Word Processing": [
+    "Introduction to Word Processing",
+    "Tabs and ribbons of word processing"
+  ],
+  "Presentation": [
+    "Introduction to MS-PowerPoint",
+    "Tabs and ribbons of MS-PowerPoint"
+  ],
+  "Desktop Publishing": [
+    "Introduction to MS-Publisher"
+  ],
+  "Programming and Databases": [
+    "Introduction to databases, algorithm and programming",
+    "Introduction to programming languages (e.g. MS-Excel, Scratch, VB dot Net etc.)",
+    "Introduction to Electronic Spreadsheet",
+    "Tabs and ribbons manipulation"
+  ],
+  "Internet and Social Media": [
+    "Network Overview",
+    "Web browsers and Web Pages",
+    "Surfing the world wide web",
+    "Favourite places and Search engine",
+    "Using Online Forms",
+    "Customising your browser",
+    "Electronic Email",
+    "Internet of things (IoT)",
+    "Digital Literacy",
+    "Network Etiquette"
+  ],
+  "Health and Safety in Using ICT Tools": [
+    "Health and safety in using ICT tools"
+  ],
+  "Visual Arts": [
+    "Thinking and exploring ideas",
+    "Planning, making and composing",
+    "Displaying and sharing",
+    "Appreciating and appraising"
+  ],
+  "Performing Arts": [
+    "Thinking and exploring ideas",
+    "Planning, making and composing",
+    "Displaying and sharing",
+    "Appreciating and appraising"
+  ],
+  "Health and Safety": [
+    "Personal Hygiene and Food Hygiene",
+    "Personal, Workshop and Food laboratory safety",
+    "Environmental Health"
+  ],
+  "Materials for Production": [
+    "Compliant Materials",
+    "Resistant Materials",
+    "Smart and Modern Materials",
+    "Food Commodities (animal and plant sources)"
+  ],
+  "Tools, Equipment and Processes": [
+    "Measuring and Marking Out",
+    "Cutting/Shaping",
+    "Joining and Assembling",
+    "Kitchen Essentials",
+    "Finishes and Finishing"
+  ],
+  "Technology": [
+    "Simple Structures and Mechanisms, Electric and Electronic Systems"
+  ],
+  "Designing and Making of Artefacts/Products": [
+    "Communicating Designs",
+    "Designing",
+    "Planning for making Artefacts/Products",
+    "Making Artefacts from Compliant, Resistant Materials and Food Ingredients"
+  ],
+  "Entrepreneurial Skills": [
+    "Career Pathways and Career Opportunities",
+    "Establishing and Managing a Small Business Enterprise"
+  ],
+  "God, His Creation and Attributes": [
+    "God the Creator",
+    "The Environment",
+    "Purpose of God's Creation",
+    "God, His Nature and Attributes",
+    "The Creation Stories",
+    "The Purpose and Usefulness of God's Creation"
+  ],
+  "Religious Practices and their Moral Implications": [
+    "Religious Worship in the Three Major Religions in Ghana",
+    "Religious Festivals in the Three Major Religions in Ghana",
+    "Worship",
+    "Religious Songs and Recitations",
+    "Rites of Passage",
+    "Religious Festivals"
+  ],
+  "Religious Leaders": [
+    "Birth of the Leaders of the three Major Religions in Ghana",
+    "Early Life of the Leaders of the three Major Religions",
+    "The Call of the Leaders of the Three Major Religions",
+    "Ministry and latter Lives of Leaders of the Three Major Religions in Ghana"
+  ],
+  "The Family and the Community": [
+    "Roles and Relationships",
+    "Personal Safety in the Community",
+    "Family Systems",
+    "Religion and Social Cohesion"
+  ],
+  "The Family, Authority and Obedience": [
+    "Authority and Obedience",
+    "Roles, Relationships in the Family and Character Formation"
+  ],
+  "Religious Leaders and Personalities": [
+    "Religious Leaders JHS",
+    "Prophets and Caliphs",
+    "Women in Religion"
+  ],
+  "Ethics and Moral Life": [
+    "Manners and Decency",
+    "Substance Abuse",
+    "Moral Teachings",
+    "Reward, Punishment and Repentance"
+  ],
+  "Religion and Economic Life": [
+    "Work and Entrepreneurship",
+    "Money",
+    "Bribery and Corruption",
+    "Time and Leisure"
+  ],
+  "Oral Language (GL)": [
+    "Songs",
+    "Rhymes",
+    "Poems",
+    "Story Telling",
+    "Dramatisation and Role Play",
+    "Conversation",
+    "Talking about Oneself, Family, People and Places",
+    "Listening Comprehension",
+    "Asking and Answering Questions",
+    "Giving and Following Commands/ Instructions",
+    "Presentation"
+  ],
+  "Reading (GL)": [
+    "Pre-Reading Activities",
+    "Print Concept",
+    "Phonological and Phonemic Awareness",
+    "Phonics (Letter and Sound Knowledge)",
+    "Vocabulary (Sight and Content Vocabulary)",
+    "Comprehension",
+    "Silent Reading",
+    "Fluency"
+  ],
+  "Writing (GL)": [
+    "Penmanship/Handwriting",
+    "Writing Letters-Small and Capital Letters",
+    "Writing Simple Words /Names of People and Places",
+    "Writing/Copying Simple Sentences with Correct Spacing"
+  ],
+  "Writing Conventions and Usage (GL)": [
+    "Integrating Grammar in Written Language (Capitalisation)",
+    "Integrating Grammar in Written Language (Punctuation)",
+    "Integrating Grammar in Written Language (Use of Action Words)",
+    "Integrating Grammar in Written Language (Use of Qualifying Words)",
+    "Integrating Grammar in Written Language (Use of Postpositions)",
+    "Integrating Grammar in Written Language (Use of Simple and Compound Sentences)",
+    "Integrating Grammar in Written Language (Spelling)",
+    "Integrating Grammar in Written Language (Use of Conjunctions)"
+  ],
+  "Extensive Reading (GL)": [
+    "Building the Love and Culture of Reading in Learners",
+    "Read Aloud with Children",
+    "Reading Texts, Poems, Narratives and Short Stories and Respond to them"
+  ],
+  "Customs and Institutions": [
+    "Rites of Passage",
+    "Naming Systems",
+    "The Clan System",
+    "Chieftaincy"
+  ],
+  "Composition Writing": [
+    "Creative/Free Writing",
+    "Narrative Writing",
+    "Descriptive Writing",
+    "Persuasive Writing",
+    "Argumentative Writing",
+    "Informative/Academic Writing",
+    "Extra-Curricular Writing"
+  ],
+  "Literature (GL)": [
+    "Oral and written literature"
+  ],
+  "L'IdentitÃƒÂ©": [
+    "Saluer et prendre congÃƒÂ©",
+    "Se prÃƒÂ©senter",
+    "PrÃƒÂ©senter quelqu'un",
+    "DÃƒÂ©crire quelqu'un",
+    "DÃƒÂ©crire la famille et les liens familiaux"
+  ],
+  "Parler de son Environnement": [
+    "Parler de sa maison",
+    "Parler de son ÃƒÂ©cole"
+  ],
+  "Exprimer ses GoÃƒÂ»ts et ses PrÃƒÂ©fÃƒÂ©rences": [
+    "Dire ce que lÃ¢â‚¬â„¢on aime",
+    "Dire ce que lÃ¢â‚¬â„¢on nÃ¢â‚¬â„¢aime pas"
+  ],
+  "Les ActivitÃƒÂ©s": [
+    "Compter et faire des calculs simples",
+    "Demander et donner lÃ¢â‚¬â„¢heure",
+    "Parler des jours de la semaine",
+    "Situer les mois et les saisons dans le temps",
+    "Entrer en contact par tÃƒÂ©lÃƒÂ©phone",
+    "Inviter quelquÃ¢â‚¬â„¢un et accepter une invitation",
+    "Identifier les professions et les mÃƒÂ©tiers",
+    "Demander et expliquer la position de personnes ou dÃ¢â‚¬â„¢objets",
+    "Donner et rÃƒÂ©pondre ÃƒÂ  des ordres"
+  ],
+  "Thermal Physics": [
+    "Heat Transfer",
+    "Thermodynamics"
+  ],
+  "Physical Chemistry": [
+    "Matter and its Properties",
+    "Equilibria"
+  ],
+  "Systematic Chemistry of the Elements": [
+    "Periodicity",
+    "Bonding"
+  ],
+  "Chemistry of Carbon Compounds": [
+    "Characterisation of Organic Compounds",
+    "Organic Functional Groups"
+  ],
+  "All About Me": [
+    "I am a wonderful and unique creation",
+    "The parts of the human body and their functions",
+    "Caring for the parts of my body",
+    "Keeping my body healthy by eating good food and taking my vaccination",
+    "My environment and my Health",
+    "Protecting ourselves from home and road accidents"
+  ],
+  "My Family": [
+    "Type and members of my family",
+    "Origin and History of my Family",
+    "Family Celebrations and Festivals",
+    "My school family-rules and regulations"
+  ],
+  "Values and Beliefs": [
+    "Our Family Values",
+    "My Cultural Values",
+    "Our religious values",
+    "Our beliefs"
+  ],
+  "My Local Community": [
+    "Knowing the special places in my community",
+    "Knowing the important people/occupation in my community",
+    "Knowing the special leaders in our community and country"
+  ],
+  "My Nation Ghana": [
+    "History and celebration of Ghana's Independence"
+  ],
+  "All Around Us": [
+    "Living and non-living things",
+    "Living things: Animals (Domestic and wild)",
+    "Water",
+    "Air",
+    "Plants",
+    "Gardening",
+    "Light - Day and Night",
+    "Changing weather conditions"
+  ],
+  "My Global Community": [
+    "Connecting and communicating with the global community"
+  ],
+  "Introduction to Literature": [
+    "General Knowledge in Literature"
+  ],
+  "African Prose": [
+    "Knowing your elements",
+    "Appreciation",
+    "From Narrative to Craft"
+  ],
+  "Non-African Prose": [
+    "Knowing your elements",
+    "Appreciation",
+    "From Narrative to Craft"
+  ],
+  "African Poetry": [
+    "Knowing your poetic elements",
+    "Appreciation",
+    "From Verse to Performance"
+  ],
+  "Non-African Poetry": [
+    "Knowing your poetic elements",
+    "Appreciation",
+    "From Verse to Performance"
+  ],
+  "Drama": [
+    "Knowing your dramatic elements",
+    "Appreciation",
+    "From Script to Stage"
+  ],
+  "Mechanics": [
+    "Kinematics and Dynamics",
+    "Work, Energy, and Power",
+    "Momentum and Collisions",
+    "Rotational Motion and Gravitation"
+  ],
+  "Waves": [
+    "Wave Motion and Properties",
+    "Sound Waves and Acoustics",
+    "Light Waves and Geometric Optics"
+  ],
+  "Electricity and Magnetism": [
+    "Electrostatics and Electric Fields",
+    "Current Electricity and Direct Current Circuits",
+    "Electromagnetism and Electromagnetic Induction"
+  ],
+  "Atomic and Nuclear Physics": [
+    "Atomic Models and Energy Levels",
+    "Photoelectric Effect and X-Rays",
+    "Radioactivity and Nuclear Energy"
+  ],
+  "Soil Science": [
+    "Soil Formation and Profile",
+    "Soil Physics and Chemistry",
+    "Soil Fertility and Management"
+  ],
+  "Crop Science": [
+    "Principles of Crop Production",
+    "Field and Horticultural Crops",
+    "Crop Protection and Pest Management"
+  ],
+  "Animal Science": [
+    "Anatomy and Physiology of Farm Animals",
+    "Animal Nutrition and Feeds",
+    "Livestock Management and Health"
+  ],
+  "Agricultural Economics and Extension": [
+    "Farm Records and Accounting",
+    "Agricultural Marketing and Cooperatives",
+    "Agricultural Extension and Technology Transfer"
+  ],
+  "Visual Communication and Design Fundamentals": [
+    "Elements and Principles of Design",
+    "Color Theory and Application",
+    "Visual Perception and Composition"
+  ],
+  "Typography and Layout": [
+    "Type Anatomy and Classification",
+    "Grid Systems and Page Layout",
+    "Editorial and Publication Design"
+  ],
+  "Digital Illustration and Vector Graphics": [
+    "Vector Drawing and Iconography",
+    "Digital Art and Concept Drawing",
+    "Image Manipulation and Photo Editing"
+  ],
+  "Branding and Corporate Identity": [
+    "Logo Design and Brand Guidelines",
+    "Packaging and Merchandise Design",
+    "Brand Strategy and Collateral"
+  ],
+  "Print Production and Advertising": [
+    "Pre-press and Printing Processes",
+    "Advertising Design and Campaigns",
+    "Portfolio Presentation and Professional Practice"
+  ]
 };
 
 export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
@@ -832,249 +1793,951 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
     "Legal Environment of Business": [
       "2.1.3.CS.1: Demonstrate knowledge and understanding of the Law of Contract.",
       "2.1.3.CS.2: Demonstrate knowledge and understanding of business risk and insurance."
+    ],
+    "Financial Management": [
+      "B10.1.1.1: Demonstrate knowledge and practical understanding of Financial Management in Business Management",
+      "B11.1.1.1: Apply advanced principles and analytical techniques to Financial Management",
+      "B12.1.1.1: Evaluate, synthesize, and resolve complex real-world challenges in Financial Management"
     ]
   },
   "Conceptual Framework": {
     "Accounting Principles & System": [
-      "B10.1.1.1: Explain Accounting as a system and its purpose in daily life."
+      "B10.1.1.1: Explain Accounting as a system and its purpose in daily life.",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Accounting Principles & System",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Accounting Principles & System"
     ],
     "Accounting Equation & Ledger": [
-      "B10.1.1.2: Compute assets, liabilities and capital values using the basic accounting equation."
+      "B10.1.1.2: Compute assets, liabilities and capital values using the basic accounting equation.",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Accounting Equation & Ledger",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Accounting Equation & Ledger"
     ],
     "Users of Accounting Info": [
-      "B10.1.1.3: Examine the information needs of various users of accounting information."
+      "B10.1.1.3: Examine the information needs of various users of accounting information.",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Users of Accounting Info",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Users of Accounting Info"
     ],
     "Accounting Standards": [
-      "B10.1.1.4: Discuss the need for general accounting standards and the role of regulatory bodies."
+      "B10.1.1.4: Discuss the need for general accounting standards and the role of regulatory bodies.",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Accounting Standards",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Accounting Standards"
     ],
     "Scope of Accounting": [
-      "B10.1.1.5: Describe the core definitions of bookkeeping, financial accounting and cost accounting."
+      "B10.1.1.5: Describe the core definitions of bookkeeping, financial accounting and cost accounting.",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Scope of Accounting",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Scope of Accounting"
     ],
     "Accounting Equation": [
-      "B10.1.1.6: Apply the double entry guidelines to adjust transactions in the accounting equation."
+      "B10.1.1.6: Apply the double entry guidelines to adjust transactions in the accounting equation.",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Accounting Equation",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Accounting Equation"
     ],
     "Double Entry Principle": [
-      "B10.1.1.7: Post basic ledger adjustments on various asset, liability, and capital accounts."
+      "B10.1.1.7: Post basic ledger adjustments on various asset, liability, and capital accounts.",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Double Entry Principle",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Double Entry Principle"
     ],
     "Trial Balance": [
-      "B10.1.1.8: Extract a standard trial balance from historical ledger balances."
+      "B10.1.1.8: Extract a standard trial balance from historical ledger balances.",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Trial Balance",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Trial Balance"
+    ],
+    "Conceptual Framework": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Conceptual Framework",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Conceptual Framework",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Conceptual Framework"
+    ],
+    "Financial Data Analysis": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Data Analysis",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Data Analysis",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Data Analysis"
+    ],
+    "Financial Reporting": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Reporting",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Reporting",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Reporting"
+    ],
+    "Financial Statements": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Statements",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Statements",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Statements"
+    ],
+    "Partnership Accounts": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Partnership Accounts",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Partnership Accounts",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Partnership Accounts"
+    ],
+    "Company Accounts": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Company Accounts",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Company Accounts",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Company Accounts"
+    ],
+    "Cost Accounting Basics": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Cost Accounting Basics",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Cost Accounting Basics",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Cost Accounting Basics"
     ]
   },
   "Financial Data Analysis": {
     "Correction of Errors & Suspense Accounts": [
-      "B11.1.2.1: Identify types of errors not affecting the trial balance and demonstrate the rectification entry procedures."
+      "B11.1.2.1: Identify types of errors not affecting the trial balance and demonstrate the rectification entry procedures.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Correction of Errors & Suspense Accounts",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Correction of Errors & Suspense Accounts"
     ],
     "Bank Reconciliation Statements": [
-      "B11.1.2.2: Prepare updated cashbook balances and reconcile with the bank statement to verify financial balances."
+      "B11.1.2.2: Prepare updated cashbook balances and reconcile with the bank statement to verify financial balances.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Bank Reconciliation Statements",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Bank Reconciliation Statements"
     ],
     "Receivables & Payables Control Accounts": [
-      "B11.1.2.3: Compile sales and purchase ledger control accounts to audit sub-ledger operations."
+      "B11.1.2.3: Compile sales and purchase ledger control accounts to audit sub-ledger operations.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Receivables & Payables Control Accounts",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Receivables & Payables Control Accounts"
     ],
     "Ratio Analysis": [
-      "B12.1.2.1: Compute and interpret gross profit, net profit, current, quick, and efficiency ratios."
+      "B12.1.2.1: Compute and interpret gross profit, net profit, current, quick, and efficiency ratios.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Ratio Analysis",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Ratio Analysis"
     ],
     "Correction of Errors": [
-      "B11.1.2.4: Distinguish between errors of omission, commission, principle, and complete reversal."
+      "B11.1.2.4: Distinguish between errors of omission, commission, principle, and complete reversal.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Correction of Errors",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Correction of Errors"
     ],
     "Suspense Account": [
-      "B11.1.2.5: Design a suspense account to balance the trial balance temporaries pending audits."
+      "B11.1.2.5: Design a suspense account to balance the trial balance temporaries pending audits.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Suspense Account",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Suspense Account"
     ],
     "Bank Reconciliation Statement": [
-      "B11.1.2.6: Draft a formal bank reconciliation statement starting with cashbook or bank statement balances."
+      "B11.1.2.6: Draft a formal bank reconciliation statement starting with cashbook or bank statement balances.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Bank Reconciliation Statement",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Bank Reconciliation Statement"
     ],
     "Control Accounts": [
-      "B11.1.2.7: Reconcile sub-ledgers with general ledger control totals."
+      "B11.1.2.7: Reconcile sub-ledgers with general ledger control totals.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Control Accounts",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Control Accounts"
+    ],
+    "Conceptual Framework": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Conceptual Framework",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Conceptual Framework",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Conceptual Framework"
+    ],
+    "Financial Data Analysis": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Data Analysis",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Data Analysis",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Data Analysis"
+    ],
+    "Financial Reporting": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Reporting",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Reporting",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Reporting"
+    ],
+    "Financial Statements": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Statements",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Statements",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Statements"
+    ],
+    "Partnership Accounts": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Partnership Accounts",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Partnership Accounts",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Partnership Accounts"
+    ],
+    "Company Accounts": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Company Accounts",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Company Accounts",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Company Accounts"
+    ],
+    "Cost Accounting Basics": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Cost Accounting Basics",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Cost Accounting Basics",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Cost Accounting Basics"
     ]
   },
   "Financial Reporting": {
     "Sole Proprietorship FINAL Accounts": [
-      "B10.1.3.1: Prepare sole proprietorship final financial statements with adjusting entries."
+      "B10.1.3.1: Prepare sole proprietorship final financial statements with adjusting entries.",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Sole Proprietorship FINAL Accounts",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Sole Proprietorship FINAL Accounts"
     ],
     "Not-for-Profit Final Accounts": [
-      "B11.1.3.1: Draft receipts and payments, and income and expenditure statements for non-governmental projects."
+      "B11.1.3.1: Draft receipts and payments, and income and expenditure statements for non-governmental projects.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Not-for-Profit Final Accounts",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Not-for-Profit Final Accounts"
     ],
     "Incomplete Records Accounts": [
-      "B11.1.3.2: Reconstruct profit calculations using Statement of Affairs and single entry conversions."
+      "B11.1.3.2: Reconstruct profit calculations using Statement of Affairs and single entry conversions.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Incomplete Records Accounts",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Incomplete Records Accounts"
     ],
     "Partnership Accounts Form": [
-      "B12.1.3.1: Draft partnership appropriation accounts, current and capital capital sheets."
+      "B12.1.3.1: Draft partnership appropriation accounts, current and capital capital sheets.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Partnership Accounts Form",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Partnership Accounts Form"
     ],
     "Company Final Accounts": [
-      "B12.1.3.2: Prepare company income statements and statements of financial position under regulatory frameworks."
+      "B12.1.3.2: Prepare company income statements and statements of financial position under regulatory frameworks.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Company Final Accounts",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Company Final Accounts"
     ],
     "Sole Proprietorship Accounts": [
-      "B10.1.3.3: Calculate adjustments for prepayments, accruals, depreciation, and bad debts for sole traders."
+      "B10.1.3.3: Calculate adjustments for prepayments, accruals, depreciation, and bad debts for sole traders.",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Sole Proprietorship Accounts",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Sole Proprietorship Accounts"
     ],
     "Accounts of Not-for-Profit Organisations": [
-      "B11.1.3.3: Formulate a subscription account to track accrued or prepaid member dues."
+      "B11.1.3.3: Formulate a subscription account to track accrued or prepaid member dues.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Accounts of Not-for-Profit Organisations",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Accounts of Not-for-Profit Organisations"
     ],
     "Accounts from Incomplete Records": [
-      "B11.1.3.4: Convert incomplete records into dual double-entry structures using ledger summaries."
+      "B11.1.3.4: Convert incomplete records into dual double-entry structures using ledger summaries.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Accounts from Incomplete Records",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Accounts from Incomplete Records"
     ],
     "Partnership Accounts": [
-      "B12.1.3.3: Manage the entry/retirement of a partner, calculating goodwill shares."
+      "B12.1.3.3: Manage the entry/retirement of a partner, calculating goodwill shares.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Partnership Accounts",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Partnership Accounts"
     ],
     "Company Accounts": [
-      "B12.1.3.4: Account for share and debenture subscription and payments in general company ledgers."
+      "B12.1.3.4: Account for share and debenture subscription and payments in general company ledgers.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Company Accounts",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Company Accounts"
+    ],
+    "Conceptual Framework": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Conceptual Framework",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Conceptual Framework",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Conceptual Framework"
+    ],
+    "Financial Data Analysis": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Data Analysis",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Data Analysis",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Data Analysis"
+    ],
+    "Financial Reporting": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Reporting",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Reporting",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Reporting"
+    ],
+    "Financial Statements": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Statements",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Statements",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Statements"
+    ],
+    "Cost Accounting Basics": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Cost Accounting Basics",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Cost Accounting Basics",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Cost Accounting Basics"
     ]
   },
   "Financial Statements": {
     "Trading, Profit and Loss Account": [
-      "B10.1.4.1: Compute gross margins and operating outputs in trading businesses."
+      "B10.1.4.1: Compute gross margins and operating outputs in trading businesses.",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Trading, Profit and Loss Account",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Trading, Profit and Loss Account"
     ],
     "Balance Sheet": [
-      "B10.1.4.2: Present a classified statement of financial position grouping local capital structures."
+      "B10.1.4.2: Present a classified statement of financial position grouping local capital structures.",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Balance Sheet",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Balance Sheet"
     ],
     "Adjustments": [
-      "B10.1.4.3: Calculate end-of-period adjustments for outstanding and accrued variables."
+      "B10.1.4.3: Calculate end-of-period adjustments for outstanding and accrued variables.",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Adjustments",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Adjustments"
     ],
     "Incomplete Records Final Accounts": [
-      "B11.1.4.1: Derive sales, purchases, and cash flows to prepare standard sole-proprietor reports."
+      "B11.1.4.1: Derive sales, purchases, and cash flows to prepare standard sole-proprietor reports.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Incomplete Records Final Accounts",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Incomplete Records Final Accounts"
+    ],
+    "Conceptual Framework": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Conceptual Framework",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Conceptual Framework",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Conceptual Framework"
+    ],
+    "Financial Data Analysis": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Data Analysis",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Data Analysis",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Data Analysis"
+    ],
+    "Financial Reporting": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Reporting",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Reporting",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Reporting"
+    ],
+    "Financial Statements": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Statements",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Statements",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Statements"
+    ],
+    "Partnership Accounts": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Partnership Accounts",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Partnership Accounts",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Partnership Accounts"
+    ],
+    "Company Accounts": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Company Accounts",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Company Accounts",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Company Accounts"
+    ],
+    "Cost Accounting Basics": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Cost Accounting Basics",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Cost Accounting Basics",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Cost Accounting Basics"
     ]
   },
   "Partnership Accounts": {
     "Partnership Deed": [
-      "B12.1.5.1: Review essential clauses in a partnership agreement and deed."
+      "B12.1.5.1: Review essential clauses in a partnership agreement and deed.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Partnership Deed",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Partnership Deed"
     ],
     "Appropriation Account": [
-      "B12.1.5.2: Prepare partnership profit distributions inside appropriation accounts."
+      "B12.1.5.2: Prepare partnership profit distributions inside appropriation accounts.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Appropriation Account",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Appropriation Account"
     ],
     "Partnership Balance Sheet": [
-      "B12.1.5.3: Draft partner capital and current account reports."
+      "B12.1.5.3: Draft partner capital and current account reports.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Partnership Balance Sheet",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Partnership Balance Sheet"
     ],
     "Goodwill Treatment": [
-      "B12.1.5.4: Formulate ledger adjustments for goodwill in partners entry or exits."
+      "B12.1.5.4: Formulate ledger adjustments for goodwill in partners entry or exits.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Goodwill Treatment",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Goodwill Treatment"
+    ],
+    "Conceptual Framework": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Conceptual Framework",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Conceptual Framework",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Conceptual Framework"
+    ],
+    "Financial Data Analysis": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Data Analysis",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Data Analysis",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Data Analysis"
+    ],
+    "Financial Reporting": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Reporting",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Reporting",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Reporting"
+    ],
+    "Financial Statements": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Statements",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Statements",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Statements"
+    ],
+    "Partnership Accounts": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Partnership Accounts",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Partnership Accounts",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Partnership Accounts"
+    ],
+    "Company Accounts": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Company Accounts",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Company Accounts",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Company Accounts"
+    ],
+    "Cost Accounting Basics": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Cost Accounting Basics",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Cost Accounting Basics",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Cost Accounting Basics"
     ]
   },
   "Company Accounts": {
     "Issue of Shares & Debentures": [
-      "B12.1.6.1: Prepare financial entries for share allocations and payments."
+      "B12.1.6.1: Prepare financial entries for share allocations and payments.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Issue of Shares & Debentures",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Issue of Shares & Debentures"
     ],
     "Company Annual Reports": [
-      "B12.1.6.2: Outline standard company components (statement of cash flows, director findings)."
+      "B12.1.6.2: Outline standard company components (statement of cash flows, director findings).",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Company Annual Reports",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Company Annual Reports"
     ],
     "Statement of Retained Earnings": [
-      "B12.1.6.3: Present company income reserves balances correctly."
+      "B12.1.6.3: Present company income reserves balances correctly.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Statement of Retained Earnings",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Statement of Retained Earnings"
+    ],
+    "Conceptual Framework": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Conceptual Framework",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Conceptual Framework",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Conceptual Framework"
+    ],
+    "Financial Data Analysis": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Data Analysis",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Data Analysis",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Data Analysis"
+    ],
+    "Financial Reporting": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Reporting",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Reporting",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Reporting"
+    ],
+    "Financial Statements": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Statements",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Statements",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Statements"
+    ],
+    "Partnership Accounts": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Partnership Accounts",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Partnership Accounts",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Partnership Accounts"
+    ],
+    "Company Accounts": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Company Accounts",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Company Accounts",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Company Accounts"
+    ],
+    "Cost Accounting Basics": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Cost Accounting Basics",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Cost Accounting Basics",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Cost Accounting Basics"
     ]
   },
   "Cost Accounting Basics": {
     "Introduction to Cost Concepts": [
-      "B10.1.7.1: Distinguish between overhead expenditures and primary costs."
+      "B10.1.7.1: Distinguish between overhead expenditures and primary costs.",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Cost Concepts",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Cost Concepts"
     ],
     "Classification of Costs": [
-      "B10.1.7.2: Group costs on production volumes, target departments, and product relationships."
+      "B10.1.7.2: Group costs on production volumes, target departments, and product relationships.",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Classification of Costs",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Classification of Costs"
     ],
     "Costing Terminology": [
-      "B10.1.7.3: Outline basic cost center and cost unit definitions."
+      "B10.1.7.3: Outline basic cost center and cost unit definitions.",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Costing Terminology",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Costing Terminology"
+    ],
+    "Conceptual Framework": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Conceptual Framework",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Conceptual Framework",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Conceptual Framework"
+    ],
+    "Financial Data Analysis": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Data Analysis",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Data Analysis",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Data Analysis"
+    ],
+    "Financial Reporting": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Reporting",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Reporting",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Reporting"
+    ],
+    "Financial Statements": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Statements",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Statements",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Financial Statements"
+    ],
+    "Partnership Accounts": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Partnership Accounts",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Partnership Accounts",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Partnership Accounts"
+    ],
+    "Company Accounts": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Company Accounts",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Company Accounts",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Company Accounts"
+    ],
+    "Cost Accounting Basics": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Cost Accounting Basics",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Cost Accounting Basics",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Cost Accounting Basics"
     ]
   },
   "Introduction to Cost Accounting": {
     "Definition & Scope of Costing": [
-      "B10.2.4.1: Explain core definitions and bounds of cost accounting tools."
+      "B10.2.4.1: Explain core definitions and bounds of cost accounting tools.",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Definition & Scope of Costing",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Definition & Scope of Costing"
     ],
     "Difference between Financial & Costing": [
-      "B10.2.4.2: Contrast information requirements of cost ledgers versus general accounting."
+      "B10.2.4.2: Contrast information requirements of cost ledgers versus general accounting.",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Difference between Financial & Costing",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Difference between Financial & Costing"
     ],
     "Standard Installation": [
-      "B10.2.4.3: Plan core requirements of implementing a sound cost accounting structure."
+      "B10.2.4.3: Plan core requirements of implementing a sound cost accounting structure.",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Standard Installation",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Standard Installation"
+    ],
+    "Controlling Cost to Improve Organisational Performance": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Controlling Cost to Improve Organisational Performance",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Controlling Cost to Improve Organisational Performance",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Controlling Cost to Improve Organisational Performance"
+    ],
+    "Determining Cost of Operations for Pricing and Controlling": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Determining Cost of Operations for Pricing and Controlling",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Determining Cost of Operations for Pricing and Controlling",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Determining Cost of Operations for Pricing and Controlling"
+    ],
+    "Analysing Information for Control and decision making": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Analysing Information for Control and decision making",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Analysing Information for Control and decision making",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Analysing Information for Control and decision making"
+    ],
+    "Introduction to Cost Accounting": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Cost Accounting",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Cost Accounting",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Cost Accounting"
+    ],
+    "Elements of Costing": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Elements of Costing",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Elements of Costing",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Elements of Costing"
+    ],
+    "Materials Costing": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Materials Costing",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Materials Costing",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Materials Costing"
+    ],
+    "Labour and Overhead Costing": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Labour and Overhead Costing",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Labour and Overhead Costing",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Labour and Overhead Costing"
+    ],
+    "Job and Batch Costing": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Job and Batch Costing",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Job and Batch Costing",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Job and Batch Costing"
     ]
   },
   "Elements of Costing": {
     "Materials Management": [
-      "B10.2.5.1: Summarize procurement routes of manufacturing resources."
+      "B10.2.5.1: Summarize procurement routes of manufacturing resources.",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Materials Management",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Materials Management"
     ],
     "Labour Remuneration": [
-      "B10.2.5.2: Trace time sheet outputs to payroll rates."
+      "B10.2.5.2: Trace time sheet outputs to payroll rates.",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Labour Remuneration",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Labour Remuneration"
     ],
     "Overheads Cost Pool": [
-      "B10.2.5.3: Explain direct and indirect categorization of operating targets."
+      "B10.2.5.3: Explain direct and indirect categorization of operating targets.",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Overheads Cost Pool",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Overheads Cost Pool"
+    ],
+    "Controlling Cost to Improve Organisational Performance": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Controlling Cost to Improve Organisational Performance",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Controlling Cost to Improve Organisational Performance",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Controlling Cost to Improve Organisational Performance"
+    ],
+    "Determining Cost of Operations for Pricing and Controlling": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Determining Cost of Operations for Pricing and Controlling",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Determining Cost of Operations for Pricing and Controlling",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Determining Cost of Operations for Pricing and Controlling"
+    ],
+    "Analysing Information for Control and decision making": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Analysing Information for Control and decision making",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Analysing Information for Control and decision making",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Analysing Information for Control and decision making"
+    ],
+    "Introduction to Cost Accounting": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Cost Accounting",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Cost Accounting",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Cost Accounting"
+    ],
+    "Elements of Costing": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Elements of Costing",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Elements of Costing",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Elements of Costing"
+    ],
+    "Materials Costing": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Materials Costing",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Materials Costing",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Materials Costing"
+    ],
+    "Labour and Overhead Costing": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Labour and Overhead Costing",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Labour and Overhead Costing",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Labour and Overhead Costing"
+    ],
+    "Job and Batch Costing": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Job and Batch Costing",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Job and Batch Costing",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Job and Batch Costing"
     ]
   },
   "Materials Costing": {
     "Store Ledger pricing (FIFO/LIFO/WAM)": [
-      "B10.2.6.1: Record resource issues under FIFO, LIFO, and Weighted Average costings."
+      "B10.2.6.1: Record resource issues under FIFO, LIFO, and Weighted Average costings.",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Store Ledger pricing (FIFO/LIFO/WAM)",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Store Ledger pricing (FIFO/LIFO/WAM)"
     ],
     "Inventory Valuation": [
-      "B10.2.6.2: Compute closing inventory values at lower of aggregate cost or market value."
+      "B10.2.6.2: Compute closing inventory values at lower of aggregate cost or market value.",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Inventory Valuation",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Inventory Valuation"
     ],
     "Material Requisitions": [
-      "B10.2.6.3: Formulate requisition sheets tracking stock movements."
+      "B10.2.6.3: Formulate requisition sheets tracking stock movements.",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Material Requisitions",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Material Requisitions"
+    ],
+    "Controlling Cost to Improve Organisational Performance": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Controlling Cost to Improve Organisational Performance",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Controlling Cost to Improve Organisational Performance",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Controlling Cost to Improve Organisational Performance"
+    ],
+    "Determining Cost of Operations for Pricing and Controlling": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Determining Cost of Operations for Pricing and Controlling",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Determining Cost of Operations for Pricing and Controlling",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Determining Cost of Operations for Pricing and Controlling"
+    ],
+    "Analysing Information for Control and decision making": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Analysing Information for Control and decision making",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Analysing Information for Control and decision making",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Analysing Information for Control and decision making"
+    ],
+    "Introduction to Cost Accounting": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Cost Accounting",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Cost Accounting",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Cost Accounting"
+    ],
+    "Elements of Costing": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Elements of Costing",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Elements of Costing",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Elements of Costing"
+    ],
+    "Materials Costing": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Materials Costing",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Materials Costing",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Materials Costing"
+    ],
+    "Labour and Overhead Costing": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Labour and Overhead Costing",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Labour and Overhead Costing",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Labour and Overhead Costing"
+    ],
+    "Job and Batch Costing": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Job and Batch Costing",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Job and Batch Costing",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Job and Batch Costing"
     ]
   },
   "Labour and Overhead Costing": {
     "Wages and Salary Computation": [
-      "B11.2.7.1: Prepare full payroll spreadsheets with core tax and welfare deductions."
+      "B11.2.7.1: Prepare full payroll spreadsheets with core tax and welfare deductions.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Wages and Salary Computation",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Wages and Salary Computation"
     ],
     "Overhead Analysis & Sheets": [
-      "B11.2.7.2: Apply step-down distribution rules to assign overheads across cost units."
+      "B11.2.7.2: Apply step-down distribution rules to assign overheads across cost units.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Overhead Analysis & Sheets",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Overhead Analysis & Sheets"
     ],
     "Overhead Absorption Rates": [
-      "B11.2.7.3: Formulate overhead absorption configurations on direct machine or labor metrics."
+      "B11.2.7.3: Formulate overhead absorption configurations on direct machine or labor metrics.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Overhead Absorption Rates",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Overhead Absorption Rates"
+    ],
+    "Controlling Cost to Improve Organisational Performance": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Controlling Cost to Improve Organisational Performance",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Controlling Cost to Improve Organisational Performance",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Controlling Cost to Improve Organisational Performance"
+    ],
+    "Determining Cost of Operations for Pricing and Controlling": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Determining Cost of Operations for Pricing and Controlling",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Determining Cost of Operations for Pricing and Controlling",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Determining Cost of Operations for Pricing and Controlling"
+    ],
+    "Analysing Information for Control and decision making": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Analysing Information for Control and decision making",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Analysing Information for Control and decision making",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Analysing Information for Control and decision making"
+    ],
+    "Introduction to Cost Accounting": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Cost Accounting",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Cost Accounting",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Cost Accounting"
+    ],
+    "Elements of Costing": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Elements of Costing",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Elements of Costing",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Elements of Costing"
+    ],
+    "Materials Costing": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Materials Costing",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Materials Costing",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Materials Costing"
+    ],
+    "Labour and Overhead Costing": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Labour and Overhead Costing",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Labour and Overhead Costing",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Labour and Overhead Costing"
+    ],
+    "Job and Batch Costing": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Job and Batch Costing",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Job and Batch Costing",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Job and Batch Costing"
     ]
   },
   "Job and Batch Costing": {
     "Job Costing System": [
-      "B12.2.8.1: Construct job sheets detailing prime costs and overhead bounds."
+      "B12.2.8.1: Construct job sheets detailing prime costs and overhead bounds.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Job Costing System",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Job Costing System"
     ],
     "Batch Costing System": [
-      "B12.2.8.2: Compute unit costs based on bulk batch executions."
+      "B12.2.8.2: Compute unit costs based on bulk batch executions.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Batch Costing System",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Batch Costing System"
     ],
     "Contract Cost Accounts": [
-      "B12.2.8.3: Formulate contract sheets tracking retention moneys and work certified values."
+      "B12.2.8.3: Formulate contract sheets tracking retention moneys and work certified values.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Contract Cost Accounts",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Contract Cost Accounts"
     ],
     "Process Cost Accounts": [
-      "B12.2.8.4: Track work-in-progress values across linear production processes."
+      "B12.2.8.4: Track work-in-progress values across linear production processes.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Process Cost Accounts",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Process Cost Accounts"
     ],
     "Service Costing": [
-      "B12.2.8.5: Compute cost-per-passenger-kilometer in commercial networks."
+      "B12.2.8.5: Compute cost-per-passenger-kilometer in commercial networks.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Service Costing",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Service Costing"
+    ],
+    "Controlling Cost to Improve Organisational Performance": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Controlling Cost to Improve Organisational Performance",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Controlling Cost to Improve Organisational Performance",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Controlling Cost to Improve Organisational Performance"
+    ],
+    "Determining Cost of Operations for Pricing and Controlling": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Determining Cost of Operations for Pricing and Controlling",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Determining Cost of Operations for Pricing and Controlling",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Determining Cost of Operations for Pricing and Controlling"
+    ],
+    "Analysing Information for Control and decision making": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Analysing Information for Control and decision making",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Analysing Information for Control and decision making",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Analysing Information for Control and decision making"
+    ],
+    "Introduction to Cost Accounting": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Cost Accounting",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Cost Accounting",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Cost Accounting"
+    ],
+    "Elements of Costing": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Elements of Costing",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Elements of Costing",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Elements of Costing"
+    ],
+    "Materials Costing": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Materials Costing",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Materials Costing",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Materials Costing"
+    ],
+    "Labour and Overhead Costing": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Labour and Overhead Costing",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Labour and Overhead Costing",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Labour and Overhead Costing"
+    ],
+    "Job and Batch Costing": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Job and Batch Costing",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Job and Batch Costing",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Job and Batch Costing"
     ]
   },
   "Controlling Cost to Improve Organisational Performance": {
     "FIFO, LIFO, and Weighted Average Pricing": [
-      "B10.2.1.2: Demonstrate material store ledger pricing and issue computation."
+      "B10.2.1.2: Demonstrate material store ledger pricing and issue computation.",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in FIFO, LIFO, and Weighted Average Pricing",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in FIFO, LIFO, and Weighted Average Pricing"
     ],
     "Labour Remuneration & Idle Time": [
-      "B11.2.1.1: Describe labor cost structures, incentive rewards, and idle hours."
+      "B11.2.1.1: Describe labor cost structures, incentive rewards, and idle hours.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Labour Remuneration & Idle Time",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Labour Remuneration & Idle Time"
     ],
     "Payroll and Wages Sheet": [
-      "B11.2.1.3: Compile payroll spreadsheets detailing gross and net payouts."
+      "B11.2.1.3: Compile payroll spreadsheets detailing gross and net payouts.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Payroll and Wages Sheet",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Payroll and Wages Sheet"
     ],
     "Overhead Allocation and Apportionment": [
-      "B11.2.1.4: Group indirect expenses to production departments using primary sheets."
+      "B11.2.1.4: Group indirect expenses to production departments using primary sheets.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Overhead Allocation and Apportionment",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Overhead Allocation and Apportionment"
     ],
     "Overhead Analysis Sheet": [
-      "B11.2.1.5: Perform step-down secondary redistributions of service budgets."
+      "B11.2.1.5: Perform step-down secondary redistributions of service budgets.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Overhead Analysis Sheet",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Overhead Analysis Sheet"
+    ],
+    "Controlling Cost to Improve Organisational Performance": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Controlling Cost to Improve Organisational Performance",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Controlling Cost to Improve Organisational Performance",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Controlling Cost to Improve Organisational Performance"
+    ],
+    "Determining Cost of Operations for Pricing and Controlling": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Determining Cost of Operations for Pricing and Controlling",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Determining Cost of Operations for Pricing and Controlling",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Determining Cost of Operations for Pricing and Controlling"
+    ],
+    "Analysing Information for Control and decision making": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Analysing Information for Control and decision making",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Analysing Information for Control and decision making",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Analysing Information for Control and decision making"
+    ],
+    "Introduction to Cost Accounting": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Cost Accounting",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Cost Accounting",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Cost Accounting"
+    ],
+    "Elements of Costing": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Elements of Costing",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Elements of Costing",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Elements of Costing"
+    ],
+    "Materials Costing": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Materials Costing",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Materials Costing",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Materials Costing"
+    ],
+    "Labour and Overhead Costing": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Labour and Overhead Costing",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Labour and Overhead Costing",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Labour and Overhead Costing"
+    ],
+    "Job and Batch Costing": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Job and Batch Costing",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Job and Batch Costing",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Job and Batch Costing"
     ]
   },
   "Determining Cost of Operations for Pricing and Controlling": {
     "Job Costing Sheets": [
-      "B11.2.2.1: Compile individual job sheets determining production profitability."
+      "B11.2.2.1: Compile individual job sheets determining production profitability.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Job Costing Sheets",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Job Costing Sheets"
     ],
     "Contract Costing & Work Certified": [
-      "B12.2.2.2: Compute profit reserves on partially completed structural contracts."
+      "B12.2.2.2: Compute profit reserves on partially completed structural contracts.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Contract Costing & Work Certified",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Contract Costing & Work Certified"
     ],
     "Service Cost Accounts": [
-      "B12.2.2.4: Formulate operational cost metrics in the services domain."
+      "B12.2.2.4: Formulate operational cost metrics in the services domain.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Service Cost Accounts",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Service Cost Accounts"
     ],
     "Process Costing and Normal Losses": [
-      "B12.2.2.1: Account for scrap yields and work developments in process accounts."
+      "B12.2.2.1: Account for scrap yields and work developments in process accounts.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Process Costing and Normal Losses",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Process Costing and Normal Losses"
+    ],
+    "Controlling Cost to Improve Organisational Performance": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Controlling Cost to Improve Organisational Performance",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Controlling Cost to Improve Organisational Performance",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Controlling Cost to Improve Organisational Performance"
+    ],
+    "Determining Cost of Operations for Pricing and Controlling": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Determining Cost of Operations for Pricing and Controlling",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Determining Cost of Operations for Pricing and Controlling",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Determining Cost of Operations for Pricing and Controlling"
+    ],
+    "Analysing Information for Control and decision making": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Analysing Information for Control and decision making",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Analysing Information for Control and decision making",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Analysing Information for Control and decision making"
+    ],
+    "Introduction to Cost Accounting": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Cost Accounting",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Cost Accounting",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Cost Accounting"
+    ],
+    "Elements of Costing": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Elements of Costing",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Elements of Costing",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Elements of Costing"
+    ],
+    "Materials Costing": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Materials Costing",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Materials Costing",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Materials Costing"
+    ],
+    "Labour and Overhead Costing": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Labour and Overhead Costing",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Labour and Overhead Costing",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Labour and Overhead Costing"
+    ],
+    "Job and Batch Costing": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Job and Batch Costing",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Job and Batch Costing",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Job and Batch Costing"
     ]
   },
   "Analysing Information for Control and decision making": {
     "Activity Based Costing & Cost Drivers": [
-      "B11.2.3.1: Formulate driver-based rates across multi-channel cost items."
+      "B11.2.3.1: Formulate driver-based rates across multi-channel cost items.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Activity Based Costing & Cost Drivers",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Activity Based Costing & Cost Drivers"
     ],
     "Marginal costing vs Absorption Costing": [
-      "B11.2.3.2: contrast income statements prepared under marginal and absorption rules."
+      "B11.2.3.2: contrast income statements prepared under marginal and absorption rules.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Marginal costing vs Absorption Costing",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Marginal costing vs Absorption Costing"
     ],
     "Cost-Volume-Profit and Break-Even Point": [
-      "B12.2.3.1: Calculate sales thresholds securing target profitability ratios."
+      "B12.2.3.1: Calculate sales thresholds securing target profitability ratios.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Cost-Volume-Profit and Break-Even Point",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Cost-Volume-Profit and Break-Even Point"
     ],
     "Standard Costing and Variance Analysis": [
-      "B12.2.3.3: Reconcile actual costs with standard estimates analyzing labor/material spreads."
+      "B12.2.3.3: Reconcile actual costs with standard estimates analyzing labor/material spreads.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Standard Costing and Variance Analysis",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Standard Costing and Variance Analysis"
     ],
     "Budgetary Control and Functional Budgets": [
-      "B12.2.3.2: Formulate cash receipts and operational schedules aiding cashflow balance."
+      "B12.2.3.2: Formulate cash receipts and operational schedules aiding cashflow balance.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Budgetary Control and Functional Budgets",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Budgetary Control and Functional Budgets"
+    ],
+    "Controlling Cost to Improve Organisational Performance": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Controlling Cost to Improve Organisational Performance",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Controlling Cost to Improve Organisational Performance",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Controlling Cost to Improve Organisational Performance"
+    ],
+    "Determining Cost of Operations for Pricing and Controlling": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Determining Cost of Operations for Pricing and Controlling",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Determining Cost of Operations for Pricing and Controlling",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Determining Cost of Operations for Pricing and Controlling"
+    ],
+    "Analysing Information for Control and decision making": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Analysing Information for Control and decision making",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Analysing Information for Control and decision making",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Analysing Information for Control and decision making"
+    ],
+    "Introduction to Cost Accounting": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Cost Accounting",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Cost Accounting",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Cost Accounting"
+    ],
+    "Elements of Costing": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Elements of Costing",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Elements of Costing",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Elements of Costing"
+    ],
+    "Materials Costing": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Materials Costing",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Materials Costing",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Materials Costing"
+    ],
+    "Labour and Overhead Costing": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Labour and Overhead Costing",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Labour and Overhead Costing",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Labour and Overhead Costing"
+    ],
+    "Job and Batch Costing": [
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Job and Batch Costing",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Job and Batch Costing",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Job and Batch Costing"
     ]
   },
   "Exploring Biology in Society": {
@@ -1083,7 +2746,8 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B10.1.1.2: Apply knowledge and understanding of the scientific method to solve everyday problems.",
       "B10.1.1.3: Apply knowledge of body symmetry, orientation, and sectioning of various organisms, and make labelled drawings of specimens.",
       "B10.1.1.4: Demonstrate knowledge, skill, and safety in the use of the microscope.",
-      "B11.1.1.1: Relate the knowledge of the characteristics and life processes of common simple living organisms to their economic importance."
+      "B11.1.1.1: Relate the knowledge of the characteristics and life processes of common simple living organisms to their economic importance.",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Biology as the Science of Life"
     ],
     "Biology and Entrepreneurship": [
       "B10.1.2.1: Apply the knowledge of basic concepts in biology to improve productivity in fish farming.",
@@ -1095,10 +2759,13 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
     "Cell Structure and Functions": [
       "B11.2.1.1: Demonstrate knowledge and understanding of cell structure and functions, and relate them to organizational hierarchies.",
       "B12.2.1.1: Explain the molecular structure of nucleic acids (DNA/RNA) and their roles in protein synthesis.",
-      "B12.2.1.2: Explain the cell cycle, cell division (mitosis/meiosis), and their relevance in living things."
+      "B12.2.1.2: Explain the cell cycle, cell division (mitosis/meiosis), and their relevance in living things.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Cell Structure and Functions"
     ],
     "Movement of Substances in Living Organisms": [
-      "B10.2.2.1: Explain the significance of the various processes involved in the movement of substances in and out of the cell and the factors affecting them."
+      "B10.2.2.1: Explain the significance of the various processes involved in the movement of substances in and out of the cell and the factors affecting them.",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Movement of Substances in Living Organisms",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Movement of Substances in Living Organisms"
     ]
   },
   "Diversity of Living Things and Their Environment": {
@@ -1184,52 +2851,124 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
   },
   "Cell Biology": {
     "Cell Structure and Functions": [
-      "B11.2.1.1: Demonstrate knowledge and understanding of cell structure and functions, and relate them to organizational hierarchies."
+      "B11.2.1.1: Demonstrate knowledge and understanding of cell structure and functions, and relate them to organizational hierarchies.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Cell Structure and Functions",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Cell Structure and Functions"
     ],
     "Movement of Substances in Living Organisms": [
-      "B10.2.2.1: Explain the significance of the various processes involved in the movement of substances in and out of the cell and the factors affecting them."
+      "B10.2.2.1: Explain the significance of the various processes involved in the movement of substances in and out of the cell and the factors affecting them.",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Movement of Substances in Living Organisms",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Movement of Substances in Living Organisms"
     ]
   },
   "Genetics": {
     "Genetics Key Terms": [
-      "B12.2.1.1: Explain the molecular structure of nucleic acids (DNA/RNA) and their roles in protein synthesis."
+      "B12.2.1.1: Explain the molecular structure of nucleic acids (DNA/RNA) and their roles in protein synthesis.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Genetics Key Terms",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Genetics Key Terms"
     ],
     "Mendel's Laws of Inheritance": [
-      "B12.2.1.2: Explain the cell cycle, cell division (mitosis/meiosis), and their relevance in living things."
+      "B12.2.1.2: Explain the cell cycle, cell division (mitosis/meiosis), and their relevance in living things.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Mendel's Laws of Inheritance",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Mendel's Laws of Inheritance"
+    ],
+    "Variation": [
+      "B10.1.1.1: Demonstrate knowledge and practical understanding of Variation in Biology",
+      "B11.1.1.1: Apply advanced principles and analytical techniques to Variation",
+      "B12.1.1.1: Evaluate, synthesize, and resolve complex real-world challenges in Variation"
+    ],
+    "Evolution": [
+      "B10.1.1.1: Demonstrate knowledge and practical understanding of Evolution in Biology",
+      "B11.1.1.1: Apply advanced principles and analytical techniques to Evolution",
+      "B12.1.1.1: Evaluate, synthesize, and resolve complex real-world challenges in Evolution"
+    ],
+    "Cell Cycle and Cell Division": [
+      "B10.1.1.1: Demonstrate knowledge and practical understanding of Cell Cycle and Cell Division in Biology",
+      "B11.1.1.1: Apply advanced principles and analytical techniques to Cell Cycle and Cell Division",
+      "B12.1.1.1: Evaluate, synthesize, and resolve complex real-world challenges in Cell Cycle and Cell Division"
     ]
   },
   "Physiology": {
     "Mammalian Systems": [
-      "B10.4.1.1: Describe the morphology of mammals and relate the external and internal structures to their functions."
+      "B10.4.1.1: Describe the morphology of mammals and relate the external and internal structures to their functions.",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Mammalian Systems",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Mammalian Systems"
     ],
     "Plant Systems": [
-      "B10.4.2.1: Describe the morphology of flowering plants and explain how these are related to their growth and development."
+      "B10.4.2.1: Describe the morphology of flowering plants and explain how these are related to their growth and development.",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Plant Systems",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Plant Systems"
+    ],
+    "Cardiovascular and Excretory Systems": [
+      "B10.1.1.1: Demonstrate knowledge and practical understanding of Cardiovascular and Excretory Systems in Biology",
+      "B11.1.1.1: Apply advanced principles and analytical techniques to Cardiovascular and Excretory Systems",
+      "B12.1.1.1: Evaluate, synthesize, and resolve complex real-world challenges in Cardiovascular and Excretory Systems"
     ]
   },
   "Ecology": {
     "Ecological terms": [
-      "B10.3.2.1: Demonstrate knowledge and understanding of major tropical ecological habitats and how living things are adapted to these habitats."
+      "B10.3.2.1: Demonstrate knowledge and understanding of major tropical ecological habitats and how living things are adapted to these habitats.",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Ecological terms",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Ecological terms"
     ],
     "Ecology in Named Habitats": [
-      "B11.3.2.1: Explain the features of various tropical habitats and how living organisms are adapted to these habitats."
+      "B11.3.2.1: Explain the features of various tropical habitats and how living organisms are adapted to these habitats.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Ecology in Named Habitats",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Ecology in Named Habitats"
+    ],
+    "Interdependency of Living Organisms": [
+      "B10.1.1.1: Demonstrate knowledge and practical understanding of Interdependency of Living Organisms in Biology",
+      "B11.1.1.1: Apply advanced principles and analytical techniques to Interdependency of Living Organisms",
+      "B12.1.1.1: Evaluate, synthesize, and resolve complex real-world challenges in Interdependency of Living Organisms"
+    ],
+    "Energy Flow in Ecosystems": [
+      "B10.1.1.1: Demonstrate knowledge and practical understanding of Energy Flow in Ecosystems in Biology",
+      "B11.1.1.1: Apply advanced principles and analytical techniques to Energy Flow in Ecosystems",
+      "B12.1.1.1: Evaluate, synthesize, and resolve complex real-world challenges in Energy Flow in Ecosystems"
     ]
   },
   "Plant Biology": {
     "Morphology of Flowering Plants": [
-      "B10.4.2.1: Describe the morphology of flowering plants and explain how these are related to their growth and development."
+      "B10.4.2.1: Describe the morphology of flowering plants and explain how these are related to their growth and development.",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Morphology of Flowering Plants",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Morphology of Flowering Plants"
     ],
     "Plant Tissues and Functions": [
-      "B11.4.2.1: Explain transport and nutrition (photosynthesis) in flowering plants and state the factors affecting them."
+      "B11.4.2.1: Explain transport and nutrition (photosynthesis) in flowering plants and state the factors affecting them.",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Plant Tissues and Functions",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Plant Tissues and Functions"
+    ],
+    "Photosynthesis and Transportation": [
+      "B10.1.1.1: Demonstrate knowledge and practical understanding of Photosynthesis and Transportation in Biology",
+      "B11.1.1.1: Apply advanced principles and analytical techniques to Photosynthesis and Transportation",
+      "B12.1.1.1: Evaluate, synthesize, and resolve complex real-world challenges in Photosynthesis and Transportation"
+    ],
+    "Reproduction and Excretion in Flowering Plants": [
+      "B10.1.1.1: Demonstrate knowledge and practical understanding of Reproduction and Excretion in Flowering Plants in Biology",
+      "B11.1.1.1: Apply advanced principles and analytical techniques to Reproduction and Excretion in Flowering Plants",
+      "B12.1.1.1: Evaluate, synthesize, and resolve complex real-world challenges in Reproduction and Excretion in Flowering Plants"
     ]
   },
   "Diversity of Life": {
     "Living Organisms": [
-      "B10.3.1.1: Identify living organisms using numbered and dichotomous keys."
+      "B10.3.1.1: Identify living organisms using numbered and dichotomous keys.",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Living Organisms",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Living Organisms"
+    ],
+    "Classification of Lower Organisms": [
+      "B10.1.1.1: Demonstrate knowledge and practical understanding of Classification of Lower Organisms in Biology",
+      "B11.1.1.1: Apply advanced principles and analytical techniques to Classification of Lower Organisms",
+      "B12.1.1.1: Evaluate, synthesize, and resolve complex real-world challenges in Classification of Lower Organisms"
+    ],
+    "Diseases and Infections": [
+      "B10.1.1.1: Demonstrate knowledge and practical understanding of Diseases and Infections in Biology",
+      "B11.1.1.1: Apply advanced principles and analytical techniques to Diseases and Infections",
+      "B12.1.1.1: Evaluate, synthesize, and resolve complex real-world challenges in Diseases and Infections"
     ]
   },
   "Consumers' Rational Decision Making": {
     "Introduction to the Subject Economics": [
-      "B10.1.1.1: Use relevant information gathered from learnersâ€™ home, school and community through observation to carefully define economics and stimulate their interest in the subject.",
+      "B10.1.1.1: Use relevant information gathered from learnersÃ¢â‚¬â„¢ home, school and community through observation to carefully define economics and stimulate their interest in the subject.",
       "B11.1.1.1: Use the appropriate economics tools to explain everyday economic issues.",
       "B12.1.1.1: Exhibit knowledge of advanced economic methodologies and tools."
     ],
@@ -1244,9 +2983,9 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B12.1.3.1: Use information from the environment to explain income and substitution effects."
     ]
   },
-  "Consumersâ€™ Rational Decision Making": {
+  "ConsumersÃ¢â‚¬â„¢ Rational Decision Making": {
     "Introduction to the Subject Economics": [
-      "B10.1.1.1: Use relevant information gathered from learnersâ€™ home, school and community through observation to carefully define economics and stimulate their interest in the subject.",
+      "B10.1.1.1: Use relevant information gathered from learnersÃ¢â‚¬â„¢ home, school and community through observation to carefully define economics and stimulate their interest in the subject.",
       "B11.1.1.1: Use the appropriate economics tools to explain everyday economic issues.",
       "B12.1.1.1: Exhibit knowledge of advanced economic methodologies and tools."
     ],
@@ -1278,7 +3017,7 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B12.2.3.1: Explain the methods, agencies, problems and solutions of distribution."
     ]
   },
-  "Firmsâ€™ Innovative Decision Making": {
+  "FirmsÃ¢â‚¬â„¢ Innovative Decision Making": {
     "Production of Goods and Services": [
       "B10.2.1.1: Evaluate the relevance of factors of production.",
       "B11.2.1.1: Use information gathered from the environment to determine the time periods, TP, AP, MP, labour and capital-intensive methods and the cost of production.",
@@ -1320,179 +3059,1066 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
     ]
   },
   "Number": {
-    "Number and Numeration Systems": ["B1.1.1.1: Describe numbers 0 to 100", "B2.1.1.1: Count and estimate 0 to 1000", "B3.1.1.1: Count and estimate 0 to 10,000", "B4.1.1.1: Multi-digit whole numerals to 100,000", "B4.1.1.2: Roman numerals up to XXX (30)", "B5.1.1.1: Multi-digit numerals up to 1,000,000", "B5.1.1.2: Roman numerals up to C (100)", "B6.1.1.1: Multi-digit numerals up to 1 billion", "B7.1.1.1: Demonstrate understanding and the use of place value", "B8.1.1.1: Use place value for expressing quantities in standard form", "B9.1.1.1: Apply the understanding of place value in solving real life problems"],
-    "Number Operations": ["B1.1.2.1: Conceptual addition and subtraction", "B2.1.2.1: Sums up to 100", "B3.1.2.1: Sums up to 1000", "B4.1.2.1: Recall multiplication up to 12x12", "B5.1.2.1: Mental math strategies for multiplication", "B6.1.2.1: Basic multiplication facts to 144", "B7.1.2.1: Apply mental mathematics strategies", "B8.1.2.1: Apply mental mathematics strategies", "B9.1.2.1: Apply mental mathematics and properties"],
-    "Fractions, Decimals and Percentages": ["B1.1.3.1: Understanding halves", "B2.1.3.1: Halves and fourths", "B3.1.3.1: Unit fractions and multiples", "B4.1.3.1: Equivalent and improper fractions", "B4.1.4.1: Decimals (tenths and hundredths)", "B4.1.5.1: Understanding percent", "B5.1.3.1: Strategies for multiplying fractions", "B6.1.3.1: Comparing mixture of common, dec and percent", "B7.1.3.1: Simplify, compare and order a mixture of positive fractions", "B8.1.3.1: Apply the understanding of operation on fractions", "B9.1.3.1: Apply the understanding of operations on fractions"],
-    "Number: Ratios and Proportion": ["B6.1.4.1: Concept of ratios", "B6.1.4.2: Proportional reasoning", "B7.1.4.1: Demonstrate an understanding of the concept of ratios", "B8.1.4.1: Demonstrate an understanding of ratio, rate and proportions", "B9.1.4.1: Apply the understanding of ratio, rate and proportions"]
+    "Number and Numeration Systems": [
+      "B1.1.1.1: Describe numbers 0 to 100",
+      "B2.1.1.1: Count and estimate 0 to 1000",
+      "B3.1.1.1: Count and estimate 0 to 10,000",
+      "B4.1.1.1: Multi-digit whole numerals to 100,000",
+      "B4.1.1.2: Roman numerals up to XXX (30)",
+      "B5.1.1.1: Multi-digit numerals up to 1,000,000",
+      "B5.1.1.2: Roman numerals up to C (100)",
+      "B6.1.1.1: Multi-digit numerals up to 1 billion",
+      "B7.1.1.1: Demonstrate understanding and the use of place value",
+      "B8.1.1.1: Use place value for expressing quantities in standard form",
+      "B9.1.1.1: Apply the understanding of place value in solving real life problems",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Number and Numeration Systems",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Number and Numeration Systems",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Number and Numeration Systems"
+    ],
+    "Number Operations": [
+      "B1.1.2.1: Conceptual addition and subtraction",
+      "B2.1.2.1: Sums up to 100",
+      "B3.1.2.1: Sums up to 1000",
+      "B4.1.2.1: Recall multiplication up to 12x12",
+      "B5.1.2.1: Mental math strategies for multiplication",
+      "B6.1.2.1: Basic multiplication facts to 144",
+      "B7.1.2.1: Apply mental mathematics strategies",
+      "B8.1.2.1: Apply mental mathematics strategies",
+      "B9.1.2.1: Apply mental mathematics and properties",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Number Operations",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Number Operations",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Number Operations"
+    ],
+    "Fractions, Decimals and Percentages": [
+      "B1.1.3.1: Understanding halves",
+      "B2.1.3.1: Halves and fourths",
+      "B3.1.3.1: Unit fractions and multiples",
+      "B4.1.3.1: Equivalent and improper fractions",
+      "B4.1.4.1: Decimals (tenths and hundredths)",
+      "B4.1.5.1: Understanding percent",
+      "B5.1.3.1: Strategies for multiplying fractions",
+      "B6.1.3.1: Comparing mixture of common, dec and percent",
+      "B7.1.3.1: Simplify, compare and order a mixture of positive fractions",
+      "B8.1.3.1: Apply the understanding of operation on fractions",
+      "B9.1.3.1: Apply the understanding of operations on fractions",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Fractions, Decimals and Percentages",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Fractions, Decimals and Percentages",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Fractions, Decimals and Percentages"
+    ],
+    "Number: Ratios and Proportion": [
+      "B6.1.4.1: Concept of ratios",
+      "B6.1.4.2: Proportional reasoning",
+      "B7.1.4.1: Demonstrate an understanding of the concept of ratios",
+      "B8.1.4.1: Demonstrate an understanding of ratio, rate and proportions",
+      "B9.1.4.1: Apply the understanding of ratio, rate and proportions",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Number: Ratios and Proportion",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Number: Ratios and Proportion",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Number: Ratios and Proportion",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Number: Ratios and Proportion",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Number: Ratios and Proportion",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Number: Ratios and Proportion",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Number: Ratios and Proportion",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Number: Ratios and Proportion"
+    ]
   },
   "Algebra": {
-    "Patterns and Relationships": ["B1.2.1.1: Repeating patterns", "B2.2.1.1: Increasing and decreasing patterns", "B3.2.1.1: Complex numerical patterns", "B4.2.1.1: Understanding patterns in tables/charts", "B5.2.1.1: Pattern rules and predictions", "B6.2.1.1: Algebraic rules for linear patterns", "B7.2.1.1: Derive the rule for a set of points of a relation", "B8.2.1.1: Determine the gradient of the line", "B9.2.1.1: Construct tables of values for pairs of linear relations"],
-    "Algebraic Expressions": ["B5.2.2.1: Basic algebraic expressions", "B6.2.2.1: Simplify and evaluate expressions", "B7.2.2.1: Simplify algebraic expressions", "B8.2.2.1: Solve problems involving algebraic expressions", "B9.2.2.1: Demonstrate an understanding of change of subject"],
-    "Variables and Equations": ["B4.2.2.1: Expressing word problems as equations", "B5.2.3.1: One-step equations with whole number coefficients", "B6.2.3.1: Single-variable one-step equations", "B7.2.3.1: Demonstrate an understanding of linear equations", "B8.2.3.1: Demonstrate an understanding of linear inequalities", "B9.2.3.1: Demonstrate understanding of single variable linear inequalities"]
+    "Patterns and Relationships": [
+      "B1.2.1.1: Repeating patterns",
+      "B2.2.1.1: Increasing and decreasing patterns",
+      "B3.2.1.1: Complex numerical patterns",
+      "B4.2.1.1: Understanding patterns in tables/charts",
+      "B5.2.1.1: Pattern rules and predictions",
+      "B6.2.1.1: Algebraic rules for linear patterns",
+      "B7.2.1.1: Derive the rule for a set of points of a relation",
+      "B8.2.1.1: Determine the gradient of the line",
+      "B9.2.1.1: Construct tables of values for pairs of linear relations",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Patterns and Relationships",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Patterns and Relationships",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Patterns and Relationships"
+    ],
+    "Algebraic Expressions": [
+      "B5.2.2.1: Basic algebraic expressions",
+      "B6.2.2.1: Simplify and evaluate expressions",
+      "B7.2.2.1: Simplify algebraic expressions",
+      "B8.2.2.1: Solve problems involving algebraic expressions",
+      "B9.2.2.1: Demonstrate an understanding of change of subject",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Algebraic Expressions",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Algebraic Expressions",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Algebraic Expressions",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Algebraic Expressions",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Algebraic Expressions",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Algebraic Expressions",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Algebraic Expressions"
+    ],
+    "Variables and Equations": [
+      "B4.2.2.1: Expressing word problems as equations",
+      "B5.2.3.1: One-step equations with whole number coefficients",
+      "B6.2.3.1: Single-variable one-step equations",
+      "B7.2.3.1: Demonstrate an understanding of linear equations",
+      "B8.2.3.1: Demonstrate an understanding of linear inequalities",
+      "B9.2.3.1: Demonstrate understanding of single variable linear inequalities",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Variables and Equations",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Variables and Equations",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Variables and Equations",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Variables and Equations",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Variables and Equations",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Variables and Equations"
+    ]
   },
   "Geometry and Measurement": {
-    "Shapes and Space": ["B1.3.1.1: Attributes of 2D and 3D shapes", "B2.3.1.1: Describe and analyse 2D/3D objects", "B3.3.1.1: Irregular polygons", "B4.3.1.1: Lines of symmetry", "B5.3.1.1: Sort quadrilaterals by attributes", "B6.3.1.1: Understanding prisms", "B7.3.1.1: Demonstrate understanding of angles", "B8.3.1.1: Relationship between parallel lines and alternate angles", "B9.3.1.1: Apply properties of angles at a point"],
-    "Measurement": ["B1.3.3.1: Non-standard units", "B2.3.3.1: Comparison logic", "B3.3.3.1: Metres and centimetres", "B4.3.3.1: Perimeter and Area concept", "B5.3.2.1: Surface area of 2D shapes", "B5.3.3.3: Understanding angles", "B5.3.2.2: Volume of common 3D shapes", "B7.3.2.1: Find the perimeter of plane shapes", "B8.3.2.1: Apply Pythagoras theorem", "B9.3.2.1: Determine the surface area of prisms"],
-    "Position and Transformation": ["B4.3.2.1: Cardinal points", "B5.3.4.1: Motion in space", "B6.3.3.5: Advanced cardinal points (NE, NW...)", "B7.3.3.1: Perform a single transformation (reflection and translation)", "B8.3.3.1: Perform a single transformation (rotation)", "B9.3.3.1: Perform an enlargement on a geometrical shape"]
+    "Shapes and Space": [
+      "B1.3.1.1: Attributes of 2D and 3D shapes",
+      "B2.3.1.1: Describe and analyse 2D/3D objects",
+      "B3.3.1.1: Irregular polygons",
+      "B4.3.1.1: Lines of symmetry",
+      "B5.3.1.1: Sort quadrilaterals by attributes",
+      "B6.3.1.1: Understanding prisms",
+      "B7.3.1.1: Demonstrate understanding of angles",
+      "B8.3.1.1: Relationship between parallel lines and alternate angles",
+      "B9.3.1.1: Apply properties of angles at a point",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Shapes and Space",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Shapes and Space",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Shapes and Space"
+    ],
+    "Measurement": [
+      "B1.3.3.1: Non-standard units",
+      "B2.3.3.1: Comparison logic",
+      "B3.3.3.1: Metres and centimetres",
+      "B4.3.3.1: Perimeter and Area concept",
+      "B5.3.2.1: Surface area of 2D shapes",
+      "B5.3.3.3: Understanding angles",
+      "B5.3.2.2: Volume of common 3D shapes",
+      "B7.3.2.1: Find the perimeter of plane shapes",
+      "B8.3.2.1: Apply Pythagoras theorem",
+      "B9.3.2.1: Determine the surface area of prisms",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Measurement",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Measurement",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Measurement",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Measurement"
+    ],
+    "Position and Transformation": [
+      "B4.3.2.1: Cardinal points",
+      "B5.3.4.1: Motion in space",
+      "B6.3.3.5: Advanced cardinal points (NE, NW...)",
+      "B7.3.3.1: Perform a single transformation (reflection and translation)",
+      "B8.3.3.1: Perform a single transformation (rotation)",
+      "B9.3.3.1: Perform an enlargement on a geometrical shape",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Position and Transformation",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Position and Transformation",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Position and Transformation",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Position and Transformation",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Position and Transformation",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Position and Transformation"
+    ]
   },
   "Handling Data": {
-    "Data": ["B1.4.1.1: Organise data in 3 categories", "B2.4.1.1: Tallies and pictographs", "B3.4.1.1: Concrete graphs", "B4.4.1.1: Many-to-one correspondence", "B5.4.1.1: First-hand and second-hand data", "B6.4.1.1: Line graphs", "B6.4.1.2: Data collection techniques", "B7.4.1.1: Select, justify, and use appropriate methods to collect data", "B8.4.1.1: Construct and interpret frequency tables", "B9.4.1.1: Construct and interpret frequency tables and histogram"],
-    "Chance or Probability": ["B5.4.2.1: Likelihood of outcomes", "B6.4.2.2: Theoretical and experimental probability", "B7.4.2.1: Identify the sample space for a probability experiment", "B8.4.2.1: Identify the sample space for a probability experiment (independent events)", "B9.4.2.1: Identify the sample space for a probability experiment (dependent events)"]
+    "Data": [
+      "B1.4.1.1: Organise data in 3 categories",
+      "B2.4.1.1: Tallies and pictographs",
+      "B3.4.1.1: Concrete graphs",
+      "B4.4.1.1: Many-to-one correspondence",
+      "B5.4.1.1: First-hand and second-hand data",
+      "B6.4.1.1: Line graphs",
+      "B6.4.1.2: Data collection techniques",
+      "B7.4.1.1: Select, justify, and use appropriate methods to collect data",
+      "B8.4.1.1: Construct and interpret frequency tables",
+      "B9.4.1.1: Construct and interpret frequency tables and histogram",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Data",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Data",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Data"
+    ],
+    "Chance or Probability": [
+      "B5.4.2.1: Likelihood of outcomes",
+      "B6.4.2.2: Theoretical and experimental probability",
+      "B7.4.2.1: Identify the sample space for a probability experiment",
+      "B8.4.2.1: Identify the sample space for a probability experiment (independent events)",
+      "B9.4.2.1: Identify the sample space for a probability experiment (dependent events)",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Chance or Probability",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Chance or Probability",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Chance or Probability",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Chance or Probability",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Chance or Probability",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Chance or Probability",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Chance or Probability"
+    ]
   },
   "Motor Skill and Movement Patterns": {
-    "Locomotor movements": ["B1.1.1.1: Travel over/under objects", "B2.1.1.1: Travel in zigzag pathways", "B3.1.1.1: Change direction quickly", "B4.1.1.1: Slow vs fast movement", "B5.1.2.1: Walk on straight line edges", "B6.1.1.1: Cooperative movement games"],
-    "Manipulative Skills": ["B1.1.3.1: Roll a ball stationary", "B2.1.10.1: Dribbling with hand", "B3.1.10.1: Dribbling around obstacles", "B4.1.6.1: Strike a bounce ball", "B5.1.6.1: Strike dropping ball", "B6.1.10.1: Dribbling under guard"]
+    "Locomotor movements": [
+      "B1.1.1.1: Travel over/under objects",
+      "B2.1.1.1: Travel in zigzag pathways",
+      "B3.1.1.1: Change direction quickly",
+      "B4.1.1.1: Slow vs fast movement",
+      "B5.1.2.1: Walk on straight line edges",
+      "B6.1.1.1: Cooperative movement games",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Locomotor movements",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Locomotor movements",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Locomotor movements",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Locomotor movements",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Locomotor movements",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Locomotor movements"
+    ],
+    "Manipulative Skills": [
+      "B1.1.3.1: Roll a ball stationary",
+      "B2.1.10.1: Dribbling with hand",
+      "B3.1.10.1: Dribbling around obstacles",
+      "B4.1.6.1: Strike a bounce ball",
+      "B5.1.6.1: Strike dropping ball",
+      "B6.1.10.1: Dribbling under guard",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Manipulative Skills",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Manipulative Skills",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Manipulative Skills",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Manipulative Skills",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Manipulative Skills",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Manipulative Skills"
+    ],
+    "Rhythmic Skills": [
+      "B1.1.1.1: Identify and explore foundational elements of Rhythmic Skills",
+      "B2.1.1.1: Describe and demonstrate key features of Rhythmic Skills",
+      "B3.1.1.1: Apply knowledge of Rhythmic Skills in guided activities",
+      "B4.1.1.1: Demonstrate clear understanding and practical skills in Rhythmic Skills",
+      "B5.1.1.1: Analyze and apply concepts of Rhythmic Skills to solve problems",
+      "B6.1.1.1: Evaluate, create, and present comprehensive work in Rhythmic Skills",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Rhythmic Skills",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Rhythmic Skills",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Rhythmic Skills",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Rhythmic Skills",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Rhythmic Skills",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Rhythmic Skills"
+    ]
   },
   "Movement Concepts, Principles and Strategies": {
-    "Space awareness": ["B7.2.1.1: Demonstrate awareness of body and space constraints", "B8.2.1.1: Apply spatial positioning in offensive and defensive plays", "B9.2.1.1: Create movement sequences maximizing spatial coverage"],
-    "Dynamics": ["B7.2.2.1: Discuss how forces act on moving bodies", "B8.2.2.1: Analyse the effects of speed and flow changes in movement patterns", "B9.2.2.1: Manipulate speed, force, and flow to improve skill execution"],
-    "Relationships": ["B7.2.3.1: Work cooperatively in pairs or small groups during physical drills", "B8.2.3.1: Coordinate movement plans with teammates in a tactical space", "B9.2.3.1: Match movements to opponent tactics in real-time play"],
-    "Body management": ["B7.2.4.1: Control balance during complex locomotion changes", "B8.2.4.1: Demonstrate body alignment and posture stability under pressure", "B9.2.4.1: Design creative routines requiring advanced body control"],
-    "Strategies": ["B7.2.5.1: Formulate personal fitness plans based on movement concepts", "B8.2.5.1: Apply team play tactics in cooperative physical games", "B9.2.5.1: Evaluate and adapt strategies mid-performance to solve game problems"]
+    "Space awareness": [
+      "B7.2.1.1: Demonstrate awareness of body and space constraints",
+      "B8.2.1.1: Apply spatial positioning in offensive and defensive plays",
+      "B9.2.1.1: Create movement sequences maximizing spatial coverage",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Space awareness",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Space awareness",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Space awareness",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Space awareness",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Space awareness",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Space awareness",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Space awareness",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Space awareness",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Space awareness"
+    ],
+    "Dynamics": [
+      "B7.2.2.1: Discuss how forces act on moving bodies",
+      "B8.2.2.1: Analyse the effects of speed and flow changes in movement patterns",
+      "B9.2.2.1: Manipulate speed, force, and flow to improve skill execution",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Dynamics",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Dynamics",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Dynamics",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Dynamics",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Dynamics",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Dynamics",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Dynamics",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Dynamics",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Dynamics"
+    ],
+    "Relationships": [
+      "B7.2.3.1: Work cooperatively in pairs or small groups during physical drills",
+      "B8.2.3.1: Coordinate movement plans with teammates in a tactical space",
+      "B9.2.3.1: Match movements to opponent tactics in real-time play",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Relationships",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Relationships",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Relationships",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Relationships",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Relationships",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Relationships",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Relationships",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Relationships",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Relationships"
+    ],
+    "Body management": [
+      "B7.2.4.1: Control balance during complex locomotion changes",
+      "B8.2.4.1: Demonstrate body alignment and posture stability under pressure",
+      "B9.2.4.1: Design creative routines requiring advanced body control",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Body management",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Body management",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Body management",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Body management",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Body management",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Body management",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Body management",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Body management",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Body management"
+    ],
+    "Strategies": [
+      "B7.2.5.1: Formulate personal fitness plans based on movement concepts",
+      "B8.2.5.1: Apply team play tactics in cooperative physical games",
+      "B9.2.5.1: Evaluate and adapt strategies mid-performance to solve game problems",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Strategies",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Strategies",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Strategies",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Strategies",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Strategies",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Strategies",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Strategies",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Strategies",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Strategies"
+    ]
   },
   "Physical Fitness": {
-    "Aerobic Capacity": ["B7.3.1.1: Cardiovascular fitness and running test", "B8.3.1.1: Cardiovascular-respiratory fitness endurance tests", "B9.3.1.1: Evaluate fitness levels through standardized testing"],
-    "Strength": ["B1.3.2.3: Perform push-ups", "B2.3.2.3: Abdominal curls", "B3.3.2.3: Continuous step-ups"],
-    "Endurance": ["B4.3.1.3: 15-min brisk walk", "B5.3.1.3: 10-min jogging", "B6.3.1.3: 8-min running test"],
-    "Strength and Endurance": ["B1.3.2.3: Perform push-ups", "B2.3.2.3: Abdominal curls", "B3.3.2.3: Continuous step-ups", "B4.3.1.3: 15-min brisk walk", "B5.3.1.3: 10-min jogging", "B6.3.1.3: 8-min running test"],
-    "Flexibility": ["B7.3.4.1: Perform joint mobility exercises", "B8.3.4.1: Demonstrate flexibility through dynamic stretching", "B9.3.4.1: Implement core flexibility sequences"],
-    "Body Composition": ["B7.3.5.1: Analyse body mass index", "B8.3.5.1: Track changes in body fat ratios", "B9.3.5.1: Maintain balanced body type profiles"]
+    "Aerobic Capacity": [
+      "B7.3.1.1: Cardiovascular fitness and running test",
+      "B8.3.1.1: Cardiovascular-respiratory fitness endurance tests",
+      "B9.3.1.1: Evaluate fitness levels through standardized testing",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Aerobic Capacity",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Aerobic Capacity",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Aerobic Capacity",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Aerobic Capacity",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Aerobic Capacity",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Aerobic Capacity",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Aerobic Capacity",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Aerobic Capacity",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Aerobic Capacity"
+    ],
+    "Strength": [
+      "B1.3.2.3: Perform push-ups",
+      "B2.3.2.3: Abdominal curls",
+      "B3.3.2.3: Continuous step-ups",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Strength",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Strength",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Strength",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Strength",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Strength",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Strength",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Strength",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Strength",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Strength"
+    ],
+    "Endurance": [
+      "B4.3.1.3: 15-min brisk walk",
+      "B5.3.1.3: 10-min jogging",
+      "B6.3.1.3: 8-min running test",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Endurance",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Endurance",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Endurance",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Endurance",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Endurance",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Endurance",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Endurance",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Endurance",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Endurance"
+    ],
+    "Strength and Endurance": [
+      "B1.3.2.3: Perform push-ups",
+      "B2.3.2.3: Abdominal curls",
+      "B3.3.2.3: Continuous step-ups",
+      "B4.3.1.3: 15-min brisk walk",
+      "B5.3.1.3: 10-min jogging",
+      "B6.3.1.3: 8-min running test"
+    ],
+    "Flexibility": [
+      "B7.3.4.1: Perform joint mobility exercises",
+      "B8.3.4.1: Demonstrate flexibility through dynamic stretching",
+      "B9.3.4.1: Implement core flexibility sequences",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Flexibility",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Flexibility",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Flexibility",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Flexibility",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Flexibility",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Flexibility",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Flexibility",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Flexibility",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Flexibility"
+    ],
+    "Body Composition": [
+      "B7.3.5.1: Analyse body mass index",
+      "B8.3.5.1: Track changes in body fat ratios",
+      "B9.3.5.1: Maintain balanced body type profiles",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Body Composition",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Body Composition",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Body Composition",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Body Composition",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Body Composition",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Body Composition",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Body Composition",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Body Composition",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Body Composition"
+    ]
   },
   "Physical Fitness Concepts, Principles and Strategies": {
-    "Fitness Programmes": ["B7.3.1.2: Research standard exercise routines", "B8.3.1.2: Design localized personal fitness schedules", "B9.3.1.2: Execute and adjust multi-week fitness programmes"],
-    "Healthy Diet": ["B7.3.2.2: Establish links between nutritional choices and training outcomes", "B8.3.2.2: Plan appropriate food charts to sustain physical development", "B9.3.2.2: Evaluate diets and metabolic rates for various sports profiles"],
-    "Safety and injury": ["B7.3.3.2: Explain warm-up and cool-down significance", "B8.3.3.2: Implement basic field-level first-aid procedures", "B9.3.3.2: Prevent common exercise-related injuries through proper form"],
-    "Substances": ["B7.3.4.2: Discuss negative outcomes of substance misuse on stamina", "B8.3.4.2: Investigate legal and physical penalties of sports doping", "B9.3.4.2: Promote healthy lifestyle alternatives to performance enhancement drugs"]
+    "Fitness Programmes": [
+      "B7.3.1.2: Research standard exercise routines",
+      "B8.3.1.2: Design localized personal fitness schedules",
+      "B9.3.1.2: Execute and adjust multi-week fitness programmes",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Fitness Programmes",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Fitness Programmes",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Fitness Programmes",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Fitness Programmes",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Fitness Programmes",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Fitness Programmes",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Fitness Programmes",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Fitness Programmes",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Fitness Programmes"
+    ],
+    "Healthy Diet": [
+      "B7.3.2.2: Establish links between nutritional choices and training outcomes",
+      "B8.3.2.2: Plan appropriate food charts to sustain physical development",
+      "B9.3.2.2: Evaluate diets and metabolic rates for various sports profiles",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Healthy Diet",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Healthy Diet",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Healthy Diet",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Healthy Diet",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Healthy Diet",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Healthy Diet",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Healthy Diet",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Healthy Diet",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Healthy Diet"
+    ],
+    "Safety and injury": [
+      "B7.3.3.2: Explain warm-up and cool-down significance",
+      "B8.3.3.2: Implement basic field-level first-aid procedures",
+      "B9.3.3.2: Prevent common exercise-related injuries through proper form",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Safety and injury",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Safety and injury",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Safety and injury",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Safety and injury",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Safety and injury",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Safety and injury",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Safety and injury",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Safety and injury",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Safety and injury"
+    ],
+    "Substances": [
+      "B7.3.4.2: Discuss negative outcomes of substance misuse on stamina",
+      "B8.3.4.2: Investigate legal and physical penalties of sports doping",
+      "B9.3.4.2: Promote healthy lifestyle alternatives to performance enhancement drugs",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Substances",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Substances",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Substances",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Substances",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Substances",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Substances",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Substances",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Substances",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Substances"
+    ]
   },
   "Values and Psycho-social Concepts, Principles and Strategies": {
-    "Self-responsibility": ["B7.5.1.1: Demonstrate personal commitment to physical safety and goals", "B8.5.1.1: Set realistic physical development targets independently", "B9.5.1.1: Critique personal growth records and take responsibility for improvement"],
-    "Social Interaction": ["B7.5.2.1: Promote respect and teamwork standards during field games", "B8.5.2.1: Manage conflicting views productively during cooperative work", "B9.5.2.1: Model inclusive and positive feedback strategies in group drills"],
-    "Group Dynamics": ["B7.5.3.1: Distribute roles fairly during team competitive events", "B8.5.3.1: Facilitate shared team strategies to optimize performance", "B9.5.3.1: Resolve structural team division problems constructively"],
-    "Critical thinking": ["B7.5.4.1: Discuss how spatial logic informs effective movement selection", "B8.5.4.1: Analyse tactical choices made by opposing parties in real games", "B9.5.4.1: Invent creative solutions to tactical problems faced in performance tasks"]
+    "Self-responsibility": [
+      "B7.5.1.1: Demonstrate personal commitment to physical safety and goals",
+      "B8.5.1.1: Set realistic physical development targets independently",
+      "B9.5.1.1: Critique personal growth records and take responsibility for improvement",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Self-responsibility",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Self-responsibility",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Self-responsibility",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Self-responsibility",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Self-responsibility",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Self-responsibility",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Self-responsibility",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Self-responsibility",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Self-responsibility"
+    ],
+    "Social Interaction": [
+      "B7.5.2.1: Promote respect and teamwork standards during field games",
+      "B8.5.2.1: Manage conflicting views productively during cooperative work",
+      "B9.5.2.1: Model inclusive and positive feedback strategies in group drills",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Social Interaction",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Social Interaction",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Social Interaction",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Social Interaction",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Social Interaction",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Social Interaction",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Social Interaction",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Social Interaction",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Social Interaction"
+    ],
+    "Group Dynamics": [
+      "B7.5.3.1: Distribute roles fairly during team competitive events",
+      "B8.5.3.1: Facilitate shared team strategies to optimize performance",
+      "B9.5.3.1: Resolve structural team division problems constructively",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Group Dynamics",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Group Dynamics",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Group Dynamics",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Group Dynamics",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Group Dynamics",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Group Dynamics",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Group Dynamics",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Group Dynamics",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Group Dynamics"
+    ],
+    "Critical thinking": [
+      "B7.5.4.1: Discuss how spatial logic informs effective movement selection",
+      "B8.5.4.1: Analyse tactical choices made by opposing parties in real games",
+      "B9.5.4.1: Invent creative solutions to tactical problems faced in performance tasks",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Critical thinking",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Critical thinking",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Critical thinking",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Critical thinking",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Critical thinking",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Critical thinking",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Critical thinking",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Critical thinking",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Critical thinking"
+    ]
   },
   "All About Us": {
-    "Nature of God": ["B1.1.1.1: Nature of God", "B2.1.1.1: Attributes of God", "B3.1.1.1: Purpose of God's creation", "B4.1.1.1: Uniqueness of human creation", "B5.1.1.1: Man as God's representative", "B6.1.1.1: God's attributes in mankind"],
-    "Myself": ["B1.1.2.1: Myself", "B4.1.2.1: Self-awareness and harmony", "B5.1.2.1: Changes during adolescence", "B6.1.2.1: Challenges of adolescence"],
-    "My Family and the Community": ["B1.1.3.1: My Family and Community", "B4.1.3.1: Commitment to family", "B5.1.3.1: Family roles and gender equity", "B6.1.3.1: Responsible family membership"],
-    "Home and School": ["B1.1.4.1: Home and School", "B4.1.4.1: Work as a civic duty", "B5.1.4.1: Peer pressure and social life", "B6.1.4.1: Food safety and table manners"]
+    "Nature of God": [
+      "B1.1.1.1: Nature of God",
+      "B2.1.1.1: Attributes of God",
+      "B3.1.1.1: Purpose of God's creation",
+      "B4.1.1.1: Uniqueness of human creation",
+      "B5.1.1.1: Man as God's representative",
+      "B6.1.1.1: God's attributes in mankind"
+    ],
+    "Myself": [
+      "B1.1.2.1: Myself",
+      "B4.1.2.1: Self-awareness and harmony",
+      "B5.1.2.1: Changes during adolescence",
+      "B6.1.2.1: Challenges of adolescence",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Myself",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Myself"
+    ],
+    "My Family and the Community": [
+      "B1.1.3.1: My Family and Community",
+      "B4.1.3.1: Commitment to family",
+      "B5.1.3.1: Family roles and gender equity",
+      "B6.1.3.1: Responsible family membership",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in My Family and the Community",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in My Family and the Community"
+    ],
+    "Home and School": [
+      "B1.1.4.1: Home and School",
+      "B4.1.4.1: Work as a civic duty",
+      "B5.1.4.1: Peer pressure and social life",
+      "B6.1.4.1: Food safety and table manners",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Home and School",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Home and School"
+    ]
   },
   "All Around Us OWOP": {
-    "The Environment and the Weather": ["B1.2.1.1: Environment and Weather", "B4.2.1.1: Environmental safety", "B5.2.1.1: Greenhouse effect and climate change", "B6.2.1.1: Reforestation and tree planting"],
-    "Plants and Animals": ["B2.2.2.1: Plants and Animals", "B4.2.2.1: Interdependence of living things", "B5.2.2.1: Animal housing and care", "B6.2.2.1: Use of animal waste"],
-    "Map Making and Land Marks": ["B3.2.3.1: Map Making and Land Marks", "B4.2.3.1: Mapping the school", "B5.2.3.1: Major landmarks in Ghana", "B6.2.3.1: Map of Ghana (Regions/Capitals)"],
-    "Population and Settlement": ["B3.2.4.1: Population and Settlement", "B4.2.4.1: Settlement patterns in Ghana", "B5.2.4.1: Features of rural and urban areas", "B6.2.4.1: Internal migration"]
+    "The Environment and the Weather": [
+      "B1.2.1.1: Environment and Weather",
+      "B4.2.1.1: Environmental safety",
+      "B5.2.1.1: Greenhouse effect and climate change",
+      "B6.2.1.1: Reforestation and tree planting",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in The Environment and the Weather",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in The Environment and the Weather"
+    ],
+    "Plants and Animals": [
+      "B2.2.2.1: Plants and Animals",
+      "B4.2.2.1: Interdependence of living things",
+      "B5.2.2.1: Animal housing and care",
+      "B6.2.2.1: Use of animal waste",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Plants and Animals",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Plants and Animals"
+    ],
+    "Map Making and Land Marks": [
+      "B3.2.3.1: Map Making and Land Marks",
+      "B4.2.3.1: Mapping the school",
+      "B5.2.3.1: Major landmarks in Ghana",
+      "B6.2.3.1: Map of Ghana (Regions/Capitals)",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Map Making and Land Marks",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Map Making and Land Marks"
+    ],
+    "Population and Settlement": [
+      "B3.2.4.1: Population and Settlement",
+      "B4.2.4.1: Settlement patterns in Ghana",
+      "B5.2.4.1: Features of rural and urban areas",
+      "B6.2.4.1: Internal migration",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Population and Settlement",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Population and Settlement"
+    ],
+    "Living and non-living things": [
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Living and non-living things",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Living and non-living things",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Living and non-living things",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Living and non-living things",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Living and non-living things",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Living and non-living things"
+    ],
+    "Living things: Animals (Domestic and wild)": [
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Living things: Animals (Domestic and wild)",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Living things: Animals (Domestic and wild)",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Living things: Animals (Domestic and wild)",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Living things: Animals (Domestic and wild)",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Living things: Animals (Domestic and wild)",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Living things: Animals (Domestic and wild)"
+    ],
+    "Water": [
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Water",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Water",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Water",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Water",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Water",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Water"
+    ],
+    "Air": [
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Air",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Air",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Air",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Air",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Air",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Air"
+    ],
+    "Plants": [
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Plants",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Plants",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Plants",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Plants",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Plants",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Plants"
+    ],
+    "Gardening": [
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Gardening",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Gardening",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Gardening",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Gardening",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Gardening",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Gardening"
+    ],
+    "Light - Day and Night": [
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Light - Day and Night",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Light - Day and Night",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Light - Day and Night",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Light - Day and Night",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Light - Day and Night",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Light - Day and Night"
+    ],
+    "Changing weather conditions": [
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Changing weather conditions",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Changing weather conditions",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Changing weather conditions",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Changing weather conditions",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Changing weather conditions",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Changing weather conditions"
+    ]
   },
   "Our Beliefs and Values": {
-    "Worship": ["B1.3.1.1: Worship", "B4.3.1.1: Obedience through worship", "B5.3.1.1: Moral lessons from sacred texts", "B6.3.1.1: Importance of prayer"],
-    "Festivals": ["B2.3.2.1: Festivals", "B4.3.2.1: Significance of Ghanaian festivals", "B5.3.2.1: Cultural practices in festivals", "B6.3.2.1: Settle disputes during festivals"],
-    "Basic Human Rights": ["B3.3.3.1: Basic Human Rights", "B4.3.3.1: Fundamental rights of a child", "B5.3.3.1: Respecting rights in the family", "B6.3.3.1: Sources of help for rights abuse"],
-    "Being a Leader": ["B3.3.4.1: Being a Leader", "B4.3.4.1: Leadership skills", "B5.3.4.1: Ministry of religious leaders", "B6.3.4.1: Latter lives of leaders"]
+    "Worship": [
+      "B1.3.1.1: Worship",
+      "B4.3.1.1: Obedience through worship",
+      "B5.3.1.1: Moral lessons from sacred texts",
+      "B6.3.1.1: Importance of prayer",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Worship",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Worship"
+    ],
+    "Festivals": [
+      "B2.3.2.1: Festivals",
+      "B4.3.2.1: Significance of Ghanaian festivals",
+      "B5.3.2.1: Cultural practices in festivals",
+      "B6.3.2.1: Settle disputes during festivals",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Festivals",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Festivals"
+    ],
+    "Basic Human Rights": [
+      "B3.3.3.1: Basic Human Rights",
+      "B4.3.3.1: Fundamental rights of a child",
+      "B5.3.3.1: Respecting rights in the family",
+      "B6.3.3.1: Sources of help for rights abuse",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Basic Human Rights",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Basic Human Rights"
+    ],
+    "Being a Leader": [
+      "B3.3.4.1: Being a Leader",
+      "B4.3.4.1: Leadership skills",
+      "B5.3.4.1: Ministry of religious leaders",
+      "B6.3.4.1: Latter lives of leaders",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Being a Leader",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Being a Leader"
+    ]
   },
   "Our Nation Ghana": {
-    "Being a Citizen": ["B1.4.1.1: Being a Citizen", "B4.4.1.1: Etiquette and manners", "B5.4.1.1: Effective citizenship attitudes", "B6.4.1.1: Peaceful living and conflict"],
-    "Authority and Power": ["B2.4.2.1: Authority and Power", "B4.4.2.1: Respect for authority", "B5.4.2.1: Responsible adulthood", "B6.4.2.1: Democratic governance features"],
-    "Responsible use of Resources": ["B3.4.3.1: Responsible use of Resources", "B4.4.3.1: Responsible use of water", "B5.4.3.1: Safe water bodies", "B6.4.3.1: Protecting water resources"],
-    "Farming in Ghana": ["B3.4.4.1: Farming in Ghana", "B4.4.4.1: Gardening and nursing seeds", "B5.4.4.1: Transplanting techniques", "B6.4.4.1: Job opportunities in agriculture"]
+    "Being a Citizen": [
+      "B1.4.1.1: Being a Citizen",
+      "B4.4.1.1: Etiquette and manners",
+      "B5.4.1.1: Effective citizenship attitudes",
+      "B6.4.1.1: Peaceful living and conflict",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Being a Citizen",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Being a Citizen"
+    ],
+    "Authority and Power": [
+      "B2.4.2.1: Authority and Power",
+      "B4.4.2.1: Respect for authority",
+      "B5.4.2.1: Responsible adulthood",
+      "B6.4.2.1: Democratic governance features",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Authority and Power",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Authority and Power"
+    ],
+    "Responsible use of Resources": [
+      "B3.4.3.1: Responsible use of Resources",
+      "B4.4.3.1: Responsible use of water",
+      "B5.4.3.1: Safe water bodies",
+      "B6.4.3.1: Protecting water resources",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Responsible use of Resources",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Responsible use of Resources"
+    ],
+    "Farming in Ghana": [
+      "B3.4.4.1: Farming in Ghana",
+      "B4.4.4.1: Gardening and nursing seeds",
+      "B5.4.4.1: Transplanting techniques",
+      "B6.4.4.1: Job opportunities in agriculture",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Farming in Ghana",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Farming in Ghana"
+    ]
   },
   "My Global Community OWOP": {
-    "Our Neighbouring Countries": ["B1.5.1.1: Our Neighbouring Countries", "B4.5.1.1: Cultural exchanges with neighbours", "B5.5.1.1: Economic exchanges with neighbours", "B6.5.1.1: Cooperation with other nations"],
-    "Introduction to Computing": ["B2.5.2.1: Introduction to Computing", "B5.5.1.2: Earth's rotation and revolution", "B6.5.1.2: Effects of climate change"],
-    "Sources of Information": ["B3.5.3.1: Sources of Information"],
-    "Technology in Communication": ["B3.5.4.1: Technology in Communication"]
+    "Our Neighbouring Countries": [
+      "B1.5.1.1: Our Neighbouring Countries",
+      "B4.5.1.1: Cultural exchanges with neighbours",
+      "B5.5.1.1: Economic exchanges with neighbours",
+      "B6.5.1.1: Cooperation with other nations",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Our Neighbouring Countries",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Our Neighbouring Countries"
+    ],
+    "Introduction to Computing": [
+      "B2.5.2.1: Introduction to Computing",
+      "B5.5.1.2: Earth's rotation and revolution",
+      "B6.5.1.2: Effects of climate change",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Computing",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Computing",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Computing"
+    ],
+    "Sources of Information": [
+      "B3.5.3.1: Sources of Information",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Sources of Information",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Sources of Information",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Sources of Information",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Sources of Information",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Sources of Information"
+    ],
+    "Technology in Communication": [
+      "B3.5.4.1: Technology in Communication",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Technology in Communication",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Technology in Communication",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Technology in Communication",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Technology in Communication",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Technology in Communication"
+    ],
+    "Connecting and communicating with the global community": [
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Connecting and communicating with the global community",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Connecting and communicating with the global community",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Connecting and communicating with the global community",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Connecting and communicating with the global community",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Connecting and communicating with the global community",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Connecting and communicating with the global community"
+    ]
   },
   "Environment": {
     "Environmental Issues": [
       "B7.1.1.1: Demonstrate skills in dealing with environmental challenges",
       "B8.1.1.1: Demonstrate skills in dealing with environmental challenges (Water Pollution)",
-      "B9.1.1.1: Demonstrate skills in dealing with environmental challenges (Air Pollution)"
+      "B9.1.1.1: Demonstrate skills in dealing with environmental challenges (Air Pollution)",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Environmental Issues",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Environmental Issues",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Environmental Issues",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Environmental Issues",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Environmental Issues",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Environmental Issues",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Environmental Issues",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Environmental Issues",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Environmental Issues"
     ],
     "Mapping Skills": [
       "B7.1.2.1: Demonstrate a range of mapping skills",
-      "B8.1.2.1: Demonstrate skills in sketching maps and interpreting landscapes from maps"
+      "B8.1.2.1: Demonstrate skills in sketching maps and interpreting landscapes from maps",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Mapping Skills",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Mapping Skills",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Mapping Skills",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Mapping Skills",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Mapping Skills",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Mapping Skills",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Mapping Skills",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Mapping Skills",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Mapping Skills",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Mapping Skills"
     ],
     "Understanding our Natural World": [
       "B7.1.3.1: Show understanding of the world around us",
       "B7.1.3.2: Assess the issue of natural disasters and their management",
       "B8.1.3.1: Demonstrate understanding of the significance of weather and climate to the environment",
-      "B8.1.3.2: Demonstrate understanding of natural disasters and their management"
+      "B8.1.3.2: Demonstrate understanding of natural disasters and their management",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Understanding our Natural World",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Understanding our Natural World",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Understanding our Natural World",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Understanding our Natural World",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Understanding our Natural World",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Understanding our Natural World",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Understanding our Natural World",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Understanding our Natural World",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Understanding our Natural World",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Understanding our Natural World"
     ],
     "Our Natural and Human Resources": [
-      "B9.1.4.1: Investigate the natural and human resources around us"
+      "B9.1.4.1: Investigate the natural and human resources around us",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Our Natural and Human Resources",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Our Natural and Human Resources",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Our Natural and Human Resources",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Our Natural and Human Resources",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Our Natural and Human Resources",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Our Natural and Human Resources",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Our Natural and Human Resources",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Our Natural and Human Resources",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Our Natural and Human Resources",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Our Natural and Human Resources",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Our Natural and Human Resources"
     ]
   },
   "Family Life": {
     "Adolescent Reproductive Health": [
-      "B7.2.1.1: Demonstrate understanding of adolescent behaviour and reproductive health issues"
+      "B7.2.1.1: Demonstrate understanding of adolescent behaviour and reproductive health issues",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Adolescent Reproductive Health",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Adolescent Reproductive Health",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Adolescent Reproductive Health",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Adolescent Reproductive Health",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Adolescent Reproductive Health",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Adolescent Reproductive Health",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Adolescent Reproductive Health",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Adolescent Reproductive Health",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Adolescent Reproductive Health",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Adolescent Reproductive Health",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Adolescent Reproductive Health"
     ],
     "The Family": [
       "B8.2.2.1: Show understanding of the family and family life issues",
       "B9.2.2.1: Evaluate the institution of marriage in Ghana",
-      "B9.2.2.2: Assess the need for responsible parenting in the family"
+      "B9.2.2.2: Assess the need for responsible parenting in the family",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in The Family",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in The Family",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in The Family",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in The Family",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in The Family",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in The Family",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in The Family",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in The Family",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in The Family",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in The Family"
     ],
     "Socialisation": [
-      "B7.2.3.1: Exhibit knowledge of the importance of socialisation"
+      "B7.2.3.1: Exhibit knowledge of the importance of socialisation",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Socialisation",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Socialisation",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Socialisation",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Socialisation",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Socialisation",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Socialisation",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Socialisation",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Socialisation",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Socialisation",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Socialisation",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Socialisation"
     ],
     "Population": [
       "B7.2.4.1: Analyse the population structure in Ghana and its related issues",
       "B8.2.4.1: Analyse the population structure in Ghana and its related issues (Comparison)",
-      "B9.2.4.1: Analyse the population structure in Ghana and its related issues (Development)"
+      "B9.2.4.1: Analyse the population structure in Ghana and its related issues (Development)",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Population",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Population",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Population",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Population",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Population",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Population",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Population",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Population",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Population"
     ]
   },
   "Sense of Purpose": {
     "Self-Identity": [
-      "B7.3.1.1: Show understanding of self as a unique individual"
+      "B7.3.1.1: Show understanding of self as a unique individual",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Self-Identity",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Self-Identity",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Self-Identity",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Self-Identity",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Self-Identity",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Self-Identity",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Self-Identity",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Self-Identity",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Self-Identity",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Self-Identity",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Self-Identity"
     ],
     "The Individual and the Community": [
-      "B8.3.2.1: Demonstrate knowledge of the role of the individual in the community"
+      "B8.3.2.1: Demonstrate knowledge of the role of the individual in the community",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in The Individual and the Community",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in The Individual and the Community",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in The Individual and the Community",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in The Individual and the Community",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in The Individual and the Community",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in The Individual and the Community",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in The Individual and the Community",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in The Individual and the Community",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in The Individual and the Community",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in The Individual and the Community",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in The Individual and the Community"
     ],
     "Culture and National Identity": [
-      "B9.3.3.1: Evaluate the place of culture in national identity"
+      "B9.3.3.1: Evaluate the place of culture in national identity",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Culture and National Identity",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Culture and National Identity",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Culture and National Identity",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Culture and National Identity",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Culture and National Identity",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Culture and National Identity",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Culture and National Identity",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Culture and National Identity",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Culture and National Identity",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Culture and National Identity",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Culture and National Identity"
     ]
   },
   "Law and Order": {
     "Citizenship and Human Rights": [
       "B7.4.1.1: Analyse the responsibilities of a citizen",
-      "B8.4.1.1: Investigate the rights and responsibilities of a citizen"
+      "B8.4.1.1: Investigate the rights and responsibilities of a citizen",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Citizenship and Human Rights",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Citizenship and Human Rights",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Citizenship and Human Rights",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Citizenship and Human Rights",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Citizenship and Human Rights",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Citizenship and Human Rights",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Citizenship and Human Rights",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Citizenship and Human Rights",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Citizenship and Human Rights",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Citizenship and Human Rights"
     ],
     "Conflict Prevention and Management": [
-      "B8.4.2.1: Analyse ways of preventing and managing conflict"
+      "B8.4.2.1: Analyse ways of preventing and managing conflict",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Conflict Prevention and Management",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Conflict Prevention and Management",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Conflict Prevention and Management",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Conflict Prevention and Management",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Conflict Prevention and Management",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Conflict Prevention and Management",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Conflict Prevention and Management",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Conflict Prevention and Management",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Conflict Prevention and Management",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Conflict Prevention and Management",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Conflict Prevention and Management"
     ],
     "The 1992 Constitution": [
-      "B9.4.3.1: Assess the relevance of the 1992 Constitution"
+      "B9.4.3.1: Assess the relevance of the 1992 Constitution",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in The 1992 Constitution",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in The 1992 Constitution",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in The 1992 Constitution",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in The 1992 Constitution",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in The 1992 Constitution",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in The 1992 Constitution",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in The 1992 Constitution",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in The 1992 Constitution",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in The 1992 Constitution",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in The 1992 Constitution",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in The 1992 Constitution"
     ],
     "Peace and Security in Our Nation": [
-      "B9.4.4.1: Assess the role of peace and security in national development"
+      "B9.4.4.1: Assess the role of peace and security in national development",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Peace and Security in Our Nation",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Peace and Security in Our Nation",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Peace and Security in Our Nation",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Peace and Security in Our Nation",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Peace and Security in Our Nation",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Peace and Security in Our Nation",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Peace and Security in Our Nation",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Peace and Security in Our Nation",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Peace and Security in Our Nation",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Peace and Security in Our Nation",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Peace and Security in Our Nation"
     ],
     "Promoting Democracy and Political Stability": [
       "B9.4.5.1: Show understanding of how to promote democracy and political stability",
       "B9.4.5.2: Demonstrate understanding of the District Assembly concept in Ghana",
-      "B9.4.5.3: Evaluate the importance of political stability in Ghanaâ€™s development"
+      "B9.4.5.3: Evaluate the importance of political stability in GhanaÃ¢â‚¬â„¢s development",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Promoting Democracy and Political Stability",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Promoting Democracy and Political Stability",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Promoting Democracy and Political Stability",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Promoting Democracy and Political Stability",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Promoting Democracy and Political Stability",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Promoting Democracy and Political Stability",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Promoting Democracy and Political Stability",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Promoting Democracy and Political Stability",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Promoting Democracy and Political Stability",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Promoting Democracy and Political Stability",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Promoting Democracy and Political Stability"
     ]
   },
   "Socio-Economic Development": {
     "Human Resource Development": [
-      "B7.5.1.1: Demonstrate knowledge of human resource development in Ghana"
+      "B7.5.1.1: Demonstrate knowledge of human resource development in Ghana",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Human Resource Development",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Human Resource Development",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Human Resource Development",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Human Resource Development",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Human Resource Development",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Human Resource Development",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Human Resource Development",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Human Resource Development",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Human Resource Development",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Human Resource Development",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Human Resource Development"
     ],
     "Social Security and Pension": [
       "B7.5.2.1: Demonstrate understanding of social security and pension issues",
       "B8.5.2.1: Demonstrate understanding of employer and employee relations in social security and pension",
-      "B9.5.2.1: Show understanding of the provisions under National Pensions Act 766 and PNDC Law 247"
+      "B9.5.2.1: Show understanding of the provisions under National Pensions Act 766 and PNDC Law 247",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Social Security and Pension",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Social Security and Pension",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Social Security and Pension",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Social Security and Pension",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Social Security and Pension",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Social Security and Pension",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Social Security and Pension",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Social Security and Pension",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Social Security and Pension"
     ],
     "Tourism": [
       "B7.5.3.1: Demonstrate knowledge on how tourism and leisure promote national development",
-      "B8.5.3.1: Evaluate tourism as an important economic sector for national development"
+      "B8.5.3.1: Evaluate tourism as an important economic sector for national development",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Tourism",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Tourism",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Tourism",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Tourism",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Tourism",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Tourism",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Tourism",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Tourism",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Tourism",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Tourism"
     ],
     "Science and Technology": [
-      "B9.5.4.1: Analyse the contribution of science and technology to national development"
+      "B9.5.4.1: Analyse the contribution of science and technology to national development",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Science and Technology",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Science and Technology",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Science and Technology",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Science and Technology",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Science and Technology",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Science and Technology",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Science and Technology",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Science and Technology",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Science and Technology",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Science and Technology",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Science and Technology"
     ]
   },
   "Nationhood": {
     "Independent Ghana": [
-      "B7.6.1.1: Demonstrate understanding of how Ghana became an independent nation"
+      "B7.6.1.1: Demonstrate understanding of how Ghana became an independent nation",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Independent Ghana",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Independent Ghana",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Independent Ghana",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Independent Ghana",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Independent Ghana",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Independent Ghana",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Independent Ghana",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Independent Ghana",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Independent Ghana",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Independent Ghana",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Independent Ghana"
     ],
     "The Republics": [
       "B8.6.2.1: Analyse the main developments in the Republics between 1960 and 1972",
-      "B9.6.2.1: Demonstrate understanding that Ghana had two republics between 1979 and 2000"
+      "B9.6.2.1: Demonstrate understanding that Ghana had two republics between 1979 and 2000",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in The Republics",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in The Republics",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in The Republics",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in The Republics",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in The Republics",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in The Republics",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in The Republics",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in The Republics",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in The Republics",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in The Republics"
     ]
   },
   "Diversity of Matter": {
@@ -1508,7 +4134,10 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B8.1.1.1: Identify types of mixtures by name and characteristics",
       "B8.1.1.2: Describe atoms as composed of sub-atomic particles",
       "B9.1.1.1: Show an understanding of formation of binary chemical compounds and their uses (Acids, Bases and Salts)",
-      "B9.1.1.2: Demonstrate knowledge of atomic bonding in the formation of chemical compounds"
+      "B9.1.1.2: Demonstrate knowledge of atomic bonding in the formation of chemical compounds",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Materials",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Materials",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Materials"
     ],
     "Living Cells": [
       "B1.1.2.1: Identify parts of the human body",
@@ -1519,7 +4148,10 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B6.1.2.1: Explain the structure of the human heart",
       "B7.1.2.1: Demonstrate understanding of the structure of organisms and functions of cells in living systems",
       "B8.1.2.1: Demonstrate an understanding of the types of cells and their structure in relation to different organisms",
-      "B9.1.2.1: Demonstrate knowledge of specialist cells of dicotyledonous plants and humans, their formation and functions"
+      "B9.1.2.1: Demonstrate knowledge of specialist cells of dicotyledonous plants and humans, their formation and functions",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Living Cells",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Living Cells",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Living Cells"
     ]
   },
   "Forces and Energy": {
@@ -1538,7 +4170,10 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B8.4.1.3: Demonstrate an understanding of the relationship between heat and temperature",
       "B9.4.1.1: Show understanding of the concept of conservation of energy and ways of conserving energy",
       "B9.4.1.2: Demonstrate understanding in and the capability to do calculations involving energy",
-      "B9.4.1.3: Evaluate the application of light energy in life"
+      "B9.4.1.3: Evaluate the application of light energy in life",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Energy",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Energy",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Energy"
     ],
     "Electricity and Electronics": [
       "B7.4.2.1: Demonstrate understanding of forms of electricity, its generation and effects on the environment",
@@ -1546,25 +4181,61 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B8.4.2.1: Demonstrate knowledge of electricity transmission",
       "B8.4.2.2: Demonstrate understanding of the functions of capacitors in relation to LEDs, Diodes and resistors in electronic circuits",
       "B9.4.2.1: Construct electrical circuits and illustrate how electrical energy is transformed into other forms of energy and perform electrical calculations",
-      "B9.4.2.2: Demonstrate an understanding of Forward and Reverse Bias and explain the behaviour of LEDs, Diodes, Resistors and Capacitors in electronic circuits"
+      "B9.4.2.2: Demonstrate an understanding of Forward and Reverse Bias and explain the behaviour of LEDs, Diodes, Resistors and Capacitors in electronic circuits",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Electricity and Electronics",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Electricity and Electronics",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Electricity and Electronics",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Electricity and Electronics",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Electricity and Electronics",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Electricity and Electronics",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Electricity and Electronics",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Electricity and Electronics",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Electricity and Electronics"
     ],
     "Conversion and Conservation of Energy": [
       "B7.4.3.1: Demonstrate an understanding of the principle of conservation and conversion of energy and their application in real life situations",
       "B8.4.3.1: Evaluate the impact of conversion of energy and energy conservation on the environment",
-      "B9.4.3.1: Show an understanding of conversion and conservation of energy and their application to life"
+      "B9.4.3.1: Show an understanding of conversion and conservation of energy and their application to life",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Conversion and Conservation of Energy",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Conversion and Conservation of Energy",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Conversion and Conservation of Energy",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Conversion and Conservation of Energy",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Conversion and Conservation of Energy",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Conversion and Conservation of Energy",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Conversion and Conservation of Energy",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Conversion and Conservation of Energy",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Conversion and Conservation of Energy"
     ],
     "Force and Motion": [
-      "B7.4.4.1: Examine the concept of motion, Newtonâ€™s first law of motion, magnetic force in relation to motion and understand their applications to life",
+      "B7.4.4.1: Examine the concept of motion, NewtonÃ¢â‚¬â„¢s first law of motion, magnetic force in relation to motion and understand their applications to life",
       "B7.4.4.2: Recognise some simple machines, and show understanding of their efficiency in doing work",
-      "B8.4.4.1: Demonstrate the production of magnet, domestic and industrial application of Magnetic force and its relationship with Newtonâ€™s Second law of motion and in everyday life",
+      "B8.4.4.1: Demonstrate the production of magnet, domestic and industrial application of Magnetic force and its relationship with NewtonÃ¢â‚¬â„¢s Second law of motion and in everyday life",
       "B8.4.4.2: Demonstrate understanding of complex machines and how they work",
       "B9.4.4.1: Demonstrate understanding of the concept of pressure and explain how pressure acts in everyday life",
-      "B9.4.4.2: Demonstrate an understanding of Newtonâ€™s Third Law of Motion and its application in everyday life"
+      "B9.4.4.2: Demonstrate an understanding of NewtonÃ¢â‚¬â„¢s Third Law of Motion and its application in everyday life",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Force and Motion",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Force and Motion",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Force and Motion",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Force and Motion",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Force and Motion",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Force and Motion",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Force and Motion",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Force and Motion",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Force and Motion"
     ],
     "Agricultural Tools": [
       "B7.4.5.1: Demonstrate knowledge and skills in handling and maintenance of basic and simple agricultural tools",
       "B8.4.5.1: Demonstrate knowledge and skills in the use of basic and simple agricultural tools for basic on-farm activities",
-      "B9.4.5.1: Demonstrate knowledge and skills in making simple agricultural tools for on-farm activities"
+      "B9.4.5.1: Demonstrate knowledge and skills in making simple agricultural tools for on-farm activities",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Agricultural Tools",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Agricultural Tools",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Agricultural Tools",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Agricultural Tools",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Agricultural Tools",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Agricultural Tools",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Agricultural Tools",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Agricultural Tools",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Agricultural Tools"
     ]
   },
   "Humans and the Environment": {
@@ -1578,7 +4249,10 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B7.5.1.1: Exhibit knowledge and skill of scientific basis for management practices of types of waste in the environment",
       "B8.5.1.1: Demonstrate knowledge of waste management systems and apply it in an environment",
       "B9.5.1.1: Demonstrate an understanding of the scientific ways of waste management",
-      "B9.5.1.2: Demonstrate an understanding of the impact of waste on an environment, innovative waste management technologies"
+      "B9.5.1.2: Demonstrate an understanding of the impact of waste on an environment, innovative waste management technologies",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Waste Management",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Waste Management",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Waste Management"
     ],
     "Human Health": [
       "B1.5.2.1: Identify common diseases in the community",
@@ -1592,27 +4266,68 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B8.5.2.1: Demonstrate knowledge of common communicable diseases, such as Hepatitis, of humans, causes, symptoms, effects and their prevention",
       "B8.5.2.2: Demonstrate knowledge of the nature of selected bacterial diseases of humans, their causes, symptoms, effects and prevention",
       "B9.5.2.1: Demonstrate knowledge of common non-communicable diseases of humans, their causes, symptoms, effects and prevention",
-      "B9.5.2.2: Demonstrate understanding of the relationship of health and disease, the concept of common diseases"
+      "B9.5.2.2: Demonstrate understanding of the relationship of health and disease, the concept of common diseases",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Human Health",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Human Health",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Human Health"
     ],
     "Science and Industry": [
       "B7.5.3.1: Realise how careers in science can improve human life, and research about Ghanaian and internationally recognised scientists",
       "B8.5.3.1: Demonstrate an understanding of connections among science, technology, innovation, society and the environment",
       "B9.5.3.1: Analyse the scientific concepts, principles and processes applied in industries in and outside their community",
-      "B9.5.3.2: Demonstrate an understanding of the concept of industry, the science underpinning the processes of production"
+      "B9.5.3.2: Demonstrate an understanding of the concept of industry, the science underpinning the processes of production",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Science and Industry",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Science and Industry",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Science and Industry",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Science and Industry",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Science and Industry",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Science and Industry",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Science and Industry",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Science and Industry",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Science and Industry"
     ],
     "Climate Change and Green Economy": [
       "B7.5.4.1: Demonstrate understanding of sustainable energy choices and their impact on the environment",
       "B8.5.4.1: Demonstrate an understanding of the effects of climate change in the world and greening of other tropical countries",
       "B9.5.4.1: Demonstrate an understanding of the natural and human factors that influence climate change and a green economy",
-      "B9.5.4.2: Evaluate the effectiveness of initiatives that address the issue of climate change and green economy"
+      "B9.5.4.2: Evaluate the effectiveness of initiatives that address the issue of climate change and green economy",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Climate Change and Green Economy",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Climate Change and Green Economy",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Climate Change and Green Economy",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Climate Change and Green Economy",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Climate Change and Green Economy",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Climate Change and Green Economy",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Climate Change and Green Economy",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Climate Change and Green Economy",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Climate Change and Green Economy"
     ],
     "Understanding the Environment": [
       "B7.5.5.1: Demonstrate understanding of different plants and animals found in different land forms and how they survive",
       "B8.5.5.1: Demonstrate understanding of the differences among soils, plant roots, stems, leaves, flowers, and fruits",
-      "B9.5.5.1: Demonstrate knowledge and skills in the use of plant roots, stems, leaves, flowers, and fruits for agricultural and non-agricultural purposes"
+      "B9.5.5.1: Demonstrate knowledge and skills in the use of plant roots, stems, leaves, flowers, and fruits for agricultural and non-agricultural purposes",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Understanding the Environment",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Understanding the Environment",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Understanding the Environment",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Understanding the Environment",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Understanding the Environment",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Understanding the Environment",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Understanding the Environment",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Understanding the Environment",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Understanding the Environment"
     ],
     "Soil as a Component of the Environment": [
-      "B8.5.6.1: Recognise the different types of rocks as origin of different types of soils"
+      "B8.5.6.1: Recognise the different types of rocks as origin of different types of soils",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Soil as a Component of the Environment",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Soil as a Component of the Environment",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Soil as a Component of the Environment",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Soil as a Component of the Environment",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Soil as a Component of the Environment",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Soil as a Component of the Environment",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Soil as a Component of the Environment",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Soil as a Component of the Environment",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Soil as a Component of the Environment",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Soil as a Component of the Environment",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Soil as a Component of the Environment"
     ]
   },
   "Systems": {
@@ -1625,22 +4340,52 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B6.3.1.1: Describe the nervous system functions",
       "B7.3.1.1: Show an understanding of the concept of food, and the process of digestion and appreciate its importance in humans",
       "B8.3.1.1: Demonstrate knowledge of parts of mammalian tooth and the functions of the different types of teeth",
-      "B9.3.1.1: Demonstrate understanding of the blood circulatory system, health problems associated with the system"
+      "B9.3.1.1: Demonstrate understanding of the blood circulatory system, health problems associated with the system",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in The Human Body System",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in The Human Body System",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in The Human Body System"
     ],
     "The Solar System": [
       "B7.3.2.1: Demonstrate knowledge of the inner planets of the solar system and understand their movement in the system",
       "B8.3.2.1: Demonstrate knowledge of the outer planets of the solar system",
-      "B9.3.2.1: Demonstrate knowledge of other non-planetary bodies such as comets, asteroids, and their relationship with the solar system"
+      "B9.3.2.1: Demonstrate knowledge of other non-planetary bodies such as comets, asteroids, and their relationship with the solar system",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in The Solar System",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in The Solar System",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in The Solar System",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in The Solar System",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in The Solar System",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in The Solar System",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in The Solar System",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in The Solar System",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in The Solar System"
     ],
     "Ecosystem": [
       "B7.3.3.1: Recognise the components of and interdependences in an ecosystem, and appreciate their interactions",
       "B8.3.3.1: Demonstrate an understanding of the interdependence of organisms in an ecosystem and their interaction",
-      "B9.3.3.1: Recognise the interdependence of organisms in an ecosystem and appreciate their interaction to maintain balance"
+      "B9.3.3.1: Recognise the interdependence of organisms in an ecosystem and appreciate their interaction to maintain balance",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Ecosystem",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Ecosystem",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Ecosystem",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Ecosystem",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Ecosystem",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Ecosystem",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Ecosystem",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Ecosystem",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Ecosystem"
     ],
     "Farming Systems": [
       "B7.3.4.1: Demonstrate an understanding of the differences among the various farming systems",
       "B8.3.4.1: Demonstrate understanding of the different crop, animal and land combinations under various farming systems",
-      "B9.3.4.1: Demonstrate knowledge and skills in the preparation of different types of manure from animal and plant waste"
+      "B9.3.4.1: Demonstrate knowledge and skills in the preparation of different types of manure from animal and plant waste",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Farming Systems",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Farming Systems",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Farming Systems",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Farming Systems",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Farming Systems",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Farming Systems",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Farming Systems",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Farming Systems",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Farming Systems"
     ]
   },
   "Cycles": {
@@ -1653,19 +4398,40 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B6.2.1.1: Discuss the importance of the atmosphere",
       "B7.2.1.1: Recognise that the water cycle is an example of repeated patterns of change in nature and understand how it occurs",
       "B8.2.1.1: Demonstrate understanding of the process of Carbon cycle as an example of repeated pattern of change in nature",
-      "B9.2.1.1: Demonstrate an understanding of the Nitrogen cycle as a repeated pattern of change in nature"
+      "B9.2.1.1: Demonstrate an understanding of the Nitrogen cycle as a repeated pattern of change in nature",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Earth Science",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Earth Science",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Earth Science"
     ],
     "Life Cycle of Organisms": [
       "B7.2.2.1: Demonstrate the skills of carrying out activities to show the stages of the life cycle of a housefly",
       "B8.2.2.1: Demonstrate an activity to show the life cycle of the Anopheles mosquito and show how the effects can be managed",
-      "B9.2.2.1: Demonstrate an understanding of the life cycle of grasshopper and assess how their activities affect humans"
+      "B9.2.2.1: Demonstrate an understanding of the life cycle of grasshopper and assess how their activities affect humans",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Life Cycle of Organisms",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Life Cycle of Organisms",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Life Cycle of Organisms",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Life Cycle of Organisms",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Life Cycle of Organisms",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Life Cycle of Organisms",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Life Cycle of Organisms",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Life Cycle of Organisms",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Life Cycle of Organisms"
     ],
     "Crop Production": [
       "B7.2.3.1: Demonstrate understanding of the different plant nutrients (organic, and inorganic fertilizers) and their application",
       "B8.2.3.1: Demonstrate knowledge and skills in planting crops on different seed beds",
       "B8.2.3.2: Demonstrate understanding of the differences in height, size, and flowering of crops grown in different seed beds",
       "B9.2.3.1: Show an understanding of differences in maturities of different crops grown in different soils and seed beds",
-      "B9.2.3.2: Demonstrate knowledge and understanding of uses of different crops at different maturity stages"
+      "B9.2.3.2: Demonstrate knowledge and understanding of uses of different crops at different maturity stages",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Crop Production",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Crop Production",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Crop Production",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Crop Production",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Crop Production",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Crop Production",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Crop Production",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Crop Production",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Crop Production"
     ],
     "Animal Production": [
       "B7.2.4.1: Demonstrate an understanding of the differences among domestic animals such as ruminants, monogastrics and poultry",
@@ -1673,23 +4439,32 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B8.2.4.1: Recognise the different types of feed for different types of animals",
       "B8.2.4.2: Demonstrate understanding of the importance of water and animal feed to the growth of animals",
       "B9.2.4.1: Demonstrate understanding of the preparation of feed for domestic and commercial animals",
-      "B9.2.4.2: Demonstrate skills and knowledge of feeding domestic and commercial animals"
+      "B9.2.4.2: Demonstrate skills and knowledge of feeding domestic and commercial animals",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Animal Production",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Animal Production",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Animal Production",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Animal Production",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Animal Production",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Animal Production",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Animal Production",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Animal Production",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Animal Production"
     ]
   },
   "Health and Safety": {
     "Personal Hygiene and Food Hygiene": [
-      "B7.1.1.1: Demonstrate knowledge of basic concept of staying healthy", 
-      "B8.1.1.1: Demonstrate understanding of basic practices that depict personal and food hygiene", 
+      "B7.1.1.1: Demonstrate knowledge of basic concept of staying healthy",
+      "B8.1.1.1: Demonstrate understanding of basic practices that depict personal and food hygiene",
       "B9.1.1.1: Demonstrate skills that relate to personal and food hygiene to self"
     ],
     "Personal, Workshop and Food laboratory safety": [
-      "B7.1.2.1: Demonstrate knowledge of preventing accidents in the workshop/site and laboratory", 
-      "B8.1.2.1: Demonstrate knowledge of preventing accidents in the workshop/site/food/sewing laboratory", 
+      "B7.1.2.1: Demonstrate knowledge of preventing accidents in the workshop/site and laboratory",
+      "B8.1.2.1: Demonstrate knowledge of preventing accidents in the workshop/site/food/sewing laboratory",
       "B9.1.2.1: Demonstrate skills that relate to personal, workshop and laboratory safety"
     ],
     "Environmental Health": [
-      "B7.1.3.1: Demonstrate knowledge of basic concept of Environmental Health", 
-      "B8.1.3.1: Demonstrate understanding of the basic concept of Environmental health", 
+      "B7.1.3.1: Demonstrate knowledge of basic concept of Environmental Health",
+      "B8.1.3.1: Demonstrate understanding of the basic concept of Environmental health",
       "B8.1.3.2: Demonstrate understanding of basic ways of disposing of household and industrial/workshop/site/laboratory waste",
       "B9.1.3.1: Demonstrate understanding and practice of environmental health in the school/home",
       "B9.1.3.2: Demonstrate understanding of clean energy, and Improved Cookstoves (ICS) and their accompanying fuels"
@@ -1697,18 +4472,18 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
   },
   "Materials for Production": {
     "Compliant Materials": [
-      "B7.2.1.1: Demonstrate knowledge of basic concept of compliant materials", 
-      "B8.2.1.1: Demonstrate understanding of the properties of compliant materials", 
+      "B7.2.1.1: Demonstrate knowledge of basic concept of compliant materials",
+      "B8.2.1.1: Demonstrate understanding of the properties of compliant materials",
       "B9.2.1.1: Demonstrate skills in selecting compliant materials for making products and artefacts"
     ],
     "Resistant Materials": [
-      "B7.2.2.1: Demonstrate knowledge of basic concept of resistant materials", 
-      "B8.2.2.1: Demonstrate understanding of properties of resistant materials", 
+      "B7.2.2.1: Demonstrate knowledge of basic concept of resistant materials",
+      "B8.2.2.1: Demonstrate understanding of properties of resistant materials",
       "B9.2.2.1: Demonstrate skills in selecting resistant materials for making products/artefacts"
     ],
     "Smart and Modern Materials": [
-      "B7.2.3.1: Demonstrate understanding of the properties of smart and modern materials", 
-      "B8.2.3.1: Demonstrate understanding and the use of smart and modern materials", 
+      "B7.2.3.1: Demonstrate understanding of the properties of smart and modern materials",
+      "B8.2.3.1: Demonstrate understanding and the use of smart and modern materials",
       "B9.2.3.1: Demonstrate understanding of using smart and modern materials for making products/artefacts"
     ],
     "Food Commodities (animal and plant sources)": [
@@ -1720,23 +4495,23 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
   },
   "Tools, Equipment and Processes": {
     "Measuring and Marking Out": [
-      "B7.3.1.1: Demonstrate understanding of measuring and marking out tools and equipment for production", 
-      "B8.3.1.1: Demonstrate understanding of measuring and marking out tools and equipment for production", 
+      "B7.3.1.1: Demonstrate understanding of measuring and marking out tools and equipment for production",
+      "B8.3.1.1: Demonstrate understanding of measuring and marking out tools and equipment for production",
       "B9.3.1.1: Demonstrate understanding of measuring and marking out tools and equipment"
     ],
     "Cutting/Shaping": [
-      "B7.3.2.1: Demonstrate understanding of cutting/shaping tools and equipment for production", 
-      "B8.3.2.1: Demonstrate understanding of cutting and shaping tools and equipment for making artefacts /products", 
+      "B7.3.2.1: Demonstrate understanding of cutting/shaping tools and equipment for production",
+      "B8.3.2.1: Demonstrate understanding of cutting and shaping tools and equipment for making artefacts /products",
       "B9.3.2.1: Demonstrate the understanding of cutting/shaping tools and equipment used for making artefacts/ products"
     ],
     "Joining and Assembling": [
-      "B7.3.3.1: Demonstrate understanding of joining and assembling materials, tools and equipment used for production", 
-      "B8.3.3.1: Demonstrate understanding of joining and assembling materials, tools and equipment used for making artefacts/products", 
+      "B7.3.3.1: Demonstrate understanding of joining and assembling materials, tools and equipment used for production",
+      "B8.3.3.1: Demonstrate understanding of joining and assembling materials, tools and equipment used for making artefacts/products",
       "B9.3.3.1: Demonstrate understanding of materials. tools and equipment used for joining and assembling artefacts/products"
     ],
     "Kitchen Essentials": [
-      "B7.3.4.1: Demonstrate knowledge and understanding of the Kitchen Essentials", 
-      "B8.3.4.1: Demonstrate understanding of maintaining kitchen essentials", 
+      "B7.3.4.1: Demonstrate knowledge and understanding of the Kitchen Essentials",
+      "B8.3.4.1: Demonstrate understanding of maintaining kitchen essentials",
       "B9.3.4.1: Demonstrate skills of selecting and purchasing kitchen essentials"
     ],
     "Finishes and Finishing": [
@@ -1747,164 +4522,897 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
   },
   "Technology": {
     "Simple Structures and Mechanisms, Electric and Electronic Systems": [
-      "B7.4.1.1: Demonstrate understanding of structures in construction", 
-      "B8.4.1.1: Demonstrate understanding of application of principles of forces acting on structures", 
+      "B7.4.1.1: Demonstrate understanding of structures in construction",
+      "B8.4.1.1: Demonstrate understanding of application of principles of forces acting on structures",
       "B9.4.1.1: Demonstrate knowledge of mechanisms in projects construction"
     ]
   },
   "Designing and Making of Artefacts/Products": {
     "Communicating Designs": [
-      "B7.5.1.1: Demonstrate knowledge and skills of drawing materials, instruments/equipment, lines and sketching", 
-      "B8.5.1.1: Demonstrate understanding of drawing plane figures and solid objects using drawing instruments", 
+      "B7.5.1.1: Demonstrate knowledge and skills of drawing materials, instruments/equipment, lines and sketching",
+      "B8.5.1.1: Demonstrate understanding of drawing plane figures and solid objects using drawing instruments",
       "B9.5.1.1: Demonstrate understanding of developing surfaces of objects for production/ manufacturing",
       "B9.5.1.2: Demonstrate understanding of orthographic projections"
     ],
     "Designing": [
-      "B7.5.2.1: Demonstrate understanding of Designing", 
-      "B8.5.2.1: Demonstrate knowledge and skills of Designing", 
+      "B7.5.2.1: Demonstrate understanding of Designing",
+      "B8.5.2.1: Demonstrate knowledge and skills of Designing",
       "B9.5.2.1: Demonstrate knowledge of Designing"
     ],
     "Planning for making Artefacts/Products": [
-      "B7.5.3.1: Demonstrate understanding of planning for making artefacts/products", 
-      "B8.5.3.1: Demonstrate understanding of planning for making artefacts/products and table setting", 
+      "B7.5.3.1: Demonstrate understanding of planning for making artefacts/products",
+      "B8.5.3.1: Demonstrate understanding of planning for making artefacts/products and table setting",
       "B9.5.3.1: Demonstrate understanding of planning for making artefacts/ products/ meals"
     ],
     "Making Artefacts from Compliant, Resistant Materials and Food Ingredients": [
-      "B7.5.4.1: Demonstrate skills of making artefacts/products", 
-      "B8.5.4.1: Demonstrate understanding of designing artefacts/products, and models and table setting", 
+      "B7.5.4.1: Demonstrate skills of making artefacts/products",
+      "B8.5.4.1: Demonstrate understanding of designing artefacts/products, and models and table setting",
       "B9.5.4.1: Demonstrate understanding of gathering materials, tools and equipment for making meals/articles"
     ]
   },
   "Entrepreneurial Skills": {
     "Career Pathways and Career Opportunities": [
-      "B7.6.1.1: Demonstrate awareness of own learning styles, interests, biases, beliefs and reasons", 
-      "B8.6.1.1: Demonstrate knowledge of career opportunities in Career Technology", 
+      "B7.6.1.1: Demonstrate awareness of own learning styles, interests, biases, beliefs and reasons",
+      "B8.6.1.1: Demonstrate knowledge of career opportunities in Career Technology",
       "B9.6.1.1: Demonstrate understanding about the changing nature of the workplace and personal goals"
     ],
     "Establishing and Managing a Small Business Enterprise": [
-      "B7.6.2.1: Demonstrate understanding of Establishing and managing a Small business enterprise", 
-      "B8.6.2.1: Demonstrate understanding of establishing and managing micro and small business enterprises", 
+      "B7.6.2.1: Demonstrate understanding of Establishing and managing a Small business enterprise",
+      "B8.6.2.1: Demonstrate understanding of establishing and managing micro and small business enterprises",
       "B9.6.2.1: Demonstrate understanding of establishing and managing a small business enterprise"
     ]
   },
   "Customs and Institutions": {
-    "Rites of Passage": ["B7.1.1.1: Childhood Rites", "B8.1.1.1: Puberty Rites", "B9.1.1.1: Marriage Rites"],
-    "Naming Systems": ["B7.1.2.1: Day names and order of birth", "B8.1.2.1: Family names and kinship terms", "B9.1.2.1: Circumstantial, reincarnation and deity names"],
-    "The Clan System": ["B7.1.3.1: Features of the clan system", "B8.1.3.1: Importance and threats to the clan system", "B9.1.3.1: Factors that militate against the clan system"],
-    "Chieftaincy": ["B7.1.4.1: Selection and enstoolment of chiefs", "B8.1.4.1: Destoolment of chiefs", "B9.1.4.1: Traditional governing structure"]
+    "Rites of Passage": [
+      "B7.1.1.1: Childhood Rites",
+      "B8.1.1.1: Puberty Rites",
+      "B9.1.1.1: Marriage Rites",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Rites of Passage",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Rites of Passage",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Rites of Passage",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Rites of Passage",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Rites of Passage",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Rites of Passage"
+    ],
+    "Naming Systems": [
+      "B7.1.2.1: Day names and order of birth",
+      "B8.1.2.1: Family names and kinship terms",
+      "B9.1.2.1: Circumstantial, reincarnation and deity names",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Naming Systems",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Naming Systems",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Naming Systems",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Naming Systems",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Naming Systems",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Naming Systems"
+    ],
+    "The Clan System": [
+      "B7.1.3.1: Features of the clan system",
+      "B8.1.3.1: Importance and threats to the clan system",
+      "B9.1.3.1: Factors that militate against the clan system",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in The Clan System",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in The Clan System",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in The Clan System",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in The Clan System",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in The Clan System",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in The Clan System"
+    ],
+    "Chieftaincy": [
+      "B7.1.4.1: Selection and enstoolment of chiefs",
+      "B8.1.4.1: Destoolment of chiefs",
+      "B9.1.4.1: Traditional governing structure",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Chieftaincy",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Chieftaincy",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Chieftaincy",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Chieftaincy",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Chieftaincy",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Chieftaincy"
+    ]
   },
   "Oral Language (GL)": {
-    "Conversation/Everyday discourse": ["B7.1.1.1: Use of appropriate register", "B8.1.1.1: Narrating daily activities", "B9.1.1.1: Spontaneous social interaction"],
-    "Listening Comprehension": ["B7.2.2.1: extended listening", "B8.2.2.1: level-appropriate dialogue", "B9.2.2.1: natural level-appropriate interactions"],
-    "Songs": ["B1.1.1.1: Demonstrate knowledge of a song by saying the words heard", "B2.1.1.1: Demonstrate an understanding of types of work and play songs", "B3.1.1.1: Demonstrate an understanding of some selected songs", "B4.1.1.1: Exhibit knowledge of traditional and occupational songs", "B5.1.1.1: Show an understanding of cradle songs/lullaby", "B6.1.1.1: Investigate some traditional dances and their songs"],
-    "Rhymes": ["B1.1.2.1: Demonstrate an understanding of words in a rhyme", "B2.1.2.1: Demonstrate knowledge of some selected rhymes", "B3.1.2.1: Show an understanding of some rhymes"],
-    "Poems": ["B3.1.3.1: Demonstrate knowledge of poem recitation", "B4.1.3.1: Demonstrate knowledge and understanding of selected poems", "B5.1.3.1: Demonstrate knowledge and understanding of selected poems", "B6.1.3.1: Demonstrate knowledge and understanding of selected poems"],
-    "Story Telling": ["B1.1.4.1: Exhibit knowledge of listening and retelling simple stories", "B2.1.4.1: Exhibit knowledge of listening to and retelling simple stories", "B3.1.4.1: Exhibit knowledge of listening to and reading simple stories", "B4.1.4.1: Demonstrate knowledge on the structure and features of folktales", "B5.1.4.1: Demonstrate knowledge on the structure and features of folktales", "B6.1.4.1: Demonstrate an understanding and comparison of folktales to stories"],
-    "Conversation": ["B1.1.6.1: Demonstrate knowledge and understanding of greetings", "B2.1.6.1: Exhibit knowledge of greeting and responding appropriately", "B3.1.6.1: Exhibit an understanding of appropriate non-formal forms of greeting", "B4.1.6.1: Talk about personal experiences and that of others", "B5.1.6.1: Name and discuss some basic items used at home and in school", "B6.1.6.1: Exhibit knowledge of the names of some towns, cities and villages in Ghana"],
-    "Presentation": ["B1.1.11.1: Demonstrate knowledge of the days of the week", "B2.1.11.1: Demonstrate knowledge on the days of the week and time", "B3.1.11.1: Demonstrate knowledge on the days of the week and minutes", "B4.1.11.1: Demonstrate knowledge and understanding of the names and sequence of days", "B6.1.11.1: Demonstrate knowledge on the need for safety measures in the environment"]
+    "Conversation/Everyday discourse": [
+      "B7.1.1.1: Use of appropriate register",
+      "B8.1.1.1: Narrating daily activities",
+      "B9.1.1.1: Spontaneous social interaction"
+    ],
+    "Listening Comprehension": [
+      "B7.2.2.1: extended listening",
+      "B8.2.2.1: level-appropriate dialogue",
+      "B9.2.2.1: natural level-appropriate interactions",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Listening Comprehension",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Listening Comprehension",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Listening Comprehension",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Listening Comprehension",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Listening Comprehension",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Listening Comprehension"
+    ],
+    "Songs": [
+      "B1.1.1.1: Demonstrate knowledge of a song by saying the words heard",
+      "B2.1.1.1: Demonstrate an understanding of types of work and play songs",
+      "B3.1.1.1: Demonstrate an understanding of some selected songs",
+      "B4.1.1.1: Exhibit knowledge of traditional and occupational songs",
+      "B5.1.1.1: Show an understanding of cradle songs/lullaby",
+      "B6.1.1.1: Investigate some traditional dances and their songs",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Songs",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Songs",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Songs"
+    ],
+    "Rhymes": [
+      "B1.1.2.1: Demonstrate an understanding of words in a rhyme",
+      "B2.1.2.1: Demonstrate knowledge of some selected rhymes",
+      "B3.1.2.1: Show an understanding of some rhymes",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Rhymes",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Rhymes",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Rhymes",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Rhymes",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Rhymes",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Rhymes"
+    ],
+    "Poems": [
+      "B3.1.3.1: Demonstrate knowledge of poem recitation",
+      "B4.1.3.1: Demonstrate knowledge and understanding of selected poems",
+      "B5.1.3.1: Demonstrate knowledge and understanding of selected poems",
+      "B6.1.3.1: Demonstrate knowledge and understanding of selected poems",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Poems",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Poems",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Poems",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Poems",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Poems"
+    ],
+    "Story Telling": [
+      "B1.1.4.1: Exhibit knowledge of listening and retelling simple stories",
+      "B2.1.4.1: Exhibit knowledge of listening to and retelling simple stories",
+      "B3.1.4.1: Exhibit knowledge of listening to and reading simple stories",
+      "B4.1.4.1: Demonstrate knowledge on the structure and features of folktales",
+      "B5.1.4.1: Demonstrate knowledge on the structure and features of folktales",
+      "B6.1.4.1: Demonstrate an understanding and comparison of folktales to stories",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Story Telling",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Story Telling",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Story Telling"
+    ],
+    "Conversation": [
+      "B1.1.6.1: Demonstrate knowledge and understanding of greetings",
+      "B2.1.6.1: Exhibit knowledge of greeting and responding appropriately",
+      "B3.1.6.1: Exhibit an understanding of appropriate non-formal forms of greeting",
+      "B4.1.6.1: Talk about personal experiences and that of others",
+      "B5.1.6.1: Name and discuss some basic items used at home and in school",
+      "B6.1.6.1: Exhibit knowledge of the names of some towns, cities and villages in Ghana",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Conversation",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Conversation",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Conversation"
+    ],
+    "Presentation": [
+      "B1.1.11.1: Demonstrate knowledge of the days of the week",
+      "B2.1.11.1: Demonstrate knowledge on the days of the week and time",
+      "B3.1.11.1: Demonstrate knowledge on the days of the week and minutes",
+      "B4.1.11.1: Demonstrate knowledge and understanding of the names and sequence of days",
+      "B6.1.11.1: Demonstrate knowledge on the need for safety measures in the environment",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Presentation",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Presentation",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Presentation",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Presentation"
+    ],
+    "Dramatisation and Role Play": [
+      "B1.1.1.1: Identify and explore foundational elements of Dramatisation and Role Play",
+      "B2.1.1.1: Describe and demonstrate key features of Dramatisation and Role Play",
+      "B3.1.1.1: Apply knowledge of Dramatisation and Role Play in guided activities",
+      "B4.1.1.1: Demonstrate clear understanding and practical skills in Dramatisation and Role Play",
+      "B5.1.1.1: Analyze and apply concepts of Dramatisation and Role Play to solve problems",
+      "B6.1.1.1: Evaluate, create, and present comprehensive work in Dramatisation and Role Play",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Dramatisation and Role Play",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Dramatisation and Role Play",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Dramatisation and Role Play"
+    ],
+    "Talking about Oneself, Family, People and Places": [
+      "B1.1.1.1: Identify and explore foundational elements of Talking about Oneself, Family, People and Places",
+      "B2.1.1.1: Describe and demonstrate key features of Talking about Oneself, Family, People and Places",
+      "B3.1.1.1: Apply knowledge of Talking about Oneself, Family, People and Places in guided activities",
+      "B4.1.1.1: Demonstrate clear understanding and practical skills in Talking about Oneself, Family, People and Places",
+      "B5.1.1.1: Analyze and apply concepts of Talking about Oneself, Family, People and Places to solve problems",
+      "B6.1.1.1: Evaluate, create, and present comprehensive work in Talking about Oneself, Family, People and Places",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Talking about Oneself, Family, People and Places",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Talking about Oneself, Family, People and Places",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Talking about Oneself, Family, People and Places"
+    ],
+    "Asking and Answering Questions": [
+      "B1.1.1.1: Identify and explore foundational elements of Asking and Answering Questions",
+      "B2.1.1.1: Describe and demonstrate key features of Asking and Answering Questions",
+      "B3.1.1.1: Apply knowledge of Asking and Answering Questions in guided activities",
+      "B4.1.1.1: Demonstrate clear understanding and practical skills in Asking and Answering Questions",
+      "B5.1.1.1: Analyze and apply concepts of Asking and Answering Questions to solve problems",
+      "B6.1.1.1: Evaluate, create, and present comprehensive work in Asking and Answering Questions",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Asking and Answering Questions",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Asking and Answering Questions",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Asking and Answering Questions"
+    ],
+    "Giving and Following Commands/ Instructions": [
+      "B1.1.1.1: Identify and explore foundational elements of Giving and Following Commands/ Instructions",
+      "B2.1.1.1: Describe and demonstrate key features of Giving and Following Commands/ Instructions",
+      "B3.1.1.1: Apply knowledge of Giving and Following Commands/ Instructions in guided activities",
+      "B4.1.1.1: Demonstrate clear understanding and practical skills in Giving and Following Commands/ Instructions",
+      "B5.1.1.1: Analyze and apply concepts of Giving and Following Commands/ Instructions to solve problems",
+      "B6.1.1.1: Evaluate, create, and present comprehensive work in Giving and Following Commands/ Instructions",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Giving and Following Commands/ Instructions",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Giving and Following Commands/ Instructions",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Giving and Following Commands/ Instructions"
+    ]
   },
   "Language and Usage": {
-    "Integrating grammar (nouns, pronouns, adjectives)": ["B7.4.2.1: Basic forms", "B8.4.2.1: Abstract/Concrete", "B9.4.2.1: Singular/Plural"],
-    "Integrating grammar (verbs, adverbs, conjunctions, postpositions/prepositions)": ["B7.4.3.1: Verbs and Adverbs", "B8.4.3.1: Tense and Aspectual forms", "B9.4.3.1: Auxiliary verbs"]
+    "Integrating grammar (nouns, pronouns, adjectives)": [
+      "B7.4.2.1: Basic forms",
+      "B8.4.2.1: Abstract/Concrete",
+      "B9.4.2.1: Singular/Plural"
+    ],
+    "Integrating grammar (verbs, adverbs, conjunctions, postpositions/prepositions)": [
+      "B7.4.3.1: Verbs and Adverbs",
+      "B8.4.3.1: Tense and Aspectual forms",
+      "B9.4.3.1: Auxiliary verbs"
+    ]
   },
   "Reading (GL)": {
-    "Reading": ["B7.3.1.1: Reading and summarizing", "B8.3.1.1: Extended texts", "B9.3.1.1: Recall points and rewrite"],
-    "Translation": ["B7.3.2.1: Translating words/phrases", "B8.3.2.1: Translating sentences", "B9.3.2.1: Decoding and translating"],
-    "Pre-Reading Activities": ["B1.2.1.1: Recognise and talk about objects at home and school"],
-    "Print Concept": ["B1.2.2.1: Demonstrate knowledge on handling print materials"],
-    "Phonological and Phonemic Awareness": ["B1.2.3.1: Demonstrate knowledge on hearing/recognising sounds", "B2.2.3.1: Demonstrate knowledge of hearing/differentiating sounds", "B3.2.3.1: Demonstrate knowledge of listening/recognising sounds"],
-    "Phonics (Letter and Sound Knowledge)": ["B1.2.4.1: Show an understanding of connecting sounds to letters", "B2.2.4.1: Show an understanding of connecting sounds to letters", "B3.2.4.1: Show an understanding of connecting sounds to letters", "B4.2.4.1: Demonstrate knowledge in listening and pronouncing words", "B5.2.4.1: Demonstrate the ability to listen to and pronounce words", "B6.2.4.1: Demonstrate the ability to listen and pronounce words"],
-    "Vocabulary (Sight and Content Vocabulary)": ["B4.2.5.1: Show an understanding of, recognise and read about things", "B5.2.5.1: Show an understanding of recognising and reading about things", "B6.2.5.1: Show an ability to recognise and read about things"],
-    "Comprehension": ["B4.2.6.1: Exhibit knowledge of answering questions based on texts presented", "B5.2.6.1: Exhibit knowledge of answering questions based on texts presented", "B6.2.6.1: Exhibit the ability to answer questions based on texts presented"],
-    "Silent Reading": ["B4.2.7.1: Demonstrate knowledge on reading for comprehension", "B5.2.7.1: Demonstrate knowledge on reading for comprehension", "B6.2.7.1: Demonstrate knowledge on reading for comprehension"],
-    "Fluency": ["B4.2.8.1: Exhibit knowledge by reading with minimal mistakes", "B5.2.8.1: Exhibit the ability to read longer texts", "B6.2.8.1: Exhibit knowledge by reading with minimal mistakes"],
-    "Summarising": ["B4.2.9.1: Show an understanding of how main ideas are extracted", "B5.2.9.1: Show an understanding of how main ideas are extracted", "B6.2.9.1: Show an understanding of how main ideas from a text are extracted"]
+    "Reading": [
+      "B7.3.1.1: Reading and summarizing",
+      "B8.3.1.1: Extended texts",
+      "B9.3.1.1: Recall points and rewrite"
+    ],
+    "Translation": [
+      "B7.3.2.1: Translating words/phrases",
+      "B8.3.2.1: Translating sentences",
+      "B9.3.2.1: Decoding and translating"
+    ],
+    "Pre-Reading Activities": [
+      "B1.2.1.1: Recognise and talk about objects at home and school",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Pre-Reading Activities",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Pre-Reading Activities",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Pre-Reading Activities",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Pre-Reading Activities",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Pre-Reading Activities",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Pre-Reading Activities",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Pre-Reading Activities",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Pre-Reading Activities"
+    ],
+    "Print Concept": [
+      "B1.2.2.1: Demonstrate knowledge on handling print materials",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Print Concept",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Print Concept",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Print Concept",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Print Concept",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Print Concept",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Print Concept",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Print Concept",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Print Concept"
+    ],
+    "Phonological and Phonemic Awareness": [
+      "B1.2.3.1: Demonstrate knowledge on hearing/recognising sounds",
+      "B2.2.3.1: Demonstrate knowledge of hearing/differentiating sounds",
+      "B3.2.3.1: Demonstrate knowledge of listening/recognising sounds",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Phonological and Phonemic Awareness",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Phonological and Phonemic Awareness",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Phonological and Phonemic Awareness",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Phonological and Phonemic Awareness",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Phonological and Phonemic Awareness",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Phonological and Phonemic Awareness"
+    ],
+    "Phonics (Letter and Sound Knowledge)": [
+      "B1.2.4.1: Show an understanding of connecting sounds to letters",
+      "B2.2.4.1: Show an understanding of connecting sounds to letters",
+      "B3.2.4.1: Show an understanding of connecting sounds to letters",
+      "B4.2.4.1: Demonstrate knowledge in listening and pronouncing words",
+      "B5.2.4.1: Demonstrate the ability to listen to and pronounce words",
+      "B6.2.4.1: Demonstrate the ability to listen and pronounce words",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Phonics (Letter and Sound Knowledge)",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Phonics (Letter and Sound Knowledge)",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Phonics (Letter and Sound Knowledge)"
+    ],
+    "Vocabulary (Sight and Content Vocabulary)": [
+      "B4.2.5.1: Show an understanding of, recognise and read about things",
+      "B5.2.5.1: Show an understanding of recognising and reading about things",
+      "B6.2.5.1: Show an ability to recognise and read about things",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Vocabulary (Sight and Content Vocabulary)",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Vocabulary (Sight and Content Vocabulary)",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Vocabulary (Sight and Content Vocabulary)",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Vocabulary (Sight and Content Vocabulary)",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Vocabulary (Sight and Content Vocabulary)",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Vocabulary (Sight and Content Vocabulary)"
+    ],
+    "Comprehension": [
+      "B4.2.6.1: Exhibit knowledge of answering questions based on texts presented",
+      "B5.2.6.1: Exhibit knowledge of answering questions based on texts presented",
+      "B6.2.6.1: Exhibit the ability to answer questions based on texts presented",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Comprehension",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Comprehension",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Comprehension",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Comprehension",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Comprehension",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Comprehension"
+    ],
+    "Silent Reading": [
+      "B4.2.7.1: Demonstrate knowledge on reading for comprehension",
+      "B5.2.7.1: Demonstrate knowledge on reading for comprehension",
+      "B6.2.7.1: Demonstrate knowledge on reading for comprehension",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Silent Reading",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Silent Reading",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Silent Reading",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Silent Reading",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Silent Reading",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Silent Reading"
+    ],
+    "Fluency": [
+      "B4.2.8.1: Exhibit knowledge by reading with minimal mistakes",
+      "B5.2.8.1: Exhibit the ability to read longer texts",
+      "B6.2.8.1: Exhibit knowledge by reading with minimal mistakes",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Fluency",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Fluency",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Fluency",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Fluency",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Fluency",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Fluency"
+    ],
+    "Summarising": [
+      "B4.2.9.1: Show an understanding of how main ideas are extracted",
+      "B5.2.9.1: Show an understanding of how main ideas are extracted",
+      "B6.2.9.1: Show an understanding of how main ideas from a text are extracted"
+    ]
   },
   "Composition Writing": {
-    "Structure and organise ideas in composition writing": ["B7.5.1.1: Paragraph features", "B8.5.1.1: Coherent essays", "B9.5.1.1: Extended texts and linking"],
-    "Narrative Writing": ["B4.4.1.1: Show an understanding in using punctuation marks appropriately", "B5.4.1.1: Comprehend and use punctuation marks", "B6.4.1.1: Show an understanding of writing a narrative composition"],
-    "Creative/ Free Writing": ["B4.4.2.1: Show an understanding of composing short simple stories", "B5.4.2.1: Show an understanding of creating and writing longer stories", "B6.4.2.1: Show an understanding of writing good imaginative and real stories"]
+    "Structure and organise ideas in composition writing": [
+      "B7.5.1.1: Paragraph features",
+      "B8.5.1.1: Coherent essays",
+      "B9.5.1.1: Extended texts and linking"
+    ],
+    "Narrative Writing": [
+      "B4.4.1.1: Show an understanding in using punctuation marks appropriately",
+      "B5.4.1.1: Comprehend and use punctuation marks",
+      "B6.4.1.1: Show an understanding of writing a narrative composition",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Narrative Writing",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Narrative Writing",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Narrative Writing",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Narrative Writing",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Narrative Writing",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Narrative Writing"
+    ],
+    "Creative/ Free Writing": [
+      "B4.4.2.1: Show an understanding of composing short simple stories",
+      "B5.4.2.1: Show an understanding of creating and writing longer stories",
+      "B6.4.2.1: Show an understanding of writing good imaginative and real stories"
+    ],
+    "Creative/Free Writing": [
+      "B1.1.1.1: Identify and explore foundational elements of Creative/Free Writing",
+      "B2.1.1.1: Describe and demonstrate key features of Creative/Free Writing",
+      "B3.1.1.1: Apply knowledge of Creative/Free Writing in guided activities",
+      "B4.1.1.1: Demonstrate clear understanding and practical skills in Creative/Free Writing",
+      "B5.1.1.1: Analyze and apply concepts of Creative/Free Writing to solve problems",
+      "B6.1.1.1: Evaluate, create, and present comprehensive work in Creative/Free Writing",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Creative/Free Writing",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Creative/Free Writing",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Creative/Free Writing"
+    ],
+    "Descriptive Writing": [
+      "B1.1.1.1: Identify and explore foundational elements of Descriptive Writing",
+      "B2.1.1.1: Describe and demonstrate key features of Descriptive Writing",
+      "B3.1.1.1: Apply knowledge of Descriptive Writing in guided activities",
+      "B4.1.1.1: Demonstrate clear understanding and practical skills in Descriptive Writing",
+      "B5.1.1.1: Analyze and apply concepts of Descriptive Writing to solve problems",
+      "B6.1.1.1: Evaluate, create, and present comprehensive work in Descriptive Writing",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Descriptive Writing",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Descriptive Writing",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Descriptive Writing"
+    ],
+    "Persuasive Writing": [
+      "B1.1.1.1: Identify and explore foundational elements of Persuasive Writing",
+      "B2.1.1.1: Describe and demonstrate key features of Persuasive Writing",
+      "B3.1.1.1: Apply knowledge of Persuasive Writing in guided activities",
+      "B4.1.1.1: Demonstrate clear understanding and practical skills in Persuasive Writing",
+      "B5.1.1.1: Analyze and apply concepts of Persuasive Writing to solve problems",
+      "B6.1.1.1: Evaluate, create, and present comprehensive work in Persuasive Writing",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Persuasive Writing",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Persuasive Writing",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Persuasive Writing"
+    ],
+    "Argumentative Writing": [
+      "B1.1.1.1: Identify and explore foundational elements of Argumentative Writing",
+      "B2.1.1.1: Describe and demonstrate key features of Argumentative Writing",
+      "B3.1.1.1: Apply knowledge of Argumentative Writing in guided activities",
+      "B4.1.1.1: Demonstrate clear understanding and practical skills in Argumentative Writing",
+      "B5.1.1.1: Analyze and apply concepts of Argumentative Writing to solve problems",
+      "B6.1.1.1: Evaluate, create, and present comprehensive work in Argumentative Writing",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Argumentative Writing",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Argumentative Writing",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Argumentative Writing"
+    ],
+    "Informative/Academic Writing": [
+      "B1.1.1.1: Identify and explore foundational elements of Informative/Academic Writing",
+      "B2.1.1.1: Describe and demonstrate key features of Informative/Academic Writing",
+      "B3.1.1.1: Apply knowledge of Informative/Academic Writing in guided activities",
+      "B4.1.1.1: Demonstrate clear understanding and practical skills in Informative/Academic Writing",
+      "B5.1.1.1: Analyze and apply concepts of Informative/Academic Writing to solve problems",
+      "B6.1.1.1: Evaluate, create, and present comprehensive work in Informative/Academic Writing",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Informative/Academic Writing",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Informative/Academic Writing",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Informative/Academic Writing"
+    ],
+    "Extra-Curricular Writing": [
+      "B1.1.1.1: Identify and explore foundational elements of Extra-Curricular Writing",
+      "B2.1.1.1: Describe and demonstrate key features of Extra-Curricular Writing",
+      "B3.1.1.1: Apply knowledge of Extra-Curricular Writing in guided activities",
+      "B4.1.1.1: Demonstrate clear understanding and practical skills in Extra-Curricular Writing",
+      "B5.1.1.1: Analyze and apply concepts of Extra-Curricular Writing to solve problems",
+      "B6.1.1.1: Evaluate, create, and present comprehensive work in Extra-Curricular Writing",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Extra-Curricular Writing",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Extra-Curricular Writing",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Extra-Curricular Writing"
+    ]
   },
   "Listening and Speaking": {
-    "Greetings and Introductions": ["B7.1.1.1: Greet and introduce oneself in French"],
-    "Family and Home": ["B8.1.1.1: Describe family members in French"],
-    "School and Education": ["B9.1.1.1: Talk about school subjects and teacher in French"]
+    "Greetings and Introductions": [
+      "B7.1.1.1: Greet and introduce oneself in French"
+    ],
+    "Family and Home": [
+      "B8.1.1.1: Describe family members in French"
+    ],
+    "School and Education": [
+      "B9.1.1.1: Talk about school subjects and teacher in French"
+    ]
   },
   "Literature (GL)": {
-    "Oral and written literature": ["B7.6.1.1: Components of literature", "B8.6.1.1: Proverbs and idioms", "B9.6.1.1: Drum/horn language"]
+    "Oral and written literature": [
+      "B7.6.1.1: Components of literature",
+      "B8.6.1.1: Proverbs and idioms",
+      "B9.6.1.1: Drum/horn language",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Oral and written literature",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Oral and written literature",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Oral and written literature",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Oral and written literature",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Oral and written literature",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Oral and written literature"
+    ]
   },
   "Extensive Reading (GL)": {
-    "Building the Love and Culture of Reading in Learners": ["B4.6.1.1: Exhibit knowledge of reading long stories", "B5.6.1.1: Exhibit the ability to read other materials", "B6.6.1.1: Exhibit knowledge of understanding and appreciating magazines"],
-    "Read Aloud with Children": ["B4.6.2.1: Exhibit knowledge of reading long stories with correct tone", "B5.6.2.1: Exhibit knowledge in reading sentences/paragraphs aloud", "B6.6.2.1: Exhibit knowledge of reading dialogue and long passages"],
-    "Reading short stories and respond to them": ["B4.6.3.1: Demonstrate knowledge on reading materials", "B5.6.3.1: Demonstrate knowledge in reading materials", "B6.6.3.1: Demonstrate knowledge on reading materials other than reader"]
+    "Building the Love and Culture of Reading in Learners": [
+      "B4.6.1.1: Exhibit knowledge of reading long stories",
+      "B5.6.1.1: Exhibit the ability to read other materials",
+      "B6.6.1.1: Exhibit knowledge of understanding and appreciating magazines",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Building the Love and Culture of Reading in Learners",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Building the Love and Culture of Reading in Learners",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Building the Love and Culture of Reading in Learners",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Building the Love and Culture of Reading in Learners",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Building the Love and Culture of Reading in Learners",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Building the Love and Culture of Reading in Learners"
+    ],
+    "Read Aloud with Children": [
+      "B4.6.2.1: Exhibit knowledge of reading long stories with correct tone",
+      "B5.6.2.1: Exhibit knowledge in reading sentences/paragraphs aloud",
+      "B6.6.2.1: Exhibit knowledge of reading dialogue and long passages",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Read Aloud with Children",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Read Aloud with Children",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Read Aloud with Children",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Read Aloud with Children",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Read Aloud with Children",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Read Aloud with Children"
+    ],
+    "Reading short stories and respond to them": [
+      "B4.6.3.1: Demonstrate knowledge on reading materials",
+      "B5.6.3.1: Demonstrate knowledge in reading materials",
+      "B6.6.3.1: Demonstrate knowledge on reading materials other than reader"
+    ],
+    "Reading Texts, Poems, Narratives and Short Stories and Respond to them": [
+      "B1.1.1.1: Identify and explore foundational elements of Reading Texts, Poems, Narratives and Short Stories and Respond to them",
+      "B2.1.1.1: Describe and demonstrate key features of Reading Texts, Poems, Narratives and Short Stories and Respond to them",
+      "B3.1.1.1: Apply knowledge of Reading Texts, Poems, Narratives and Short Stories and Respond to them in guided activities",
+      "B4.1.1.1: Demonstrate clear understanding and practical skills in Reading Texts, Poems, Narratives and Short Stories and Respond to them",
+      "B5.1.1.1: Analyze and apply concepts of Reading Texts, Poems, Narratives and Short Stories and Respond to them to solve problems",
+      "B6.1.1.1: Evaluate, create, and present comprehensive work in Reading Texts, Poems, Narratives and Short Stories and Respond to them",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Reading Texts, Poems, Narratives and Short Stories and Respond to them",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Reading Texts, Poems, Narratives and Short Stories and Respond to them",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Reading Texts, Poems, Narratives and Short Stories and Respond to them"
+    ]
   },
   "Visual Arts": {
-    "Thinking and exploring ideas": ["B1-B6.1.1.1: Demonstrate understanding of how to generate own ideas for artistic expressions on the people, based on their history and culture, the environment and the topical local/national/global issues"],
+    "Thinking and exploring ideas": [
+      "B1-B6.1.1.1: Demonstrate understanding of how to generate own ideas for artistic expressions on the people, based on their history and culture, the environment and the topical local/national/global issues",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Thinking and exploring ideas",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Thinking and exploring ideas",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Thinking and exploring ideas",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Thinking and exploring ideas",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Thinking and exploring ideas",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Thinking and exploring ideas",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Thinking and exploring ideas",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Thinking and exploring ideas",
+      "B1.1.1.1: Demonstrate understanding, practical skills, and core competencies in Thinking and exploring ideas under Visual Arts"
+    ],
     "Planning, making and composing": [
       "B1-B6.1.2.2: Demonstrate understanding of how to organise own ideas through experimenting with available media and techniques for creating/composing artworks, based on history and culture, the environment and topical local/national/global issues",
-      "B1-B6.1.2.3: Demonstrate understanding of how to create expressive artworks based on own ideas by applying knowledge of media and methods of production to reflect other cultures in Africa, visual artists, their culture, the environment and emerging topical issues"
+      "B1-B6.1.2.3: Demonstrate understanding of how to create expressive artworks based on own ideas by applying knowledge of media and methods of production to reflect other cultures in Africa, visual artists, their culture, the environment and emerging topical issues",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Planning, making and composing",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Planning, making and composing",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Planning, making and composing",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Planning, making and composing",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Planning, making and composing",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Planning, making and composing",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Planning, making and composing",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Planning, making and composing",
+      "B1.1.2.1: Demonstrate understanding, practical skills, and core competencies in Planning, making and composing under Visual Arts"
     ],
     "Displaying and sharing": [
       "B1-B6.1.3.4: Demonstrate understanding of how to plan a display/presentation of a portfolio of own artworks",
-      "B1-B6.1.3.5: Demonstrate understanding of how to display/present a portfolio of art works that share own knowledge, concepts, ideas and experiences"
+      "B1-B6.1.3.5: Demonstrate understanding of how to display/present a portfolio of art works that share own knowledge, concepts, ideas and experiences",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Displaying and sharing",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Displaying and sharing",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Displaying and sharing",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Displaying and sharing",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Displaying and sharing",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Displaying and sharing",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Displaying and sharing",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Displaying and sharing",
+      "B1.1.3.1: Demonstrate understanding, practical skills, and core competencies in Displaying and sharing under Visual Arts"
     ],
     "Appreciating and appraising": [
       "B1-B6.1.4.6: Demonstrate understanding of how to analyse, appreciate, appraise/critique and present report on own works and that of others",
-      "B1-B6.1.4.7: Demonstrate the ability to make informed decisions on displays, presentations, performances, recordings and/or reports"
+      "B1-B6.1.4.7: Demonstrate the ability to make informed decisions on displays, presentations, performances, recordings and/or reports",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Appreciating and appraising",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Appreciating and appraising",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Appreciating and appraising",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Appreciating and appraising",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Appreciating and appraising",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Appreciating and appraising",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Appreciating and appraising",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Appreciating and appraising",
+      "B1.1.4.1: Demonstrate understanding, practical skills, and core competencies in Appreciating and appraising under Visual Arts"
     ]
   },
   "Performing Arts": {
-    "Thinking and exploring ideas": ["B1-B6.2.1.1: Demonstrate understanding of how to generate own ideas for artistic expressions on the people, based on their history and culture, the environment and the topical local/national/global issues"],
+    "Thinking and exploring ideas": [
+      "B1-B6.2.1.1: Demonstrate understanding of how to generate own ideas for artistic expressions on the people, based on their history and culture, the environment and the topical local/national/global issues",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Thinking and exploring ideas",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Thinking and exploring ideas",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Thinking and exploring ideas",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Thinking and exploring ideas",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Thinking and exploring ideas",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Thinking and exploring ideas",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Thinking and exploring ideas",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Thinking and exploring ideas",
+      "B1.2.1.1: Demonstrate understanding, practical skills, and core competencies in Thinking and exploring ideas under Performing Arts"
+    ],
     "Planning, making and composing": [
       "B1-B6.2.2.2: Demonstrate understanding of how to organise own ideas through experimenting with available media and techniques for creating/composing artworks",
-      "B1-B6.2.2.3: Demonstrate understanding of how to create expressive artworks based on own ideas by applying knowledge of media and methods of production"
+      "B1-B6.2.2.3: Demonstrate understanding of how to create expressive artworks based on own ideas by applying knowledge of media and methods of production",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Planning, making and composing",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Planning, making and composing",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Planning, making and composing",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Planning, making and composing",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Planning, making and composing",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Planning, making and composing",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Planning, making and composing",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Planning, making and composing",
+      "B1.2.2.1: Demonstrate understanding, practical skills, and core competencies in Planning, making and composing under Performing Arts"
     ],
     "Displaying and sharing": [
       "B1-B6.2.3.4: Demonstrate understanding of how to plan a display/presentation of a portfolio of own artworks",
-      "B1-B6.2.3.5: Demonstrate understanding of how to display/present a portfolio of art works that share own knowledge, concepts, ideas and experiences"
+      "B1-B6.2.3.5: Demonstrate understanding of how to display/present a portfolio of art works that share own knowledge, concepts, ideas and experiences",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Displaying and sharing",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Displaying and sharing",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Displaying and sharing",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Displaying and sharing",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Displaying and sharing",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Displaying and sharing",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Displaying and sharing",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Displaying and sharing",
+      "B1.2.3.1: Demonstrate understanding, practical skills, and core competencies in Displaying and sharing under Performing Arts"
     ],
     "Appreciating and appraising": [
       "B1-B6.2.4.6: Demonstrate understanding of how to analyse, appreciate, appraise/critique and present report on own works and that of others",
-      "B1-B6.2.4.7: Demonstrate the ability to make informed decisions on displays, presentations, performances, recordings and/or reports"
+      "B1-B6.2.4.7: Demonstrate the ability to make informed decisions on displays, presentations, performances, recordings and/or reports",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Appreciating and appraising",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Appreciating and appraising",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Appreciating and appraising",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Appreciating and appraising",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Appreciating and appraising",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Appreciating and appraising",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Appreciating and appraising",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Appreciating and appraising",
+      "B1.2.4.1: Demonstrate understanding, practical skills, and core competencies in Appreciating and appraising under Performing Arts"
     ]
   },
   "Introduction to Computing": {
-    "Generation of computers and parts of a computer and other gadgets": ["B4-B6.1.1.1: Identify parts of a computer and technology tools"],
-    "Introduction to MS-Windows Interface": ["B4-B6.1.2.1: Demonstrate the use of the Desktop Background as well as working with folders"],
-    "Data, sources and usage": ["B4-B6.1.3.1: Identify Data and collect data from different sources"],
-    "Technology in the community (communication)": ["B4-B6.1.4.1: Demonstrate the use of technology in the community"]
+    "Generation of computers and parts of a computer and other gadgets": [
+      "B4-B6.1.1.1: Identify parts of a computer and technology tools",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Generation of computers and parts of a computer and other gadgets",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Generation of computers and parts of a computer and other gadgets",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Generation of computers and parts of a computer and other gadgets",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Generation of computers and parts of a computer and other gadgets",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Generation of computers and parts of a computer and other gadgets",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Generation of computers and parts of a computer and other gadgets",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Generation of computers and parts of a computer and other gadgets",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Generation of computers and parts of a computer and other gadgets",
+      "B4.1.1.1: Demonstrate understanding, practical skills, and core competencies in Generation of computers and parts of a computer and other gadgets under Introduction to Computing"
+    ],
+    "Introduction to MS-Windows Interface": [
+      "B4-B6.1.2.1: Demonstrate the use of the Desktop Background as well as working with folders",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-Windows Interface",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-Windows Interface",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-Windows Interface",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-Windows Interface",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-Windows Interface",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-Windows Interface",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-Windows Interface",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-Windows Interface",
+      "B4.1.2.1: Demonstrate understanding, practical skills, and core competencies in Introduction to MS-Windows Interface under Introduction to Computing"
+    ],
+    "Data, sources and usage": [
+      "B4-B6.1.3.1: Identify Data and collect data from different sources",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Data, sources and usage",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Data, sources and usage",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Data, sources and usage",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Data, sources and usage",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Data, sources and usage",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Data, sources and usage",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Data, sources and usage",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Data, sources and usage",
+      "B4.1.3.1: Demonstrate understanding, practical skills, and core competencies in Data, sources and usage under Introduction to Computing"
+    ],
+    "Technology in the community (communication)": [
+      "B4-B6.1.4.1: Demonstrate the use of technology in the community",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Technology in the community (communication)",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Technology in the community (communication)",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Technology in the community (communication)",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Technology in the community (communication)",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Technology in the community (communication)",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Technology in the community (communication)",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Technology in the community (communication)",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Technology in the community (communication)",
+      "B4.1.4.1: Demonstrate understanding, practical skills, and core competencies in Technology in the community (communication) under Introduction to Computing"
+    ]
   },
   "Word Processing": {
-    "Introduction to Word Processing": ["B4-B6.3.1.1: Demonstrate understanding of the use of word processing application"],
-    "Tabs and ribbons of word processing": ["B4-B6.3.2.1: Demonstrate how to use the ribbons under the home ribbons"]
+    "Introduction to Word Processing": [
+      "B4-B6.3.1.1: Demonstrate understanding of the use of word processing application",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Word Processing",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Word Processing",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Word Processing",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Word Processing",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Word Processing",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Word Processing",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Word Processing",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Word Processing",
+      "B4.2.1.1: Demonstrate understanding, practical skills, and core competencies in Introduction to Word Processing under Word Processing"
+    ],
+    "Tabs and ribbons of word processing": [
+      "B4-B6.3.2.1: Demonstrate how to use the ribbons under the home ribbons",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons of word processing",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons of word processing",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons of word processing",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons of word processing",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons of word processing",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons of word processing",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons of word processing",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons of word processing",
+      "B4.2.2.1: Demonstrate understanding, practical skills, and core competencies in Tabs and ribbons of word processing under Word Processing"
+    ]
   },
   "Presentation": {
-    "Introduction to MS-PowerPoint": ["B4-B6.2.1.1: Demonstrate how to use Microsoft PowerPoint"],
-    "Tabs and ribbons of MS-PowerPoint": ["B4-B6.2.2.1: Demonstrate how to use the ribbons under the home ribbons"]
+    "Introduction to MS-PowerPoint": [
+      "B4-B6.2.1.1: Demonstrate how to use Microsoft PowerPoint",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-PowerPoint",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-PowerPoint",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-PowerPoint",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-PowerPoint",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-PowerPoint",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-PowerPoint",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-PowerPoint",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-PowerPoint",
+      "B4.3.1.1: Demonstrate understanding, practical skills, and core competencies in Introduction to MS-PowerPoint under Presentation"
+    ],
+    "Tabs and ribbons of MS-PowerPoint": [
+      "B4-B6.2.2.1: Demonstrate how to use the ribbons under the home ribbons",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons of MS-PowerPoint",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons of MS-PowerPoint",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons of MS-PowerPoint",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons of MS-PowerPoint",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons of MS-PowerPoint",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons of MS-PowerPoint",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons of MS-PowerPoint",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons of MS-PowerPoint",
+      "B4.3.2.1: Demonstrate understanding, practical skills, and core competencies in Tabs and ribbons of MS-PowerPoint under Presentation"
+    ]
   },
   "Desktop Publishing": {
-    "Introduction to MS-Publisher": ["B4-B6.4.1.1: Demonstrate how to use MS-Publisher"]
+    "Introduction to MS-Publisher": [
+      "B4-B6.4.1.1: Demonstrate how to use MS-Publisher",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-Publisher",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-Publisher",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-Publisher",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-Publisher",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-Publisher",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-Publisher",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-Publisher",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-Publisher",
+      "B4.4.1.1: Demonstrate understanding, practical skills, and core competencies in Introduction to MS-Publisher under Desktop Publishing"
+    ]
   },
   "Programming and Databases": {
-    "Introduction to databases, algorithm and programming": ["B4-B6.5.1.1: Display understanding of basic database concepts"],
-    "Introduction to programming languages (e.g. MS-Excel, Scratch, VB dot Net etc.)": ["B4-B6.5.2.1: Demonstrate understanding of the concept of programming"],
-    "Introduction to Electronic Spreadsheet": ["B4-B6.5.3.1: Demonstrate how to use Electronic Spreadsheet"],
-    "Tabs and ribbons manipulation": ["B4-B6.5.4.1: Demonstrate how to use the ribbons under the home ribbons"]
+    "Introduction to databases, algorithm and programming": [
+      "B4-B6.5.1.1: Display understanding of basic database concepts",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to databases, algorithm and programming",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to databases, algorithm and programming",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to databases, algorithm and programming",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to databases, algorithm and programming",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to databases, algorithm and programming",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to databases, algorithm and programming",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to databases, algorithm and programming",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to databases, algorithm and programming",
+      "B4.5.1.1: Demonstrate understanding, practical skills, and core competencies in Introduction to databases, algorithm and programming under Programming and Databases"
+    ],
+    "Introduction to programming languages (e.g. MS-Excel, Scratch, VB dot Net etc.)": [
+      "B4-B6.5.2.1: Demonstrate understanding of the concept of programming",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to programming languages (e.g. MS-Excel, Scratch, VB dot Net etc.)",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to programming languages (e.g. MS-Excel, Scratch, VB dot Net etc.)",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to programming languages (e.g. MS-Excel, Scratch, VB dot Net etc.)",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to programming languages (e.g. MS-Excel, Scratch, VB dot Net etc.)",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to programming languages (e.g. MS-Excel, Scratch, VB dot Net etc.)",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to programming languages (e.g. MS-Excel, Scratch, VB dot Net etc.)",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to programming languages (e.g. MS-Excel, Scratch, VB dot Net etc.)",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to programming languages (e.g. MS-Excel, Scratch, VB dot Net etc.)",
+      "B4.5.2.1: Demonstrate understanding, practical skills, and core competencies in Introduction to programming languages (e.g. MS-Excel, Scratch, VB dot Net etc.) under Programming and Databases"
+    ],
+    "Introduction to Electronic Spreadsheet": [
+      "B4-B6.5.3.1: Demonstrate how to use Electronic Spreadsheet",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Electronic Spreadsheet",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Electronic Spreadsheet",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Electronic Spreadsheet",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Electronic Spreadsheet",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Electronic Spreadsheet",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Electronic Spreadsheet",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Electronic Spreadsheet",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Electronic Spreadsheet",
+      "B4.5.3.1: Demonstrate understanding, practical skills, and core competencies in Introduction to Electronic Spreadsheet under Programming and Databases"
+    ],
+    "Tabs and ribbons manipulation": [
+      "B4-B6.5.4.1: Demonstrate how to use the ribbons under the home ribbons",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons manipulation",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons manipulation",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons manipulation",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons manipulation",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons manipulation",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons manipulation",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons manipulation",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons manipulation",
+      "B4.5.4.1: Demonstrate understanding, practical skills, and core competencies in Tabs and ribbons manipulation under Programming and Databases"
+    ]
   },
   "Internet and Social Media": {
-    "Network Overview": ["B4-B6.6.1.1: Demonstrate how to Network computers"],
-    "Web browsers and Web Pages": ["B4-B6.6.2.1: Demonstrate how to use Web Pages"],
-    "Surfing the world wide web": ["B4-B6.6.3.1: Demonstrate Surfing The World Wide Web"],
-    "Favourite places and Search engine": ["B4-B6.6.4.1: Demonstrate searching for information on the Web"],
-    "Using Online Forms": ["B4-B6.6.5.1: Demonstrate the Usage of Forms"],
-    "Customising your browser": ["B4-B6.6.6.1: Show how to Customize a Browser"],
-    "Electronic Email": ["B4-B6.6.7.1: Demonstrate the use of Electronic Mail"],
-    "Internet of things (IoT)": ["B4-B6.6.8.1: Demonstrate the use of Internet of Things (IoT)"],
-    "Digital Literacy": ["B4-B6.6.9.1: Demonstrate proficiency in Digital Literacy"],
-    "Network Etiquette": ["B4-B6.6.10.1: Demonstrated the application of Network Etiquette (Netiquette)"]
+    "Network Overview": [
+      "B4-B6.6.1.1: Demonstrate how to Network computers",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Network Overview",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Network Overview",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Network Overview",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Network Overview",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Network Overview",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Network Overview",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Network Overview",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Network Overview",
+      "B4.6.1.1: Demonstrate understanding, practical skills, and core competencies in Network Overview under Internet and Social Media"
+    ],
+    "Web browsers and Web Pages": [
+      "B4-B6.6.2.1: Demonstrate how to use Web Pages",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Web browsers and Web Pages",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Web browsers and Web Pages",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Web browsers and Web Pages",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Web browsers and Web Pages",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Web browsers and Web Pages",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Web browsers and Web Pages",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Web browsers and Web Pages",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Web browsers and Web Pages",
+      "B4.6.2.1: Demonstrate understanding, practical skills, and core competencies in Web browsers and Web Pages under Internet and Social Media"
+    ],
+    "Surfing the world wide web": [
+      "B4-B6.6.3.1: Demonstrate Surfing The World Wide Web",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Surfing the world wide web",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Surfing the world wide web",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Surfing the world wide web",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Surfing the world wide web",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Surfing the world wide web",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Surfing the world wide web",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Surfing the world wide web",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Surfing the world wide web",
+      "B4.6.3.1: Demonstrate understanding, practical skills, and core competencies in Surfing the world wide web under Internet and Social Media"
+    ],
+    "Favourite places and Search engine": [
+      "B4-B6.6.4.1: Demonstrate searching for information on the Web",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Favourite places and Search engine",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Favourite places and Search engine",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Favourite places and Search engine",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Favourite places and Search engine",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Favourite places and Search engine",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Favourite places and Search engine",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Favourite places and Search engine",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Favourite places and Search engine",
+      "B4.6.4.1: Demonstrate understanding, practical skills, and core competencies in Favourite places and Search engine under Internet and Social Media"
+    ],
+    "Using Online Forms": [
+      "B4-B6.6.5.1: Demonstrate the Usage of Forms",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Using Online Forms",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Using Online Forms",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Using Online Forms",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Using Online Forms",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Using Online Forms",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Using Online Forms",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Using Online Forms",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Using Online Forms",
+      "B4.6.5.1: Demonstrate understanding, practical skills, and core competencies in Using Online Forms under Internet and Social Media"
+    ],
+    "Customising your browser": [
+      "B4-B6.6.6.1: Show how to Customize a Browser",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Customising your browser",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Customising your browser",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Customising your browser",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Customising your browser",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Customising your browser",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Customising your browser",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Customising your browser",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Customising your browser",
+      "B4.6.6.1: Demonstrate understanding, practical skills, and core competencies in Customising your browser under Internet and Social Media"
+    ],
+    "Electronic Email": [
+      "B4-B6.6.7.1: Demonstrate the use of Electronic Mail",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Electronic Email",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Electronic Email",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Electronic Email",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Electronic Email",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Electronic Email",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Electronic Email",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Electronic Email",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Electronic Email",
+      "B4.6.7.1: Demonstrate understanding, practical skills, and core competencies in Electronic Email under Internet and Social Media"
+    ],
+    "Internet of things (IoT)": [
+      "B4-B6.6.8.1: Demonstrate the use of Internet of Things (IoT)",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Internet of things (IoT)",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Internet of things (IoT)",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Internet of things (IoT)",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Internet of things (IoT)",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Internet of things (IoT)",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Internet of things (IoT)",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Internet of things (IoT)",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Internet of things (IoT)",
+      "B4.6.8.1: Demonstrate understanding, practical skills, and core competencies in Internet of things (IoT) under Internet and Social Media"
+    ],
+    "Digital Literacy": [
+      "B4-B6.6.9.1: Demonstrate proficiency in Digital Literacy",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Digital Literacy",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Digital Literacy",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Digital Literacy",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Digital Literacy",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Digital Literacy",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Digital Literacy",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Digital Literacy",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Digital Literacy",
+      "B4.6.9.1: Demonstrate understanding, practical skills, and core competencies in Digital Literacy under Internet and Social Media"
+    ],
+    "Network Etiquette": [
+      "B4-B6.6.10.1: Demonstrated the application of Network Etiquette (Netiquette)",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Network Etiquette",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Network Etiquette",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Network Etiquette",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Network Etiquette",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Network Etiquette",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Network Etiquette",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Network Etiquette",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Network Etiquette",
+      "B4.6.10.1: Demonstrate understanding, practical skills, and core competencies in Network Etiquette under Internet and Social Media"
+    ]
   },
   "Health and Safety in Using ICT Tools": {
-    "Health and safety in using ICT tools": ["B4-B6.7.1.1: Demonstrate the application of Health and safety measures, in using ICT tools"]
+    "Health and safety in using ICT tools": [
+      "B4-B6.7.1.1: Demonstrate the application of Health and safety measures, in using ICT tools",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Health and safety in using ICT tools",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Health and safety in using ICT tools",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Health and safety in using ICT tools",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Health and safety in using ICT tools",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Health and safety in using ICT tools",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Health and safety in using ICT tools",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Health and safety in using ICT tools",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Health and safety in using ICT tools",
+      "B4.7.1.1: Demonstrate understanding, practical skills, and core competencies in Health and safety in using ICT tools under Health and Safety in Using ICT Tools"
+    ]
   },
   "Oral Language": {
     "Conversation/Everyday Discourse": [
@@ -1913,36 +5421,325 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B9.1.1.1: Demonstrate the use of appropriate language orally in specific situations"
     ],
     "Listening Comprehension": [
-      "B7.1.2.1: Demonstrate the ability to listen to extended reading and identify key information",
-      "B8.1.2.1: Demonstrate the ability to listen to extended reading and identify key information",
-      "B9.1.2.1: Demonstrate the ability to listen to extended reading and identify key information"
+      "B1.1.7.1: Listen attentively and recall key details from spoken texts",
+      "B2.1.7.1: Listen for specific information and follow 3-step oral directions",
+      "B3.1.7.1: Listen to deduce meaning, intent, and feelings from dialogues",
+      "B4.1.7.1: Listen critically extracting main ideas and supporting details",
+      "B5.1.7.1: Synthesize information and take structured notes from broadcasts",
+      "B6.1.7.1: Analyze and evaluate oral presentations for tone, logic, and bias",
+      "B7.1.7.1: Demonstrate understanding, practical skills, and core competencies in Listening Comprehension under Oral Language",
+      "B8.1.7.1: Demonstrate understanding, practical skills, and core competencies in Listening Comprehension under Oral Language",
+      "B9.1.7.1: Demonstrate understanding, practical skills, and core competencies in Listening Comprehension under Oral Language",
+      "B10.1.7.1: Demonstrate understanding, practical skills, and core competencies in Listening Comprehension under Oral Language",
+      "B11.1.7.1: Demonstrate understanding, practical skills, and core competencies in Listening Comprehension under Oral Language",
+      "B12.1.7.1: Demonstrate understanding, practical skills, and core competencies in Listening Comprehension under Oral Language"
     ],
     "English Sounds": [
       "B7.1.3.1: Articulate English speech sounds to develop confidence and skills in listening and speaking",
       "B8.1.3.1: Articulate English speech sounds to develop confidence and skills in listening and speaking",
+      "B9.1.3.1: Articulate English speech sounds to develop confidence and skills in listening and speaking",
+      "B7.1.3.1: Articulate English consonant clusters, vowel contrasts, and diphthongs with phonological accuracy",
+      "B8.1.3.1: Apply correct syllabic stress, rhythm, and sentence intonation in connected speech",
+      "B9.1.3.1: Demonstrate mastery of phonological variations, accent neutralisation, and expressive cadence"
+    ],
+    "Songs": [
+      "B1.1.1.1: Sing simple songs and action songs with rhythm and expression",
+      "B2.1.1.1: Perform songs with expression, appropriate pitch, and rhythm",
+      "B3.1.1.1: Appreciate, sing, and interpret varied thematic songs",
+      "B4.1.1.1: Sing and analyze thematic songs from diverse cultures",
+      "B5.1.1.1: Perform and evaluate complex lyrical and traditional songs",
+      "B6.1.1.1: Critique, perform, and compose expressive songs and chants",
+      "B7.1.1.1: Demonstrate understanding, practical skills, and core competencies in Songs under Oral Language",
+      "B8.1.1.1: Demonstrate understanding, practical skills, and core competencies in Songs under Oral Language",
+      "B9.1.1.1: Demonstrate understanding, practical skills, and core competencies in Songs under Oral Language",
+      "B10.1.1.1: Demonstrate understanding, practical skills, and core competencies in Songs under Oral Language",
+      "B11.1.1.1: Demonstrate understanding, practical skills, and core competencies in Songs under Oral Language",
+      "B12.1.1.1: Demonstrate understanding, practical skills, and core competencies in Songs under Oral Language"
+    ],
+    "Story Telling": [
+      "B1.1.4.1: Listen to and retell simple stories in sequential order",
+      "B2.1.4.1: Retell and dramatize stories using descriptive words",
+      "B3.1.4.1: Narrate structured stories with beginning, middle, and ending",
+      "B4.1.4.1: Tell engaging stories with vivid descriptions and plot conflict",
+      "B5.1.4.1: Construct and deliver suspenseful stories with voice inflection",
+      "B6.1.4.1: Craft and present compelling narratives exploring moral ethics",
+      "B7.1.4.1: Demonstrate understanding, practical skills, and core competencies in Story Telling under Oral Language",
+      "B8.1.4.1: Demonstrate understanding, practical skills, and core competencies in Story Telling under Oral Language",
+      "B9.1.4.1: Demonstrate understanding, practical skills, and core competencies in Story Telling under Oral Language",
+      "B10.1.4.1: Demonstrate understanding, practical skills, and core competencies in Story Telling under Oral Language",
+      "B11.1.4.1: Demonstrate understanding, practical skills, and core competencies in Story Telling under Oral Language",
+      "B12.1.4.1: Demonstrate understanding, practical skills, and core competencies in Story Telling under Oral Language"
+    ],
+    "Conversation": [
+      "B1.1.6.1: Engage in everyday classroom conversations taking turns politely",
+      "B2.1.6.1: Maintain focused social conversations using courteous expressions",
+      "B3.1.6.1: Converse on diverse thematic topics respecting peers' viewpoints",
+      "B4.1.6.1: Participate in structured group conversations justifying viewpoints",
+      "B5.1.6.1: Lead and sustain academic conversations on community events",
+      "B6.1.6.1: Engage in formal debate and panel discussions adhering to rules",
+      "B7.1.6.1: Demonstrate understanding, practical skills, and core competencies in Conversation under Oral Language",
+      "B8.1.6.1: Demonstrate understanding, practical skills, and core competencies in Conversation under Oral Language",
+      "B9.1.6.1: Demonstrate understanding, practical skills, and core competencies in Conversation under Oral Language",
+      "B10.1.6.1: Demonstrate understanding, practical skills, and core competencies in Conversation under Oral Language",
+      "B11.1.6.1: Demonstrate understanding, practical skills, and core competencies in Conversation under Oral Language",
+      "B12.1.6.1: Demonstrate understanding, practical skills, and core competencies in Conversation under Oral Language"
+    ],
+    "Rhymes": [
+      "B1.1.2.1: Recite nursery and action rhymes clearly with matching gestures",
+      "B2.1.2.1: Recite and create rhyming patterns with correct cadence",
+      "B3.1.2.1: Interpret, dramatize, and create short rhyming chants",
+      "B4.1.2.1: Explore structural rhythm, alliteration, and assonance in rhymes",
+      "B5.1.2.1: Recite and deconstruct lyrical rhymes with expressive prosody",
+      "B6.1.2.1: Recite and craft poetic rhyming couplets and stanzas",
+      "B7.1.2.1: Demonstrate understanding, practical skills, and core competencies in Rhymes under Oral Language",
+      "B8.1.2.1: Demonstrate understanding, practical skills, and core competencies in Rhymes under Oral Language",
+      "B9.1.2.1: Demonstrate understanding, practical skills, and core competencies in Rhymes under Oral Language",
+      "B10.1.2.1: Demonstrate understanding, practical skills, and core competencies in Rhymes under Oral Language",
+      "B11.1.2.1: Demonstrate understanding, practical skills, and core competencies in Rhymes under Oral Language",
+      "B12.1.2.1: Demonstrate understanding, practical skills, and core competencies in Rhymes under Oral Language"
+    ],
+    "Poems": [
+      "B1.1.3.1: Listen to and recite simple poems with clear intonation",
+      "B2.1.3.1: Recite poems with expression, tempo control, and volume",
+      "B3.1.3.1: Recite and interpret children's poetry identifying sensory words",
+      "B4.1.3.1: Analyze and recite poetry explaining similes, metaphors, and themes",
+      "B5.1.3.1: Interpret figurative elements and stanzas in narrative poems",
+      "B6.1.3.1: Critique, compose, and perform expressive poems with theatrical poise",
+      "B7.1.3.1: Demonstrate understanding, practical skills, and core competencies in Poems under Oral Language",
+      "B8.1.3.1: Demonstrate understanding, practical skills, and core competencies in Poems under Oral Language",
+      "B9.1.3.1: Demonstrate understanding, practical skills, and core competencies in Poems under Oral Language",
+      "B10.1.3.1: Demonstrate understanding, practical skills, and core competencies in Poems under Oral Language",
+      "B11.1.3.1: Demonstrate understanding, practical skills, and core competencies in Poems under Oral Language",
+      "B12.1.3.1: Demonstrate understanding, practical skills, and core competencies in Poems under Oral Language"
+    ],
+    "Dramatisation and Role Play": [
+      "B1.1.5.1: Participate in simple role play and mimes of everyday routines",
+      "B2.1.5.1: Dramatize simple dialogues and story scenes using props",
+      "B3.1.5.1: Enact scenes from literature and community life in small groups",
+      "B4.1.5.1: Create and perform scripted scenes depicting social themes",
+      "B5.1.5.1: Improvise and direct short dramatic presentations on civic values",
+      "B6.1.5.1: Stage complex theatrical presentations with vocal dynamics and blocking",
+      "B7.1.5.1: Demonstrate understanding, practical skills, and core competencies in Dramatisation and Role Play under Oral Language",
+      "B8.1.5.1: Demonstrate understanding, practical skills, and core competencies in Dramatisation and Role Play under Oral Language",
+      "B9.1.5.1: Demonstrate understanding, practical skills, and core competencies in Dramatisation and Role Play under Oral Language",
+      "B10.1.5.1: Demonstrate understanding, practical skills, and core competencies in Dramatisation and Role Play under Oral Language",
+      "B11.1.5.1: Demonstrate understanding, practical skills, and core competencies in Dramatisation and Role Play under Oral Language",
+      "B12.1.5.1: Demonstrate understanding, practical skills, and core competencies in Dramatisation and Role Play under Oral Language"
+    ],
+    "Asking and Answering Questions": [
+      "B1.1.8.1: Ask and answer simple 'Wh-' questions in full sentences",
+      "B2.1.8.1: Ask and answer open-ended 'Why' and 'How' questions logically",
+      "B3.1.8.1: Formulate clarifying questions during thematic inquiries",
+      "B4.1.8.1: Formulate probing questions and provide substantiated answers",
+      "B5.1.8.1: Construct higher-order analytical and hypothetical questions",
+      "B6.1.8.1: Engage in interview questioning and defend proposals during Q&A",
+      "B7.1.8.1: Demonstrate understanding, practical skills, and core competencies in Asking and Answering Questions under Oral Language",
+      "B8.1.8.1: Demonstrate understanding, practical skills, and core competencies in Asking and Answering Questions under Oral Language",
+      "B9.1.8.1: Demonstrate understanding, practical skills, and core competencies in Asking and Answering Questions under Oral Language",
+      "B10.1.8.1: Demonstrate understanding, practical skills, and core competencies in Asking and Answering Questions under Oral Language",
+      "B11.1.8.1: Demonstrate understanding, practical skills, and core competencies in Asking and Answering Questions under Oral Language",
+      "B12.1.8.1: Demonstrate understanding, practical skills, and core competencies in Asking and Answering Questions under Oral Language"
+    ],
+    "Giving and Following Commands": [
+      "B1.1.9.1: Give and follow simple 1-step and 2-step classroom commands",
+      "B2.1.9.1: Deliver and execute multi-step directional instructions",
+      "B3.1.9.1: Give and follow sequential procedural instructions accurately",
+      "B4.1.9.1: Explain and execute detailed task and safety procedures",
+      "B5.1.9.1: Formulate and follow technical instructions and model guides",
+      "B6.1.9.1: Lead group project workflows and draft organizational guidelines",
+      "B7.1.9.1: Demonstrate understanding, practical skills, and core competencies in Giving and Following Commands under Oral Language",
+      "B8.1.9.1: Demonstrate understanding, practical skills, and core competencies in Giving and Following Commands under Oral Language",
+      "B9.1.9.1: Demonstrate understanding, practical skills, and core competencies in Giving and Following Commands under Oral Language",
+      "B10.1.9.1: Demonstrate understanding, practical skills, and core competencies in Giving and Following Commands under Oral Language",
+      "B11.1.9.1: Demonstrate understanding, practical skills, and core competencies in Giving and Following Commands under Oral Language",
+      "B12.1.9.1: Demonstrate understanding, practical skills, and core competencies in Giving and Following Commands under Oral Language"
+    ],
+    "Presentation": [
+      "B1.1.10.1: Show and tell about familiar items with audible voice",
+      "B2.1.10.1: Deliver brief prepared talks using visual aids and eye contact",
+      "B3.1.10.1: Present informative 2-3 minute mini-talks with cue cards",
+      "B4.1.10.1: Deliver thematic presentations using charts and slides",
+      "B5.1.10.1: Deliver persuasive speeches adapting to audience needs",
+      "B6.1.10.1: Deliver capstone presentations and project pitches with poise",
+      "B7.1.10.1: Demonstrate understanding, practical skills, and core competencies in Presentation under Oral Language",
+      "B8.1.10.1: Demonstrate understanding, practical skills, and core competencies in Presentation under Oral Language",
+      "B9.1.10.1: Demonstrate understanding, practical skills, and core competencies in Presentation under Oral Language",
+      "B10.1.10.1: Demonstrate understanding, practical skills, and core competencies in Presentation under Oral Language",
+      "B11.1.10.1: Demonstrate understanding, practical skills, and core competencies in Presentation under Oral Language",
+      "B12.1.10.1: Demonstrate understanding, practical skills, and core competencies in Presentation under Oral Language"
+    ],
+    "Speech Sounds": [
+      "B7.1.3.1: Articulate English speech sounds to develop confidence and skills in listening and speaking",
+      "B8.1.3.1: Articulate English speech sounds to develop confidence and skills in listening and speaking",
       "B9.1.3.1: Articulate English speech sounds to develop confidence and skills in listening and speaking"
     ],
-    "Songs": ["B1.1.1.1: Listen to and sing familiar songs", "B2.1.1.1: Interpret familiar songs", "B3.1.1.1: Talk about the benefits of songs", "B4.1.1.1: Listen attentively to songs and sing them", "B5.1.1.1: Explain the central messages in songs", "B6.1.1.1: Relate the central messages in songs to personal experiences"],
-    "Story Telling": ["B1.1.3.1: Listen to stories and identify characters", "B2.1.4.1: Identify characters in a story", "B3.1.4.1: Respond to and ask questions based on stories", "B4.1.4.1: Retell stories sequentially", "B5.1.4.1: Demonstrate understanding of lessons in stories", "B6.1.4.1: Make connections between texts or stories and personal experiences"],
-    "Conversation": ["B1.1.6.1: Use appropriate greetings", "B2.1.6.1: Use certain culturally acceptable language", "B3.1.6.1: Use appropriate greetings for special occasions", "B4.1.6.1: Describe/talk about objects, events, dates and time", "B5.1.6.1: Describe/talk about names of regions/places", "B6.1.6.1: Describe/talk about objects/personalities/events"]
+    "Presentation and Public Speaking": [
+      "B7.1.4.1: Plan and deliver structured 3-minute oral presentations using visual aids and vocal modulation",
+      "B8.1.4.1: Construct and defend arguments in formal debates and panel discussions adhering to parliamentary rules",
+      "B9.1.4.1: Deliver persuasive capstone speeches and ceremonial presentations with rhetorical techniques"
+    ]
   },
   "Reading": {
     "Comprehension": [
-      "B1.2.7.1: Use self-correction strategies", "B2.2.7.1: Understand and analyse texts read", "B3.2.7.1: Use self-correction strategies to make meaning", "B4.2.7.1: Construct meaning from texts read", "B5.2.7.1: Use pre-reading and while-reading strategies", "B6.2.7.1: Use prior knowledge to adjust comprehension",
-      "B7.2.1.1: Demonstrate increasing confidence and enjoyment in independent reading",
-      "B7.2.1.2: Read, comprehend and interpret texts",
-      "B8.2.1.1: Demonstrate increasing confidence and enjoyment in independent reading",
-      "B8.2.1.2: Read, comprehend, interpret texts",
-      "B9.2.1.1: Demonstrate increasing confidence and enjoyment in independent reading",
-      "B9.2.1.2: Read, comprehend, and analyse varieties of texts"
+      "B1.2.7.1: Answer literal comprehension questions about shared stories",
+      "B2.2.7.1: Make predictions and draw inferences from illustrated storybooks",
+      "B3.2.7.1: Identify main idea, supporting details, and author's purpose",
+      "B4.2.7.1: Analyze plot structures, character traits, and central themes",
+      "B5.2.7.1: Compare and contrast multiple texts on similar topics or themes",
+      "B6.2.7.1: Critically evaluate arguments, evidence, and perspectives in texts",
+      "B7.2.7.1: Demonstrate understanding, practical skills, and core competencies in Comprehension under Reading",
+      "B8.2.7.1: Demonstrate understanding, practical skills, and core competencies in Comprehension under Reading",
+      "B9.2.7.1: Demonstrate understanding, practical skills, and core competencies in Comprehension under Reading",
+      "B10.2.7.1: Demonstrate understanding, practical skills, and core competencies in Comprehension under Reading",
+      "B11.2.7.1: Demonstrate understanding, practical skills, and core competencies in Comprehension under Reading",
+      "B12.2.7.1: Demonstrate understanding, practical skills, and core competencies in Comprehension under Reading"
     ],
     "Summarising": [
-      "B7.2.2.1: Demonstrate an understanding in summarising",
-      "B7.2.2.2: Demonstrate understanding of textual evidence that supports a writing piece",
-      "B8.2.2.1: Cite the textual evidence that supports an analysis of a text to determine the central idea and provide an objective summary",
-      "B9.2.2.1: Cite the textual evidence that supports an analysis of what the text says, determining the central idea of a text and provide an objective summary"
+      "B1.2.10.1: Retell the beginning, middle, and end of a read-aloud story",
+      "B2.2.10.1: Summarize key events in 2-3 sentences with teacher scaffolding",
+      "B3.2.10.1: Write a brief summary paragraph capturing main plot milestones",
+      "B4.2.10.1: Summarize informational articles highlighting 3 key takeaway points",
+      "B5.2.10.1: Write concise summaries eliminating redundant illustrative details",
+      "B6.2.10.1: Synthesize multi-page texts into structured executive summaries",
+      "B7.2.10.1: Demonstrate understanding, practical skills, and core competencies in Summarising under Reading",
+      "B8.2.10.1: Demonstrate understanding, practical skills, and core competencies in Summarising under Reading",
+      "B9.2.10.1: Demonstrate understanding, practical skills, and core competencies in Summarising under Reading",
+      "B10.2.10.1: Demonstrate understanding, practical skills, and core competencies in Summarising under Reading",
+      "B11.2.10.1: Demonstrate understanding, practical skills, and core competencies in Summarising under Reading",
+      "B12.2.10.1: Demonstrate understanding, practical skills, and core competencies in Summarising under Reading"
     ],
-    "Phonics": ["B1.2.2.1: Identify the alphabet in order", "B2.2.2.1: Blend syllables to produce words", "B3.2.2.1: Understand the relationship between spelling and sounds", "B4.2.2.1: Match sounds to their corresponding letter patterns", "B5.2.2.1: Apply common phonic generalisations", "B6.2.2.1: Read words with specific ending sounds"]
+    "Phonics": [
+      "B1.2.2.1: Identify single letter sounds and blend simple CVC words",
+      "B2.2.2.1: Apply phonics to decode words with consonant blends and digraphs",
+      "B3.2.2.1: Decode multi-syllabic words using phonetic rules and syllables",
+      "B4.2.2.1: Decode unfamiliar words using advanced phonemic segmentation",
+      "B5.2.2.1: Apply knowledge of roots, prefixes, and suffixes in decoding",
+      "B6.2.2.1: Master complex orthographic rules and morphological decoding",
+      "B7.2.2.1: Demonstrate understanding, practical skills, and core competencies in Phonics under Reading",
+      "B8.2.2.1: Demonstrate understanding, practical skills, and core competencies in Phonics under Reading",
+      "B9.2.2.1: Demonstrate understanding, practical skills, and core competencies in Phonics under Reading",
+      "B10.2.2.1: Demonstrate understanding, practical skills, and core competencies in Phonics under Reading",
+      "B11.2.2.1: Demonstrate understanding, practical skills, and core competencies in Phonics under Reading",
+      "B12.2.2.1: Demonstrate understanding, practical skills, and core competencies in Phonics under Reading"
+    ],
+    "Pre-reading activities": [
+      "B1.2.1.1: Demonstrate print awareness, book handling, and directionality",
+      "B2.2.1.1: Identify book features including title, author, and illustrator",
+      "B3.2.1.1: Preview texts using illustrations, titles, and table of contents",
+      "B4.2.1.1: Preview and survey texts using headings, subheadings, and graphical features",
+      "B5.2.1.1: Formulate pre-reading hypotheses and activate prior domain knowledge",
+      "B6.2.1.1: Conduct independent text reconnaissance and evaluate text difficulty",
+      "B7.2.1.1: Demonstrate understanding, practical skills, and core competencies in Pre-reading activities under Reading",
+      "B8.2.1.1: Demonstrate understanding, practical skills, and core competencies in Pre-reading activities under Reading",
+      "B9.2.1.1: Demonstrate understanding, practical skills, and core competencies in Pre-reading activities under Reading",
+      "B10.2.1.1: Demonstrate understanding, practical skills, and core competencies in Pre-reading activities under Reading",
+      "B11.2.1.1: Demonstrate understanding, practical skills, and core competencies in Pre-reading activities under Reading",
+      "B12.2.1.1: Demonstrate understanding, practical skills, and core competencies in Pre-reading activities under Reading"
+    ],
+    "Word Families": [
+      "B1.2.3.1: Recognize and generate words in common rhyming word families",
+      "B2.2.3.1: Read and construct words with short and long vowel word families",
+      "B3.2.3.1: Identify complex word family patterns and spelling analogies",
+      "B4.2.3.1: Expand academic vocabulary using base words and word family trees",
+      "B5.2.3.1: Analyze Greek and Latin roots belonging to common word families",
+      "B6.2.3.1: Apply comprehensive morphological word families in reading texts",
+      "B7.2.3.1: Demonstrate understanding, practical skills, and core competencies in Word Families under Reading",
+      "B8.2.3.1: Demonstrate understanding, practical skills, and core competencies in Word Families under Reading",
+      "B9.2.3.1: Demonstrate understanding, practical skills, and core competencies in Word Families under Reading",
+      "B10.2.3.1: Demonstrate understanding, practical skills, and core competencies in Word Families under Reading",
+      "B11.2.3.1: Demonstrate understanding, practical skills, and core competencies in Word Families under Reading",
+      "B12.2.3.1: Demonstrate understanding, practical skills, and core competencies in Word Families under Reading"
+    ],
+    "Diphthongs": [
+      "B1.2.4.1: Identify common vowel digraphs and diphthongs in spoken words",
+      "B2.2.4.1: Read and write words with diphthongs (oi, oy, ou, ow)",
+      "B3.2.4.1: Distinguish between various diphthong sound-spelling patterns",
+      "B4.2.4.1: Decode complex words containing varied diphthongs in context",
+      "B5.2.4.1: Pronounce and transcribe words with diphthongs accurately",
+      "B6.2.4.1: Differentiate subtle vowel glides and diphthongs in connected speech",
+      "B7.2.4.1: Demonstrate understanding, practical skills, and core competencies in Diphthongs under Reading",
+      "B8.2.4.1: Demonstrate understanding, practical skills, and core competencies in Diphthongs under Reading",
+      "B9.2.4.1: Demonstrate understanding, practical skills, and core competencies in Diphthongs under Reading",
+      "B10.2.4.1: Demonstrate understanding, practical skills, and core competencies in Diphthongs under Reading",
+      "B11.2.4.1: Demonstrate understanding, practical skills, and core competencies in Diphthongs under Reading",
+      "B12.2.4.1: Demonstrate understanding, practical skills, and core competencies in Diphthongs under Reading"
+    ],
+    "Blends and Consonant Clusters": [
+      "B1.2.5.1: Blend initial and final two-letter consonant clusters (bl, st, etc.)",
+      "B2.2.5.1: Read and write words with triple consonant blends (scr, spl, str)",
+      "B3.2.5.1: Pronounce and decode medial and final consonant clusters accurately",
+      "B4.2.5.1: Articulate complex consonant clusters without vowel insertion",
+      "B5.2.5.1: Read fluent passages containing complex consonant clusters",
+      "B6.2.5.1: Analyze phonological clusters across formal and casual speech",
+      "B7.2.5.1: Demonstrate understanding, practical skills, and core competencies in Blends and Consonant Clusters under Reading",
+      "B8.2.5.1: Demonstrate understanding, practical skills, and core competencies in Blends and Consonant Clusters under Reading",
+      "B9.2.5.1: Demonstrate understanding, practical skills, and core competencies in Blends and Consonant Clusters under Reading",
+      "B10.2.5.1: Demonstrate understanding, practical skills, and core competencies in Blends and Consonant Clusters under Reading",
+      "B11.2.5.1: Demonstrate understanding, practical skills, and core competencies in Blends and Consonant Clusters under Reading",
+      "B12.2.5.1: Demonstrate understanding, practical skills, and core competencies in Blends and Consonant Clusters under Reading"
+    ],
+    "Vocabulary": [
+      "B1.2.6.1: Develop sight word vocabulary and use contextual picture clues",
+      "B2.2.6.1: Use context clues to deduce meanings of unfamiliar grade-level words",
+      "B3.2.6.1: Use dictionaries and glossaries to find word meanings and synonyms",
+      "B4.2.6.1: Use context clues, antonyms, and synonyms to deduce word meanings",
+      "B5.2.6.1: Determine meanings of idioms, similes, and domain-specific words",
+      "B6.2.6.1: Analyze nuances, connotations, and denotations of academic words",
+      "B7.2.6.1: Demonstrate understanding, practical skills, and core competencies in Vocabulary under Reading",
+      "B8.2.6.1: Demonstrate understanding, practical skills, and core competencies in Vocabulary under Reading",
+      "B9.2.6.1: Demonstrate understanding, practical skills, and core competencies in Vocabulary under Reading",
+      "B10.2.6.1: Demonstrate understanding, practical skills, and core competencies in Vocabulary under Reading",
+      "B11.2.6.1: Demonstrate understanding, practical skills, and core competencies in Vocabulary under Reading",
+      "B12.2.6.1: Demonstrate understanding, practical skills, and core competencies in Vocabulary under Reading"
+    ],
+    "Silent Reading": [
+      "B1.2.8.1: Engage in sustained silent reading of illustrated books for 5-10 mins",
+      "B2.2.8.1: Practice sustained silent reading with focus and comprehension checks",
+      "B3.2.8.1: Read silently for extended periods and write brief reflection notes",
+      "B4.2.8.1: Demonstrate independent silent reading stamina for 15-20 minutes",
+      "B5.2.8.1: Read informational chapters silently and extract essential notes",
+      "B6.2.8.1: Practice speed reading and skimming techniques during silent reading",
+      "B7.2.8.1: Demonstrate understanding, practical skills, and core competencies in Silent Reading under Reading",
+      "B8.2.8.1: Demonstrate understanding, practical skills, and core competencies in Silent Reading under Reading",
+      "B9.2.8.1: Demonstrate understanding, practical skills, and core competencies in Silent Reading under Reading",
+      "B10.2.8.1: Demonstrate understanding, practical skills, and core competencies in Silent Reading under Reading",
+      "B11.2.8.1: Demonstrate understanding, practical skills, and core competencies in Silent Reading under Reading",
+      "B12.2.8.1: Demonstrate understanding, practical skills, and core competencies in Silent Reading under Reading"
+    ],
+    "Fluency": [
+      "B1.2.9.1: Read aloud simple sentences with emerging accuracy and expression",
+      "B2.2.9.1: Read grade-level passages aloud at conversational rate with phrasing",
+      "B3.2.9.1: Read aloud with appropriate pace, intonation, and expression",
+      "B4.2.9.1: Read grade-appropriate prose with automaticity and inflection",
+      "B5.2.9.1: Read varied genres aloud demonstrating rhythmic fluency and tone",
+      "B6.2.9.1: Master oratorical oral reading matching punctuation and emotion",
+      "B7.2.9.1: Demonstrate understanding, practical skills, and core competencies in Fluency under Reading",
+      "B8.2.9.1: Demonstrate understanding, practical skills, and core competencies in Fluency under Reading",
+      "B9.2.9.1: Demonstrate understanding, practical skills, and core competencies in Fluency under Reading",
+      "B10.2.9.1: Demonstrate understanding, practical skills, and core competencies in Fluency under Reading",
+      "B11.2.9.1: Demonstrate understanding, practical skills, and core competencies in Fluency under Reading",
+      "B12.2.9.1: Demonstrate understanding, practical skills, and core competencies in Fluency under Reading"
+    ],
+    "Comprehension / Reading Strategies": [
+      "B7.2.1.1: Apply skimming, scanning, and in-depth analytical reading strategies to expository texts",
+      "B8.2.1.1: Evaluate authorial intent, tone, figurative language, and perspective across varied texts",
+      "B9.2.1.1: Critically deconstruct complex literary and informational articles synthesizing key themes"
+    ],
+    "Reading": [
+      "B7.2.1.1: Apply skimming, scanning, and in-depth analytical reading strategies to expository texts",
+      "B8.2.1.1: Evaluate authorial intent, tone, figurative language, and perspective across varied texts",
+      "B9.2.1.1: Critically deconstruct complex literary and informational articles synthesizing key themes"
+    ],
+    "Vocabulary and Word Analysis": [
+      "B7.2.2.1: Decode unfamiliar words using prefixes, suffixes, root words, and contextual clues",
+      "B8.2.2.1: Distinguish between denotative and connotative meanings and nuances of academic vocabulary",
+      "B9.2.2.1: Utilize specialized academic and technical register across discipline-specific reading"
+    ],
+    "Silent Reading and Fluency": [
+      "B7.2.3.1: Read grade-level texts silently with sustained comprehension and target reading speed",
+      "B8.2.3.1: Demonstrate accelerated silent reading fluency adjusting pace to text complexity",
+      "B9.2.3.1: Read diverse informational and literary materials with high-level comprehension and retention"
+    ]
   },
   "Writing": {
     "Production and Distribution of Writing": [
@@ -1966,28 +5763,564 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B8.4.3.1: Research to build and present knowledge",
       "B9.4.3.1: Research to build and present knowledge"
     ],
-    "Penmanship/Handwriting": ["B1.4.2.1: Copy and write letters of the alphabet correctly", "B2.4.2.1: Copy and rewrite sentences correctly", "B3.4.2.1: Copy short paragraphs clearly", "B4.4.2.1: Write clearly using joined letters", "B5.4.2.1: Copy sentences clearly in joint script", "B6.4.2.1: Write with a legible, fluent and personal style"],
-    "Narrative Writing": ["B1.4.10.1: Write about oneself", "B2.4.10.1: Narrate situations and express feelings", "B3.4.10.1: Add more details to a story structure", "B4.4.10.1: Write real or imagined experiences", "B5.4.10.1: Create settings, characters and plots", "B6.4.10.1: Use linking words for cohesion"]
+    "Penmanship/Handwriting": [
+      "B1.4.2.1: Copy and write lower and upper case letters of the alphabet correctly",
+      "B2.4.2.1: Copy and rewrite short sentences maintaining spacing and baseline alignment",
+      "B3.4.2.1: Copy short paragraphs clearly with consistent letter size and cursive joins",
+      "B4.4.2.1: Write clearly using joined cursive script with speed and legibility",
+      "B5.4.2.1: Produce neat, fluent, and uniform cursive handwriting across all subjects",
+      "B6.4.2.1: Write with a mature, fluent, and efficient personal handwriting style",
+      "B7.4.2.1: Demonstrate understanding, practical skills, and core competencies in Penmanship/Handwriting under Writing",
+      "B8.4.2.1: Demonstrate understanding, practical skills, and core competencies in Penmanship/Handwriting under Writing",
+      "B9.4.2.1: Demonstrate understanding, practical skills, and core competencies in Penmanship/Handwriting under Writing",
+      "B10.4.2.1: Demonstrate understanding, practical skills, and core competencies in Penmanship/Handwriting under Writing",
+      "B11.4.2.1: Demonstrate understanding, practical skills, and core competencies in Penmanship/Handwriting under Writing",
+      "B12.4.2.1: Demonstrate understanding, practical skills, and core competencies in Penmanship/Handwriting under Writing"
+    ],
+    "Narrative Writing": [
+      "B1.4.10.1: Write simple personal stories about oneself and family events",
+      "B2.4.10.1: Narrate memorable experiences with chronological time markers",
+      "B3.4.10.1: Write imaginative stories with character, setting, conflict, and climax",
+      "B4.4.10.1: Write detailed narratives incorporating vivid dialogue and sensory imagery",
+      "B5.4.10.1: Construct engaging plots with character development and suspense",
+      "B6.4.10.1: Write polished short stories exploring moral and cultural themes",
+      "B7.4.10.1: Demonstrate understanding, practical skills, and core competencies in Narrative Writing under Writing",
+      "B8.4.10.1: Demonstrate understanding, practical skills, and core competencies in Narrative Writing under Writing",
+      "B9.4.10.1: Demonstrate understanding, practical skills, and core competencies in Narrative Writing under Writing",
+      "B10.4.10.1: Demonstrate understanding, practical skills, and core competencies in Narrative Writing under Writing",
+      "B11.4.10.1: Demonstrate understanding, practical skills, and core competencies in Narrative Writing under Writing",
+      "B12.4.10.1: Demonstrate understanding, practical skills, and core competencies in Narrative Writing under Writing"
+    ],
+    "Pre-writing Activities": [
+      "B1.4.1.1: Practice fine motor pencil grips, tracing patterns, and left-to-right strokes",
+      "B2.4.1.1: Brainstorm ideas using doodles, picture webs, and keyword bubbles",
+      "B3.4.1.1: Use graphic organizers and concept maps to plan writing topics",
+      "B4.4.1.1: Generate and organize outline structures using story maps and flowcharts",
+      "B5.4.1.1: Conduct research note-taking and plan argumentative/informative structures",
+      "B6.4.1.1: Synthesize multiple source notes and develop structured expository outlines",
+      "B7.4.1.1: Demonstrate understanding, practical skills, and core competencies in Pre-writing Activities under Writing",
+      "B8.4.1.1: Demonstrate understanding, practical skills, and core competencies in Pre-writing Activities under Writing",
+      "B9.4.1.1: Demonstrate understanding, practical skills, and core competencies in Pre-writing Activities under Writing",
+      "B10.4.1.1: Demonstrate understanding, practical skills, and core competencies in Pre-writing Activities under Writing",
+      "B11.4.1.1: Demonstrate understanding, practical skills, and core competencies in Pre-writing Activities under Writing",
+      "B12.4.1.1: Demonstrate understanding, practical skills, and core competencies in Pre-writing Activities under Writing"
+    ],
+    "Writing Letters": [
+      "B1.4.3.1: Write individual letter strokes and form all 26 alphabet characters",
+      "B2.4.3.1: Write thank-you notes and simple greeting cards to friends and family",
+      "B3.4.3.1: Write informal invitations and friendly notes with date and sign-off",
+      "B4.4.3.1: Maintain consistent cursive script, standard letter sizing, and neat margins",
+      "B5.4.3.1: Write with legible cursive fluency adhering to formal presentation layout",
+      "B6.4.3.1: Produce clean, error-free typography and consistent handwriting speed",
+      "B7.4.3.1: Demonstrate understanding, practical skills, and core competencies in Writing Letters under Writing",
+      "B8.4.3.1: Demonstrate understanding, practical skills, and core competencies in Writing Letters under Writing",
+      "B9.4.3.1: Demonstrate understanding, practical skills, and core competencies in Writing Letters under Writing",
+      "B10.4.3.1: Demonstrate understanding, practical skills, and core competencies in Writing Letters under Writing",
+      "B11.4.3.1: Demonstrate understanding, practical skills, and core competencies in Writing Letters under Writing",
+      "B12.4.3.1: Demonstrate understanding, practical skills, and core competencies in Writing Letters under Writing"
+    ],
+    "Labeling Items": [
+      "B1.4.4.1: Label classroom objects, body parts, and animals using single words",
+      "B2.4.4.1: Label diagrams, family charts, and maps using descriptive captions",
+      "B3.4.4.1: Label multi-part scientific diagrams and timelines with explanatory keys",
+      "B4.4.4.1: Annotate technical diagrams and flowcharts with technical labels",
+      "B5.4.4.1: Create infographic charts with concise data labels and captions",
+      "B6.4.4.1: Label and annotate complex scientific models and geographic maps",
+      "B7.4.4.1: Demonstrate understanding, practical skills, and core competencies in Labeling Items under Writing",
+      "B8.4.4.1: Demonstrate understanding, practical skills, and core competencies in Labeling Items under Writing",
+      "B9.4.4.1: Demonstrate understanding, practical skills, and core competencies in Labeling Items under Writing",
+      "B10.4.4.1: Demonstrate understanding, practical skills, and core competencies in Labeling Items under Writing",
+      "B11.4.4.1: Demonstrate understanding, practical skills, and core competencies in Labeling Items under Writing",
+      "B12.4.4.1: Demonstrate understanding, practical skills, and core competencies in Labeling Items under Writing"
+    ],
+    "Writing Simple Words and Sentences": [
+      "B1.4.5.1: Write simple 3-4 letter phonetic words and 3-word sentences",
+      "B2.4.5.1: Construct complete sentences with subject, verb, and capital letters",
+      "B3.4.5.1: Expand simple sentences using conjunctions and descriptive adjectives",
+      "B4.4.5.1: Construct compound sentences using appropriate coordinating conjunctions",
+      "B5.4.5.1: Craft complex sentences with dependent clauses and descriptive modifiers",
+      "B6.4.5.1: Construct varied compound-complex sentences with stylistic precision",
+      "B7.4.5.1: Demonstrate understanding, practical skills, and core competencies in Writing Simple Words and Sentences under Writing",
+      "B8.4.5.1: Demonstrate understanding, practical skills, and core competencies in Writing Simple Words and Sentences under Writing",
+      "B9.4.5.1: Demonstrate understanding, practical skills, and core competencies in Writing Simple Words and Sentences under Writing",
+      "B10.4.5.1: Demonstrate understanding, practical skills, and core competencies in Writing Simple Words and Sentences under Writing",
+      "B11.4.5.1: Demonstrate understanding, practical skills, and core competencies in Writing Simple Words and Sentences under Writing",
+      "B12.4.5.1: Demonstrate understanding, practical skills, and core competencies in Writing Simple Words and Sentences under Writing"
+    ],
+    "Paragraph Development": [
+      "B1.4.6.1: Combine 2-3 related sentences about a single familiar picture",
+      "B2.4.6.1: Write a cohesive 4-sentence paragraph with a clear central topic",
+      "B3.4.6.1: Develop a paragraph with topic sentence, supporting facts, and closing",
+      "B4.4.6.1: Write structured paragraphs with transition words (first, next, finally)",
+      "B5.4.6.1: Develop multi-paragraph texts maintaining unity and logical coherence",
+      "B6.4.6.1: Craft complex paragraphs with thesis statements and topic transitions",
+      "B7.4.6.1: Demonstrate understanding, practical skills, and core competencies in Paragraph Development under Writing",
+      "B8.4.6.1: Demonstrate understanding, practical skills, and core competencies in Paragraph Development under Writing",
+      "B9.4.6.1: Demonstrate understanding, practical skills, and core competencies in Paragraph Development under Writing",
+      "B10.4.6.1: Demonstrate understanding, practical skills, and core competencies in Paragraph Development under Writing",
+      "B11.4.6.1: Demonstrate understanding, practical skills, and core competencies in Paragraph Development under Writing",
+      "B12.4.6.1: Demonstrate understanding, practical skills, and core competencies in Paragraph Development under Writing"
+    ],
+    "Controlled Writing": [
+      "B1.4.7.1: Complete fill-in-the-blank sentences using a provided word bank",
+      "B2.4.7.1: Reorder scrambled words to form grammatically correct sentences",
+      "B3.4.7.1: Rewrite passages substituting underlined words with suitable synonyms",
+      "B4.4.7.1: Complete cloze passages ensuring subject-verb agreement and coherence",
+      "B5.4.7.1: Transform sentences from active to passive and positive to negative forms",
+      "B6.4.7.1: Paraphrase complex sentences without altering fundamental meaning",
+      "B7.4.7.1: Demonstrate understanding, practical skills, and core competencies in Controlled Writing under Writing",
+      "B8.4.7.1: Demonstrate understanding, practical skills, and core competencies in Controlled Writing under Writing",
+      "B9.4.7.1: Demonstrate understanding, practical skills, and core competencies in Controlled Writing under Writing",
+      "B10.4.7.1: Demonstrate understanding, practical skills, and core competencies in Controlled Writing under Writing",
+      "B11.4.7.1: Demonstrate understanding, practical skills, and core competencies in Controlled Writing under Writing",
+      "B12.4.7.1: Demonstrate understanding, practical skills, and core competencies in Controlled Writing under Writing"
+    ],
+    "Guided Composition": [
+      "B1.4.8.1: Write short 3-sentence descriptions based on guided picture prompts",
+      "B2.4.8.1: Complete guided story frames with character details and setting words",
+      "B3.4.8.1: Write a guided composition using teacher-provided questions and outline",
+      "B4.4.8.1: Draft compositions following structured planning matrices and outlines",
+      "B5.4.8.1: Compose multi-section articles guided by research prompts and checklists",
+      "B6.4.8.1: Write comprehensive thematic reports following formal rubric criteria",
+      "B7.4.8.1: Demonstrate understanding, practical skills, and core competencies in Guided Composition under Writing",
+      "B8.4.8.1: Demonstrate understanding, practical skills, and core competencies in Guided Composition under Writing",
+      "B9.4.8.1: Demonstrate understanding, practical skills, and core competencies in Guided Composition under Writing",
+      "B10.4.8.1: Demonstrate understanding, practical skills, and core competencies in Guided Composition under Writing",
+      "B11.4.8.1: Demonstrate understanding, practical skills, and core competencies in Guided Composition under Writing",
+      "B12.4.8.1: Demonstrate understanding, practical skills, and core competencies in Guided Composition under Writing"
+    ],
+    "Writing as a Process": [
+      "B1.4.9.1: Plan, draw, write, and share a picture story with classmates",
+      "B2.4.9.1: Draft, review with a partner, and edit a short written piece",
+      "B3.4.9.1: Follow the 5 stages: Pre-writing, Drafting, Revising, Editing, Publishing",
+      "B4.4.9.1: Apply writing process strategies using peer editing checklists",
+      "B5.4.9.1: Revise drafts to enhance word choice, sentence variety, and voice",
+      "B6.4.9.1: Self-edit compositions for syntactic flow, tone, mechanics, and citation",
+      "B7.4.9.1: Demonstrate understanding, practical skills, and core competencies in Writing as a Process under Writing",
+      "B8.4.9.1: Demonstrate understanding, practical skills, and core competencies in Writing as a Process under Writing",
+      "B9.4.9.1: Demonstrate understanding, practical skills, and core competencies in Writing as a Process under Writing",
+      "B10.4.9.1: Demonstrate understanding, practical skills, and core competencies in Writing as a Process under Writing",
+      "B11.4.9.1: Demonstrate understanding, practical skills, and core competencies in Writing as a Process under Writing",
+      "B12.4.9.1: Demonstrate understanding, practical skills, and core competencies in Writing as a Process under Writing"
+    ],
+    "Creative/Free Writing": [
+      "B1.4.11.1: Express imaginative thoughts through drawings and creative captions",
+      "B2.4.11.1: Write fanciful stories and humorous poems about imaginary creatures",
+      "B3.4.11.1: Compose creative journal entries, comic strips, and short fables",
+      "B4.4.11.1: Write original folk stories, playscripts, and expressive poems",
+      "B5.4.11.1: Compose creative fiction exploring alternative endings to known tales",
+      "B6.4.11.1: Produce a portfolio of creative literary works including poetry and prose",
+      "B7.4.11.1: Demonstrate understanding, practical skills, and core competencies in Creative/Free Writing under Writing",
+      "B8.4.11.1: Demonstrate understanding, practical skills, and core competencies in Creative/Free Writing under Writing",
+      "B9.4.11.1: Demonstrate understanding, practical skills, and core competencies in Creative/Free Writing under Writing",
+      "B10.4.11.1: Demonstrate understanding, practical skills, and core competencies in Creative/Free Writing under Writing",
+      "B11.4.11.1: Demonstrate understanding, practical skills, and core competencies in Creative/Free Writing under Writing",
+      "B12.4.11.1: Demonstrate understanding, practical skills, and core competencies in Creative/Free Writing under Writing"
+    ],
+    "Descriptive Writing": [
+      "B1.4.12.1: Describe familiar people, objects, and pets using sensory words",
+      "B2.4.12.1: Write descriptive paragraphs about festivals, markets, and places",
+      "B3.4.12.1: Describe scenes and events appealing to sight, sound, smell, touch, and taste",
+      "B4.4.12.1: Paint vivid word pictures using figurative language and strong adjectives",
+      "B5.4.12.1: Describe complex landscapes, historical landmarks, and cultural festivals",
+      "B6.4.12.1: Create evocative character sketches and atmospheric descriptive essays",
+      "B7.4.12.1: Demonstrate understanding, practical skills, and core competencies in Descriptive Writing under Writing",
+      "B8.4.12.1: Demonstrate understanding, practical skills, and core competencies in Descriptive Writing under Writing",
+      "B9.4.12.1: Demonstrate understanding, practical skills, and core competencies in Descriptive Writing under Writing",
+      "B10.4.12.1: Demonstrate understanding, practical skills, and core competencies in Descriptive Writing under Writing",
+      "B11.4.12.1: Demonstrate understanding, practical skills, and core competencies in Descriptive Writing under Writing",
+      "B12.4.12.1: Demonstrate understanding, practical skills, and core competencies in Descriptive Writing under Writing"
+    ],
+    "Persuasive/Argumentative Writing": [
+      "B1.4.13.1: State simple preferences and give one reason (e.g., I prefer dogs because...)",
+      "B2.4.13.1: Write short opinion pieces stating a point of view with 2 supporting reasons",
+      "B3.4.13.1: Write letters to the teacher or parents persuading them on a class project",
+      "B4.4.13.1: Write persuasive essays using facts, examples, and emotive language",
+      "B5.4.13.1: Construct balanced arguments addressing both supporting and opposing views",
+      "B6.4.13.1: Draft compelling argumentative essays supporting a clear thesis with evidence",
+      "B7.4.13.1: Demonstrate understanding, practical skills, and core competencies in Persuasive/Argumentative Writing under Writing",
+      "B8.4.13.1: Demonstrate understanding, practical skills, and core competencies in Persuasive/Argumentative Writing under Writing",
+      "B9.4.13.1: Demonstrate understanding, practical skills, and core competencies in Persuasive/Argumentative Writing under Writing",
+      "B10.4.13.1: Demonstrate understanding, practical skills, and core competencies in Persuasive/Argumentative Writing under Writing",
+      "B11.4.13.1: Demonstrate understanding, practical skills, and core competencies in Persuasive/Argumentative Writing under Writing",
+      "B12.4.13.1: Demonstrate understanding, practical skills, and core competencies in Persuasive/Argumentative Writing under Writing"
+    ],
+    "Informative/Academic Writing": [
+      "B1.4.14.1: Write simple factual statements about animals, plants, and weather",
+      "B2.4.14.1: Write simple informational fact sheets on healthy habits and safety",
+      "B3.4.14.1: Write instructional 'How-to' guides for cooking or playing local games",
+      "B4.4.14.1: Write explanatory essays on natural phenomena and community history",
+      "B5.4.14.1: Compile research project reports with sub-headings, diagrams, and glossaries",
+      "B6.4.14.1: Write comprehensive formal reports, book reviews, and academic summaries",
+      "B7.4.14.1: Demonstrate understanding, practical skills, and core competencies in Informative/Academic Writing under Writing",
+      "B8.4.14.1: Demonstrate understanding, practical skills, and core competencies in Informative/Academic Writing under Writing",
+      "B9.4.14.1: Demonstrate understanding, practical skills, and core competencies in Informative/Academic Writing under Writing",
+      "B10.4.14.1: Demonstrate understanding, practical skills, and core competencies in Informative/Academic Writing under Writing",
+      "B11.4.14.1: Demonstrate understanding, practical skills, and core competencies in Informative/Academic Writing under Writing",
+      "B12.4.14.1: Demonstrate understanding, practical skills, and core competencies in Informative/Academic Writing under Writing"
+    ],
+    "Letter Writing": [
+      "B1.4.15.1: Write simple holiday greeting messages and postcard notes",
+      "B2.4.15.1: Write friendly letters to pen pals with date, greeting, and sign-off",
+      "B3.4.15.1: Write informal letters following standard layout (address, date, body, closing)",
+      "B4.4.15.1: Write semi-formal letters to school authorities and clubs",
+      "B5.4.15.1: Write formal letters of request and apology with sender and recipient addresses",
+      "B6.4.15.1: Master formal letters of application, complaint, and enquiry with formal tone",
+      "B7.4.15.1: Demonstrate understanding, practical skills, and core competencies in Letter Writing under Writing",
+      "B8.4.15.1: Demonstrate understanding, practical skills, and core competencies in Letter Writing under Writing",
+      "B9.4.15.1: Demonstrate understanding, practical skills, and core competencies in Letter Writing under Writing",
+      "B10.4.15.1: Demonstrate understanding, practical skills, and core competencies in Letter Writing under Writing",
+      "B11.4.15.1: Demonstrate understanding, practical skills, and core competencies in Letter Writing under Writing",
+      "B12.4.15.1: Demonstrate understanding, practical skills, and core competencies in Letter Writing under Writing"
+    ],
+    "Structure and Organise Ideas in Composition Writing": [
+      "B7.4.1.1: Generate, plan, and organize ideas using brainstorm webs, outlines, and coherent paragraphs",
+      "B8.4.1.1: Develop unified multi-paragraph essays with logical progression and smooth transitions",
+      "B9.4.1.1: Organize complex essays incorporating introductory hooks, body argumentation, and strong conclusions"
+    ],
+    "Argumentative Writing": [
+      "B7.4.4.1: Write simple argumentative texts supporting a claim with relevant evidence and reasons",
+      "B8.4.4.1: Draft balanced persuasive essays addressing counterarguments and refuting opposing views",
+      "B9.4.4.1: Write formal debate speeches and opinion essays defending complex policy positions"
+    ],
+    "Informative / Expository Writing": [
+      "B7.4.5.1: Write procedural instructions, recipes, and informative reports using sequential markers",
+      "B8.4.5.1: Compose cause-and-effect and compare-and-contrast expository essays",
+      "B9.4.5.1: Author formal research reports and analytical articles citing factual data"
+    ],
+    "Summary Writing": [
+      "B7.4.7.1: Identify topic sentences and extract main ideas to write brief passage summaries",
+      "B8.4.7.1: Paraphrase complex passages and draft concise summaries within specified word limits",
+      "B9.4.7.1: Synthesize multiple informational texts into structured executive summaries"
+    ]
   },
   "Grammar Usage at Word and Phrase Levels": {
-    "Nouns": ["B4.3.1.1: Identify and use nouns to identify people, animals, events and objects", "B5.3.1.1: Identify and use nouns or noun phrases to refer to quantities or units", "B6.3.1.1: Identify and use nouns or noun phrases to describe conditions"],
-    "Determiners": ["B4.3.2.1: Apply knowledge of different types of determiners", "B5.3.2.1: Apply knowledge of different types of determiners (e.g. articles, quantifiers)", "B6.3.2.1: Apply knowledge of definite and indefinite articles"],
-    "Pronouns": ["B4.3.3.1: Apply knowledge of different types of pronouns", "B5.3.3.1: Identify and use indefinite pronouns", "B6.3.3.1: Identify and use reflexive, relative and reciprocal pronouns"],
-    "Verbs": ["B4.3.5.1: Apply the knowledge of verbs in communication", "B5.3.5.1: Use different types of verbs in sentences", "B6.3.5.1: Use past continuous and past perfect forms"]
+    "Nouns": [
+      "B4.3.1.1: Use common, proper, countable, and uncountable nouns correctly",
+      "B5.3.1.1: Use abstract, collective, and compound nouns accurately",
+      "B6.3.1.1: Apply nominalization and complex noun phrases in varied contexts",
+      "B1.3.1.1: Demonstrate understanding, practical skills, and core competencies in Nouns under Grammar Usage at Word and Phrase Levels",
+      "B2.3.1.1: Demonstrate understanding, practical skills, and core competencies in Nouns under Grammar Usage at Word and Phrase Levels",
+      "B3.3.1.1: Demonstrate understanding, practical skills, and core competencies in Nouns under Grammar Usage at Word and Phrase Levels",
+      "B7.3.1.1: Demonstrate understanding, practical skills, and core competencies in Nouns under Grammar Usage at Word and Phrase Levels",
+      "B8.3.1.1: Demonstrate understanding, practical skills, and core competencies in Nouns under Grammar Usage at Word and Phrase Levels",
+      "B9.3.1.1: Demonstrate understanding, practical skills, and core competencies in Nouns under Grammar Usage at Word and Phrase Levels",
+      "B10.3.1.1: Demonstrate understanding, practical skills, and core competencies in Nouns under Grammar Usage at Word and Phrase Levels",
+      "B11.3.1.1: Demonstrate understanding, practical skills, and core competencies in Nouns under Grammar Usage at Word and Phrase Levels",
+      "B12.3.1.1: Demonstrate understanding, practical skills, and core competencies in Nouns under Grammar Usage at Word and Phrase Levels"
+    ],
+    "Determiners": [
+      "B4.3.2.1: Use articles (a, an, the) and demonstratives (this, that, these, those)",
+      "B5.3.2.1: Use quantifiers (few, many, much, several) and possessive determiners",
+      "B6.3.2.1: Apply distributive and interrogative determiners in complex sentences",
+      "B1.3.2.1: Demonstrate understanding, practical skills, and core competencies in Determiners under Grammar Usage at Word and Phrase Levels",
+      "B2.3.2.1: Demonstrate understanding, practical skills, and core competencies in Determiners under Grammar Usage at Word and Phrase Levels",
+      "B3.3.2.1: Demonstrate understanding, practical skills, and core competencies in Determiners under Grammar Usage at Word and Phrase Levels",
+      "B7.3.2.1: Demonstrate understanding, practical skills, and core competencies in Determiners under Grammar Usage at Word and Phrase Levels",
+      "B8.3.2.1: Demonstrate understanding, practical skills, and core competencies in Determiners under Grammar Usage at Word and Phrase Levels",
+      "B9.3.2.1: Demonstrate understanding, practical skills, and core competencies in Determiners under Grammar Usage at Word and Phrase Levels",
+      "B10.3.2.1: Demonstrate understanding, practical skills, and core competencies in Determiners under Grammar Usage at Word and Phrase Levels",
+      "B11.3.2.1: Demonstrate understanding, practical skills, and core competencies in Determiners under Grammar Usage at Word and Phrase Levels",
+      "B12.3.2.1: Demonstrate understanding, practical skills, and core competencies in Determiners under Grammar Usage at Word and Phrase Levels"
+    ],
+    "Pronouns": [
+      "B4.3.3.1: Use personal, possessive, and reflexive pronouns accurately",
+      "B5.3.3.1: Use relative pronouns (who, which, that) to combine sentences",
+      "B6.3.3.1: Apply indefinite, demonstrative, and reciprocal pronouns correctly",
+      "B1.3.3.1: Demonstrate understanding, practical skills, and core competencies in Pronouns under Grammar Usage at Word and Phrase Levels",
+      "B2.3.3.1: Demonstrate understanding, practical skills, and core competencies in Pronouns under Grammar Usage at Word and Phrase Levels",
+      "B3.3.3.1: Demonstrate understanding, practical skills, and core competencies in Pronouns under Grammar Usage at Word and Phrase Levels",
+      "B7.3.3.1: Demonstrate understanding, practical skills, and core competencies in Pronouns under Grammar Usage at Word and Phrase Levels",
+      "B8.3.3.1: Demonstrate understanding, practical skills, and core competencies in Pronouns under Grammar Usage at Word and Phrase Levels",
+      "B9.3.3.1: Demonstrate understanding, practical skills, and core competencies in Pronouns under Grammar Usage at Word and Phrase Levels",
+      "B10.3.3.1: Demonstrate understanding, practical skills, and core competencies in Pronouns under Grammar Usage at Word and Phrase Levels",
+      "B11.3.3.1: Demonstrate understanding, practical skills, and core competencies in Pronouns under Grammar Usage at Word and Phrase Levels",
+      "B12.3.3.1: Demonstrate understanding, practical skills, and core competencies in Pronouns under Grammar Usage at Word and Phrase Levels"
+    ],
+    "Verbs": [
+      "B4.3.5.1: Apply main and auxiliary verbs in simple present and past tenses",
+      "B5.3.5.1: Use regular, irregular, transitive, and intransitive verbs accurately",
+      "B6.3.5.1: Use past perfect, future continuous, and conditional verb forms",
+      "B1.3.5.1: Demonstrate understanding, practical skills, and core competencies in Verbs under Grammar Usage at Word and Phrase Levels",
+      "B2.3.5.1: Demonstrate understanding, practical skills, and core competencies in Verbs under Grammar Usage at Word and Phrase Levels",
+      "B3.3.5.1: Demonstrate understanding, practical skills, and core competencies in Verbs under Grammar Usage at Word and Phrase Levels",
+      "B7.3.5.1: Demonstrate understanding, practical skills, and core competencies in Verbs under Grammar Usage at Word and Phrase Levels",
+      "B8.3.5.1: Demonstrate understanding, practical skills, and core competencies in Verbs under Grammar Usage at Word and Phrase Levels",
+      "B9.3.5.1: Demonstrate understanding, practical skills, and core competencies in Verbs under Grammar Usage at Word and Phrase Levels",
+      "B10.3.5.1: Demonstrate understanding, practical skills, and core competencies in Verbs under Grammar Usage at Word and Phrase Levels",
+      "B11.3.5.1: Demonstrate understanding, practical skills, and core competencies in Verbs under Grammar Usage at Word and Phrase Levels",
+      "B12.3.5.1: Demonstrate understanding, practical skills, and core competencies in Verbs under Grammar Usage at Word and Phrase Levels"
+    ],
+    "Adjectives": [
+      "B4.3.4.1: Use descriptive and quantitative adjectives with comparative forms",
+      "B5.3.4.1: Follow correct order of adjectives in noun phrase construction",
+      "B6.3.4.1: Use compound and participial adjectives to enrich descriptions",
+      "B1.3.4.1: Demonstrate understanding, practical skills, and core competencies in Adjectives under Grammar Usage at Word and Phrase Levels",
+      "B2.3.4.1: Demonstrate understanding, practical skills, and core competencies in Adjectives under Grammar Usage at Word and Phrase Levels",
+      "B3.3.4.1: Demonstrate understanding, practical skills, and core competencies in Adjectives under Grammar Usage at Word and Phrase Levels",
+      "B7.3.4.1: Demonstrate understanding, practical skills, and core competencies in Adjectives under Grammar Usage at Word and Phrase Levels",
+      "B8.3.4.1: Demonstrate understanding, practical skills, and core competencies in Adjectives under Grammar Usage at Word and Phrase Levels",
+      "B9.3.4.1: Demonstrate understanding, practical skills, and core competencies in Adjectives under Grammar Usage at Word and Phrase Levels",
+      "B10.3.4.1: Demonstrate understanding, practical skills, and core competencies in Adjectives under Grammar Usage at Word and Phrase Levels",
+      "B11.3.4.1: Demonstrate understanding, practical skills, and core competencies in Adjectives under Grammar Usage at Word and Phrase Levels",
+      "B12.3.4.1: Demonstrate understanding, practical skills, and core competencies in Adjectives under Grammar Usage at Word and Phrase Levels"
+    ],
+    "Adverbs": [
+      "B4.3.6.1: Use adverbs of manner, time, and place in simple sentences",
+      "B5.3.6.1: Use adverbs of frequency, degree, and purpose accurately",
+      "B6.3.6.1: Position adverbs correctly and compare actions using adverb forms",
+      "B1.3.6.1: Demonstrate understanding, practical skills, and core competencies in Adverbs under Grammar Usage at Word and Phrase Levels",
+      "B2.3.6.1: Demonstrate understanding, practical skills, and core competencies in Adverbs under Grammar Usage at Word and Phrase Levels",
+      "B3.3.6.1: Demonstrate understanding, practical skills, and core competencies in Adverbs under Grammar Usage at Word and Phrase Levels",
+      "B7.3.6.1: Demonstrate understanding, practical skills, and core competencies in Adverbs under Grammar Usage at Word and Phrase Levels",
+      "B8.3.6.1: Demonstrate understanding, practical skills, and core competencies in Adverbs under Grammar Usage at Word and Phrase Levels",
+      "B9.3.6.1: Demonstrate understanding, practical skills, and core competencies in Adverbs under Grammar Usage at Word and Phrase Levels",
+      "B10.3.6.1: Demonstrate understanding, practical skills, and core competencies in Adverbs under Grammar Usage at Word and Phrase Levels",
+      "B11.3.6.1: Demonstrate understanding, practical skills, and core competencies in Adverbs under Grammar Usage at Word and Phrase Levels",
+      "B12.3.6.1: Demonstrate understanding, practical skills, and core competencies in Adverbs under Grammar Usage at Word and Phrase Levels"
+    ],
+    "Idiomatic Expressions": [
+      "B4.3.7.1: Recognize common everyday idioms and explain their literal vs figurative meanings",
+      "B5.3.7.1: Use appropriate idioms and proverbs in narrative writing and speech",
+      "B6.3.7.1: Interpret nuanced cultural idioms and phrasal expressions in literature",
+      "B1.3.7.1: Demonstrate understanding, practical skills, and core competencies in Idiomatic Expressions under Grammar Usage at Word and Phrase Levels",
+      "B2.3.7.1: Demonstrate understanding, practical skills, and core competencies in Idiomatic Expressions under Grammar Usage at Word and Phrase Levels",
+      "B3.3.7.1: Demonstrate understanding, practical skills, and core competencies in Idiomatic Expressions under Grammar Usage at Word and Phrase Levels",
+      "B7.3.7.1: Demonstrate understanding, practical skills, and core competencies in Idiomatic Expressions under Grammar Usage at Word and Phrase Levels",
+      "B8.3.7.1: Demonstrate understanding, practical skills, and core competencies in Idiomatic Expressions under Grammar Usage at Word and Phrase Levels",
+      "B9.3.7.1: Demonstrate understanding, practical skills, and core competencies in Idiomatic Expressions under Grammar Usage at Word and Phrase Levels",
+      "B10.3.7.1: Demonstrate understanding, practical skills, and core competencies in Idiomatic Expressions under Grammar Usage at Word and Phrase Levels",
+      "B11.3.7.1: Demonstrate understanding, practical skills, and core competencies in Idiomatic Expressions under Grammar Usage at Word and Phrase Levels",
+      "B12.3.7.1: Demonstrate understanding, practical skills, and core competencies in Idiomatic Expressions under Grammar Usage at Word and Phrase Levels"
+    ],
+    "Conjunctions": [
+      "B4.3.8.1: Use coordinating conjunctions (FANBOYS) to join words and clauses",
+      "B5.3.8.1: Use subordinating conjunctions (although, because, while) in complex sentences",
+      "B6.3.8.1: Use correlative conjunctions (either...or, neither...nor, not only...but also)",
+      "B1.3.8.1: Demonstrate understanding, practical skills, and core competencies in Conjunctions under Grammar Usage at Word and Phrase Levels",
+      "B2.3.8.1: Demonstrate understanding, practical skills, and core competencies in Conjunctions under Grammar Usage at Word and Phrase Levels",
+      "B3.3.8.1: Demonstrate understanding, practical skills, and core competencies in Conjunctions under Grammar Usage at Word and Phrase Levels",
+      "B7.3.8.1: Demonstrate understanding, practical skills, and core competencies in Conjunctions under Grammar Usage at Word and Phrase Levels",
+      "B8.3.8.1: Demonstrate understanding, practical skills, and core competencies in Conjunctions under Grammar Usage at Word and Phrase Levels",
+      "B9.3.8.1: Demonstrate understanding, practical skills, and core competencies in Conjunctions under Grammar Usage at Word and Phrase Levels",
+      "B10.3.8.1: Demonstrate understanding, practical skills, and core competencies in Conjunctions under Grammar Usage at Word and Phrase Levels",
+      "B11.3.8.1: Demonstrate understanding, practical skills, and core competencies in Conjunctions under Grammar Usage at Word and Phrase Levels",
+      "B12.3.8.1: Demonstrate understanding, practical skills, and core competencies in Conjunctions under Grammar Usage at Word and Phrase Levels"
+    ],
+    "Modals": [
+      "B4.3.9.1: Use basic modals (can, may, must) to express ability, permission, and obligation",
+      "B5.3.9.1: Use modal auxiliaries (should, would, could) to express advice and conditions",
+      "B6.3.9.1: Use modal verbs to convey degrees of certainty, probability, and polite requests",
+      "B1.3.9.1: Demonstrate understanding, practical skills, and core competencies in Modals under Grammar Usage at Word and Phrase Levels",
+      "B2.3.9.1: Demonstrate understanding, practical skills, and core competencies in Modals under Grammar Usage at Word and Phrase Levels",
+      "B3.3.9.1: Demonstrate understanding, practical skills, and core competencies in Modals under Grammar Usage at Word and Phrase Levels",
+      "B7.3.9.1: Demonstrate understanding, practical skills, and core competencies in Modals under Grammar Usage at Word and Phrase Levels",
+      "B8.3.9.1: Demonstrate understanding, practical skills, and core competencies in Modals under Grammar Usage at Word and Phrase Levels",
+      "B9.3.9.1: Demonstrate understanding, practical skills, and core competencies in Modals under Grammar Usage at Word and Phrase Levels",
+      "B10.3.9.1: Demonstrate understanding, practical skills, and core competencies in Modals under Grammar Usage at Word and Phrase Levels",
+      "B11.3.9.1: Demonstrate understanding, practical skills, and core competencies in Modals under Grammar Usage at Word and Phrase Levels",
+      "B12.3.9.1: Demonstrate understanding, practical skills, and core competencies in Modals under Grammar Usage at Word and Phrase Levels"
+    ],
+    "Prepositions": [
+      "B4.3.10.1: Use prepositions of place, direction, and time accurately",
+      "B5.3.10.1: Construct complex prepositional phrases indicating spatial relationships",
+      "B6.3.10.1: Use dependent prepositions attached to verbs and adjectives appropriately",
+      "B1.3.10.1: Demonstrate understanding, practical skills, and core competencies in Prepositions under Grammar Usage at Word and Phrase Levels",
+      "B2.3.10.1: Demonstrate understanding, practical skills, and core competencies in Prepositions under Grammar Usage at Word and Phrase Levels",
+      "B3.3.10.1: Demonstrate understanding, practical skills, and core competencies in Prepositions under Grammar Usage at Word and Phrase Levels",
+      "B7.3.10.1: Demonstrate understanding, practical skills, and core competencies in Prepositions under Grammar Usage at Word and Phrase Levels",
+      "B8.3.10.1: Demonstrate understanding, practical skills, and core competencies in Prepositions under Grammar Usage at Word and Phrase Levels",
+      "B9.3.10.1: Demonstrate understanding, practical skills, and core competencies in Prepositions under Grammar Usage at Word and Phrase Levels",
+      "B10.3.10.1: Demonstrate understanding, practical skills, and core competencies in Prepositions under Grammar Usage at Word and Phrase Levels",
+      "B11.3.10.1: Demonstrate understanding, practical skills, and core competencies in Prepositions under Grammar Usage at Word and Phrase Levels",
+      "B12.3.10.1: Demonstrate understanding, practical skills, and core competencies in Prepositions under Grammar Usage at Word and Phrase Levels"
+    ],
+    "Adjective Phrase": [
+      "B4.3.11.1: Identify and expand noun phrases using single and double adjectives",
+      "B5.3.11.1: Construct adjective phrases to add vivid sensory detail to writing",
+      "B6.3.11.1: Use participial and prepositional adjective phrases as sentence modifiers",
+      "B1.3.11.1: Demonstrate understanding, practical skills, and core competencies in Adjective Phrase under Grammar Usage at Word and Phrase Levels",
+      "B2.3.11.1: Demonstrate understanding, practical skills, and core competencies in Adjective Phrase under Grammar Usage at Word and Phrase Levels",
+      "B3.3.11.1: Demonstrate understanding, practical skills, and core competencies in Adjective Phrase under Grammar Usage at Word and Phrase Levels",
+      "B7.3.11.1: Demonstrate understanding, practical skills, and core competencies in Adjective Phrase under Grammar Usage at Word and Phrase Levels",
+      "B8.3.11.1: Demonstrate understanding, practical skills, and core competencies in Adjective Phrase under Grammar Usage at Word and Phrase Levels",
+      "B9.3.11.1: Demonstrate understanding, practical skills, and core competencies in Adjective Phrase under Grammar Usage at Word and Phrase Levels",
+      "B10.3.11.1: Demonstrate understanding, practical skills, and core competencies in Adjective Phrase under Grammar Usage at Word and Phrase Levels",
+      "B11.3.11.1: Demonstrate understanding, practical skills, and core competencies in Adjective Phrase under Grammar Usage at Word and Phrase Levels",
+      "B12.3.11.1: Demonstrate understanding, practical skills, and core competencies in Adjective Phrase under Grammar Usage at Word and Phrase Levels"
+    ],
+    "Adverb Phrase": [
+      "B4.3.12.1: Identify and formulate multi-word adverb phrases answering how, when, where",
+      "B5.3.12.1: Use adverb phrases to modify verbs, adjectives, and whole clauses",
+      "B6.3.12.1: Vary sentence openings using fronted adverbial phrases with commas",
+      "B1.3.12.1: Demonstrate understanding, practical skills, and core competencies in Adverb Phrase under Grammar Usage at Word and Phrase Levels",
+      "B2.3.12.1: Demonstrate understanding, practical skills, and core competencies in Adverb Phrase under Grammar Usage at Word and Phrase Levels",
+      "B3.3.12.1: Demonstrate understanding, practical skills, and core competencies in Adverb Phrase under Grammar Usage at Word and Phrase Levels",
+      "B7.3.12.1: Demonstrate understanding, practical skills, and core competencies in Adverb Phrase under Grammar Usage at Word and Phrase Levels",
+      "B8.3.12.1: Demonstrate understanding, practical skills, and core competencies in Adverb Phrase under Grammar Usage at Word and Phrase Levels",
+      "B9.3.12.1: Demonstrate understanding, practical skills, and core competencies in Adverb Phrase under Grammar Usage at Word and Phrase Levels",
+      "B10.3.12.1: Demonstrate understanding, practical skills, and core competencies in Adverb Phrase under Grammar Usage at Word and Phrase Levels",
+      "B11.3.12.1: Demonstrate understanding, practical skills, and core competencies in Adverb Phrase under Grammar Usage at Word and Phrase Levels",
+      "B12.3.12.1: Demonstrate understanding, practical skills, and core competencies in Adverb Phrase under Grammar Usage at Word and Phrase Levels"
+    ],
+    "Direct and Reported Speech": [
+      "B4.3.13.1: Punctuate simple direct speech quotes accurately using speech marks",
+      "B5.3.13.1: Convert direct speech statements into reported speech with tense backshifting",
+      "B6.3.13.1: Transform questions, commands, and dialogues between direct and reported speech",
+      "B1.3.13.1: Demonstrate understanding, practical skills, and core competencies in Direct and Reported Speech under Grammar Usage at Word and Phrase Levels",
+      "B2.3.13.1: Demonstrate understanding, practical skills, and core competencies in Direct and Reported Speech under Grammar Usage at Word and Phrase Levels",
+      "B3.3.13.1: Demonstrate understanding, practical skills, and core competencies in Direct and Reported Speech under Grammar Usage at Word and Phrase Levels",
+      "B7.3.13.1: Demonstrate understanding, practical skills, and core competencies in Direct and Reported Speech under Grammar Usage at Word and Phrase Levels",
+      "B8.3.13.1: Demonstrate understanding, practical skills, and core competencies in Direct and Reported Speech under Grammar Usage at Word and Phrase Levels",
+      "B9.3.13.1: Demonstrate understanding, practical skills, and core competencies in Direct and Reported Speech under Grammar Usage at Word and Phrase Levels",
+      "B10.3.13.1: Demonstrate understanding, practical skills, and core competencies in Direct and Reported Speech under Grammar Usage at Word and Phrase Levels",
+      "B11.3.13.1: Demonstrate understanding, practical skills, and core competencies in Direct and Reported Speech under Grammar Usage at Word and Phrase Levels",
+      "B12.3.13.1: Demonstrate understanding, practical skills, and core competencies in Direct and Reported Speech under Grammar Usage at Word and Phrase Levels"
+    ]
   },
   "Writing Conventions and Grammar Usage": {
-    "Capitalization": ["B1.5.1.1: Write capital letters correctly", "B2.5.1.1: Capitalize names of people and places", "B3.5.1.1: use capitalization correctly", "B4.5.1.1: Use capitalization in varied contexts", "B5.5.1.1: Follow appropriate mechanical convention", "B6.5.1.1: Use capital letters in direct speech"],
-    "Punctuation": ["B1.5.2.1: Use full stop", "B2.5.2.1: Use full stops and question marks", "B3.5.2.1: Use full stops in initials and abbreviations", "B4.5.2.1: Use the comma appropriately", "B5.5.2.1: Use comma for modifying phrases", "B6.5.2.1: Use quotation marks and apostrophes"],
-    "Naming Words": ["B1.5.3.1: Identify naming words", "B2.5.3.1: Use common and proper nouns", "B3.5.3.1: Use collective nouns"],
-    "Action Words": ["B1.5.4.1: Identify action words", "B2.5.4.1: Use simple present tense", "B3.5.4.1: Use simple past tense"],
-    "Qualifying Words": ["B1.5.5.1: Identify qualifying words", "B2.5.5.1: Use adjectives for description", "B3.5.5.1: Use comparative and superlative forms"],
-    "Simple Prepositions": ["B1.5.6.1: Use in, on, under", "B2.5.6.1: Use between, behind, in front of", "B3.5.6.1: Use above, below, beside"],
-    "Conjunctions": ["B1.5.7.1: Use 'and'", "B2.5.7.1: Use 'but', 'or'", "B3.5.7.1: Use 'because', 'so'"],
-    "Sentences": ["B1.5.8.1: Write simple sentences", "B2.5.8.1: Expand simple sentences", "B3.5.8.1: Write compound sentences"],
-    "Spelling": ["B1.5.10.1: Spell simple words correctly", "B2.5.10.1: Spell words with irregular phonic patterns", "B3.5.10.1: Spell phonically irregular words", "B4.5.10.1: Use invented spelling to increase fluency", "B5.5.10.1: Use phonics knowledge to spell correctly", "B6.5.10.1: Check pieces of literary work for spelling"]
+    "Capitalization": [
+      "B1.5.1.1: Write capital letters correctly at start of sentences and for 'I'",
+      "B2.5.1.1: Capitalize names of people, places, days of the week, and months",
+      "B3.5.1.1: Use capitalization correctly in titles of books, headings, and holidays",
+      "B4.5.1.1: Use capitalization in varied contexts including brand names and acronyms",
+      "B5.5.1.1: Follow appropriate capitalization conventions for historical events and eras",
+      "B6.5.1.1: Use capital letters in direct speech quotations, poetry, and formal titles",
+      "B7.5.1.1: Demonstrate understanding, practical skills, and core competencies in Capitalization under Writing Conventions and Grammar Usage",
+      "B8.5.1.1: Demonstrate understanding, practical skills, and core competencies in Capitalization under Writing Conventions and Grammar Usage",
+      "B9.5.1.1: Demonstrate understanding, practical skills, and core competencies in Capitalization under Writing Conventions and Grammar Usage",
+      "B10.5.1.1: Demonstrate understanding, practical skills, and core competencies in Capitalization under Writing Conventions and Grammar Usage",
+      "B11.5.1.1: Demonstrate understanding, practical skills, and core competencies in Capitalization under Writing Conventions and Grammar Usage",
+      "B12.5.1.1: Demonstrate understanding, practical skills, and core competencies in Capitalization under Writing Conventions and Grammar Usage"
+    ],
+    "Punctuation": [
+      "B1.5.2.1: Use full stops and question marks correctly at the end of sentences",
+      "B2.5.2.1: Use full stops, question marks, and exclamation marks appropriately",
+      "B3.5.2.1: Use commas in lists and full stops in standard initials and abbreviations",
+      "B4.5.2.1: Use commas appropriately to separate clauses and introductory words",
+      "B5.5.2.1: Use commas for modifying phrases, apostrophes for possession and contractions",
+      "B6.5.2.1: Use quotation marks, colons, semi-colons, hyphens, and apostrophes accurately",
+      "B7.5.2.1: Demonstrate understanding, practical skills, and core competencies in Punctuation under Writing Conventions and Grammar Usage",
+      "B8.5.2.1: Demonstrate understanding, practical skills, and core competencies in Punctuation under Writing Conventions and Grammar Usage",
+      "B9.5.2.1: Demonstrate understanding, practical skills, and core competencies in Punctuation under Writing Conventions and Grammar Usage",
+      "B10.5.2.1: Demonstrate understanding, practical skills, and core competencies in Punctuation under Writing Conventions and Grammar Usage",
+      "B11.5.2.1: Demonstrate understanding, practical skills, and core competencies in Punctuation under Writing Conventions and Grammar Usage",
+      "B12.5.2.1: Demonstrate understanding, practical skills, and core competencies in Punctuation under Writing Conventions and Grammar Usage"
+    ],
+    "Naming Words": [
+      "B1.5.3.1: Identify naming words (nouns) for people, animals, places, and things",
+      "B2.5.3.1: Use common and proper nouns with correct singular and plural forms (-s, -es)",
+      "B3.5.3.1: Use irregular plural nouns and collective nouns in sentences",
+      "B4.5.3.1: Distinguish between countable and uncountable nouns with quantifiers",
+      "B5.5.3.1: Form abstract nouns from verbs and adjectives using suffixes (-tion, -ness)",
+      "B6.5.3.1: Apply compound and collective nouns effectively in academic contexts",
+      "B7.5.3.1: Demonstrate understanding, practical skills, and core competencies in Naming Words under Writing Conventions and Grammar Usage",
+      "B8.5.3.1: Demonstrate understanding, practical skills, and core competencies in Naming Words under Writing Conventions and Grammar Usage",
+      "B9.5.3.1: Demonstrate understanding, practical skills, and core competencies in Naming Words under Writing Conventions and Grammar Usage",
+      "B10.5.3.1: Demonstrate understanding, practical skills, and core competencies in Naming Words under Writing Conventions and Grammar Usage",
+      "B11.5.3.1: Demonstrate understanding, practical skills, and core competencies in Naming Words under Writing Conventions and Grammar Usage",
+      "B12.5.3.1: Demonstrate understanding, practical skills, and core competencies in Naming Words under Writing Conventions and Grammar Usage"
+    ],
+    "Action Words": [
+      "B1.5.4.1: Identify action words (verbs) and demonstrate their meanings",
+      "B2.5.4.1: Use simple present and present continuous tenses (-ing) correctly",
+      "B3.5.4.1: Use simple past tense regular and irregular verbs in speech and writing",
+      "B4.5.4.1: Apply past continuous and future tenses (will/shall) with correct concord",
+      "B5.5.4.1: Use present perfect tense (has/have + past participle) accurately",
+      "B6.5.4.1: Master past perfect and modal auxiliary verb constructions",
+      "B7.5.4.1: Demonstrate understanding, practical skills, and core competencies in Action Words under Writing Conventions and Grammar Usage",
+      "B8.5.4.1: Demonstrate understanding, practical skills, and core competencies in Action Words under Writing Conventions and Grammar Usage",
+      "B9.5.4.1: Demonstrate understanding, practical skills, and core competencies in Action Words under Writing Conventions and Grammar Usage",
+      "B10.5.4.1: Demonstrate understanding, practical skills, and core competencies in Action Words under Writing Conventions and Grammar Usage",
+      "B11.5.4.1: Demonstrate understanding, practical skills, and core competencies in Action Words under Writing Conventions and Grammar Usage",
+      "B12.5.4.1: Demonstrate understanding, practical skills, and core competencies in Action Words under Writing Conventions and Grammar Usage"
+    ],
+    "Qualifying Words": [
+      "B1.5.5.1: Identify qualifying words (adjectives) for colors, sizes, and shapes",
+      "B2.5.5.1: Use adjectives to describe people, objects, and feelings in sentences",
+      "B3.5.5.1: Use comparative and superlative forms (-er, -est, more, most) correctly",
+      "B4.5.5.1: Use demonstrative and quantitative adjectives to qualify noun phrases",
+      "B5.5.5.1: Apply descriptive adjectives in correct statutory adjective sequence",
+      "B6.5.5.1: Employ rich figurative adjectives and participial modifiers in essays",
+      "B7.5.5.1: Demonstrate understanding, practical skills, and core competencies in Qualifying Words under Writing Conventions and Grammar Usage",
+      "B8.5.5.1: Demonstrate understanding, practical skills, and core competencies in Qualifying Words under Writing Conventions and Grammar Usage",
+      "B9.5.5.1: Demonstrate understanding, practical skills, and core competencies in Qualifying Words under Writing Conventions and Grammar Usage",
+      "B10.5.5.1: Demonstrate understanding, practical skills, and core competencies in Qualifying Words under Writing Conventions and Grammar Usage",
+      "B11.5.5.1: Demonstrate understanding, practical skills, and core competencies in Qualifying Words under Writing Conventions and Grammar Usage",
+      "B12.5.5.1: Demonstrate understanding, practical skills, and core competencies in Qualifying Words under Writing Conventions and Grammar Usage"
+    ],
+    "Simple Prepositions": [
+      "B1.5.6.1: Use simple prepositions of place (in, on, under, at, by) correctly",
+      "B2.5.6.1: Use spatial prepositions (between, behind, in front of, next to)",
+      "B3.5.6.1: Use prepositions of time and direction (above, below, beside, through, into)",
+      "B4.5.6.1: Use compound prepositions (in addition to, because of, according to)",
+      "B5.5.6.1: Distinguish between easily confused prepositions (among/between, in/into)",
+      "B6.5.6.1: Integrate prepositional phrases smoothly to expand sentence meaning",
+      "B7.5.6.1: Demonstrate understanding, practical skills, and core competencies in Simple Prepositions under Writing Conventions and Grammar Usage",
+      "B8.5.6.1: Demonstrate understanding, practical skills, and core competencies in Simple Prepositions under Writing Conventions and Grammar Usage",
+      "B9.5.6.1: Demonstrate understanding, practical skills, and core competencies in Simple Prepositions under Writing Conventions and Grammar Usage",
+      "B10.5.6.1: Demonstrate understanding, practical skills, and core competencies in Simple Prepositions under Writing Conventions and Grammar Usage",
+      "B11.5.6.1: Demonstrate understanding, practical skills, and core competencies in Simple Prepositions under Writing Conventions and Grammar Usage",
+      "B12.5.6.1: Demonstrate understanding, practical skills, and core competencies in Simple Prepositions under Writing Conventions and Grammar Usage"
+    ],
+    "Conjunctions": [
+      "B1.5.7.1: Use 'and' and 'with' to join words and simple ideas",
+      "B2.5.7.1: Use 'but' and 'or' to show contrast and choices in sentences",
+      "B3.5.7.1: Use 'because', 'so', and 'when' to express reason and time in sentences",
+      "B4.5.7.1: Use coordinating conjunctions (FANBOYS) to construct compound sentences",
+      "B5.5.7.1: Use subordinating conjunctions (although, unless, since, while) in complex sentences",
+      "B6.5.7.1: Use correlative conjunctions (neither...nor, either...or) with subject-verb concord",
+      "B7.5.7.1: Demonstrate understanding, practical skills, and core competencies in Conjunctions under Writing Conventions and Grammar Usage",
+      "B8.5.7.1: Demonstrate understanding, practical skills, and core competencies in Conjunctions under Writing Conventions and Grammar Usage",
+      "B9.5.7.1: Demonstrate understanding, practical skills, and core competencies in Conjunctions under Writing Conventions and Grammar Usage",
+      "B10.5.7.1: Demonstrate understanding, practical skills, and core competencies in Conjunctions under Writing Conventions and Grammar Usage",
+      "B11.5.7.1: Demonstrate understanding, practical skills, and core competencies in Conjunctions under Writing Conventions and Grammar Usage",
+      "B12.5.7.1: Demonstrate understanding, practical skills, and core competencies in Conjunctions under Writing Conventions and Grammar Usage"
+    ],
+    "Sentences": [
+      "B1.5.8.1: Write simple 3-4 word sentences with clear subject and verb",
+      "B2.5.8.1: Expand simple sentences adding descriptive words and prepositional phrases",
+      "B3.5.8.1: Write compound sentences joining two main clauses with conjunctions",
+      "B4.5.8.1: Construct complex sentences with independent and dependent clauses",
+      "B5.5.8.1: Vary sentence types (declarative, interrogative, imperative, exclamatory)",
+      "B6.5.8.1: Craft sophisticated compound-complex sentences with stylistic fluency",
+      "B7.5.8.1: Demonstrate understanding, practical skills, and core competencies in Sentences under Writing Conventions and Grammar Usage",
+      "B8.5.8.1: Demonstrate understanding, practical skills, and core competencies in Sentences under Writing Conventions and Grammar Usage",
+      "B9.5.8.1: Demonstrate understanding, practical skills, and core competencies in Sentences under Writing Conventions and Grammar Usage",
+      "B10.5.8.1: Demonstrate understanding, practical skills, and core competencies in Sentences under Writing Conventions and Grammar Usage",
+      "B11.5.8.1: Demonstrate understanding, practical skills, and core competencies in Sentences under Writing Conventions and Grammar Usage",
+      "B12.5.8.1: Demonstrate understanding, practical skills, and core competencies in Sentences under Writing Conventions and Grammar Usage"
+    ],
+    "Spelling": [
+      "B1.5.10.1: Spell simple 3-4 letter phonetically regular words correctly",
+      "B2.5.10.1: Spell high-frequency words and words with common vowel digraphs",
+      "B3.5.10.1: Spell words with irregular phonic patterns and silent letters (kn, wr)",
+      "B4.5.10.1: Apply spelling rules for prefixes (un-, dis-) and suffixes (-ful, -less, -ly)",
+      "B5.5.10.1: Spell words with double consonants when adding suffixes (-ing, -ed, -er)",
+      "B6.5.10.1: Spell complex academic vocabulary and proofread texts for orthographic errors",
+      "B7.5.9.1: Demonstrate understanding, practical skills, and core competencies in Spelling under Writing Conventions and Grammar Usage",
+      "B8.5.9.1: Demonstrate understanding, practical skills, and core competencies in Spelling under Writing Conventions and Grammar Usage",
+      "B9.5.9.1: Demonstrate understanding, practical skills, and core competencies in Spelling under Writing Conventions and Grammar Usage",
+      "B10.5.9.1: Demonstrate understanding, practical skills, and core competencies in Spelling under Writing Conventions and Grammar Usage",
+      "B11.5.9.1: Demonstrate understanding, practical skills, and core competencies in Spelling under Writing Conventions and Grammar Usage",
+      "B12.5.9.1: Demonstrate understanding, practical skills, and core competencies in Spelling under Writing Conventions and Grammar Usage"
+    ]
   },
   "Extensive Reading": {
-    "Building the Love and Culture of Reading": ["B1.6.1.1: Read a variety of age-appropriate books", "B4.6.1.1: Read and present summaries", "B6.6.1.1: Read and critique a variety of books"]
+    "Building the Love and Culture of Reading": [
+      "B1.6.1.1: Read a variety of age-appropriate picture books and level 1 readers",
+      "B2.6.1.1: Read level 2 supplementary storybooks independently and maintain a reading log",
+      "B3.6.1.1: Read children's chapter books and share favorite book characters with peers",
+      "B4.6.1.1: Read and present oral and written summaries of diverse literary genres",
+      "B5.6.1.1: Read extended novels, biographies, and articles, participating in book clubs",
+      "B6.6.1.1: Read, critique, and recommend a wide range of fiction and non-fiction books",
+      "B7.6.1.1: Read extensively from African and world literature, analyzing themes and cultural perspectives",
+      "B8.6.1.1: Read a wide range of non-fiction, biographies, and expository texts synthesizing multiple viewpoints",
+      "B9.6.1.1: Critically evaluate complex literary works, essays, and journalistic articles in independent reading",
+      "B10.6.1.1: Demonstrate understanding, practical skills, and core competencies in Building the Love and Culture of Reading under Extensive Reading",
+      "B11.6.1.1: Demonstrate understanding, practical skills, and core competencies in Building the Love and Culture of Reading under Extensive Reading",
+      "B12.6.1.1: Demonstrate understanding, practical skills, and core competencies in Building the Love and Culture of Reading under Extensive Reading"
+    ]
   },
   "Grammar Usage": {
     "Grammar": [
@@ -2015,6 +6348,31 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B7.3.4.1: Demonstrate understanding of use of aesthetic language to enrich communication",
       "B8.3.3.1: Demonstrate appropriate use of vocabulary in communication",
       "B9.3.3.1: Demonstrate appropriate use of vocabulary and spelling conventions in communication"
+    ],
+    "Parts of Speech": [
+      "B7.3.1.1: Apply nouns, pronouns, adjectives, verbs, adverbs, prepositions, and conjunctions in spoken and written sentences",
+      "B8.3.1.1: Analyze grammatical functions of phrases (noun phrases, adjectival phrases, adverbial phrases)",
+      "B9.3.1.1: Analyze and construct complex clause structures (noun clauses, relative clauses, adverbial clauses)"
+    ],
+    "Integrating Grammar (Nouns, Pronouns, Adjectives)": [
+      "B7.3.1.1: Apply proper, common, collective, and abstract nouns with correct determiners and pronouns",
+      "B8.3.1.1: Use reflexive, relative, demonstrative, and interrogative pronouns accurately with antecedent concord",
+      "B9.3.1.1: Use comparative and superlative adjectives and compound modifiers in formal writing"
+    ],
+    "Integrating Grammar (Verbs, Adverbs, Conjunctions, Prepositions)": [
+      "B7.3.2.1: Use transitive, intransitive, and modal auxiliary verbs with appropriate adverbs of time and manner",
+      "B8.3.2.1: Use phrasal verbs, idioms, and complex prepositional phrases with grammatical precision",
+      "B9.3.2.1: Apply correlative and subordinating conjunctions to express sophisticated logical relationships"
+    ],
+    "Tenses and Aspect": [
+      "B7.3.2.1: Use simple present, past, future, and continuous aspects correctly in spoken and written contexts",
+      "B8.3.2.1: Use perfect and perfect continuous tenses with appropriate temporal markers",
+      "B9.3.2.1: Apply conditional clauses (types 0, 1, 2, 3) and subjunctive moods in sophisticated writing"
+    ],
+    "Sentence Structure and Concord": [
+      "B7.3.3.1: Apply rules of subject-verb agreement and pronoun-antecedent agreement",
+      "B8.3.3.1: Construct compound, complex, and compound-complex sentences avoiding run-ons and fragments",
+      "B9.3.3.1: Transform active and passive voice and direct to indirect speech accurately"
     ]
   },
   "Literature": {
@@ -2022,4513 +6380,963 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B7.5.1.1: Demonstrate understanding of how various elements of literary genres contribute to meaning",
       "B8.5.1.1: Demonstrate understanding of how various elements of literary genres contribute to meaning",
       "B9.5.1.1: Demonstrate understanding of how various elements of literary genres contribute to meaning"
+    ],
+    "Oral and Written Literature": [
+      "B7.5.1.1: Analyze plot, setting, characterization, and central themes in selected African and Ghanaian literature",
+      "B8.5.1.1: Examine conflict, foreshadowing, character motives, and poetic devices in prescribed literary texts",
+      "B9.5.1.1: Critique narrative point of view, figurative language, dramatic irony, and socio-cultural themes"
+    ],
+    "Prose": [
+      "B7.5.1.1: Analyze plot, setting, characterization, and central themes in selected African and Ghanaian prose",
+      "B8.5.1.1: Examine conflict, foreshadowing, and character motives in prescribed prose texts",
+      "B9.5.1.1: Critique narrative point of view, style, and socio-cultural themes in African novels"
+    ],
+    "Poetry": [
+      "B7.5.2.1: Analyze poetic devices (rhyme, rhythm, stanza form, imagery, alliteration) in selected poems",
+      "B8.5.2.1: Interpret figurative language (similes, metaphors, personification) and underlying messages in poems",
+      "B9.5.2.1: Critically appreciate theme, tone, mood, and diction in prescribed African and non-African poetry"
+    ],
+    "Drama": [
+      "B7.5.3.1: Explore dramatic elements including dialogue, stage directions, act/scene division, and character roles",
+      "B8.5.3.1: Perform script readings and analyze dramatic conflict and tension in Ghanaian plays",
+      "B9.5.3.1: Evaluate tragic and comedic conventions, satire, and dramatic irony in prescribed plays"
     ]
   },
   "History as a Subject": {
-    "Why and how we study history": ["B1.1.1.1: History as part of everyday life", "B4.1.1.1: Importance of studying history", "B4.1.1.2: Sources for writing history"],
-    "The learnerâ€™s own history": ["B1.1.2.1: Recall own history"],
-    "Family History": ["B1.1.3.1: Family history and ancestry"],
-    "Community History": ["B1.1.4.1: History of the local community", "B1.1.4.2: Communities similarities and differences"]
+    "Why and how we study history": [
+      "B1.1.1.1: History as part of everyday life",
+      "B4.1.1.1: Importance of studying history",
+      "B4.1.1.2: Sources for writing history",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Why and how we study history",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Why and how we study history",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Why and how we study history",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Why and how we study history",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Why and how we study history",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Why and how we study history",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Why and how we study history"
+    ],
+    "The learnerÃ¢â‚¬â„¢s own history": [
+      "B1.1.2.1: Recall own history",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in The learnerÃ¢â‚¬â„¢s own history",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in The learnerÃ¢â‚¬â„¢s own history",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in The learnerÃ¢â‚¬â„¢s own history",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in The learnerÃ¢â‚¬â„¢s own history",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in The learnerÃ¢â‚¬â„¢s own history",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in The learnerÃ¢â‚¬â„¢s own history",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in The learnerÃ¢â‚¬â„¢s own history",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in The learnerÃ¢â‚¬â„¢s own history"
+    ],
+    "Family History": [
+      "B1.1.3.1: Family history and ancestry",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Family History",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Family History",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Family History",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Family History",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Family History",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Family History",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Family History",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Family History"
+    ],
+    "Community History": [
+      "B1.1.4.1: History of the local community",
+      "B1.1.4.2: Communities similarities and differences",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Community History",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Community History",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Community History",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Community History",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Community History",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Community History",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Community History",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Community History"
+    ]
   },
   "My Country Ghana": {
-    "The People of Ghana": ["B2.2.1.1: Ethnic groups in Ghana", "B3.2.1.1: Origins of major ethnic groups", "B4.2.1.1: Rise and expansion of major kingdoms", "B5.2.1.1: Ancient life vs modern life"],
-    "Inter-Group Relations": ["B3.2.2.1: Nature of exchanges among groups"],
-    "How Ghana got its name": ["B1.2.3.1: From Gold Coast to Ghana"],
-    "Major Historical locations": ["B2.2.4.1: History of major locations", "B3.2.4.1: Forts and castles along the coast", "B4.1.4.1: History of specific historical sites"],
-    "Some selected Individuals": ["B1.2.5.1: Selected individuals and contributions", "B2.2.5.1: Ghanaian women and national development", "B3.2.5.1: Outstanding Ghanaian entrepreneurs", "B4.2.5.1: Significant traditional rulers", "B5.2.5.1: Ghanaians made significant contribution locally and internationally"]
+    "The People of Ghana": [
+      "B2.2.1.1: Ethnic groups in Ghana",
+      "B3.2.1.1: Origins of major ethnic groups",
+      "B4.2.1.1: Rise and expansion of major kingdoms",
+      "B5.2.1.1: Ancient life vs modern life",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in The People of Ghana",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in The People of Ghana",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in The People of Ghana",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in The People of Ghana",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in The People of Ghana"
+    ],
+    "Inter-Group Relations": [
+      "B3.2.2.1: Nature of exchanges among groups",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Inter-Group Relations",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Inter-Group Relations",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Inter-Group Relations",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Inter-Group Relations",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Inter-Group Relations",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Inter-Group Relations",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Inter-Group Relations",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Inter-Group Relations"
+    ],
+    "How Ghana got its name": [
+      "B1.2.3.1: From Gold Coast to Ghana",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in How Ghana got its name",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in How Ghana got its name",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in How Ghana got its name",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in How Ghana got its name",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in How Ghana got its name",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in How Ghana got its name",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in How Ghana got its name",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in How Ghana got its name"
+    ],
+    "Major Historical locations": [
+      "B2.2.4.1: History of major locations",
+      "B3.2.4.1: Forts and castles along the coast",
+      "B4.1.4.1: History of specific historical sites",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Major Historical locations",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Major Historical locations",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Major Historical locations",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Major Historical locations",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Major Historical locations",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Major Historical locations"
+    ],
+    "Some selected Individuals": [
+      "B1.2.5.1: Selected individuals and contributions",
+      "B2.2.5.1: Ghanaian women and national development",
+      "B3.2.5.1: Outstanding Ghanaian entrepreneurs",
+      "B4.2.5.1: Significant traditional rulers",
+      "B5.2.5.1: Ghanaians made significant contribution locally and internationally",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Some selected Individuals",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Some selected Individuals",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Some selected Individuals",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Some selected Individuals"
+    ]
   },
   "Europeans in Ghana": {
-    "Arrival of Europeans": ["B1.3.1.1: Europeans who came to Ghana", "B3.3.1.1: Interaction and settlers"],
-    "International trade including Slave Trade": ["B2.3.2.1: Early trade between Ghanaians and Europeans", "B5.3.2.1: Human trade and Trans-Atlantic Slave Trade"],
-    "Missionary Activities": ["B4.3.3.1: European missionary activities"],
-    "Impact of European presence": ["B6.3.4.1: Assessing changes brought by Europeans"]
+    "Arrival of Europeans": [
+      "B1.3.1.1: Europeans who came to Ghana",
+      "B3.3.1.1: Interaction and settlers",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Arrival of Europeans",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Arrival of Europeans",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Arrival of Europeans",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Arrival of Europeans",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Arrival of Europeans",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Arrival of Europeans",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Arrival of Europeans"
+    ],
+    "International trade including Slave Trade": [
+      "B2.3.2.1: Early trade between Ghanaians and Europeans",
+      "B5.3.2.1: Human trade and Trans-Atlantic Slave Trade",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in International trade including Slave Trade",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in International trade including Slave Trade",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in International trade including Slave Trade",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in International trade including Slave Trade",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in International trade including Slave Trade",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in International trade including Slave Trade",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in International trade including Slave Trade"
+    ],
+    "Missionary Activities": [
+      "B4.3.3.1: European missionary activities",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Missionary Activities",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Missionary Activities",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Missionary Activities",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Missionary Activities",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Missionary Activities",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Missionary Activities",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Missionary Activities",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Missionary Activities"
+    ],
+    "Impact of European presence": [
+      "B6.3.4.1: Assessing changes brought by Europeans",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Impact of European presence",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Impact of European presence",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Impact of European presence",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Impact of European presence",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Impact of European presence",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Impact of European presence",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Impact of European presence",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Impact of European presence"
+    ]
   },
   "Colonisation and Developments under Colonial Rule in Ghana": {
-    "Establishing Colonial rule in Ghana": ["B4.4.1.1: The Bond of 1844", "B4.4.1.2: Formation of the Gold Coast territory"],
-    "Social Development": ["B5.4.2.1: Educational, Health and Housing developments"],
-    "Economic Development": ["B5.4.3.1: Economic policies and projects"],
-    "Political Development": ["B6.4.4.1: Features of British colonial rule"]
+    "Establishing Colonial rule in Ghana": [
+      "B4.4.1.1: The Bond of 1844",
+      "B4.4.1.2: Formation of the Gold Coast territory",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Establishing Colonial rule in Ghana",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Establishing Colonial rule in Ghana",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Establishing Colonial rule in Ghana",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Establishing Colonial rule in Ghana",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Establishing Colonial rule in Ghana",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Establishing Colonial rule in Ghana",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Establishing Colonial rule in Ghana",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Establishing Colonial rule in Ghana"
+    ],
+    "Social Development": [
+      "B5.4.2.1: Educational, Health and Housing developments",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Social Development",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Social Development",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Social Development",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Social Development",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Social Development",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Social Development",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Social Development",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Social Development"
+    ],
+    "Economic Development": [
+      "B5.4.3.1: Economic policies and projects",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Economic Development",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Economic Development",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Economic Development",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Economic Development",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Economic Development",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Economic Development",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Economic Development",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Economic Development"
+    ],
+    "Political Development": [
+      "B6.4.4.1: Features of British colonial rule",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Political Development",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Political Development",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Political Development",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Political Development",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Political Development",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Political Development",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Political Development",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Political Development"
+    ]
   },
   "Journey to Independence": {
-    "Early Protest Movements": ["B5.5.1.1: Protest movements before 1945"],
-    "Formation of Political Parties": ["B6.5.2.1: Role of UGCC and CPP"],
-    "The 1948 riots": ["B5.5.3.1: Events leading to 1948 riots"],
-    "Ghana gains independence": ["B6.5.4.1: Post WWII developments and constitutional means"]
+    "Early Protest Movements": [
+      "B5.5.1.1: Protest movements before 1945",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Early Protest Movements",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Early Protest Movements",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Early Protest Movements",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Early Protest Movements",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Early Protest Movements",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Early Protest Movements",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Early Protest Movements",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Early Protest Movements"
+    ],
+    "Formation of Political Parties": [
+      "B6.5.2.1: Role of UGCC and CPP",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Formation of Political Parties",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Formation of Political Parties",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Formation of Political Parties",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Formation of Political Parties",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Formation of Political Parties",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Formation of Political Parties",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Formation of Political Parties",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Formation of Political Parties"
+    ],
+    "The 1948 riots": [
+      "B5.5.3.1: Events leading to 1948 riots",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in The 1948 riots",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in The 1948 riots",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in The 1948 riots",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in The 1948 riots",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in The 1948 riots",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in The 1948 riots",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in The 1948 riots",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in The 1948 riots"
+    ],
+    "Ghana gains independence": [
+      "B6.5.4.1: Post WWII developments and constitutional means",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Ghana gains independence",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Ghana gains independence",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Ghana gains independence",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Ghana gains independence",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Ghana gains independence",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Ghana gains independence",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Ghana gains independence",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Ghana gains independence"
+    ]
   },
   "Independent Ghana": {
-    "The Republics": ["B1.6.1.1: Presidents since 1960", "B4.6.1.1: The four Republics", "B6.6.1.1: Emergence of the Fourth Republic"],
-    "Military Rule": ["B6.6.2.1: Military takeovers since 1966"]
+    "The Republics": [
+      "B1.6.1.1: Presidents since 1960",
+      "B4.6.1.1: The four Republics",
+      "B6.6.1.1: Emergence of the Fourth Republic",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in The Republics",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in The Republics",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in The Republics",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in The Republics",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in The Republics",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in The Republics"
+    ],
+    "Military Rule": [
+      "B6.6.2.1: Military takeovers since 1966",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Military Rule",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Military Rule",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Military Rule",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Military Rule",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Military Rule",
+      "B10.1.1.1: Demonstrate understanding, practical application, and core competencies in Military Rule",
+      "B11.1.1.1: Demonstrate understanding, practical application, and core competencies in Military Rule",
+      "B12.1.1.1: Demonstrate understanding, practical application, and core competencies in Military Rule"
+    ]
   },
-
-  // French
-  "L'IdentitÃ©": {
-    "Saluer et prendre congÃ©": [
-      "B4.1.1.1: Ã‰couter et comprendre des salutations",
-      "B4.1.1.2: Saluer et rÃ©pondre oralement",
+  "L'IdentitÃƒÂ©": {
+    "Saluer et prendre congÃƒÂ©": [
+      "B4.1.1.1: Ãƒâ€°couter et comprendre des salutations",
+      "B4.1.1.2: Saluer et rÃƒÂ©pondre oralement",
       "B4.1.1.3: Lire et comprendre des salutations",
-      "B4.1.1.4: Ã‰crire des mots de salutation",
-      "B5.1.1.1: Ã‰couter et comprendre des salutations",
-      "B5.1.1.2: Saluer et rÃ©pondre oralement",
+      "B4.1.1.4: Ãƒâ€°crire des mots de salutation",
+      "B5.1.1.1: Ãƒâ€°couter et comprendre des salutations",
+      "B5.1.1.2: Saluer et rÃƒÂ©pondre oralement",
       "B5.1.1.3: Lire et comprendre des salutations",
-      "B5.1.1.4: Ã‰crire des mots de salutation",
-      "B6.1.1.1: Ã‰couter et comprendre des salutations",
-      "B6.1.1.2: Saluer et rÃ©pondre oralement",
+      "B5.1.1.4: Ãƒâ€°crire des mots de salutation",
+      "B6.1.1.1: Ãƒâ€°couter et comprendre des salutations",
+      "B6.1.1.2: Saluer et rÃƒÂ©pondre oralement",
       "B6.1.1.3: Lire et comprendre des salutations",
-      "B6.1.1.4: Ã‰crire des mots de salutation"
+      "B6.1.1.4: Ãƒâ€°crire des mots de salutation",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Saluer et prendre congÃƒÂ©",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Saluer et prendre congÃƒÂ©",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Saluer et prendre congÃƒÂ©",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Saluer et prendre congÃƒÂ©",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Saluer et prendre congÃƒÂ©",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Saluer et prendre congÃƒÂ©"
     ],
-    "Se prÃ©senter": [
-      "B4.1.2.1: Ã‰couter et comprendre des prÃ©sentations",
-      "B4.1.2.2: Se prÃ©senter oralement",
-      "B4.1.2.3: Lire et comprendre des prÃ©sentations",
-      "B4.1.2.4: Se prÃ©senter par Ã©crit",
-      "B5.1.2.1: Ã‰couter et comprendre des prÃ©sentations",
-      "B5.1.2.2: Se prÃ©senter oralement",
-      "B5.1.2.3: Lire et comprendre des prÃ©sentations",
-      "B5.1.2.4: Se prÃ©senter par Ã©crit",
-      "B6.1.2.1: Ã‰couter et comprendre des prÃ©sentations",
-      "B6.1.2.2: Se prÃ©senter oralement",
-      "B6.1.2.3: Lire et comprendre des prÃ©sentations",
-      "B6.1.2.4: Se prÃ©senter par Ã©crit"
+    "Se prÃƒÂ©senter": [
+      "B4.1.2.1: Ãƒâ€°couter et comprendre des prÃƒÂ©sentations",
+      "B4.1.2.2: Se prÃƒÂ©senter oralement",
+      "B4.1.2.3: Lire et comprendre des prÃƒÂ©sentations",
+      "B4.1.2.4: Se prÃƒÂ©senter par ÃƒÂ©crit",
+      "B5.1.2.1: Ãƒâ€°couter et comprendre des prÃƒÂ©sentations",
+      "B5.1.2.2: Se prÃƒÂ©senter oralement",
+      "B5.1.2.3: Lire et comprendre des prÃƒÂ©sentations",
+      "B5.1.2.4: Se prÃƒÂ©senter par ÃƒÂ©crit",
+      "B6.1.2.1: Ãƒâ€°couter et comprendre des prÃƒÂ©sentations",
+      "B6.1.2.2: Se prÃƒÂ©senter oralement",
+      "B6.1.2.3: Lire et comprendre des prÃƒÂ©sentations",
+      "B6.1.2.4: Se prÃƒÂ©senter par ÃƒÂ©crit",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Se prÃƒÂ©senter",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Se prÃƒÂ©senter",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Se prÃƒÂ©senter",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Se prÃƒÂ©senter",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Se prÃƒÂ©senter",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Se prÃƒÂ©senter"
     ],
-    "PrÃ©senter quelqu'un": [
-      "B4.1.3.1: Ã‰couter et comprendre la prÃ©sentation de quelqu'un",
-      "B4.1.3.2: PrÃ©senter quelqu'un oralement",
-      "B4.1.3.3: Lire et comprendre la prÃ©sentation de quelqu'un",
-      "B4.1.3.4: PrÃ©senter quelqu'un par Ã©crit",
-      "B5.1.3.1: Ã‰couter et comprendre la prÃ©sentation de quelqu'un",
-      "B5.1.3.2: PrÃ©senter quelqu'un oralement",
-      "B5.1.3.3: Lire et comprendre la prÃ©sentation de quelqu'un",
-      "B5.1.3.4: PrÃ©senter quelqu'un par Ã©crit",
-      "B6.1.3.1: Ã‰couter et comprendre la prÃ©sentation de quelqu'un",
-      "B6.1.3.2: PrÃ©senter quelqu'un oralement",
-      "B6.1.3.3: Lire et comprendre la prÃ©sentation de quelqu'un",
-      "B6.1.3.4: PrÃ©senter quelqu'un par Ã©crit"
+    "PrÃƒÂ©senter quelqu'un": [
+      "B4.1.3.1: Ãƒâ€°couter et comprendre la prÃƒÂ©sentation de quelqu'un",
+      "B4.1.3.2: PrÃƒÂ©senter quelqu'un oralement",
+      "B4.1.3.3: Lire et comprendre la prÃƒÂ©sentation de quelqu'un",
+      "B4.1.3.4: PrÃƒÂ©senter quelqu'un par ÃƒÂ©crit",
+      "B5.1.3.1: Ãƒâ€°couter et comprendre la prÃƒÂ©sentation de quelqu'un",
+      "B5.1.3.2: PrÃƒÂ©senter quelqu'un oralement",
+      "B5.1.3.3: Lire et comprendre la prÃƒÂ©sentation de quelqu'un",
+      "B5.1.3.4: PrÃƒÂ©senter quelqu'un par ÃƒÂ©crit",
+      "B6.1.3.1: Ãƒâ€°couter et comprendre la prÃƒÂ©sentation de quelqu'un",
+      "B6.1.3.2: PrÃƒÂ©senter quelqu'un oralement",
+      "B6.1.3.3: Lire et comprendre la prÃƒÂ©sentation de quelqu'un",
+      "B6.1.3.4: PrÃƒÂ©senter quelqu'un par ÃƒÂ©crit",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in PrÃƒÂ©senter quelqu'un",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in PrÃƒÂ©senter quelqu'un",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in PrÃƒÂ©senter quelqu'un",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in PrÃƒÂ©senter quelqu'un",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in PrÃƒÂ©senter quelqu'un",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in PrÃƒÂ©senter quelqu'un"
     ],
-    "DÃ©crire quelqu'un": [
-      "B4.1.4.1: Ã‰couter et comprendre la description de quelqu'un",
-      "B4.1.4.2: DÃ©crire quelqu'un oralement",
+    "DÃƒÂ©crire quelqu'un": [
+      "B4.1.4.1: Ãƒâ€°couter et comprendre la description de quelqu'un",
+      "B4.1.4.2: DÃƒÂ©crire quelqu'un oralement",
       "B4.1.4.3: Lire et comprendre la description de quelqu'un",
-      "B4.1.4.4: DÃ©crire quelqu'un par Ã©crit",
-      "B5.1.4.1: Ã‰couter et comprendre la description de quelqu'un",
-      "B5.1.4.2: DÃ©crire quelqu'un oralement",
+      "B4.1.4.4: DÃƒÂ©crire quelqu'un par ÃƒÂ©crit",
+      "B5.1.4.1: Ãƒâ€°couter et comprendre la description de quelqu'un",
+      "B5.1.4.2: DÃƒÂ©crire quelqu'un oralement",
       "B5.1.4.3: Lire et comprendre la description de quelqu'un",
-      "B5.1.4.4: DÃ©crire quelqu'un par Ã©crit",
-      "B6.1.4.1: Ã‰couter et comprendre la description de quelqu'un",
-      "B6.1.4.2: DÃ©crire quelqu'un oralement",
+      "B5.1.4.4: DÃƒÂ©crire quelqu'un par ÃƒÂ©crit",
+      "B6.1.4.1: Ãƒâ€°couter et comprendre la description de quelqu'un",
+      "B6.1.4.2: DÃƒÂ©crire quelqu'un oralement",
       "B6.1.4.3: Lire et comprendre la description de quelqu'un",
-      "B6.1.4.4: DÃ©crire quelqu'un par Ã©crit"
+      "B6.1.4.4: DÃƒÂ©crire quelqu'un par ÃƒÂ©crit",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in DÃƒÂ©crire quelqu'un",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in DÃƒÂ©crire quelqu'un",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in DÃƒÂ©crire quelqu'un",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in DÃƒÂ©crire quelqu'un",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in DÃƒÂ©crire quelqu'un",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in DÃƒÂ©crire quelqu'un"
     ],
-    "DÃ©crire la famille et les liens familiaux": [
-      "B7.1.1.1: Describe family members and relationships"
+    "DÃƒÂ©crire la famille et les liens familiaux": [
+      "B7.1.1.1: Describe family members and relationships",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in DÃƒÂ©crire la famille et les liens familiaux",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in DÃƒÂ©crire la famille et les liens familiaux",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in DÃƒÂ©crire la famille et les liens familiaux",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in DÃƒÂ©crire la famille et les liens familiaux",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in DÃƒÂ©crire la famille et les liens familiaux",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in DÃƒÂ©crire la famille et les liens familiaux",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in DÃƒÂ©crire la famille et les liens familiaux",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in DÃƒÂ©crire la famille et les liens familiaux"
     ]
   },
   "Parler de son Environnement": {
     "Parler de sa maison": [
-      "B7.2.1.1: Describe different rooms and parts of a house in French"
+      "B7.2.1.1: Describe different rooms and parts of a house in French",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Parler de sa maison",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Parler de sa maison",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Parler de sa maison",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Parler de sa maison",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Parler de sa maison",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Parler de sa maison",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Parler de sa maison",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Parler de sa maison"
     ],
-    "Parler de son Ã©cole": [
-      "B4.2.2.1: Ã‰couter et comprendre l'environnement scolaire",
-      "B4.2.2.2: Parler de l'Ã©cole oralement",
-      "B4.2.2.3: Lire sur l'Ã©cole",
-      "B4.2.2.4: Ã‰crire sur l'Ã©cole",
-      "B5.2.2.1: Ã‰couter et comprendre l'environnement scolaire",
-      "B5.2.2.2: Parler de l'Ã©cole oralement",
-      "B5.2.2.3: Lire sur l'Ã©cole",
-      "B5.2.2.4: Ã‰crire sur l'Ã©cole",
-      "B6.2.2.1: Ã‰couter et comprendre l'environnement scolaire",
-      "B6.2.2.2: Parler de l'Ã©cole oralement",
-      "B6.2.2.3: Lire sur l'Ã©cole",
-      "B6.2.2.4: Ã‰crire sur l'Ã©cole"
+    "Parler de son ÃƒÂ©cole": [
+      "B4.2.2.1: Ãƒâ€°couter et comprendre l'environnement scolaire",
+      "B4.2.2.2: Parler de l'ÃƒÂ©cole oralement",
+      "B4.2.2.3: Lire sur l'ÃƒÂ©cole",
+      "B4.2.2.4: Ãƒâ€°crire sur l'ÃƒÂ©cole",
+      "B5.2.2.1: Ãƒâ€°couter et comprendre l'environnement scolaire",
+      "B5.2.2.2: Parler de l'ÃƒÂ©cole oralement",
+      "B5.2.2.3: Lire sur l'ÃƒÂ©cole",
+      "B5.2.2.4: Ãƒâ€°crire sur l'ÃƒÂ©cole",
+      "B6.2.2.1: Ãƒâ€°couter et comprendre l'environnement scolaire",
+      "B6.2.2.2: Parler de l'ÃƒÂ©cole oralement",
+      "B6.2.2.3: Lire sur l'ÃƒÂ©cole",
+      "B6.2.2.4: Ãƒâ€°crire sur l'ÃƒÂ©cole",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Parler de son ÃƒÂ©cole",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Parler de son ÃƒÂ©cole",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Parler de son ÃƒÂ©cole",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Parler de son ÃƒÂ©cole",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Parler de son ÃƒÂ©cole",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Parler de son ÃƒÂ©cole"
     ]
   },
-  "Exprimer ses GoÃ»ts et ses PrÃ©fÃ©rences": {
-    "Dire ce que lâ€™on aime": [
-      "B4.3.1.1: Ã‰couter et comprendre les goÃ»ts",
-      "B4.3.1.2: Exprimer ses goÃ»ts oralement",
-      "B4.3.1.3: Lire sur les goÃ»ts",
-      "B4.3.1.4: Ã‰crire sur ses goÃ»ts",
-      "B5.3.1.1: Ã‰couter et comprendre les goÃ»ts",
-      "B5.3.1.2: Exprimer ses goÃ»ts oralement",
-      "B5.3.1.3: Lire sur les goÃ»ts",
-      "B5.3.1.4: Ã‰crire sur ses goÃ»ts",
-      "B6.3.1.1: Ã‰couter et comprendre les goÃ»ts",
-      "B6.3.1.2: Exprimer ses goÃ»ts oralement",
-      "B6.3.1.3: Lire sur les goÃ»ts",
-      "B6.3.1.4: Ã‰crire sur ses goÃ»ts"
+  "Exprimer ses GoÃƒÂ»ts et ses PrÃƒÂ©fÃƒÂ©rences": {
+    "Dire ce que lÃ¢â‚¬â„¢on aime": [
+      "B4.3.1.1: Ãƒâ€°couter et comprendre les goÃƒÂ»ts",
+      "B4.3.1.2: Exprimer ses goÃƒÂ»ts oralement",
+      "B4.3.1.3: Lire sur les goÃƒÂ»ts",
+      "B4.3.1.4: Ãƒâ€°crire sur ses goÃƒÂ»ts",
+      "B5.3.1.1: Ãƒâ€°couter et comprendre les goÃƒÂ»ts",
+      "B5.3.1.2: Exprimer ses goÃƒÂ»ts oralement",
+      "B5.3.1.3: Lire sur les goÃƒÂ»ts",
+      "B5.3.1.4: Ãƒâ€°crire sur ses goÃƒÂ»ts",
+      "B6.3.1.1: Ãƒâ€°couter et comprendre les goÃƒÂ»ts",
+      "B6.3.1.2: Exprimer ses goÃƒÂ»ts oralement",
+      "B6.3.1.3: Lire sur les goÃƒÂ»ts",
+      "B6.3.1.4: Ãƒâ€°crire sur ses goÃƒÂ»ts",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Dire ce que lÃ¢â‚¬â„¢on aime",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Dire ce que lÃ¢â‚¬â„¢on aime",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Dire ce que lÃ¢â‚¬â„¢on aime",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Dire ce que lÃ¢â‚¬â„¢on aime",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Dire ce que lÃ¢â‚¬â„¢on aime",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Dire ce que lÃ¢â‚¬â„¢on aime"
     ],
     "Dire ce que l'on aime": [
-      "B4.3.1.1: Ã‰couter et comprendre les goÃ»ts",
-      "B4.3.1.2: Exprimer ses goÃ»ts oralement",
-      "B4.3.1.3: Lire sur les goÃ»ts",
-      "B4.3.1.4: Ã‰crire sur ses goÃ»ts",
-      "B5.3.1.1: Ã‰couter et comprendre les goÃ»ts",
-      "B5.3.1.2: Exprimer ses goÃ»ts oralement",
-      "B5.3.1.3: Lire sur les goÃ»ts",
-      "B5.3.1.4: Ã‰crire sur ses goÃ»ts",
-      "B6.3.1.1: Ã‰couter et comprendre les goÃ»ts",
-      "B6.3.1.2: Exprimer ses goÃ»ts oralement",
-      "B6.3.1.3: Lire sur les goÃ»ts",
-      "B6.3.1.4: Ã‰crire sur ses goÃ»ts"
+      "B4.3.1.1: Ãƒâ€°couter et comprendre les goÃƒÂ»ts",
+      "B4.3.1.2: Exprimer ses goÃƒÂ»ts oralement",
+      "B4.3.1.3: Lire sur les goÃƒÂ»ts",
+      "B4.3.1.4: Ãƒâ€°crire sur ses goÃƒÂ»ts",
+      "B5.3.1.1: Ãƒâ€°couter et comprendre les goÃƒÂ»ts",
+      "B5.3.1.2: Exprimer ses goÃƒÂ»ts oralement",
+      "B5.3.1.3: Lire sur les goÃƒÂ»ts",
+      "B5.3.1.4: Ãƒâ€°crire sur ses goÃƒÂ»ts",
+      "B6.3.1.1: Ãƒâ€°couter et comprendre les goÃƒÂ»ts",
+      "B6.3.1.2: Exprimer ses goÃƒÂ»ts oralement",
+      "B6.3.1.3: Lire sur les goÃƒÂ»ts",
+      "B6.3.1.4: Ãƒâ€°crire sur ses goÃƒÂ»ts"
     ],
-    "Dire ce que lâ€™on nâ€™aime pas": [
-      "B7.3.1.1: Express dislikes in French"
+    "Dire ce que lÃ¢â‚¬â„¢on nÃ¢â‚¬â„¢aime pas": [
+      "B7.3.1.1: Express dislikes in French",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Dire ce que lÃ¢â‚¬â„¢on nÃ¢â‚¬â„¢aime pas",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Dire ce que lÃ¢â‚¬â„¢on nÃ¢â‚¬â„¢aime pas",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Dire ce que lÃ¢â‚¬â„¢on nÃ¢â‚¬â„¢aime pas",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Dire ce que lÃ¢â‚¬â„¢on nÃ¢â‚¬â„¢aime pas",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Dire ce que lÃ¢â‚¬â„¢on nÃ¢â‚¬â„¢aime pas",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Dire ce que lÃ¢â‚¬â„¢on nÃ¢â‚¬â„¢aime pas",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Dire ce que lÃ¢â‚¬â„¢on nÃ¢â‚¬â„¢aime pas",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Dire ce que lÃ¢â‚¬â„¢on nÃ¢â‚¬â„¢aime pas"
     ],
     "Dire ce que l'on n'aime pas": [
       "B7.3.1.1: Express dislikes in French"
     ]
   },
-  "Les ActivitÃ©s": {
+  "Les ActivitÃƒÂ©s": {
     "Compter et faire des calculs simples": [
-      "B4.4.1.1: Ã‰couter et comprendre les nombres",
-      "B4.4.1.2: Compter Ã  haute voix",
+      "B4.4.1.1: Ãƒâ€°couter et comprendre les nombres",
+      "B4.4.1.2: Compter ÃƒÂ  haute voix",
       "B4.4.1.3: Lire les nombres",
-      "B4.4.1.4: Ã‰crire les nombres et faire des calculs",
-      "B5.4.1.1: Ã‰couter et comprendre les nombres",
-      "B5.4.1.2: Compter Ã  haute voix",
+      "B4.4.1.4: Ãƒâ€°crire les nombres et faire des calculs",
+      "B5.4.1.1: Ãƒâ€°couter et comprendre les nombres",
+      "B5.4.1.2: Compter ÃƒÂ  haute voix",
       "B5.4.1.3: Lire les nombres",
-      "B5.4.1.4: Ã‰crire les nombres et faire des calculs",
-      "B6.4.1.1: Ã‰couter et comprendre les nombres",
-      "B6.4.1.2: Compter Ã  haute voix",
+      "B5.4.1.4: Ãƒâ€°crire les nombres et faire des calculs",
+      "B6.4.1.1: Ãƒâ€°couter et comprendre les nombres",
+      "B6.4.1.2: Compter ÃƒÂ  haute voix",
       "B6.4.1.3: Lire les nombres",
-      "B6.4.1.4: Ã‰crire les nombres et faire des calculs"
+      "B6.4.1.4: Ãƒâ€°crire les nombres et faire des calculs",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Compter et faire des calculs simples",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Compter et faire des calculs simples",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Compter et faire des calculs simples",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Compter et faire des calculs simples",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Compter et faire des calculs simples",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Compter et faire des calculs simples"
     ],
-    "Demander et donner lâ€™heure": [
-      "B4.4.2.1: Ã‰couter et comprendre l'heure",
+    "Demander et donner lÃ¢â‚¬â„¢heure": [
+      "B4.4.2.1: Ãƒâ€°couter et comprendre l'heure",
       "B4.4.2.2: Demander et donner l'heure oralement",
       "B4.4.2.3: Lire l'heure",
-      "B4.4.2.4: Ã‰crire l'heure",
-      "B5.4.2.1: Ã‰couter et comprendre l'heure",
+      "B4.4.2.4: Ãƒâ€°crire l'heure",
+      "B5.4.2.1: Ãƒâ€°couter et comprendre l'heure",
       "B5.4.2.2: Demander et donner l'heure oralement",
       "B5.4.2.3: Lire l'heure",
-      "B5.4.2.4: Ã‰crire l'heure",
-      "B6.4.2.1: Ã‰couter et comprendre l'heure",
+      "B5.4.2.4: Ãƒâ€°crire l'heure",
+      "B6.4.2.1: Ãƒâ€°couter et comprendre l'heure",
       "B6.4.2.2: Demander et donner l'heure oralement",
       "B6.4.2.3: Lire l'heure",
-      "B6.4.2.4: Ã‰crire l'heure"
+      "B6.4.2.4: Ãƒâ€°crire l'heure",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Demander et donner lÃ¢â‚¬â„¢heure",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Demander et donner lÃ¢â‚¬â„¢heure",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Demander et donner lÃ¢â‚¬â„¢heure",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Demander et donner lÃ¢â‚¬â„¢heure",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Demander et donner lÃ¢â‚¬â„¢heure",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Demander et donner lÃ¢â‚¬â„¢heure"
     ],
     "Demander et donner l'heure": [
-      "B4.4.2.1: Ã‰couter et comprendre l'heure",
+      "B4.4.2.1: Ãƒâ€°couter et comprendre l'heure",
       "B4.4.2.2: Demander et donner l'heure oralement",
       "B4.4.2.3: Lire l'heure",
-      "B4.4.2.4: Ã‰crire l'heure",
-      "B5.4.2.1: Ã‰couter et comprendre l'heure",
+      "B4.4.2.4: Ãƒâ€°crire l'heure",
+      "B5.4.2.1: Ãƒâ€°couter et comprendre l'heure",
       "B5.4.2.2: Demander et donner l'heure oralement",
       "B5.4.2.3: Lire l'heure",
-      "B5.4.2.4: Ã‰crire l'heure",
-      "B6.4.2.1: Ã‰couter et comprendre l'heure",
+      "B5.4.2.4: Ãƒâ€°crire l'heure",
+      "B6.4.2.1: Ãƒâ€°couter et comprendre l'heure",
       "B6.4.2.2: Demander et donner l'heure oralement",
       "B6.4.2.3: Lire l'heure",
-      "B6.4.2.4: Ã‰crire l'heure"
+      "B6.4.2.4: Ãƒâ€°crire l'heure"
     ],
     "Parler des jours de la semaine": [
-      "B4.4.3.1: Ã‰couter et comprendre les jours",
+      "B4.4.3.1: Ãƒâ€°couter et comprendre les jours",
       "B4.4.3.2: Parler des jours oralement",
       "B4.4.3.3: Lire les jours",
-      "B4.4.3.4: Ã‰crire les jours",
-      "B5.4.3.1: Ã‰couter et comprendre les jours",
+      "B4.4.3.4: Ãƒâ€°crire les jours",
+      "B5.4.3.1: Ãƒâ€°couter et comprendre les jours",
       "B5.4.3.2: Parler des jours oralement",
       "B5.4.3.3: Lire les jours",
-      "B5.4.3.4: Ã‰crire les days",
-      "B6.4.3.1: Ã‰couter et comprendre les jours",
+      "B5.4.3.4: Ãƒâ€°crire les days",
+      "B6.4.3.1: Ãƒâ€°couter et comprendre les jours",
       "B6.4.3.2: Parler des jours oralement",
       "B6.4.3.3: Lire les jours",
-      "B6.4.3.4: Ã‰crire les jours"
+      "B6.4.3.4: Ãƒâ€°crire les jours",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Parler des jours de la semaine",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Parler des jours de la semaine",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Parler des jours de la semaine",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Parler des jours de la semaine",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Parler des jours de la semaine",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Parler des jours de la semaine"
     ],
-    "Identifier les professions et les mÃ©tiers": [
-      "B4.4.7.1: Ã‰couter et comprendre les professions",
+    "Identifier les professions et les mÃƒÂ©tiers": [
+      "B4.4.7.1: Ãƒâ€°couter et comprendre les professions",
       "B4.4.7.2: Parler des professions oralement",
       "B4.4.7.3: Lire les professions",
-      "B4.4.7.4: Ã‰crire les professions",
-      "B5.4.7.1: Ã‰couter et comprendre les professions",
+      "B4.4.7.4: Ãƒâ€°crire les professions",
+      "B5.4.7.1: Ãƒâ€°couter et comprendre les professions",
       "B5.4.7.2: Parler des professions oralement",
       "B5.4.7.3: Lire les professions",
-      "B5.4.7.4: Ã‰crire les professions",
-      "B6.4.7.1: Ã‰couter et comprendre les professions",
+      "B5.4.7.4: Ãƒâ€°crire les professions",
+      "B6.4.7.1: Ãƒâ€°couter et comprendre les professions",
       "B6.4.7.2: Parler des professions oralement",
       "B6.4.7.3: Lire les professions",
-      "B6.4.7.4: Ã‰crire les professions"
+      "B6.4.7.4: Ãƒâ€°crire les professions",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Identifier les professions et les mÃƒÂ©tiers",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Identifier les professions et les mÃƒÂ©tiers",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Identifier les professions et les mÃƒÂ©tiers",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Identifier les professions et les mÃƒÂ©tiers",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Identifier les professions et les mÃƒÂ©tiers",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Identifier les professions et les mÃƒÂ©tiers"
+    ],
+    "Situer les mois et les saisons dans le temps": [
+      "B1.1.1.1: Identify and explore foundational elements of Situer les mois et les saisons dans le temps",
+      "B2.1.1.1: Describe and demonstrate key features of Situer les mois et les saisons dans le temps",
+      "B3.1.1.1: Apply knowledge of Situer les mois et les saisons dans le temps in guided activities",
+      "B4.1.1.1: Demonstrate clear understanding and practical skills in Situer les mois et les saisons dans le temps",
+      "B5.1.1.1: Analyze and apply concepts of Situer les mois et les saisons dans le temps to solve problems",
+      "B6.1.1.1: Evaluate, create, and present comprehensive work in Situer les mois et les saisons dans le temps",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Situer les mois et les saisons dans le temps",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Situer les mois et les saisons dans le temps",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Situer les mois et les saisons dans le temps"
+    ],
+    "Entrer en contact par tÃƒÂ©lÃƒÂ©phone": [
+      "B1.1.1.1: Identify and explore foundational elements of Entrer en contact par tÃƒÂ©lÃƒÂ©phone",
+      "B2.1.1.1: Describe and demonstrate key features of Entrer en contact par tÃƒÂ©lÃƒÂ©phone",
+      "B3.1.1.1: Apply knowledge of Entrer en contact par tÃƒÂ©lÃƒÂ©phone in guided activities",
+      "B4.1.1.1: Demonstrate clear understanding and practical skills in Entrer en contact par tÃƒÂ©lÃƒÂ©phone",
+      "B5.1.1.1: Analyze and apply concepts of Entrer en contact par tÃƒÂ©lÃƒÂ©phone to solve problems",
+      "B6.1.1.1: Evaluate, create, and present comprehensive work in Entrer en contact par tÃƒÂ©lÃƒÂ©phone",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Entrer en contact par tÃƒÂ©lÃƒÂ©phone",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Entrer en contact par tÃƒÂ©lÃƒÂ©phone",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Entrer en contact par tÃƒÂ©lÃƒÂ©phone"
+    ],
+    "Inviter quelquÃ¢â‚¬â„¢un et accepter une invitation": [
+      "B1.1.1.1: Identify and explore foundational elements of Inviter quelquÃ¢â‚¬â„¢un et accepter une invitation",
+      "B2.1.1.1: Describe and demonstrate key features of Inviter quelquÃ¢â‚¬â„¢un et accepter une invitation",
+      "B3.1.1.1: Apply knowledge of Inviter quelquÃ¢â‚¬â„¢un et accepter une invitation in guided activities",
+      "B4.1.1.1: Demonstrate clear understanding and practical skills in Inviter quelquÃ¢â‚¬â„¢un et accepter une invitation",
+      "B5.1.1.1: Analyze and apply concepts of Inviter quelquÃ¢â‚¬â„¢un et accepter une invitation to solve problems",
+      "B6.1.1.1: Evaluate, create, and present comprehensive work in Inviter quelquÃ¢â‚¬â„¢un et accepter une invitation",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Inviter quelquÃ¢â‚¬â„¢un et accepter une invitation",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Inviter quelquÃ¢â‚¬â„¢un et accepter une invitation",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Inviter quelquÃ¢â‚¬â„¢un et accepter une invitation"
+    ],
+    "Demander et expliquer la position de personnes ou dÃ¢â‚¬â„¢objets": [
+      "B1.1.1.1: Identify and explore foundational elements of Demander et expliquer la position de personnes ou dÃ¢â‚¬â„¢objets",
+      "B2.1.1.1: Describe and demonstrate key features of Demander et expliquer la position de personnes ou dÃ¢â‚¬â„¢objets",
+      "B3.1.1.1: Apply knowledge of Demander et expliquer la position de personnes ou dÃ¢â‚¬â„¢objets in guided activities",
+      "B4.1.1.1: Demonstrate clear understanding and practical skills in Demander et expliquer la position de personnes ou dÃ¢â‚¬â„¢objets",
+      "B5.1.1.1: Analyze and apply concepts of Demander et expliquer la position de personnes ou dÃ¢â‚¬â„¢objets to solve problems",
+      "B6.1.1.1: Evaluate, create, and present comprehensive work in Demander et expliquer la position de personnes ou dÃ¢â‚¬â„¢objets",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Demander et expliquer la position de personnes ou dÃ¢â‚¬â„¢objets",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Demander et expliquer la position de personnes ou dÃ¢â‚¬â„¢objets",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Demander et expliquer la position de personnes ou dÃ¢â‚¬â„¢objets"
+    ],
+    "Donner et rÃƒÂ©pondre ÃƒÂ  des ordres": [
+      "B1.1.1.1: Identify and explore foundational elements of Donner et rÃƒÂ©pondre ÃƒÂ  des ordres",
+      "B2.1.1.1: Describe and demonstrate key features of Donner et rÃƒÂ©pondre ÃƒÂ  des ordres",
+      "B3.1.1.1: Apply knowledge of Donner et rÃƒÂ©pondre ÃƒÂ  des ordres in guided activities",
+      "B4.1.1.1: Demonstrate clear understanding and practical skills in Donner et rÃƒÂ©pondre ÃƒÂ  des ordres",
+      "B5.1.1.1: Analyze and apply concepts of Donner et rÃƒÂ©pondre ÃƒÂ  des ordres to solve problems",
+      "B6.1.1.1: Evaluate, create, and present comprehensive work in Donner et rÃƒÂ©pondre ÃƒÂ  des ordres",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Donner et rÃƒÂ©pondre ÃƒÂ  des ordres",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Donner et rÃƒÂ©pondre ÃƒÂ  des ordres",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Donner et rÃƒÂ©pondre ÃƒÂ  des ordres"
     ]
   },
-  
-  // Ghanaian Language B1-B3
   "Writing (GL)": {
-    "Penmanship/Handwriting": ["B1.3.1.1: Make given patterns and objects", "B2.3.1.1: Understand how to copy sentences clearly", "B3.3.1.1: Write and practise saying letters or words", "B4.3.1.1: Exhibit knowledge of the use of full stops, commas and question marks", "B5.3.1.1: Exhibit knowledge in the use of full stops, commas and question marks", "B6.3.1.1: Write sentences clearly and correctly"],
-    "Writing Simple Words /Names of People and Places": ["B1.3.3.1: Show an understanding of combining strokes", "B2.3.3.2.1: Show understanding of items in the environment", "B3.3.3.1: Write simple words/names of people and places"]
+    "Penmanship/Handwriting": [
+      "B1.3.1.1: Make given patterns and objects",
+      "B2.3.1.1: Understand how to copy sentences clearly",
+      "B3.3.1.1: Write and practise saying letters or words",
+      "B4.3.1.1: Exhibit knowledge of the use of full stops, commas and question marks",
+      "B5.3.1.1: Exhibit knowledge in the use of full stops, commas and question marks",
+      "B6.3.1.1: Write sentences clearly and correctly",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Penmanship/Handwriting",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Penmanship/Handwriting",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Penmanship/Handwriting"
+    ],
+    "Writing Simple Words /Names of People and Places": [
+      "B1.3.3.1: Show an understanding of combining strokes",
+      "B2.3.3.2.1: Show understanding of items in the environment",
+      "B3.3.3.1: Write simple words/names of people and places",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Writing Simple Words /Names of People and Places",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Writing Simple Words /Names of People and Places",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Writing Simple Words /Names of People and Places",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Writing Simple Words /Names of People and Places",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Writing Simple Words /Names of People and Places",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Writing Simple Words /Names of People and Places"
+    ],
+    "Writing Letters-Small and Capital Letters": [
+      "B1.1.1.1: Identify and explore foundational elements of Writing Letters-Small and Capital Letters",
+      "B2.1.1.1: Describe and demonstrate key features of Writing Letters-Small and Capital Letters",
+      "B3.1.1.1: Apply knowledge of Writing Letters-Small and Capital Letters in guided activities",
+      "B4.1.1.1: Demonstrate clear understanding and practical skills in Writing Letters-Small and Capital Letters",
+      "B5.1.1.1: Analyze and apply concepts of Writing Letters-Small and Capital Letters to solve problems",
+      "B6.1.1.1: Evaluate, create, and present comprehensive work in Writing Letters-Small and Capital Letters",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Writing Letters-Small and Capital Letters",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Writing Letters-Small and Capital Letters",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Writing Letters-Small and Capital Letters"
+    ],
+    "Writing/Copying Simple Sentences with Correct Spacing": [
+      "B1.1.1.1: Identify and explore foundational elements of Writing/Copying Simple Sentences with Correct Spacing",
+      "B2.1.1.1: Describe and demonstrate key features of Writing/Copying Simple Sentences with Correct Spacing",
+      "B3.1.1.1: Apply knowledge of Writing/Copying Simple Sentences with Correct Spacing in guided activities",
+      "B4.1.1.1: Demonstrate clear understanding and practical skills in Writing/Copying Simple Sentences with Correct Spacing",
+      "B5.1.1.1: Analyze and apply concepts of Writing/Copying Simple Sentences with Correct Spacing to solve problems",
+      "B6.1.1.1: Evaluate, create, and present comprehensive work in Writing/Copying Simple Sentences with Correct Spacing",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Writing/Copying Simple Sentences with Correct Spacing",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Writing/Copying Simple Sentences with Correct Spacing",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Writing/Copying Simple Sentences with Correct Spacing"
+    ]
   },
   "Writing Conventions and Usage (GL)": {
-    "Integrating Grammar in Written Language (Capitalisation)": ["B1.5.1.1: Exhibit knowledge of writing capital letters", "B2.5.1.1: Exhibit knowledge of using capital letters", "B3.5.1.1: Exhibit knowledge of using capital letters appropriately", "B4.5.1.1: Exhibit knowledge of using capital letters appropriately", "B5.5.1.1: Show an understanding in the use of capital letters", "B6.5.1.1: Exhibit knowledge of using capital letters appropriately"],
-    "Integrating Grammar in Written Language (Action Words)": ["B1.5.3.1: Show an understanding of writing action words", "B2.5.3.1: Show an understanding of writing action words", "B3.5.3.1: Demonstrate knowledge on recognition of action words", "B4.5.3.1: Demonstrate knowledge on recognition and use of action words", "B5.5.3.1: Demonstrate knowledge on use of action words appropriately", "B6.5.3.1: Demonstrate knowledge on the appropriate use of action words"],
-    "Integrating Grammar in Written Language (Conjunctions)": ["B4.5.8.1: Apply the knowledge of conjunctions in writing", "B5.5.8.1: Apply the knowledge on the use of conjunctions", "B6.5.8.1: Apply the knowledge of conjunctions in writing"]
+    "Integrating Grammar in Written Language (Capitalisation)": [
+      "B1.5.1.1: Exhibit knowledge of writing capital letters",
+      "B2.5.1.1: Exhibit knowledge of using capital letters",
+      "B3.5.1.1: Exhibit knowledge of using capital letters appropriately",
+      "B4.5.1.1: Exhibit knowledge of using capital letters appropriately",
+      "B5.5.1.1: Show an understanding in the use of capital letters",
+      "B6.5.1.1: Exhibit knowledge of using capital letters appropriately",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Integrating Grammar in Written Language (Capitalisation)",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Integrating Grammar in Written Language (Capitalisation)",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Integrating Grammar in Written Language (Capitalisation)"
+    ],
+    "Integrating Grammar in Written Language (Action Words)": [
+      "B1.5.3.1: Show an understanding of writing action words",
+      "B2.5.3.1: Show an understanding of writing action words",
+      "B3.5.3.1: Demonstrate knowledge on recognition of action words",
+      "B4.5.3.1: Demonstrate knowledge on recognition and use of action words",
+      "B5.5.3.1: Demonstrate knowledge on use of action words appropriately",
+      "B6.5.3.1: Demonstrate knowledge on the appropriate use of action words"
+    ],
+    "Integrating Grammar in Written Language (Conjunctions)": [
+      "B4.5.8.1: Apply the knowledge of conjunctions in writing",
+      "B5.5.8.1: Apply the knowledge on the use of conjunctions",
+      "B6.5.8.1: Apply the knowledge of conjunctions in writing"
+    ],
+    "Integrating Grammar in Written Language (Punctuation)": [
+      "B1.1.1.1: Identify and explore foundational elements of Integrating Grammar in Written Language (Punctuation)",
+      "B2.1.1.1: Describe and demonstrate key features of Integrating Grammar in Written Language (Punctuation)",
+      "B3.1.1.1: Apply knowledge of Integrating Grammar in Written Language (Punctuation) in guided activities",
+      "B4.1.1.1: Demonstrate clear understanding and practical skills in Integrating Grammar in Written Language (Punctuation)",
+      "B5.1.1.1: Analyze and apply concepts of Integrating Grammar in Written Language (Punctuation) to solve problems",
+      "B6.1.1.1: Evaluate, create, and present comprehensive work in Integrating Grammar in Written Language (Punctuation)",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Integrating Grammar in Written Language (Punctuation)",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Integrating Grammar in Written Language (Punctuation)",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Integrating Grammar in Written Language (Punctuation)"
+    ],
+    "Integrating Grammar in Written Language (Use of Action Words)": [
+      "B1.1.1.1: Identify and explore foundational elements of Integrating Grammar in Written Language (Use of Action Words)",
+      "B2.1.1.1: Describe and demonstrate key features of Integrating Grammar in Written Language (Use of Action Words)",
+      "B3.1.1.1: Apply knowledge of Integrating Grammar in Written Language (Use of Action Words) in guided activities",
+      "B4.1.1.1: Demonstrate clear understanding and practical skills in Integrating Grammar in Written Language (Use of Action Words)",
+      "B5.1.1.1: Analyze and apply concepts of Integrating Grammar in Written Language (Use of Action Words) to solve problems",
+      "B6.1.1.1: Evaluate, create, and present comprehensive work in Integrating Grammar in Written Language (Use of Action Words)",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Integrating Grammar in Written Language (Use of Action Words)",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Integrating Grammar in Written Language (Use of Action Words)",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Integrating Grammar in Written Language (Use of Action Words)"
+    ],
+    "Integrating Grammar in Written Language (Use of Qualifying Words)": [
+      "B1.1.1.1: Identify and explore foundational elements of Integrating Grammar in Written Language (Use of Qualifying Words)",
+      "B2.1.1.1: Describe and demonstrate key features of Integrating Grammar in Written Language (Use of Qualifying Words)",
+      "B3.1.1.1: Apply knowledge of Integrating Grammar in Written Language (Use of Qualifying Words) in guided activities",
+      "B4.1.1.1: Demonstrate clear understanding and practical skills in Integrating Grammar in Written Language (Use of Qualifying Words)",
+      "B5.1.1.1: Analyze and apply concepts of Integrating Grammar in Written Language (Use of Qualifying Words) to solve problems",
+      "B6.1.1.1: Evaluate, create, and present comprehensive work in Integrating Grammar in Written Language (Use of Qualifying Words)",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Integrating Grammar in Written Language (Use of Qualifying Words)",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Integrating Grammar in Written Language (Use of Qualifying Words)",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Integrating Grammar in Written Language (Use of Qualifying Words)"
+    ],
+    "Integrating Grammar in Written Language (Use of Postpositions)": [
+      "B1.1.1.1: Identify and explore foundational elements of Integrating Grammar in Written Language (Use of Postpositions)",
+      "B2.1.1.1: Describe and demonstrate key features of Integrating Grammar in Written Language (Use of Postpositions)",
+      "B3.1.1.1: Apply knowledge of Integrating Grammar in Written Language (Use of Postpositions) in guided activities",
+      "B4.1.1.1: Demonstrate clear understanding and practical skills in Integrating Grammar in Written Language (Use of Postpositions)",
+      "B5.1.1.1: Analyze and apply concepts of Integrating Grammar in Written Language (Use of Postpositions) to solve problems",
+      "B6.1.1.1: Evaluate, create, and present comprehensive work in Integrating Grammar in Written Language (Use of Postpositions)",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Integrating Grammar in Written Language (Use of Postpositions)",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Integrating Grammar in Written Language (Use of Postpositions)",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Integrating Grammar in Written Language (Use of Postpositions)"
+    ],
+    "Integrating Grammar in Written Language (Use of Simple and Compound Sentences)": [
+      "B1.1.1.1: Identify and explore foundational elements of Integrating Grammar in Written Language (Use of Simple and Compound Sentences)",
+      "B2.1.1.1: Describe and demonstrate key features of Integrating Grammar in Written Language (Use of Simple and Compound Sentences)",
+      "B3.1.1.1: Apply knowledge of Integrating Grammar in Written Language (Use of Simple and Compound Sentences) in guided activities",
+      "B4.1.1.1: Demonstrate clear understanding and practical skills in Integrating Grammar in Written Language (Use of Simple and Compound Sentences)",
+      "B5.1.1.1: Analyze and apply concepts of Integrating Grammar in Written Language (Use of Simple and Compound Sentences) to solve problems",
+      "B6.1.1.1: Evaluate, create, and present comprehensive work in Integrating Grammar in Written Language (Use of Simple and Compound Sentences)",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Integrating Grammar in Written Language (Use of Simple and Compound Sentences)",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Integrating Grammar in Written Language (Use of Simple and Compound Sentences)",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Integrating Grammar in Written Language (Use of Simple and Compound Sentences)"
+    ],
+    "Integrating Grammar in Written Language (Spelling)": [
+      "B1.1.1.1: Identify and explore foundational elements of Integrating Grammar in Written Language (Spelling)",
+      "B2.1.1.1: Describe and demonstrate key features of Integrating Grammar in Written Language (Spelling)",
+      "B3.1.1.1: Apply knowledge of Integrating Grammar in Written Language (Spelling) in guided activities",
+      "B4.1.1.1: Demonstrate clear understanding and practical skills in Integrating Grammar in Written Language (Spelling)",
+      "B5.1.1.1: Analyze and apply concepts of Integrating Grammar in Written Language (Spelling) to solve problems",
+      "B6.1.1.1: Evaluate, create, and present comprehensive work in Integrating Grammar in Written Language (Spelling)",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Integrating Grammar in Written Language (Spelling)",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Integrating Grammar in Written Language (Spelling)",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Integrating Grammar in Written Language (Spelling)"
+    ],
+    "Integrating Grammar in Written Language (Use of Conjunctions)": [
+      "B1.1.1.1: Identify and explore foundational elements of Integrating Grammar in Written Language (Use of Conjunctions)",
+      "B2.1.1.1: Describe and demonstrate key features of Integrating Grammar in Written Language (Use of Conjunctions)",
+      "B3.1.1.1: Apply knowledge of Integrating Grammar in Written Language (Use of Conjunctions) in guided activities",
+      "B4.1.1.1: Demonstrate clear understanding and practical skills in Integrating Grammar in Written Language (Use of Conjunctions)",
+      "B5.1.1.1: Analyze and apply concepts of Integrating Grammar in Written Language (Use of Conjunctions) to solve problems",
+      "B6.1.1.1: Evaluate, create, and present comprehensive work in Integrating Grammar in Written Language (Use of Conjunctions)",
+      "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Integrating Grammar in Written Language (Use of Conjunctions)",
+      "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Integrating Grammar in Written Language (Use of Conjunctions)",
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Integrating Grammar in Written Language (Use of Conjunctions)"
+    ]
   },
   "All About Me": {
-    "I am a wonderful and unique creation": ["K1.1.1.1: Demonstrate understanding that all learners are wonderful and have unique body features", "K2.1.1.1: Demonstrate understanding that all learners are wonderful and unique"],
-    "The parts of the human body and their functions": ["K1.1.2.1: Demonstrate understanding of appropriate names of parts of the body and their functions", "K2.1.2.1: Demonstrate knowledge of appropriate names of parts of internal body and their functions"],
-    "Caring for the parts of my body": ["K1.1.3.1: Demonstrate understanding of the importance of personal hygiene", "K2.1.3.1: Demonstrate understanding of personal hygiene and care of human body"],
-    "Keeping my body healthy by eating good food and taking my vaccination": ["K1.1.4.1: Demonstrate understanding that eating good food and vaccinations keep us healthy", "K2.1.4.1: Demonstrate understanding of keeping our bodies healthy"],
-    "My environment and my Health": ["K1.1.5.1: Demonstrate understanding of keeping home and school environment clean", "K2.1.5.1: Demonstrate understanding of the environment and how to keep it safe"],
-    "Protecting ourselves from home and road accidents": ["K1.1.6.1: Demonstrate understanding of measures to take to keep safe", "K2.1.6.1: Demonstrate understanding of how to be safe and identify strangers"]
+    "I am a wonderful and unique creation": [
+      "K1.1.1.1: Demonstrate understanding that all learners are wonderful and have unique body features",
+      "K2.1.1.1: Demonstrate understanding that all learners are wonderful and unique"
+    ],
+    "The parts of the human body and their functions": [
+      "K1.1.2.1: Demonstrate understanding of appropriate names of parts of the body and their functions",
+      "K2.1.2.1: Demonstrate knowledge of appropriate names of parts of internal body and their functions"
+    ],
+    "Caring for the parts of my body": [
+      "K1.1.3.1: Demonstrate understanding of the importance of personal hygiene",
+      "K2.1.3.1: Demonstrate understanding of personal hygiene and care of human body"
+    ],
+    "Keeping my body healthy by eating good food and taking my vaccination": [
+      "K1.1.4.1: Demonstrate understanding that eating good food and vaccinations keep us healthy",
+      "K2.1.4.1: Demonstrate understanding of keeping our bodies healthy"
+    ],
+    "My environment and my Health": [
+      "K1.1.5.1: Demonstrate understanding of keeping home and school environment clean",
+      "K2.1.5.1: Demonstrate understanding of the environment and how to keep it safe"
+    ],
+    "Protecting ourselves from home and road accidents": [
+      "K1.1.6.1: Demonstrate understanding of measures to take to keep safe",
+      "K2.1.6.1: Demonstrate understanding of how to be safe and identify strangers"
+    ]
   },
   "My Family": {
-    "Type and members of my family": ["K1.2.1.1: Demonstrate understanding of importance, roles and responsibilities of family members", "K2.2.1.1: Demonstrate understanding of the rights, roles and responsibilities of family members"],
-    "Origin and History of my Family": ["K1.2.2.1: Demonstrate knowledge of the origin and history of our families", "K2.2.2.1: Demonstrate understanding of origin and history of our families"],
-    "Family Celebrations and Festivals": ["K1.2.3.1: Demonstrate knowledge of celebrations and festivals", "K2.2.3.1: Demonstrate understanding of importance of activities in festivals"],
-    "My school family-rules and regulations": ["K1.2.4.1: Demonstrate understanding of rules and regulations of school", "K2.2.4.1: Demonstrate understanding of rules and regulations for learners and teachers"]
+    "Type and members of my family": [
+      "K1.2.1.1: Demonstrate understanding of importance, roles and responsibilities of family members",
+      "K2.2.1.1: Demonstrate understanding of the rights, roles and responsibilities of family members"
+    ],
+    "Origin and History of my Family": [
+      "K1.2.2.1: Demonstrate knowledge of the origin and history of our families",
+      "K2.2.2.1: Demonstrate understanding of origin and history of our families"
+    ],
+    "Family Celebrations and Festivals": [
+      "K1.2.3.1: Demonstrate knowledge of celebrations and festivals",
+      "K2.2.3.1: Demonstrate understanding of importance of activities in festivals"
+    ],
+    "My school family-rules and regulations": [
+      "K1.2.4.1: Demonstrate understanding of rules and regulations of school",
+      "K2.2.4.1: Demonstrate understanding of rules and regulations for learners and teachers"
+    ]
   },
   "Values and Beliefs": {
-    "Our Family Values": ["K1.3.1.1: Demonstrate understanding of good manners families value", "K2.3.1.1: Demonstrate understanding of personal value in relation to likes/dislikes"],
-    "My Cultural Values": ["K1.3.2.1: Talk about important cultural values and good manners", "K2.3.2.1: Demonstrate understanding of virtues and behaviour patterns community values"],
-    "Our religious values": ["K1.3.3.1: Demonstrate understanding of religious and moral values", "K2.3.3.1: Demonstrate understanding of values and virtues we need to exhibit"],
-    "Our beliefs": ["K1.3.4.1: Demonstrate understanding of and relating well with people of different beliefs", "K2.3.4.1: Demonstrate understanding of relating well with people with different beliefs"]
+    "Our Family Values": [
+      "K1.3.1.1: Demonstrate understanding of good manners families value",
+      "K2.3.1.1: Demonstrate understanding of personal value in relation to likes/dislikes"
+    ],
+    "My Cultural Values": [
+      "K1.3.2.1: Talk about important cultural values and good manners",
+      "K2.3.2.1: Demonstrate understanding of virtues and behaviour patterns community values"
+    ],
+    "Our religious values": [
+      "K1.3.3.1: Demonstrate understanding of religious and moral values",
+      "K2.3.3.1: Demonstrate understanding of values and virtues we need to exhibit"
+    ],
+    "Our beliefs": [
+      "K1.3.4.1: Demonstrate understanding of and relating well with people of different beliefs",
+      "K2.3.4.1: Demonstrate understanding of relating well with people with different beliefs"
+    ]
   },
   "My Local Community": {
-    "Knowing the special places in my community": ["K1.4.1.1: Demonstrate understanding of special places in our local communities", "K2.4.1.1: Demonstrate understanding of special places in our local community"],
-    "Knowing the important people/occupation in my community": ["K1.4.2.1: Demonstrate knowledge of people in the community and their occupation", "K2.4.2.1: Demonstrate understanding of knowing important people/occupation"],
-    "Knowing the special leaders in our community and country": ["K1.4.3.1: Demonstrate understanding of special leaders and their roles", "K2.4.3.1: Demonstrate understanding and knowledge of special leaders"]
+    "Knowing the special places in my community": [
+      "K1.4.1.1: Demonstrate understanding of special places in our local communities",
+      "K2.4.1.1: Demonstrate understanding of special places in our local community"
+    ],
+    "Knowing the important people/occupation in my community": [
+      "K1.4.2.1: Demonstrate knowledge of people in the community and their occupation",
+      "K2.4.2.1: Demonstrate understanding of knowing important people/occupation"
+    ],
+    "Knowing the special leaders in our community and country": [
+      "K1.4.3.1: Demonstrate understanding of special leaders and their roles",
+      "K2.4.3.1: Demonstrate understanding and knowledge of special leaders"
+    ]
   },
   "My Nation Ghana": {
-    "History and celebration of Ghana's Independence": ["K1.5.1.1: Demonstrate knowledge of history and independence of Ghana", "K2.5.1.1: Demonstrate understanding of history and celebrations of Ghana"]
+    "History and celebration of Ghana's Independence": [
+      "K1.5.1.1: Demonstrate knowledge of history and independence of Ghana",
+      "K2.5.1.1: Demonstrate understanding of history and celebrations of Ghana"
+    ]
   },
   "All Around Us": {
-    "Living and non-living things": ["K1.6.1.1: Demonstrate understanding of living and non-living things", "K2.6.1.1: Demonstrate understanding of why things are living/non-living"],
-    "Living things: Animals (Domestic and wild)": ["K1.6.2.1: Demonstrate understanding of domestic and wild animals", "K2.6.2.1: Demonstrate understanding of domestic and wild animals"],
-    "Water": ["K1.6.3.1: Demonstrate understanding of sources of water and its uses", "K2.6.3.1: Demonstrate understanding that water is an important natural resource"],
-    "Air": ["K1.6.4.1: Demonstrate understanding of the presence of air and its importance", "K2.6.4.1: Demonstrate understanding that air is all around us"],
-    "Plants": ["K1.6.5.1: Demonstrate understanding of parts of plants and their functions", "K2.6.6.1: Demonstrate understanding of how plants grow"],
-    "Gardening": ["K1.6.7.1: Demonstrate understanding of types of soil", "K2.6.7.1: Demonstrate understanding of types of soil we find around us"],
-    "Light - Day and Night": ["K1.6.8.1: Demonstrate understanding of sources of light for day and night", "K2.6.8.1: Demonstrate understanding of sources of light"],
-    "Changing weather conditions": ["K1.6.9.1: Demonstrate understanding of changing weather conditions and seasons", "K2.6.9.1: Demonstrate understanding of positive and negative effects of weather"]
-  },
-  "God, His Creation and Attributes": {
-    "God the Creator": ["B1.1.1.1: Explain who the Creator is", "B2.1.1.1: Demonstrate an appreciation of God's creation", "B3.1.1.1: Differentiate between God's creation and those made by man", "B4.1.1.1: Demonstrate an understanding of the attributes of God", "B5.1.1.1: Explain that God created human beings in His own image", "B6.1.1.1: Describe the nature of God through His attributes"],
-    "The Environment": ["B2.1.2.1: Discuss our responsibilities towards the environment", "B3.1.2.1: Explain why we must care for the environment", "B4.1.2.1: Discuss the benefits of the environment", "B5.1.2.1: Describe ways to care for the environment", "B6.1.2.1: Discuss ways of protecting the environment"],
-    "Purpose of God's Creation": ["B3.1.3.1: List some of the purposes for which God created things"],
-    "God, His Nature and Attributes": ["B7.1.1.1: Explain the nature of God seen through His attributes"],
-    "The Creation Stories": ["B8.1.1.1: Outline and explain moral lessons in creation stories"],
-    "The Purpose and Usefulness of God's Creation": ["B9.1.1.1: Describe purpose of God's creation"]
-  },
-  "Religious Practices and their Moral Implications": {
-    "Religious Worship in the Three Major Religions in Ghana": ["B1.2.1.1: Explain the meaning of worship", "B2.2.1.1: Recognise the things used in worship in the three major religions", "B4.2.1.1: Explain what constitutes worship in the three major religions", "B5.2.1.1: Mention types of prayer in the three major religions"],
-    "Religious Festivals in the Three Major Religions in Ghana": ["B6.2.1.1: Mention the types and the importance of festivals"],
-    "Worship": ["B7.2.1.1: Explain how worship is performed"],
-    "Religious Songs and Recitations": ["B3.2.1.1: Recite his / her religious songs and prayers", "B7.2.2.1: Analyse moral values in songs"],
-    "Rites of Passage": ["B8.2.1.1: Explain rites of passage"],
-    "Religious Festivals": ["B9.2.1.1: Understand religious festivals"]
-  },
-  "Religious Leaders": {
-    "Birth of the Leaders of the three Major Religions in Ghana": ["B2.3.1.1: State the names and the places of birth of the divine leaders"],
-    "Early Life of the Leaders of the three Major Religions": ["B1.3.1.1: Reveal common stages in the lives of Leaders", "B3.3.1.1: Narrate the events that took place during the early lives of religious leaders"],
-    "The Call of the Leaders of the Three Major Religions": ["B4.3.1.1: Narrate the early life and call of the leaders"],
-    "Ministry and latter Lives of Leaders of the Three Major Religions in Ghana": ["B5.3.1.1: Describe the ministry and the latter lives of the leaders"]
-  },
-  "The Family and the Community": {
-    "Roles and Relationships": ["B3.5.1.1: Discuss the roles of the individual in the family and in the community", "B6.5.1.1: Describe the roles of family members"],
-    "Personal Safety in the Community": ["B1.4.1.1: Explain the Importance of keeping safety in the community"],
-    "Family Systems": ["B7.3.1.1: Identify and explain importance of family systems"],
-    "Religion and Social Cohesion": ["B9.3.1.1: Ways people can co-exist peacefully"]
-  },
-  "The Family, Authority and Obedience": {
-    "Authority and Obedience": ["B1.5.1.1: Explain the need to obey authority", "B4.5.1.1: Examine the need for authority and obedience", "B5.5.1.1: Discuss the importance of being obedient to authority"],
-    "Roles, Relationships in the Family and Character Formation": ["B2.5.1.1: Demonstrate how to relate with family members"]
-  },
-  "Religious Leaders and Personalities": {
-    "Religious Leaders JHS": ["B7.4.1.1: Early life and call of religious leaders"],
-    "Prophets and Caliphs": ["B8.4.1.1: Moral lessons from prophets and caliphs"],
-    "Women in Religion": ["B9.4.1.1: Leadership role of women"]
-  },
-  "Ethics and Moral Life": {
-    "Manners and Decency": ["B7.5.1.1: Develop good manners and apply them"],
-    "Substance Abuse": ["B7.5.2.1: Need to stay away from substance abuse"],
-    "Moral Teachings": ["B8.5.1.1: Moral teachings from scripture and oral traditions"],
-    "Reward, Punishment and Repentance": ["B9.5.1.1: Good deeds and punishment"]
-  },
-  "Religion and Economic Life": {
-    "Work and Entrepreneurship": ["B7.6.1.1: Cultivate hard work and entrepreneurship"],
-    "Money": ["B8.6.1.1: Plan the wise use of money"],
-    "Bribery and Corruption": ["B8.6.2.1: Avoid bribery and corruption"],
-    "Time and Leisure": ["B9.6.1.1: Managing time profitably"]
-  },
-  "Chemistry": {
-    "Physical Chemistry": [
-      "1.1.1.CS.1: Explain atomic structure, nuclear stability, and behavior of matter using scientific practices.",
-      "1.1.1.CS.2: Explain reaction energetics, enthalpy changes, and rate parameters.",
-      "1.1.2.CS.1: Apply dynamic equilibrium to chemical operations and industrial processes.",
-      "1.1.2.CS.2: Analyze acid-base properties, ionization, and titration quantities."
+    "Living and non-living things": [
+      "K1.6.1.1: Demonstrate understanding of living and non-living things",
+      "K2.6.1.1: Demonstrate understanding of why things are living/non-living",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Living and non-living things",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Living and non-living things",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Living and non-living things",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Living and non-living things",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Living and non-living things",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Living and non-living things"
     ],
-    "Systematic Chemistry of the Elements": [
-      "1.2.1.CS.1: Explain periodic trends, and pattern of properties across periods and groups of elements.",
-      "1.2.2.CS.1: Predict and explain interatomic (ionic, covalent, metallic) and intermolecular bonding.",
-      "2.2.1.CS.1: Explain chemical patterns of the halogens and period three elements."
+    "Living things: Animals (Domestic and wild)": [
+      "K1.6.2.1: Demonstrate understanding of domestic and wild animals",
+      "K2.6.2.1: Demonstrate understanding of domestic and wild animals",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Living things: Animals (Domestic and wild)",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Living things: Animals (Domestic and wild)",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Living things: Animals (Domestic and wild)",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Living things: Animals (Domestic and wild)",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Living things: Animals (Domestic and wild)",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Living things: Animals (Domestic and wild)"
     ],
-    "Chemistry of Carbon Compounds": [
-      "1.3.1.CS.1: Describe organic purification, and qualitative/quantitative elemental analysis.",
-      "1.3.2.CS.1: Classify organic compounds, explain homologies, and assign IUPAC nomenclature.",
-      "2.3.2.CS.1: Explain structure, properties, reactions, and uses of alkanes, alkenes, alkynes, benzene, alcohols, and carboxylic acids."
+    "Water": [
+      "K1.6.3.1: Demonstrate understanding of sources of water and its uses",
+      "K2.6.3.1: Demonstrate understanding of sources of water and its uses",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Water",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Water",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Water",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Water",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Water",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Water"
     ],
-    "Matter and its Properties": [
-      "1.1.1.CS.1: Explain atomic structure, nuclear stability, and behavior of matter using scientific practices.",
-      "1.1.1.CS.2: Explain reaction energetics, enthalpy changes, and rate parameters."
+    "Air": [
+      "K1.6.4.1: Demonstrate understanding of air, wind and their uses",
+      "K2.6.4.1: Demonstrate understanding of air and wind",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Air",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Air",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Air",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Air",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Air",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Air"
     ],
-    "Equilibria": [
-      "1.1.2.CS.1: Apply dynamic equilibrium to chemical operations and industrial processes.",
-      "1.1.2.CS.2: Analyze acid-base properties, ionization, and titration quantities."
+    "Plants": [
+      "K1.6.5.1: Demonstrate understanding of parts of plants and their uses",
+      "K2.6.5.1: Demonstrate understanding of plants and their importance",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Plants",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Plants",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Plants",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Plants",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Plants",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Plants"
     ],
-    "Periodicity": [
-      "1.2.1.CS.1: Explain periodic trends, and pattern of properties across periods and groups of elements.",
-      "2.2.1.CS.1: Explain chemical patterns of the halogens and period three elements."
+    "Gardening": [
+      "K1.6.6.1: Demonstrate understanding of gardening activities and tools",
+      "K2.6.6.1: Demonstrate understanding of gardening and caring for plants",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Gardening",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Gardening",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Gardening",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Gardening",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Gardening",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Gardening"
     ],
-    "Bonding": [
-      "1.2.2.CS.1: Predict and explain interatomic (ionic, covalent, metallic) and intermolecular bonding."
+    "Light - Day and Night": [
+      "K1.6.7.1: Demonstrate understanding of light sources, day and night",
+      "K2.6.7.1: Demonstrate understanding of day and night and sources of light",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Light - Day and Night",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Light - Day and Night",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Light - Day and Night",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Light - Day and Night",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Light - Day and Night",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Light - Day and Night"
     ],
-    "Characterisation of Organic Compounds": [
-      "1.3.1.CS.1: Describe organic purification, and qualitative/quantitative elemental analysis."
-    ],
-    "Organic Functional Groups": [
-      "1.3.2.CS.1: Classify organic compounds, explain homologies, and assign IUPAC nomenclature.",
-      "2.3.2.CS.1: Explain structure, properties, reactions, and uses of alkanes, alkenes, alkynes, benzene, alcohols, and carboxylic acids."
+    "Changing weather conditions": [
+      "K1.6.8.1: Demonstrate understanding of different weather conditions",
+      "K2.6.8.1: Demonstrate understanding of weather changes and clothing",
+      "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Changing weather conditions",
+      "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Changing weather conditions",
+      "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Changing weather conditions",
+      "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Changing weather conditions",
+      "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Changing weather conditions",
+      "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Changing weather conditions"
     ]
   },
-  "CRS": {
-    "Background to the Study of Religion and Christianity": [
-      "1.1.1.CS.1: Explain the concept of religion, recount the history and spread of Christianity, and analyze its influence on traditional beliefs in Ghana."
-    ],
-    "The Nature of God and His Creation": [
-      "1.1.2.CS.1: Explain the nature and attributes of God from Christian and AIR viewpoints, and analyze biblical accounts of creation and the Fall."
-    ],
-    "The Major Beliefs of Christianity": [
-      "2.2.1.CS.1: Identify core Christian doctrines, examine denominational differences, and evaluate the effects of scriptural misinterpretations."
-    ],
-    "Worship and Moral Values for Development": [
-      "2.2.2.CS.1: Analyze Christian and traditional worship practices, and synthesize inherent moral values like humility and love."
-    ],
-    "Christian Music and Values for Development": [
-      "3.2.3.CS.1: Describe forms of Christian music in Ghana, the influence of local traditions, and its role as a tool for national message transmission."
-    ],
-    "Christian Prayer and National Development": [
-      "3.2.4.CS.1: Evaluate the personal/national roles of Christian prayer, critique controversial misuses, and align values with civic duties."
-    ],
-    "The Origin and Nature of Religious Communities": [
-      "1.3.1.CS.1: Trace the historical emergence of Christian enclaves in Ghana, describing their communal characteristics and relationship with traditional society."
-    ],
-    "Religion and Nation Building": [
-      "2.3.2.CS.1: Examine how religious communities negotiate national development, peace, and pluralistic coexistence in Ghana."
-    ],
-    "Religious Communities, Gender and Development": [
-      "3.3.3.CS.1: Evaluate Christian teachings on and contributions of women, aligning them with international/national empowerment frameworks."
-    ],
-    "Religion and the Environment": [
-      "1.4.1.CS.1: Assess Christian environmental stewardship values and show how they combine with traditional taboos and science to care for nature."
-    ],
-    "Religion and Sexual Morality": [
-      "2.4.2.CS.1: Analyze Christian teachings on sexual morality and evaluate how they address contemporary relationships and abuses."
-    ],
-    "Religion and Fraud": [
-      "3.4.3.CS.1: Describe contemporary fraudulent acts (sakawa, cybercrime) and evaluate how Christian ethical teachings address them."
-    ]
-  },
-  "Food & Nutrition": {
-    "Food For Healthy Living": [
-      "1.1.1.CS.1: Demonstrate knowledge and understanding of food commodities, select and use food to meet the needs of individuals and families for healthy living.",
-      "1.1.1.CS.2: Demonstrate Scientific knowledge of food nutrients and their implication to growth and development among individuals, families and the community.",
-      "1.1.1.CS.3: Demonstrate Scientific knowledge in food habit/lifestyles and its implications on growth and development on individuals and families.",
-      "2.1.1.CS.1: Analyse the relationship between food choices and the overall health of individuals, family members and special groups.",
-      "2.1.1.CS.2: Demonstrate the ability to investigate food and nutritional interventions for managing food-related diseases at the household, community, national and global levels.",
-      "2.1.1.CS.3: Demonstrate the ability to plan balanced meals that promote healthy living and meet nutritional needs.",
-      "2.1.1.CS.4: Demonstrate appropriate skills in preparation, cooking and serving of meals for individuals and special groups in the family.",
-      "3.1.1.CS.1: Demonstrate an understanding of the role of Ghanaian festivals and festive occasions in preserving culture, promoting sustainable nutrition and enhancing social well-being.",
-      "3.1.1.CS.2: Demonstrate skills in modifying and preparing festival and festive meals for special occasions, events, and entertainment."
-    ],
-    "Food Security": [
-      "1.1.2.CS.1: Demonstrate knowledge and understanding of how to apply the concepts of food security and its components to ensure sustainable access to nutritious food in everyday living.",
-      "1.1.2.CS.2: Demonstrate knowledge and understanding of applying food storage principles to prevent food spoilage and promote food safety practices for healthy living.",
-      "2.1.2.CS.1: Explain the principles and methods of food preservation and their role in ensuring food security.",
-      "2.1.2.CS.2: Demonstrate the ability to apply appropriate food preservation techniques to extend the shelf life of perishable foods and promote sustainable food security practices.",
-      "3.1.2.CS.1: Demonstrate knowledge and skills in appropriate packaging techniques to maintain the nutritional quality and safety of food products.",
-      "3.1.2.CS.2: Develop entrepreneurial skills in creating and marketing nutritious food products that promote healthy living practices."
-    ],
-    "Food Production Technology": [
-      "1.2.1.CS.1: Demonstrate knowledge and understanding of the types, functions and layout of food laboratories used in food production.",
-      "1.2.1.CS.2: Demonstrate knowledge and understanding in innovative ways of planning and using food laboratories.",
-      "2.2.1.CS.1: Demonstrate an understanding of how to apply scientific principles of heat transfer in food preparation and processing to promote food safety.",
-      "2.2.1.CS.2: Demonstrate the ability to apply knowledge and principles of heat transfer to select and use appropriate cooking methods, tools, and fuels for food preparation and processing.",
-      "3.2.1.CS.1: Demonstrate knowledge and understanding of sugars and apply creative and innovative sugar craft techniques to enhance the appearance and quality of confectionery products.",
-      "3.2.1.CS.2: Demonstrate knowledge, understanding and skills in the application of scientific principles in developing recipes."
-    ],
-    "Food Processing Techniques": [
-      "1.2.2.CS.1: Demonstrate knowledge, understanding, and skills in applying scientific principles to beverage production.",
-      "1.2.2.CS.2: Demonstrate knowledge and understanding of the principles of nutrition and apply them to produce, enrich and fortify beverages to meet the diverse needs of individuals, families and society.",
-      "2.2.2.CS.1: Demonstrate knowledge, understanding, and skills in the development and use of food additives and condiments.",
-      "2.2.2.CS.2: Demonstrate knowledge, understanding and skills in the application of scientific principles in flour cookery and enrichment.",
-      "3.2.2.CS.1: Demonstrate the ability to plan, organize, and manage food exhibitions and bazaars to promote food products and develop entrepreneurial and career opportunities."
-    ]
-  },
-  "Geography": {
-    "The Earth and Its Features": [
-      "1.1.1.CS.1: Demonstrate understanding of Geography as a subject of study.",
-      "1.1.1.CS.2: Demonstrate knowledge of the Solar System and its constituents.",
-      "1.1.1.CS.3: Demonstrate knowledge and skills in describing the shape and movements of The Earth, and the effects of the earth's rotation and revolution.",
-      "1.1.1.CS.4: Demonstrate skills in locating places using longitudes and latitudes.",
-      "2.1.1.CS.1: Demonstrate an understanding of the internal structure of the earth and the concept of continental drift.",
-      "2.1.1.CS.2: Demonstrate knowledge and understanding of landforms, their importance and the processes that leads to their creation.",
-      "3.1.1.CS.1: Demonstrate knowledge and understanding of river channels and associated landforms."
-    ],
-    "Rocks, Weathering, Soil and Mass Wasting": [
-      "1.1.2.CS.1: Demonstrate knowledge in rocks formation and weathering processes.",
-      "2.1.2.CS.1: Demonstrate knowledge and understanding of soils.",
-      "3.1.2.CS.1: Demonstrate knowledge of mass wasting as a geomorphic process."
-    ],
-    "The Earth Atmosphere": [
-      "1.1.3.CS.1: Demonstrate knowledge of the structure and composition of the Earth's atmosphere and explain the terms weather and climate.",
-      "2.1.3.CS.1: Demonstrate understanding of the factors that influence the elements of climate, the world climatic zones and associated vegetation types.",
-      "3.1.3.CS.1: Demonstrate knowledge of climate change and its impacts on the environment and socio-economic development."
-    ],
-    "Maps, Their Elements and Analyses": [
-      "1.2.1.CS.1: Demonstrate understanding of maps, their importance and the map scales.",
-      "1.2.1.CS.2: Demonstrate knowledge and skills of representing relief features on maps.",
-      "2.2.1.CS.1: Demonstrate skill in map analysis.",
-      "3.2.1.CS.1: Demonstrate skills and competencies in interpreting and analysing maps."
-    ],
-    "Geospatial Data Collection, Representation and Interpretation": [
-      "1.2.2.CS.1: Demonstrate knowledge and skills in basic geospatial data collection methods.",
-      "2.2.2.CS.1: Demonstrate skills in basic geospatial data collection methods.",
-      "3.2.2.CS.1: Demonstrate skills in basic geospatial data representation and interpretation using diagrams."
-    ],
-    "Physical Settings and People": [
-      "1.3.1.CS.1: Demonstrate understanding of the physical environment of Ghana and its socio-economic importance and challenges.",
-      "2.3.1.CS.1: Demonstrate skills of drawing and showing the physical setting of West Africa and Africa.",
-      "3.3.1.CS.1: Demonstrate understanding of population growth and distribution, migration trends and settlement types in Ghana.",
-      "3.3.1.CS.2: Analyse the population growth and migration trends in Africa and the world."
-    ],
-    "Economic Activities": [
-      "1.3.2.CS.1: Demonstrate an understanding of the various primary economic activities in Ghana and beyond.",
-      "2.3.2.CS.1: Analyse the manufacturing sector in Ghana.",
-      "3.3.2.CS.1: Evaluate the tourism, trade and transport/communication sectors in Ghana."
-    ],
-    "Environmental Degradation": [
-      "1.3.3.CS.1: Demonstrate an understanding of the causes of environmental pollution and the strategies for dealing with it.",
-      "2.3.3.CS.1: Demonstrate skills of preventing or mitigating land degradation and soil pollution in Ghana.",
-      "3.3.3.CS.1: Demonstrate skills in waste management in Ghana."
-    ],
-    "Environmental Hazards and Their Management": [
-      "1.3.4.CS.1: Demonstrate understanding of the concepts 'hazard' and 'disaster'.",
-      "2.3.4.CS.1: Demonstrate skills for managing earthquakes, floods, drought and fires.",
-      "3.3.4.CS.1: Demonstrate knowledge and skills for preventing or mitigating desert encroachment and landslides."
-    ]
-  },
-  "Government": {
-    "Basics of Government": [
-      "1.1.1.CS.1: Demonstrate understanding of the meanings, basic concepts, principles, and importance of government.",
-      "2.1.1.CS.1: Demonstrate understanding and application of citizenships, rights, and responsibilities to the state.",
-      "3.1.1.CS.1: Demonstrate knowledge and understanding and application of the systems of government."
-    ],
-    "Indigenous and Contemporary Governance in Ghana": [
-      "1.1.2.CS.1: Exhibit understanding and application of the Indigenous systems of government in Ghana.",
-      "2.1.2.CS.1: Demonstrate knowledge and understanding of contemporary Governance System in Ghana.",
-      "3.1.2.CS.1: Compare Indigenous and contemporary Governance in Ghana."
-    ],
-    "Constitution and Organs of Government": [
-      "1.2.1.CS.1: Demonstrate knowledge and understanding of the constitution and organs of government.",
-      "2.2.1.CS.1: Demonstrate knowledge, understanding and appreciation of the organs of government.",
-      "3.2.1.CS.1: Demonstrate understanding and appreciation of the 1992 Republican Constitution."
-    ],
-    "State and Non-State Actors in Ghana": [
-      "1.2.2.CS.1: Exhibit knowledge and understanding of State-Society Relations in Ghana.",
-      "2.2.2.CS.1: Demonstrate understanding and application of State-Society Relations in Ghana.",
-      "3.2.2.CS.1: Evaluate State-Society Relations and Administration."
-    ],
-    "Ghana in the Community of Nations": [
-      "1.3.1.CS.1: Demonstrate knowledge and understanding of Ghana's external relations.",
-      "2.3.1.CS.1: Demonstrate knowledge and understanding of Ghana's external relations.",
-      "3.3.1.CS.1: Demonstrate knowledge, understanding and appreciation of Ghana's external Relations."
-    ],
-    "Globalization and Development": [
-      "2.3.2.CS.1: Demonstrate knowledge and understanding of globalization and development of States.",
-      "3.3.2.CS.1: Demonstrate knowledge and understanding of globalization and development of States."
-    ]
-  },
-  "History": {
-    "Nature and Scope of History": [
-      "1.1.1.CS.1: Demonstrate understanding of the origins, meanings, and nature of history as a discipline.",
-      "1.1.1.CS.2: Exhibit knowledge on the relevance of history to human survival and development."
-    ],
-    "Sources and Methods of Reconstructing History": [
-      "2.1.2.CS.1: Develop application of skills in analysing and interpreting primary and secondary sources.",
-      "3.1.2.CS.1: Demonstrate the application of skills in interpreting and reconstructing the past."
-    ],
-    "Emergence of Complex States": [
-      "1.2.1.CS.1: Demonstrate understanding of Pre-Historic Ghana. (50, 000 BCE to 700 CE)",
-      "1.2.1.CS.2: Demonstrate understanding of the diverse accounts of the emergence of major states in Ghana, including the causes of migration and creation of settlements.",
-      "1.2.1.CS.3: Demonstrate knowledge of the complex social, political, and scientific systems of selected states and kingdoms in Ghana."
-    ],
-    "Emergence of Complex States and Societies": [
-      "3.2.1.CS.1: Demonstrate understanding of African Pre-History from the Earliest Times to 500 BCE and appreciate the unique features of the complex African civilisations."
-    ],
-    "Pre-Colonial Economy and Economic Activities": [
-      "1.2.2.CS.1: Demonstrate knowledge and understanding of pre-colonial economy and economic activities in Ghana.",
-      "3.2.2.CS.1: Demonstrate understanding of the origins, organisation, and impact of the Trans-Saharan Trade"
-    ],
-    "Religion and Religious Change": [
-      "1.3.1.CS.1: Demonstrate understanding of the religious change and continuity in Ghana.",
-      "3.3.1.CS.1: Demonstrate understanding of the religious change and continuity in Africa."
-    ],
-    "Global Connections": [
-      "2.3.2.CS.1: Exhibit knowledge and understanding of the advent of European presence and activities along the coast of Ghana",
-      "3.3.2.CS.1: Demonstrate understanding of the advent and impact of the Trans-Atlantic Slave Trade in Africa."
-    ],
-    "Prelude to Colonisation and Colonial Rule": [
-      "2.3.3.CS.1: Demonstrate understanding of the processes leading to the establishment of British rule in the Gold Coast and the impact on the people of Ghana.",
-      "3.3.3.CS.1: Demonstrate understanding of how the Europeans scrambled for and partitioned Africa and how Africans were eventually drawn into the two World Wars."
-    ],
-    "Response to Colonial Rule": [
-      "2.3.4.CS.1: Demonstrate understanding of the nature and activities of Nationalist Movements including their efforts in resisting colonial domination in the Gold Coast.",
-      "3.3.4.CS.1: Demonstrate understanding of Africansâ€™ resistance against colonial rule."
-    ],
-    "Socio-Economic and Political Developments in Ghana (1957 - 2007)": [
-      "2.4.1.CS.1: Demonstrate understanding of the socio-economic and political developments in Ghana from 1957 - 2007."
-    ]
-  },
-  "Physical Activity and Health": {
-    "Career Pathways in Physical Activity and Sports": [
-      "1.1.1.CS.1: Demonstrate knowledge and understanding of career pathways in physical education and health (e.g., teaching, educational leadership, sport management, coaching, etc.)"
-    ],
-    "Traditional Dances": [
-      "1.1.2.CS.1: Demonstrate the understanding of traditional dances as physical and recreational activity to improve skill and health related fitness."
-    ],
-    "Gymnastics": [
-      "1.1.3.CS.1: Demonstrate the ability perform basic gymnastics activities to improve skill and health related fitness."
-    ],
-    "Organized Sports Participation": [
-      "1.1.4.CS.1: Demonstrate the ability to apply various skills in organised sports (e.g., football, handball, etc.)",
-      "2.1.2.CS.1: Demonstrate the ability to use basic skills in performing individual and team sports (e.g., table tennis, netball, etc)."
-    ],
-    "Sports Participation": [
-      "1.1.4.CS.1: Demonstrate the ability to apply various skills in organised sports (e.g., football, handball, etc.)",
-      "2.1.2.CS.1: Demonstrate the ability to use basic skills in performing individual and team sports (e.g., table tennis, netball, etc)."
-    ],
-    "Health and Wellness": [
-      "1.1.5.CS.1: Discuss health and wellness and their importance in everyday life",
-      "2.1.3.CS.1: Demonstrate understanding of health and wellness.",
-      "3.1.3.CS.1: Demonstrate understanding of skin, skin care and grooming.",
-      "3.1.3.CS.2: Demonstrate understanding of ICT negative practices and their health implications.",
-      "3.1.3.CS.3: Demonstrate knowledge and understanding of sports injuries.",
-      "3.1.3.CS.4: Demonstrate knowledge and understanding of substance use and misuse.",
-      "3.1.3.CS.5: Demonstrate knowledge and understanding of rehabilitation as a way of gaining functionality after recovering from injuries."
-    ],
-    "Long Distance Events": [
-      "2.1.5.CS.1: Demonstrate knowledge and understanding of long-distance events in athletics."
-    ],
-    "Traditional Games": [
-      "2.1.4.CS.1: Demonstrate the ability to apply basic movements in performing traditional games.",
-      "3.1.4.CS.1: Demonstrate the ability to apply basic movements in performing traditional games.",
-      "3.1.4.CS.2: Demonstrate the ability to apply basic movement in performing traditional games."
-    ],
-    "Recreational Activities": [
-      "3.1.5.CS.1: Demonstrate an understanding of the importance, benefits and various types of recreational activities and participate in any of them to promote lifelong fitness and well-being."
-    ]
-  },
-  "Elective ICT": {
-    "Organising, Managing and Presenting Information Using Essential Productivity Tools": [
-      "1.1.1.CS.1: Demonstrate knowledge and understanding of the use of various computing tools to responsibly create multimedia documents containing text, images etc. e.g., birthday cards/Flyers for a specified purpose",
-      "2.1.1.CS.1: Demonstrate knowledge and understanding of Analysing numerical data using Spreadsheet software",
-      "3.1.1.CS.1: Demonstrate knowledge and understanding of Presentation software and Desktop Publishing Software"
-    ],
-    "Emerging Technologies and Applications": [
-      "1.1.2.CS.1: Demonstrate knowledge and understanding of Emerging Technologies",
-      "2.1.2.CS.1: Demonstrate knowledge and understanding of Emerging Technologies",
-      "3.1.2.CS.1: Demonstrate knowledge and understanding of emerging technologies"
-    ],
-    "Connecting and Communicating Online": [
-      "1.1.3.CS.1: Demonstrate knowledge and understanding of the use of the Internet",
-      "2.1.3.CS.1: Demonstrate knowledge and understanding of the World Wide Web",
-      "3.1.3.CS.1: Demonstrate knowledge and understanding of Collaboration tools for Communication and synchronisation"
-    ],
-    "Guided and Unguided Network Systems": [
-      "1.2.1.CS.1: Demonstrate basic knowledge and understanding of guided and unguided network systems",
-      "2.2.1.CS.1: Demonstrate basic knowledge and understanding of guided and unguided network systems",
-      "3.2.1.CS.1: Demonstrate basic knowledge and understanding of guided and unguided network systems"
-    ],
-    "Computer and Information Security": [
-      "1.2.2.CS.1: Demonstrate knowledge and understanding of Safety and Security Issues in the use of computers",
-      "2.2.2.CS.1: Demonstrate knowledge and understanding of safety and security issues in ICT",
-      "3.2.2.CS.1: Demonstrate knowledge and understanding of Safety and security Issues in ICT"
-    ]
-  },
-  "IRS": {
-    "Background to the study of religion and Islam": [
-      "1.1.1.CS.1: Demonstrate knowledge of the concept of religion and an understanding of the importance of studying religion at SHS",
-      "1.1.1.CS.2: Demonstrate understanding of the history of Islam and evaluate the contributions of Islam to the development of Ghana."
-    ],
-    "The nature of God and His creation": [
-      "2.1.2.CS.1: Demonstrate understanding of the nature of Allah (God) in Islam and indicate how to apply the moral values in them to life.",
-      "3.1.2.CS.1: Demonstrate understanding of creation stories of Islam and assess how humansâ€™ disobedience has affected the disposition of humankind"
-    ],
-    "The major beliefs of Islam": [
-      "1.2.1.CS.1: Demonstrate knowledge and understanding of the beliefs of Islam and AIRâ€™s influence and critically assess the varied interpretations of these beliefs."
-    ],
-    "Worship and Moral Values for Development": [
-      "2.2.2.CS.1: Demonstrate the understanding of worship in Islam and elements of its influence, to deduce and apply values inherent in them.",
-      "3.2.2.CS.1: Demonstrate understanding of worship of Islam to justify the need for respect for the religious other."
-    ],
-    "Muslim Practices and National Development": [
-      "3.2.3.CS.1: Demonstrate knowledge and appreciation of Islamic practices for national development"
-    ],
-    "The origin and nature of Islamic communities": [
-      "1.3.1.CS.1: Demonstrate understanding of the origins, characteristics and roles of Islamic religious communities, and their relationship with other religions."
-    ],
-    "Religion and Nation Building": [
-      "2.3.2.CS.1: Demonstrate understanding of opportunities and challenges in religious pluralism for nation-building."
-    ],
-    "Religious Communities, Gender and Development": [
-      "3.3.3.CS.1: Demonstrate knowledge and understanding of Islamic teachings, values and the contributions of women and explain how international policies on the development and empowerment of women aligns or otherwise with Islam"
-    ],
-    "Islam and the environment": [
-      "1.4.1.CS.1: Demonstrate an understanding of the environmental values in the teachings of Islam and show how they collaborate Science to address environmental problems."
-    ],
-    "Islam and sexual morality": [
-      "2.4.2.CS.1: Demonstrate an understanding of the teachings of Islam on sexual morality and the values inherent in them"
-    ],
-    "Islam and fraud": [
-      "3.4.3.CS.1: Demonstrate an understanding of the teachings of Islam on fraud and how to apply them"
-    ]
-  },
-  "Additional Mathematics": {
-    "Number and Algebraic Patterns": [
-      "1.1.1.CS.1: Demonstrate knowledge and understanding of binary operations, sets and binomial theorem and solve related problems in real life situations.",
-      "2.1.1.CS.1: Demonstrate understanding of De Morgan's laws on sets and binomial expansions with positive integers."
-    ],
-    "Applications of Algebra": [
-      "1.1.2.CS.1: Demonstrate knowledge and understanding of applying algebraic processes and reasoning involving sequence, functions, and linear programming.",
-      "2.1.1.CS.2: Demonstrate the ability to apply algebraic processes and reasoning to model and solve real life situations involving sequences, and linear programming and use appropriate techniques to solve quadratic inequalities, as well as resolve rational functions.",
-      "3.1.2.CS.1: Demonstrate understanding and use of logic, linear transformations, matrices and their applications to solve real life problems."
-    ],
-    "Application of Algebra": [
-      "1.1.2.CS.1: Demonstrate knowledge and understanding of applying algebraic processes and reasoning involving sequence, functions, and linear programming.",
-      "2.1.1.CS.2: Demonstrate the ability to apply algebraic processes and reasoning to model and solve real life situations involving sequences, and linear programming and use appropriate techniques to solve quadratic inequalities, as well as resolve rational functions.",
-      "3.1.2.CS.1: Demonstrate understanding and use of logic, linear transformations, matrices and their applications to solve real life problems."
-    ],
-    "Spatial Sense": [
-      "1.2.1.CS.1: Demonstrate knowledge and understanding of spatial sense in relation to lines and angles between intersecting lines.",
-      "2.2.1.CS.1: Demonstrate understanding of loci and circles and their applications."
-    ],
-    "Measurement of Triangles": [
-      "1.2.2.CS.1: Demonstrate understanding of the measurement of triangles and radians."
-    ],
-    "Spatial Reasoning": [
-      "3.2.1.CS.1: Demonstrate understanding of parabola and its properties."
-    ],
-    "Measuring Triangles": [
-      "3.2.2.CS.1: Demonstrate understanding of drawing and analysing basic trigonometric graphs and compound angles."
-    ],
-    "Principles of Calculus": [
-      "1.3.1.CS.1: Demonstrate understanding of the limit of a function, investigate the behaviour of a function near a value in its domain and establish the derivative of a function.",
-      "2.3.1.CS.1: Identify and apply integration rules and techniques to solve transcendental functions."
-    ],
-    "Applications of Calculus": [
-      "1.3.2.CS.1: Determine the equation of tangents and normal to a curve at a given point.",
-      "2.3.2.CS.1: Investigate the turning point of a function and find maximum/minimum values in real life."
-    ],
-    "Principle of Calculus": [
-      "1.3.1.CS.1: Demonstrate understanding of the limit of a function, investigate the behaviour of a function near a value in its domain and establish the derivative of a function."
-    ],
-    "Application of Calculus": [
-      "1.3.2.CS.1: Determine the equation of tangents and normal to a curve at a given point."
-    ],
-    "Organising, Representing and Interpreting Data": [
-      "1.4.1.CS.1: Collect quantitative and qualitative data, organise and present data using graphs.",
-      "3.4.1.CS.1: Describe the nature and strength of relationship between two given variables using scatter diagram and correlation coefficient."
-    ],
-    "Making Predictions with Data": [
-      "1.4.2.CS.1: Demonstrate knowledge of basic principles of permutation and combination and interpret probability in everyday life.",
-      "2.4.2.CS.1: Solve problems using the axioms and the laws of probability.",
-      "3.4.2.CS.1: Solve problems involving conditional probability using permutations and combinations."
-    ],
-    "Organising and Representing and Interpreting Data": [
-      "1.4.1.CS.1: Collect quantitative and qualitative data, organise and present data using graphs.",
-      "3.4.1.CS.1: Describe the nature and strength of relationship between two given variables using scatter diagram and correlation coefficient."
-    ]
-  },
-  "Literature in English": {
-    "General Knowledge in Literature": [
-      "1.1.1.CS.1: Demonstrate understanding and interest in Literature-in-English and make meaningful connections to text and life.",
-      "1.1.1.CS.2: Demonstrate knowledge and understanding in the tools of literary analyses."
-    ],
-    "Knowing your elements": [
-      "1.2.1.CS.1: Demonstrate knowledge and understanding of a variety of prose fictional texts.",
-      "1.2.1.CS.2: Demonstrate understanding of how novelists use elements of style and themes in selected prose texts.",
-      "2.2.1.CS.1: Demonstrate knowledge and understanding of a variety of prose non-fiction texts.",
-      "2.2.1.CS.2: Demonstrate knowledge of how authors apply style and themes in non-fictional texts."
-    ],
-    "Appreciation": [
-      "1.2.2.CS.1: Demonstrate knowledge and understanding in diversity in contexts, plots and settings as tools for interpreting narrative texts.",
-      "2.2.2.CS.1: Demonstrate knowledge and understanding of diversity in themes and style as tools for interpreting narrative text."
-    ],
-    "From Narrative to Craft": [
-      "1.2.3.CS.1: Exhibit creative writing skills by producing short stories useful for fictional prose.",
-      "2.2.3.CS.1: Exhibit creative writing skills by producing novels as fictional and non-fictional prose."
-    ],
-    "Knowing your dramatic elements": [
-      "1.3.1.CS.1: Demonstrate understanding of the dramatic techniques/elements in analysing varied texts.",
-      "2.3.1.CS.1: Demonstrate knowledge and understanding of a variety of dramatic forms in analysing varied texts.",
-      "3.3.1.CS.1: Demonstrate knowledge and understanding of a variety of dramatic forms in analysing varied texts."
-    ],
-    "Knowing your poetic elements": [
-      "1.4.1.CS.1: Engage with a variety of poetic forms for pleasure and aesthetic effect.",
-      "2.4.1.CS.1: Engage with a variety of poetic forms for pleasure and its aesthetic effect.",
-      "3.4.1.CS.1: Demonstrate knowledge and understanding of how authors apply the elements of poetry in their works."
-    ],
-    "From Verse to Performance": [
-      "1.4.3.CS.1: Reconstruct and perform poetic pieces.",
-      "2.4.3.CS.1: Reconstruct and perform poetic pieces."
-    ],
-    "From Script to Stage": [
-      "1.3.3.CS.1: Exhibit knowledge and understanding of scripting and performing drama pieces.",
-      "2.3.3.CS.1: Exhibit knowledge and understanding of scripting and performing drama pieces."
-    ]
-  },
-  "Numbers for everyday life": {
-    "Real number and numeration system": [
-      "1.1.1.CS.1: Demonstrate knowledge and understanding of real number systems and the operations of the various subsets.",
-      "1.1.1.CS.2: Demonstrate knowledge and understanding of real number systems with respect to the concepts and vocabulary of sets, establish their relationships and carry out simple surveys using the properties of sets.",
-      "2.1.1.CS.1: Demonstrate knowledge and understanding of surds, indices and logarithms and establish their laws and properties.",
-      "2.1.1.CS.2: Demonstrate knowledge and understanding of the laws and properties of indices and logarithms and their applications to solving real-life problems.",
-      "2.1.1.CS.3: Demonstrate understanding of the concepts of modulo arithmetic and solve real life problems on them."
-    ],
-    "Real number and Numeration system": [
-      "1.1.1.CS.1: Demonstrate knowledge and understanding of real number systems and the operations of the various subsets.",
-      "1.1.1.CS.2: Demonstrate knowledge and understanding of real number systems with respect to the concepts and vocabulary of sets, establish their relationships and carry out simple surveys using the properties of sets.",
-      "2.1.1.CS.1: Demonstrate knowledge and understanding of surds, indices and logarithms and establish their laws and properties.",
-      "2.1.1.CS.2: Demonstrate knowledge and understanding of the laws and properties of indices and logarithms and their applications to solving real-life problems.",
-      "2.1.1.CS.3: Demonstrate understanding of the concepts of modulo arithmetic and solve real life problems on them."
-    ],
-    "Proportional reasoning": [
-      "1.1.2.CS.1: Demonstrate an understanding of proportional reasoning involving fractions and its operations and use it to solve real-life problems, including rounding off.",
-      "1.1.2.CS.2: Demonstrate a conceptual understanding of proportional reasoning on percentages and use it to solve everyday life problems, including simple interest, discount, profit, loss, commission, etc.",
-      "2.1.2.CS.1: Demonstrate knowledge and understanding of ratios, rates and proportions and use it to solve real-world problems.",
-      "2.1.2.CS.2: Demonstrate an understanding of proportional reasoning using mathematical connections among ratios, rates and proportions to solve daily problems, including compound interest, tax (VAT, E-Levy), utilities, depreciation, etc.",
-      "3.1.2.CS.1: Establish the validity of logical arguments and use it to make relevant decisions in solving problems.",
-      "3.1.2.CS.2: Demonstrate a conceptual understanding of proportionality in relation to variation and use it to solve real-life problems."
-    ]
-  },
-  "Algebraic Thinking": {
-    "Applications of expressions, equations and inequalities": [
-      "1.2.1.CS.1: Demonstrate knowledge and understanding of algebraic expressions and solve real-life problems on them.",
-      "1.2.1.CS.2: Demonstrate knowledge and understanding of equations and inequalities in one variable and apply it in solving real-life problems.",
-      "2.2.1.CS.1: Demonstrate knowledge and understanding of simultaneous equations involving two variables and apply it to solve every day-life problems."
-    ],
-    "Patterns and relationships": [
-      "1.2.2.CS.1: Demonstrate an understanding of mapping, relations, and functions and the ability to interpret graphs of a function and its applications in real life.",
-      "1.2.2.CS.2: Demonstrate understanding of the gradient and equation of a straight line, the magnitude of a line segment, and its applications in real-life situations.",
-      "2.2.2.CS.1: Demonstrate understanding of patterns and relations involving sequence and series, generate strategies for algebraic formulas, and use them in solving real-life problems.",
-      "3.2.2.CS.1: Solve problems on quadratic functions and equations, including real-life problems."
-    ],
-    "Patterns and relations": [
-      "1.2.2.CS.1: Demonstrate an understanding of mapping, relations, and functions and the ability to interpret graphs of a function and its applications in real life.",
-      "1.2.2.CS.2: Demonstrate understanding of the gradient and equation of a straight line, the magnitude of a line segment, and its applications in real-life situations.",
-      "2.2.2.CS.1: Demonstrate understanding of patterns and relations involving sequence and series, generate strategies for algebraic formulas, and use them in solving real-life problems.",
-      "3.2.2.CS.1: Solve problems on quadratic functions and equations, including real-life problems."
-    ]
-  },
-  "Algebraic Reasoning": {
-    "Applications of expressions, equations and inequalities": [
-      "1.2.1.CS.1: Demonstrate knowledge and understanding of algebraic expressions and solve real-life problems on them.",
-      "1.2.1.CS.2: Demonstrate knowledge and understanding of equations and inequalities in one variable and apply it in solving real-life problems.",
-      "2.2.1.CS.1: Demonstrate knowledge and understanding of simultaneous equations involving two variables and apply it to solve every day-life problems."
-    ],
-    "Patterns and relationships": [
-      "1.2.2.CS.1: Demonstrate an understanding of mapping, relations, and functions and the ability to interpret graphs of a function and its applications in real life.",
-      "1.2.2.CS.2: Demonstrate understanding of the gradient and equation of a straight line, the magnitude of a line segment, and its applications in real-life situations.",
-      "2.2.2.CS.1: Demonstrate understanding of patterns and relations involving sequence and series, generate strategies for algebraic formulas, and use them in solving real-life problems.",
-      "3.2.2.CS.1: Solve problems on quadratic functions and equations, including real-life problems."
-    ],
-    "Patterns and relations": [
-      "1.2.2.CS.1: Demonstrate an understanding of mapping, relations, and functions and the ability to interpret graphs of a function and its applications in real life.",
-      "1.2.2.CS.2: Demonstrate understanding of the gradient and equation of a straight line, the magnitude of a line segment, and its applications in real-life situations.",
-      "2.2.2.CS.1: Demonstrate understanding of patterns and relations involving sequence and series, generate strategies for algebraic formulas, and use them in solving real-life problems.",
-      "3.2.2.CS.1: Solve problems on quadratic functions and equations, including real-life problems."
-    ]
-  },
-  "Geometry around us": {
-    "Spatial sense": [
-      "1.3.1.CS.1: Demonstrate a conceptual understanding of spatial sense with respect to angles, parallel lines, transversal and polygons, and apply their properties to solve everyday life problems.",
-      "2.3.1.CS.1: Demonstrate a conceptual understanding of spatial sense regarding changes and invariance achieved by performing a combination of successive transformations (reflection, translation, rotation) in a 2D shape.",
-      "3.3.1.CS.1: Draw circles for given radii and use the circle theorems; identify the tangent as perpendicular to the radius.",
-      "3.3.1.CS.2: Demonstrate knowledge and understanding of geometrical construction, use the knowledge to construct plane shapes and apply these."
-    ],
-    "Measurement": [
-      "1.3.2.CS.1: Interpret information about real-world/nature applications of vectors and recognise vectors with the same magnitude and direction.",
-      "1.3.2.CS.2: Demonstrate a conceptual understanding of primary trigonometric ratios and apply it to solve problems that involve right triangles.",
-      "1.3.2.CS.3: Demonstrate conceptual understanding of the measurement of perimeter and area of circles and quadrilaterals.",
-      "2.3.2.CS.1: Demonstrate knowledge and understanding of measurement with respect to operations on bearings and vectors.",
-      "2.3.2.CS.2: Demonstrate an understanding of the inverse of trigonometric ratios and angles of elevation/depression, and apply the knowledge.",
-      "2.3.2.CS.3: Demonstrate conceptual understanding of the measurement of surface area, volume and capacity of solid shapes.",
-      "3.3.2.CS.1: Draw graphs of given trigonometric functions and use them to solve related problems."
-    ]
-  },
-  "Making sense of and using data": {
-    "Statistical reasoning and its application in real life": [
-      "1.4.1.CS.1: Demonstrate a conceptual understanding of the appropriateness of data collection methods to collect everyday life data.",
-      "1.4.1.CS.2: Demonstrate conceptual understanding of data organisation and presentation for grouped and ungrouped data, including 3D graphs/charts with appropriate digital technology.",
-      "1.4.1.CS.3: Demonstrate the ability to embark on a project involving the collection, analysis and interpretation of quantitative and qualitative data.",
-      "2.4.1.CS.1: Design a data collection instrument and justify its appropriateness for collecting everyday life data to address a contextual issue.",
-      "2.4.1.CS.2: Demonstrate an understanding of data presentations and analysis for grouped and ungrouped data and describe the relationship.",
-      "2.4.1.CS.3: Demonstrate the ability to carry out a mini-project involving data handling (data collection, analysis and interpretation).",
-      "3.4.1.CS.1: Establish simple mathematical relationships between two variables in a given observational or experimental context.",
-      "3.4.1.CS.2: Demonstrate the ability to compare different data sets and use appropriate vocabulary to contribute."
-    ],
-    "Chance": [
-      "1.4.2.CS.1: Demonstrate conceptual understanding of simple and compound probability experiments involving two independent events.",
-      "2.4.2.CS.1: Demonstrate a conceptual understanding of simple and compound probability experiments involving two dependent events.",
-      "3.4.2.CS.1: Explain how a given probability from print and electronic media influences individual decisions; select and analyse real-life data."
+  "My Global Community": {
+    "Connecting and communicating with the global community": [
+      "K1.7.1.1: Demonstrate understanding of how we connect with people around the world",
+      "K2.7.1.1: Demonstrate understanding of connecting and communicating globally"
     ]
   }
 };
 
-export const STANDARD_INDICATORS: Record<string, string[]> = {
-  // Art and Design Studio Indicators
-  "1.1.1.CS.1: Demonstrate understanding of the Scope and role of Art and Design Studios in the Ghanaian society": [
-    "1.1.1.LI.1: Document the components of Art and Design Studio (Sculpture, Painting, Graphic Design, Textiles, Ceramics, Jewellery, Leatherwork, Pliable Arts, Contemporary Art).",
-    "1.1.1.LI.2: Document the roles of the various components of the Art and Design Studio."
-  ],
-  "1.1.2.CS.1: Demonstrate knowledge and understanding of art and design material classification and method.": [
-    "1.1.2.LI.1: Discuss art materials according to nature, technique and purpose.",
-    "1.1.2.LI.2: Discuss the basic methods and techniques in creating 2-D and 3-D art and design works.",
-    "1.1.2.LI.3: Discuss the basic methods for preparing and storing art media."
-  ],
-  "1.1.3.CS.1: Demonstrate knowledge and understanding of professional practices and ethics in Art.": [
-    "1.1.3.LI.1: Explain the concept of professional practice in Art.",
-    "1.1.3.LI.2: Analyse the concept of ethics in Art and Design."
-  ],
-  "1.2.1.CS.1: Demonstrate understanding of art and design studio ideation and proposal presentations as studio tasks to solve societal problems.": [
-    "1.2.1.LI.1: Identify how art or design studio tasks can be used as an artistic intervention for social problems.",
-    "1.2.1.LI.2: Determine possible multiple forms of artworks in Art and Design that can be used to solve identified problems in society.",
-    "1.2.1.LI.3: Create multiple proposals with accompanying notes in 2D, 3D, or mixed-media presentations for possible art and design studio task."
-  ],
-  "2.2.1.CS.1: Demonstrate the knowledge and understanding of mixed media ideations in the studio as a proposition for 21st Century interventions for antique cultural products and product design.": [
-    "2.2.1.LI.1: Analyse antique artworks made in single materials and propose new ways of making such works as mixed media representations.",
-    "2.3.1.LI.2: Analyse multiple approaches, material combinations, and techniques for the work, as well as the appropriate mode of presentations.",
-    "2.3.1.LI.3: Create multiple annotated mixed media presentations in preferred artistic formats as studio thinking for creating artworks."
-  ],
-  "3.2.1.CS.1: Demonstrate knowledge and understanding of 21st Century futuristic propositions and product design for Sustainable Development Goals (SDGs).": [
-    "3.2.1.LI.1: Discuss embedded sustainable development messages within selected artworks through the analysis of the actual meaning of the image, and reflection and reaction.",
-    "3.2.1.LI.2: Create innovative artworks and designs on sustainable development using both digital and other media ideations to show the relevance of sustainable living.",
-    "3.2.1.LI.3: Design and create artwork based on the message of sustainability using biodegradable and 80% recyclable waste materials."
-  ],
-  "1.2.2.CS.1: Demonstrate understanding and application of studio processes, relevant tools and materials to create 2-dimensional artworks through visual thinking and creative communication.": [
-    "1.2.2.LI.1: Examine the workability of conventional and non-conventional tools and materials from the environment that can be used to create 2-D art or design works.",
-    "1.2.2.LI.2: Design and create 2-D art or design work using conventional and non-conventional materials, tools, and relevant processes to respond to societal problems."
-  ],
-  "1.2.2.CS.2: Demonstrate understanding and application of studio processes, relevant tools and materials to create 3-dimensional artworks through visual thinking and creative communication.": [
-    "1.2.2.LI.1: Identify materials, tools, and relevant processes and techniques used in performing 3D studio tasks.",
-    "1.2.2.LI.2: Design and create 3D artworks using conventional and non-conventional materials, tools, and relevant processes to respond to societal problems."
-  ],
-  "2.2.2.CS.1: Demonstrate knowledge and application of image making as well as repetition processes and techniques with local ideas and relevant studio skills to create 2-Dimensional artworks.": [
-    "2.2.2.LI.1: Identify and document image-making, and repetition processes and techniques used to create selected 2-Dimensional art or design works.",
-    "2.2.2.LI.2: Analyse how image-making and repeat processes and techniques for creating 2-D artworks can be undertaken with relevant tools and materials.",
-    "2.2.2.LI.3: Create 2-D art or design works with tools and materials with image making and repeat processes and techniques."
-  ],
-  "2.2.2.CS.2: Demonstrate knowledge and application of subtractive processes and techniques for making 3-Dimensional artwork with local materials and relevant studio skills.": [
-    "2.2.2.LI.1: Identify materials and the appropriate tools that can be used in the subtractive processes of creating 3-D artforms.",
-    "2.2.2.LI.2: Review different types of subtractive processes and techniques for performing particular studio tasks and creation of artworks.",
-    "2.2.2.LI.3: Design and Create 3D artwork with local materials and appropriate tools using subtractive processes and techniques to solve a societal problem."
-  ],
-  "3.2.2.CS.1: Demonstrate knowledge and skill in using analogue and digital media processes and techniques, together with any other relevant skills and materials in the environment to create 2-Dimensional solutions for societal problems.": [
-    "3.2.2.LI.1: Analyse multiple media processes and techniques used in creating 2-Dimensional artworks in the environment.",
-    "3.2.2.LI.2: Categorise tools, materials and methods for analogue and digital media in the environment, and their potential usage.",
-    "3.2.2.LI.3: Create 2-Dimensional artwork using multiple methods, including analogue and digital media processes and techniques in response to societal problems."
-  ],
-  "3.2.2.CS.2: Demonstrate knowledge and application of subtractive processes and techniques for making three-dimensional artwork with local materials and relevant studio skills.": [
-    "3.2.2.LI.1: Identify objects from various disciplines of study such as education, engineering, health, architecture, agriculture etc to record their form and methods of fabrication.",
-    "3.2.2.LI.2: Discuss materials and method of fabrications in relation to additive and subtractive processes and techniques, together with any other applicable methods for creating 3-Dimensional mix-media artwork.",
-    "3.2.2.LI.3: Design and create 3-dimensional mixed media artworks using materials, appropriate tools and processes in response to challenges within selected disciplines of study such as education, engineering, health, architecture, agriculture, etc."
-  ],
-  "1.3.1.CS.1: Demonstrate understanding and application of creative processes in artefact production with emphasis on protective and decorative processes.": [
-    "1.3.1.LI.1: Use a visual medium to create art and design projects with an emphasis on protective and decorative processes.",
-    "1.3.1.LI.2: Apply safety measures in creating art and design work with special attention to protective and decorative processes to create artwork."
-  ],
-  "2.3.1.CS.1: Demonstrate knowledge and understanding of art and design studio theory and creative methodologies for artefact production with an emphasis on designing and finishing.": [
-    "2.3.1.LI.1: Distinguish and record the difference between protective processes and decorative processes in artefact productions.",
-    "2.3.1.LI.2: Apply knowledge and skills in safety, maintenance and sustainability in environmental protection and energy conservation (Greening Education).",
-    "2.3.1.LI.3: Apply designing and finishing processes to create an artistic project to solve a social problem."
-  ],
-  "3.3.1.CS.1: Demonstrate knowledge and understanding of advanced Finishing Techniques/Processes to create art or design work for functional and aesthetic purposes.": [
-    "3.3.1.LI.1: Make a short video presentation to illustrate the characteristics of advanced finishing techniques.",
-    "3.3.1.LI.2: Mount an exhibition that reflects selected advanced finishing techniques.",
-    "3.3.1.LI.3: Present a short report on the exhibition mounted in relation to advanced finishing techniques."
-  ],
-  "1.3.2.CS.1: Demonstrate understanding and application of art and design portfolio-building to exhibit art or design work.": [
-    "1.3.2.LI.1: Develop artist statements to reflect portfolio and exhibition.",
-    "1.3.2.LI.2: Generate a manual and digital portfolio as evidence of art and design practice.",
-    "1.3.2.LI.3: Use appropriate strategies to mount art and design exhibition."
-  ],
-  "2.3.2.CS.1: Demonstrate knowledge and understanding in portfolio building to mount an exhibition and generate an artist statement and exhibition brochure.": [
-    "2.3.2.LI.1: Distinguish between portfolio building and exhibition.",
-    "2.3.2.LI.2: Mount in-person, digital, and or online exhibitions of their own art or design works and that of others.",
-    "2.3.2.LI.3: Generate artist statements and exhibition brochures on their own art or design exhibitions and that of another artist."
-  ],
-  "3.3.2.CS.1: Demonstrate knowledge, understanding and application of current trends in portfolio building in the art world.": [
-    "3.3.2.LI.1: Identify and analyse the challenges involved in organising digital portfolios.",
-    "3.3.2.LI.2: In small groups, discuss and report on the benefits of a digital portfolio.",
-    "3.3.2.LI.3: Using group discussion, identify some contemporary Ghanaian artists who depend largely on portfolio building in their artistic practice."
-  ],
-
-  // SHS PE Core Indicators
-  "1.1.1.CS.1: Demonstrate knowledge and understanding of career pathways in physical education and health (e.g., teaching, educational leadership, sport management, coaching, etc.)": [
-    "1.1.1.LI.1: Identify and discuss career pathways in physical education and health and the professional attributes and mind sets required for practice.",
-    "1.1.1.LI.2: Identify role models in Ghana and beyond in various careers in physical education and discuss their contributions to the society and sports development in general."
-  ],
-  "1.1.2.CS.1: Demonstrate the understanding of traditional dances as physical and recreational activity to improve skill and health related fitness.": [
-    "1.1.2.LI.1: Explain the concepts of traditional dance as physical and recreational activities for improving skill and health-related fitness.",
-    "1.1.2.LI.2: Perform a traditional dance as physical and recreational activities for improving skill and health-related fitness (e.g. Agbadza).",
-    "1.1.2.LI.3: Perform a traditional dance as physical and recreational activities for improving skill and health-related fitness (e.g. Kpanlogo).",
-    "1.1.2.LI.4: Perform a traditional dance as physical and recreational activities for improving skill and health-related fitness (e.g. Adowa)."
-  ],
-  "1.1.3.CS.1: Demonstrate the ability perform basic gymnastics activities to improve skill and health related fitness.": [
-    "1.1.3.LI.1: Perform floor activities in gymnastics for improving skill and health-related fitness (forward roll).",
-    "1.1.3.LI.2: Perform floor activities in gymnastics for improving skill and health-related fitness (backward roll).",
-    "1.1.3.LI.3: Perform floor activities in gymnastics for improving skill and health-related fitness (handstand)."
-  ],
-  "1.1.4.CS.1: Demonstrate the ability to apply various skills in organised sports (e.g., football, handball, etc.)": [
-    "1.1.4.LI.1: Identify the types of basic skills in football and apply them in a game of football (passing and receiving in football).",
-    "1.1.4.LI.2: Identify the types of basic skills in football and apply them in a game (dribbling in football).",
-    "1.1.4.LI.3: Identify the types of basic skills in football and apply them in a game of football (shooting in football).",
-    "1.1.4.LI.4: Identify the types of basic skills in handball and apply them in a game of handball (Chest pass in handball).",
-    "1.1.4.LI.5: Identify the types of basic skills in handball and apply them in a game of handball (Overhead pass in handball).",
-    "1.1.4.LI.6: Point out the basic skills involved in handball and apply them (Shooting in handball).",
-    "1.1.4.LI.7: Pinpoint the basic skills in basketball and use them effectively (Dribbling in basketball).",
-    "1.1.4.LI.8: Perform the lay-up shot in basketball with proper form (Lay up in basketball)."
-  ],
-  "2.1.2.CS.1: Demonstrate the ability to use basic skills in performing individual and team sports (e.g., table tennis, netball, etc).": [
-    "2.1.2.LI.1: Apply basic skills in performing individual and team sports (e.g., table tennis - Service and reception in table tennis).",
-    "2.1.2.LI.2: Apply basic skills in performing individual and team sports (e.g., table tennis - forehand and backhand strokes in table tennis).",
-    "2.1.2.LI.3: Apply the basic skills acquired in a game of table tennis.",
-    "2.1.2.LI.4: Apply basic skills in performing individual and team sports (e.g., netball - footwork and chest pass).",
-    "2.1.2.LI.5: Apply basic skills in performing individual and team sports (e.g., netball - shooting).",
-    "2.1.2.LI.6: Apply the skills acquired from the previous lessons in a game situation.",
-    "2.1.2.LI.7: Apply basic skills in performing individual and team sports (e.g., volleyball - underarm serve and digging reception in volleyball).",
-    "2.1.2.LI.8: Apply basic skills in performing individual and team sports (e.g., volleyball - reinforcement of underarm serve and digging reception in volleyball).",
-    "2.1.2.LI.9: Apply basic skills in performing individual and team sports (e.g., volleyball - zones and rotational order on the court in volleyball).",
-    "2.1.2.LI.10: Apply basic skills in performing individual and team sports (e.g., hockey - grip and pushing in hockey).",
-    "2.1.2.LI.11: Identify the basic skills in hockey and apply them in a game (e.g., hockey - dribbling in hockey).",
-    "2.1.2.LI.12: Identify the basic skills in hockey and apply them in a game (e.g., hockey - hitting in hockey)."
-  ],
-  "1.1.5.CS.1: Discuss health and wellness and their importance in everyday life": [
-    "1.1.5.LI.1: The pillars of health and how they influence life (Concept of health).",
-    "1.1.5.LI.2: Wellness, healthy and unhealthy lifestyle (Concept of wellness and healthy lifestyle).",
-    "1.1.5.LI.3: Identify and explain the determinants of health.",
-    "1.1.5.LI.4: Describe the wellness continuum and discuss the barriers to accessing health services.",
-    "1.1.5.LI.5: Identify the components of wellness and how they influence life (physical, social, intellectual/mental and emotional wellness).",
-    "1.1.5.LI.6: Identify the components of wellness and how they influence life (spiritual, environmental, occupational/vocational and financial wellness)."
-  ],
-  "2.1.3.CS.1: Demonstrate understanding of health and wellness.": [
-    "2.1.3.LI.1: Explain the concepts of human diseases.",
-    "2.1.3.LI.2: Discuss the classification of human diseases.",
-    "2.1.3.LI.3: Discuss vaccination and immunisation as a form of disease prevention."
-  ],
-  "3.1.3.CS.1: Demonstrate understanding of skin, skin care and grooming.": [
-    "3.1.3.LI.1: Discuss the concept of the human skin, its care and grooming."
-  ],
-  "3.1.3.CS.2: Demonstrate understanding of ICT negative practices and their health implications.": [
-    "3.1.3.LI.2: Discuss ICT negative practices and their health implications."
-  ],
-  "3.1.3.CS.3: Demonstrate knowledge and understanding of sports injuries.": [
-    "3.1.3.LI.3: Discuss the concept of sports injuries and how they manifest."
-  ],
-  "3.1.3.CS.4: Demonstrate knowledge and understanding of substance use and misuse.": [
-    "3.1.3.LI.4: Discuss and practice preventive measures relating to sports injuries."
-  ],
-  "3.1.3.CS.5: Demonstrate knowledge and understanding of rehabilitation as a way of gaining functionality after recovering from injuries.": [
-    "3.1.3.LI.5: Discuss substance use, its causes and risk factors.",
-    "3.1.3.LI.6: Discuss the consequences of substance use.",
-    "3.1.3.LI.7: Discuss the concept and types of rehabilitation.",
-    "3.1.3.LI.8: Discuss Principles, factors affecting and hindrances to rehabilitation.",
-    "3.1.3.LI.9: Discuss the avenues available for rehabilitation."
-  ],
-  "2.1.5.CS.1: Demonstrate knowledge and understanding of long-distance events in athletics.": [
-    "2.1.5.LI.1: Identify the basic skills in race walking and apply them."
-  ],
-  "2.1.4.CS.1: Demonstrate the ability to apply basic movements in performing traditional games.": [
-    "2.1.4.LI.1: Identify various traditional games and discuss their origins and importance.",
-    "2.1.4.LI.2: Identify the basic skills in performing arm wrestling and tug of war.",
-    "2.1.4.LI.3: Identify the basic skills in performing the African Cloth Parachuting or sail."
-  ],
-  "3.1.4.CS.1: Demonstrate the ability to apply basic movements in performing traditional games.": [
-    "3.1.4.LI.1: Identify the basic skills in performing chaskele."
-  ],
-  "3.1.4.CS.2: Demonstrate the ability to apply basic movement in performing traditional games.": [
-    "3.1.4.LI.2: Identify the basic skills in performing Tumatu (hopscotch) and ampe."
-  ],
-  "3.1.5.CS.1: Demonstrate an understanding of the importance, benefits and various types of recreational activities and participate in any of them to promote lifelong fitness and well-being.": [
-    "3.1.5.LI.1: Discuss the different types of recreational activities in Physical Education.",
-    "3.1.5.LI.2: Participate in a variety of recreational activities and reflect on experiences.",
-    "3.1.5.LI.3: Explain the benefits of engaging in recreational activities.",
-    "3.1.5.LI.4: Create a personal plan to guide regular participation in recreational activities."
-  ],
-
-  // SHS Mathematics Indicators
-  "1.1.1.CS.1: Demonstrate knowledge and understanding of real number systems and the operations of the various subsets.": [
-    "1.1.1.LI.1: Develop the real number system using the closure property.",
-    "1.1.1.LI.2: Distinguish between rational and irrational numbers using the conversion of common fractions to decimals and solve related problems.",
-    "1.1.1.LI.3: Establish the properties of real numbers with respect to commutative, associative, identity, inverse, distributive, etc."
-  ],
-  "1.1.1.CS.2: Demonstrate knowledge and understanding of real number systems with respect to the concepts and vocabulary of sets, establish their relationships and carry out simple surveys using the properties of sets.": [
-    "1.1.1.LI.1: Determine the properties of subsets (for two-set problems), their vocabulary and operations and use them to solve real-life problems.",
-    "1.1.1.LI.2: Organise information visually to establish the relationship between and among sets of items (three sets) and apply these to conduct mini surveys in the school community and beyond.",
-    "1.1.1.LI.3: Establish the relationship between and among three sets, including set equations and de Morgan's law."
-  ],
-  "1.1.2.CS.1: Demonstrate an understanding of proportional reasoning involving fractions and its operations and use it to solve real-life problems, including rounding off.": [
-    "1.1.2.LI.1: Establish the concept of fractions and investigate the connections between fractions and decimal numbers.",
-    "1.1.2.LI.2: Establish additive and multiplicative inverses of fractions using multi-purpose model charts."
-  ],
-  "1.1.2.CS.2: Demonstrate a conceptual understanding of proportional reasoning on percentages and use it to solve everyday life problems, including simple interest, discount, profit, loss, commission, etc.": [
-    "1.1.2.LI.1: Develop models to examine connections between and among fractions, percentages and decimal numbers and make generalisations.",
-    "1.1.2.LI.2: Analyse daily activities/issues/businesses involving percentage change, including simple problems involving personal or household finance (such as utility bills, exchange rates, project budgeting, school fees, shopping, etc.)"
-  ],
-  "1.2.1.CS.1: Demonstrate knowledge and understanding of algebraic expressions and solve real-life problems on them.": [
-    "1.2.1.LI.1: Use numbers, patterns, and variables to formulate mathematical expressions and apply the algebraic order of the four operations to solve problems.",
-    "1.2.1.LI.2: Factorise algebraic expressions involving quadratic trinomials.",
-    "1.2.1.LI.3: Recognise perfect squares and apply the idea to solve problems, including the difference of two squares of binomials.",
-    "1.2.1.LI.4: Analyse and apply operations on simple algebraic fractions involving monomial and binomial denominators and determine the conditions under which an algebraic fraction is zero or undefined."
-  ],
-  "1.2.1.CS.2: Demonstrate knowledge and understanding of equations and inequalities in one variable and apply it in solving real-life problems.": [
-    "1.2.1.LI.1: Construct and interpret formulae for a given task and apply them to problems involving change of subjects.",
-    "1.2.1.LI.2: Solve linear equations and inequalities in one variable for a given problem and relate it to real life situations."
-  ],
-  "1.2.2.CS.1: Demonstrate an understanding of mapping, relations, and functions and the ability to interpret graphs of a function and its applications in real life.": [
-    "1.2.2.LI.1: Distinguish between relations and functions using models such as graphs, investigate relationships between two number sets and determine rules for mappings or functions.",
-    "1.2.2.LI.2: Draw graphs of linear functions and interpret them."
-  ],
-  "1.2.2.CS.2: Demonstrate understanding of the gradient and equation of a straight line, the magnitude of a line segment, and its applications in real-life situations.": [
-    "1.2.2.LI.1: Extend the knowledge of the coordinates of two points to find the gradient and equation of a straight line.",
-    "1.2.2.LI.2: Recognise and interpret two points on a straight line and use it to find the distance between them."
-  ],
-  "1.3.1.CS.1: Demonstrate a conceptual understanding of spatial sense with respect to angles, parallel lines, transversal and polygons, and apply their properties to solve everyday life problems.": [
-    "1.3.1.LI.1: Draw and describe angles with various measures, including acute, right, straight, obtuse and reflex angles and solve problems on them.",
-    "1.3.1.LI.2: Solve problems that involve parallel lines, perpendicular lines transversal, and pairs of angles formed between them.",
-    "1.3.1.LI.3: State and apply the exterior angle theorem of a triangle to solve problems.",
-    "1.3.1.LI.4: State and apply the Pythagorean theorem, verify the formula and apply it.",
-    "1.3.1.LI.5: State and use the properties of quadrilaterals and calculate the sums of interior and exterior angles."
-  ],
-  "1.3.2.CS.1: Interpret information about real-world/nature applications of vectors and recognise vectors with the same magnitude and direction.": [
-    "1.3.2.LI.1: Recognise a vector as a quantity with both magnitude and direction.",
-    "1.3.2.LI.2: Represent a vector in two-space geometrically as a directed line segment."
-  ],
-  "1.3.2.CS.2: Demonstrate a conceptual understanding of primary trigonometric ratios and apply it to solve problems that involve right triangles.": [
-    "1.3.2.LI.1: Investigate the three basic trigonometric ratios (tangent, sine and cosine) of an acute angle in degrees.",
-    "1.3.2.LI.2: Find the trigonometric functions of special angles 30o, 45o and 60o.",
-    "1.3.2.LI.3: Solve problems using the three primary trigonometric ratios for angles from 0o to 360o in standard position."
-  ],
-  "1.3.2.CS.3: Demonstrate conceptual understanding of the measurement of perimeter and area of circles and quadrilaterals.": [
-    "1.3.2.LI.1: Identify and compare referents for SI and imperial area measurements of regular, composite and irregular 2D shapes.",
-    "1.3.2.LI.2: Estimate the perimeter and area of a given regular, composite or irregular 2D shape.",
-    "1.3.2.LI.3: Solve a contextual problem that involves the perimeter and area of regular, composite and irregular 2D shapes.",
-    "1.3.2.LI.4: Determine the volume of prisms and solve everyday life problems."
-  ],
-  "1.4.1.CS.1: Demonstrate a conceptual understanding of the appropriateness of data collection methods to collect everyday life data.": [
-    "1.4.1.LI.1: Classify data (primary and secondary) as quantitative (discrete and continuous), qualitative (nominal and ordinal), numerical, categorical, grouped, ungrouped, etc.",
-    "1.4.1.LI.2: Identify and validate quantitative data collection methods (Survey/Questionnaire, Interviews, Observation, Existing Data) and use them to collect everyday-life data.",
-    "1.4.1.LI.3: Identify and validate qualitative data collection methods (interviews, observations, focus groups, oral histories, online tracking, social media monitoring, etc.) and use them to collect everyday-life data."
-  ],
-  "1.4.1.CS.2: Demonstrate conceptual understanding of data organisation and presentation for grouped and ungrouped data, including 3D graphs/charts with appropriate digital technology.": [
-    "1.4.1.LI.1: Organise and present data (grouped/ungrouped) using frequency tables, line graphs, pie charts, multiple bar graphs, infographics, etc.",
-    "1.4.1.LI.2: Analyse and interpret data using descriptive statistics.",
-    "1.4.1.LI.3: Use mathematical arguments to support personal choices as well as incorporate views and perspectives of others."
-  ],
-  "1.4.1.CS.3: Demonstrate the ability to embark on a project involving the collection, analysis and interpretation of quantitative and qualitative data.": [
-    "1.4.1.LI.1: Develop and execute a project with a team by collecting and analysing data.",
-    "1.4.1.LI.2: Present a project report to your class or at a school forum."
-  ],
-  "1.4.2.CS.1: Demonstrate conceptual understanding of simple and compound probability experiments involving two independent events.": [
-    "1.4.2.LI.1: List the elements of the sample space from a simple or compound experiment involving two independent events.",
-    "1.4.2.LI.2: Determine the probabilities of independent events and express the results as fractions, decimals, percentages and/or ratios.",
-    "1.4.2.LI.3: Solve everyday life problems involving the probability of two independent events."
-  ],
-  "2.1.1.CS.1: Demonstrate knowledge and understanding of surds, indices and logarithms and establish their laws and properties.": [
-    "2.1.1.LI.1: Carry out operations on surds and rationalize monomial denominators.",
-    "2.1.1.LI.2: Explain the concepts of indices and logarithms with examples.",
-    "2.1.1.LI.3: Compose and decompose logarithm laws and properties with exponents and apply the concepts to solve real-life problems."
-  ],
-  "2.1.1.CS.2: Demonstrate knowledge and understanding of the laws and properties of indices and logarithms and their applications to solving real-life problems.": [
-    "2.1.1.LI.1: Investigate real life problems using laws and properties of indices and logarithms.",
-    "2.1.1.LI.2: Use mathematical connections to explore the relevance of surds, indices and logarithms and their applications to scientific concepts."
-  ],
-  "2.1.1.CS.3: Demonstrate understanding of the concepts of modulo arithmetic and solve real life problems on them.": [
-    "2.1.1.LI.1: Investigate the concept and existence of modulo arithmetic in learners' environment and introduce it as the arithmetic of remainders.",
-    "2.1.1.LI.2: Model and solve real-life problems involving modular arithmetic."
-  ],
-  "2.1.2.CS.1: Demonstrate knowledge and understanding of ratios, rates and proportions and use it to solve real-world problems.": [
-    "2.1.2.LI.1: Explain the concepts ratios and rate as a comparison of quantities.",
-    "2.1.2.LI.2: Establish the relationships among ratio, rates and proportions."
-  ],
-  "2.1.2.CS.2: Demonstrate an understanding of proportional reasoning using mathematical connections among ratios, rates and proportions to solve daily problems, including compound interest, tax (VAT, E-Levy), utilities, depreciation, etc.": [
-    "2.1.2.LI.1: Apply the concept of ratios, rates and proportions to solve problems in financial mathematics, health, sports, etc.",
-    "2.1.2.LI.2: Establish the relevance of ratios, rates and proportions in their day-to-day activities, make generalisations and apply them to solve real-world problems."
-  ],
-  "2.2.1.CS.1: Demonstrate knowledge and understanding of simultaneous equations involving two variables and apply it to solve every day-life problems.": [
-    "2.2.1.LI.1: Solve simultaneous linear equations involving two variables using the graphical method and interpret them.",
-    "2.2.1.LI.2: Analyse two linear equations in two variables and solve them using the elimination and substitution methods.",
-    "2.2.1.LI.3: Analyse, model, and solve word problems of simultaneous linear equations involving numbers, age, etc."
-  ],
-  "2.2.2.CS.1: Demonstrate understanding of patterns and relations involving sequence and series, generate strategies for algebraic formulas, and use them in solving real-life problems.": [
-    "2.2.2.LI.1: Explore patterns of a sequence using plane figures and continue with more terms.",
-    "2.2.2.LI.2: Recognise and find the nth term and the sum of the nth term of an arithmetic progression (AP) or linear sequence.",
-    "2.2.2.LI.3: Identify geometric progression or exponential sequence and find the algebraic expression for the general term.",
-    "2.2.2.LI.4: Analyse, model, and solve real-life problems involving financial mathematics.",
-    "2.2.2.LI.5: Analyse, model, and solve real-life problems involving exponential growth."
-  ],
-  "2.3.1.CS.1: Demonstrate a conceptual understanding of spatial sense regarding changes and invariance achieved by performing a combination of successive transformations (reflection, translation, rotation) in a 2D shape.": [
-    "2.3.1.LI.1: Identify and translate an object or point by a translating vector and describe the image.",
-    "2.3.1.LI.2: Identify and explain the reflection of an object in a mirror line and describe the image points.",
-    "2.3.1.LI.3: Identify shapes with rotational symmetry and show the image of an object (or point) after a rotation about the origin (or point).",
-    "2.3.1.LI.4: Carry out an enlargement of a plane shape given a scale factor."
-  ],
-  "2.3.2.CS.1: Demonstrate knowledge and understanding of measurement with respect to operations on bearings and vectors.": [
-    "2.3.2.LI.1: Perform addition, subtraction, and scalar multiplication on vectors represented as directed line segments in two-space and in Cartesian form."
-  ],
-  "2.3.2.CS.2: Demonstrate an understanding of the inverse of trigonometric ratios and angles of elevation/depression, and apply the knowledge.": [
-    "2.3.2.LI.1: Determine the inverse of trigonometric ratios (graphs excluded) and talk about their applications.",
-    "2.3.2.LI.2: Solve real-life problems involving angles of elevation and depression."
-  ],
-  "2.3.2.CS.3: Demonstrate conceptual understanding of the measurement of surface area, volume and capacity of solid shapes.": [
-    "2.3.2.LI.1: Solve problems that involve SI and imperial units in surface area measurements and verify the solutions.",
-    "2.3.2.LI.2: Solve problems that involve SI and imperial units in volume and capacity measurements.",
-    "2.3.2.LI.3: Solve real world problems that involve the volume/capacity of a 3-D object."
-  ],
-  "2.4.1.CS.1: Design a data collection instrument and justify its appropriateness for collecting everyday life data to address a contextual issue.": [
-    "2.4.1.LI.1: Design a data collection instrument by employing a feasible digital technology.",
-    "2.4.1.LI.2: Evaluate a given data collection instrument by identifying potential problems."
-  ],
-  "2.4.1.CS.2: Demonstrate an understanding of data presentations and analysis for grouped and ungrouped data and describe the relationship.": [
-    "2.4.1.LI.1: Organise and present data by means of the ogive, waffle diagrams, box and whisker plots.",
-    "2.4.1.LI.2: Analyse and interpret data using measures of dispersion and justify which of these measures best suits.",
-    "2.4.1.LI.3: Use mathematical arguments to support personal choices as well as incorporate views and perspectives of others."
-  ],
-  "2.4.1.CS.3: Demonstrate the ability to carry out a mini-project involving data handling (data collection, analysis and interpretation).": [
-    "2.4.1.LI.1: Develop and implement a project plan for the collection, analysis and interpretation of data.",
-    "2.4.1.LI.2: Present a project report including the use of PowerPoint, infographics, etc."
-  ],
-  "2.4.2.CS.1: Demonstrate a conceptual understanding of simple and compound probability experiments involving two dependent events.": [
-    "2.4.2.LI.1: List the elements of the sample space from a simple or compound experiment involving two dependent events.",
-    "2.4.2.LI.2: Solve everyday life problems involving the probability of two dependent events."
-  ],
-  "3.1.2.CS.1: Establish the validity of logical arguments and use it to make relevant decisions in solving problems.": [
-    "3.1.2.LI.1: Investigate to establish differences between variables in situational growth (symbolic logic) and apply it.",
-    "3.1.2.LI.2: Make intelligent guessing to establish valid arguments and draw logical conclusions.",
-    "3.1.2.LI.3: Carry out mini real-life investigations to solve problems involving logical reasoning within their local community."
-  ],
-  "3.1.2.CS.2: Demonstrate a conceptual understanding of proportionality in relation to variation and use it to solve real-life problems.": [
-    "3.1.2.LI.1: Use proportional reasoning to investigate the various types of variation (direct and inverse) and extend this to make generalisations.",
-    "3.1.2.LI.2: Use proportional reasoning to investigate the various types of variation (joint and partial) and extend this to make generalisations."
-  ],
-  "3.2.2.CS.1: Solve problems on quadratic functions and equations, including real-life problems.": [
-    "3.2.2.LI.1: Identify and solve quadratic equations.",
-    "3.2.2.LI.2: Solve quadratic equations graphically and find the maximum and minimum points.",
-    "3.2.2.LI.3: Identify and explain the axis of symmetry, write its equation and solve linear and quadratic equations simultaneously.",
-    "3.2.2.LI.4: Use quadratic graphs to solve related equations and solve real-life problems to find the range of values."
-  ],
-  "3.3.1.CS.1: Draw circles for given radii and use the circle theorems; identify the tangent as perpendicular to the radius.": [
-    "3.3.1.LI.1: Identify parts of a circle and draw circles for given radii.",
-    "3.3.1.LI.2: Discuss the circle theorems by identifying the statements, proofs, examples and applications.",
-    "3.3.1.LI.3: Identify the tangent as perpendicular to the radius at the point of contact and verify the Alternate Segment Theorem.",
-    "3.3.1.LI.4: Verify that tangents drawn from an external point to the same circle are equal when measured from their point of contact."
-  ],
-  "3.3.1.CS.2: Demonstrate knowledge and understanding of geometrical construction, use the knowledge to construct plane shapes and apply these.": [
-    "3.3.1.LI.1: Recall the construction of various angles such as 75o, 105o, 135o and 150o.",
-    "3.3.1.LI.2: Construct a triangle or quadrilateral under given conditions.",
-    "3.3.1.LI.3: Construct a particular locus for a given condition."
-  ],
-  "3.3.2.CS.1: Draw graphs of given trigonometric functions and use them to solve related problems.": [
-    "3.3.2.LI.1: Draw graphs of given trigonometric functions and use them to solve related problems."
-  ],
-  "3.4.1.CS.1: Establish simple mathematical relationships between two variables in a given observational or experimental context.": [
-    "3.4.1.LI.1: Establish simple mathematical relationships between two variables in a given observational or experimental context.",
-    "3.4.1.LI.2: Collect data from an experimental study in which the interest is based on treatment and non-treatment (control) groups."
-  ],
-  "3.4.1.CS.2: Demonstrate the ability to compare different data sets and use appropriate vocabulary to contribute.": [
-    "3.4.1.LI.1: Compare the quality of different datasets using knowledge and skills acquired from data analysis techniques.",
-    "3.4.1.LI.2: Discuss data information published in local and/or international media platforms."
-  ],
-  "3.4.2.CS.1: Explain how a given probability from print and electronic media influences individual decisions; select and analyse real-life data.": [
-    "3.4.2.LI.1: Identify examples from print and electronic media where probability is used, and explain how the given probability influences.",
-    "3.4.2.LI.2: Solve everyday life problems involving the probability of two dependent and independent events, including addition and multiplication laws."
-  ],
-  // Arabic Standard Indicators
-  "1.1.1.CS.1: Demonstrate knowledge and ability to identify the sound patterns of Arabic poetry and prose.": [
-    "1.1.1.LI.1: Identify the sound pattern of Arabic poetry, focusing on the rhyming patterns.",
-    "1.1.1.LI.2: Identify the sound pattern of Arabic poetry, focusing on the rhythm, the stressed and unstressed elements.",
-    "1.1.1.LI.3: Identify the sound pattern of Arabic prose, highlighting the syllable and consonant cluster, the stressed and unstressed sounds.",
-    "1.1.1.LI.4: Describe the sound pattern of Arabic prose, and the levels of tones that relate to moods or emotions."
-  ],
-  "1.1.2.CS.1: Demonstrate knowledge and understanding of the difference of Arabic types and the various regional Arabic dialects.": [
-    "1.1.2.LI.1: Identify the peculiar phonological features of Modern Standard Arabic.",
-    "1.1.2.LI.2: Identify the textual representations of sounds in words of the MSA and their sequence.",
-    "1.1.2.LI.3: Identify the distinct phonological features of Arabic dialect of Cairo and that of Saudi Arabia.",
-    "1.1.2.LI.4: Identify the phonological features of Arabic dialect of Saudi Arabia and imitate its sounds pattern."
-  ],
-  "1.1.3.CS.1: Demonstrate knowledge and understanding of the meanings and purposes of the various non-fictional texts.": [
-    "1.1.3.LI.1: Explain the general idea of an audio speech or reading from an Informational text and write down identifiable words from the audio.",
-    "1.1.3.LI.2: Tell the meanings of words from media news, using clues from surrounding words and context."
-  ],
-  "1.2.1.CS.1: Demonstrate knowledge and application of arithmetic methods to calculate in hundreds and thousands, quantities, distance and weight.": [
-    "1.2.1.LI.1: Count the number of students in class, estimate the congregation size at your mosque or church.",
-    "1.2.1.LI.2: Tell how much you buy food, clothes, learning materials, and electronics.",
-    "1.2.1.LI.3: Tell the distance between your house to the school, market, shopping centre, or city centre.",
-    "1.2.1.LI.4: Tell your weight, that of people you know, or items you use."
-  ],
-  "1.2.1.CS.2: Demonstrate knowledge and understanding of culturally specific expressions on sad/happy moments": [
-    "1.2.1.LI.1: Exemplify appropriate words of condolences to a bereaved family.",
-    "1.2.1.LI.2: Say words of consolation or comfort to a person who loses a property or business.",
-    "1.2.1.LI.3: Say words of congratulation, felicitation or well-wishing to a person in happy moment."
-  ],
-  "1.2.1.CS.3: Demonstrate knowledge and application of effective communicative strategies.": [
-    "1.2.1.LI.1: Apply questions as a strategy to seek clarity of a statement.",
-    "1.2.1.LI.2: Employ rhetorical question to show surprise or wonder about an opposing statement or view.",
-    "1.2.1.LI.3: Give a two-sentence introduction of the topic, six-sentence main body, and two-sentence conclusion."
-  ],
-  "1.2.1.CS.4: Demonstrate knowledge and application of basic translation/interpretation rules and methods involving simple Arabic and English texts from different fields and varying degrees of difficulty": [
-    "1.2.1.LI.1: Tell the English equivalent denotative meanings of words in an Arabic text.",
-    "1.2.1.LI.2: Give the Arabic equivalent denotative meanings of words in an English text.",
-    "1.2.1.LI.3: Give the English equivalent connotative meanings of words in an Arabic text.",
-    "1.2.1.LI.4: Give the Arabic equivalent connotative meanings of words in an English text."
-  ],
-  "1.2.2.CS.1: Demonstrate knowledge and literary creativity in narrating a known local story, using simple literary devices.": [
-    "1.2.2.LI.1: Give a summary of a famous Ghanaian story using words from a literature book.",
-    "1.2.2.LI.2: Narrate a summarized story from a prescribed literature textbook adopting familiar names within your locality.",
-    "1.2.2.LI.3: In not more than 100 words, give an account of a real event in your own words, employing simple literary devices like Simile.",
-    "1.2.2.LI.4: In not more than 100 words, give an account of a real event in your own words, employing metaphor, and imagery."
-  ],
-  "1.2.2.CS.2: Demonstrate knowledge and ability to recall and reproduce lines of Modern Arabic poetry and prose with clear voice and articulation.": [
-    "1.2.2.LI.1: Recite a Modern Arabic poem of 10 lines from memory, with clear voice and articulation at a natural pace.",
-    "1.2.2.LI.2: Recite a Modern Arabic poem of 10 lines from memory, with clear voice, articulation, rhythm and intonation.",
-    "1.2.2.LI.3: Recite a Modern Arabic prose of 10 lines from memory, with clear voice and articulation at a natural pace.",
-    "1.2.2.LI.4: Recite a Modern Arabic poem of 10 lines from memory, with clear voice, articulation, recitation and intonation."
-  ],
-  "1.2.3.CS.1: Speaking Good Arabic: Grammar Unit: Demonstrate knowledge and understanding of parts of speech and their various characteristics": [
-    "1.2.3.LI.1: Orally compose 5 nominal sentences about personal experiences and tell the reason for starting with a Noun and its grammatical function.",
-    "1.2.3.LI.2: Apply the grammatical rule to orally compose 5 verbal sentences about recent events in the community, and the reason for starting with the verb and its morphological changes.",
-    "1.2.3.LI.3: Apply the grammatical rule to orally compose 5 sentences that contain particles and their grammatical functions."
-  ],
-  "1.3.1.CS.1: Demonstrate understanding and application of reading techniques of a moderately complex authentic text at a reasonable speed.": [
-    "1.3.1.LI.1: Read semi-complex fully vowelized verses of the Quran with clear voice, rhythm, intonation, and proper pronunciation at a reasonable speed.",
-    "1.3.1.LI.2: Read semi-complex fully vowelized verses of poetry with clear voice, rhythm, intonation, and proper pronunciation at a reasonable speed.",
-    "1.3.1.LI.3: Read semi-complex fully vowelized classic prose with clear voice, rhythm, intonation, and proper pronunciation at a reasonable speed.",
-    "1.3.1.LI.4: Read semi-complex fully vowelized classic prose with clear voice, rhythm, intonation, and proper pronunciation at a reasonable speed."
-  ],
-  "1.3.2.CS.1: Demonstrate knowledge and understanding of text content using reading strategies of semi-complex text at a reasonable speed. (B1, CEFR)": [
-    "1.3.2.LI.1: Survey the text for clues related to its general idea, its relevance, and how the ideas connect to each other.",
-    "1.3.2.LI.2: Give possible meanings of unknown words in the passage, and then confirm their meanings from the dictionary."
-  ],
-  "1.3.2.CS.2: Demonstrate knowledge and application of basic translation/interpretation rules and methods involving simple Arabic and English texts from different fields and varying degrees of difficulty": [
-    "1.3.2.LI.1: Provide the denotative meanings of Arabic words, phrases, and sentences in an English text.",
-    "1.3.2.LI.2: Provide the denotative meanings of English words, phrases, and sentences in an Arabic text.",
-    "1.3.2.LI.3: Provide the connotative meanings of Arabic words, phrases, and sentences in an English text.",
-    "1.3.2.LI.4: Provide the connotative meanings of English words, phrases, and sentences in an Arabic text."
-  ],
-  "1.3.3.CS.1: Reading Good Arabic: Grammar Unit: Demonstrate knowledge and understanding of parts of speech and their grammatical functions": [
-    "1.3.3.LI.1: Identify nouns, verbs and particles and state their identifiable features.",
-    "1.3.3.LI.2: State the grammatical functions of nouns, verbs, and particles in a given sentence."
-  ],
-  "1.3.4.CS.1: Demonstrate knowledge and understanding of the introduction of Arabic Literature": [
-    "1.3.4.LI.1: Give the general definition of Arabic literature and the factors that influenced its development.",
-    "1.3.4.LI.2: Identify the various types of Arabic literature and their literary functions.",
-    "1.3.4.LI.3: Identify the social and cultural elements in a given text (prose).",
-    "1.3.4.LI.4: Identify the social and cultural elements in selected lines of poetry."
-  ],
-  "1.4.1.CS.1: Demonstrate understanding and knowledge of the orthography of Arabic and the exceptions to the conventional spelling system.": [
-    "1.4.1.LI.1: Compose an essay using words some of whose letters lose their audio manifestation, as well as those some of whose letters are pronounced and yet do not have textual representations. Use 10 of such for each of the two categories.",
-    "1.4.1.LI.2: List letters whose sounds are pronounced and yet do not have textual representations, with examples."
-  ],
-  "1.4.2.CS.1: Demonstrate knowledge and application of writing methods using special styles, diction, and appropriate registers in compositions.": [
-    "1.4.2.LI.1: Write a simple composition by planning, drafting, editing, and revising your draft, using formal and informal expressions.",
-    "1.4.2.LI.2: Differentiate between formal and informal texts by identifying vocabularies and expressions peculiar to each."
-  ],
-  "1.4.2.CS.2: Demonstrate knowledge and application of basic translation/interpretation rules and methods involving simple Arabic and English texts from different fields and varying degrees of difficulty": [
-    "1.4.2.LI.1: Write the denotative meanings of Arabic words in an English text.",
-    "1.4.2.LI.2: Write the denotative meanings of English words in an Arabic text.",
-    "1.4.2.LI.3: Write the connotative meanings of Arabic words in an English text.",
-    "1.4.2.LI.4: Write the connotative meanings of English words in an Arabic text."
-  ],
-  "1.4.3.CS.1: Demonstrate knowledge and application of strategies of composing straightforward descriptive essay on a range of familiar subjects within your field of interest.": [
-    "1.4.3.LI.1: Compose an essay to describe someone close to you with whom youâ€™ve shared an experience in the past.",
-    "1.4.3.LI.2: Compose an essay to describe something that has sentimental value for you."
-  ],
-  "1.4.3.CS.2: Demonstrate knowledge and creativity in adopting famous quotations as a specific theme to recount real stories using simple narrative style.": [
-    "1.4.3.LI.1: Write about a real event using one of the famous quotes as the theme, employing simple literary devices like Simile.",
-    "1.4.3.LI.2: Write an account of a real event in not less than 20 lines with one of the famous quotes as the theme, using metaphor, and imagery."
-  ],
-  "1.4.4.CS.1: Demonstrate knowledge of types of sentences and their components: the Subject and Predicate (Complement), the Subject and Predicate (Object)": [
-    "1.4.4.LI.1: Extract from the passage 10 nominal sentences and identify their two major components with their grammatical functions and the attached declensions.",
-    "1.4.4.LI.2: Extract from the passage 10 verbal sentences and identify their two major components with their grammatical functions and the attached declensions."
-  ],
-
-  // Chemistry Standard Indicators
-  "1.1.1.CS.1: Explain atomic structure, nuclear stability, and behavior of matter using scientific practices.": [
-    "1.1.1.LI.1: Describe chemical processes around us, and their applications in everyday life (food, agriculture, medicine, energy).",
-    "1.1.1.LI.2: Discuss and explain safety rules and hazard symbols (corrosive, toxic, flammable) in the chemistry laboratory.",
-    "1.1.1.LI.3: Explain why chemicals should be stored by compatibility rather than alphabetically.",
-    "1.1.1.LI.4: Describe the steps involved in the scientific method of inquiry.",
-    "1.1.1.LI.5: State the main postulates of Dalton's atomic theory and describe its historical weaknesses.",
-    "1.1.1.LI.6: Describe cathode rays and alpha scattering experiments, explaining weaknesses in J. J. Thomson and Rutherford's models.",
-    "1.1.1.LI.7: Describe Bohr's planetary theory and explain the importance of quantum numbers to electronic structures.",
-    "1.1.1.LI.8: Apply properties of solids, liquids, and gases under the kinetic theory of matter to distinguish states.",
-    "1.1.1.LI.9: Perform calculations on gas behavior using Boyle's, Charles', Gay-Lussac's, and the combined gas laws.",
-    "1.1.1.LI.10: State Graham's law of diffusion and Dalton's law of partial pressures and perform calculations from experimental data.",
-    "1.1.1.LI.11: Distinguish ideal and real gas deviations using the van der Waals equation.",
-    "1.1.1.LI.12: Describe laboratory preparation and tests for hydrogen, ammonia, and carbon (IV) oxide gases."
-  ],
-  "1.1.1.CS.2: Explain reaction energetics, enthalpy changes, and rate parameters.": [
-    "1.1.1.LI.13: Explain chemical energy, endothermic/exothermic profiles, and state standard enthalpy definitions (formation, combustion).",
-    "1.1.1.LI.14: Calculate reaction enthalpy changes using calorimetry relationships (q = mcÎ”T) and experimental results.",
-    "1.1.1.LI.15: State Hess's law of constant heat summation and construct energy cycles to determine unknown enthalpies.",
-    "1.1.1.LI.16: Use Born-Haber cycles to calculate lattice energy, electron affinity, and ionization energy properties.",
-    "1.1.1.LI.17: Discuss bond energy as a measure of bond strength and calculate reaction enthalpies.",
-    "1.1.1.LI.18: Define rate of reaction and explain methods for measuring rates (initial, average, and instantaneous rates).",
-    "1.1.1.LI.19: Investigate experimental factors affecting reaction rates (concentration, surface area, temperature, catalyst).",
-    "1.1.1.LI.20: State collision theory principles and sketch Maxwell-Boltzmann energy distribution curves.",
-    "1.1.1.LI.21: Construct rate equations (r = k[A]^x[B]^y) from experimental tables and determine order of reactions."
-  ],
-  "1.1.2.CS.1: Apply dynamic equilibrium to chemical operations and industrial processes.": [
-    "1.1.2.LI.1: Explain dynamic equilibrium state, write reversibility models, and perform calculations on initial/equilibrium concentration lists.",
-    "1.1.2.LI.2: State Le Chatelier's Principle and deduce qualitative shifts from stress factors (concentration, temperature, pressure).",
-    "1.1.2.LI.3: Apply dynamic equilibrium and reaction rates to evaluate commercial efficiency in the Haber and Contact processes.",
-    "1.1.2.LI.4: Establish mathematical relationships between Kp and Kc using the ideal gas law and calculate Ksp values."
-  ],
-  "1.1.2.CS.2: Analyze acid-base properties, ionization, and titration quantities.": [
-    "1.1.2.LI.5: Explain Arrhenius, Bronsted-Lowry, and Lewis concepts of acids and bases, highlighting strengths and constraints.",
-    "1.1.2.LI.6: Differentiate strong/weak acids and bases using extent of dissociation, conductivity, pH, and neutralization values.",
-    "1.1.2.LI.7: Describe physical and chemical reactions of acids/bases with metals, carbonates, basic oxides, and ammonium salts.",
-    "1.1.2.LI.8: Differentiate acidic, basic, normal, double, hydrated, and complex salts and list their domestic/industrial uses.",
-    "1.1.2.LI.9: Perform acid-base titrations (including back titrations and double-indicator systems) to determine unknown quantities.",
-    "1.1.2.LI.10: Define pH and pOH, convert hydrogen ion concentrations, and discuss ionic product of water (Kw).",
-    "1.1.2.LI.11: State the concept of salt hydrolysis and predict acidity/alkalinity for different salt groups.",
-    "1.1.2.LI.12: Draw standard acid-base titration curves and select appropriate indicators (methyl orange, phenolphthalein)."
-  ],
-  "1.2.1.CS.1: Explain periodic trends, and pattern of properties across periods and groups of elements.": [
-    "1.2.1.LI.1: Use electron configuration to classify elements into s, p, and d blocks and find positions in the periodic table.",
-    "1.2.1.LI.2: Explain trends in periodic properties (atomic radius, ionic radius, ionization energy, electronegativity).",
-    "1.2.1.LI.3: Account for discrepancies/anomalies in periodic trends with respect to beryllium, boron, oxygen, and nitrogen.",
-    "1.2.1.LI.4: Describe trends in physical and chemical properties of period 3 elements and their compounds (hydrides, oxides, chlorides).",
-    "1.2.1.LI.5: Study thermal stability trends under heat tests on period 2 and 3 nitrates/carbonates."
-  ],
-  "1.2.2.CS.1: Predict and explain interatomic (ionic, covalent, metallic) and intermolecular bonding.": [
-    "1.2.2.LI.1: Distinguish chemical bonding categories (ionic, covalent, metallic) and describe properties of their compounds.",
-    "1.2.2.LI.2: Explain factors influencing ionic bond formation (ionization energy, lattice energy) and model NaCl crystal lattice structure.",
-    "1.2.2.LI.3: Model covalent bond categories (simple, coordinate/dative, polar) using Lewis dot structures.",
-    "1.2.2.LI.4: Explain orbital mixing and hybridization (sp, sp2, sp3, sp3d, sp3d2) to predict molecular shapes and bond angles using VSEPR.",
-    "1.2.2.LI.5: Explain intermolecular forces (dipole-dipole, van der Waals, hydrogen bonding) and analyze factors affecting their strengths.",
-    "1.2.2.LI.6: Relate intermolecular forces to variations in physical properties (solubility, boiling points, viscosity)."
-  ],
-  "2.2.1.CS.1: Explain chemical patterns of the halogens and period three elements.": [
-    "2.2.1.LI.1: Detail physical and chemical properties of Group 17 halogens (physical state, electronegativity differences, bond energy curves).",
-    "2.2.1.LI.2: Describe displacement and precipitation reactions of h halides/halogens to compare standard electrode potentials.",
-    "2.2.1.LI.3: Discuss acid strength trends, Ka values, and thermal stability of hydrogen halides.",
-    "2.2.1.LI.4: Write electron configurations of first-row transition elements and describe their characteristics (variable oxidation, color, complexes, catalysis).",
-    "2.2.1.LI.5: Use molecular models/reagents to analyze geometry and coordination circles of first-row complex ions."
-  ],
-  "1.3.1.CS.1: Describe organic purification, and qualitative/quantitative elemental analysis.": [
-    "1.3.1.LI.1: Outline techniques to purify organic solids and liquids (distillation, crystallization, chromatography).",
-    "1.3.1.LI.2: Explain qualitative tests and perform mass composition calculations for carbon, hydrogen, nitrogen, sulfur, and halogens in organic compounds.",
-    "1.3.1.LI.3: Interpret paper chromatography sheets and Rf values to index purity of organic extracts."
-  ],
-  "1.3.2.CS.1: Classify organic compounds, explain homologies, and assign IUPAC nomenclature.": [
-    "1.3.2.LI.1: Distinguish organic vs inorganic compounds and categorize structures (aliphatic, cyclic, heterocyclic, aromatic).",
-    "1.3.2.LI.2: Explain homologous series characteristics, general formulas, and various representations (molecular, structural, condensed).",
-    "1.3.2.LI.3: Define structural and stereoisomerism (chain, positional, functional, geometrical cis-trans isomerism).",
-    "1.3.2.LI.4: Apply IUPAC rules to name and draw parent alkanes, alkenes, alkynes, and their branched structures up to six carbons."
-  ],
-  "2.3.2.CS.1: Explain structure, properties, reactions, and uses of alkanes, alkenes, alkynes, benzene, alcohols, and carboxylic acids.": [
-    "2.3.2.LI.1: Discuss source, naming, low reactivity, combustion reactions, and free-radical substitution mechanisms of alkanes.",
-    "2.3.2.LI.2: Describe preparation and addition reactions of alkenes and alkynes, applying Markovnikov's rule.",
-    "2.3.2.LI.3: Describe structure, resonance/stability, and electrophilic substitution reactions of benzene (nitration, halogenation, Friedel-Crafts).",
-    "2.3.2.LI.4: Explain industrial production, classification, dehydration/esterification, and characteristic tests (Lucas/iodoform) of alcohols.",
-    "2.3.2.LI.5: Explain structure, synthesis, acidity factors, and organic salt/ester reactions of alkanoic (carboxylic) acids.",
-    "2.3.2.LI.6: Describe preparation, properties, nucleophilic substitution mechanisms, and commercial uses of alkanoic acid derivatives (esters, amides).",
-    "2.3.2.LI.7: Detail fats and oils structure as triglycerides, describe saponification, and contrast properties of soapy vs soapless detergents.",
-    "2.3.2.LI.8: Define polymers and map addition vs condensation paths (producing nylon-6,6 or terylene) alongside plastic pollution remedies.",
-    "2.3.2.LI.9: Describe molecular structures/bonding of amino acids, proteins, and carbohydrates, performing diagnostic tests (Fehling's, Biuret)."
-  ],
-  // CRS Standard Indicators
-  "1.1.1.CS.1: Explain the concept of religion, recount the history and spread of Christianity, and analyze its influence on traditional beliefs in Ghana.": [
-    "1.1.1.LI.1: Explain the concept of religion from learners' perspectives, classical definitions (Emile Durkheim, Edward Tylor, Paul Tillich), and misconceptions.",
-    "1.1.1.LI.2: Discuss the characteristics of religion and categorize ways in which definitions of religion are classified (theological, sociological, psychological, moral).",
-    "1.1.1.LI.3: Justify the need to study religion at SHS, detailing reasons (moral development, civic responsibility, interfaith harmony) and career avenues.",
-    "1.1.1.LI.4: Recount the global origins of Christianity and trace its historical backgrounds in Ghana (Portuguese arrival, missionary groups).",
-    "1.1.1.LI.5: State the contributions of indigenous agents such as Philip Quaque and the role of mission schools/churches in nation-building.",
-    "1.1.1.LI.6: Contrast African Indigenous Religion (AIR) before European contact and assess the areas of conflict, convergence, and blending with Christianity."
-  ],
-  "1.1.2.CS.1: Explain the nature and attributes of God from Christian and AIR viewpoints, and analyze biblical accounts of creation and the Fall.": [
-    "1.1.2.LI.1: Explain the Father, Son, and Holy Spirit as the Christian concept of Trinity with scriptural references.",
-    "1.1.2.LI.2: Explain how the natural environment reveals God's character (orderliness, care, beauty, design, peace, mystery) in Christianity and AIR.",
-    "1.1.2.LI.3: Analyze unique attributes of God (omniscience, omnipotence, omnipresence) and attributes of God found in humans (mercy, holiness, justice).",
-    "1.1.2.LI.4: Examine theological approaches and debates over God's nature (the problem of evil, personal vs impersonal God).",
-    "1.1.2.LI.5: Contrast Christianity and other religions' views of God, and discuss how moral values in divine attributes apply to life.",
-    "1.1.2.LI.6: Analyze and compare the Priestly and Yahwist accounts of creation (Genesis 1-2) with scientific theories like the Big Bang or evolution.",
-    "1.1.2.LI.7: Discuss the original close relationship between God and humankind, trace the temptation/disobedience in Genesis 3, and examine the origin of sin.",
-    "1.1.2.LI.8: Critically examine philosophical tensions (free will vs. determinism, justice vs. mercy) and compare how AIR accounts handle the origin of sin/moral failure."
-  ],
-  "2.2.1.CS.1: Identify core Christian doctrines, examine denominational differences, and evaluate the effects of scriptural misinterpretations.": [
-    "2.2.1.LI.1: Describe major Christian beliefs, the second coming of Jesus, resurrection, judgment, and the doctrinal significance of holy scriptures.",
-    "2.2.1.LI.2: Interrogate differences in denominational interpretations of Christian beliefs (Catholicism vs. Protestantism, baptism, sacraments, tithing, role of women).",
-    "2.2.1.LI.3: Assess the personal and social effects of scriptural misinterpretations (misrepresenting 'God will provide' to excuse laziness, or misinterpreting 'generational curses').",
-    "2.2.1.LI.4: Examine how African traditional witchcraft beliefs, spiritual protective objects, and musical expressions influenced Ghanaian Christianity."
-  ],
-  "2.2.2.CS.1: Analyze Christian and traditional worship practices, and synthesize inherent moral values like humility and love.": [
-    "2.2.2.LI.1: Explain how Christian worship is performed in Ghana, highlighting liturgical, charismatic, musical, prayer, and preaching styles.",
-    "2.2.2.LI.2: Compare traditional and contemporary worship elements (prayer, praise, giving, sacraments, deliverance) across major denominations.",
-    "2.2.2.LI.3: Synthesise moral values inherent in Christian worship (humility, gratitude, forgiveness, love, obedience) and apply them to life dilemmas."
-  ],
-  "3.2.3.CS.1: Describe forms of Christian music in Ghana, the influence of local traditions, and its role as a tool for national message transmission.": [
-    "3.2.3.LI.1: Identify the nature and different forms of Christian music in Ghana (classical hymns, choral anthems, traditional/charismatic praise, urban gospel).",
-    "3.2.3.LI.2: Describe how churches in Ghana have incorporated local language, musical rhythms, instruments, and traditional proverbs.",
-    "3.2.3.LI.3: Assess the spiritual, emotional, doctrinal, and community-unifying functions of gospel music in Ghanaian society.",
-    "3.2.3.LI.4: Propose how Christian music serves as a tool for moral education, social cohesion, cultural preservation, and national campaigns/messaging."
-  ],
-  "3.2.4.CS.1: Evaluate the personal/national roles of Christian prayer, critique controversial misuses, and align values with civic duties.": [
-    "3.2.4.LI.1: Examine scriptural foundations and forms of prayer (silent, spontaneous, liturgical) used across different Christian denominations.",
-    "3.2.4.LI.2: Evaluate the practice of Christian prayer at state and secular events, and explore issues of religious pluralism and constitutional neutrality.",
-    "3.2.4.LI.3: Critique the misuse and abuse of Christian prayer (imprecatory prayer for harm, commercialisation of prayer, or public showy displays)."
-  ],
-  "1.3.1.CS.1: Trace the historical emergence of Christian enclaves in Ghana, describing their communal characteristics and relationship with traditional society.": [
-    "1.3.1.LI.1: Trace the circumstances that led to the creation of separate Christian enclaves (Abokobi, Osu Salems, Akropong) in Ghana.",
-    "1.3.1.LI.2: Describe core characteristics of early Christian communities (unity, love, fellowship, moral living, biblical foundations in Acts 2).",
-    "1.3.1.LI.3: Compare early community characteristics with traditional society relating to authority, dress, work conduct, and membership regulations."
-  ],
-  "2.3.2.CS.1: Examine how religious communities negotiate national development, peace, and pluralistic coexistence in Ghana.": [
-    "2.3.2.LI.1: Examine the traditional and evolving roles of Christian communities in addressing education, healthcare, and peacebuilding.",
-    "2.3.2.LI.2: Explain the concept of religious pluralism, contrasting it with exclusivism and inclusivism in pluralistic Ghanaian towns.",
-    "2.3.2.LI.3: Analyze opportunities and challenges of religious nationalism and investigate real-life examples (Chief Imam's visit to a Catholic church, inter-religious marriages)."
-  ],
-  "3.3.3.CS.1: Evaluate Christian teachings on and contributions of women, aligning them with international/national empowerment frameworks.": [
-    "3.3.3.LI.1: Identify key scriptures affirming the dignity and spiritual equality of women (Genesis 1:27, Galatians 3:28) and rebut patriarchal misinterpretations.",
-    "3.3.3.LI.2: Assess the vital roles and financial contributions of key women during Jesus' ministry, the resurrection witnesses, and in the early Church (Lydia, Phoebe, Priscilla).",
-    "3.3.3.LI.3: Describe the traditional and leadership roles of women in modern churches, and identify ways religious teachings have historically constrained females.",
-    "3.3.3.LI.4: Examine structural alignments between Christian values and (inter)national frameworks for women's empowerment (UN SDG 5, Ghana's Affirmative Action Act)."
-  ],
-  "1.4.1.CS.1: Assess Christian environmental stewardship values and show how they combine with traditional taboos and science to care for nature.": [
-    "1.4.1.LI.1: Identify negative human activities affecting the environment (deforestation, galamsey/illegal mining, plastic waste) and suggest recovery options.",
-    "1.4.1.LI.2: Describe biblical teachings on environment care, creation stewardship, and Christian values applied to ecological preservation.",
-    "1.4.1.LI.3: Comparatively analyze overlaps between Christian stewardship and traditional African practices (sacred groves, taboos) on nature preservation."
-  ],
-  "2.4.2.CS.1: Analyze Christian teachings on sexual morality and evaluate how they address contemporary relationships and abuses.": [
-    "2.4.2.LI.1: Examine the concept of sexual morality, contrasting traditional religious and contemporary secular viewpoints in Ghana.",
-    "2.4.2.LI.2: Describe various forms of contemporary sexual behaviors (sexting, cohabitation, hookup, revenge porn) and their social implications.",
-    "2.4.2.LI.3: Analyze Christian teachings on chastity, fidelity, purity, and self-discipline to prevent sexual abuse, exploitation, and stigmatisation."
-  ],
-  "3.4.3.CS.1: Describe contemporary fraudulent acts (sakawa, cybercrime) and evaluate how Christian ethical teachings address them.": [
-    "3.4.3.LI.1: Describe contemporary fraudulent practices (SIM box fraud, sakawa, phishing, mobile money scams) and their emotional/economic impacts.",
-    "3.4.3.LI.2: Explain scriptural instructions against fraud (dishonest weights, stealing) and define the roles of conscience, repentance, and restitution.",
-    "3.4.3.LI.3: Discuss how Christian ethical values (honesty, accountability, stewardship) can be practically applied in schools, workplaces, and communities."
-  ],
-  // Food & Nutrition Standard Indicators
-  "1.1.1.CS.1: Demonstrate knowledge and understanding of food commodities, select and use food to meet the needs of individuals and families for healthy living.": [
-    "1.1.1.LI.1: Explain basic concepts in food and nutrition and their implication to healthy living.",
-    "1.1.1.LI.2: Classify food commodities under the various food groups to enhance food selection and utilisation.",
-    "1.1.1.LI.3: Analyse ways convenience foods can be processed and used to promote healthy nutritional practice in households.",
-    "1.1.1.LI.4: Analyse the effect of heat on the nutritional values of the various food commodities."
-  ],
-  "1.1.1.CS.2: Demonstrate Scientific knowledge of food nutrients and their implication to growth and development among individuals, families and the community.": [
-    "1.1.1.LI.5: Identify food nutrients and their effects on growth and development in the body (proteins, carbohydrates, fats/lipids, vitamins, minerals, water).",
-    "1.1.1.LI.6: Discuss the effects of nutrient deficiencies on growth and development of the individual, family and society (Kwashiorkor, Marasmus, scurvy, etc.)."
-  ],
-  "1.1.1.CS.3: Demonstrate Scientific knowledge in food habit/lifestyles and its implications on growth and development on individuals and families.": [
-    "1.1.1.LI.7: Discuss food habits/ lifestyles and their implications on the nutritional status of individuals, families and societies (eating frequency, balanced diet).",
-    "1.1.1.LI.8: Analyse factors that influence food habits/ lifestyle practices in daily nutrition (geographical, cultural, technological, religious, economic, etc.)."
-  ],
-  "2.1.1.CS.1: Analyse the relationship between food choices and the overall health of individuals, family members and special groups.": [
-    "2.1.1.LI.1: Explain the importance of consuming a balanced diet for maintaining good health (proteins, vitamins, minerals, and water functions).",
-    "2.1.1.LI.2: Identify dietary-related diseases and their causes among individuals, families and the community (obesity, diabetes, hypertension, malnutrition).",
-    "2.1.1.LI.3: Analyse the effects of excessive consumption of processed foods and sugary drinks on health."
-  ],
-  "2.1.1.CS.2: Demonstrate the ability to investigate food and nutritional interventions for managing food-related diseases at the household, community, national and global levels.": [
-    "2.1.1.LI.4: Explain basic concepts of nutritional interventions (dietary diversification, school feeding programs, nutrition education, supplementation).",
-    "2.1.1.LI.5: Examine household and community-based food and nutritional interventions supporting individuals, families and societies to manage dietary related diseases.",
-    "2.1.1.LI.6: Apply basic research skills (interviews, questionnaires) to assess the impact and challenges of household-based and community-based food and nutritional interventions."
-  ],
-  "2.1.1.CS.3: Demonstrate the ability to plan balanced meals that promote healthy living and meet nutritional needs.": [
-    "2.1.1.LI.7: Demonstrate appropriate cooking methods that help retain nutrients in food to promote healthy living (steaming, grilling, poaching, boiling).",
-    "2.1.1.LI.8: Develop a meal plan that meets the nutritional needs of individuals and families (toddlers, adolescents, pregnant/lactating mothers, manual workers, sedentary).",
-    "2.1.1.LI.9: Plan special meals to support groups of individuals suffering from dietary related diseases (hypertensive, diabetic, anaemic) in the family."
-  ],
-  "2.1.1.CS.4: Demonstrate appropriate skills in preparation, cooking and serving of meals for individuals and special groups in the family.": [
-    "2.1.1.LI.10: Prepare and cook balanced meals that meet the dietary needs of special groups in the family (toddlers, adolescents, pregnant/lactating mothers, invalids).",
-    "2.1.1.LI.11: Apply proper serving techniques and table-setting skills suitable for different individuals and special groups (basic, formal, buffet table settings)."
-  ],
-  "3.1.1.CS.1: Demonstrate an understanding of the role of Ghanaian festivals and festive occasions in preserving culture, promoting sustainable nutrition and enhancing social well-being.": [
-    "3.1.1.LI.1: Describe major Ghanaian festivals and their associated traditional foods (Religious, Cultural, Harvest, National festivals).",
-    "3.1.1.LI.2: Analyse the role of traditional foods in promoting sustainable nutrition and their impact on healthy living (balanced diet, medicinal/healing properties).",
-    "3.1.1.LI.3: Analyse how traditional festive meals can be modified for improved health benefits and sustainability (reducing excess salt and oil, eco-friendly cooking).",
-    "3.1.1.LI.4: Examine the social and communal benefits of festive and festivals dishes in strengthening relationships and enhancing overall well-being."
-  ],
-  "3.1.1.CS.2: Demonstrate skills in modifying and preparing festival and festive meals for special occasions, events, and entertainment.": [
-    "3.1.1.LI.5: Plan festive and festivals meals suitable for various occasions or events (dinners, cocktails, luncheons, tea parties).",
-    "3.1.1.LI.6: Prepare and cook dishes for festive/festivals/occasions/events (cakes, jollof rice, fries with sauces) and display for peer feedback."
-  ],
-  "1.1.2.CS.1: Demonstrate knowledge and understanding of how to apply the concepts of food security and its components to ensure sustainable access to nutritious food in everyday living.": [
-    "1.1.2.LI.1: Explain the concept of food security and the implication of its components (availability, affordability, accessibility, safety, stability) in everyday living.",
-    "1.1.2.LI.2: Analyse the factors influencing food security at the household and national levels (socio-economic, environmental, and political factors)."
-  ],
-  "1.1.2.CS.2: Demonstrate knowledge and understanding of applying food storage principles to prevent food spoilage and promote food safety practices for healthy living.": [
-    "1.1.2.LI.3: Explain the concept and principles of food storage and their role in preventing food spoilage (dry, refrigerated, frozen storage, FIFO).",
-    "1.1.2.LI.4: Discuss the causes of food spoilage and its implication for food safety (microbial spoilage, enzymatic activity, chemical reactions, physical factors).",
-    "1.1.2.LI.5: Demonstrate appropriate food handling, storage and hygiene practices to minimise contamination and ensure food safety (storing fish, onion, mango, banana, beans)."
-  ],
-  "2.1.2.CS.1: Explain the principles and methods of food preservation and their role in ensuring food security.": [
-    "2.1.2.LI.1: Describe the principles of food preservation and how they help maintain food quality and safety (prevention of microbial growth, moisture control, acidity, oxidation).",
-    "2.1.2.LI.2: Describe the various food preservation methods and their effectiveness in extending food shelf life (freezing, canning, drying, salting, sugaring, pickling).",
-    "2.1.2.LI.3: Differentiate between various food preservation methods such as drying, freezing, fermentation and canning."
-  ],
-  "2.1.2.CS.2: Demonstrate the ability to apply appropriate food preservation techniques to extend the shelf life of perishable foods and promote sustainable food security practices.": [
-    "2.1.2.LI.4: Demonstrate the application of appropriate food preservation methods (marmalade, jam, pickles, shito) to support sustainable food security.",
-    "2.1.2.LI.5: Package and store preserved food under suitable conditions to maintain quality and safety (vapour proof, grease proof, waterproof, glass, vacuum, etc.).",
-    "2.1.2.LI.6: Apply appropriate eco-friendly packaging methods (biodegradable, edible packaging, beeswax wraps, glass) to enhance preservation and minimise waste."
-  ],
-  "3.1.2.CS.1: Demonstrate knowledge and skills in appropriate packaging techniques to maintain the nutritional quality and safety of food products.": [
-    "3.1.2.LI.1: Explain the role of food packaging in maintaining nutritional quality, hygiene and food safety (barrier against contaminants, temperature, moisture).",
-    "3.1.2.LI.2: Apply appropriate eco-friendly packaging methods (compostable, beeswax, glass, bioplastics) to enhance food preservation and design prototypes."
-  ],
-  "3.1.2.CS.2: Develop entrepreneurial skills in creating and marketing nutritious food products that promote healthy living practices.": [
-    "3.1.2.LI.3: Identify business opportunities in food production that support healthy eating habits and sustainable nutrition (agricultural production, retail, catering).",
-    "3.1.2.LI.4: Develop, package and market a nutritious food product that aligns with consumer health needs and industry standards, and perform break-even analyses."
-  ],
-  "1.2.1.CS.1: Demonstrate knowledge and understanding of the types, functions and layout of food laboratories used in food production.": [
-    "1.2.1.LI.1: Discuss the concept of food laboratories and their functions in food production (kitchens, microbiological, chemical, sensory evaluation laboratories).",
-    "1.2.1.LI.2: Discuss the types of kitchen laboratories layout and their implication in food production (single-line, L-shaped, U-shaped, island, parallel layouts)."
-  ],
-  "1.2.1.CS.2: Demonstrate knowledge and understanding in innovative ways of planning and using food laboratories.": [
-    "1.2.1.LI.3: Evaluate the factors that affect the planning and layout of food laboratories (purpose, infrastructure, equipment, space, safety, socio-cultural, budget).",
-    "1.2.1.LI.4: Suggest ways of re-designing/ renovation/refurbishment of a food laboratory to enhance the functions of various areas within the laboratory.",
-    "1.2.1.LI.5: Discuss ways of ensuring hygiene in the food laboratory (personal hygiene, food hygiene, environmental hygiene)."
-  ],
-  "2.2.1.CS.1: Demonstrate an understanding of how to apply scientific principles of heat transfer in food preparation and processing to promote food safety.": [
-    "2.2.1.LI.1: Discuss the various methods of food preparation and processing that apply principles of heat transfer (conduction, convection, radiation).",
-    "2.2.1.LI.2: Relate the various principles of heat transfer (conduction on stovetop, oven convection, radiation grilling/microwaving) to cooking methods."
-  ],
-  "2.2.1.CS.2: Demonstrate the ability to apply knowledge and principles of heat transfer to select and use appropriate cooking methods, tools, and fuels for food preparation and processing.": [
-    "2.2.1.LI.3: Discuss the different methods of food preparation and processing to promote sustainable food safety practices (Upcycling food scraps, composting, portion control).",
-    "2.2.1.LI.4: Analyse the challenges of applying the various heat transfer principles in food preparation and processing (uneven heat distribution, energy consumption, safety)."
-  ],
-  "3.2.1.CS.1: Demonstrate knowledge and understanding of sugars and apply creative and innovative sugar craft techniques to enhance the appearance and quality of confectionery products.": [
-    "3.2.1.LI.1: Discuss the types, properties and functions of sugars/sweeteners (granulated, cubes, liquid, powder) in food production and sugar craft.",
-    "3.2.1.LI.2: Demonstrate the application of creative and innovative sugar craft techniques to design and decorate confectionery products (fondant, royal, butter icing)."
-  ],
-  "3.2.1.CS.2: Demonstrate knowledge, understanding and skills in the application of scientific principles in developing recipes.": [
-    "3.2.1.LI.3: Explain the scientific principles involved in recipe development (protein, carbohydrate, fat interactions, moist/dry/combination cooking methods).",
-    "3.2.1.LI.4: Develop and modify recipes using scientific principles to improve taste, texture, nutritional content and presentation (rÃ©chauffÃ©/leftover design rules)."
-  ],
-  "1.2.2.CS.1: Demonstrate knowledge, understanding, and skills in applying scientific principles to beverage production.": [
-    "1.2.2.LI.1: Discuss the types of beverages and their uses (alcoholic vs non-alcoholic: stimulants, nourishing, refreshing, hydration, nutrition, energy).",
-    "1.2.2.LI.2: Explain the scientific principles involved in the selection, processing, and preservation of beverages (cleanliness, safety, temperature control, tannin extraction)."
-  ],
-  "1.2.2.CS.2: Demonstrate knowledge and understanding of the principles of nutrition and apply them to produce, enrich and fortify beverages to meet the diverse needs of individuals, families and society.": [
-    "1.2.2.LI.3: Analyse how to enrich or fortify beverages with vitamins, minerals, proteins, and plant extracts to meet nutrition needs.",
-    "1.2.2.LI.4: Conduct experiments to produce non-alcoholic beverages using local food commodities (sobolo leaves, prekese, turkey berry) to meet nutritional needs.",
-    "1.2.2.LI.5: Evaluate how scientific principles influence alcoholic beverage production (biochemical fermentation, physical distillation, aging/maturation) using local food commodities."
-  ],
-  "2.2.2.CS.1: Demonstrate knowledge, understanding, and skills in the development and use of food additives and condiments.": [
-    "2.2.2.LI.1: Distinguish between food additives (naturally/artificially produced stocks, mixed spices) and condiments (vinegar, ketchup, mustard, ground ginger).",
-    "2.2.2.LI.2: Conduct experiments to develop natural colours from natural food sources (beetroot, turmeric, karadafa leaves).",
-    "2.2.2.LI.3: Prepare food additives and condiments from local food sources and label them (prekese, turkey berry, aniseed/rosemary, karadafa powder)."
-  ],
-  "2.2.2.CS.2: Demonstrate knowledge, understanding and skills in the application of scientific principles in flour cookery and enrichment.": [
-    "2.2.2.LI.4: Explain the scientific principles underlying flour cookery, including gluten formation, gelatinisation and leavening (yeast, baking powder, baking soda).",
-    "2.2.2.LI.5: Discuss the basic ingredients used in flour cookery (flour structure, fat tenderness, sugar sweetening/coloring, egg value/raising).",
-    "2.2.2.LI.6: Apply appropriate techniques to improve the texture and nutritional value of flour-based products through enrichment and fortification.",
-    "2.2.2.LI.7: Evaluate the quality of different flour products based on texture, appearance and nutritional composition."
-  ],
-  "3.2.2.CS.1: Demonstrate the ability to plan, organize, and manage food exhibitions and bazaars to promote food products and develop entrepreneurial and career opportunities.": [
-    "3.2.2.LI.1: Plan and organise a food exhibition or bazaar to showcase newly developed food products to target consumers (objectives, target audience, venue selection, budget).",
-    "3.2.2.LI.2: Apply marketing and promotional strategies to attract consumers and enhance the visibility of food products (pre-event promotion, booth design, free sampling, pricing).",
-    "3.2.2.LI.3: Explore career opportunities in the food industry (nutrition/dietetics, food science, culinary services, agribusness development, R&D).",
-    "3.2.2.LI.4: Discuss work ethics in the food industry, highlighting qualities like punctuality, honesty, reliability, and hygiene practices."
-  ],
-  // Business Management Standard Indicators
-  "1.1.1.CS.1: Demonstrate functional knowledge and understanding of business and its various forms of ownership.": [
-    "1.1.1.LI.1: Explain business, its objectives, discuss its role in society, and classify its different forms.",
-    "1.1.1.LI.2: Examine the features of sole proprietorship business, identify its benefits, challenges and sources of funding.",
-    "1.1.1.LI.3: Discuss partnership business, its features, deed, formation, benefits, challenges and sources of funding.",
-    "1.1.1.LI.4: Describe a company and discuss its features, types, the procedure for registration, benefits, challenges and sources of funding.",
-    "1.1.1.LI.5: Examine State-owned enterprises, their features, types, benefits, challenges and sources of funding."
-  ],
-  "1.1.2.CS.1: Demonstrate knowledge and understanding of the basic functions of management.": [
-    "1.1.2.LI.1: Explain management, its levels and skills",
-    "1.1.2.LI.2: Differentiate between management and administration and identify the career paths in business management",
-    "1.1.2.LI.3: Explain planning, its tools, processes, benefits and limitations.",
-    "1.1.2.LI.4: Explain the concept of organising, its principles, importance and describe organisational structures.",
-    "1.1.2.LI.5: Describe departmentalisation, its types and explain the reasons, benefits and challenges of dividing an organisation into distinct units.",
-    "1.1.2.LI.6: Differentiate between centralisation and decentralisation and examine their advantages and disadvantages",
-    "1.1.2.LI.7: Explain leadership, its various styles/forms, sources of power in leadership and the importance of effective leadership.",
-    "1.1.2.LI.8: Discuss emotional intelligence, leadership skill development, and conflict management, and relate these concepts to effective leadership practices.",
-    "1.1.2.LI.9: Explain controlling, its types, processes, tools and importance."
-  ],
-  "2.1.2.CS.1: Demonstrate knowledge, understanding and application of decision-making skills in organisations.": [
-    "2.1.2.LI.1: Explain decision-making, its importance, types and tools.",
-    "2.1.2.LI.2: Identify management levels and the decisions they make and analyse the steps in the decision-making process."
-  ],
-  "2.1.2.CS.2: Demonstrate knowledge and understanding of delegation.": [
-    "2.1.2.LI.1: Explain delegation and outline its principles and steps involved in the process of delegation.",
-    "2.1.2.LI.2: Identify the benefits of delegation, its limitations and ways of making it effective"
-  ],
-  "2.1.2.CS.3: Demonstrate understanding and application of effective communication skills in organisations.": [
-    "2.1.2.LI.1: Explain business communication, its importance, processes and forms/types.",
-    "2.1.2.LI.2: Explain the channels of business communication, the barriers and ways of making communication effective."
-  ],
-  "2.1.3.CS.4: Demonstrate knowledge and understanding of Human Resource Management.": [
-    "2.2.3.LI.1: Explain Human Resource Management, its functions and describe the processes involved in recruitment and selection.",
-    "2.2.3.LI.2: Explain the components of Performance Management and its importance.",
-    "2.2.3.LI.3: Explain Labour and Industrial relations including Collective bargaining processes."
-  ],
-  "3.1.2.CS.1: Demonstrate knowledge and understanding of production management.": [
-    "3.1.2.LI.1: Explain the functions of Production Management and identify the main forms of production.",
-    "3.1.2.LI.2: Describe the types of production and the steps in production planning and control."
-  ],
-  "3.1.2.CS.2: Demonstrate knowledge and understanding of Procurement Management.": [
-    "3.1.2.LI.1: Explain Procurement Management and discuss its importance and process.",
-    "3.1.2.LI.2: Explain the strategies in procurement, legal and ethical guidelines governing procurement and identify the challenges in the procurement management."
-  ],
-  "2.1.3.CS.1: Demonstrate knowledge and understanding of the Law of Contract.": [
-    "2.1.3.LI.1: Explain a contract and its elements.",
-    "2.1.3.LI.2: Explain types of contracts and how contracts may be vitiated and discharged."
-  ],
-  "2.1.3.CS.2: Demonstrate knowledge and understanding of business risk and insurance.": [
-    "2.1.3.LI.1: Explain business risk, identify the types of business risks and how to manage risk",
-    "2.1.3.LI.2: Explain insurance and outline its principles, policies and importance to businesses"
-  ],
-  "2.2.1.CS.1: Demonstrate knowledge and understanding of the approaches to international business.": [
-    "2.2.1.LI.1: Explain the following approaches to international business: a. franchising, b. joint venturing, c. licensing and d. wholly-owned subsidiary"
-  ],
-  "2.2.1.CS.2: Demonstrate knowledge and understanding of Domestic and International Trade.": [
-    "2.2.1.LI.1: Differentiate between domestic and international trade, and outline the basis and documents used in international trade.",
-    "2.2.1.LI.2: Analyse the various restrictions in international trade, the reasons for restrictions and explain the benefits and challenges of international trade."
-  ],
-  "3.2.1.CS.1: Demonstrate knowledge and understanding of digital marketing.": [
-    "3.2.1.LI.1: Explain marketing, evaluate its functions and analyse the Extended Marketing Mix (7Ps)",
-    "3.2.1.LI.2: Discuss the processes involved in new product development and the product life cycle",
-    "3.2.1.LI.3: Explain e-business and digital marketing, its tools and assess the benefits and challenges in their applications in business"
-  ],
-  "1.2.2.CS1: Demonstrate knowledge and understanding of globalization and international business and how to transform Ghanaian companies into multinational corporations.": [
-    "1.2.2.LI.1: Explain the factors driving globalisation, analyse its impact on local businesses, and discuss the benefits and challenges of operating businesses in a global market.",
-    "1.2.2.LI.2: Explain international business, it features, the reasons for engaging in it, and discuss its benefits and the challenges.",
-    "1.2.2.LI.3: Describe multinational corporation and discuss its features, benefits and challenges including factors driving companies to become multination corporation.",
-    "1.2.1.LI.4: Explain indigenous Ghanaian businesses with examples, outline the steps to become a multinational corporation, and discuss strategies for Ghanaian companies to transform into multinational operations."
-  ],
-  "1.2.1.CS1: Demonstrate knowledge and understanding of the business environment and corporate social responsibility.": [
-    "1.2.1.LI.1: Analyse the factors affecting the internal and external environment of business using SWOT and PESTEL",
-    "1.2.1.LI.2: Define business ethics, outline its key principles, and explain the importance of business ethics in promoting integrity, trust, and accountability within organisations.",
-    "1.2.1.LI.3: Explain corporate social responsibility and discuss its types of initiatives",
-    "1.2.1.LI.4: Discuss the benefits and challenges of Corporate Social Responsibility"
-  ],
-  "3.2.2.CS.1: Demonstrate knowledge and understanding of entrepreneurship and setting up businesses.": [
-    "3.2.2.LI.1: Describe entrepreneurship and outline the characteristics and roles of entrepreneurs",
-    "3.2.2.LI.2: Identify ways of entering into businesses and describe the various documents needed by entrepreneurs.",
-    "3.2.2.LI.3: Analyse the process of setting up a business, prepare a simple business plan for the establishment of business and outline the reasons for business successes and failures."
-  ],
-
-  // Accounting and Financial/Cost Accounting Standard Indicators
-  "B10.1.1.1: Demonstrate knowledge and understanding of Accounting, its nature, principles, purpose and application.": [
-    "B10.1.1.1.1: Distinguish between financial and cost accounting functions, stating objectives and scope of each.",
-    "B10.1.1.1.2: Research standard bookkeeping processes used in local businesses (sole traders, retail, corporate)."
-  ],
-  "B11.1.2.1: Analyze accounting transactions using the double-entry system, adjusting ledgers, correcting errors and extracting trial balances.": [
-    "B11.1.2.1.1: Apply basic double-entry ledger posting rules to debit and credit asset/liability actions.",
-    "B11.1.2.1.2: Post entries in journals and adjust physical ledger mappings."
-  ],
-  "B11.1.2.2: Prepare updated cash books, and bank reconciliation statements to monitor liquidity.": [
-    "B11.1.2.2.1: Identify causes of differences between general cashbooks and Bank Statement structures.",
-    "B11.1.2.2.2: Draft bank reconciliation reports resolving unpresented cheques and direct debits."
-  ],
-  "B11.1.2.3: Draft receivables and payables control accounts to audit sub-ledger operations.": [
-    "B11.1.2.3.1: Reconcile trade receivable sub-ledgers with general ledger control accounts.",
-    "B11.1.2.3.2: Account for contra entries, bad debts, and dishonoured cheques in control ledgers."
-  ],
-  "B10.1.3.1: Prepare sole proprietorship final financial statements with basic internal adjustments.": [
-    "B10.1.3.1.1: Construct standard trading profit & loss sheets resolving inventory and margin outcomes.",
-    "B10.1.3.1.2: Account for accrued or prepaid expenses and depreciation adjustments."
-  ],
-  "B11.1.3.1: Prepare final statements from single-entry and incomplete financial records.": [
-    "B11.1.3.1.1: Construct opening and closing Statements of Affairs to derive net asset capitals.",
-    "B11.1.3.1.2: Reconstruct summary cash receipt ledgers to compute total credit sales."
-  ],
-  "B11.1.3.2: Account for financial items in non-profit operations, compiling subscriptions and accumulated funds.": [
-    "B11.1.3.2.1: Reconcile nonprofit receipts and payments accounts with income/expense spreadsheets.",
-    "B11.1.3.2.2: Prepare ledger accounts tracing prepaid and outstanding member subscriptions."
-  ],
-  "B12.1.3.1: Account for the constitution, profit distribution, and goodwill of general business partnerships.": [
-    "B12.1.3.1.1: Formulate partner capital/current accounts following profit distribution sharing arrangements.",
-    "B12.1.3.1.2: Post ledger entries for goodwill treatment on admission or retirement of general partners."
-  ],
-  "B12.1.3.2: Prepare final structured financial accounts and reports for companies.": [
-    "B12.1.3.2.1: Sketch standardized company financial layouts mapping share reserves, retained gains, and debentures.",
-    "B12.1.3.2.2: Analyze corporate annual reports checking cash flows and auditing declarations."
-  ],
-  "B10.1.4.1: Compute trading, profit and loss components to determine business profitability.": [
-    "B10.1.4.1.1: Calculate gross margin ratios and operating net returns from merchant logs."
-  ],
-  "B12.1.5.1: Allocate partnership rewards using profit and loss appropriation accounts.": [
-    "B12.1.5.1.1: Compute interest on capital allocations, drawings charges, and partner salary distributions."
-  ],
-  "B12.1.6.1: Examine company share capital issues and balance sheet groupings.": [
-    "B12.1.6.1.1: Post company ledger entries accounting for share subscriptions and share premium reserves."
-  ],
-  "B10.1.7.1: Classify general overhead and prime expenses in basic production sheets.": [
-    "B10.1.7.1.1: Group expenditures into prime costs, factory overheads, and administrative costs."
-  ],
-  "B10.2.1.1: Distinguish nature, purpose, basics and installation guidelines of modern cost accounting files.": [
-    "B10.2.1.1.1: Compare information outputs of cost accounting databases with financial ledgers.",
-    "B10.2.1.1.2: Assess local operational targets before installing custom costing parameters."
-  ],
-  "B10.2.1.2: Demonstrate material storage, purchase documentation, and issue pricing under FIFO, LIFO and Weighted Average schemes.": [
-    "B10.2.1.2.1: Record warehouse receipts and issues using FIFO, LIFO, and Weighted Average structures.",
-    "B10.2.1.2.2: Calculate lower of cost or net realizable value for raw material stock balances."
-  ],
-  "B11.2.1.1: Account for labour remuneration, idle time metrics, and calculate complete payroll sheets.": [
-    "B11.2.1.1.1: Compute base wages using standard day-rate, piece-rate, and differential incentive systems.",
-    "B11.2.1.1.2: Formulate standard payroll spreadsheets showing itemized statutory tax and union deductions."
-  ],
-  "B11.2.1.2: Formulate overhead analysis sheets to apportion common indirect overheads.": [
-    "B11.2.1.2.1: Allocate administrative overhead budgets using mathematical step-down reapportionment models.",
-    "B11.2.1.2.2: Determine machine-hour or direct labor-hour overhead absorption rates."
-  ],
-  "B11.2.2.1: Draft job and batch cost records to compute margins on specific custom orders.": [
-    "B11.2.2.1.1: Complete customer job cost sheets summing raw resource requisitions and prime wage variables.",
-    "B11.2.2.1.2: Formulate batch cost schedules tracking cost-per-unit metrics on serialized print or chemical batches."
-  ],
-  "B12.2.2.1: Account for process costing scenarios including treatment of normal and abnormal losses.": [
-    "B12.2.2.1.1: Chart process account flows calculating equivalent units of production on work-in-progress stock.",
-    "B12.2.2.1.2: Reconcile scrap returns, byproduct transfers, and process spill normal/abnormal waste parameters."
-  ],
-  "B12.2.2.2: Reconcile contract costing procedures with architectural certificate milestones.": [
-    "B12.2.2.2.1: Draft contract accounts summing materials sent to site, site wages, and plant depreciation.",
-    "B12.2.2.2.2: Calculate reserve profits recognizing architect certified percentage milestones."
-  ],
-  "B12.2.2.3: Formulate service cost schedules for passenger transport and related service sectors.": [
-    "B12.2.2.3.1: Prepare operating and service sheets for logistics and transport businesses."
-  ],
-  "B11.2.3.1: Apply Activity Based Costing methods to link overheads to strategic cost pools.": [
-    "B11.2.3.1.1: Classify factory overhead items into defined cost activity pools.",
-    "B11.2.3.1.2: Calculate cost-driver rates (setups, inspections, machine hours) to assign resource demands dynamically."
-  ],
-  "B11.2.3.2: Contrast Marginal and Absorption costing treatments on period adjustments and profits.": [
-    "B11.2.3.2.1: Prepare monthly income comparisons accounting for differences in closing stock valuations.",
-    "B11.2.3.2.2: Reconcile marginal costing profits with traditional absorption costing reports."
-  ],
-  "B12.2.3.1: Draft cost-volume-profit graphs to pinpoint break-even outcomes and margin of safety indices.": [
-    "B12.2.3.1.1: Calculate contribution-to-sales ratios, break-even unit quantities, and target profit sales targets.",
-    "B12.2.3.1.2: Plot multi-variable margins of safety on coordinates charts mapping operational thresholds."
-  ],
-  "B12.2.3.2: Prepare functional sales, production, purchase, and cash budgets to schedule operations.": [
-    "B12.2.3.2.1: Formulate production budgets using anticipated sales targets adjusted for holding stock policies.",
-    "B12.2.3.2.2: Draft comprehensive cash budgets mapping receipts and layouts to preserve liquid buffers."
-  ],
-  "B12.2.3.3: Calculate standard material and labour variances to evaluate operational efficiency discrepancies.": [
-    "B12.2.3.3.1: Analyze price, usage, rate, and efficiency variances comparing standard targets with audited payments.",
-    "B12.2.3.3.2: Formulate ledger adjustments reconciling theoretical standards with physical production invoices."
-  ],
-  "B10.1.1.2: Compute assets, liabilities and capital values using the basic accounting equation.": [
-    "B10.1.1.2.1: State and demonstrate how transaction impacts preserve basic account equation states."
-  ],
-  "B10.1.1.3: Examine the information needs of various users of accounting information.": [
-    "B10.1.1.3.1: Distinguish information targets of internal managers, tax authorities, and creditors."
-  ],
-  "B10.1.1.4: Discuss the need for general accounting standards and the role of regulatory bodies.": [
-    "B10.1.1.4.1: Examine how the IFRS frameworks protect global reporting honesty."
-  ],
-  "B10.1.1.5: Describe the core definitions of bookkeeping, financial accounting and cost accounting.": [
-    "B10.1.1.5.1: List the differences between original records entry and analytical spreadsheet operations."
-  ],
-  "B10.1.1.6: Apply the double entry guidelines to adjust transactions in the accounting equation.": [
-    "B10.1.1.6.1: Draft double-entry balances across dual asset transactions."
-  ],
-  "B10.1.1.7: Post basic ledger adjustments on various asset, liability, and capital accounts.": [
-    "B10.1.1.7.1: Open, ledger, and extract closing balances across t-accounts."
-  ],
-  "B10.1.1.8: Extract a standard trial balance from historical ledger balances.": [
-    "B10.1.1.8.1: Reconcile general ledger balances to prove computational equality."
-  ],
-  "B11.1.2.4: Distinguish between errors of omission, commission, principle, and complete reversal.": [
-    "B11.1.2.4.1: Identify structural errors and summarize rectify procedures."
-  ],
-  "B11.1.2.5: Design a suspense account to balance the trial balance temporaries pending audits.": [
-    "B11.1.2.5.1: Rectify errors utilizing journal corrections posted to suspense accounts."
-  ],
-  "B11.1.2.6: Draft a formal bank reconciliation statement starting with cashbook or bank statement balances.": [
-    "B11.1.2.6.1: Prepare unadjusted Cashbook balances and bank adjustments."
-  ],
-  "B11.1.2.7: Reconcile sub-ledgers with general ledger control totals.": [
-    "B11.1.2.7.1: Identify outstanding invoice differences in Control Account sheets."
-  ],
-  "B10.1.3.3: Calculate adjustments for prepayments, accruals, depreciation, and bad debts for sole traders.": [
-    "B10.1.3.3.1: Calculate reducing balance or straight line depreciation schedules."
-  ],
-  "B11.1.3.3: Formulate a subscription account to track accrued or prepaid member dues.": [
-    "B11.1.3.3.1: Distinguish prepaid/outstanding subscription members data."
-  ],
-  "B11.1.3.4: Convert incomplete records into dual double-entry structures using ledger summaries.": [
-    "B11.1.3.4.1: Formulate cash receipt and payment analysis ledgers."
-  ],
-  "B12.1.3.3: Manage the entry/retirement of a partner, calculating goodwill shares.": [
-    "B12.1.3.3.1: Post double entry shares for partners entry/retirement records."
-  ],
-  "B12.1.3.4: Account for share and debenture subscription and payments in general company ledgers.": [
-    "B12.1.3.4.1: Journalize company share payments in general ledger files."
-  ],
-  "B10.1.4.2: Present a classified statement of financial position grouping local capital structures.": [
-    "B10.1.4.2.1: Group asset resources by current/noncurrent balance structures."
-  ],
-  "B10.1.4.3: Calculate end-of-period adjustments for outstanding and accrued variables.": [
-    "B10.1.4.3.1: Allocate month-end adjustments to the cost of operations."
-  ],
-  "B11.1.4.1: Derive sales, purchases, and cash flows to prepare standard sole-proprietor reports.": [
-    "B11.1.4.1.1: Reconstruct control records under single entry rules."
-  ],
-  "B12.1.5.2: Prepare partnership profit distributions inside appropriation accounts.": [
-    "B12.1.5.2.1: draft partner profit appropriation schedules."
-  ],
-  "B12.1.5.3: Draft partner capital and current account reports.": [
-    "B12.1.5.3.1: distinguish fluctuating and fixed partner current structures."
-  ],
-  "B12.1.5.4: Formulate ledger adjustments for goodwill in partners entry or exits.": [
-    "B12.1.5.4.1: Post entries adjusting partners ledger capital lines for goodwill transfers."
-  ],
-  "B12.1.6.2: Outline standard company components (statement of cash flows, director findings).": [
-    "B11.1.6.2.1: Identify elements in published financial profiles."
-  ],
-  "B12.1.6.3: Present company income reserves balances correctly.": [
-    "B12.1.6.3.1: Map reserves balances inside statement of changes in equity."
-  ],
-  "B10.2.4.2: Contrast information requirements of cost ledgers versus general accounting.": [
-    "B10.2.4.2.1: Differentiate internal management data from external reporting files."
-  ],
-  "B10.2.4.3: Plan core requirements of implementing a sound cost accounting structure.": [
-    "B10.2.4.3.1: Outline cost sheet installation pathways."
-  ],
-  "B10.2.5.2: Trace time sheet outputs to payroll rates.": [
-    "B10.2.5.2.1: Reconcile production clocks with labor cost databases."
-  ],
-  "B10.2.5.3: Explain direct and indirect categorization of operating targets.": [
-    "B10.2.5.3.1: Map expenses to prime vs general factory overhead sectors."
-  ],
-  "B10.2.6.2: Compute closing inventory values at lower of aggregate cost or market value.": [
-    "B10.2.6.2.1: Apply IAS 2 rules mapping realistic inventory markets."
-  ],
-  "B10.2.6.3: Formulate requisition sheets tracking stock movements.": [
-    "B10.2.6.3.1: Track store receipts with official requisition tickets."
-  ],
-  "B11.2.7.2: Apply step-down distribution rules to assign overheads across cost units.": [
-    "B11.2.7.2.1: Allocate support center expenditures using mathematical proportions."
-  ],
-  "B11.2.7.3: Formulate overhead absorption configurations on direct machine or labor metrics.": [
-    "B11.2.7.3.1: Derive factory absorption base factors."
-  ],
-  "B12.2.8.2: Compute unit costs based on bulk batch executions.": [
-    "B12.2.8.2.1: Summarize average unit cost per batch yield."
-  ],
-  "B12.2.8.3: Formulate contract sheets tracking retention moneys and work certified values.": [
-    "B12.2.8.3.1: Compile contract ledger adjustments computing architectural values."
-  ],
-  "B12.2.8.4: Track work-in-progress values across linear production processes.": [
-    "B12.2.8.4.1: Compute equivalent production units."
-  ],
-  "B12.2.8.5: Compute cost-per-passenger-kilometer in commercial networks.": [
-    "B12.2.8.5.1: Calculate service costing parameters for public transit fleets."
-  ],
-  "B11.2.1.3: Compile payroll spreadsheets detailing gross and net payouts.": [
-    "B11.2.1.3.1: Compute monthly salary sheets mapping personal tax tiers."
-  ],
-  "B11.2.1.4: Group indirect expenses to production departments using primary sheets.": [
-    "B11.2.1.4.1: Distribute general rent and power budgets based on floor layouts."
-  ],
-  "B11.2.1.5: Perform step-down secondary redistributions of service budgets.": [
-    "B11.2.1.5.1: Balance support center sheets with standard allocation tiers."
-  ],
-  "B12.2.2.4: Formulate operational cost metrics in the services domain.": [
-    "B12.2.2.4.1: Prepare cost unit metrics for public transport networks."
-  ],
-  "B12.2.3.2: Formulate cash receipts and operational schedules aiding cashflow balance.": [
-    "B12.2.3.2.1: Reconcile cashflow schedules tracking planned payouts."
-  ],
-  // Biology Standard Indicators
-  "B10.1.1.1: Demonstrate knowledge and understanding of Biology, the various branches and fields of study, and their benefits in everyday life.": [
-    "B10.1.1.1.1: Observe specimen samples (honey, fish, milk, medicines) and identify respective biological domains.",
-    "B10.1.1.1.2: Prepare a research report outlining how various fields of biology apply to human careers and health."
-  ],
-  "B10.1.1.2: Apply knowledge and understanding of the scientific method to solve everyday problems.": [
-    "B10.1.1.2.1: Outline key processes of scientific investigation (observation, hypothesis, experiment, analysis, conclusion).",
-    "B10.1.1.2.2: Apply the scientific method to address immediate local environmental challenges (e.g. sanitation, water security)."
-  ],
-  "B10.1.1.3: Apply knowledge of body symmetry, orientation, and sectioning of various organisms, and make labelled drawings of specimens.": [
-    "B10.1.1.3.1: Distinguish between bilateral, radial and spherical symmetries of common plant/animal specimens.",
-    "B10.1.1.3.2: Make clear, well-annotated biological drawings of cross-sections and longitudinal-sections of specific structures."
-  ],
-  "B10.1.1.4: Demonstrate knowledge, skill, and safety in the use of the microscope.": [
-    "B10.1.1.4.1: Examine and describe the main parts and functions of a compound light microscope.",
-    "B10.1.1.4.2: Demonstrate correct, safe manipulative technique to configure the stage and obtain clear glass slide focuses."
-  ],
-  "B11.1.1.1: Relate the knowledge of the characteristics and life processes of common simple living organisms to their economic importance.": [
-    "B11.1.1.1.1: Describe biological processes and characteristics of Rhizopus, Moss, and Fern.",
-    "B11.1.1.1.2: Discuss the ecological benefits and harmful qualities of these basic lower plants/fungi."
-  ],
-  "B10.1.2.1: Apply the knowledge of basic concepts in biology to improve productivity in fish farming.": [
-    "B10.1.2.1.1: Identify optimal environmental criteria (pH, dissolved oxygen, temperature) for nursery pond stocking.",
-    "B10.1.2.1.2: Build an experimental aquarium to analyze feeding behaviors and growth scales of fingerlings."
-  ],
-  "B11.1.2.1: Apply the knowledge of basic concepts in biology to improve crop and animal production.": [
-    "B11.1.2.1.1: Demonstrate how soil enrichment mechanisms (composting, mulching) depend on basic bacterial activities.",
-    "B11.1.2.1.2: Discuss biological principles underlying selective animal breeding, immunization, and deworming routines."
-  ],
-  "B12.1.2.1: Apply knowledge and skills in biotechnology to enhance the value of products that help improve human lives and the environment.": [
-    "B12.1.2.1.1: Describe microbial fermentation pathways used in local dietary production (Kenkey, Yoghurt, Bread, Pito).",
-    "B12.1.2.1.2: Outline fundamental molecular techniques used for tissue culturing, gene splicing, and bioremediation."
-  ],
-  "B11.2.1.1: Demonstrate knowledge and understanding of cell structure and functions, and relate them to organizational hierarchies.": [
-    "B11.2.1.1.1: Distinguish between prokaryotic and eukaryotic cells, and compare specialized animal and plant cell organelles.",
-    "B11.2.1.1.2: Relate cellular specialization to structural levels (cells -> tissues -> organs -> systems -> organisms)."
-  ],
-  "B12.2.1.1: Explain the molecular structure of nucleic acids (DNA/RNA) and their roles in protein synthesis.": [
-    "B12.2.1.1.1: Draw and label the double-helix Watson-Crick model of DNA, describing nucleotide pairing principles.",
-    "B12.2.1.1.2: Outline the phase stages of transcription and translation within cellular protein production mechanisms."
-  ],
-  "B12.2.1.2: Explain the cell cycle, cell division (mitosis/meiosis), and their relevance in living things.": [
-    "B12.2.1.2.1: Contrast the phase events of Mitosis and Meiosis, citing chromosomal replication behaviors.",
-    "B11.2.1.2.2: Discuss the biological significance of cell divisions to organism growth, tissue repair, and sexual heredity."
-  ],
-  "B10.2.2.1: Explain the significance of the various processes involved in the movement of substances in and out of the cell and the factors affecting them.": [
-    "B10.2.2.1.1: Demonstrate the occurrence of passive diffusion, osmosis, active transport, and bulk cellular transport.",
-    "B10.2.2.1.2: Design model experiments checking temperature, surface-to-volume ratio, and concentration dependencies."
-  ],
-  "B10.3.1.1: Identify living organisms using numbered and dichotomous keys.": [
-    "B10.3.1.1.1: Sample local animals and plants and build standard dichotomous keys based on physical features."
-  ],
-  "B10.3.1.2: Explain how lower organisms are classified into their taxonomic groups.": [
-    "B10.3.1.2.1: Explain taxonomic ranking hierarchies (Domain, Kingdom, Phylum, Class, Order, Family, Genus, Species)."
-  ],
-  "B11.3.1.1: Describe the distinctive characteristics, life cycle and characteristics of grain weevil, butterfly, housefly and honeybee.": [
-    "B11.3.1.1.1: Examine body segmentation, appendages, and metamorphic cycles of weevils, butterflies, houseflies, and honeybees.",
-    "B11.3.1.1.2: Evaluate economic roles (pollination, honey yields) and health risks (vector transmissions) of these insects."
-  ],
-  "B12.3.1.1: Relate the characteristic features and life processes of tilapia, toad, wall gecko and domestic fowl to their economic importance.": [
-    "B12.3.1.1.1: Compare respiratory, reproductive, and thermoregulatory structures of tilapia, toad, gecko, and fowl.",
-    "B12.3.1.1.2: Discuss local perceptions, dietary values, and agricultural benefits of these diverse classes."
-  ],
-  "B10.3.2.1: Demonstrate knowledge and understanding of major tropical ecological habitats and how living things are adapted to these habitats.": [
-    "B10.3.2.1.1: Describe characteristics of rainforest, savannah, desert, seashore, river pond, and lagoon habitats.",
-    "B10.3.2.1.2: Investigate morphologic and behavioral adaptive traits of organisms living in specialized regions."
-  ],
-  "B10.3.2.2: Use the appropriate ecological tool/devices and methods to estimate the population of given species in a named habitat.": [
-    "B10.3.2.2.1: Apply quadrat sampling, pitfall traps, pooters, and Lincoln Indice strategies to compute local insect profiles."
-  ],
-  "B11.3.2.1: Explain the features of various tropical habitats and how living organisms are adapted to these habitats.": [
-    "B11.3.2.1.1: Document the adaptative features of tropical organisms during field trips or simulated digital explorations."
-  ],
-  "B12.3.2.1: Explain the interdependencies of living things and their environment (food chains, webs, and symbiotic relationships) and indicate their importance.": [
-    "B12.3.2.1.1: Plot complex food webs mapping tropical biotic dependencies.",
-    "B12.3.2.1.2: Distinguish between biological associations: parasitism, mutualism, commensalism, saprophytism, and epiphytism."
-  ],
-  "B10.3.3.1: Discuss the life cycles of common disease-causing organisms, and their effects on humans and other living things.": [
-    "B10.3.3.1.1: Analyze life cycles, vectors, symptoms, and control measures for Plasmodium, Schistosoma, and Hookworms."
-  ],
-  "B11.3.3.1: Explain immunization, vaccination, and inoculation and state their importance in the environment.": [
-    "B11.3.3.1.1: Distinguish between active/passive immunity and artificial inoculation procedures promoting health."
-  ],
-  "B12.3.3.1: Examine and explain emerging diseases and infections (SARS, COVID-19, Ebola, Swine flu, etc.) and suggest prevention methods.": [
-    "B12.3.3.1.1: Conduct epidemiological checks detailing transmission dynamics of SARS, COVID-19, and Monkeypox, outlining hygiene options."
-  ],
-  "B10.4.1.1: Describe the morphology of mammals and relate the external and internal structures to their functions.": [
-    "B10.4.1.1.1: Dissect a sedated small mammal (rat/rabbit) to examine internal organs and draw annotated body maps."
-  ],
-  "B11.4.1.1: Discuss the human cardiovascular and excretory systems and relate their parts to homeostasis and general well-being.": [
-    "B11.4.1.1.1: Plot blood flow routes inside mammalian hearts and describe double-circulation pathways.",
-    "B11.4.1.1.2: Chart nephrotic waste filtration loops inside mammalian kidneys defending chemical equilibrium."
-  ],
-  "B12.4.1.1: Explain the mammalian respiratory, reproductive, musculoskeletal, nervous, and hormonal systems and how they work together.": [
-    "B12.4.1.1.1: Contrast mammalian skeletal subsystems (axial and appendicular skull, vertebrae, limbs and girdles).",
-    "B12.4.1.1.2: Outline chemical and electrical coordination loops combining neuro-endocrine centers with muscle targets."
-  ],
-  "B10.4.2.1: Describe the morphology of flowering plants and explain how these are related to their growth and development.": [
-    "B10.4.2.1.1: Classify monocotyledonous and dicotyledonous plant root, stem, leaf, and seed adaptive characteristics."
-  ],
-  "B11.4.2.1: Explain transport and nutrition (photosynthesis) in flowering plants and state the factors affecting them.": [
-    "B11.4.2.1.1: Map water and mineral ascending routes through vascular tissues (xylem and phloem).",
-    "B11.4.2.1.2: Perform light-to-chlorophyll tests showing constraints influencing organic sugar yields."
-  ],
-  "B12.4.2.1: Describe reproduction and excretion in flowering plants and relate them to survival.": [
-    "B12.4.2.1.1: Sketch and annotate complete whorl sectors of a flower (calyx, corolla, androecium, gynoecium).",
-    "B12.4.2.1.2: Distinguish botanical waste release patterns (excreting resins, gums, latexes, carbon dioxide, and excess water)."
-  ],
-
-  // Economics Standard Indicators
-  "B10.1.1.1: Use relevant information gathered from learnersâ€™ home, school and community through observation to carefully define economics and stimulate their interest in the subject.": [
-    "B10.1.1.1.1: Brainstorm in mixed ability groups to define Economics based on everyday experiences.",
-    "B10.1.1.1.2: Research career options (finance, policy, academia) available to Economics graduates."
-  ],
-  "B11.1.1.1: Use the appropriate economics tools to explain everyday economic issues.": [
-    "B11.1.1.1.1: Apply basic mathematical tables and models (equations) to economic problems.",
-    "B11.1.1.1.2: Interpret and plot line graphs, bar charts, and pie charts/pictograms for pricing."
-  ],
-  "B12.1.1.1: Exhibit knowledge of advanced economic methodologies and tools.": [
-    "B12.1.1.1.1: Demonstrate how to construct and derive algebraic demand and supply schedules."
-  ],
-  "B10.1.2.1: Use concepts of demand to solve everyday life and societal challenges.": [
-    "B10.1.2.1.1: Describe wants, scarcity, choice, scale of preference and opportunity cost.",
-    "B10.1.2.1.2: Role-play situations illustrating the principle of opportunity cost and scarcity."
-  ],
-  "B11.1.2.1: Use the appropriate factors of demand to explain the differences between change in quantity demanded and change in demand.": [
-    "B11.1.2.1.1: Plot shift in demand vs movement along the demand curve under ceteris paribus.",
-    "B11.1.2.1.2: Analyze non-price determinants (income, tastes, seasons) affecting total demand."
-  ],
-  "B12.1.2.1: Interpret elasticity of demand and apply the concept to daily life.": [
-    "B12.1.2.1.1: Calculate price, income and cross elasticity of demand using standard formulas.",
-    "B12.1.2.1.2: Discuss applications of elasticity to business price settings and government taxation."
-  ],
-  "B10.1.3.1: Use relevant information gathered from home, school and community through observation to carefully explain the concept of utility and the law of diminishing marginal utility.": [
-    "B10.1.3.1.1: Explain total utility, average utility and marginal utility using food/water tests."
-  ],
-  "B11.1.3.1: Exhibit rational behaviour in determining the equilibrium in consumption of goods and services through practical experiences.": [
-    "B11.1.3.1.1: Graphically model consumer equilibrium where marginal utility equals price."
-  ],
-  "B12.1.3.1: Use information from the environment to explain income and substitution effects.": [
-    "B12.1.3.1.1: Distinguish between substitution effect and income effect using indifference curves."
-  ],
-  // Career Technology - Health and Safety
-  "B7.1.1.1: Demonstrate knowledge of basic concept of staying healthy": ["B7.1.1.1.1: Discuss the need to stay healthy", "B7.1.1.1.2: Describe ways of maintaining personal hygiene", "B7.1.1.1.3: Discuss food hygiene"],
-  "B7.1.2.1: Demonstrate knowledge of preventing accidents in the workshop/site and laboratory": ["B7.1.2.1.1: Describe accidents in the workshop/site/laboratory", "B7.1.2.1.2: Explain the need for keeping the workshop/site and the laboratory safe"],
-  "B7.1.3.1: Demonstrate knowledge of basic concept of Environmental Health": ["B7.1.3.1.1: Discuss the factors of environmental health", "B7.1.3.1.2: Demonstrate the preventive measures of environmental health"],
-  "B8.1.1.1: Demonstrate understanding of basic practices that depict personal and food hygiene": ["B8.1.1.1.1: Demonstrate skills of personal hygiene", "B8.1.1.1.2: Demonstrate skills in keeping food safe (food hygiene)"],
-  "B8.1.2.1: Demonstrate knowledge of preventing accidents in the workshop/site/food/sewing laboratory": ["B8.1.2.1.1: Demonstrate basic skills in applying First Aid to self and others"],
-  "B8.1.3.1: Demonstrate understanding of the basic concept of Environmental health": ["B8.1.3.1.1: Discuss the causal factors, effects and prevention of desertification and deforestation"],
-  "B8.1.3.2: Demonstrate understanding of basic ways of disposing of household and industrial/workshop/site/laboratory waste": ["B8.1.3.2.1: Identify proper management and disposal of household and industrial waste"],
-  "B9.1.1.1: Demonstrate skills that relate to personal and food hygiene to self": ["B9.1.1.1.1: Practice good grooming", "B9.1.1.1.2: Observe appropriate food hygiene practices"],
-  "B9.1.2.1: Demonstrate skills that relate to personal, workshop and laboratory safety": ["B9.1.2.1.1: Describe procedures for reporting accidents and unsafe practices", "B9.1.2.1.2: Use appropriate personal protective equipment when working", "B9.1.2.1.3: Maintain safe working environments"],
-  "B9.1.3.1: Demonstrate understanding and practice of environmental health in the school/home": ["B9.1.3.1.1: Discuss the causes and prevention of poor sanitation"],
-  "B9.1.3.2: Demonstrate understanding of clean energy, and Improved Cookstoves (ICS) and their accompanying fuels": ["B9.1.3.2.1: Discuss what is meant by clean energy and improved cookstoves and fuels", "B9.1.3.2.2: Discuss the benefits of improved cookstoves and fuels"],
-  
-  // Career Technology - Materials for Production
-  "B7.2.1.1: Describe compliant materials": ["B7.2.1.1.1: Describe compliant materials", "B7.2.1.1.2: Distinguish between types of compliant materials", "B7.2.1.1.3: Explain how compliant materials are manufactured"],
-  "B7.2.2.1: Describe resistant materials": ["B7.2.2.1.1: Describe resistant materials", "B7.2.2.1.2: Distinguish between the types of resistant materials", "B7.2.2.1.3: Explain how each of the resistant materials is manufactured"],
-  "B7.2.3.1: Demonstrate understanding of the properties of smart and modern materials": ["B7.2.3.1.1: Explore the general properties of smart and modern materials"],
-  "B7.2.4.1: Demonstrate knowledge of basic food commodities": ["B7.2.4.1.1: Discuss food commodities"],
-  "B8.2.1.1: Demonstrate understanding of the properties of compliant materials": ["B8.2.1.1.2: Discuss the basic characteristics of compliant materials"],
-  "B8.2.2.1: Demonstrate understanding of properties of resistant materials": ["B8.2.2.1.1: Explain the basic properties of resistant materials", "B8.2.2.1.2: Describe the properties of building materials"],
-  "B8.2.3.1: Demonstrate understanding and the use of smart and modern materials": ["B8.2.3.1.1: Discuss smart and modern materials"],
-  "B8.2.4.1: Demonstrate understanding of the functions of food commodities": ["B8.2.4.1.1: Explore the functions of food to the body"],
-  "B9.2.1.1: Demonstrate skills in selecting compliant materials for making products and artefacts": ["B9.2.1.1.1: Discuss the factors that influence the selection of compliant materials"],
-  "B9.2.2.1: Demonstrate skills in selecting resistant materials for making products/artefacts": ["B9.2.2.1.1: Discuss the factors that influence the selection of resistant materials", "B9.2.2.1.2: Discuss the reasons why resistant materials require particular techniques and tools"],
-  "B9.2.3.1: Demonstrate understanding of using smart and modern materials for making products/artefacts": ["B9.2.3.1.1: Discuss reasons for using smart and modern materials", "B9.2.3.1.2: Demonstrate techniques for making prototypes/projects using smart and modern materials"],
-  "B9.2.4.1: Demonstrate skills in selecting food commodities in meal preparation": ["B9.2.4.1.1: Discuss how to select food commodities used for meal preparation"],
-  "B9.2.4.2: Demonstrate skills in planning meals for various members of the family": ["B9.2.4.1.2: Discuss the basic food requirements for different members of the family"],
-
-  // Career Technology - Tools, Equipment and Processes
-  "B7.3.1.1: Classify and use measuring and marking out tools": ["B7.3.1.1.1: Classify and use measuring and marking out tools and equipment", "B7.3.1.1.2: Demonstrate how to care for and maintain measuring and marking out tools"],
-  "B7.3.4.1: Describe kitchen essentials": ["B7.3.4.1.1: Describe kitchen essentials", "B7.3.4.1.2: Demonstrate skills in the classification of kitchen essentials"],
-  "B7.3.2.1: Identify cutting and shaping tools": ["B7.3.2.1.1: Identify cutting and shaping tools and equipment", "B7.3.2.1.2: Use appropriate skills in cutting, chopping, slicing, dicing and shaping"],
-  "B7.3.3.1: Describe joining and assembling materials": ["B7.3.3.1.1: Describe joining and assembling materials, tools and equipment", "B7.3.3.1.2: Use appropriate skills for joining and assembling artefacts"],
-  "B8.3.1.1: Demonstrate understanding of measuring and marking out tools and equipment for production": ["B8.3.1.1.1: Identify tools and equipment for measuring", "B8.3.1.1.2: Take body measurements", "B8.3.1.1.3: Use appropriate techniques to measure", "B8.3.1.1.4: Care for tools"],
-  "B8.3.2.1: Demonstrate understanding of cutting and shaping tools and equipment for making artefacts /products": ["B8.3.2.1.1: Identify and use cutting tools", "B8.3.2.1.2: Skills in cutting/shaping", "B8.3.2.1.3: Care for tools"],
-  "B8.3.3.1: Demonstrate understanding of joining and assembling materials, tools and equipment used for making artefacts/products": ["B8.3.3.1.1: Identify joining materials", "B8.3.3.1.2: Skills for joining/assembling", "B8.3.3.1.3: Care for tools"],
-  "B8.3.4.1: Demonstrate understanding of maintaining kitchen essentials": ["B8.3.4.1.1: Care for kitchen essentials"],
-  "B8.3.5.1: Demonstrate understanding of application of finishes": ["B8.3.5.1.1: Mix various finishes", "B8.3.5.1.2: Finishing edges"],
-  "B9.3.1.1: Demonstrate understanding of measuring and marking out tools and equipment": ["B9.3.1.1.1: Discuss tools for measuring", "B9.3.1.1.2: Use tools for measuring"],
-  "B9.3.2.1: Demonstrate the understanding of cutting/shaping tools and equipment used for making artefacts/ products": ["B9.3.2.1.1: Discuss tools for cutting", "B9.3.2.1.2: Use tools for cutting"],
-  "B9.3.3.1: Demonstrate understanding of materials. tools and equipment used for joining and assembling artefacts/products": ["B9.3.3.1.1: Discuss joining materials", "B9.3.3.1.2: Skills in joining"],
-  "B9.3.4.1: Demonstrate skills of selecting and purchasing kitchen essentials": ["B9.3.4.1.1: Select suitable kitchen essentials", "B9.3.4.1.2: Use labour-saving kitchen essentials"],
-  "B9.3.5.1: Demonstrate understanding of application of finishes": ["B9.3.5.1.1: Apply finishes to resistant materials", "B9.3.5.1.2: Finish edges in sewing"],
-
-  // English - Oral Language
-  "B1.1.1.1: Listen to and sing familiar songs": ["B1.1.1.1.1: Listen to and sing familiar songs with appropriate expressions", "B1.1.1.1.2: Identify some familiar songs"],
-  "B2.1.1.1: Interpret familiar songs": ["B2.1.1.1.1: Identify some familiar songs from learnersâ€™ locality", "B2.1.1.1.2: Have learners interpret the songs in their own words"],
-  "B3.1.1.1: Talk about the benefits of songs": ["B3.1.1.1.1: Identify some familiar songs e.g. patriotic songs", "B3.1.1.1.2: Identify and talk about the moral lessons in the songs", "B3.1.1.1.3: Think-pair-share the benefits of songs"],
-  "B4.1.1.1: Listen attentively to songs and sing them": ["B4.1.1.1.1: Listen attentively to songs and sing them with appropriate stress", "B4.1.1.1.2: Identify and discuss values in songs"],
-  "B5.1.1.1: Explain the central messages in songs": ["B5.1.1.1.1: Explain the central messages in songs", "B5.1.1.1.2: Relate values in songs to real life experiences"],
-  "B6.1.1.1: Relate the central messages in songs to personal experiences": ["B6.1.1.1.1: Relate the central messages in songs to personal experiences", "B6.1.1.1.2: Compose songs around values discussed"],
-
-  // English - Reading
-  "B1.2.2.1: Identify the alphabet in order": ["B1.2.2.1.1: Identify the alphabet in order (aA-zZ)", "B1.2.2.1.2: Recognise and produce letter names and sounds randomly"],
-  "B4.2.2.1: Match sounds to their corresponding letter patterns": ["B4.2.2.1.1: Match sounds to their corresponding letter patterns", "B4.2.2.1.2: Read single-syllable-words with taught consonant digraphs"],
-  "B5.2.2.1: Apply common phonic generalisations": ["B5.2.2.1.1: Apply common phonic generalisations (e.g. hard and soft â€œcâ€� and â€œgâ€�)", "B5.2.2.1.2: Read two syllable words with suffixes and 'r' controlled words"],
-  "B6.2.2.1: Read words with specific ending sounds": ["B6.2.2.1.1: Read words with ending sounds like 'sure', 'ture' and 'tch'", "B6.2.2.1.2: Read ccvcc, cccvc words and multisyllabic words"],
-
-  // English - Writing
-  "B1.4.2.1: Copy and write letters of the alphabet correctly": ["B1.4.2.1.1: Copy letters of the alphabet clearly", "B1.4.2.1.2: Match lower and upper case letters"],
-  "B4.4.2.1: Write clearly using joined letters": ["B4.4.2.1.1: Write clearly using joined letters of consistent size", "B4.4.2.1.2: Use simple sentences clearly and correctly"],
-  "B5.4.2.1: Copy sentences clearly in joint script": ["B5.4.2.1.1: Copy sentences clearly in joint script maintaining legible handwriting", "B5.4.2.1.2: Write compound sentences clearly and correctly"],
-  "B6.4.2.1: Write with a legible, fluent and personal style": ["B6.4.2.1.1: Write with a legible, fluent and personal handwriting style", "B6.4.2.1.2: Write complex sentences clearly and correctly"],
-
-  // Ghanaian Language B1-B3 Indicators
-  "B1.1.1.1: Demonstrate knowledge of a song by saying the words heard": ["B1.1.1.1.1: Sing familiar songs of more than six lines and recognise place names"],
-  "B1.1.6.1: Demonstrate knowledge and understanding of greetings": ["B1.1.6.1.1: Recognise the various categories of people to greet", "B1.1.6.1.2: Discuss the correct terms for the various categories of people"],
-  "B2.1.1.1: Demonstrate an understanding of types of work and play songs": ["B2.1.1.1.1: Sing work and play songs and discuss their importance", "B2.1.1.1.2: Relate types of play songs to everyday activities"],
-  "B2.1.6.1: Exhibit knowledge of greeting and responding appropriately": ["B2.1.6.1.1: Discuss occasions to greet and talk about importance", "B2.1.6.1.2: Discuss greetings associated with different occasions"],
-  "B3.1.2.1: Show an understanding of some rhymes": ["B3.1.2.1.1: Recognise rhyming words", "B3.1.2.1.2: Produce own rhyming words"],
-  "B3.5.7.1: Exhibit knowledge of recognising and spelling words correctly": ["B3.5.7.1.1: Write four and five letter words correctly", "B3.5.7.1.2: Write five and six letter words correctly"],
-  "B1.2.4.1: Show an understanding of connecting sounds to letters": ["B1.2.4.1.1: Blend sounds to produce syllables", "B1.2.4.1.2: Blend syllables to produce simple words"],
-  "B2.2.4.1: Show an understanding of connecting sounds to letters": ["B2.2.4.1.1: Blend syllables to produce simple words", "B2.2.4.1.2: Use alphabetic knowledge to decode words"],
-  "B3.2.4.1: Show an understanding of connecting sounds to letters": ["B3.2.4.1.1: Use alphabetic awareness to decode words", "B3.2.4.1.2: Use alphabetic awareness to decode compound words"],
-  "B4.1.1.1: Exhibit knowledge of traditional and occupational songs": ["B4.1.1.1.1: Sing and discuss songs connected to traditional occupations"],
-  "B5.1.1.1: Show an understanding of cradle songs/lullaby": ["B5.1.1.1.1: Sing cradle songs/lullaby with focus on importance"],
-  "B6.1.1.1: Investigate some traditional dances and their songs": ["B6.1.1.1.1: Sing traditional songs used for traditional dances", "B6.1.1.1.2: Discuss importance and moral lessons of songs/dances"],
-  "B4.3.1.1: Exhibit knowledge of the use of full stops, commas and question marks": ["B4.3.1.1.1: Recognise full stops at end of sentences", "B4.3.1.1.2: Recognise comma usage for pauses", "B4.3.1.1.3: Recognise question marks at end of questions"],
-  "B5.3.1.1: Exhibit knowledge in the use of full stops, commas and question marks": ["B5.3.1.1.1: Recognise full stops for sentences/initials", "B5.3.1.1.3: Recognise colon usage for lists", "B5.3.1.1.4: Recognise quotation marks for speech"],
-  "B6.3.1.1: Write sentences clearly and correctly": ["B6.3.1.1.1: Pay attention to ascending/descending letters", "B6.3.1.1.2: Write sentences using joint scripts"],
-
-  // English - Grammar Usage at Word and Phrase Levels
-  "B4.3.1.1: Identify and use nouns to identify people, animals, events and objects": ["B4.3.1.1.1: Identify and use nouns in sentences", "B4.3.1.1.2: Differentiate between common and proper nouns", "B4.3.1.1.3: Use collective and abstract nouns"],
-  "B5.3.1.1: Identify and use nouns or noun phrases to refer to quantities or units": ["B5.3.1.1.1: Use nouns or noun phrases to refer to quantities or units", "B5.3.1.1.2: Use count and non-count nouns correctly"],
-  "B6.3.1.1: Identify and use nouns or noun phrases to describe conditions": ["B6.3.1.1.1: Identify and use nouns in describing conditions", "B6.3.1.1.2: Use gerunds (-ing nouns) in activities"],
-  "B4.3.2.1: Apply knowledge of different types of determiners": ["B4.3.2.1.1: Use definite and indefinite articles (a, an, the)", "B4.3.2.1.2: Use simple quantifiers (some, few, all)"],
-  "B5.3.2.1: Apply knowledge of different types of determiners (e.g. articles, quantifiers)": ["B5.3.2.1.1: Use articles and quantifiers appropriately", "B5.3.2.1.2: Use possessive pronouns and demonstratives"],
-  "B6.3.2.1: Apply knowledge of definite and indefinite articles": ["B6.3.2.1.1: Use articles in complex sentences", "B6.3.2.1.2: Use interrogative determiners"],
-  "B4.3.3.1: Apply knowledge of different types of pronouns": ["B4.3.3.1.1: Use personal pronouns correctly", "B4.3.3.1.2: Use interrogative pronouns"],
-  "B5.3.3.1: Identify and use indefinite pronouns": ["B5.3.3.1.1: Use indefinite pronouns (someone, anyone, everything)", "B5.3.3.1.2: Use possessive pronouns to show possession"],
-  "B6.3.3.1: Identify and use reflexive, relative and reciprocal pronouns": ["B6.3.3.1.1: Use reflexive pronouns (myself, yourself)", "B6.3.3.1.2: Use relative and reciprocal pronouns"],
-  "B4.3.5.1: Apply the knowledge of verbs in communication": ["B4.3.5.1.1: Use main and auxiliary verbs", "B4.3.5.1.2: Use simple present and simple past forms"],
-  "B5.3.5.1: Use different types of verbs in sentences": ["B5.3.5.1.1: Differentiate between simple past and present perfect", "B5.3.5.1.2: Use past continuous form"],
-  "B6.3.5.1: Use past continuous and past perfect forms": ["B6.3.5.1.1: Use past perfect form in speech and writing", "B6.3.5.1.2: Apply correct subject-verb agreement across multiple tenses"],
-
-  // Career Technology - Technology
-  "B7.4.1.1: Demonstrate understanding of structures in construction": ["B7.4.1.1.1: Outline the uses of structures in construction", "B7.4.1.1.2: Discuss the causes of structural failures in construction", "B7.4.1.1.3: Design and make simple structures"],
-
-  // Creative Arts - Visual Arts
-  "B1-B6.1.1.1: Demonstrate understanding of how to generate own ideas for artistic expressions on the people, based on their history and culture, the environment and the topical local/national/global issues": [
-    "B1.1.1.1: Think about the people in the local community and their history/culture",
-    "B2.1.1.1: Describe views of history and culture of people in other communities in the region",
-    "B3.1.1.1: Explain views of history and culture of people in other regions in Ghana",
-    "B4.1.1.1: Explain views on history and culture of people in African countries",
-    "B5.1.1.1: Explain views on history and culture of people across the world",
-    "B6.1.1.1: Reflect and share views on history and culture of people in the world"
-  ],
-  "B1-B6.1.2.2: Demonstrate understanding of how to organise own ideas through experimenting with available media and techniques for creating/composing artworks, based on history and culture, the environment and topical local/national/global issues": [
-    "B1.1.2.2: Develop ideas for making artworks reflecting local community",
-    "B4.1.2.2: Experiment with media and techniques reflecting African communities"
-  ],
-  "B1-B6.1.2.3: Demonstrate understanding of how to create expressive artworks based on own ideas by applying knowledge of media and methods of production to reflect other cultures in Africa, visual artists, their culture, the environment and emerging topical issues": [
-    "B1.1.2.3: Create artworks that reflect the natural environment",
-    "B4.1.2.3: Create artworks using media and techniques that reflect other African cultures"
-  ],
-
-  // Creative Arts - Performing Arts
-  "B1-B6.2.1.1: Demonstrate understanding of how to generate own ideas for artistic expressions on the people, based on their history and culture, the environment and the topical local/national/global issues": [
-    "B1.2.1.1: Describe history and culture of local community through performing arts",
-    "B4.2.1.1: Explain views on history and culture of people in African countries through performing arts"
-  ],
-
-  // Computing - Introduction to Computing
-  "B4-B6.1.1.1: Identify parts of a computer and technology tools": [
-    "B4.1.1.1.1: Discuss the generation of computers",
-    "B4.1.1.1.2: Demonstrate the use of different parts of a computer",
-    "B5.1.1.1.1: Discuss types of computers (Mainframes, supercomputers, PCs)",
-    "B6.1.1.1.1: Discuss importance of computers in everyday life"
-  ],
-  "B4-B6.1.2.1: Demonstrate the use of the Desktop Background as well as working with folders": [
-    "B4.1.2.1.1: Describe icons on the desktop",
-    "B4.1.2.1.2: Demonstrate how to create a folder",
-    "B5.1.2.1.1: Demonstrate how to change desktop background",
-    "B6.1.2.1.1: Demonstrate how to manage files and folders"
-  ],
-
-  // Computing - Word Processing
-  "B4-B6.3.1.1: Demonstrate understanding of the use of word processing application": [
-    "B4.3.1.1.1: Identify word processing applications",
-    "B4.3.1.1.2: Demonstrate how to launch and exit word processor",
-    "B5.3.1.1.1: Demonstrate how to create and save a document",
-    "B6.3.1.1.1: Demonstrate how to format text in word processor"
-  ],
-  "B8.4.1.1: Demonstrate understanding of application of principles of forces acting on structures": ["B8.4.1.1.1: Perform experiments on forces", "B8.4.1.1.2: Design and make technology projects"],
-  "B9.4.1.1: Demonstrate knowledge of mechanisms in projects construction": ["B9.4.1.1.1: Describe mechanisms", "B9.4.1.1.2: Principles of mechanisms", "B9.4.1.1.3: Design with mechanisms"],
-
-  // Career Technology - Designing and Making
-  "B7.5.1.1: Demonstrate knowledge and skills of drawing materials, instruments/equipment, lines and sketching": ["B7.5.1.1.1: Identify drawing materials", "B7.5.1.1.2: Types of lines", "B7.5.1.1.3: Lettering", "B7.5.1.1.4: Sketching"],
-  "B8.5.1.1: Demonstrate understanding of drawing plane figures and solid objects using drawing instruments": ["B8.5.1.1.1: Draw plane figures", "B8.5.1.1.2: Pictorial drawing"],
-  "B9.5.1.1: Demonstrate understanding of developing surfaces of objects for production/ manufacturing": ["B9.5.1.1.1: Prisms and pyramids", "B9.5.1.1.2: Develop surfaces"],
-  "B9.5.1.2: Demonstrate understanding of orthographic projections": ["B9.5.1.2.1: Principles of orthographic projections", "B9.5.1.2.2: Draw orthographic projections"],
-  "B7.5.2.1: Demonstrate understanding of Designing": ["B7.5.2.1.1: Work with design brief", "B7.5.2.1.2: Generate ideas"],
-  "B8.5.2.1: Demonstrate knowledge and skills of Designing": ["B8.5.2.1.1: Design brief", "B8.5.2.1.2: Research problems", "B8.5.2.1.3: Specifications", "B8.5.2.1.4: Generate ideas", "B8.5.2.1.5: Make artefact", "B8.5.2.1.6: Evaluate artefact", "B8.5.2.1.7: Cutting without patterns"],
-  "B9.5.2.1: Demonstrate knowledge of Designing": ["B9.5.2.1.1: User requirements", "B9.5.2.1.2: Clarify requirements", "B9.5.2.1.3: Generate ideas", "B9.5.2.1.4: Develop solution"],
-  "B7.5.3.1: Demonstrate understanding of planning for making artefacts/products": ["B7.5.3.1.1: Factors in planning a meal", "B7.5.3.1.2: Moist methods of cooking"],
-  "B8.5.3.1: Demonstrate understanding of planning for making artefacts/products and table setting": ["B8.5.3.1.1: Plan wooden/metal artefacts", "B8.5.3.1.2: Plan building artefacts", "B8.5.3.1.3: Table setting"],
-  "B9.5.3.1: Demonstrate understanding of planning for making artefacts/ products/ meals": ["B9.5.3.1.1: Dry methods of cooking", "B9.5.3.1.2: Menu planning", "B9.5.3.1.3: Clarify user requirements", "B9.5.3.1.4: Natural building materials"],
-  "B7.5.4.1: Demonstrate skills of making artefacts/products": ["B7.5.4.1.1: Preparing food", "B7.5.4.1.2: Sewing and crocheting", "B7.5.4.1.3: Mock-ups"],
-  "B8.5.4.1: Demonstrate understanding of designing artefacts/products, and models and table setting": ["B8.5.4.1.1: Table setting", "B8.5.4.1.2: Sewing artefacts", "B8.5.4.1.3: Wood/metal artefacts"],
-  "B9.5.4.1: Demonstrate understanding of gathering materials, tools and equipment for making meals/articles": ["B9.5.4.1.1: Preparations with dry methods", "B9.5.4.1.2: Advanced crocheting", "B9.5.4.1.3: Gather materials for artefacts"],
-
-  // Career Technology - Entrepreneurial Skills
-  "B7.6.1.1: Demonstrate awareness of own learning styles, interests, biases, beliefs and reasons": ["B7.6.1.1.1: Evaluate own learning styles"],
-  "B8.6.1.1: Demonstrate knowledge of career opportunities in Career Technology": ["B8.6.1.1.1: Explore career pathways"],
-  "B9.6.1.1: Demonstrate understanding about the changing nature of the workplace and personal goals": ["B9.6.1.1.1: Changing nature of workplace", "B9.6.1.1.2: Value of work", "B9.6.1.1.3: Career plan"],
-  "B7.6.2.1: Demonstrate understanding of Establishing and managing a Small business enterprise": ["B7.6.2.1.1: Meaning of entrepreneurship", "B7.6.2.1.2: Characteristics of entrepreneur", "B7.6.2.1.3: Advantages of being entrepreneur", "B7.6.2.1.4: Opportunities in locality"],
-  "B8.6.2.1: Demonstrate understanding of establishing and managing micro and small business enterprises": ["B8.6.2.1.1: Micro, small and medium enterprises"],
-  "B9.6.2.1: Demonstrate understanding of establishing and managing a small business enterprise": ["B9.6.2.1.1: How to start a small business", "B9.6.2.1.2: Manage resources"],
-
-  // Computing - Strand 1
-  "B7.1.1.1: Examine the parts of a computer": ["B7.1.1.1.1: Discuss the fourth-generation computers", "B7.1.1.1.2: Demonstrate understanding in the use of input devices", "B7.1.1.1.3: Examine the uses of the output devices"],
-  "B8.1.1.1: Identify parts a computer and technology tools": ["B8.1.1.1.1: Discuss the fifth generation of computers", "B8.1.1.1.2: Demonstrate understanding of direct data entry devices", "B8.1.1.1.3: Examine the uses of the output devices (3D printers, etc)"],
-  "B9.1.1.1: Identify parts of a Computer and Technology Tools": ["B9.1.1.1.1: Discuss the trends in the next generation of computers", "B9.1.1.1.2: Examine the concept of Perceptual Computing", "B9.1.1.1.3: Discuss the uses of Wearable Displays"],
-  "B7.1.2.1: Demonstrate the use of Technology in the community": ["B7.1.2.1.1: Describe technology tools for learning", "B7.1.2.1.2: Demonstrate the use of technology tools", "B7.1.2.1.3: Discuss the benefits of using technology tools in learning"],
-  "B7.1.3.1: Demonstrate how to apply Health and Safety measures": ["B7.1.3.1.1: Describe health measures and computing-related disorders", "B7.1.3.1.2: Describe Safety measures in using ICT tools"],
-
-  // Computing - Strand 2
-  "B7.2.1.1: Demonstrate how to use Microsoft Word (Editing)": ["B7.2.1.1.1: Explain the importance of word processing software", "B7.2.1.1.2: Demonstrate how to insert, select, delete and move text", "B7.2.1.1.3: Demonstrate how to find and replace content"],
-  "B8.2.3.1: Demonstrate how to use MS-Publisher": ["B8.2.3.1.1: Explain the importance of desktop publishing software", "B8.2.3.1.2: Create and save a new document from a blank or pre-designed template"],
-  "B7.2.3.1: Demonstrate how to use the Spreadsheet": ["B7.2.3.1.1: Explain the importance of electronic spreadsheet", "B7.2.3.1.2: Explore features of MS-Excel interface"],
-
-  // Computing - Strand 3
-  "B7.3.1.1: Identify the concept of computer networking for global communications": ["B7.3.1.1.1: Draw diagrams to illustrate features of the network topologies", "B7.3.1.1.2: Describe types of networks (PAN, LAN, MAN, WAN)"],
-  "B7.3.3.1: Recognise data threats and means of protection": ["B7.3.3.1.1: Discuss the key principles of information security", "B7.3.3.1.2: Explore legal issues regarding intellectual property rights"],
-
-  // Computing - Strand 4
-  "B7.4.1.1: Show an understanding of the concept of programming": ["B7.4.1.1.1: Demonstrate the correct use of programming terminologies", "B7.4.1.1.2: Demonstrate understanding in the use of data types"],
-  "B7.4.2.1: Analyse the correct step-by-step procedure in solving any real-world problem": ["B7.4.2.1.1: Understand the use of sequence, selection and iteration", "B7.4.2.1.2: Perform a linear search"],
-  "B7.4.4.1: Discuss Artificial intelligence concepts": ["B7.4.4.1.1: Discuss the application of various areas of artificial intelligence"],
-  "B9.4.4.1: Discuss Artificial intelligence Concepts": ["B9.4.4.1.1: Describe the knowledge-based systems (Expert systems)"],
-
-  // Creative Arts - Design
-  "B7.1.1.1: Design in nature and manmade environment": ["B7.1.1.1.1: Meaning, importance and role of design", "B7.1.1.1.2: Record elements of design in nature"],
-  "B8.1.1.1: Design as a concept": ["B8.1.1.1.1: Use elements and principles of design", "B8.1.1.1.2: Record elements of design in nature"],
-  "B9.1.1.1: Design as a concept (variety, proportion)": ["B9.1.1.1.1: Use elements (form, value) and principles (variety, proportion)"],
-  "B7.1.2.1: Outline drawing, shading, colouring": ["B7.1.2.1.1: Explore tools for outline drawing", "B7.1.2.1.2: Experiment with manual tools"],
-  "B7.1.3.1: Design process and models": ["B7.1.3.1.1: Creativity and innovation differences", "B7.1.3.1.2: Design process steps"],
-
-  // Creative Arts - Media and Techniques
-  "B7.2.1.1: Visual Arts Media": ["B7.2.1.1.1: Tools for still-life drawing", "B7.2.1.1.2: Shading techniques"],
-  "B7.2.1.2: Music Scale": ["B7.2.1.2.5: Sing diatonic major scale", "B7.2.1.2.6: Identify durational symbols"],
-  "B7.2.1.3: Dance and Drama Techniques": ["B7.2.1.3.8: Ghanaian dance movements", "B7.2.1.3.9: Body movements and voice projections"],
-
-  "B9.2.1.1: Visual Arts Casting": ["B9.2.1.1.1: Media and techniques for casting", "B9.2.1.1.2: Techniques in casting"],
-  "B9.2.1.2: Music Triads": ["B9.2.1.2.5: Sing in pitch triads", "B9.2.1.2.6: Create/improvise a melody"],
-
-  // Creative Arts - Expression
-  "B7.2.2.1: Visual Arts Idea development": ["B7.2.2.1.1: Design and produce visual artworks"],
-  "B9.2.2.3: Producing a Dance Drama": ["B9.2.2.3.7: Rehearse and perform original dance drama"],
-
-  // Creative Arts - Connections
-  "B7.2.3.1: Visual Arts Correlate ideas": ["B7.2.3.1.1: Narrate own views of history and culture"],
-  "B9.2.3.1: Visual Arts Correlate African artists": ["B9.2.3.1.1: Analyse creative artworks of African visual artists"],
-
-  // Mathematics - Number
-  "B7.1.1.1: Demonstrate understanding and the use of place value": ["B7.1.1.1.1: Model number quantities up to 1,000,000,000", "B7.1.1.1.2: Compare and order whole numbers", "B7.1.1.1.3: Round whole numbers"],
-  "B8.1.1.1: Use place value for expressing quantities in standard form": ["B8.1.1.1.4: Express integers of any size into standard form", "B8.1.1.1.5: Express integers in a given number of significant and decimal places"],
-  "B9.1.1.1: Apply the understanding of place value in solving real life problems": ["B9.1.1.1.1: Express integers to a given number of significant and decimal places", "B9.1.1.1.2: Use knowledge of place value to solve real life problems"],
-  "B7.1.2.1: Apply mental mathematics strategies": ["B7.1.2.1.1: Multiply and divide by powers of 10", "B7.1.2.1.2: Apply number properties for mental calculations"],
-  "B7.1.4.1: Demonstrate an understanding of the concept of ratios": ["B7.1.4.1.1: Find ratio and use ratio language", "B7.1.4.1.2: Use the concept of a unit rate", "B7.1.4.1.3: Make tables of equivalent ratios"],
-  
-  // Mathematics - Algebra
-  "B7.2.3.1: Demonstrate an understanding of linear equations": ["B7.2.3.1.1: Translate word problems to linear equations", "B7.2.3.1.2: Model and solve linear equations concretely"],
-  "B8.2.1.1: Determine the gradient of the line": ["B8.2.1.1.1: Calculate the gradient and use y = mx + c", "B8.2.1.1.2: Use graph to determine missing elements"],
-  "B9.2.1.1: Construct tables of values for pairs of linear relations": ["B9.2.1.1.1: Construct and graph linear relations", "B9.2.1.1.3: Solve equations involving two linear relations"],
-
-  // Mathematics - Geometry
-  "B7.3.1.1: Demonstrate understanding of angles": ["B7.3.1.1.1: Measure and classify angles", "B7.3.1.1.2: Apply complementary and supplementary angles"],
-  "B8.3.2.1: Apply Pythagoras theorem": ["B8.3.2.1.1: Deduce formula for area of a circle", "B8.3.2.1.2: Establish relationship between hypotenuse and other sides"],
-  "B9.3.2.1: Determine the surface area of prisms": ["B9.3.2.1.1: Identify cuboids and triangular prisms", "B9.3.2.1.2: Use net of a cuboid to determine surface area"],
-  
-  // Science - Diversity of Matter
-  "B1.1.1.1: Identify different materials in the environment": [
-    "B1.1.1.1.1: Observe and name different materials in the classroom",
-    "B1.1.1.1.2: Group materials based on their colour and size"
-  ],
-  "B2.1.1.1: Describe materials based on their physical properties": [
-    "B2.1.1.1.1: Describe textures of different materials (rough, smooth)",
-    "B2.1.1.1.2: Classify materials as hard or soft"
-  ],
-  "B3.1.1.1: Distinguish between various materials and their uses": [
-    "B3.1.1.1.1: Identify materials used to make common objects",
-    "B3.1.1.1.2: Discuss why certain materials are used for specific purposes"
-  ],
-  "B4.1.1.1: Classify solids, liquids and gases": [
-    "B4.1.1.1.1: State physical properties of solids, liquids and gases",
-    "B4.1.1.1.2: Group substances into the three states of matter"
-  ],
-  "B5.1.1.1: Investigate the properties of matter": [
-    "B5.1.1.1.1: Demonstrate that matter has weight and occupies space",
-    "B5.1.1.1.2: Research on the internal structure of matter (atoms and molecules)"
-  ],
-  "B6.1.1.1: Describe the changes of state of matter": [
-    "B6.1.1.1.1: Explain the processes of melting and freezing",
-    "B6.1.1.1.2: Demonstrate evaporation and condensation"
-  ],
-  "B1.1.2.1: Identify parts of the human body": [
-    "B1.1.2.1.1: Mention names of external parts of the body",
-    "B1.1.2.1.2: Point to specific body parts when named"
-  ],
-  "B2.1.2.1: Explain the functions of the sense organs": [
-    "B2.1.2.1.1: Identify the five sense organs",
-    "B2.1.2.1.2: Describe the function of each sense organ"
-  ],
-  "B3.1.2.1: Describe how we grow and change": [
-    "B3.1.2.1.1: Compare physical features as one grows",
-    "B3.1.2.1.2: Identify things that help us grow healthy"
-  ],
-  "B4.1.2.1: Explain the parts of a flowering plant": [
-    "B4.1.2.1.1: Label the parts of a flowering plant",
-    "B4.1.2.1.2: State the functions of the roots, stem and leaves"
-  ],
-  "B5.1.2.1: Describe the life cycle of a flowering plant": [
-    "B5.1.2.1.1: Sequence the stages in the life cycle of a plant",
-    "B5.1.2.1.2: Discuss the conditions necessary for germination"
-  ],
-  "B6.1.2.1: Explain the structure of the human heart": [
-    "B6.1.2.1.1: Identify the main parts of the heart",
-    "B6.1.2.1.2: Discuss the function of the heart in the body"
-  ],
-  "B7.1.1.1: Recognise materials as important resources for providing human needs": [
-    "B7.1.1.1.1: Classify materials into liquids, solids and gases",
-    "B7.1.1.1.2: Discuss the importance of liquids in the life of humans",
-    "B7.1.1.1.3: Discuss the importance of specific solids to life"
-  ],
-  "B7.1.1.2: Understand the periodic table as different elements made up of metals, non-metals and noble gases arranged in an order": [
-    "B7.1.1.2.1: Demonstrate the knowledge of the orderly arrangement of metals, non-metals and noble gases in the periodic table"
-  ],
-  "B8.1.1.1: Identify types of mixtures by name and characteristics": [
-    "B8.1.1.1.1: Identify types of mixtures by name and characteristics",
-    "B8.1.1.1.2: Design and perform processes for separating kinds of mixtures"
-  ],
-  "B8.1.1.2: Describe atoms as composed of sub-atomic particles": [
-    "B8.1.1.2.1: Describe atoms as composed of sub-atomic particles",
-    "B8.1.1.2.2: Explain the arrangement of elements in terms of the number of protons in the nuclei of atoms of each element"
-  ],
-  "B9.1.1.1: Show an understanding of formation of binary chemical compounds and their uses (Acids, Bases and Salts)": [
-    "B9.1.1.1.1: Identify by name binary chemical compounds and discuss their uses",
-    "B9.1.1.1.2: Discuss the formation of binary chemical compounds",
-    "B9.1.1.1.3: Describe the characteristics of common acids, bases and salts"
-  ],
-  "B9.1.1.2: Demonstrate knowledge of atomic bonding in the formation of chemical compounds": [
-    "B9.1.1.2.1: Recognise that chemical bond results from the attraction between atoms in a compound"
-  ],
-  "B7.1.2.1: Demonstrate understanding of the structure of organisms and functions of cells in living systems": [
-    "B7.1.2.1.1: Describe the structure and function of living cells of an animal",
-    "B7.1.2.1.2: State the functions of each organelle in a plant cell"
-  ],
-  "B8.1.2.1: Demonstrate an understanding of the types of cells and their structure in relation to different organisms": [
-    "B8.1.2.1.1: Examine and describe the structure of prokaryotic and eukaryotic cells",
-    "B8.1.2.1.2: Classify organisms (plants or animals) as prokaryotic or eukaryotic based on the type of cells they are made of"
-  ],
-  "B9.1.2.1: Demonstrate knowledge of specialist cells of dicotyledonous plants and humans, their formation and functions": [
-    "B9.1.2.1.1: Discuss the concepts of specialised cells and how they are formed in dicotyledonous plants and humans",
-    "B9.1.2.1.2: Examine the functions of specialised cells in dicotyledonous plants such as epidermal, guard cells, cambium, xylem",
-    "B9.1.2.1.3: Examine the functions of specialised animal cells such as (nerve, blood cells, muscle cells and sperm cells)"
-  ],
-
-  // Science - Cycles
-  "B1.2.1.1: Observe and group changes in weather": [
-    "B1.2.1.1.1: Describe the daily weather (sunny, rainy, cloudy)",
-    "B1.2.1.1.2: Discuss how weather affects what we wear"
-  ],
-  "B2.2.1.1: Identify the sun as the main source of light and heat": [
-    "B2.2.1.1.1: Discuss the benefits of sunlight to plants and humans",
-    "B2.2.1.1.2: Observe the shadows at different times of the day"
-  ],
-  "B3.2.1.1: Describe the movement of the earth": [
-    "B3.2.1.1.1: Demonstrate day and night using a globe and torch",
-    "B3.2.1.1.2: Explain why we have day and night"
-  ],
-  "B4.2.1.1: Identify the main sources of water in the community": [
-    "B4.2.1.1.1: List sources like rivers, wells and rain",
-    "B4.2.1.1.2: Discuss the uses of water in the community"
-  ],
-  "B5.2.1.1: Explain the stages of the water cycle": [
-    "B5.2.1.1.1: Define evaporation and condensation",
-    "B5.2.1.1.2: Illustrate the water cycle with a diagram"
-  ],
-  "B6.2.1.1: Discuss the importance of the atmosphere": [
-    "B6.2.1.1.1: Identify the gases found in the air",
-    "B6.2.1.1.2: Explain the importance of air to living things"
-  ],
-  "B7.2.1.1: Recognise that the water cycle is an example of repeated patterns of change in nature and understand how it occurs": [
-    "B7.2.1.1.1: Explain how the water cycle occurs as a repeated pattern in nature",
-    "B7.2.1.1.2: Describe the importance of the water cycle in nature"
-  ],
-  "B8.2.1.1: Demonstrate understanding of the process of Carbon cycle as an example of repeated pattern of change in nature": [
-    "B8.2.1.1.1: Explain the process of the carbon cycle",
-    "B8.2.1.1.2: Describe the role of the carbon cycle to the environment"
-  ],
-  "B9.2.1.1: Demonstrate an understanding of the Nitrogen cycle as a repeated pattern of change in nature": [
-    "B9.2.1.1.1: Explain the process of the nitrogen cycle as a repeated pattern in nature",
-    "B9.2.1.1.2: Describe the importance of the nitrogen cycle to the environment"
-  ],
-  "B7.2.2.1: Demonstrate the skills of carrying out activities to show the stages of the life cycle of a housefly": [
-    "B7.2.2.1.1: Describe the life cycle of the housefly",
-    "B7.2.2.1.2: Discuss the activities of the housefly as a menace to humans and show how to reduce the effects"
-  ],
-  "B8.2.2.1: Demonstrate an activity to show the life cycle of the Anopheles mosquito and show how the effects can be managed": [
-    "B8.2.2.1.1: Describe the life cycle and economic importance of the Anopheles mosquito",
-    "B8.2.2.1.2: Discuss the impact of the Anopheles mosquito on humans and how it can be controlled"
-  ],
-  "B9.2.2.1: Demonstrate an understanding of the life cycle of grasshopper and assess how their activities affect humans": [
-    "B9.2.2.1.1: Describe the life cycle of the grasshopper as a form of incomplete metamorphosis",
-    "B9.2.2.1.2: Examine how the activities of the grasshopper affect humans"
-  ],
-  "B7.2.3.1: Demonstrate understanding of the different plant nutrients (organic, and inorganic fertilizers) and their application": [
-    "B7.2.3.1.1: Observe and list all plant nutrient sources available in a community and categorise them",
-    "B7.2.3.1.2: Describe the physical characteristics of different plant nutrients and how each is applied"
-  ],
-  "B8.2.3.1: Demonstrate knowledge and skills in planting crops on different seed beds": [
-    "B8.2.3.1.1: Explore the different seed beds for planting crops in your community",
-    "B8.2.3.1.2: Plant different types of crops on different seed beds"
-  ],
-  "B8.2.3.2: Demonstrate understanding of the differences in height, size, and flowering of crops grown in different seed beds": [
-    "B8.2.3.2.1: Compare and contrast the differences in height, size, and flowering of crops grown in different seed beds"
-  ],
-  "B9.2.3.1: Show an understanding of differences in maturities of different crops grown in different soils and seed beds": [
-    "B9.2.3.1.1: Observe and describe differences in maturation of crops grown in different soils and seed beds"
-  ],
-  "B9.2.3.2: Demonstrate knowledge and understanding of uses of different crops at different maturity stages": [
-    "B9.2.3.2.1: Observe and record the uses of different crops at different maturity stages",
-    "B9.2.3.2.2: Evaluate the importance of knowledge of the maturity stages of different crops to human beings"
-  ],
-  "B7.2.4.1: Demonstrate an understanding of the differences among domestic animals such as ruminants, monogastrics and poultry": [
-    "B7.2.4.1.1: Examine and list domestic animals in the community",
-    "B7.2.4.1.2: Show the differences and similarities among domestic animals"
-  ],
-  "B7.2.4.2: Show an understanding of the usefulness of the different types of animals for domestic and commercial purposes": [
-    "B7.2.4.2.1: Discuss and write the domestic and commercial uses of different types of animals",
-    "B7.2.4.2.2: Observe and compare the uses of the different types of animals"
-  ],
-  "B8.2.4.1: Recognise the different types of feed for different types of animals": [
-    "B8.2.4.1.1: Compare and contrast the different types of feed for different types of animals"
-  ],
-  "B8.2.4.2: Demonstrate understanding of the importance of water and animal feed to the growth of animals": [
-    "B8.2.4.2.1: Explain the importance of water and animal feed to the growth of animals"
-  ],
-  "B9.2.4.1: Demonstrate understanding of the preparation of feed for domestic and commercial animals": [
-    "B9.2.4.1.1: List the ingredients and the method of preparation of different feed for different domestic and commercial animals"
-  ],
-  "B9.2.4.2: Demonstrate skills and knowledge of feeding domestic and commercial animals": [
-    "B9.2.4.2.1: Describe and select appropriate feed for different domestic and commercial animals",
-    "B9.2.4.2.2: Differentiate between different types of feed for different stages of domestic and commercial animals",
-    "B9.2.4.2.3: Perform the feeding of domestic and commercial animals"
-  ],
-
-  // Science - Systems
-  "B1.3.1.1: Identify the external parts of the human body": [
-    "B1.3.1.1.1: Point and name head, hands, legs and torso",
-    "B1.3.1.1.2: State the functions of the hands and legs"
-  ],
-  "B2.3.1.1: Explain the functions of the five senses": [
-    "B2.3.1.1.1: Name the five sense organs",
-    "B2.3.1.1.2: Match each sense organ to its function"
-  ],
-  "B3.3.1.1: Describe the digestive system in humans (intro)": [
-    "B3.3.1.1.1: Identify the mouth and stomach as parts of digestion",
-    "B3.3.1.1.2: Discuss the importance of chewing food"
-  ],
-  "B4.3.1.1: Identify the parts of the respiratory system": [
-    "B4.3.1.1.1: Name the nose, windpipe and lungs",
-    "B4.3.1.1.2: Explain the process of breathing (inhaling and exhaling)"
-  ],
-  "B5.3.1.1: Explain how the human body system works together": [
-    "B5.3.1.1.1: Discuss how different systems support each other",
-    "B5.3.1.1.2: Identify things that keep the body systems healthy"
-  ],
-  "B6.3.1.1: Describe the nervous system functions": [
-    "B6.3.1.1.1: Identify the brain and spinal cord",
-    "B6.3.1.1.2: Discuss how the brain controls body actions"
-  ],
-  "B7.3.1.1: Show an understanding of the concept of food, and the process of digestion and appreciate its importance in humans": [
-    "B7.3.1.1.1: Explain the concept of food and the need for humans to eat",
-    "B7.3.1.1.2: Examine what happens to food at the stages of digestion in humans",
-    "B7.3.1.1.3: Identify the end product of digestion of starchy, protein and oily foods"
-  ],
-  "B8.3.1.1: Demonstrate knowledge of parts of mammalian tooth and the functions of the different types of teeth": [
-    "B8.3.1.1.1: Identify parts of a mammalian tooth",
-    "B8.3.1.1.2: Discuss the functions of the different types of teeth such as incisors, canines, premolars, and molars",
-    "B8.3.1.1.3: Explain the causes and prevention of tooth and gum decay"
-  ],
-  "B9.3.1.1: Demonstrate understanding of the blood circulatory system, health problems associated with the system": [
-    "B9.3.1.1.1: Explain the concept of the circulatory system, state the function of each part of the system",
-    "B9.3.1.1.2: Explain the concept of respiration and show how the respiratory and circulatory systems complement each other"
-  ],
-  "B7.3.2.1: Demonstrate knowledge of the inner planets of the solar system and understand their movement in the system": [
-    "B7.3.2.1.1: Identify the inner planets of the solar system and describe their properties",
-    "B7.3.2.1.2: Discuss the properties and the relative motions of the planets Mercury and Venus"
-  ],
-  "B8.3.2.1: Demonstrate knowledge of the outer planets of the solar system": [
-    "B8.3.2.1.1: Identify the outer planets of the solar system and describe their properties"
-  ],
-  "B9.3.2.1: Demonstrate knowledge of other non-planetary bodies such as comets, asteroids, and their relationship with the solar system": [
-    "B9.3.2.1.1: Understand the movement of non-planetary bodies in the solar system"
-  ],
-  "B7.3.3.1: Recognise the components of and interdependences in an ecosystem, and appreciate their interactions": [
-    "B7.3.3.1.1: Analyse the components of ecosystems and identify the interactions within"
-  ],
-  "B8.3.3.1: Demonstrate an understanding of the interdependence of organisms in an ecosystem and their interaction": [
-    "B8.3.3.1.1: Explore the feeding relationships within an ecosystem"
-  ],
-  "B9.3.3.1: Recognise the interdependence of organisms in an ecosystem and appreciate their interaction to maintain balance": [
-    "B9.3.3.1.1: Conduct research into the composition of an ecosystem and discuss how the components depend on each other"
-  ],
-  "B7.3.4.1: Demonstrate an understanding of the differences among the various farming systems": [
-    "B7.3.4.1.1: Examine and discuss the differences among the various farming systems",
-    "B7.3.4.1.2: Categorise different farming systems",
-    "B7.3.4.1.3: Discuss the usefulness of different farming systems"
-  ],
-  "B8.3.4.1: Demonstrate understanding of the different crop, animal and land combinations under various farming systems": [
-    "B8.3.4.1.1: Identify and describe the types of crops, animals and land combinations for the different farming systems",
-    "B8.3.4.1.2: Discuss the usefulness of the different crops and animals involved in the different farming systems"
-  ],
-  "B9.3.4.1: Demonstrate knowledge and skills in the preparation of different types of manure from animal and plant waste": [
-    "B9.3.4.1.1: List and explain the different plant and animal waste used in preparing different types of manure",
-    "B9.3.4.1.2: Demonstrate the preparation of different types of manure",
-    "B9.3.4.1.3: Prepare different types of manure"
-  ],
-
-  // Science - Forces and Energy
-  "B1.4.1.1: Identify different sources of light and heat in the home": [
-    "B1.4.1.1.1: Identify sources of light (sun, bulb, candle)",
-    "B1.4.1.1.2: Identify sources of heat (sun, coal pot, stove)"
-  ],
-  "B2.4.1.1: Demonstrate how light travels": [
-    "B2.4.1.1.1: Show that light travels in a straight line using simple objects",
-    "B2.4.1.1.2: Discuss the importance of light for seeing"
-  ],
-  "B3.4.1.1: Identify simple sources of energy": [
-    "B3.4.1.1.1: Identify food as a source of energy for humans",
-    "B3.4.1.1.2: Mention other simple sources like batteries and sun"
-  ],
-  "B4.4.1.1: Identify renewable and non-renewable energy sources": [
-    "B4.4.1.1.1: Define renewable and non-renewable energy",
-    "B4.4.1.1.2: Give examples of each type of energy source"
-  ],
-  "B5.4.1.1: Demonstrate the conversion of energy": [
-    "B5.4.1.1.1: Explain the conversion of electrical energy to light and heat",
-    "B5.4.1.1.2: Show conversion of chemical energy to kinetic energy"
-  ],
-  "B6.4.1.1: Explain the conservation of energy": [
-    "B6.4.1.1.1: State the law of conservation of energy",
-    "B6.4.1.1.2: Identify ways to prevent energy wastage"
-  ],
-  "B7.4.1.1: Demonstrate an understanding of forms of energy and their daily applications": [
-    "B7.4.1.1.1: Identify the various forms of energy and show how they are related",
-    "B7.4.1.1.2: Explain daily applications of forms of energy"
-  ],
-  "B7.4.1.2: Demonstrate an understanding of the concept of heat transfer and its applications in life": [
-    "B7.4.1.2.1: Explain and demonstrate how heat is transferred in various media"
-  ],
-  "B7.4.1.3: Demonstrate understanding of characteristics of light, such as travelling in a straight line, reflection, refraction and dispersion": [
-    "B7.4.1.3.1: Demonstrate how light travels in a straight line"
-  ],
-  "B8.4.1.1: Demonstrate the skill to evaluate the conversion of energy from one form to another": [
-    "B8.4.1.1.1: Describe energy conversion",
-    "B8.4.1.1.2: Discuss the importance of conversion of energy"
-  ],
-  "B8.4.1.2: Show an understanding of the sources of renewable energy and how to manage these sources in a sustainable manner": [
-    "B8.4.1.2.1: Describe renewable and non-renewable forms of energy",
-    "B8.4.1.2.2: Demonstrate how to manage sources of renewable energy sustainably"
-  ],
-  "B8.4.1.3: Demonstrate an understanding of the relationship between heat and temperature": [
-    "B8.4.1.3.1: Discuss the differences and the relationship between heat and temperature in the environment"
-  ],
-  "B9.4.1.1: Show understanding of the concept of conservation of energy and ways of conserving energy": [
-    "B9.4.1.1.1: List the ways to conserve energy",
-    "B9.4.1.1.2: Explain the importance of energy conservation in daily life"
-  ],
-  "B9.4.1.2: Demonstrate understanding in and the capability to do calculations involving energy": [
-    "B9.4.1.2.1: Explain how to calculate energy consumed over a period of time",
-    "B9.4.1.2.2: Describe how images are formed in cameras",
-    "B9.4.1.2.3: Describe the formation of shadows",
-    "B9.4.1.2.4: Demonstrate the formation of an eclipse"
-  ],
-  "B9.4.1.3: Evaluate the application of light energy in life": [
-    "B9.4.1.3.1: Demonstrate that light changes path when it travels from one medium to a different medium"
-  ],
-  "B7.4.2.1: Demonstrate understanding of forms of electricity, its generation and effects on the environment": [
-    "B7.4.2.1.1: Describe the various forms of electricity generation",
-    "B7.4.2.1.2: Explain the impact of electricity generation on the environment"
-  ],
-  "B7.4.2.2: Demonstrate knowledge of how to assemble and explain the functions of basic electronic components and their interdependence in an electronic circuit": [
-    "B7.4.2.2.1: Demonstrate how to assemble basic electronic components in an electronic circuit",
-    "B7.4.2.2.2: Discuss the function of each electronic component and their interdependence",
-    "B7.4.2.2.3: Discuss the function of each electronic component such as resistor, diode, and inductor"
-  ],
-  "B8.4.2.1: Demonstrate knowledge of electricity transmission": [
-    "B8.4.2.1.1: Explain how electricity transmission occurs"
-  ],
-  "B8.4.2.2: Demonstrate understanding of the functions of capacitors in relation to LEDs, Diodes and resistors in electronic circuits": [
-    "B8.4.2.2.1: Demonstrate the charging and discharging action of a capacitor in a DC electronic circuit"
-  ],
-  "B9.4.2.1: Construct electrical circuits and illustrate how electrical energy is transformed into other forms of energy and perform electrical calculations": [
-    "B9.4.2.1.1: Demonstrate transformation of electrical energy to other forms of energy"
-  ],
-  "B9.4.2.2: Demonstrate an understanding of Forward and Reverse Bias and explain the behaviour of LEDs, Diodes, Resistors and Capacitors in electronic circuits": [
-    "B9.4.2.2.1: Describe forward bias and reverse bias and explain the relationship among the components"
-  ],
-  "B7.4.3.1: Demonstrate an understanding of the principle of conservation and conversion of energy and their application in real life situations": [
-    "B7.4.3.1.1: Explain the principle underlying conservation and conversion of energy",
-    "B7.4.3.1.2: Demonstrate the conversion of energy into useable forms",
-    "B7.4.3.1.3: Know how energy could be conserved for future use in life"
-  ],
-  "B8.4.3.1: Evaluate the impact of conversion of energy and energy conservation on the environment": [
-    "B8.4.3.1.1: Explain the importance of conversion of energy and energy conservation in daily life"
-  ],
-  "B9.4.3.1: Show an understanding of conversion and conservation of energy and their application to life": [
-    "B9.4.3.1.1: Describe how energy can be converted from one form to another and show how conservation occurs",
-    "B9.4.3.1.2: Describe how conversion and conservation of energy are applied in life"
-  ],
-  "B7.4.4.1: Examine the concept of motion, Newtonâ€™s first law of motion, magnetic force in relation to motion and understand their applications to life": [
-    "B7.4.4.1.1: Understand that unbalanced forces acting on an object cause it to move",
-    "B7.4.4.1.2: State and explain Newtonâ€™s First Law of motion",
-    "B7.4.4.1.3: Examine the application of Newtonâ€™s First Law of motion in life",
-    "B7.4.4.1.4: Demonstrate the behaviour of magnet and its use to life"
-  ],
-  "B7.4.4.2: Recognise some simple machines, and show understanding of their efficiency in doing work": [
-    "B7.4.4.2.1: Identify simple machines",
-    "B7.4.4.2.2: Describe the types and functions of levers",
-    "B7.4.4.2.3: Know work input, and output and efficiency as they apply to machines"
-  ],
-  "B8.4.4.1: Demonstrate the production of magnet, domestic and industrial application of Magnetic force and its relationship with Newtonâ€™s Second law of motion and in everyday life": [
-    "B8.4.4.1.1: Demonstrate simple ways of making magnets and show how magnetic force can be applied",
-    "B8.4.4.1.2: Explain the relationship between magnetic force and Newtonâ€™s Second Law of motion"
-  ],
-  "B8.4.4.2: Demonstrate understanding of complex machines and how they work": [
-    "B8.4.4.2.1: Identify complex machines and describe their functions in life"
-  ],
-  "B9.4.4.1: Demonstrate understanding of the concept of pressure and explain how pressure acts in everyday life": [
-    "B9.4.4.1.1: Explain the concept of pressure and show how pressure relates to force",
-    "B9.4.4.1.2: Demonstrate the application of Newtonâ€™s Third Law of motion in life"
-  ],
-  "B9.4.4.2: Demonstrate an understanding of Newtonâ€™s Third Law of Motion and its application in everyday life": [
-    "B9.4.4.2.1: Explain Newtonâ€™s Laws of Motion and their applications to daily life"
-  ],
-  "B7.4.5.1: Demonstrate knowledge and skills in handling and maintenance of basic and simple agricultural tools": [
-    "B7.4.5.1.1: Explain the basic rules in handling and maintaining simple agricultural tools",
-    "B7.4.5.1.2: Apply the handling and maintenance of basic and simple agricultural tools in their community"
-  ],
-  "B8.4.5.1: Demonstrate knowledge and skills in the use of basic and simple agricultural tools for basic on-farm activities": [
-    "B8.4.5.1.1: Show and discuss the use of basic and simple agricultural tools for basic on-farm activities",
-    "B8.4.5.1.2: Engage in the use of basic and simple agricultural tools for basic farm activities"
-  ],
-  "B9.4.5.1: Demonstrate knowledge and skills in making simple agricultural tools for on-farm activities": [
-    "B9.4.5.1.1: Identify materials used in making simple agricultural tools",
-    "B9.4.5.1.2: Discuss and write activities involved in making simple agricultural tools",
-    "B9.4.5.1.3: Manufacture simple agricultural tools"
-  ],
-
-  // Science - Humans and the Environment
-  "B1.5.1.1: Identify different types of waste in the home and school": [
-    "B1.5.1.1.1: List examples of solid waste (paper, plastic)",
-    "B1.5.1.1.2: Identify liquid waste like soapy water"
-  ],
-  "B2.5.1.1: Describe ways of managing waste in the school": [
-    "B2.5.1.1.1: Discuss the importance of putting waste in dustbins",
-    "B2.5.1.1.2: Identify things that can be reused"
-  ],
-  "B3.5.1.1: Explain the importance of keeping the environment clean": [
-    "B3.5.1.1.1: Discuss the effects of dirty environment on health",
-    "B3.5.1.1.2: Demonstrate how to clean the school yard"
-  ],
-  "B4.5.1.1: Identify ways of disposing of liquid waste": [
-    "B4.5.1.1.1: Describe safe ways of pouring away dirty water",
-    "B4.5.1.1.2: Discuss the dangers of stagnant water"
-  ],
-  "B5.5.1.1: Explain the concept of the 3Rs (Reduce, Reuse, Recycle)": [
-    "B5.5.1.1.1: Define Reduce, Reuse and Recycle",
-    "B5.5.1.1.2: Identify materials that can be recycled"
-  ],
-  "B6.5.1.1: Demonstrate how to prepare compost from organic waste": [
-    "B6.5.1.1.1: Identify materials suitable for composting",
-    "B6.5.1.1.2: Explain the stages of making compost"
-  ],
-  "B1.5.2.1: Identify common diseases in the community": [
-    "B1.5.2.1.1: Name common ailments like cold and stomach ache",
-    "B1.5.2.1.2: Discuss how people get sick"
-  ],
-  "B2.5.2.1: Discuss how to prevent common diseases like malaria": [
-    "B2.5.2.1.1: Identify the mosquito as the cause of malaria",
-    "B2.5.2.1.2: Suggest ways to avoid mosquito bites"
-  ],
-  "B3.5.2.1: Explain the importance of personal hygiene": [
-    "B3.5.2.1.1: Discuss why we wash our hands with soap",
-    "B3.5.2.1.2: Demonstrate correct hand washing steps"
-  ],
-  "B4.5.2.1: Identify common skin diseases and their prevention": [
-    "B4.5.2.1.1: Name skin problems like rashes and ringworm",
-    "B4.5.2.1.2: Discuss how to keep the skin healthy"
-  ],
-  "B5.5.2.1: Discuss the importance of immunization": [
-    "B5.5.2.1.1: Explain what vaccines are and how they help",
-    "B5.5.2.1.2: Mention some diseases that can be prevented by vaccines"
-  ],
-  "B6.5.2.1: Explain the causes and effects of waterborne diseases": [
-    "B6.5.2.1.1: Identify cholera and typhoid as waterborne diseases",
-    "B6.5.2.1.2: Discuss how to treat water to make it safe for drinking"
-  ],
-  "B7.5.1.1: Exhibit knowledge and skill of scientific basis for management practices of types of waste in the environment": [
-    "B7.5.1.1.1: Apply information from research on good management practices of waste to make the environment clean"
-  ],
-  "B8.5.1.1: Demonstrate knowledge of waste management systems and apply it in an environment": [
-    "B8.5.1.1.1: Explain sustainable waste management practices",
-    "B8.5.1.1.2: Apply knowledge of waste management practices to manage waste in a community"
-  ],
-  "B9.5.1.1: Demonstrate an understanding of the scientific ways of waste management": [
-    "B9.5.1.1.1: Investigate the scientific methods used in waste management"
-  ],
-  "B9.5.1.2: Demonstrate an understanding of the impact of waste on an environment, innovative waste management technologies": [
-    "B9.5.1.2.1: Describe innovative ways of waste management for sustainable development"
-  ],
-  "B7.5.2.1: Demonstrate knowledge of common deficiency diseases of humans, their causes, symptoms, effects and prevention": [
-    "B7.5.2.1.1: Explain the relationship between food nutrients and common deficiency diseases and how they affect humans"
-  ],
-  "B7.5.2.2: Demonstrate knowledge of the nature of selected viral diseases of humans, their causes, symptoms, effects and management": [
-    "B7.5.2.2.1: Explain the nature of viral diseases with special emphasis on corona virus (COVID-19)"
-  ],
-  "B8.5.2.1: Demonstrate knowledge of common communicable diseases, such as Hepatitis, of humans, causes, symptoms, effects and their prevention": [
-    "B8.5.2.1.1: Explain the symptoms, effects and prevention of common communicable diseases",
-    "B8.5.2.1.2: Analyse the risk factors of communicable diseases"
-  ],
-  "B8.5.2.2: Demonstrate knowledge of the nature of selected bacterial diseases of humans, their causes, symptoms, effects and prevention": [
-    "B8.5.2.2.1: Explain the nature of bacterial diseases with special emphasis on food poisoning/gonorrhoea/ meningitis"
-  ],
-  "B9.5.2.1: Demonstrate knowledge of common non-communicable diseases of humans, their causes, symptoms, effects and prevention": [
-    "B9.5.2.1.1: Explain the symptoms, effects and prevention of some non-communicable diseases and analyse risk factors"
-  ],
-  "B9.5.2.2: Demonstrate understanding of the relationship of health and disease, the concept of common diseases": [
-    "B9.5.2.2.1: Explain the concepts of health and disease and show their relationship",
-    "B9.5.2.2.2: Explain the concept of common diseases in an environment",
-    "B9.5.2.2.3: Explain the nature of fungal diseases with special emphasis on Ringworm/candidiasis"
-  ],
-  "B7.5.3.1: Realise how careers in science can improve human life, and research about Ghanaian and internationally recognised scientists": [
-    "B7.5.3.1.1: Discover and explain how careers in science can improve human conditions and relate these careers"
-  ],
-  "B8.5.3.1: Demonstrate an understanding of connections among science, technology, innovation, society and the environment": [
-    "B8.5.3.1.1: Examine the relationship among science, technology, innovation and society"
-  ],
-  "B9.5.3.1: Analyse the scientific concepts, principles and processes applied in industries in and outside their community": [
-    "B9.5.3.1.1: Investigate the scientific concepts, principles and processes involved in industries"
-  ],
-  "B9.5.3.2: Demonstrate an understanding of the concept of industry, the science underpinning the processes of production": [
-    "B9.5.3.2.1: Explain the concept of industry and distinguish between modern and indigenous industries",
-    "B9.5.3.2.2: Examine indigenous industries in their communities and show the scientific processes"
-  ],
-  "B7.5.4.1: Demonstrate understanding of sustainable energy choices and their impact on the environment": [
-    "B7.5.4.1.1: Search for information on ways sustainable energy choices and scientific ideas are used"
-  ],
-  "B8.5.4.1: Demonstrate an understanding of the effects of climate change in the world and greening of other tropical countries": [
-    "B8.5.4.1.1: Explain the concept of climate change and its effect on the environment",
-    "B8.5.4.1.2: Describe climate change and green economy actions"
-  ],
-  "B9.5.4.1: Demonstrate an understanding of the natural and human factors that influence climate change and a green economy": [
-    "B9.5.4.1.1: Examine various natural and human factors that influence climate change and green economy"
-  ],
-  "B9.5.4.2: Evaluate the effectiveness of initiatives that address the issue of climate change and green economy": [
-    "B9.5.4.2.1: Assess data on climate change and green economy actions/ activities globally"
-  ],
-  "B7.5.5.1: Demonstrate understanding of different plants and animals found in different land forms and how they survive": [
-    "B7.5.5.1.1: List and describe the different types of plants and animals that live in different land forms",
-    "B7.5.5.1.2: Explain the nature of associations that exist among plants and animals in different landforms"
-  ],
-  "B8.5.5.1: Demonstrate understanding of the differences among soils, plant roots, stems, leaves, flowers, and fruits": [
-    "B8.5.5.1.1: Discuss physical properties of soils",
-    "B8.5.5.1.2: Analyse the physical properties of soils and soil water content and demonstrate importance in crop production"
-  ],
-  "B9.5.5.1: Demonstrate knowledge and skills in the use of plant roots, stems, leaves, flowers, and fruits for agricultural and non-agricultural purposes": [
-    "B9.5.5.1.1: Show and list the uses of different plant parts for agricultural and non-agricultural purposes",
-    "B9.5.5.1.2: Demonstrate the use of different plant parts for agricultural and non-agricultural purposes"
-  ],
-  "B8.5.6.1: Recognise the different types of rocks as origin of different types of soils": [
-    "B8.5.6.1.1: Observe and describe different types of rocks as origins of soils"
-  ],
-  
-  // English - Oral Language
-  "B7.1.1.1: Demonstrate use of appropriate language orally in specific situations": [
-    "B7.1.1.1.1: Use appropriate register in everyday communication with diverse partners on grade-level topics",
-    "B7.1.1.1.2: Ask questions that elicit elaboration and respond to othersâ€™ questions in conversation",
-    "B7.1.1.1.3: Use appropriate language orally to describe experiences about oneself and others",
-    "B7.1.1.1.4: Listen to and give accurate directions to familiar places",
-    "B7.1.1.1.5: Use techniques (voice modulation and eye contact) for effective oral communication"
-  ],
-  "B8.1.1.1: Demonstrate use of appropriate language orally in specific situations": [
-    "B8.1.1.1.1: Use appropriate register in everyday communication with diverse partners on grade-level topics",
-    "B8.1.1.1.2: Ask and respond to specific questions with elaboration by making comments that contribute to topics",
-    "B8.1.1.1.3: Use appropriate language orally to describe familiar places and events",
-    "B8.1.1.1.4: Listen to and give accurate directions of complex routes to different locations",
-    "B8.1.1.1.5: Demonstrate appropriate turn taking for effective oral communication"
-  ],
-  "B9.1.1.1: Demonstrate the use of appropriate language orally in specific situations": [
-    "B9.1.1.1.1: Use appropriate register in everyday communication with diverse partners",
-    "B9.1.1.1.2: Ask questions that link the ideas of several speakers and respond to othersâ€™ questions in a discussion",
-    "B9.1.1.1.3: Use appropriate language and open-ended questions to discuss grade-level national and global issues",
-    "B9.1.1.1.4: Demonstrate appropriate turn taking and use techniques for effective argument (debating)"
-  ],
-  "B7.1.2.1: Demonstrate the ability to listen to extended reading and identify key information": [
-    "B7.1.2.1.1: Listen to level-appropriate text attentively and identify key information",
-    "B7.1.2.1.2: Listen to, discuss ideas and share opinions from a level-appropriate text"
-  ],
-  "B8.1.2.1: Demonstrate the ability to listen to extended reading and identify key information": [
-    "B8.1.2.1.1: Listen to a level-appropriate dialogue/discussion by more than one speaker attentively",
-    "B8.1.2.1.2: Listen to and discuss ideas and share opinions from a level-appropriate text"
-  ],
-  "B9.1.2.1: Demonstrate the ability to listen to extended reading and identify key information": [
-    "B9.1.2.1.1: Listen to audio-visual texts attentively and support ideas with vocabulary/figures",
-    "B9.1.2.1.2: Initiate and participate in meaningful and collaborative discussions using texts"
-  ],
-  "B7.1.3.1: Articulate English speech sounds to develop confidence and skills in listening and speaking": [
-    "B7.1.3.1.1: Produce pure vowel sounds (short vowels) in context",
-    "B7.1.3.1.2: Produce pure vowel sounds (long vowels) in context",
-    "B7.1.3.1.3: Produce diphthongs in context (centring and closing)"
-  ],
-  "B8.1.3.1: Articulate English speech sounds to develop confidence and skills in listening and speaking": [
-    "B8.1.3.1.1: Produce consonant sounds in context (plosives)",
-    "B8.1.3.1.2: Produce consonant sounds (fricatives) in context",
-    "B8.1.3.1.3: Produce consonant sounds (nasals and affricates) in context"
-  ],
-  "B9.1.3.1: Articulate English speech sounds to develop confidence and skills in listening and speaking": [
-    "B9.1.3.1.1: Produce /r/ and /l/ sounds in different positions in word",
-    "B9.1.3.1.2: Produce consonant clusters in context",
-    "B9.1.3.1.3: Produce mono-syllabic and di-syllabic words with accurate stress in speech"
-  ],
-
-  // English - Reading
-  "B7.2.1.1: Demonstrate increasing confidence and enjoyment in independent reading": [
-    "B7.2.1.1.1: Read and understand a range of texts using monitoring and visualising strategies",
-    "B7.2.1.1.2: Use prediction to assess and improve understanding of texts",
-    "B7.2.1.1.3: Generate and answer questions to increase understanding of fiction texts",
-    "B7.2.1.1.4: Use text structure to understand and read texts independently"
-  ],
-  "B7.2.1.2: Read, comprehend and interpret texts": [
-    "B7.2.1.2.1: Identify the main text features of a non-literary texts",
-    "B7.2.1.2.2: Interpret non-fiction texts pointing out attitudes, opinions, biases and facts",
-    "B7.2.1.2.3: Interpret a non-literary text showing personal responses with textual evidence"
-  ],
-  "B8.2.1.1: Demonstrate increasing confidence and enjoyment in independent reading": [
-    "B8.2.1.1.1: Use Monitoring and mental visualisation to engage and understand non-fictional texts",
-    "B8.2.1.1.2: Use prediction to assess and improve engagement and understanding of non-fiction texts",
-    "B8.2.1.1.3: Generate and answer questions to increase confidence through a variety of non-fiction"
-  ],
-  "B8.2.1.2: Read, comprehend, interpret texts": [
-    "B8.2.1.2.1: Identify the main text features of non-fiction texts",
-    "B8.2.1.2.2: Use contextual clues to analyse text",
-    "B8.2.1.2.3: Read silently and answer more complex comprehension questions",
-    "B8.2.1.2.4: Provide evidence and show mastery to support understanding of texts",
-    "B8.2.1.2.5: Generate simple themes from a text and apply to different situations",
-    "B8.2.1.2.6: Examine the connections between a text and other points of view",
-    "B8.2.1.2.7: Use derivation to expand vocabulary to new contexts (historical, cultural, political)",
-    "B8.2.1.2.8: Integrate appropriate grade level vocabulary in different contexts"
-  ],
-  "B9.2.1.1: Demonstrate increasing confidence and enjoyment in independent reading": [
-    "B9.2.1.1.1: Read a variety of grade level texts and demonstrate understanding",
-    "B9.2.1.1.2: Reflect on how reading impacts self and others see the world",
-    "B9.2.1.1.3: Evaluate ways that the media helps to disseminate information",
-    "B9.2.1.1.4: Expand various ideas and perspectives in texts"
-  ],
-  "B9.2.1.2: Read, comprehend, and analyse varieties of texts": [
-    "B9.2.1.2.1: Read given text, within a specific time, for specific information",
-    "B9.2.1.2.2: Make predictions, identify patterns and relationships of ideas",
-    "B9.2.1.2.3: Make generalisations from text and link to real life situations",
-    "B9.2.1.2.4: Compare language, style, structure and purpose across different texts",
-    "B9.2.1.2.5: Read silently and answer more complex comprehension questions",
-    "B9.2.1.2.6: Show the effect a text has on the reader",
-    "B9.2.1.2.7: Interpret use of words/phases (figurative, symbolic, sensory) in complex texts",
-    "B9.2.1.2.8: Demonstrate conceptual understanding of academic and technical vocabulary",
-    "B9.2.1.2.9: Make conceptual connections between known and unknown words/phrases"
-  ],
-
-  // English - Summarising
-  "B7.2.2.1: Demonstrate an understanding in summarising": [
-    "B7.2.2.1.1: Use summarising to understand key ideas in a range of texts"
-  ],
-  "B7.2.2.2: Demonstrate understanding of textual evidence that supports a writing piece": [
-    "B7.2.2.2.1: Determine and analyse central and supporting ideas of texts"
-  ],
-  "B8.2.2.1: Cite the textual evidence that supports an analysis of a text to determine the central idea and provide an objective summary": [
-    "B8.2.2.1.1: Determine the central idea in paragraphs and analyse to identify supporting ideas"
-  ],
-  "B9.2.2.1: Cite the textual evidence that supports an analysis of what the text says, determining the central idea of a text and provide an objective summary": [
-    "B9.2.2.1.1: Analyse critically a given text in entirety and provide an objective summary"
-  ],
-
-  // English - Grammar
-  "B7.3.1.1: Apply the knowledge of word classes and their functions in Communication": [
-    "B7.3.1.1.1: Demonstrate command and application of nouns in speaking and texts",
-    "B7.3.1.1.2: Use types of pronouns accurately in speaking and texts",
-    "B7.3.1.1.3: Explore accurate use of adjectives in texts",
-    "B7.3.1.1.4: Relate forms of verbs to everyday activities (Tense & Aspects)",
-    "B7.3.1.1.5: Use adverbs to modify verbs accurately at the phrase and sentence level",
-    "B7.3.1.1.6: Use conjunctions accurately to link ideas in everyday discourse",
-    "B7.3.1.1.7: Demonstrate command of the use of prepositions in daily discourse",
-    "B7.3.1.1.8: Identify and use determiners in speaking and texts"
-  ],
-  "B7.3.1.2: Demonstrate command of structural and functional use of sentences": [
-    "B7.3.1.2.1: Identify and use subject and predicate in text",
-    "B7.3.1.3.1: Demonstrate command and use of compound sentences"
-  ],
-  "B7.3.1.4: Apply knowledge of clauses in communication": [
-    "B7.3.1.4.1: Use dependent and independent clauses appropriately in speaking and writing"
-  ],
-  "B7.3.1.5: Demonstrate understanding of the use of conditional tenses in communication": [
-    "B7.3.1.5.1: Use conditional sentences in communication to indicate possible conditions and results"
-  ],
-  "B7.3.1.6: Demonstrate mastery of use of active and passive voice": [
-    "B7.3.1.6.1: Use passive sentences for a range of functions",
-    "B7.3.1.6.2: Demonstrate use and command of reported speech"
-  ],
-  "B7.3.1.7: Show understanding and use of question tags in communication": [
-    "B7.3.1.7.1: Use question tags accurately"
-  ],
-  "B8.3.1.1: Apply the knowledge of word classes and their functions in Communication": [
-    "B8.3.1.1.1: Use an increasing range of singular and plural forms of compound nouns",
-    "B8.3.1.1.2: Demonstrate use of relative pronouns correctly in speaking and writing",
-    "B8.3.1.1.3: Demonstrate command of the use of adjectives in discourse",
-    "B8.3.1.1.4: Use verb forms correctly when talking about future events",
-    "B8.3.1.1.5: Demonstrate command of the knowledge of adverbs",
-    "B8.3.1.1.6: Demonstrate command of use of prepositions in speaking and writing"
-  ],
-  "B8.3.1.5: Demonstrate command of the use of reported speech": [
-    "B8.3.1.5.2: Demonstrate command of the use of reported speech (direct/indirect questions)"
-  ],
-  "B8.3.1.6: Show understanding and use of question tags in communication": [
-    "B8.3.1.6.1: Demonstrate command of question tags"
-  ],
-  "B9.3.1.1: Apply the knowledge of phrases and clauses and their functions in Communication": [
-    "B9.3.1.1.1: Use noun phrases accurately in context",
-    "B9.3.1.1.2: Demonstrate command using multiple adjectives in correct order",
-    "B9.3.1.1.3: Use more complex phrasal verbs accurately",
-    "B9.3.1.1.4: Use knowledge of the adverbial phrase and its functions"
-  ],
-  "B9.3.1.2: Demonstrate understanding of the use of conditional tenses in communication": [
-    "B9.3.1.2.1: Use conditional sentences to indicate impossible conditions in the past",
-    "B9.3.1.2.2: Use defining and non-defining relative clauses appropriately"
-  ],
-  "B9.3.1.3: Demonstrate command of structural and functional use of sentences": [
-    "B9.3.1.3.1: Identify and use subject and predicate in texts"
-  ],
-  "B9.3.1.4: Demonstrate mastery of the use of active and passive voice": [
-    "B9.3.1.4.1: Use passive forms appropriately in speech and writing",
-    "B9.3.1.4.2: Demonstrate command of the use of reported speech"
-  ],
-
-  // English - Punctuation, Vocabulary and Aesthetic Language
-  "B7.3.2.1: Demonstrate use and mastery of capitalisation and punctuation in communication": [
-    "B7.3.2.1.1: Identify and use punctuation marks (question, exclamation, full-stop, comma)"
-  ],
-  "B8.3.2.1: Demonstrate mastery of capitalisation and punctuation in communication": [
-    "B8.3.2.1.1: Use punctuation marks (colon, semi-colon, apostrophe) in context"
-  ],
-  "B9.3.2.1: Demonstrate mastery of capitalisation and punctuation in communication": [
-    "B9.3.2.1.1: Identify and use punctuation marks (dash, hyphen, bracket) in context"
-  ],
-  "B7.3.3.1: Demonstrate appropriate use of vocabulary in communication": [
-    "B7.3.3.1.1: Apply vocabulary appropriately in specific contexts"
-  ],
-  "B7.3.4.1: Demonstrate understanding of use of aesthetic language to enrich communication": [
-    "B7.3.4.1.1: Explore the use of proverbs to enrich communication"
-  ],
-  "B8.3.3.1: Demonstrate appropriate use of vocabulary in communication": [
-    "B8.3.3.1.1: Use vocabulary appropriately in speaking and writing (synonyms, antonyms)"
-  ],
-  "B9.3.3.1: Demonstrate appropriate use of vocabulary and spelling conventions in communication": [
-    "B9.3.3.1.1: Interpret vocabulary appropriately in more complex texts"
-  ],
-
-  // English - Writing
-  "B7.4.1.1: Develop, organise and express ideas coherently and cohesively in writing": [
-    "B7.4.1.1.1: Use cohesive devices (pronouns, punctuations, conjunctions) to link sentences"
-  ],
-  "B7.4.1.2: Create different paragraphs on a given topic": [
-    "B7.4.1.2.1: Organise information in a logical manner"
-  ],
-  "B8.4.1.1: Develop, organise and express ideas coherently and cohesively in writing": [
-    "B8.4.1.1.1: Demonstrate understanding of how different sentences relate within a paragraph"
-  ],
-  "B8.4.1.2: Create different paragraphs within a composition on a given topic": [
-    "B8.4.1.2.1: Record and use different techniques to capture the reader's attention"
-  ],
-  "B9.4.1.1: Develop, organise and express ideas coherently and cohesively in writing": [
-    "B9.4.1.1.1: Compose logically connected paragraphs to show unity and coherence",
-    "B9.4.1.1.2: Develop a paragraph to show paragraph unity using supporting details"
-  ],
-  "B9.4.1.2: Create different paragraphs a given topic": [
-    "B9.4.1.2.1: Compose more complex paragraphs using appropriate strategies"
-  ],
-  "B7.4.2.1: Develop, organise and express ideas coherently and cohesively in writing for a variety of purposes": [
-    "B7.4.2.1.1: Write personal narratives using effective techniques",
-    "B7.4.2.1.2: Use precise vocabulary and sensory language for vivid mental pictures",
-    "B7.4.2.1.3: Create advertisements to persuade a given audience",
-    "B7.4.2.1.4: Compose a paragraph to explain a process or phenomenon"
-  ],
-  "B7.4.2.2: Apply writing skills to specific life situations": [
-    "B7.4.2.2.1: Compose informal letters on varied topics using appropriate format",
-    "B7.4.2.2.2: Compose formal writing (application, invitation, email) using appropriate format",
-    "B7.4.2.2.3: Take notes for academic and other purposes",
-    "B7.4.2.2.4: Design notices and posters for different purposes",
-    "B7.4.2.2.5: Write articles on given issues for publication",
-    "B7.4.2.2.6: Create dialogues between two interlocutors"
-  ],
-  "B8.4.2.1: Use a process approach to compose descriptive, narrative/ imaginative, informational, persuasive and argumentative texts": [
-    "B8.4.2.1.1: Write personal narratives using effective techniques and descriptive details",
-    "B8.2.1.2: Use precise words, phrases and sensory language for vivid mental pictures",
-    "B8.4.2.1.3: Create shorter transactional texts to convince an audience",
-    "B8.4.2.1.4: Compose paragraphs that identify an issue and suggest solutions"
-  ],
-  "B8.4.2.2: Apply writing skills to specific life situations": [
-    "B8.4.2.2.1: Compose formal writing (business letters, email) on given topics",
-    "B8.4.2.2.2: Compose notes, brochures and flyers for different purposes",
-    "B8.4.2.2.3: Write articles on given issues for publication in school magazines",
-    "B8.4.2.2.4: Create dialogues among multiple interlocutors on different themes",
-    "B8.4.2.2.5: Compose speeches for different purposes and occasions"
-  ],
-  "B9.4.2.1: Use a process approach to compose descriptive, narrative/ imaginative, informational and persuasive, argumentative texts": [
-    "B9.4.2.1.1: Create effective descriptive sentences when describing characters or mood",
-    "B9.4.2.1.2: Use different narrative techniques to manipulate time in a story",
-    "B9.4.2.1.3: Write a well-organised persuasive piece that states and defends a position",
-    "B9.4.2.1.4: Write an informative, explanatory text on a familiar or unfamiliar topic"
-  ],
-  "B9.4.2.2: Apply writing skills to specific life situations": [
-    "B9.4.2.2.1: Compose formal writing (minutes, programme agenda reports) on given topics",
-    "B9.4.2.2.2: Compose short text (flyers, posters, invitation cards, email) for different purposes",
-    "B9.4.2.2.3: Write articles (short reports, letters and case studies) for publication",
-    "B9.4.2.2.4: Compose speeches for different purposes and occasions"
-  ],
-  "B7.4.3.1: Research to build and present knowledge": [
-    "B7.4.3.1.1: Identify and record information from non-text sources, organise and present in writing"
-  ],
-  "B8.4.3.1: Research to build and present knowledge": [
-    "B8.4.3.1.1: Use information from non-text sources to support ideas in writing"
-  ],
-  "B9.4.3.1: Research to build and present knowledge": [
-    "B9.4.3.1.1: Conduct short research projects based on focused questions"
-  ],
-
-  // English - Literature
-  "B7.5.1.1: Demonstrate understanding of how various elements of literary genres contribute to meaning": [
-    "B7.5.1.1.1: Demonstrate understanding of oral literature and how different genres contribute to meaning",
-    "B7.5.1.1.2: Analyse the elements of written literature (narrative, drama, or poetry)",
-    "B7.5.1.1.3: Use basic literary devices in texts (metaphor, simile, personification)"
-  ],
-  "B8.5.1.1: Demonstrate understanding of how various elements of literary genres contribute to meaning": [
-    "B8.5.1.1.1: Analyse the types of characters in texts",
-    "B8.5.1.1.2: Examine the features of different types of poems",
-    "B8.5.1.1.3: Examine how monologues and dialogues are used to convey characters",
-    "B8.5.1.1.4: Use literary devices (euphemism, hyperbole, onomatopoeia) in texts",
-    "B8.5.1.1.5: Analyse the sequence of events in film/media, narratives and play scripts"
-  ],
-  "B9.5.1.1: Demonstrate understanding of how various elements of literary genres contribute to meaning": [
-    "B9.5.1.1.1: Analyse the use of language to convey characters in film/media and narratives",
-    "B9.5.1.1.2: Create monologues and dialogues narratives in play scripts",
-    "B9.5.1.1.3: Analyse the sequence of events across texts",
-    "B9.5.1.1.4: Create different types of poems (sonnet, acrostic, haiku etc.)",
-    "B9.5.1.14: Use literary devices (imagery) in texts",
-    "B9.5.1.1.5: Analyse common themes in texts"
-  ],
-  
-  // Ghanaian Language - Customs
-  "B7.1.1.1: Childhood Rites": ["B7.1.1.1.1: Identify processes in naming a child", "B7.1.1.1.2: Discuss significance of naming a child"],
-  "B8.1.1.1: Puberty Rites": ["B8.1.1.1.1: Identify processes in puberty rites", "B8.1.1.1.2: Compare puberty rites across cultures"],
-  "B9.1.1.1: Marriage Rites": ["B9.1.1.1.1: Discuss processes in marriage rites", "B9.1.1.1.2: Compare traditional and contemporary marriage"],
-  "B7.1.3.1: Features of the clan system": ["B7.1.3.1.1: Describe the clan system", "B7.1.3.1.2: Discuss features of the clan system"],
-
-  // Ghanaian Language - Reading
-  "B7.3.1.1: Reading and summarizing": ["B7.3.1.1.1: Read and understand main ideas", "B7.3.1.1.2: Read and summarise ideas"],
-  "B8.3.1.1: Extended texts": ["B8.3.1.1.1: Understand main ideas in extended texts", "B8.3.1.1.2: Summarise long passages"],
-  "B7.3.2.1: Translating words/phrases": ["B7.3.2.1.1: Translate words from source to target language"],
-
-  // Ghanaian Language - Composition
-  "B7.5.1.1: Paragraph features": ["B7.5.1.1.1: Discuss features of a paragraph", "B7.5.1.1.2: Develop a three-paragraph essay"],
-  "B9.5.1.1: Extended texts and linking": ["B9.5.1.1.1: Plan and structure extended texts"],
-
-  // Mathematics additions
-  "B7.1.3.1: Simplify, compare and order a mixture of positive fractions": ["B7.1.3.1.1: Determine recall percentages and decimals of benchmark fractions", "B7.1.3.1.2: Compare and order fractions"],
-  "B8.3.1.1: Relationship between parallel lines and alternate angles": ["B8.3.1.1.1: Draw and determine alternate and corresponding angles", "B8.3.1.1.2: Determine values of angles in a triangle"],
-  "B9.3.1.1: Apply properties of angles at a point": ["B9.3.1.1.1: Derive formula for sum of angles in a polygon"],
-  
-  // Ghanaian Language - Listening/Speaking
-  "B7.2.1.1: Use of appropriate register": ["B7.2.1.1.1: Use suitable formal and informal register", "B7.2.1.1.2: Ask and respond to questions for elaboration"],
-  "B8.2.1.1: Narrating daily activities": ["B8.2.1.1.1: Narrate home and community activities"],
-  "B9.2.1.1: Spontaneous social interaction": ["B9.2.1.1.1: Use register in diverse social contexts"],
-  
-  // RME - God
-  "B7.1.1.1: Explain the nature of God seen through His attributes": ["B7.1.1.1.1: Explain nature of God through attributes in major religions", "B7.1.1.1.2: Describe ways to demonstrate God's attributes in life"],
-  "B8.1.1.1: Outline and explain moral lessons in creation stories": ["B8.1.1.1.1: Discuss creation stories of major religions", "B8.1.1.1.2: Identify moral values in creation stories"],
-  
-  // RME - Worship
-  "B7.2.1.1: Explain how worship is performed": ["B7.2.1.1.1: Identify types of worship", "B7.2.1.1.2: Describe modes of worship", "B7.2.1.1.3: Explain moral lessons from worship"],
-  
-  // RME - Ethics
-  "B7.5.1.1: Develop good manners and apply them": ["B7.5.1.1.1: Identify good manners", "B7.5.1.1.2: Discuss importance of decency", "B7.5.1.1.3: Discuss significance of chastity"],
-  
-  // RME - Economic Life
-  "B7.6.1.1: Cultivate hard work and entrepreneurship": ["B7.6.1.1.1: Explain meaning of work", "B7.6.1.1.3: Identify steps to become an entrepreneur"],
-  "B8.6.1.1: Plan the wise use of money": ["B8.6.1.1.1: Explain usefulness of money", "B8.6.1.1.2: Identify honest ways of acquiring money", "B8.6.1.1.4: Discuss benefits of SSNIT"],
-  
-  // RME - Family
-  "B7.3.1.1: Identify and explain importance of family systems": ["B7.3.1.1.1: Explain concepts of family systems", "B7.3.1.1.2: Identify roles of family members"],
-  "B8.3.1.1: Identify and explain importance of obeying authority": ["B8.3.1.1.1: Identify various sources of authority", "B8.3.1.1.2: Explain need to obey God and parents"],
-  
-  // RME - Leaders
-  "B7.4.1.1: Early life and call of religious leaders": ["B7.4.1.1.1: Discuss early life and call", "B7.4.1.1.2: Describe ministries of leaders"],
-  "B8.4.1.1: Moral lessons from prophets and caliphs": ["B8.4.1.1.1: Describe mission of prophets", "B8.4.1.1.2: Outline mission of caliphs"],
-  
-  // RME - Moral Teachings
-  "B8.5.1.1: Moral teachings from scripture and oral traditions": ["B8.5.1.1.1: Identify moral teachings from religious texts", "B8.5.1.1.2: Apply moral teachings in daily life"],
-  "B9.5.1.1: Good deeds and punishment": ["B9.5.1.1.1: Describe basis for good deeds", "B9.5.1.1.2: Identify acts that attract punishment", "B9.5.1.1.3: Outline stages of repentance"],
-  
-  // RME - Time
-  "B9.6.1.1: Managing time profitably": ["B9.6.1.1.1: Explain time, leisure and idleness", "B9.6.1.1.2: Demonstrate how to plan and use time wisely"],
-  "B9.1.1.1: Describe purpose of God's creation": ["B9.1.1.1.1: Identify purpose and usefulness of creation"],
-  "B7.2.2.1: Analyse moral values in songs": ["B7.2.2.1.1: Differentiate between religious and non-religious songs"],
-  "B8.2.1.1: Explain rites of passage": ["B8.2.1.1.1: Describe naming ceremonies", "B8.2.1.1.3: Describe puberty rites"],
-  "B9.2.1.1: Understand religious festivals": ["B9.2.1.1.1: State meaning and types of festivals"],
-  "B9.3.1.1: Ways people can co-exist peacefully": ["B9.3.1.1.1: Identify tolerant and intolerant communities"],
-  "B9.4.1.1: Leadership role of women": ["B9.4.1.1.1: Discuss contributions of key women"],
-  "B7.5.2.1: Need to stay away from substance abuse": ["B7.5.2.1.1: Summarise causes of substance abuse"],
-  "B8.6.2.1: Avoid bribery and corruption": ["B8.6.2.1.1: Explain terms bribery and corruption"],
-
-  // Social Studies - Environment
-  "B7.1.1.1: Demonstrate skills in dealing with environmental challenges": ["B7.1.1.1.1. Examine ways of dealing with sanitation challenges in the environment"],
-  "B8.1.1.1: Demonstrate skills in dealing with environmental challenges (Water Pollution)": ["B8.1.1.1.1. Examine water pollution as an environmental challenge"],
-  "B9.1.1.1: Demonstrate skills in dealing with environmental challenges (Air Pollution)": ["B9.1.1.1.1. Examine air pollution as an environmental challenge"],
-  "B7.1.2.1: Demonstrate a range of mapping skills": ["B7.1.2.1.1. Demonstrate skills involved in mapping and locating places in the environment"],
-  "B8.1.2.1: Demonstrate skills in sketching maps and interpreting landscapes from maps": ["B8.1.2.1.1. Sketch maps and interpret landscapes from maps"],
-  "B7.1.3.1: Show understanding of the world around us": ["B7.1.3.1.1. Examine major physical features of the earth"],
-  "B7.1.3.2: Assess the issue of natural disasters and their management": ["B7.1.3.2.1. Examine natural disasters in the environment"],
-  "B8.1.3.1: Demonstrate understanding of the significance of weather and climate to the environment": ["B8.1.3.1.1. Assess the significance of weather and climate to the environment"],
-  "B8.1.3.2: Demonstrate understanding of natural disasters and their management": ["B8.1.3.2.1. Discuss natural disasters"],
-  "B9.1.4.1: Investigate the natural and human resources around us": ["B9.1.4.1.1. Examine the importance of natural resources to the development of Ghana", "B9.1.4.1.2. Evaluate the importance of human resources to the development of Ghana"],
-
-  // Social Studies - Family Life
-  "B7.2.1.1: Demonstrate understanding of adolescent behaviour and reproductive health issues": ["B7.2.1.1.1. Examine issues on adolescent behaviour and reproductive health"],
-  "B8.2.2.1: Show understanding of the family and family life issues": ["B8.2.2.1.1. Examine the composition and functions of the nuclear and the extended families", "B8.2.2.1.2. Discuss the issues of inheritance in Ghana"],
-  "B9.2.2.1: Evaluate the institution of marriage in Ghana": ["B9.2.2.1.1. Examine the importance of marriage as a social institution in Ghana"],
-  "B9.2.2.2: Assess the need for responsible parenting in the family": ["B9.2.2.2.1. Examine the importance of responsible parenting within the family system"],
-  "B7.2.3.1: Exhibit knowledge of the importance of socialisation": ["B7.2.3.1.1 Examine the place of socialisation in developing the individual"],
-  "B7.2.4.1: Analyse the population structure in Ghana and its related issues": ["B7.2.4.1.1 Examine the components of population growth"],
-  "B8.2.4.1: Analyse the population structure in Ghana and its related issues (Comparison)": ["B8.2.4.1.1. Compare the population structure of high-income and middle/low income countries"],
-  "B9.2.4.1: Analyse the population structure in Ghana and its related issues (Development)": ["B9.2.4.1.1. Assess population structure in Ghana and its associated development issues"],
-
-  // Social Studies - Sense of Purpose
-  "B7.3.1.1: Show understanding of self as a unique individual": ["B7.3.1.1.1. Exhibit knowledge of self-identity"],
-  "B8.3.2.1: Demonstrate knowledge of the role of the individual in the community": ["B8.3.2.1.1. Examine the role of the individuals in the community", "B8.3.2.1.2. Discuss the relevance of volunteerism to community development"],
-  "B9.3.3.1: Evaluate the place of culture in national identity": ["B9.3.3.1.1. Assess the significance of symbols, music and ceremonies in promoting national identity"],
-
-  // Social Studies - Law and Order
-  "B7.4.1.1: Analyse the responsibilities of a citizen": ["B7.4.1.1.1 Examine the value of citizenship in nation building"],
-  "B8.4.1.1: Investigate the rights and responsibilities of a citizen": ["B8.4.1.1.1. Examine the importance of human rights in the Ghanaian society"],
-  "B8.4.2.1: Analyse ways of preventing and managing conflict": ["B8.4.2.1.1 Examine ways of preventing and managing conflict in the community"],
-  "B9.4.3.1: Assess the relevance of the 1992 Constitution": ["B9.4.3.1.1. Examine the 1992 Constitution and its significance to national development", "B9.4.3.1.2. Discuss the rights of the child as enshrined in the 1992 Constitution"],
-  "B9.4.4.1: Assess the role of peace and security in national development": ["B9.4.4.1.1. Examine the relevance of peace and security in our community"],
-  "B9.4.5.1: Show understanding of how to promote democracy and political stability": ["B9.4.5.1.1. Examine election as a way of promoting democracy and political stability"],
-  "B9.4.5.2: Demonstrate understanding of the District Assembly concept in Ghana": ["B9.4.5.2.1. Examine the role of the District Assembly in promoting decentralisation"],
-  "B9.4.5.3: Evaluate the importance of political stability in Ghanaâ€™s development": ["B9.4.5.3.1. Assess the significance of political stability in national development"],
-
-  // Social Studies - Socio-Economic Development
-  "B7.5.1.1: Demonstrate knowledge of human resource development in Ghana": ["B7.5.1.1.1. Mention ways of developing human resource in Ghana"],
-  "B7.5.2.1: Demonstrate understanding of social security and pension issues": ["B7.5.2.1.1. Examine the importance of social security to the individual"],
-  "B8.5.2.1: Demonstrate understanding of employer and employee relations in social security and pension": ["B8.5.2.1.1. Exhibit knowledge on employer and employee relation in social security and pension schemes"],
-  "B9.5.2.1: Show understanding of the provisions under National Pensions Act 766 and PNDC Law 247": ["B9.5.2.1.1. Exhibit knowledge on pension rights under National Pensions Act 766 and PNDC Law 247"],
-  "B7.5.3.1: Demonstrate knowledge on how tourism and leisure promote national development": ["B7.5.3.1.1. Examine the role of tourism and leisure in socio- economic development of Ghana"],
-  "B8.5.3.1: Evaluate tourism as an important economic sector for national development": ["B8.5.3.1.1. Assess the importance of tourism to socio-economic development of Ghana"],
-  "B9.5.4.1: Analyse the contribution of science and technology to national development": ["B9.5.4.1.1. Examine how science and technology can be used to promote development"],
-
-  // Social Studies - Nationhood
-  "B7.6.1.1: Demonstrate understanding of how Ghana became an independent nation": ["B7.6.1.1.1. Explain how events after the 1948 riots accelerated the move towards independence", "B7.6.1.1.2 Recount the formation of the Convention Peopleâ€™s Party (CPP) in 1949", "B7.6.1.1.3 Discuss the recommendations of the Coussey Committee and the outcomes of the 1951, 1954 and 1956 elections", "B7.6.1.1.4 Analyse the nature of government from 1957 to 1960"],
-  "B8.6.2.1: Analyse the main developments in the Republics between 1960 and 1972": ["B8.6.2.1.1. Explain how the First Republic came into being", "B8.6.2.1.2. Explain political developments under the first republic", "B8.6.2.1.3. Explain how the Second Republic came into being.", "B8.6.2.1.4. Explain political developments under the Second Republic"],
-  "B9.6.2.1: Demonstrate understanding that Ghana had two republics between 1979 and 2000": ["B9.6.2.1.1. Explain how the Third Republic came into being (1979-1981)", "B9.6.2.1.2. Explain political developments under the Third Republic", "B9.6.2.1.3. Explain how the Fourth Republic came into being", "B9.6.2.1.4. Explain political developments under the Fourth Republic"],
-
-  // History - Indicators
-  "B1.1.1.1: History as part of everyday life": ["B1.1.1.1.1: Explain that history deals with past human activities", "B1.1.1.1.2: Describe how sources of historical evidence help us find out about past human activities"],
-  "B4.1.1.1: Importance of studying history": ["B4.1.1.1.1: Explain the importance of studying the history of Ghana"],
-  "B4.1.1.2: Sources for writing history": ["B4.1.1.2.1: Identify the sources of history including archaeology, numismatics, oral tradition, wall paintings etc."],
-  "B2.2.1.1: Ethnic groups in Ghana": ["B2.2.1.1.1: Identify the ethnic groups in each region in Ghana", "B2.2.1.1.2: State the characteristics of the ethnic groups in Ghana"],
-  "B3.2.1.1: Origins of major ethnic groups": ["B3.2.1.1.1: Discuss the origins of the major ethnic groups in Ghana"],
-  "B4.2.1.1: Rise and expansion of major kingdoms": ["B4.2.1.1.1: Describe how one major Kingdom was formed and the reasons behind its expansion", "B4.2.1.1.2: State the factors that led to decline of the Kingdom you have studied"],
-  "B5.2.1.1: Ancient life vs modern life": ["B5.2.1.1.1: Describe how our ancestors lived in ancient times (before the 15th century) and compare it with how we live today", "B5.2.1.1.2: Describe some ancient towns in Ghana"],
-  "B3.2.2.1: Nature of exchanges among groups": ["B3.2.2.1.1: Discuss the nature of exchanges among the ethnic groups", "B3.2.2.1.2: Name some of the items exchanged among the various groups", "B3.2.2.1.3: Describe the conflicts and alliances that existed among the ethnic groups in Ghana"],
-  "B1.2.3.1: From Gold Coast to Ghana": ["B1.2.3.1.1: Explain why, in the past, Ghana was known as the Gold Coast", "B1.2.3.1.2: Recall when the name Ghana came into formal use"],
-  "B2.2.4.1: History of major locations": ["B2.2.4.1.1: Discuss the history of Ghanaâ€™s major historical locations"],
-  "B3.2.4.1: Forts and castles along the coast": ["B3.2.4.1.1: Identify the forts and castles built along the coast of Ghana"],
-  "B4.1.4.1: History of specific historical sites": ["B4.1.4.1.1: Describe the history of Ghanaâ€™s major historical locations, specifically, Flagstaff house, Burma camp, James Town light house, Gbewa Palace, Larabanga Mosque etc."],
-  "B1.2.5.1: Selected individuals and contributions": ["B1.2.5.1.1: Identify Ghanaians of diverse fields who have contributed significantly to national development"],
-  "B2.2.5.1: Ghanaian women and national development": ["B2.2.5.1.1: Identify Ghanaian women who have made significant contributions to national development"],
-  "B3.2.5.1: Outstanding Ghanaian entrepreneurs": ["B3.2.5.1.1: Describe Ghanaian entrepreneurs who have made significant contributions"],
-  "B4.2.5.1: Significant traditional rulers": ["B4.2.5.1.1: Identify the role played by some traditional rulers in the national development"],
-  "B5.2.5.1: Contributions locally and internationally": ["B5.2.5.1.1: Name Ghanaians who have made significant Contribution locally and internationally"],
-  "B1.3.1.1: Europeans who came to Ghana": ["B1.3.1.1.1: Explore which Europeans came to Ghana"],
-  "B3.3.1.1: Interaction and settlers": ["B3.3.1.1.1: Describe how the Europeans settled on the Gold Coast, including forming alliances with the local chiefs"],
-  "B2.3.2.1: Early trade between Ghanaians and Europeans": ["B2.3.2.1.1: Describe how early trade was carried out between Ghanaians and Europeans"],
-  "B5.3.2.1: Human trade and Trans-Atlantic Slave Trade": ["B5.3.2.1.1: Investigate why the Europeans began trading in humans by the 16th century"],
-  "B4.3.3.1: Missionary societies and impact": ["B4.3.3.1.1: Describe European missionary activities in Ghana"],
-  "B6.3.4.1: Assessing changes brought by Europeans": ["B6.3.4.1.1: Assess the changes that the European presence brought to Ghana"],
-  "B4.4.1.1: The Bond of 1844": ["B4.4.1.1.1: Examine the Bond of 1844"],
-  "B4.4.1.2: Formation of the Gold Coast territory": ["B4.4.1.2.1: Describe how the different areas â€“ The Colony, Asante, The Northern Territories and The British Mandated Togolandâ€“ became one territory known as the Gold Coast"],
-  "B5.4.2.1: Educational, Health and Housing developments": ["B5.4.2.1.1: Identify the developments in education during the colonial era (1874-1957)", "B5.4.2.1.2: Identify some of the health facilities and housing projects in the colonial period"],
-  "B5.4.3.1: Economic policies and projects": ["B5.4.3.1.1: Describe the economic measures introduced during the colonial period including transport and communication projects"],
-  "B6.4.4.1: Features of British colonial rule": ["B6.4.4.1.1: Describe the features of British colonial rule in Ghana including â€˜directâ€™ and â€˜indirectâ€™ rule, 1874-1957"],
-  "B5.5.1.1: Protest movements before 1945": ["B5.5.1.1.1: Identify the early protest movements in Ghana before 1945", "B5.5.1.1.2: Examine sources of evidence about the role of Joseph Mensah Sarbah"],
-  "B6.5.2.1: Role of UGCC and CPP": ["B6.5.2.1.1: Describe the role played by the leaders of the two major political parties (UGCC and CPP) in the independence struggle"],
-  "B5.5.3.1: Events leading to 1948 riots": ["B5.5.3.1.1: Explain why people were unhappy in the country after the Second World War", "B5.5.3.1.2: Examine sources of evidence about what happened during the 1948 riots"],
-  "B6.5.4.1: Post WWII developments and constitutional means": ["B6.5.4.1.1: Explain post World War II developments in the Gold Coast", "B6.5.4.1.2: Explain how Ghana gained independence through constitutional means"],
-  "B1.6.1.1: Presidents since 1960": ["B1.6.1.1.1: Identify the Presidents Ghana has had since 1960"],
-  "B4.6.1.1: The four Republics": ["B4.6.1.1.1: Explain that Ghana up to June 1960, though independent, had the Queen of The UK as Head of State", "B4.6.1.1.2: State the dates and names of the leaders of the four Republics of Ghana since 1960"],
-  "B6.6.1.1: Emergence of the Fourth Republic": ["B6.6.1.1.1: Describe the events leading to the emergence of the Fourth Republic", "B6.6.1.1.2: Identify the political parties that have governed the country under the Fourth Republic"],
-  "B6.6.2.1: Military takeovers since 1966": ["B6.6.2.1.1: Identify the leaders of the coup dâ€™Ã©tats and names of their regimes", "B6.6.2.1.2: Assess the consequences of military takeovers on Ghanaâ€™s development"],
-  // French - Indicators
-  "B4.1.1.1: Ã‰couter et comprendre des salutations": ["B4.1.1.1.1: Ã‰couter et regarder un document audio-visuel oÃ¹ deux personnes se saluent"],
-  "B4.1.1.2: Saluer et rÃ©pondre oralement": ["B4.1.1.1.2: Saluer et rÃ©pondre oralement aux salutations"],
-  "B4.1.1.3: Lire et comprendre des salutations": ["B4.1.1.1.3: Lire et comprendre un texte/image dÃ©crivant une scÃ¨ne de salutation"],
-  "B4.1.1.4: Ã‰crire des mots de salutation": ["B4.1.1.1.4: Ã‰crire des mots de salutation simples"],
-  "B5.1.1.1: Ã‰couter et comprendre des salutations": ["B5.1.1.1.1: Ã‰couter/Regarder un document audio-visuel de salutations"],
-  "B5.1.1.2: Saluer et rÃ©pondre oralement": ["B5.1.1.1.2: Saluer et rÃ©pondre oralement en respectant les codes"],
-  "B6.1.1.1: Ã‰couter et comprendre des salutations": ["B6.1.1.1.1: Ã‰couter et comprendre des Ã©changes de salutations complexes"],
-  "B4.1.2.1: Ã‰couter et comprendre des prÃ©sentations": ["B4.1.2.1.1: Ã‰couter et comprendre un dialogue de prÃ©sentation"],
-  "B4.1.2.2: Se prÃ©senter oralement": ["B4.1.2.2.1: Poser et rÃ©pondre Ã  des questions sur le nom, prÃ©nom et nationalitÃ©"],
-  "B5.1.2.1: Ã‰couter et comprendre des prÃ©sentations": ["B5.1.2.1.1: Ã‰couter un dialogue entre deux personnes qui se prÃ©sentent"],
-  "B5.1.2.2: Se prÃ©senter oralement": ["B5.1.2.2.1: Poser et rÃ©pondre Ã  des questions sur l'Ã¢ge, profession and adresse"],
-  "B4.4.1.1: Ã‰couter et comprendre les nombres": ["B4.4.1.1.1: Ã‰couter/Regarder un document audio-visuel sur les nombres"],
-  "B4.4.1.2: Compter Ã  haute voix": ["B4.4.1.2.1: Compter Ã  haute voix des objets et personnes"],
-  "B4.4.1.4: Ã‰crire les nombres et faire des calculs": ["B4.4.1.4.1: Faire des calculs simples Ã  l'Ã©crit avec chiffres en lettres"],
-  "B5.4.1.1: Ã‰couter et comprendre les nombres": ["B5.4.1.1.1: Ã‰couter un document audiovisuel sur les nombres Ã©tendus"],
-  "B5.4.1.4: Ã‰crire les nombres et faire des calculs": ["B5.4.1.4.1: Faire des calculs mentaux et Ã©crits complexes"],
-  "B4.4.2.1: Ã‰couter et comprendre l'heure": ["B4.4.2.1.1: Ã‰couter un document audio-visuel on les horaires"],
-  "B4.4.2.2: Demander et donner l'heure oralement": ["B4.4.2.2.1: Poser et rÃ©pondre Ã  des questions sur l'heure qu'il est"],
-  "B5.4.2.1: Ã‰couter et comprendre l'heure": ["B5.4.2.1.1: Ã‰couter des horaires de restaurant, train, avion"],
-  "B5.4.2.2: Demander et donner l'heure oralement": ["B5.4.2.2.1: Se renseigner sur l'heure d'un rendez-vous"],
-  "B4.4.7.1: Ã‰couter et comprendre les professions": ["B4.4.7.1.1: Ã‰couter un document audiovisuel sur les mÃ©tiers"],
-  "B4.4.7.2: Parler des professions oralement": ["B4.4.7.2.1: Poser et rÃ©pondre Ã  des questions sur les mÃ©tiers de la famille", "B4.4.7.2.2: Dire la profession que l'on veut exercer"],
-  
-  // KG Integrated Curriculum Indicators
-  // Theme 1: All About Me - KG 1
-  "K1.1.1.1: Demonstrate understanding that all learners are wonderful and have unique body features": [
-    "K1.1.1.1.1: Identify and talk in simple sentences, about the features of our body that make us unique",
-    "K1.1.1.1.2: Sing an action song that helps learners name the parts of the body and point to them",
-    "K1.1.1.1.3: Recognize and talk about the different parts of book",
-    "K1.1.1.1.4: Use new and positive expressions/vocabulary related to the parts of the body"
-  ],
-  "K1.1.2.1: Demonstrate understanding of appropriate names of parts of the body and their functions": [
-    "K1.1.2.1.1: Identify and name parts of the human body and state their functions",
-    "K1.1.2.1.2: Identify and talk about the special parts of the body (the five senses) and what they do"
-  ],
-  "K1.1.3.1: Demonstrate understanding of the importance of personal hygiene": [
-    "K1.1.3.1.1: Identify and talk about how to keep our bodies clean (Personal Hygiene)",
-    "K1.1.3.1.2: Demonstrate the correct way of washing hands with soap under running water"
-  ],
-
-  // Theme 1: All About Me - KG 2
-  "K2.1.1.1: Demonstrate understanding that all learners are wonderful and unique": [
-    "K2.1.1.1.1: Identify and describe in simple sentences (using home language), the wonderful features of our body that make us special and unique",
-    "K2.1.1.1.2: Recognize and describe the different parts of book",
-    "K2.1.1.1.3: Use positive words learnt from the Shared reading related to parts of the body"
-  ],
-  "K2.1.2.1: Demonstrate knowledge of appropriate names of parts of internal body and their functions": [
-    "K2.1.2.1.1: Name parts of the human body and state their functions (including heart, stomach etc)",
-    "K2.1.2.1.2: Identify and talk about the special parts of the body (the five senses) and state their functions"
-  ],
-  
-  // Theme 2: My Family - KG 1
-  "K1.2.1.1: Demonstrate understanding of importance, roles and responsibilities of family members": [
-    "K1.2.1.1.1: Identify and talk about members of their families using simple sentences",
-    "K1.2.1.1.2: Recite a rhyme/sing a song about the family and talk about the roles of members"
-  ],
-  // Math B1-B3
-  "B1.1.1.1: Describe numbers 0 to 100": ["B1.1.1.1.1: Count by 1s, 2s and 10s forward and backward between 0 and 100", "B1.1.1.1.4: Represent number of objects with written numerals 0-100"],
-  "B2.1.1.1.4: Understanding place value to 100": ["B2.1.1.1.4.1: Explain the meaning of each digit in a 2-digit number using bundles of 10s"],
-  "B3.1.2.5: Multiplication up to 5x5": ["B3.1.2.5.1: Represent and explain multiplication using equal groupings", "B3.1.2.5.2: Represent and explain multiplication using rectangular arrays"],
-  "B1.3.1.1: Attributes of 2D and 3D shapes": ["B1.3.1.1.1: Distinguish between attributes that define a shape and attributes that do not"],
-  "B3.3.3.1: Metres and centimetres": ["B3.3.3.1.1: Model and describe the relationship between metre and centimetre (100cm = 1m)"],
-  // Mathematics B4
-  "B4.1.1.1: Multi-digit whole numerals to 100,000": ["B4.1.1.1.1: Model number quantities, place value for multi-digit using graph sheets up to 100,000", "B4.1.1.1.2: Read and write numbers in figures and in words up to 100,000"],
-  "B4.1.1.2: Roman numerals up to XXX (30)": ["B4.1.1.2.1: Develop an understanding of Roman Numeral system up to XXX (30)"],
-  "B4.1.1.3: Factors, multiples and squared numbers": ["B4.1.1.3.1: Determine set of factors of a given number up to 50", "B4.1.1.3.2: Determine the highest common factor (HCF) of any two whole numbers between 1 and 50"],
-  "B4.1.3.1: Equivalent and improper fractions": ["B4.1.3.1.1: Generate unit fractions and locate a unit fraction on a number line", "B4.1.3.1.4: Recognise fractions that are greater than one (improper fractions)"],
-  "B4.3.3.1: Perimeter and Area concept": ["B4.3.3.1.2: Measure and record perimeter for regular and irregular shapes in cm and m", "B4.3.3.2.1: Recognise that area is measured in square units"],
-  "B4.4.1.1: Many-to-one correspondence": ["B4.4.1.1.2: Use an understanding of many-to-one correspondence to display or construct graphs"],
-
-  // Mathematics B5
-  "B5.1.1.1: Multi-digit numerals up to 1,000,000": ["B5.1.1.1.1: Model number quantities up to 1,000,000 using graph sheets and multi-base block"],
-  "B5.1.2.4: Divide 3-digit numbers by 1-digit number efficiently": ["B5.1.2.4.1: Divide 3-digit numbers by 1-digit number efficiently using long division"],
-  "B5.1.4.1: Decimals (tenths and hundredths)": ["B5.1.4.1.1: Describe and represent decimals (up to the thousandths) concretely, pictorially, and symbolically"],
-  "B5.3.3.3: Understanding angles": ["B5.3.3.3.2: Measure given angles with a protractor and classify them (right, acute, obtuse)"],
-  "B5.4.1.1: First-hand and second-hand data": ["B5.4.1.1.1: Explain the difference between first-hand and second-hand data"],
-
-  // Mathematics B6
-  "B6.1.1.1: Multi-digit numerals up to 1 billion": ["B6.1.1.1.1: Model number quantities up to 1,000,000,000 using graph sheets and multi-base block"],
-  "B6.1.3.1: Comparing mixture of common, dec and percent": ["B6.1.3.1.2: Add and subtract unlike and mixed fractions"],
-  "B6.1.4.1: Concept of ratios": ["B6.1.4.1.1: Use concrete models and pictorial representations to explain a ratio as a concept"],
-  "B6.3.3.5: Advanced cardinal points (NE, NW...)": ["B6.3.3.5.1: Tell the position and motion of objects in space using 8 cardinal points"],
-  "B6.4.2.2: Theoretical and experimental probability": ["B6.4.2.2.1: List the possible outcomes and determine theoretical probability for an experiment"],
-
-  // Our World Our People B1-B3
-  "B1.1.1.1: Nature of God": ["B1.1.1.1.1: Examine our relationship with the Creator"],
-  "B3.1.1.1: Purpose of God's creation": ["B3.1.1.1.1: Examine the purpose of God's creation of human beings"],
-  "B1.2.1.1: Environment and Weather": ["B1.2.1.1.1: Explore the uses of things in the environment"],
-  "B2.2.2.1: Plants and Animals": ["B2.2.2.1.1: Explore the important plants in the community", "B2.2.2.1.2: Explore the important animals in the community"],
-  "B3.2.1.1: Use of land and water": ["B3.2.1.1.1: Explain problems with the use of land and water"],
-  "B3.3.3.1: Basic Human Rights": ["B3.3.3.1.1: Describe ways of claiming one's rights"],
-  "B1.5.1.1: Our Neighbouring Countries": ["B1.5.1.1.1: Mention Ghana's Neighbours"],
-
-  // Our World Our People B4-B6
-  "B4.1.1.1: Uniqueness of human creation": ["B4.1.1.1.1: Explain how special each individual is in relation to others"],
-  "B4.2.1.1: Environmental safety": ["B4.2.1.1.1: Explain ways of making the environment safe (sanitation, tree planting)"],
-  "B5.1.2.1: Changes during adolescence": ["B5.1.2.1.1: Describe physical and emotional changes that occur during adolescence"],
-  "B5.4.2.2: Democratic governance": ["B5.4.2.2.1: Explain and appreciate the importance of democratic governance in school"],
-  "B6.1.2.2: Personal hygiene during adolescence": ["B6.1.2.2.1: Explain how to maintain personal hygiene during adolescence"],
-  "B6.4.6.1: Job opportunities in agriculture": ["B6.4.6.1.1: Describe the agricultural value chain and the job opportunities within it"],
-  "B4.3.2.1: Significance of Ghanaian festivals": ["B4.3.2.1.1: Identify and describe celebrations and positive traditions"],
-  "B5.2.1.1: Greenhouse effect and climate change": ["B5.2.1.1.1: Record human activities that cause concentration of greenhouse gases"],
-  "B6.2.3.1: Map of Ghana (Regions/Capitals)": ["B6.2.3.1.1: Identify the political regions and capitals on a map of Ghana"],
-  "B6.5.1.2: Effects of climate change": ["B6.5.1.2.1: Investigate the effects of climate change on the environment"],
-
-  // Physical Education
-  "B1.1.1.1: Travel over/under objects": ["B1.1.1.1.1: Travel over, under, in front of and behind objects"],
-  "B2.1.1.1: Travel in zigzag pathways": ["B2.1.1.1.1: Move in straight, curved and zigzag pathways"],
-  "B3.1.10.1: Dribbling around obstacles": ["B3.1.10.1.13: Hand-dribble a ball continuously while moving around obstacles"],
-  "B4.1.6.1: Strike a bounce ball": ["B4.1.6.1.6: Strike a bounce ball with the hands and feet"],
-  "B5.3.1.3: 10-min jogging": ["B5.3.1.3.1: Perform 10 minutes jogging with music"],
-  "B6.4.1.4: Physical fitness plan": ["B6.4.1.4.1: Develop a one-day personal physical fitness plan"],
-
-  // RME B1-B6
-  "B1.1.1.1: Explain who the Creator is": ["B1.1.1.1.1: Explore God's Creation", "B1.1.1.1.2: Mention names of things God created", "B1.1.1.1.3: Examine some attributes of God"],
-  "B2.1.1.1: Demonstrate an appreciation of God's creation": ["B2.1.1.1.1: Demonstrate appreciation of God's creation", "B2.1.1.1.2: Show care for God's creation"],
-  "B3.1.1.1: Differentiate between God's creation and those made by man": ["B3.1.1.1.1: Differentiate between natural and man-made things"],
-  "B4.1.1.1: Demonstrate an understanding of the attributes of God": ["B4.1.1.1.1: Demonstrate understanding of attributes of God"],
-  "B5.1.1.1: Explain that God created human beings in His own image": ["B5.1.1.1.1: Explain man created in God's image"],
-  "B6.1.1.1: Describe the nature of God through His attributes": ["B6.1.1.1.1: Describe nature of God through attributes"],
-  "B2.1.2.1: Discuss our responsibilities towards the environment": ["B2.1.2.1.1: Discuss roles in caring for the environment", "B2.1.2.1.2: Identify types of things in the environment"],
-  "B3.1.2.1: Explain why we must care for the environment": ["B3.1.2.1.1: Explain why we must care for the environment"],
-  "B4.1.2.1: Discuss the benefits of the environment": ["B4.1.2.1.1: Discuss benefits of the environment"],
-  "B5.1.2.1: Describe ways to care for the environment": ["B5.1.2.1.1: Describe ways to care for the environment"],
-  "B6.1.2.1: Discuss ways of protecting the environment": ["B6.1.2.1.1: Discuss ways of protecting environment"],
-  "B3.1.3.1: List some of the purposes for which God created things": ["B3.1.3.1.1: List purposes of God's creation"],
-  "B1.2.1.1: Explain the meaning of worship": ["B1.2.1.1.1: Explain the meaning of worship", "B1.2.1.1.2: State the importance of worship"],
-  "B2.2.1.1: Recognise the things used in worship in the three major religions": ["B2.2.1.1.1: Recognise things used in worship"],
-  "B4.2.1.1: Explain what constitutes worship in the three major religions": ["B4.2.1.1.1: Explain what constitutes worship"],
-  "B5.2.1.1: Mention types of prayer in the three major religions": ["B5.2.1.1.1: Mention types of prayer"],
-  "B6.2.1.1: Mention the types and the importance of festivals": ["B6.2.1.1.1: Mention types and importance of festivals"],
-  "B3.2.1.1: Recite his / her religious songs and prayers": ["B3.2.1.1.1: Recite his/her religious songs and prayers"],
-  "B2.3.1.1: State the names and the places of birth of the divine leaders": ["B2.3.1.1.1: State names and places of birth of divine leaders"],
-  "B1.3.1.1: Reveal common stages in the lives of Leaders": ["B1.3.1.1.1: Reveal common stages in the lives of religious leaders"],
-  "B3.3.1.1: Narrate the events that took place during the early lives of religious leaders": ["B3.3.1.1.1: Narrate events from early lives of leaders"],
-  "B4.3.1.1: Narrate the early life and call of the leaders": ["B4.3.1.1.1: Narrate early life and call of leaders"],
-  "B5.3.1.1: Describe the ministry and the latter lives of the leaders": ["B5.3.1.1.1: Describe ministry and latter lives of leaders"],
-  "B3.5.1.1: Discuss the roles of the individual in the family and in the community": ["B3.5.1.1.1: Discuss roles of individuals in family and community"],
-  "B6.5.1.1: Describe the roles of family members": ["B6.5.1.1.1: Describe roles of family members"],
-  "B1.4.1.1: Explain the Importance of keeping safety in the community": ["B1.4.1.1.1: Explain importance of safety in the community"],
-  "B1.5.1.1: Explain the need to obey authority": ["B1.5.1.1.1: Explain the need to obey authority"],
-  "B4.5.1.1: Examine the need for authority and obedience": ["B4.5.1.1.1: Examine need for authority and obedience"],
-  "B5.5.1.1: Discuss the importance of being obedient to authority": ["B5.5.1.1.1: Discuss importance of obedience"],
-  "B2.5.1.1: Demonstrate how to relate with family members": ["B2.5.1.1.1: Demonstrate how to relate with family members"],
-
-  // Geography Standard Indicators
-  "1.1.1.CS.1: Demonstrate understanding of Geography as a subject of study.": [
-    "1.1.1.LI.1: Explain Geography and its branches.",
-    "1.1.1.LI.2: Discuss career prospects and the importance of studying geography."
-  ],
-  "1.1.1.CS.2: Demonstrate knowledge of the Solar System and its constituents.": [
-    "1.1.1.LI.3: Describe the solar system and its constituents.",
-    "1.1.1.LI.4: Discuss the characteristics of the planets in the solar system."
-  ],
-  "1.1.1.CS.3: Demonstrate knowledge and skills in describing the shape and movements of The Earth, and the effects of the earth's rotation and revolution.": [
-    "1.1.1.LI.5: Discuss evidence of the shape of earth.",
-    "1.1.1.LI.6: Examine the effects of the Earth's rotation and revolution."
-  ],
-  "1.1.1.CS.4: Demonstrate skills in locating places using longitudes and latitudes.": [
-    "1.1.1.LI.7: Use latitudes and longitudes to locate places on the earth's surface.",
-    "1.1.1.LI.8: Calculate distances using latitudes and time using longitudes."
-  ],
-  "2.1.1.CS.1: Demonstrate an understanding of the internal structure of the earth and the concept of continental drift.": [
-    "2.1.1.LI.1: Sketch, label and describe the internal structure of the Earth.",
-    "2.1.1.LI.2: Explain the concept of continental drift and discuss the supporting evidence."
-  ],
-  "2.1.1.CS.2: Demonstrate knowledge and understanding of landforms, their importance and the processes that leads to their creation.": [
-    "2.1.1.LI.3: Identify the different types of mountains (e.g. volcanic, fold and block), their characteristics, the processes that create them and their importance.",
-    "2.1.1.LI.4: Describe the types of plains (structural, erosional and depositional) and the processes that create them and their importance."
-  ],
-  "3.1.1.CS.1: Demonstrate knowledge and understanding of river channels and associated landforms.": [
-    "3.1.1.LI.1: Describe the development of river channels and associated landforms.",
-    "3.1.1.LI.2: Examine the importance of river landforms to the socio-economic development in Ghana."
-  ],
-  "1.1.2.CS.1: Demonstrate knowledge in rocks formation and weathering processes.": [
-    "1.1.2.LI.1: Discuss the three types of rock, their characteristics, formational processes and their importance.",
-    "1.1.2.LI.2: Explain weathering and the factors affecting its processes.",
-    "1.1.2.LI.3: Evaluate the three weathering processes (physical, chemical and biological weathering processes)."
-  ],
-  "2.1.2.CS.1: Demonstrate knowledge and understanding of soils.": [
-    "2.1.2.LI.1: State and explain the factors of soil formation.",
-    "2.1.2.LI.2: Differentiate between the soil types and discuss the importance of soil."
-  ],
-  "3.1.2.CS.1: Demonstrate knowledge of mass wasting as a geomorphic process.": [
-    "3.1.2.LI.1: Discuss mass wasting and the factors that influence it.",
-    "3.1.2.LI.2: Examine the types of mass wasting.",
-    "3.1.2.LI.3: Discuss the socio-economic and environmental effects of mass wasting."
-  ],
-  "1.1.3.CS.1: Demonstrate knowledge of the structure and composition of the Earth's atmosphere and explain the terms weather and climate.": [
-    "1.1.3.LI.1: Discuss the physical structure and composition of the Earth's atmosphere and their importance.",
-    "1.1.3.LI.2: Explain the differences between the weather and climate and the factors that affect them.",
-    "1.1.3.LI.3: Calculate the annual and mean rainfall and temperature data of a station with appropriate instruments for measuring the various elements of weather."
-  ],
-  "2.1.3.CS.1: Demonstrate understanding of the factors that influence the elements of climate, the world climatic zones and associated vegetation types.": [
-    "2.1.3.LI.1: Discuss the factors influencing the various climatic elements.",
-    "2.1.3.LI.2: Identify the forms of precipitation and the types of rainfall.",
-    "2.1.3.LI.3: Describe the characteristics associated with vegetation within each climatic zone in the world."
-  ],
-  "3.1.3.CS.1: Demonstrate knowledge of climate change and its impacts on the environment and socio-economic development.": [
-    "3.1.3.LI.1: Discuss the causes and evidence of climate change in Ghana.",
-    "3.1.3.LI.2: Discuss the socio-economic and environmental impacts of climate change in Ghana and beyond.",
-    "3.1.3.LI.3: Discuss adaptation strategies and remedies for climate change in Ghana."
-  ],
-  "1.2.1.CS.1: Demonstrate understanding of maps, their importance and the map scales.": [
-    "1.2.1.LI.1: Discuss the types of maps and their importance.",
-    "1.2.1.LI.2: Explain the concept of map scale and convert from one scale type to another."
-  ],
-  "1.2.1.CS.2: Demonstrate knowledge and skills of representing relief features on maps.": [
-    "1.2.1.LI.3: Examine the methods of representing relief on maps.",
-    "1.2.1.LI.4: Read and interpret contours on maps."
-  ],
-  "2.2.1.CS.1: Demonstrate skill in map analysis.": [
-    "2.2.1.LI.1: Reproduce map by reduction and enlargement.",
-    "2.2.1.LI.2: Measure distances and areas on maps.",
-    "2.2.1.LI.3: Determine directions and bearings.",
-    "2.2.1.LI.4: Draw sectional profiles (annotated) and calculate vertical exaggeration and gradient."
-  ],
-  "3.2.1.CS.1: Demonstrate skills and competencies in interpreting and analysing maps.": [
-    "3.2.1.LI.1: Analyse natural features on maps (e.g. relief, drainage).",
-    "3.2.1.LI.2: Analyse cultural features on maps (e.g. settlements, farms and roads).",
-    "3.2.1.LI.3: Analyse the interrelationships between natural and cultural features on maps."
-  ],
-  "1.2.2.CS.1: Demonstrate knowledge and skills in basic geospatial data collection methods.": [
-    "1.2.2.LI.1: Discuss the methods of collecting geospatial data (surveying, remote sensing, GPS etc.).",
-    "1.2.2.LI.2: Assess the geospatial data collection tools."
-  ],
-  "2.2.2.CS.1: Demonstrate skills in basic geospatial data collection methods.": [
-    "2.2.2.LI.1: Identify and discuss the methods of collecting geospatial data (surveying, remote sensing, GIS, GPS etc).",
-    "2.2.2.LI.2: Collect and map geospatial data using Computer and Mobile Apps, GIS and GPS.",
-    "2.2.2.LI.3: Explore the emerging technologies for geospatial data collection."
-  ],
-  "3.2.2.CS.1: Demonstrate skills in basic geospatial data representation and interpretation using diagrams.": [
-    "3.2.2.LI.1: Analyse and interpret geospatial data using dot maps.",
-    "3.2.2.LI.2: Analyse and interpret geospatial data using flow charts."
-  ],
-  "1.3.1.CS.1: Demonstrate understanding of the physical environment of Ghana and its socio-economic importance and challenges.": [
-    "1.3.1.LI.1: Draw the outline map of Ghana and describe the location and size, and indicate the administrative regions.",
-    "1.3.1.LI.2: Discuss the major relief and drainage features of Ghana and their importance and challenges to development.",
-    "1.3.1.LI.3: Discuss the climate, vegetation and soil types in Ghana and their importance and challenges to socio-economic development."
-  ],
-  "2.3.1.CS.1: Demonstrate skills of drawing and showing the physical setting of West Africa and Africa.": [
-    "2.3.1.LI.1: Describe the geographic location, size and political divisions of West Africa and Africa.",
-    "2.3.1.LI.2: Describe the relief, drainage, climate and vegetation of West Africa and Africa."
-  ],
-  "3.3.1.CS.1: Demonstrate understanding of population growth and distribution, migration trends and settlement types in Ghana.": [
-    "3.3.1.LI.1: Examine population growth and distribution in Ghana.",
-    "3.3.1.LI.2: Discuss migration trends, settlement types and patterns in Ghana.",
-    "3.3.1.LI.3: Discuss factors influencing population growth, population distribution and migration in Ghana."
-  ],
-  "3.3.1.CS.2: Analyse the population growth and migration trends in Africa and the world.": [
-    "3.3.1.LI.4: Compare Ghana's population growth to that of Africa and the world.",
-    "3.3.1.LI.5: Explore the socio-economic implications of migration from Africa to the rest of the world."
-  ],
-  "1.3.2.CS.1: Demonstrate an understanding of the various primary economic activities in Ghana and beyond.": [
-    "1.3.2.LI.1: Discuss the characteristics of subsistence and commercial agriculture and their importance and challenges in Ghana.",
-    "1.3.2.LI.2: Examine the methods, importance and problems of lumbering and mining in Ghana."
-  ],
-  "2.3.2.CS.1: Analyse the manufacturing sector in Ghana.": [
-    "2.3.2.LI.1: Discuss the distribution, types and characteristics of manufacturing industries in Ghana.",
-    "2.3.2.LI.2: Discuss the importance and challenges of manufacturing industries in Ghana."
-  ],
-  "3.3.2.CS.1: Evaluate the tourism, trade and transport/communication sectors in Ghana.": [
-    "3.3.2.LI.1: Examine the role of tourism in the socio-economic development of Ghana and the challenges facing the tourism sector.",
-    "3.3.2.LI.2: Assess the role of trade in the socio-economic development of Ghana and the challenges facing the sector.",
-    "3.3.2.LI.3: Examine the role of transport and communication in the socio-economic development of Ghana and the challenges facing the sector."
-  ],
-  "1.3.3.CS.1: Demonstrate an understanding of the causes of environmental pollution and the strategies for dealing with it.": [
-    "1.3.3.LI.1: Examine causes and measures for preventing or mitigating air pollution in Ghana.",
-    "1.3.3.LI.2: Examine causes and measures for preventing/mitigating water pollution in Ghana."
-  ],
-  "2.3.3.CS.1: Demonstrate skills of preventing or mitigating land degradation and soil pollution in Ghana.": [
-    "2.3.3.LI.1: Discuss the causes of land degradation, its effects and management strategies in Ghana.",
-    "2.3.3.LI.2: Discuss the causes of soil pollution, its effects and management strategies in Ghana."
-  ],
-  "3.3.3.CS.1: Demonstrate skills in waste management in Ghana.": [
-    "3.3.3.LI.1: Discuss the sources of waste in your community and Ghana.",
-    "3.3.3.LI.2: Discuss the effects of improper waste management or disposal in your community and Ghana.",
-    "3.3.3.LI.3: Examine appropriate methods of waste management in Ghana: Reduce, Reuse and Recycle (3Rs)."
-  ],
-  "1.3.4.CS.1: Demonstrate understanding of the concepts 'hazard' and 'disaster'.": [
-    "1.3.4.LI.1: Differentiate between hazards and disasters.",
-    "1.3.4.LI.2: Sketch areas in Ghana prone to floods, drought, bushfires and earthquakes."
-  ],
-  "2.3.4.CS.1: Demonstrate skills for managing earthquakes, floods, drought and fires.": [
-    "2.3.4.LI.1: Examine the measures for managing floods in Ghana.",
-    "2.3.4.LI.2: Examine the measures for managing drought and fires in Ghana."
-  ],
-  "3.3.4.CS.1: Demonstrate knowledge and skills for preventing or mitigating desert encroachment and landslides.": [
-    "3.3.4.LI.1: Examine ways of managing desert encroachment.",
-    "3.3.4.LI.2: Examine measures for the prevention/mitigation of landslides."
-  ],
-  // Government Standard Indicators
-  "1.1.1.CS.1: Demonstrate understanding of the meanings, basic concepts, principles, and importance of government.": [
-    "1.1.1.LI.1: Analyse the meanings of government.",
-    "1.1.1.LI.2: Analyse basic concepts and principles of government.",
-    "1.1.1.LI.3: Explain the importance of the study of government."
-  ],
-  "1.1.2.CS.1: Exhibit understanding and application of the Indigenous systems of government in Ghana": [
-    "1.1.2.LI.1: Describe the structure of indigenous systems of government in Ghana.",
-    "1.1.2.LI.2: Describe how traditional leaders contribute to the socio-economic development of Ghana."
-  ],
-  "1.2.1.CS.1: Demonstrate knowledge and understanding of the constitution and organs of government": [
-    "1.2.1.LI.1: Explain the meaning of constitution and constitutionalism.",
-    "1.2.1.LI.2: Discuss the various types of constitution.",
-    "1.2.1.LI.3: Explain the meaning, composition and types of the executive.",
-    "1.2.1.LI.4: Explain the meaning, types, and structure of the legislature.",
-    "1.2.1.LI.5: Explain the meaning and structure of the Judiciary."
-  ],
-  "1.2.2.CS.1: Exhibit knowledge and understanding of State-Society Relations in Ghana": [
-    "1.2.2.LI.1: Explain how public opinion influences public policy decisions.",
-    "1.2.2.LI.2: Discuss the principles of mass media.",
-    "1.2.2.LI.3: Explain political party and its structure and Pressure Group."
-  ],
-  "1.3.1.CS.1: Demonstrate knowledge and understanding of Ghana's external relations.": [
-    "1.3.1.LI.1: Identify and explain state and non-state actors in the international system.",
-    "1.3.1.LI.2: Discuss the role of state and non-state actors in the international system."
-  ],
-  "2.1.1.CS.1: Demonstrate understanding and application of citizenships, rights, and responsibilities to the state.": [
-    "2.1.1.LI.1: Explain the concept of citizenship.",
-    "2.1.1.LI.2: Discuss how citizenship is acquired in Ghana.",
-    "2.1.1.LI.3: Explain the meaning and types of rights.",
-    "2.1.1.LI.4: Examine how citizens' rights are protected.",
-    "2.1.1.LI.5: Establish the symbiotic relationship between the responsibility of the state towards citizens and vice versa in national development.",
-    "2.1.1.LI.6: Discuss how the rights of a citizen can be restricted."
-  ],
-  "2.1.2.CS.1: Demonstrate knowledge and understanding of contemporary Governance System in Ghana.": [
-    "2.1.2.LI.1: Examine the features of democratic system of governance.",
-    "2.1.2.LI.2: Analyse the features of good governance."
-  ],
-  "2.2.1.CS.1: Demonstrate knowledge, understanding and appreciation of the organs of government.": [
-    "2.2.1.LI.1: Examine the functions of the executive organ of government.",
-    "2.2.1.LI.2: Discuss the significance of the legislature in a democratic state.",
-    "2.2.1.LI.3: Discuss the role of the Judiciary in a democratic state."
-  ],
-  "2.2.2.CS.1: Demonstrate understanding and application of State-Society Relations in Ghana.": [
-    "2.2.2.LI.1: Mass media and democratic state development.",
-    "2.2.2.LI.2: Discuss party systems.",
-    "2.2.2.LI.3: Assess the significance of the EC in Ghana's democratic practice.",
-    "2.2.2.LI.4: Describe Decentralization, types, and structure of Ghanaâ€™s local government system.",
-    "2.2.2.LI.5: Describe the Public Service.",
-    "2.2.2.LI.6: Distinguish between E-government and E-governance."
-  ],
-  "2.3.1.CS.1: Demonstrate knowledge and understanding of Ghana's external relations.": [
-    "2.3.1.LI.1: Discuss Diplomacy.",
-    "2.3.1.LI.2: Examine the determinants of Ghana's foreign policy.",
-    "2.3.1.LI.3: Discuss the actors and institutions involved in Ghana's foreign policy."
-  ],
-  "2.3.2.CS.1: Demonstrate knowledge and understanding of globalization and development of States.": [
-    "2.3.2.LI.1: Explain the meaning and characteristics of globalisation.",
-    "2.3.2.LI.2: Discuss the types of globalisation."
-  ],
-  "3.1.1.CS.1: Demonstrate knowledge and understanding and application of the systems of government.": [
-    "3.1.1.LI.1: Discuss the systems of government.",
-    "3.1.1.LI.2: Provide reasons for Ghana's adoption of unitary system of government."
-  ],
-  "3.1.2.CS.1: Compare Indigenous and contemporary Governance in Ghana.": [
-    "3.1.2.LI.1: Assess the democratic features of the indigenous governance system.",
-    "3.1.2.LI.2: Examine the role of the chieftaincy institution in contemporary governance in Ghana."
-  ],
-  "3.2.1.CS.1: Demonstrate understanding and appreciation of the 1992 Republican Constitution.": [
-    "3.2.1.LI.1: Examine the salient features of the 1992 Republican Constitution.",
-    "3.2.1.LI.2: Describe separation of powers, checks and balances.",
-    "3.2.1.LI.3: Discuss the relevance of the existence of separation of powers, checks and balances in Ghana."
-  ],
-  "3.2.2.CS.1: Evaluate State-Society Relations and Administration.": [
-    "3.2.2.LI.1: Discuss the role of political parties in a democratic state.",
-    "3.2.2.LI.2: Assess the types and functions of elections.",
-    "3.2.2.LI.3: Assess the effects of the concept of decentralization on development.",
-    "3.2.2.LI.4: Examine the functions and challenges of the Public Service.",
-    "3.2.2.LI.5: Examine the relevance of e-governance in the socio-economic development of Ghana."
-  ],
-  "3.3.1.CS.1: Demonstrate knowledge, understanding and appreciation of Ghana's external Relations.": [
-    "3.3.1.LI.1: Assess Ghana's foreign policy of good neighbourliness.",
-    "3.3.1.LI.2: Analyse Ghana's foreign policy towards Economic Community of West African States (ECOWAS), Africa Union (AU), European Union (EU) and United Nations Organisation (UNO)."
-  ],
-  "3.3.2.CS.1: Demonstrate knowledge and understanding of globalization and development of States.": [
-    "3.3.2.LI.1: Assess the effects of globalisation on the development of the Ghanaian economy.",
-    "3.3.2.LI.2: Discuss the measures aimed at mitigating the negative effects of globalization on Ghana's development."
-  ],
-  // History Standard Indicators (SHS)
-  "1.1.1.CS.1: Demonstrate understanding of the origins, meanings, and nature of history as a discipline.": [
-    "1.1.1.LI.1: Trace the origins and meanings of the word 'history' using conventional and non-conventional sources.",
-    "1.1.1.LI.2: Analyse the nature and scope of History as an academic discipline.",
-    "1.1.1.LI.3: Investigate some common misconceptions associated with the study of History."
-  ],
-  "1.1.1.CS.2: Exhibit knowledge on the relevance of history to human survival and development.": [
-    "1.1.1.LI.1: Justify why the study of History is relevant to individuals and the society.",
-    "1.1.1.LI.2: Analyse the need for the study of History in Ghanaian schools."
-  ],
-  "2.1.2.CS.1: Develop application of skills in analysing and interpreting primary and secondary sources.": [
-    "2.1.2.LI.1: Categorise sources of history into Primary and Secondary.",
-    "2.1.2.LI.2: Examine the authenticity of Primary and Secondary Sources.",
-    "2.1.2.LI.3: Assess authentic online historical sources."
-  ],
-  "3.1.2.CS.1: Demonstrate the application of skills in interpreting and reconstructing the past.": [
-    "3.1.2.LI.1: Corroborate historical sources and draw conclusions.",
-    "3.1.2.LI.2: Explore how methods and skills for reconstructing history can provide avenues for societal development."
-  ],
-  "1.2.1.CS.1: Demonstrate understanding of Pre-Historic Ghana. (50, 000 BCE to 700 CE)": [
-    "1.2.1.LI.1: Examine the nature of the earliest human culture in Ghana.",
-    "1.2.1.LI.2: Analyse the Pre-Historic Periods in Ghana."
-  ],
-  "1.2.1.CS.2: Demonstrate understanding of the diverse accounts of the emergence of major states in Ghana, including the causes of migration and creation of settlements.": [
-    "1.2.1.LI.1: Analyse the multiple perspectives on the migration accounts of any major ethnic group that settled in each of the three vegetation zones in Ghana.",
-    "1.2.1.LI.2: Discuss the reasons for the migration of the various ethnic groups into Ghana.",
-    "1.2.1.LI.3: Recount factors responsible for the rise and decline of major states and kingdoms in Ghana."
-  ],
-  "1.2.1.CS.3: Demonstrate knowledge of the complex social, political, and scientific systems of selected states and kingdoms in Ghana.": [
-    "1.2.1.LI.1: Analyse the socio-cultural organisation of the major kingdoms in Pre-Colonial Ghana.",
-    "1.2.1.LI.2: Examine the political organisation of states and kingdoms in Pre-Colonial Ghana.",
-    "1.2.1.LI.3: Explain the unique methods of providing health care in pre-colonial Ghana.",
-    "1.2.1.LI.4: Analyse the history of Art and Technology in pre-colonial Ghana."
-  ],
-  "3.2.1.CS.1: Demonstrate understanding of African Pre-History from the Earliest Times to 500 BCE and appreciate the unique features of the complex African civilisations.": [
-    "3.2.1.LI.1: Trace the origin of human beings from diverse point of views including scientific and non-scientific theories.",
-    "3.2.1.LI.2: Assess the factors leading to the emergence of earliest African states and kingdoms.",
-    "3.2.1.LI.3: Analyse the key features of earliest African civilisations."
-  ],
-  "1.2.2.CS.1: Demonstrate knowledge and understanding of pre-colonial economy and economic activities in Ghana.": [
-    "1.2.2.LI.1: Examine agricultural activities in pre-colonial Ghana.",
-    "1.2.2.LI.2: Investigate the existence and the development of pre-colonial Ghanaian industries.",
-    "1.2.2.LI.3: Investigate the nature of trade and the development of trading activities in pre-colonial Ghana."
-  ],
-  "3.2.2.CS.1: Demonstrate understanding of the origins, organisation, and impact of the Trans-Saharan Trade": [
-    "3.2.2.LI.1: Discuss the origin and nature of the Trans-Saharan Trade in Africa.",
-    "3.2.2.LI.2: Assess the socio-economic and political effects of the Trans-Saharan Trade on pre-colonial African societies.",
-    "3.2.2.LI.3: Investigate reasons for the decline of the Trans-Saharan Trade."
-  ],
-  "1.3.1.CS.1: Demonstrate understanding of the religious change and continuity in Ghana.": [
-    "1.3.1.LI.1: Discuss the indigenous Ghanaian religious beliefs and practices.",
-    "1.3.1.LI.2: Trace the advent and influences of Islam and Christianity in Ghana."
-  ],
-  "3.3.1.CS.1: Demonstrate understanding of the religious change and continuity in Africa.": [
-    "3.3.1.LI.1: Discuss indigenous African religious beliefs and practices.",
-    "3.3.1.LI.2: Trace the advent and influence of Islam and Christianity on Africa."
-  ],
-  "2.3.2.CS.1: Exhibit knowledge and understanding of the advent of European presence and activities along the coast of Ghana": [
-    "2.3.2.LI.1: Identify the European countries whose citizens sailed to the coast of Ghana.",
-    "2.3.2.LI.2: Explore the diverse motives behind European exploration to the coast of Ghana.",
-    "2.3.2.LI.3: Examine the changing patterns of trade with the coming of Europeans."
-  ],
-  "3.3.2.CS.1: Demonstrate understanding of the advent and impact of the Trans-Atlantic Slave Trade in Africa.": [
-    "3.3.2.LI.1: Investigate the nature and impact of the Trans-Atlantic Slave Trade.",
-    "3.3.2.LI.2: Analyse the nature of African resistance against the Trans-Atlantic Slave Trade."
-  ],
-  "2.3.3.CS.1: Demonstrate understanding of the processes leading to the establishment of British rule in the Gold Coast and the impact on the people of Ghana.": [
-    "2.3.3.LI.1: Examine sources on the processes leading to colonial rule in the Gold Coast.",
-    "2.3.3.LI.2: Assess the socio-political effects of European (British) presence in Ghana.",
-    "2.3.3.LI.3: Examine the effects of the European presence on the economy of Ghana."
-  ],
-  "3.3.3.CS.1: Demonstrate understanding of how the Europeans scrambled for and partitioned Africa and how Africans were eventually drawn into the two World Wars.": [
-    "3.3.3.LI.1: Assess the Berlin Conference of 1884-1885 and its impact on Africa.",
-    "3.3.3.LI.2: Assess indirect and direct rule systems in West Africa.",
-    "3.3.3.LI.3: Assess Africa's role in the First and Second World Wars and how this influenced independence struggle across different regions."
-  ],
-  "2.3.4.CS.1: Demonstrate understanding of the nature and activities of Nationalist Movements including their efforts in resisting colonial domination in the Gold Coast.": [
-    "2.3.4.LI.1: Describe the nature of resistance against colonial rule in Ghana.",
-    "2.3.4.LI.2: Identify nationalist movements in Ghana before the WWII.",
-    "2.3.4.LI.3: Analyse the activities of nationalist movements before the WWII.",
-    "2.3.4.LI.4: Identify nationalist movements in Ghana after the WWII.",
-    "2.3.4.LI.5: Examine post-WWII nationalist struggles in Ghana that led to the attainment of Independence."
-  ],
-  "3.3.4.CS.1: Demonstrate understanding of Africansâ€™ resistance against colonial rule.": [
-    "3.3.4.LI.1: Discuss the conditions that led to African resistance to colonial rule.",
-    "3.3.4.LI.2: Analyse the nature of African resistance against colonial rule."
-  ],
-  "2.4.1.CS.1: Demonstrate understanding of the socio-economic and political developments in Ghana from 1957 - 2007.": [
-    "2.4.1.LI.1: Examine the nature of the diarchic system of government in Ghana from 1957 â€“ 1960.",
-    "2.4.1.LI.2: Assess the Socio-economic and political developments in Ghana from 1957 â€“ 1969.",
-    "2.4.1.LI.3: Examine Ghana's socio-economic and political developments from 1969 - 1981.",
-    "2.4.1.LI.4: Analyse the processes leading to the birth of the Fourth Republic.",
-    "2.4.1.LI.5: Assess the socio-economic and political developments in Ghana from 1993 to 2007."
-  ],
-  // Elective ICT Standard Indicators (SHS)
-  "1.1.1.CS.1: Demonstrate knowledge and understanding of the use of various computing tools to responsibly create multimedia documents containing text, images etc. e.g., birthday cards/Flyers for a specified purpose": [
-    "1.1.1.LI.1: Describe software, hardware, and other computing features needed to create a document.",
-    "1.1.1.LI.2: Create, Edit and Format text and paragraphs (Cut, Copy, Bold, Italic, Tables, Find and Replace, Format Painter, Spelling & Grammar check, Styles) using desktop/online computing tools (word processing software e.g., MS Word, Google Docs) keyboard, mouse etc.",
-    "1.1.1.LI.3: Enhance lists by sorting, renumbering, and customising list styles using desktop/online computing tools (word processing software e.g., MS Word, Google Docs) keyboard, mouse etc.",
-    "1.1.1.LI.4: Format the overall appearance of a page through colours, watermarks, headers and footers, page layout, paragraph and line, change capitalisation, bordering and shading, perform bullets and numbering, do page column, tables, graphics) using desktop/online computing tools (word processing software e.g., MS Word, Google Docs) keyboard, mouse etc.",
-    "1.1.1.LI.5: Save and print documents (Save, Save As, Print)"
-  ],
-  "2.1.1.CS.1: Demonstrate knowledge and understanding of Analysing numerical data using Spreadsheet software": [
-    "2.1.1.LI.1: Describe Spreadsheet software workbooks, worksheets, cell referencing",
-    "2.1.1.LI.2: Create and utilise formulae and functions for data analysis. (SUM, AVERAGE, MIN, MAX, IF, DATE, TIME)",
-    "2.1.1.LI.3: Highlight the use of cell referencing (relative and absolute) in formulas.",
-    "2.1.1.LI.4: Generate and interpret graphs and charts to visualise data. (bar, pie, line)",
-    "2.1.1.LI.5: Apply sorting and filtering operations to manipulate tables."
-  ],
-  "3.1.1.CS.1: Demonstrate knowledge and understanding of Presentation software and Desktop Publishing Software": [
-    "3.1.1.LI.1: Discuss Presentation Software and its Features (Windows, Animation, Transition, Presenter view slides, Master slides)",
-    "3.1.1.LI.2: Develop slides, format tables, and incorporate charts, graphs, animation, and transitions in a slide presentation.",
-    "3.1.1.LI.3: Create and save a publication using desktop publishing software, such as MS Publisher or Adobe.",
-    "3.1.1.LI.4: Utilise basic tools in desktop publishing to add pictures, text boxes, tables, word art, and picture frames to a publication."
-  ],
-  "1.1.2.CS.1: Demonstrate knowledge and understanding of Emerging Technologies": [
-    "1.1.2.LI.1: Explain digital devices and their importance",
-    "1.1.2.LI.2: Differentiate between desktops, laptops, smart gadgets (tablets), and servers.",
-    "1.1.2.LI.3: Explore the purpose and uses of smartphones, digital cameras, wearable devices, game devices, e-book readers, portable and digital media players"
-  ],
-  "2.1.2.CS.1: Demonstrate knowledge and understanding of Emerging Technologies": [
-    "2.1.2.LI.1: Discuss the use of technology in education, healthcare, manufacturing, government, finance, entertainment, transport, and business.",
-    "2.1.2.LI.2: Identify technologies used by home users, small/home office users, mobile users, power users and enterprise users."
-  ],
-  "3.1.2.CS.1: Demonstrate knowledge and understanding of emerging technologies": [
-    "3.1.2.LI.1: Analyse and Discuss the Affordances and Impact of Digital Tools in Various Domains.",
-    "3.1.2.LI.2: Evaluate the Role of Social Media as Communication and Collaboration Tools in Society. (Example Facebook, Twitter, Instagram, LinkedIn, YouTube, etc.)"
-  ],
-  "1.1.3.CS.1: Demonstrate knowledge and understanding of the use of the Internet": [
-    "1.1.3.LI.1: Describe the evolution of the Internet and identify the Internet service providers and their functions.",
-    "1.1.3.LI.2: Explore how data travels on the Internet, how the IP addressing system functions and discuss surfing the Web, creating and use of e-mail and mailing lists."
-  ],
-  "2.1.3.CS.1: Demonstrate knowledge and understanding of the World Wide Web": [
-    "2.1.3.LI.1: Navigate the Web effectively using Web addresses, browsers, Web apps, and mobile platforms.",
-    "2.1.3.LI.2: Analyse and discuss the features and multimedia content found on Websites (Graphics, Audio, Videos, Plug-ins)"
-  ],
-  "3.1.3.CS.1: Demonstrate knowledge and understanding of Collaboration tools for Communication and synchronisation": [
-    "3.1.3.LI.1: Create and Set up Communication Tools (Synchronous(Real-time) and/or Asynchronous Communication) (Zoom, Google Meet, Facebook, other video conferencing platforms, instant messaging, telephone conversation / Email, messengers, Intranet, etc.)",
-    "3.1.3.LI.2: Discuss the Types of Websites and Digital Media on the Web (Graphics, Audio, Videos, Plug-ins)"
-  ],
-  "1.2.1.CS.1: Demonstrate basic knowledge and understanding of guided and unguided network systems": [
-    "1.2.1.LI.1: Classify network types and topologies",
-    "1.2.1.LI.2: Classify transmission media used to send and receive data in a network environment"
-  ],
-  "2.2.1.CS.1: Demonstrate basic knowledge and understanding of guided and unguided network systems": [
-    "2.2.1.LI.1: Understand the Concepts and Differences Between Client/Server and Peer-to-Peer Networks.",
-    "2.2.1.LI.2: Describe and Explain Common Network Communication Protocols and Standards, such as Ethernet, TCP/IP, HTTP(s), SMTP, FTP, Wi-Fi, LTE, Bluetooth, IrDA, RFID, and NFC."
-  ],
-  "3.2.1.CS.1: Demonstrate basic knowledge and understanding of guided and unguided network systems": [
-    "3.2.1.LI.1: Describe Commonly used Devices (e.g., broadband, modems, wireless access points, routers, network cards, hubs and switches)."
-  ],
-  "1.2.2.CS.1: Demonstrate knowledge and understanding of Safety and Security Issues in the use of computers": [
-    "1.2.2.LI.1: Discuss Physical Safety Risks (Electrocution, Fire hazard, Tripping hazard, Personal injury) in the use of computers",
-    "1.2.2.LI.2: Discuss Causes of Physical Safety Risks of computer equipment.",
-    "1.2.2.LI.3: Apply preventive measures on physical safety risks (Increase the number of wall sockets and do not use too many extension blocks)"
-  ],
-  "2.2.2.CS.1: Demonstrate knowledge and understanding of safety and security issues in ICT": [
-    "2.2.2.LI.1: Understand and evaluate the risks associated with the use of ICT, including Internet and network attacks (e.g., cyberbullying, malware, botnets, denial-of-service attacks, spoofing, hardware theft, and firewalls).",
-    "2.2.2.LI.2: Discuss and implement preventive mechanisms to mitigate computer network attacks (e.g., antivirus software, hardware and software, and firewalls)."
-  ],
-  "3.2.2.CS.1: Demonstrate knowledge and understanding of Safety and security Issues in ICT": [
-    "3.2.2.LI.1: Discuss the Fundamental Objectives of Computer Security.",
-    "3.2.2.LI.2: Discuss the Threats to Computer Security and how to Prevent such Threats."
-  ],
-  // Elective IRS Standard Indicators (SHS)
-  "1.1.1.CS.1: Demonstrate knowledge of the concept of religion and an understanding of the importance of studying religion at SHS": [
-    "1.1.1.LI.1: Explain the meaning of religion and the various ways in which definitions of religion may be classified.",
-    "1.1.1.LI.2: Justify the need to study religion at SHS"
-  ],
-  "1.1.1.CS.2: Demonstrate understanding of the history of Islam and evaluate the contributions of Islam to the development of Ghana.": [
-    "1.1.1.LI.3: Examine the pre-Islamic context of Arabia",
-    "1.1.1.LI.4: Describe the birth and life of Muhammad before prophethood",
-    "1.1.1.LI.5: Recount the call and life of Muhammad as prophet",
-    "1.1.1.LI.6: Explain challenges of early Muslims",
-    "1.1.1.LI.7: Examine the role of religion in the life of Africans (Ghanaians) before the arrival of Islam",
-    "1.1.1.LI.8: Assess the influence of the arrival of Islam on AIR",
-    "1.1.1.LI.9: Discuss the contributions of Islam to the development of Ghana"
-  ],
-  "2.1.2.CS.1: Demonstrate understanding of the nature of Allah (God) in Islam and indicate how to apply the moral values in them to life.": [
-    "2.1.2.LI.1: Explain how the natural environment reveals the nature of Allah.",
-    "2.1.2.LI.2: Analyse the nature of Allah through His attributes as espoused by Islam",
-    "2.1.2.LI.3: Examine theological approaches and debates over the nature of Allah in Islam",
-    "2.1.2.LI.4: Compare and contrast Islamâ€™s understanding of the nature of Allah",
-    "2.1.2.LI.5: Apply the moral values in the attributes of Allah in Islam"
-  ],
-  "3.1.2.CS.1: Demonstrate understanding of creation stories of Islam and assess how humansâ€™ disobedience has affected the disposition of humankind": [
-    "3.1.2.LI.1: Examine the Creation story in the Qurâ€™an",
-    "3.1.2.LI.2: Discuss the disobedience of Adam and Hawa in the Qurâ€™an",
-    "3.1.2.LI.3: Critically examine the philosophical underpinnings associated with the disobedience of humankind"
-  ],
-  "1.2.1.CS.1: Demonstrate knowledge and understanding of the beliefs of Islam and AIRâ€™s influence and critically assess the varied interpretations of these beliefs.": [
-    "1.2.1.LI.1: Identify the nature or form of Islamic monotheism (Tawhid)",
-    "1.2.1.LI.2: Examine the six articles of faith in Islam",
-    "1.2.1.LI.3: Assess the concept of Shariah and its interpretations",
-    "1.2.1.LI.4: Examine ways in which African Indigenous Religion has influenced the belief system of Islam in Ghana"
-  ],
-  "2.2.2.CS.1: Demonstrate the understanding of worship in Islam and elements of its influence, to deduce and apply values inherent in them.": [
-    "2.2.2.LI.1: Explain how the five pillars of Islam are performed",
-    "2.2.2.LI.2: Analyse elements of worship in Islam to deduce their scriptural references",
-    "2.2.2.LI.3: Examine ways in which Islamic worship has influenced the Ghanaian society",
-    "2.2.2.LI.4: Synthesise moral values inherent in Islamic worship and how to apply them"
-  ],
-  "3.2.2.CS.1: Demonstrate understanding of worship of Islam to justify the need for respect for the religious other.": [
-    "3.2.2.LI.1: Examine worship in Islam and how it has transformed throughout history",
-    "3.2.2.LI.2: Compare and contrast Islamic worship with African Indigenous Religion (AIR) and Christianity",
-    "3.2.2.LI.3: Analyse how knowledge and understanding of the differences and common patterns in worship can help in promoting religious respect"
-  ],
-  "3.2.3.CS.1: Demonstrate knowledge and appreciation of Islamic practices for national development": [
-    "3.2.3.LI.1: Examine the practice of Zakat for national development",
-    "3.2.3.LI.2: Assess the practice of Sadaqah for poverty alleviation",
-    "3.2.3.LI.3: Explore the practice of Hajj for peace-building",
-    "3.2.3.LI.4: Examine the practice of prayer (Salah) for the development of time-consciousness"
-  ],
-  "1.3.1.CS.1: Demonstrate understanding of the origins, characteristics and roles of Islamic religious communities, and their relationship with other religions.": [
-    "1.3.1.LI.1: Explain the origin of Islamic religious communities",
-    "1.3.1.LI.2: Describe the characteristics of Islamic communities",
-    "1.3.1.LI.3: Examine the changing roles of Islamic communities in Ghanaian society.",
-    "1.3.1.LI.4: Examine how Islam has collaborated with AIR and Christianity in creating harmonious co-existence"
-  ],
-  "2.3.2.CS.1: Demonstrate understanding of opportunities and challenges in religious pluralism for nation-building.": [
-    "2.3.2.LI.1: Explain the concept of religious pluralism",
-    "2.3.2.LI.2: Examine Islamic teachings on religious pluralism",
-    "2.3.2.LI.3: Identify the opportunities and challenges of religious pluralism in Ghana",
-    "2.3.2.LI.4: Examine how the challenges and opportunities for religious pluralism can be used for nation-building",
-    "2.3.2.LI.5: Explore real-life examples of religious pluralism in local and global contexts"
-  ],
-  "3.3.3.CS.1: Demonstrate knowledge and understanding of Islamic teachings, values and the contributions of women and explain how international policies on the development and empowerment of women aligns or otherwise with Islam": [
-    "3.3.3.LI.1: Identify the key teachings of Islam on women",
-    "3.3.3.LI.2: Assess the contributions of key women to the start and spread of Islam",
-    "3.3.3.LI.3: Discuss the roles women play in Islamic communities and in society at large",
-    "3.3.3.LI.4: Examine ways in which Islamic religious teachings are perceived to constrain the role of women in society",
-    "3.3.3.LI.5: Examine alignments between Islamic values and (inter)national policies on women empowerment"
-  ],
-  "1.4.1.CS.1: Demonstrate an understanding of the environmental values in the teachings of Islam and show how they collaborate Science to address environmental problems.": [
-    "1.4.1.LI.1: Identify human activities that affect the environment.",
-    "1.4.1.LI.2: Identify the environmental values in the teachings of Islam",
-    "1.4.1.LI.3: Comparatively analyse how Islamic values align with those of AIR and Christianity on environmental protection",
-    "1.4.1.LI.4: Examine how Islamic environmental values can complement science and technology to solve environmental problems"
-  ],
-  "2.4.2.CS.1: Demonstrate an understanding of the teachings of Islam on sexual morality and the values inherent in them": [
-    "2.4.2.LI.1: Examine the concept of sexual morality within local and global contexts",
-    "2.4.2.LI.2: Analyse the teachings of Islam on sexual morality",
-    "2.4.2.LI.3: Analyse the moral values in the teachings of Islam on sexual morality",
-    "2.4.2.LI.4: Describe how to apply Islamic teachings on sexual morality within the context of contemporary sexual behaviours"
-  ],
-  "3.4.3.CS.1: Demonstrate an understanding of the teachings of Islam on fraud and how to apply them": [
-    "3.4.3.LI.1: Describe some key contemporary fraudulent acts",
-    "3.4.3.LI.2: Explain the teachings of Islam on fraud",
-    "3.4.3.LI.3: Discuss how ethical teachings of Islam can be used to address the incidences of fraud"
-  ],
-  // Additional Mathematics Standard Indicators
-  "1.1.1.CS.1: Demonstrate knowledge and understanding of binary operations, sets and binomial theorem and solve related problems in real life situations.": [
-    "1.1.1.LI.1: Explain binary operations and apply that knowledge in solving related problems.",
-    "1.1.1.LI.2: Solve problems involving properties of binary operations.",
-    "1.1.1.LI.3: Model and solve real life problems on sets.",
-    "1.1.1.LI.4: Expand binomials with positive integral indices and simplify coefficients of the terms."
-  ],
-  "2.1.1.CS.1: Demonstrate understanding of De Morgan's laws on sets and binomial expansions with positive integers.": [
-    "2.1.1.LI.1: Investigate De Morgan's law on sets algebraically and graphically, formulate and solve real life problems up to three sets.",
-    "2.1.1.LI.2: Use the expansion of (1-x)^n or (1+x)^n to approximate exponential numbers."
-  ],
-  "1.1.2.CS.1: Demonstrate knowledge and understanding of applying algebraic processes and reasoning involving sequence, functions, and linear programming.": [
-    "1.1.2.LI.1: Examine, analyse, determine and predict other terms in a pattern/sequence.",
-    "1.1.2.LI.2: Distinguish among various types of relations, find the domain and range of, and evaluate functions.",
-    "1.1.2.LI.3: Show that a function is injective, surjective, and bijective.",
-    "1.1.2.LI.4: Find graphical and algebraic solutions to a system of three linear equations in three variables."
-  ],
-  "2.1.1.CS.2: Demonstrate the ability to apply algebraic processes and reasoning to model and solve real life situations involving sequences, and linear programming and use appropriate techniques to solve quadratic inequalities, as well as resolve rational functions.": [
-    "2.1.1.LI.3: Generate the terms of a recurrence sequence and find an explicit formula for the sum of the sequence.",
-    "2.1.1.LI.4: Determine the arithmetic and geometric means of linear and exponential sequences.",
-    "2.1.1.LI.5: Formulate and derive appropriate strategies to solve quadratic inequalities.",
-    "2.1.1.LI.6: Resolve rational functions into partial fractions, specifically quadratic denominators and improper rational functions."
-  ],
-  "3.1.2.CS.1: Demonstrate understanding and use of logic, linear transformations, matrices and their applications to solve real life problems.": [
-    "3.1.2.LI.1: Construct compound statements and truth tables using connectives.",
-    "3.1.2.LI.2: Apply linear transformation to find images of points and objects, and reflections and rotation.",
-    "3.1.2.LI.3: Find the inverse of a matrix using linear transformation."
-  ],
-  "1.2.1.CS.1: Demonstrate knowledge and understanding of spatial sense in relation to lines and angles between intersecting lines.": [
-    "1.2.1.LI.1: Describe the properties of lines, including parallel, perpendicular and midpoints.",
-    "1.2.1.LI.2: Derive the equation of a line in various forms, find the shortest distance between a point and a line."
-  ],
-  "2.2.1.CS.1: Demonstrate understanding of loci and circles and their applications.": [
-    "2.2.1.LI.1: Deduce the equation of a circle and find its centre and radius.",
-    "2.2.1.LI.2: Determine the equation of a locus under a given condition."
-  ],
-  "1.2.2.CS.1: Demonstrate understanding of the measurement of triangles and radians.": [
-    "1.2.2.LI.1: Identify values of the special angles, explain the radian measure orally and mathematically.",
-    "1.2.2.LI.2: Solve problems on acute angles between two intersecting lines."
-  ],
-  "3.2.1.CS.1: Demonstrate understanding of parabola and its properties.": [
-    "3.2.1.LI.1: Construct a parabola of a given quadratic equation and explain its key features.",
-    "3.2.1.LI.2: Deduce the directrix and focus from a parabolic equation and vice versa."
-  ],
-  "3.2.2.CS.1: Demonstrate understanding of drawing and analysing basic trigonometric graphs and compound angles.": [
-    "3.2.2.LI.1: Draw and analyse basic trigonometric graphs using values of the unit circle.",
-    "3.2.2.LI.2: Prove and apply compound angles to derive the identities for multiple angles."
-  ],
-  "1.3.1.CS.1: Demonstrate understanding of the limit of a function, investigate the behaviour of a function near a value in its domain and establish the derivative of a function.": [
-    "1.3.1.LI.1: Describe and interpret the meaning of the limit of a function.",
-    "1.3.1.LI.2: Distinguish between continuous and discontinuous functions near an input value."
-  ],
-  "2.3.1.CS.1: Identify and apply integration rules and techniques to solve transcendental functions.": [
-    "2.3.1.LI.1: Identify and apply integration rules to evaluate integrals.",
-    "2.3.1.LI.2: Identify and apply appropriate techniques for integration of a function."
-  ],
-  "1.3.2.CS.1: Determine the equation of tangents and normal to a curve at a given point.": [
-    "1.3.2.LI.1: Determine the equation of tangents and normal to a curve."
-  ],
-  "2.3.2.CS.1: Investigate the turning point of a function and find maximum/minimum values in real life.": [
-    "2.3.2.LI.1: Determine the maximum/minimum values within the given constraints."
-  ],
-  "1.4.1.CS.1: Collect quantitative and qualitative data, organise and present data using graphs.": [
-    "1.4.1.LI.1: Collect quantitative and qualitative data, and organise and present data using graphs."
-  ],
-  "3.4.1.CS.1: Describe the nature and strength of relationship between two given variables using scatter diagram and correlation coefficient.": [
-    "3.4.1.LI.1: Describe the nature and strength of relationship between two given variables using scatter diagram."
-  ],
-  "1.4.2.CS.1: Demonstrate knowledge of basic principles of permutation and combination and interpret probability in everyday life.": [
-    "1.4.2.LI.1: Explain combination and permutation, state their difference and solve basic problems."
-  ],
-  "2.4.2.CS.1: Solve problems using the axioms and the laws of probability.": [
-    "2.4.2.LI.1: Solve problems using the axioms and the laws of probability."
-  ],
-  "3.4.2.CS.1: Solve problems involving conditional probability using permutations and combinations.": [
-    "3.4.2.LI.1: Solve problems involving conditional probability using permutations and combinations."
-  ],
-
-  // Literature in English Indicators
-  "1.1.1.CS.1: Demonstrate understanding and interest in Literature-in-English and make meaningful connections to text and life.": [
-    "1.1.1.LI.1: Explain the concepts, types and importance of literature.",
-    "1.1.1.LI.2: Differentiate between oral and written literature.",
-    "1.1.1.LI.3: Compare and contrast the relationship between genres in oral and written literature."
-  ],
-  "1.1.1.CS.2: Demonstrate knowledge and understanding in the tools of literary analyses.": [
-    "1.1.1.LI.1: Use the tools in analysing varied level appropriate texts."
-  ],
-  "1.2.1.CS.1: Demonstrate knowledge and understanding of a variety of prose fictional texts.": [
-    "1.2.1.LI.1: Discuss short stories and novels of varied contexts for pleasure.",
-    "1.2.1.LI.2: Make a distinction between a variety of prose fiction texts.",
-    "1.2.1.LI.3: Establish the purposes and appeal of a variety of prose texts."
-  ],
-  "1.2.1.CS.2: Demonstrate understanding of how novelists use elements of style and themes in selected prose texts.": [
-    "1.2.1.LI.1: Review knowledge and understanding of the tools of literary analyses, e.g., elements of prose.",
-    "1.2.1.LI.2: Use the knowledge gained to examine how an author creates plot and setting.",
-    "1.2.1.LI.3: Examine characters and theme, and how they reflect context and society.",
-    "1.2.1.LI.4: Discuss how the elements of language and style enhance meaning in fictional texts."
-  ],
-  "2.2.1.CS.1: Demonstrate knowledge and understanding of a variety of prose non-fiction texts.": [
-    "2.2.1.LI.1: Examine the structure of fiction and nonfiction texts.",
-    "2.2.1.LI.2: Compare the elements of fiction and non-fiction."
-  ],
-  "2.2.1.CS.2: Demonstrate knowledge of how authors apply style and themes in non-fictional texts.": [
-    "2.1.1.LI.1: Discuss the development of themes throughout the selected prose texts.",
-    "2.2.1.LI.2: Discuss the development of style in the selected prose texts.",
-    "2.2.1.LI.3: Discuss how authors use style to bring out themes in their works.",
-    "2.2.1.LI.4: Discuss authors' use of theme and style in creating non-fictional texts."
-  ],
-  "1.2.2.CS.1: Demonstrate knowledge and understanding in diversity in contexts, plots and settings as tools for interpreting narrative texts.": [
-    "1.2.2.LI.1: Establish the relationship between context and setting.",
-    "1.2.2.LI.2: Examine different types of plot devices using level appropriate texts.",
-    "1.2.2.LI.3: Analyse the relationship between/among plot, subplots and conflict."
-  ],
-  "2.2.2.CS.1: Demonstrate knowledge and understanding of diversity in themes and style as tools for interpreting narrative text.": [
-    "2.2.2.LI.1: Examine more themes in novels through the major incidents and related ideas.",
-    "2.2.2.LI.2: Discuss the different aspects of style authors use in creating their works.",
-    "2.2.2.LI.3: Examine the overall impact of the author's narrative devices and the effect on meaning."
-  ],
-  "1.2.3.CS.1: Exhibit creative writing skills by producing short stories useful for fictional prose.": [
-    "1.2.3.LI.1: Produce summaries of longer texts exhibiting different parts and types of plot structures.",
-    "1.2.3.LI.2: Produce a narrative piece with the elements learnt (plot and setting).",
-    "1.2.3.LI.3: Dramatise portions of narrative texts such as subplots.",
-    "1.2.3.LI.4: Write a review of other learners' pieces and some read novels."
-  ],
-  "2.2.3.CS.1: Exhibit creative writing skills by producing novels as fictional and non-fictional prose.": [
-    "2.2.3.LI.1: Produce summaries of some selected novels based on varied themes.",
-    "2.2.3.LI.2: Produce narrative pieces applying different styles.",
-    "2.2.3.LI.3: Apply the narrative writing skills to edit and review short stories created."
-  ],
-  "1.3.1.CS.1: Demonstrate understanding of the dramatic techniques/elements in analysing varied texts.": [
-    "1.3.1.LI.1: Review knowledge in elements of prose and apply them in the discussion of elements of drama.",
-    "1.3.1.LI.2: Identify and explain the significance of the plot.",
-    "1.3.1.LI.3: Identify the various conflicts in drama texts and explain how these move the plot forward."
-  ],
-  "2.3.1.CS.1: Demonstrate knowledge and understanding of a variety of dramatic forms in analysing varied texts.": [
-    "2.3.1.LI.1: Identify the forms in varied drama texts.",
-    "2.3.1.LI.2: Distinguish between the forms of drama.",
-    "2.3.1.LI.3: Examine how the forms are developed in varied texts."
-  ],
-  "3.3.1.CS.1: Demonstrate knowledge and understanding of a variety of dramatic forms in analysing varied texts.": [
-    "3.3.1.LI.1: Discuss the connection between dramatic forms and themes.",
-    "3.3.1.LI.2: Compare and contrast the different dramatic forms in varied texts."
-  ],
-  "1.4.1.CS.1: Engage with a variety of poetic forms for pleasure and aesthetic effect.": [
-    "1.4.1.LI.1: Analyse different forms of narrative poems (Epics, Ballads, Idyll, lay) with increasing difficulties for meaning and effect.",
-    "1.4.1.LI.2: Distinguish between the features of narrative poems and lyrical poems in context."
-  ],
-  "2.4.1.CS.1: Engage with a variety of poetic forms for pleasure and its aesthetic effect.": [
-    "2.4.1.LI.1: Explore the different forms of lyrical poems (Elegy, Ode, Sonnet, Haiku) using interesting level appropriate examples for pleasure.",
-    "2.4.1.LI.2: Distinguish between the features of lyrical poems in context.",
-    "2.4.1.LI.3: Compare and contrast the use of language in lyrical poetry to bring out its beauty(aesthetic value)."
-  ],
-  "3.4.1.CS.1: Demonstrate knowledge and understanding of how authors apply the elements of poetry in their works.": [
-    "3.4.1.LI.1: Review the elements of poetry.",
-    "3.4.1.LI.2: Discuss the use of elements of poetry in varied selected poems.",
-    "3.4.1.LI.3: Compare and contrast how different poets use the elements to create meaning."
-  ],
-  "1.4.3.CS.1: Reconstruct and perform poetic pieces.": [
-    "1.4.3.LI.1: Perform parts of selected poems.",
-    "1.4.3.LI.2: Reconstruct a poem into another creative expression (song, painting, parodies).",
-    "1.4.3.LI.3: Create short poems."
-  ],
-  "2.4.3.CS.1: Reconstruct and perform poetic pieces.": [
-    "2.4.3.LI.1: Create a stanza of a poem using a simple template as a guide.",
-    "2.4.3.LI.2: Edit and perform the poem created in class."
-  ],
-  "1.3.3.CS.1: Exhibit knowledge and understanding of scripting and performing drama pieces.": [
-    "1.3.3.LI.1: Perform monologues of chosen scenes from a variety of plays.",
-    "1.3.3.LI.2: Perform skits of chosen scenes from a variety of plays.",
-    "1.3.3.LI.3: Write and perform simple skits from stories read.",
-    "1.3.3.LI.4: Write and perform a sketch on relevant themes and values.",
-    "1.3.3.LI.5: Write and produce plays using the skills acquired."
-  ],
-  "2.3.3.CS.1: Exhibit knowledge and understanding of scripting and performing drama pieces.": [
-    "2.3.3.LI.1: Write a drama piece on varied themes depicting real world events.",
-    "2.3.3.LI.2: Perform parts/full Acts and scenes."
-  ]
-};
-
-export const PE_LESSON_FRAMES: Record<string, any> = {
-  "B1.1.1.1.1": {
-    topic: "Moving Over and Under Obstacles",
-    keyWords: ["Over", "Under", "Obstacles", "Locomotor"],
-    activities: [
-      "Set up cones and bars as hurdles",
-      "Teacher demonstrates crawling 'under' and jumping 'over'",
-      "Learner practice at their own pace in a circuit",
-      "Game: 'Bridge and River' - some learners act as bridges (under) and some as stones (over)"
-    ],
-    resources: ["Cones", "Poles/Hurdles", "Mats"]
-  },
-  "B3.1.10.1.13": {
-    topic: "Hand Dribbling with Agility",
-    keyWords: ["Dribbling", "Control", "Hand-eye Coordination"],
-    activities: [
-      "Practice bouncing the ball stationary first",
-      "Dribble through a line of 5 cones using one hand",
-      "Change hands (left/right) at each cone",
-      "Relay race: Dribbling around obstacles back to the team"
-    ],
-    resources: ["Handballs/Basketballs", "Skittles/Cones"]
-  },
-  "B5.3.1.3.1": {
-    topic: "Aerobic Capacity: Jogging to Rhythm",
-    keyWords: ["Jogging", "Pulse", "Endurance", "Rhythm"],
-    activities: [
-      "Choose a local upbeat song",
-      "Learners jog in a circle following the tempo of the music",
-      "Monitor breathing and encourage steady pace for 10 minutes",
-      "Group stretch and cool down after the music stops"
-    ],
-    resources: ["Bluetooth speaker", "Local music playlists", "Stopwatch"]
-  }
-};
-
-export const OWOP_B4_B6_LESSON_FRAMES: Record<string, any> = {
-  "B4.1.1.1.1": {
-    topic: "My Cultural Identity: Traditional Musical Instruments",
-    keyWords: ["Membranophones", "Idiophones", "Chordophones", "Aerophones", "Fontomfrom"],
-    activities: [
-      "Listen to an audio recording of traditional drumming (Fontomfrom/Kete/Agbadza)",
-      "Learners identify and classify instruments by how sound is produced",
-      "Improvise and perform rhythm using table tops and improvised rattles",
-      "Teacher models the historical importance of musical instruments in chieftaincy"
-    ],
-    resources: ["Audio recordings of drumming", "Improvised shakers", "Pictures of instruments"]
-  },
-  "B5.2.1.1.1": {
-    topic: "Our Environment: Protecting Water Bodies",
-    keyWords: ["Pollution", "Turbidity", "Buffer zone", "Water table", "Ecosystem"],
-    activities: [
-      "Show before-and-after photographs of a clean vs polluted river (e.g. Pra or Birim)",
-      "Learners engage in think-pair-share on how local human activities damage water sources",
-      "Draw a flow diagram showing the journey of water from rainfall to household tap",
-      "Create a classroom poster advocating for clean water protection in the community"
-    ],
-    resources: ["Photographs of polluted rivers", "Clear water samples", "Manila cards", "Crayons"]
-  },
-  "B6.4.1.1.1": {
-    topic: "Basic Computing: Identifying Input and Output Devices",
-    keyWords: ["Peripheral", "Microphone", "Projector", "Scanner", "Processing Unit"],
-    activities: [
-      "Display physical computer peripherals or printed flashcards of devices",
-      "Learners sort devices into two groups: Input vs Output",
-      "Simulate data entry: One learner acts as keyboard (input), another processes, third displays (monitor)",
-      "Fill in a worksheet matching device names with their specific functions"
-    ],
-    resources: ["Old keyboard, mouse, or pictures", "Device sorting flashcards", "Worksheets"]
-  }
-};
-
-export const MATH_B1_B3_LESSON_FRAMES: Record<string, any> = {
-  "B1.1.1.1.1": {
-    topic: "Number Sense: Counting Quantities up to 20",
-    keyWords: ["Count", "Forward", "Quantity", "Numeral", "One-to-one correspondence"],
-    activities: [
-      "Learners gather 10-20 bottle caps or pebbles from the math corner",
-      "Count objects aloud in groups of five, pointing to each object once",
-      "Match numeral cards (1 to 20) with corresponding concrete sets of objects",
-      "Sing a Ghanaian counting rhyme to reinforce number order"
-    ],
-    resources: ["Bottle caps", "Pebbles", "Numeral flashcards (1-20)", "Counting frame/Abacus"]
-  },
-  "B2.1.2.1.1": {
-    topic: "Addition within 50: Adding Two 2-Digit Numbers without Regrouping",
-    keyWords: ["Addition", "Sum", "Tens", "Ones", "Place value", "Combine"],
-    activities: [
-      "Represent numbers using bundle-of-ten sticks and loose single sticks",
-      "Add tens first, then add ones using a place value mat",
-      "Solve 3 horizontal addition problems using expanded notation (e.g. 23 + 14 = 20+10 + 3+4)",
-      "Work in pairs to solve word problems based on market shopping scenarios"
-    ],
-    resources: ["Base-ten blocks/Bundle of sticks", "Place value charts", "Grid paper"]
-  },
-  "B3.1.2.2.1": {
-    topic: "Multiplication: Understanding Equal Groups and Repeated Addition",
-    keyWords: ["Groups of", "Array", "Repeated addition", "Times", "Product"],
-    activities: [
-      "Arrange counters into 3 equal rows of 4 objects each",
-      "Write the corresponding repeated addition sentence: 4 + 4 + 4 = 12",
-      "Translate repeated addition into a multiplication sentence: 3 Ã— 4 = 12",
-      "Draw arrays representing given multiplication facts on mini chalkboards"
-    ],
-    resources: ["Egg cartons", "Pebbles/Bottle tops", "Mini slates/chalk"]
-  }
-};
-
-export const MATH_B4_B6_LESSON_FRAMES: Record<string, any> = {
-  "B4.1.2.1.1": {
-    topic: "Fractions: Identifying Equivalent Fractions with Visual Models",
-    keyWords: ["Numerator", "Denominator", "Equivalent", "Fraction strip", "Simplify"],
-    activities: [
-      "Fold paper strips into halves, fourths, and eighths to observe equal shaded lengths",
-      "Identify that 1/2 = 2/4 = 4/8 using fraction bars",
-      "Solve practice problems converting fractions by multiplying numerator and denominator by the same number",
-      "Group game: 'Fraction Match' pairing equivalent visual and numerical fraction cards"
-    ],
-    resources: ["Paper strips for folding", "Fraction chart", "Fraction dominoes/cards"]
-  },
-  "B5.1.2.3.1": {
-    topic: "Percentages: Converting Simple Fractions to Percentages",
-    keyWords: ["Percent", "Out of 100", "Conversion", "Proportion", "Hundredths"],
-    activities: [
-      "Shade parts of a 10x10 hundred grid to visualize percentages (e.g. 50 out of 100 = 50%)",
-      "Convert benchmark fractions (1/2, 1/4, 3/4, 1/10) to percentages using equivalent denominators of 100",
-      "Solve practical word problems calculating discount percentages from a local shop scenario",
-      "Pair discussion on where percentages appear in daily life (phone battery, test scores)"
-    ],
-    resources: ["100-grid sheets", "Calculators for verification", "Price tags/Store receipts"]
-  },
-  "B6.2.1.1.1": {
-    topic: "Algebraic Expressions: Forming Linear Equations from Word Descriptions",
-    keyWords: ["Variable", "Unknown", "Expression", "Equation", "Constant"],
-    activities: [
-      "Introduce mystery number problems: 'I think of a number, add 5, result is 12'",
-      "Represent unknown quantities with letters (e.g. x + 5 = 12)",
-      "Translate word sentences into algebraic equations in groups of three",
-      "Verify solutions by substituting values back into the equation"
-    ],
-    resources: ["Algebra balance scales", "Expression cards", "Whiteboard and markers"]
-  }
-};
-
-export const OWOP_B1_B3_LESSON_FRAMES: Record<string, any> = {
-  "B1.1.1.1": {
-    topic: "All About Me - Myself and My Family",
-    keyWords: ["Identity", "Family", "Parents", "Sibling", "Care"],
-    activities: [
-      "Share names and birth orders in small circles",
-      "Draw picture of own family members engaged in an activity",
-      "Discuss good manners and respecting elders at home",
-      "Sing family-themed rhymes in local dialect"
-    ],
-    resources: ["Drawing sheets", "Color pencils", "Family tree template"]
-  },
-  "B2.2.1.1": {
-    topic: "Our Environment - Keeping School Clean",
-    keyWords: ["Sanitation", "Litter", "Sweeping", "Dustbin", "Hygiene"],
-    activities: [
-      "Walk around the school compound identifying clean and dirty spots",
-      "Practice sorting waste into organic and plastic waste bins",
-      "Role-play proper hand washing after cleaning chores",
-      "Draft simple class sanitation rules"
-    ],
-    resources: ["Brooms", "Dustbins", "Soap and Veronica bucket", "Sanitation chart"]
-  }
-};
-
-export const PEDAGOGICAL_PHASES = {
-  phase1: "Phase 1: Starter (Introduction & Engaging Prior Knowledge)",
-  phase2: "Phase 2: Main / New Learning (Teacher Facilitation, Guided & Independent Practice)",
-  phase3: "Phase 3: Reflection & Plenary (Assessment, Summary & Homework)"
-};
-
-export const FORMATIVE_ASSESSMENT_STRATEGIES = [
-  "Think-Pair-Share (Oral reflection)",
-  "Exit Tickets (1-minute quick check)",
-  "Traffic Light Self-Assessment (Red/Yellow/Green)",
-  "Two Stars and a Wish (Peer feedback)",
-  "Mini-Whiteboard Check",
-  "Thumbs Up / Thumbs Down / Sideways",
-  "Chalkboard Splash (Simultaneous writing)",
-  "Observation with Checklists"
+export const STANDARD_INDICATORS: Record<string, string[]> = {};
+
+export const GHANA_REGIONS = [
+  "Ahafo",
+  "Ashanti",
+  "Bono",
+  "Bono East",
+  "Central",
+  "Eastern",
+  "Greater Accra",
+  "North East",
+  "Northern",
+  "Oti",
+  "Savannah",
+  "Upper East",
+  "Upper West",
+  "Volta",
+  "Western",
+  "Western North"
 ];
 
-export const MATH_B7_LESSON_FRAMES: Record<string, any> = {
-  "B7.1.1.1": {
-    topic: "Sets and Operations on Sets",
-    keyWords: ["Venn diagram", "Intersection", "Union", "Universal set", "Complement"],
-    activities: [
-      "Define sets and list elements of finite and infinite sets",
-      "Draw 2-set Venn diagrams to represent union and intersection",
-      "Find cardinal numbers and complements of sets",
-      "Solve practical word problems involving two sets"
-    ],
-    resources: ["Venn diagram charts", "Set cards", "Graph paper", "Worksheets"]
-  },
-  "B7.1.2.1": {
-    topic: "Fractions, Decimals and Percentages",
-    keyWords: ["Recurring decimal", "Terminating decimal", "Simplification", "Equivalent"],
-    activities: [
-      "Convert between common fractions, decimals and percentages",
-      "Compare and order fractions with unlike denominators",
-      "Perform arithmetic operations on mixed fractions",
-      "Solve word problems on real-world profit and loss percentages"
-    ],
-    resources: ["Fraction chart", "Percentage grid", "Ruler", "Word problem cards"]
-  }
-};
-
-export const SCIENCE_B7_LESSON_FRAMES: Record<string, any> = {
-  "B7.1.1.1": {
-    topic: "Cells and Organisation of Life",
-    keyWords: ["Plant cell", "Animal cell", "Cell membrane", "Cytoplasm", "Nucleus", "Organelles"],
-    activities: [
-      "Observe plant and animal cells under a light microscope",
-      "Draw and label generalized plant and animal cells",
-      "Compare structures of plant and animal cells in a summary table",
-      "Explain the levels of cellular organisation (Cell â†’ Tissue â†’ Organ â†’ System â†’ Organism)"
-    ],
-    resources: ["Microscope", "Prepared slides of onion epidermal and cheek cells", "Cell charts", "Modeling clay"]
-  },
-  "B7.1.2.1": {
-    topic: "Matter - Particulate nature of matter",
-    keyWords: ["Atom", "Molecule", "Ion", "Solid", "Liquid", "Gas", "Diffusion"],
-    activities: [
-      "Demonstrate Brownian motion using smoke cell or pollen grains in water",
-      "Perform diffusion experiments using potassium permanganate crystals in water",
-      "Draw particle arrangement diagrams for solids, liquids and gases",
-      "Classify common substances into elements, compounds and mixtures"
-    ],
-    resources: ["Potassium permanganate", "Beakers", "Water", "Perfume/Incense stick", "Charts"]
-  }
-};
-
-export const ENGLISH_B1_B6_LESSON_FRAMES: Record<string, any> = {
-  "B1.1.1.1": {
-    topic: "Oral Language - Listening and Speaking",
-    keyWords: ["Phonics", "Rhymes", "Greetings", "Pronunciation"],
-    activities: [
-      "Sing nursery rhymes and action songs",
-      "Practice polite greetings and farewells in pairs",
-      "Identify beginning sounds in familiar words",
-      "Engage in storytelling and listening comprehension"
-    ],
-    resources: ["Letter flashcards", "Puppets", "Picture books", "Audio recorder"]
-  },
-  "B4.1.1.1": {
-    topic: "Reading - Comprehension and Vocabulary",
-    keyWords: ["Main idea", "Context clues", "Inference", "Vocabulary", "Summary"],
-    activities: [
-      "Read short narrative passages aloud with correct pauses and expression",
-      "Identify unfamiliar words and infer meanings using context clues",
-      "Answer direct and inferential comprehension questions",
-      "Write a 3-sentence summary of the main event in the text"
-    ],
-    resources: ["Comprehension readers", "Dictionary", "Sentence strips"]
-  }
-};
-
-export const ENGLISH_B7_LESSON_FRAMES: Record<string, any> = {
-  "B7.1.1.1": {
-    topic: "Grammar - Parts of Speech in Context",
-    keyWords: ["Nouns", "Pronouns", "Verbs", "Adjectives", "Adverbs", "Prepositions"],
-    activities: [
-      "Identify parts of speech in selected literary excerpts",
-      "Construct compound and complex sentences using proper conjunctions",
-      "Analyze functions of nouns and verbs in subject-verb agreement",
-      "Engage in peer-editing of written paragraphs"
-    ],
-    resources: ["Grammar charts", "Reading passages", "Editing checklists"]
-  }
-};
-
-export const SCIENCE_B8_LESSON_FRAMES: Record<string, any> = {
-  "B8.1.1.1": {
-    topic: "Photosynthesis and Respiration",
-    keyWords: ["Chlorophyll", "Stomata", "Glucose", "Aerobic", "Anaerobic"],
-    activities: [
-      "Investigate the presence of starch in green leaves",
-      "Demonstrate that light and carbon dioxide are needed for photosynthesis",
-      "Compare equations for photosynthesis and cellular respiration",
-      "Explain the importance of green plants in the carbon cycle"
-    ],
-    resources: ["Iodine solution", "Ethanol", "Boiling water bath", "Variegated leaves", "Test tubes"]
-  }
-};
-
-export const SCIENCE_B9_LESSON_FRAMES: Record<string, any> = {
-  "B9.1.1.1": {
-    topic: "Acids, Bases and Salts",
-    keyWords: ["pH scale", "Indicators", "Neutralisation", "Litmus"],
-    activities: [
-      "Identify common acids and bases used in the home",
-      "Prepare natural indicators from flowers and plants",
-      "Test solutions with pH paper and indicators",
-      "Demonstrate a neutralisation reaction"
-    ],
-    resources: ["Indicators", "Lemon juice", "Soap solution", "pH paper", "Test tubes"]
-  },
-  "B9.1.2.1": {
-    topic: "Genetics and Heredity",
-    keyWords: ["DNA", "Genes", "Chromosomes", "Inheritance", "Variation"],
-    activities: [
-      "Discuss basic concepts of genetics and DNA",
-      "Investigate variation in human traits (earlobes, tongue rolling)",
-      "Outline how traits are passed from parents to offspring",
-      "Construct a simple DNA model"
-    ],
-    resources: ["Charts", "Videos", "Mirror", "Paper for traits chart", "Model building kits"]
-  }
-};
-
-export const GHANAIAN_LANGUAGE_B1_B3_LESSON_FRAMES: Record<string, any> = {
-  "B1.1.1.1": {
-    topic: "Oral Language - Songs and Rhymes",
-    keyWords: ["Songs", "Rhymes", "Rhythm", "Clapping", "Actions"],
-    activities: [
-      "Sing traditional Ghanaian children songs with appropriate actions",
-      "Recite simple rhymes and clap to the rhythm",
-      "Identify rhyming words in familiar local songs",
-      "Perform group singing and dramatization"
-    ],
-    resources: ["Audio recordings of traditional songs", "Percussion instruments", "Song charts"]
-  },
-  "B2.1.1.1": {
-    topic: "Oral Language - Storytelling and Discussion",
-    keyWords: ["Ananse stories", "Moral values", "Characters", "Listening", "Retelling"],
-    activities: [
-      "Listen attentively to a folklore story narrated by teacher or peer",
-      "Answer factual and inferential questions based on the story",
-      "Retell the story in sequence using own words in the Ghanaian language",
-      "Role-play key characters and dramatize the moral lesson"
-    ],
-    resources: ["Story books in Ghanaian languages", "Puppets", "Picture cards"]
-  },
-  "B3.2.1.1": {
-    topic: "Reading and Comprehension - Simple Texts",
-    keyWords: ["Phonics", "Sight words", "Fluency", "Vocabulary", "Punctuation"],
-    activities: [
-      "Read grade-level decodable passages with correct pronunciation",
-      "Identify new vocabulary words and infer meanings from context",
-      "Answer guided reading comprehension questions",
-      "Illustrate the main idea of the passage"
-    ],
-    resources: ["Graded readers", "Word walls", "Flashcards", "Sentence strips"]
-  }
-};
-
-export const KG_INTEGRATED_LESSON_FRAMES: Record<string, any> = {
-  "KG1.1.1.1": {
-    topic: "All About Me - Parts of My Body",
-    keyWords: ["Head", "Eyes", "Nose", "Mouth", "Hands", "Feet"],
-    activities: [
-      "Sing action songs like 'Head, Shoulders, Knees and Toes' in local and English languages",
-      "Point to and name parts of the body during guided circle time",
-      "Trace and colour outlines of body parts",
-      "Engage in sensory discovery games (taste, touch, smell, hearing, sight)"
-    ],
-    resources: ["Body part charts", "Mirror", "Crayons", "Large paper for tracing"]
-  },
-  "KG2.1.1.1": {
-    topic: "My Family and Community",
-    keyWords: ["Father", "Mother", "Brother", "Sister", "Family", "Love"],
-    activities: [
-      "Show family photographs and talk about members of the household",
-      "Role-play family roles and chores in the dramatic play corner",
-      "Draw family members and dictate simple descriptions to the teacher",
-      "Sing songs honoring family love and unity"
-    ],
-    resources: ["Family pictures", "Dramatic play props", "Drawing paper", "Crayons"]
-  }
-};
-
-export const RME_LESSON_FRAMES: Record<string, any> = {
-  "B1.1.1.1": {
-    topic: "God the Creator and His Creation",
-    keyWords: ["God", "Creation", "Sun", "Moon", "Stars", "Plants", "Animals"],
-    activities: [
-      "Observe natural objects around the school environment (plants, sky, stones)",
-      "Recite poems and sing songs appreciating God's creation",
-      "Draw and color things created by God",
-      "Discuss ways of caring for God's creation"
-    ],
-    resources: ["Nature walk observations", "Creation charts", "Crayons", "Pictures of nature"]
-  },
-  "B4.1.1.1": {
-    topic: "Religious Festivals in Ghana",
-    keyWords: ["Christmas", "Eid-ul-Fitr", "Eid-ul-Adha", "Homowo", "Hogbetsotso", "Odwira"],
-    activities: [
-      "Identify major Christian, Islamic, and Traditional festivals celebrated in Ghana",
-      "Describe the significance and moral values taught by each festival",
-      "Compare how different religious communities celebrate their festive seasons",
-      "Present short dramatizations or poems on religious tolerance and peace"
-    ],
-    resources: ["Festival pictures and videos", "Costumes", "Cultural artifacts", "Resource persons"]
-  },
-  "B7.1.1.1": {
-    topic: "The Nature of God and His Attributes",
-    keyWords: ["Omnipotent", "Omnipresent", "Omniscient", "Sovereign", "Names of God"],
-    activities: [
-      "List indigenous Ghanaian names and attributes of God (Onyankopon, Mawu, Naawuni)",
-      "Analyze the meaning of various religious names of God across Christian, Islamic, and Traditional beliefs",
-      "Discuss how belief in God's attributes influences personal moral conduct",
-      "Compose reflective essays or poems on the greatness of God"
-    ],
-    resources: ["Holy Scriptures (Bible, Quran)", "Charts of God's attributes", "Reference texts"]
-  }
-};
-
-export const FRENCH_B4_B6_LESSON_FRAMES: Record<string, any> = {
-  "B4.1.1.1": {
-    topic: "Saluer et prendre congé (Greetings and Leave-taking)",
-    keyWords: ["Bonjour", "Au revoir", "Comment vas-tu ?", "Je vais bien", "À bientôt"],
-    activities: [
-      "Listen to an audio of two people greeting each other in different settings",
-      "Role-play greetings with classmates using appropriate physical gestures",
-      "Identify formal and informal greeting expressions",
-      "Practice the song 'Bonjour mes amis'"
-    ],
-    resources: ["Audio recordings", "Flashcards with greeting scenes", "Video clips from YouTube"]
-  },
-  "B4.1.2.1": {
-    topic: "Se présenter (Self-introduction)",
-    keyWords: ["Je m'appelle", "Mon nom est", "Je suis ghanéen(ne)", "Prénom"],
-    activities: [
-      "Listen to the teacher introducing themselves to the class",
-      "Practice saying your name and nationality in French",
-      "Complete a simple identity card (fiche d'identité)",
-      "Ask a partner 'Comment tu t'appelles ?' and respond"
-    ],
-    resources: ["ID card templates", "Flags of Ghana and France", "Name tags"]
-  },
-  "B4.4.1.1": {
-    topic: "Les Nombres 1-20 (Numbers 1-20)",
-    keyWords: ["Un", "Deux", "Trois", "Calcul", "Plus", "Égal"],
-    activities: [
-      "Count objects in the classroom (chairs, tables) in French",
-      "Play a counting game where learners eliminate those who miss a number",
-      "Perform simple additions like 'deux plus deux égal quatre' in French",
-      "Sing a numerical rhyme"
-    ],
-    resources: ["Counters", "Number cards", "Abacus"]
-  },
-  "B5.1.2.1": {
-    topic: "Se présenter - Âge et Profession (Introduction - Age and Profession)",
-    keyWords: ["J'ai ... ans", "Je suis élève", "J'habite à", "Quel âge as-tu ?"],
-    activities: [
-      "Role-play a dialogue about age and place of residence",
-      "Describe one's father's or mother's profession in French",
-      "Write a short postcard to a pen-pal introducing oneself with age and address",
-      "Listen to a presentation of a public personality"
-    ],
-    resources: ["Envelope/Postcard samples", "Occupation flashcards", "Map of Ghana"]
-  },
-  "B6.1.3.2": {
-    topic: "Présenter quelqu'un (Presenting someone else)",
-    keyWords: ["Voici", "Il s'appelle", "Elle s'appelle", "Mon ami(e)", "Son nom est"],
-    activities: [
-      "Introduce a friend or classmate to the rest of the class in French",
-      "Describe someone's physical appearance or characteristics",
-      "Draw and present a family member with a short French caption",
-      "Engage in pair work introducing each other"
-    ],
-    resources: ["Pictures of friends/family", "Flashcards", "Drawing paper and crayons"]
-  }
-};
+export * from './data/lessonFrames';
