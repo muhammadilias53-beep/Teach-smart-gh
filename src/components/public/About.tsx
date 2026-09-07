@@ -51,7 +51,7 @@ export const About: React.FC = () => {
                 However, listing indicators, strand codes, and detailed differentiation levels created hours of weekly template coordination for teachers, taking away valuable time from actual interactive classroom lessons.
               </p>
               <p className="text-slate-600 text-sm leading-relaxed font-semibold italic text-emerald-800">
-                "Our single objective is to take the strenuous template compliance off the educator's shoulders, while ensuring their output remains 100% compliant with GES and NaCCA requirements."
+                "Our single objective is to take the strenuous template formatting off the educator's shoulders, while ensuring their output is designed to align with GES and NaCCA curriculum requirements."
               </p>
               
               <div className="flex gap-4 pt-2">
@@ -76,7 +76,7 @@ export const About: React.FC = () => {
                 <div className="w-10 h-10 rounded-2xl bg-emerald-100/60 flex items-center justify-center text-emerald-700">
                   <ShieldCheck size={20} />
                 </div>
-                <h3 className="font-extrabold text-sm text-slate-800 uppercase tracking-tight">100% Trust & Compliance</h3>
+                <h3 className="font-extrabold text-sm text-slate-800 uppercase tracking-tight">Curriculum Alignment & Trust</h3>
                 <p className="text-xs text-slate-500 font-medium leading-relaxed">
                   Every scheme generated aligns with standardized quarterly week divisions, correct content strand structures, and performance assessment codes.
                 </p>

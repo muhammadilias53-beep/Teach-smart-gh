@@ -505,7 +505,7 @@ TeachSmartGH • Aligned with NaCCA & Ghana Education Service Guidelines
           <div className="space-y-3">
             <div className="flex flex-wrap items-center gap-2">
               <span className="bg-emerald-500/20 text-emerald-400 text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full border border-emerald-500/30">
-                🇬🇭 NaCCA JHS Curriculum Approved
+                🇬🇭 Aligned with NaCCA JHS Curriculum
               </span>
               <span className="bg-amber-500/20 text-amber-400 text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full border border-amber-500/30">
                 BSTEM Project Companion
@@ -1140,7 +1140,7 @@ TeachSmartGH • Aligned with NaCCA & Ghana Education Service Guidelines
                         className="bg-slate-950 text-white rounded-[2.5rem] border-2 border-slate-850 p-6 flex flex-col justify-between"
                       >
                         <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
-                          <p className="text-[9px] font-mono text-emerald-400 font-bold uppercase tracking-widest">Teacher Output File: Curriculum compliant</p>
+                          <p className="text-[9px] font-mono text-emerald-400 font-bold uppercase tracking-widest">Teacher Output File: Curriculum aligned</p>
                           <div className="flex gap-2">
                             <button onClick={copyNoteClipboard} className="p-1 px-3 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-[10px] uppercase font-bold rounded-lg flex items-center gap-1 text-slate-300">
                               <Copy size={12} />

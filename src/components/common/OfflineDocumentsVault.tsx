@@ -232,7 +232,7 @@ export default function OfflineDocumentsVault({
         });
         const safeFilename = `teachsmart_${(doc.subject || 'lesson').toLowerCase().replace(/[^a-z0-9]/g, '_')}_GES_LessonPlan.pdf`;
         pdf.save(safeFilename);
-        toast.success('Official GES Lesson Plan PDF downloaded from vault! 🇬🇭');
+        toast.success('GES-format Lesson Plan PDF downloaded from vault! 🇬🇭');
         return;
       }
 

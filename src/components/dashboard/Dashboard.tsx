@@ -41,8 +41,9 @@ const AnimatedCounter = ({ value, duration = 1.5 }: { value: number, duration?: 
 };
 
 const Dashboard = () => {
-  const { profile, user, getTrialDaysLeft, daysLeft, isSubscriptionActive } = useAuth();
+  const { profile, user, daysLeft, isSubscriptionActive, isTrialActive, trialGenerationsLeftToday, trialDailyLimit } = useAuth();
   const hasActiveSubscription = isSubscriptionActive();
+  const trialActive = isTrialActive();
   const [recentDocs, setRecentDocs] = useState<any[]>([]);
   const [loadingDocs, setLoadingDocs] = useState(true);
   const [viewingDoc, setViewingDoc] = useState<any>(null);
@@ -315,7 +316,7 @@ const Dashboard = () => {
   const getMasteryLevel = (total: number) => {
     if (total >= 50) return { title: 'Visionary Principal', color: 'text-ghana-gold', icon: Award };
     if (total >= 20) return { title: 'Senior Educator', color: 'text-indigo-500', icon: Trophy };
-    if (total >= 5) return { title: 'Accredited Teacher', color: 'text-emerald-deep', icon: Target };
+    if (total >= 5) return { title: 'Proficient Educator', color: 'text-emerald-deep', icon: Target };
     return { title: 'Novice Instructor', color: 'text-slate-400', icon: Activity };
   };
 
@@ -456,12 +457,22 @@ const Dashboard = () => {
 
           <div>
             <h3 className="font-black text-xs uppercase tracking-wider text-slate-900">
-              {hasActiveSubscription ? 'Premium Membership Active' : 'Automated Subscription Alert'}
+              {hasActiveSubscription 
+                ? 'Premium Membership Active' 
+                : ((profile?.aiCredits ?? 0) > 0 
+                    ? `Pay-As-You-Go Active • ${profile?.aiCredits} AI Generation${profile?.aiCredits === 1 ? '' : 's'} Left` 
+                    : (trialActive
+                        ? `3-Day Free Trial • ${daysLeft}d Left (${trialGenerationsLeftToday}/${trialDailyLimit} generations left today)`
+                        : 'Trial Access Expired • Read-Only Mode'))}
             </h3>
             <p className="text-xs text-slate-600 mt-1 max-w-xl font-medium leading-relaxed">
               {hasActiveSubscription
                 ? 'Thank you for supporting quality education in Ghana! Your premium status is fully active. You have full access to TeachSmartGH 2.0: lesson plans, quizzes, report cards, and classroom trackers.'
-                : 'Empower your classroom with the absolute best! Upgrade to Premium today to unlock unlimited NaCCA curriculum-aligned lesson plans, printable exam papers, terminal report comments, and school letter drafts instantly.'}
+                : ((profile?.aiCredits ?? 0) > 0
+                    ? `You have ${profile?.aiCredits} AI generation credit${profile?.aiCredits === 1 ? '' : 's'} available to create lesson plans, schemes, notes, and exams. You can top up credits starting at GHC 5 (for 2 generations) or upgrade to an unlimited plan.`
+                    : (trialActive
+                        ? `Your 3-day trial includes 2 free NaCCA generations per day (up to 6 total). You currently have ${trialGenerationsLeftToday} of ${trialDailyLimit} generations available today. Daily quota resets at midnight! You can also top up credits from GHC 5 or unlock unlimited termly access.`
+                        : 'Your 3-day free trial has completed. You still have full access to view, search, review, and export all your saved lesson notes and schemes! Top up AI credits from GHC 5 (for 2 generations) or subscribe in Billing to resume generating.'))}
             </p>
           </div>
         </div>
@@ -475,7 +486,7 @@ const Dashboard = () => {
                 : 'bg-slate-900 text-white hover:bg-black hover:shadow-lg'
             }`}
           >
-            {hasActiveSubscription ? 'Manage Plan' : 'Upgrade to Premium'}
+            {hasActiveSubscription ? 'Manage Plan' : ((profile?.aiCredits ?? 0) > 0 ? 'Top Up Credits / Upgrade' : 'Get Credits / Upgrade')}
           </Link>
         </div>
       </motion.div>
@@ -607,6 +618,13 @@ const Dashboard = () => {
                     hasActiveSubscription ? 'Active Membership' : 'Days Left'
                   )}
                 </div>
+
+                {!isAdmin && !hasActiveSubscription && trialActive && (
+                  <div className="mt-2 flex items-center gap-1.5 text-[10px] font-bold text-slate-600">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+                    <span><strong className="font-mono text-emerald-700">{trialGenerationsLeftToday}</strong> of {trialDailyLimit} left today</span>
+                  </div>
+                )}
               </div>
               
               {!isAdmin && !hasActiveSubscription && (
@@ -645,7 +663,7 @@ const Dashboard = () => {
                   Verified
                 </h3>
                 <div className="text-[9px] font-bold px-2 py-1 rounded-full uppercase tracking-tighter text-ghana-gold bg-white/10 mt-1">
-                  NaCCA Compliant Profile
+                  Curriculum Aligned Profile
                 </div>
               </div>
             </div>

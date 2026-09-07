@@ -11,14 +11,13 @@ import firebaseConfig from '../../firebase-applet-config.json';
 
 const app = initializeApp(firebaseConfig);
 
-// Initialize Firestore with modern persistent cache settings (replaces deprecated enableIndexedDbPersistence)
+// Initialize Firestore with modern persistent cache settings and auto-detecting transport
 export const db = initializeFirestore(app, {
   localCache: persistentLocalCache({
     tabManager: persistentMultipleTabManager()
   }),
-  experimentalForceLongPolling: true,
-  useFetchStreams: false,
-} as any, firebaseConfig.firestoreDatabaseId);
+  experimentalAutoDetectLongPolling: true,
+}, firebaseConfig.firestoreDatabaseId);
 
 export const auth = getAuth(app);
 

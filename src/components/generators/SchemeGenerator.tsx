@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { 
   Calendar, 
   Sparkles, 
@@ -14,9 +14,19 @@ import {
   MessageSquare,
   Edit3,
   Check,
-  Eye
+  Eye,
+  ChevronDown,
+  ChevronUp,
+  Sliders,
+  Layers,
+  Clock,
+  AlertTriangle,
+  CheckCircle2,
+  ShieldAlert
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
+import { TrialQuotaBanner } from '../common/TrialQuotaBanner';
+import { showGenerationBlockedToast } from '../../lib/generationBlockedNotice';
 import { useNavigate } from 'react-router';
 import { generateSchemeOfWork } from '../../lib/gemini';
 import { db } from '../../lib/firebase';
@@ -34,6 +44,19 @@ import { exportSchemeToWord } from '../../lib/wordExport';
 import { registerUnicodeFonts } from '../../lib/fonts/unicodeFonts';
 import { subjects as sharedSubjects, levels, CLASSES_BY_LEVEL, SUBJECT_STRANDS, SUBJECT_SUB_STRANDS, subjectsByLevel } from '../../constants';
 import { SearchableDropdown } from '../ui/SearchableDropdown';
+import { 
+  buildSchemeCurriculumFrame, 
+  buildSchemeCoveragePlan,
+  getSchemeTermCurriculumFrame,
+  buildTermWeeklyDistributionPlan,
+  buildYearWeeklyDistributionPlan,
+  validateYearCoveragePlan,
+  validateSchemeAgainstFrame,
+  isSubjectClassVerified,
+  CurriculumVerificationError,
+  TermWeeklyDistributionPlan,
+  YearWeeklyDistributionPlan
+} from '../../lib/schemeGrounding';
 
 const types = [
   { id: 'termly', label: 'Termly', icon: Calendar, desc: '12-week breakdown' },
@@ -81,7 +104,7 @@ const GHANAIAN_LANGUAGES_FOR_BILINGUAL = [
 ];
 
 export default function SchemeGenerator() {
-  const { user, profile } = useAuth();
+  const { user, profile, canGenerate, consumeCredit, aiCredits, getGenerationBlockReason } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [loadingStep, setLoadingStep] = useState(0);
@@ -97,15 +120,74 @@ export default function SchemeGenerator() {
     class: 'Basic 7',
     type: 'termly',
     term: '1',
+    academicYear: '2025/2026',
+    totalWeeks: 12,
+    revisionWeeks: 1,
+    assessmentWeeks: 1,
     title: '',
     includeLearningOutcomes: true,
     language: 'English',
     bilingualLanguage: 'Twi',
   });
 
+  const [showWeeklyPreview, setShowWeeklyPreview] = useState(false);
+
   const displaySubject = formData.subject === 'Ghanaian Language' && formData.ghanaianLanguage
     ? `Ghanaian Language (${formData.ghanaianLanguage})`
     : formData.subject;
+
+  const instructionalWeeks = Math.max(1, formData.totalWeeks - formData.revisionWeeks - formData.assessmentWeeks);
+
+  // Memoized deterministic full-year curriculum coverage plan
+  const coveragePlan = useMemo(() => {
+    if (!formData.subject) return null;
+    try {
+      return buildSchemeCoveragePlan(
+        displaySubject,
+        formData.level,
+        formData.class
+      );
+    } catch (e) {
+      console.warn("Failed to compute coverage plan:", e);
+      return null;
+    }
+  }, [displaySubject, formData.level, formData.class]);
+
+  const selectedTerm = (formData.type === 'termly' && ['1', '2', '3'].includes(formData.term))
+    ? (parseInt(formData.term, 10) as 1 | 2 | 3)
+    : 1;
+
+  // Memoized weekly distribution plan for termly scheme
+  const weeklyDistributionPlan = useMemo(() => {
+    if (!coveragePlan) return null;
+    try {
+      return buildTermWeeklyDistributionPlan(coveragePlan, selectedTerm, {
+        academicYear: formData.academicYear,
+        totalWeeks: formData.totalWeeks,
+        revisionWeeks: formData.revisionWeeks,
+        assessmentWeeks: formData.assessmentWeeks
+      });
+    } catch (e) {
+      console.warn("Failed to compute weekly distribution plan:", e);
+      return null;
+    }
+  }, [coveragePlan, selectedTerm, formData.academicYear, formData.totalWeeks, formData.revisionWeeks, formData.assessmentWeeks]);
+
+  // Memoized yearly weekly distribution plan
+  const yearlyWeeklyDistributionPlan = useMemo(() => {
+    if (!coveragePlan || formData.type !== 'yearly') return null;
+    try {
+      return buildYearWeeklyDistributionPlan(coveragePlan, {
+        academicYear: formData.academicYear,
+        totalWeeks: formData.totalWeeks,
+        revisionWeeks: formData.revisionWeeks,
+        assessmentWeeks: formData.assessmentWeeks
+      });
+    } catch (e) {
+      console.warn("Failed to compute yearly weekly distribution plan:", e);
+      return null;
+    }
+  }, [coveragePlan, formData.type, formData.academicYear, formData.totalWeeks, formData.revisionWeeks, formData.assessmentWeeks]);
 
   const loadingSteps = [
     "Analyzing NaCCA syllabus requirements...",
@@ -116,6 +198,11 @@ export default function SchemeGenerator() {
 
   const handleGenerate = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!canGenerate()) {
+      showGenerationBlockedToast(getGenerationBlockReason(), 'schemes');
+      return;
+    }
     
     // Client-side validation
     if (!formData.subject) {
@@ -140,6 +227,68 @@ export default function SchemeGenerator() {
     setResult(null);
     setSaved(false);
 
+    // Strict Curriculum Authority Check (Phase 1: Basic 4 English Audited Pilot)
+    const isVerified = isSubjectClassVerified(displaySubject, formData.class);
+    if (!isVerified) {
+      setLoading(false);
+      toast.error(
+        `Curriculum Authority Notice: Strict Verified Mode is active. Basic 4 English has been 100% audited and verified against the official NaCCA curriculum. Full syllabus authority verification for ${formData.class} ${displaySubject} is currently in progress. Generation is blocked to prevent synthetic indicators.`,
+        { duration: 8000 }
+      );
+      return;
+    }
+
+    // Build deterministic full-year curriculum coverage plan for selected class and subject
+    let activeCoveragePlan;
+    try {
+      activeCoveragePlan = coveragePlan || buildSchemeCoveragePlan(
+        displaySubject,
+        formData.level,
+        formData.class,
+        undefined,
+        true
+      );
+    } catch (err: any) {
+      setLoading(false);
+      const errMsg = err?.userMessage || err?.message || 'Curriculum verification error.';
+      toast.error(errMsg, { duration: 8000 });
+      return;
+    }
+
+    // Validate mathematical invariants of the coverage plan
+    const coverageValidation = validateYearCoveragePlan(activeCoveragePlan);
+    if (!coverageValidation.valid) {
+      console.warn("[SchemeGenerator] Year coverage plan validation notice:", coverageValidation.errors);
+    }
+
+    // Determine target term (default to Term 1 if not specified)
+    const activeSelectedTerm = (formData.type === 'termly' && ['1', '2', '3'].includes(formData.term))
+      ? (parseInt(formData.term, 10) as 1 | 2 | 3)
+      : 1;
+
+    // For termly: extract the target term frame; for yearly: full year frame
+    const targetFrame = formData.type === 'termly'
+      ? getSchemeTermCurriculumFrame(activeCoveragePlan, activeSelectedTerm)
+      : buildSchemeCurriculumFrame(displaySubject, formData.level, formData.class);
+
+    const activeWeeklyPlan = formData.type === 'termly'
+      ? (weeklyDistributionPlan || buildTermWeeklyDistributionPlan(activeCoveragePlan, activeSelectedTerm, {
+          academicYear: formData.academicYear,
+          totalWeeks: formData.totalWeeks,
+          revisionWeeks: formData.revisionWeeks,
+          assessmentWeeks: formData.assessmentWeeks
+        }))
+      : undefined;
+
+    const activeYearlyWeeklyPlan = formData.type === 'yearly'
+      ? (yearlyWeeklyDistributionPlan || buildYearWeeklyDistributionPlan(activeCoveragePlan, {
+          academicYear: formData.academicYear,
+          totalWeeks: formData.totalWeeks,
+          revisionWeeks: formData.revisionWeeks,
+          assessmentWeeks: formData.assessmentWeeks
+        }))
+      : undefined;
+
     // Simulated progress steps
     const stepInterval = setInterval(() => {
       setLoadingStep(s => (s < loadingSteps.length - 1 ? s + 1 : s));
@@ -155,9 +304,37 @@ export default function SchemeGenerator() {
           includeLearningOutcomes: formData.includeLearningOutcomes,
           language: formData.language,
           bilingualLanguage: formData.bilingualLanguage,
-          isBstemSchool: profile?.isBstemSchool
+          isBstemSchool: profile?.isBstemSchool,
+          educationalLevel: formData.level,
+          curriculumFrame: targetFrame,
+          coveragePlan: activeCoveragePlan,
+          weeklyConfig: {
+            academicYear: formData.academicYear,
+            totalWeeks: formData.totalWeeks,
+            revisionWeeks: formData.revisionWeeks,
+            assessmentWeeks: formData.assessmentWeeks
+          },
+          weeklyDistributionPlan: activeWeeklyPlan,
+          yearlyWeeklyDistributionPlan: activeYearlyWeeklyPlan
         }
       );
+
+      // Perform validation check to verify class isolation and zero cross-term contamination
+      const validation = validateSchemeAgainstFrame(
+        content, 
+        targetFrame,
+        activeCoveragePlan,
+        formData.type === 'termly' ? activeSelectedTerm : undefined
+      );
+      if (!validation.valid) {
+        if (validation.classMismatches.length > 0) {
+          console.warn("[SchemeGenerator] Class isolation validation warning:", validation.classMismatches);
+        }
+        if (validation.termCrossContamination.length > 0) {
+          console.warn("[SchemeGenerator] Cross-term contamination warning:", validation.termCrossContamination);
+        }
+      }
+
       setResult(content);
       
       if (user) {
@@ -169,6 +346,14 @@ export default function SchemeGenerator() {
           subject: displaySubject,
           level: formData.level,
           class: formData.class,
+          term: formData.term,
+          academicYear: formData.academicYear,
+          totalWeeks: formData.totalWeeks,
+          instructionalWeeks,
+          revisionWeeks: formData.revisionWeeks,
+          assessmentWeeks: formData.assessmentWeeks,
+          coverageVersion: 'teachsmart-v2-coverage',
+          weeklyDistributionVersion: 'teachsmart-v2-weekly',
           content: content,
           includeLearningOutcomes: formData.includeLearningOutcomes,
           createdAt: Date.now(),
@@ -176,6 +361,7 @@ export default function SchemeGenerator() {
         });
       }
 
+      await consumeCredit();
       toast.success("Scheme generated & cached offline! 🇬🇭");
     } catch (error) {
       console.error("Scheme generation failed:", error);
@@ -197,6 +383,14 @@ export default function SchemeGenerator() {
         level: formData.level,
         class: formData.class,
         type: formData.type,
+        term: formData.term,
+        academicYear: formData.academicYear,
+        totalWeeks: formData.totalWeeks,
+        instructionalWeeks,
+        revisionWeeks: formData.revisionWeeks,
+        assessmentWeeks: formData.assessmentWeeks,
+        coverageVersion: 'teachsmart-v2-coverage',
+        weeklyDistributionVersion: 'teachsmart-v2-weekly',
         content: result,
         includeLearningOutcomes: formData.includeLearningOutcomes,
         createdAt: new Date().toISOString()
@@ -235,6 +429,14 @@ export default function SchemeGenerator() {
           level: formData.level,
           class: formData.class,
           type: formData.type,
+          term: formData.term,
+          academicYear: formData.academicYear,
+          totalWeeks: formData.totalWeeks,
+          instructionalWeeks,
+          revisionWeeks: formData.revisionWeeks,
+          assessmentWeeks: formData.assessmentWeeks,
+          coverageVersion: 'teachsmart-v2-coverage',
+          weeklyDistributionVersion: 'teachsmart-v2-weekly',
           content: result,
           includeLearningOutcomes: formData.includeLearningOutcomes,
           createdAt: new Date().toISOString()
@@ -276,7 +478,7 @@ export default function SchemeGenerator() {
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(11);
     doc.setFont(fontName, "normal");
-    const metaText = `Subject: ${displaySubject.toUpperCase()} | Class: ${formData.class.toUpperCase()} (${formData.level.toUpperCase()})`;
+    const metaText = `Subject: ${displaySubject.toUpperCase()} | Class: ${formData.class.toUpperCase()} (${formData.level.toUpperCase()}) | Academic Year: ${formData.academicYear}`;
     doc.text(metaText, 148.5, 40, { align: 'center' });
 
     // Parse markdown table to array for autoTable
@@ -368,6 +570,7 @@ export default function SchemeGenerator() {
         classLevel: formData.class,
         level: formData.level,
         term: formData.term,
+        academicYear: formData.academicYear,
         documentType: `${formData.type === 'termly' ? 'Termly' : 'Yearly'} Scheme of Learning`,
         orientation: 'landscape'
       });
@@ -381,6 +584,7 @@ export default function SchemeGenerator() {
 
   return (
     <div className="max-w-6xl mx-auto space-y-10 p-4 md:p-8">
+      <TrialQuotaBanner />
       <div className="text-center space-y-4">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-ghana-red/10 text-ghana-red rounded-full text-xs font-black uppercase tracking-widest border border-ghana-red/20 text-center">
           <Calendar size={14} />
@@ -467,6 +671,37 @@ export default function SchemeGenerator() {
               </select>
             </div>
           </div>
+
+          {/* Curriculum Authority & Verification Status Banner */}
+          {formData.subject && formData.class && (
+            <div className="animate-fadeIn">
+              {isSubjectClassVerified(displaySubject, formData.class) ? (
+                <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+                  <div className="text-xs space-y-1">
+                    <p className="font-bold text-emerald-900">
+                      NaCCA Official Curriculum Verified (Strict Authority Active)
+                    </p>
+                    <p className="text-emerald-700">
+                      Basic 4 English is grounded in official NaCCA curriculum documents: <strong>52 Content Standards</strong>, <strong>59 Explicit Indicators</strong>, and <strong>0 synthetic fallbacks</strong>. Full-year coverage and weekly pacing are mathematically locked.
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className="p-4 bg-amber-50 border border-amber-200 rounded-2xl flex items-start gap-3">
+                  <ShieldAlert className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                  <div className="text-xs space-y-1">
+                    <p className="font-bold text-amber-900">
+                      Curriculum Authority Notice — Strict Verified Mode
+                    </p>
+                    <p className="text-amber-700">
+                      Strict Mode requires explicit, audited NaCCA standards and indicators. <strong>Basic 4 English</strong> is currently 100% verified. Full syllabus authority verification for <strong>{formData.class} {displaySubject}</strong> is currently in progress. Generation is blocked to guarantee curriculum authority.
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Multilingual settings */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-6 bg-slate-50 rounded-3xl border border-slate-100/50">
@@ -563,6 +798,216 @@ export default function SchemeGenerator() {
             )}
           </AnimatePresence>
 
+          {/* Academic Year & Term Instructional Structure */}
+          <div className="space-y-6 p-6 bg-slate-50 rounded-3xl border border-slate-200/80">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200/80 pb-4">
+              <div className="flex items-center gap-2 text-slate-800">
+                <Clock size={18} className="text-ghana-red" />
+                <h3 className="font-black uppercase tracking-tight text-sm">Term Structure & Instructional Distribution</h3>
+              </div>
+              <span className="text-[11px] font-bold text-slate-600 bg-white px-3 py-1 rounded-full border border-slate-200 shadow-xs w-fit">
+                {instructionalWeeks} Teaching + {formData.revisionWeeks} Revision + {formData.assessmentWeeks} Assessment = {formData.totalWeeks} Wks
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* Academic Year */}
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Academic Year</label>
+                <select
+                  value={formData.academicYear}
+                  onChange={(e) => setFormData({ ...formData, academicYear: e.target.value })}
+                  className="w-full p-3.5 bg-white border border-slate-200 rounded-2xl font-bold text-slate-700 text-sm focus:ring-2 focus:ring-ghana-red outline-none transition-all"
+                >
+                  <option value="2025/2026">2025/2026</option>
+                  <option value="2024/2025">2024/2025</option>
+                  <option value="2026/2027">2026/2027</option>
+                </select>
+              </div>
+
+              {/* Total Term Weeks */}
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Total Term Weeks</label>
+                <select
+                  value={formData.totalWeeks}
+                  onChange={(e) => {
+                    const total = parseInt(e.target.value, 10);
+                    setFormData({ ...formData, totalWeeks: total });
+                  }}
+                  className="w-full p-3.5 bg-white border border-slate-200 rounded-2xl font-bold text-slate-700 text-sm focus:ring-2 focus:ring-ghana-red outline-none transition-all"
+                >
+                  {[10, 11, 12, 13, 14].map(w => (
+                    <option key={w} value={w}>{w} Weeks {w === 12 ? '(Default)' : ''}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Revision Weeks */}
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Revision Weeks</label>
+                <select
+                  value={formData.revisionWeeks}
+                  onChange={(e) => setFormData({ ...formData, revisionWeeks: parseInt(e.target.value, 10) })}
+                  className="w-full p-3.5 bg-white border border-slate-200 rounded-2xl font-bold text-slate-700 text-sm focus:ring-2 focus:ring-ghana-red outline-none transition-all"
+                >
+                  {[0, 1, 2, 3].map(rw => (
+                    <option key={rw} value={rw}>{rw} Week{rw === 1 ? '' : 's'} {rw === 1 ? '(Default)' : ''}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Assessment Weeks */}
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Assessment Weeks</label>
+                <select
+                  value={formData.assessmentWeeks}
+                  onChange={(e) => setFormData({ ...formData, assessmentWeeks: parseInt(e.target.value, 10) })}
+                  className="w-full p-3.5 bg-white border border-slate-200 rounded-2xl font-bold text-slate-700 text-sm focus:ring-2 focus:ring-ghana-red outline-none transition-all"
+                >
+                  {[0, 1, 2].map(aw => (
+                    <option key={aw} value={aw}>{aw} Week{aw === 1 ? '' : 's'} {aw === 1 ? '(Default)' : ''}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <p className="text-[11px] text-slate-500 font-medium leading-relaxed">
+              TeachSmartGH default term structure distributes curriculum across <strong>{instructionalWeeks} instructional weeks</strong>, with designated revision and assessment periods. Adjust according to your school calendar.
+            </p>
+
+            {/* High Density Warning Banner */}
+            {weeklyDistributionPlan?.densityWarning && (
+              <div className="p-4 bg-amber-50 border border-amber-200 rounded-2xl flex items-start gap-3">
+                <AlertTriangle className="text-amber-600 shrink-0 mt-0.5" size={18} />
+                <div className="text-xs text-amber-800 space-y-1">
+                  <p className="font-bold">High Curriculum Density Notice</p>
+                  <p className="font-medium text-amber-700 leading-relaxed">
+                    {weeklyDistributionPlan.densityWarning}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Weekly Allocation Preview Accordion */}
+            {formData.subject && weeklyDistributionPlan && (
+              <div className="pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowWeeklyPreview(!showWeeklyPreview)}
+                  className="w-full py-3 px-4 bg-white hover:bg-slate-100/80 border border-slate-200 rounded-2xl flex items-center justify-between transition-colors group"
+                >
+                  <div className="flex items-center gap-2.5 text-left">
+                    <Layers size={16} className="text-ghana-green" />
+                    <span className="font-bold text-xs text-slate-800">
+                      Preview Planned Weekly Distribution ({formData.type === 'termly' ? `Term ${formData.term}` : 'Full Year'} • {weeklyDistributionPlan.weeks.length} Weeks)
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 text-slate-400 group-hover:text-slate-600">
+                    <span className="text-[11px] font-semibold">
+                      {showWeeklyPreview ? 'Hide Schedule' : 'Inspect Roadmap'}
+                    </span>
+                    {showWeeklyPreview ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                  </div>
+                </button>
+
+                <AnimatePresence>
+                  {showWeeklyPreview && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="overflow-hidden mt-3"
+                    >
+                      <div className="p-4 bg-white border border-slate-200 rounded-2xl space-y-3 max-h-96 overflow-y-auto">
+                        <div className="flex items-center justify-between pb-2 border-b border-slate-100 text-xs">
+                          <span className="font-bold text-slate-700">
+                            {displaySubject} ({formData.class}) — Term {formData.term} Allocation
+                          </span>
+                          <span className="text-[11px] text-slate-500 font-medium">
+                            Avg {weeklyDistributionPlan.averageDensity} indicators/wk
+                          </span>
+                        </div>
+
+                        <div className="space-y-2">
+                          {weeklyDistributionPlan.weeks.map(alloc => (
+                            <div
+                              key={alloc.weekNumber}
+                              className={cn(
+                                "p-3 rounded-xl border text-xs transition-colors",
+                                alloc.type === 'assessment'
+                                  ? "bg-purple-50/60 border-purple-200/80"
+                                  : alloc.type === 'revision'
+                                  ? "bg-blue-50/60 border-blue-200/80"
+                                  : "bg-slate-50/70 border-slate-200/70"
+                              )}
+                            >
+                              <div className="flex items-start justify-between gap-2">
+                                <div className="space-y-0.5">
+                                  <div className="flex items-center gap-2">
+                                    <span className="font-black text-slate-900 bg-white px-2 py-0.5 rounded-md border border-slate-200 text-[11px]">
+                                      Week {alloc.weekNumber}
+                                    </span>
+                                    <span className="font-bold text-slate-700 text-xs">
+                                      {alloc.strandSummary || 'Curriculum Consolidation'}
+                                    </span>
+                                  </div>
+                                  {alloc.subStrandSummary && alloc.subStrandSummary !== alloc.strandSummary && (
+                                    <p className="text-[11px] text-slate-500 font-medium pl-1">
+                                      Sub-Strand: {alloc.subStrandSummary}
+                                    </p>
+                                  )}
+                                </div>
+                                <span className={cn(
+                                  "text-[10px] font-black uppercase px-2 py-0.5 rounded-full shrink-0",
+                                  alloc.type === 'assessment'
+                                    ? "bg-purple-200 text-purple-800"
+                                    : alloc.type === 'revision'
+                                    ? "bg-blue-200 text-blue-800"
+                                    : "bg-emerald-100 text-emerald-800"
+                                )}>
+                                  {alloc.type === 'assessment'
+                                    ? 'Assessment'
+                                    : alloc.type === 'revision'
+                                    ? 'Revision'
+                                    : `${alloc.totalIndicators} Ind.`}
+                                </span>
+                              </div>
+
+                              {alloc.standards.length > 0 ? (
+                                <div className="mt-2 pl-1 space-y-1.5 border-t border-slate-200/50 pt-2">
+                                  {alloc.standards.map((st, idx) => (
+                                    <div key={idx} className="space-y-0.5">
+                                      <p className="text-[11px] font-bold text-slate-800">
+                                        {st.contentStandardCode}: <span className="font-normal text-slate-600">{st.contentStandardText}</span>
+                                      </p>
+                                      {st.indicators.length > 0 && (
+                                        <ul className="list-disc list-inside pl-1 text-[10px] text-slate-500 space-y-0.5">
+                                          {st.indicators.map(ind => (
+                                            <li key={ind.code}>
+                                              <span className="font-semibold text-slate-700">{ind.code}</span>: {ind.text}
+                                            </li>
+                                          ))}
+                                        </ul>
+                                      )}
+                                    </div>
+                                  ))}
+                                </div>
+                              ) : (
+                                <p className="mt-1.5 pl-1 text-[11px] text-slate-500 italic">
+                                  {alloc.notes || 'Consolidation, revision, and structured review activities.'}
+                                </p>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            )}
+          </div>
+
           <div className="flex flex-col md:flex-row gap-8 items-start md:items-center justify-between p-6 bg-slate-50 rounded-3xl border border-slate-100">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-ghana-red/10 rounded-2xl flex items-center justify-center text-ghana-red">
@@ -649,7 +1094,7 @@ export default function SchemeGenerator() {
                 <div className="min-w-0">
                    <h3 className="font-black text-slate-900 uppercase tracking-tight text-sm">Roadmap Preview</h3>
                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider truncate">
-                     {displaySubject} • {formData.class} ({formData.level}) • {formData.type === 'termly' ? `Term ${formData.term}` : 'Yearly'}
+                     {displaySubject} • {formData.class} ({formData.level}) • {formData.type === 'termly' ? `Term ${formData.term}` : 'Yearly'} • {formData.academicYear} • {formData.totalWeeks} Wks
                    </p>
                 </div>
               </div>

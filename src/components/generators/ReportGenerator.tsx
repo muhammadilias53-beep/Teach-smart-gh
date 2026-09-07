@@ -9,6 +9,8 @@ import {
 } from 'lucide-react';
 import { generateWithProxy } from '../../lib/gemini';
 import { useAuth } from '../../contexts/AuthContext';
+import { TrialQuotaBanner } from '../common/TrialQuotaBanner';
+import { showGenerationBlockedToast } from '../../lib/generationBlockedNotice';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-hot-toast';
 import { SafeMarkdown } from '../common/SafeMarkdown';
@@ -57,7 +59,7 @@ const TITLE_PRESETS = [
 ];
 
 export default function ReportGenerator() {
-  const { user, canGenerate } = useAuth();
+  const { user, canGenerate, consumeCredit, getGenerationBlockReason } = useAuth();
   const navigate = useNavigate();
 
   // Mode: 'roster' (Student Marks & Score Sheet), 'comment' (AI Remarks Creator), 'single_card' (Individual Report Card Preview)
@@ -432,8 +434,7 @@ export default function ReportGenerator() {
     }
 
     if (!canGenerate()) {
-      toast.error('Please upgrade your subscription to generate custom AI report remarks.');
-      navigate('/billing');
+      showGenerationBlockedToast(getGenerationBlockReason(), 'report remarks');
       return;
     }
 
@@ -459,6 +460,7 @@ Rules:
     try {
       const responseText = await generateWithProxy(prompt, systemInstruction);
       setGeneratedComment(responseText || 'Remark generated.');
+      await consumeCredit();
       toast.success('Professional GES remark crafted! 🇬🇭');
     } catch (error: any) {
       console.error('AI Remark Error:', error);
@@ -724,12 +726,13 @@ Rules:
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 space-y-8">
+      <TrialQuotaBanner />
       {/* Header Banner */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 border-b border-slate-200 dark:border-slate-800 pb-6">
         <div>
           <div className="flex items-center gap-2 mb-2">
             <span className="px-3 py-1 bg-ghana-green/10 text-ghana-green text-[10px] font-black rounded-lg uppercase tracking-wider border border-ghana-green/20">
-              GES & NaCCA Compliant
+              Aligned with NaCCA Standards
             </span>
             <span className="px-3 py-1 bg-ghana-gold/20 text-emerald-950 text-[10px] font-black rounded-lg uppercase tracking-wider">
               Catalyst Smart Reports
@@ -1879,7 +1882,7 @@ Rules:
                   <div className="space-y-6">
                     <div className="flex items-center justify-between flex-wrap gap-2">
                       <span className="px-3 py-1 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 text-[10px] font-black uppercase rounded-lg border border-emerald-200 dark:border-emerald-800">
-                        Official GES Academic Remark
+                        Standard GES Academic Remark
                       </span>
                       <div className="flex items-center gap-3">
                         <span className="text-xs text-slate-400 font-bold">

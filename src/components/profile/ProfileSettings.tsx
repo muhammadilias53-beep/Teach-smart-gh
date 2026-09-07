@@ -199,8 +199,8 @@ export default function ProfileSettings() {
                   <BadgeCheck size={16} />
                 </div>
                 <div>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400">Verified</p>
-                  <p className="text-xs font-bold text-emerald-700 dark:text-emerald-300">NaCCA Accredited</p>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400">Curriculum</p>
+                  <p className="text-xs font-bold text-emerald-700 dark:text-emerald-300">NaCCA Aligned</p>
                 </div>
               </div>
             </div>

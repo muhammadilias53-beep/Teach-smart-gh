@@ -70,8 +70,10 @@ const GeminiAssistant = () => {
 
   const handleSend = async (customText?: string) => {
     if (!canGenerate()) {
-      toast.error("Upgrade to active subscription to use AI assistant");
-      navigate('/billing');
+      toast.error("Your subscription has expired. Please renew your subscription to chat with the AI assistant.", {
+        duration: 5000,
+        icon: '🔒'
+      });
       return;
     }
 

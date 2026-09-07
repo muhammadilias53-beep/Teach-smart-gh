@@ -33,6 +33,7 @@ import ConnectivityToast from './components/common/ConnectivityToast';
 import { About } from './components/public/About';
 import { Features } from './components/public/Features';
 import { BlogResources } from './components/public/BlogResources';
+import { PrivacyPolicy } from './components/public/PrivacyPolicy';
 
 // Generic placeholder for other features
 const Placeholder = ({ name }: { name: string }) => (
@@ -64,6 +65,7 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/features" element={<Features />} />
             <Route path="/blog" element={<BlogResources />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
             
             <Route element={<AuthGuard />}>
               <Route path="/" element={<Dashboard />} />

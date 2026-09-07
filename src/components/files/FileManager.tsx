@@ -96,8 +96,10 @@ export default function FileManager() {
     }
 
     if (!canGenerate()) {
-      toast.error('Please upgrade your membership to use AI Document Summarizer.');
-      navigate('/billing');
+      toast.error('Your subscription has expired. You can view and manage all files, but an active subscription is required to run AI analysis.', {
+        duration: 5000,
+        icon: '🔒'
+      });
       return;
     }
 

@@ -11,7 +11,8 @@ import {
   Scale, 
   Lock, 
   X, 
-  Cpu
+  Cpu,
+  ExternalLink
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { toast } from 'react-hot-toast';
@@ -21,19 +22,27 @@ interface TermsAndConditionsModalProps {
   isOpen: boolean;
   onClose?: () => void;
   isMandatory?: boolean; // True when first-time login requires acceptance
+  initialTab?: 'ai_ethics' | 'curriculum' | 'privacy' | 'general';
 }
 
 export const TermsAndConditionsModal: React.FC<TermsAndConditionsModalProps> = ({
   isOpen,
   onClose,
-  isMandatory = false
+  isMandatory = false,
+  initialTab = 'ai_ethics'
 }) => {
   const { user, profile, acceptTermsAndConditions } = useAuth();
-  const [activeTab, setActiveTab] = useState<'ai_ethics' | 'curriculum' | 'privacy' | 'general'>('ai_ethics');
+  const [activeTab, setActiveTab] = useState<'ai_ethics' | 'curriculum' | 'privacy' | 'general'>(initialTab);
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [agreeResponsibleAi, setAgreeResponsibleAi] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (initialTab) {
+      setActiveTab(initialTab);
+    }
+  }, [initialTab]);
 
   if (!isOpen) return null;
 
@@ -373,6 +382,21 @@ export const TermsAndConditionsModal: React.FC<TermsAndConditionsModalProps> = (
                       <span><strong>No Unauthorized Third-Party Selling:</strong> TeachSmartGH does not sell, rent, or distribute educator or school data to advertisers.</span>
                     </li>
                   </ul>
+
+                  <div className="pt-3 border-t border-slate-100 flex items-center justify-between flex-wrap gap-2">
+                    <span className="text-[11px] text-slate-500 font-medium">Want to review full disclosures?</span>
+                    <a
+                      href="#/privacy"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 hover:text-emerald-900 underline"
+                      title="Read the TeachSmartGH Public Privacy Policy (/privacy) in a new tab"
+                    >
+                      <span>Read Public Privacy Policy (/privacy)</span>
+                      <ExternalLink size={11} />
+                    </a>
+                  </div>
                 </div>
               </motion.div>
             )}
@@ -412,29 +436,49 @@ export const TermsAndConditionsModal: React.FC<TermsAndConditionsModalProps> = (
           <div className="p-5 sm:p-6 bg-white border-t border-slate-200 shrink-0 space-y-4 shadow-lg">
             {/* Acceptance Checkboxes */}
             <div className="space-y-2.5">
-              <label className="flex items-start gap-3 cursor-pointer group select-none">
+              <div className="flex items-start gap-3 select-none">
                 <input
+                  id="agree-terms-checkbox"
                   type="checkbox"
                   checked={agreeTerms}
                   onChange={(e) => setAgreeTerms(e.target.checked)}
                   className="mt-0.5 w-4 h-4 rounded text-emerald-600 border-slate-300 focus:ring-emerald-500 cursor-pointer shrink-0"
                 />
-                <span className="text-xs font-semibold text-slate-800 leading-snug group-hover:text-slate-950">
-                  I have read and agree to the <strong>TeachSmartGH Terms of Service & Privacy Policy</strong>.
-                </span>
-              </label>
+                <div className="text-xs font-semibold text-slate-800 leading-snug">
+                  <label htmlFor="agree-terms-checkbox" className="cursor-pointer hover:text-slate-950">
+                    I have read and agree to the <strong>TeachSmartGH Terms of Service</strong> &{' '}
+                  </label>
+                  <a
+                    href="#/privacy"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                    }}
+                    className="text-emerald-700 underline font-bold hover:text-emerald-900 inline-flex items-center gap-0.5 cursor-pointer relative z-10"
+                    title="Read the TeachSmartGH Public Privacy Policy (/privacy) in a new tab"
+                  >
+                    <span>Privacy Policy</span>
+                    <ExternalLink size={10} className="inline ml-0.5" />
+                  </a>
+                  <label htmlFor="agree-terms-checkbox" className="cursor-pointer hover:text-slate-950">
+                    .
+                  </label>
+                </div>
+              </div>
 
-              <label className="flex items-start gap-3 cursor-pointer group select-none">
+              <div className="flex items-start gap-3 select-none">
                 <input
+                  id="agree-responsible-ai-checkbox"
                   type="checkbox"
                   checked={agreeResponsibleAi}
                   onChange={(e) => setAgreeResponsibleAi(e.target.checked)}
                   className="mt-0.5 w-4 h-4 rounded text-emerald-600 border-slate-300 focus:ring-emerald-500 cursor-pointer shrink-0"
                 />
-                <span className="text-xs font-semibold text-emerald-950 leading-snug group-hover:text-black">
+                <label htmlFor="agree-responsible-ai-checkbox" className="text-xs font-semibold text-emerald-950 leading-snug cursor-pointer hover:text-black">
                   <strong className="text-emerald-700 font-bold">Responsible AI Pledge:</strong> I commit to verifying all AI-generated content against official NaCCA curriculum standards, exercising professional teacher judgment, and protecting student privacy in the Ghanaian classroom.
-                </span>
-              </label>
+                </label>
+              </div>
             </div>
 
             {/* Action Buttons */}

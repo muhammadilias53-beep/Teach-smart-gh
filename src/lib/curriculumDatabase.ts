@@ -8,6 +8,11 @@ import {
   STANDARD_INDICATORS, 
   subjectsByLevel 
 } from '../constants';
+import {
+  getVerifiedIndicatorsForStandard,
+  getVerifiedStandards,
+  isSubjectClassVerified
+} from '../data/verifiedCurriculum';
 
 export interface CurriculumIndicatorItem {
   id: string;
@@ -665,6 +670,19 @@ export function getCurriculumStandards(
   classLevel?: string
 ): string[] {
   if (!strand || !subStrand) return [];
+
+  // 1. Authoritative Verified Curriculum Priority
+  if (subject && classLevel && isSubjectClassVerified(subject, classLevel)) {
+    const verified = getVerifiedStandards(subject, classLevel);
+    const matched = verified.filter(s => 
+      s.strand.toLowerCase() === strand.toLowerCase() &&
+      s.subStrand.toLowerCase() === subStrand.toLowerCase()
+    );
+    if (matched.length > 0) {
+      return matched.map(s => `${s.code}: ${s.text}`);
+    }
+  }
+
   const lookupStrand = getLookupStrand(subject, strand, level);
 
   const rawList = (
@@ -693,7 +711,7 @@ export function getCurriculumStandards(
     }
   }
 
-  // If we have classLevel and subStrand, generate authentic NaCCA standard for that class
+  // If we have classLevel and subStrand, generate authentic NaCCA standard for that class (legacy fallback)
   if (classLevel && subStrand) {
     const prefix = getClassPrefix(classLevel);
     return [
@@ -707,35 +725,46 @@ export function getCurriculumStandards(
 export function getCurriculumIndicators(
   standard: string, 
   subject?: string, 
-  classLevel?: string
+  classLevel?: string,
+  strictMode: boolean = false
 ): string[] {
   if (!standard) return [];
+
+  // Parse code and text
+  const match = standard.match(/^([A-Za-z0-9.]+):?\s*(.*)$/);
+  const code = match ? match[1].trim() : standard.trim();
+  const text = match ? match[2]?.trim() : '';
+
+  // 1. Authoritative Verified Curriculum Check
+  const verifiedInds = getVerifiedIndicatorsForStandard(code);
+  if (verifiedInds && verifiedInds.length > 0) {
+    return verifiedInds.map(ind => `${ind.code}: ${ind.text}`);
+  }
+
+  // 2. Strict Verified Mode Check: DO NOT manufacture synthetic indicators
+  const isSubjectVerified = subject && classLevel ? isSubjectClassVerified(subject, classLevel) : false;
+  if (strictMode || isSubjectVerified) {
+    // Under strict mode or verified scope, missing indicators must fail closed (return empty)
+    return [];
+  }
+
+  // 3. Fallback: STANDARD_INDICATORS direct map
   if (STANDARD_INDICATORS[standard] && STANDARD_INDICATORS[standard].length > 0) {
     return STANDARD_INDICATORS[standard];
   }
 
-  // Search by code prefix
-  const match = standard.match(/^([A-Za-z0-9.]+):?\s*(.*)$/);
-  if (match) {
-    const code = match[1].trim();
-    const text = match[2]?.trim() || 'the curriculum standard';
-
-    // Direct key lookup
-    for (const [k, v] of Object.entries(STANDARD_INDICATORS)) {
-      if (k.startsWith(code + ':') || k === code) {
-        if (v && v.length > 0) return v;
-      }
+  // Direct key lookup
+  for (const [k, v] of Object.entries(STANDARD_INDICATORS)) {
+    if (k.startsWith(code + ':') || k === code) {
+      if (v && v.length > 0) return v;
     }
-
-    return [
-      `${code}.1: Identify, describe, and explain key principles and concepts of ${text.toLowerCase()}`,
-      `${code}.2: Apply knowledge and practical skills of ${text.toLowerCase()} in structured exercises and collaborative tasks`,
-      `${code}.3: Evaluate, reflect on, and communicate findings related to ${text.toLowerCase()} using appropriate terminology`
-    ];
   }
 
+  // 4. Non-strict legacy synthetic fallback
+  const fallbackText = text || 'the curriculum standard';
   return [
-    `${standard}.1: Demonstrate practical understanding and mastery of this standard`,
-    `${standard}.2: Apply concepts in classroom learning activities and independent exercises`
+    `${code}.1: Identify, describe, and explain key principles and concepts of ${fallbackText.toLowerCase()}`,
+    `${code}.2: Apply knowledge and practical skills of ${fallbackText.toLowerCase()} in structured exercises and collaborative tasks`,
+    `${code}.3: Evaluate, reflect on, and communicate findings related to ${fallbackText.toLowerCase()} using appropriate terminology`
   ];
 }

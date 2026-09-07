@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Sparkles, Download, RefreshCw, Printer, FileText, LayoutList, Award, HelpCircle, Edit3, Check, Eye, CheckCircle } from 'lucide-react';
 import { generateWithProxy } from '../../lib/gemini';
 import { useAuth } from '../../contexts/AuthContext';
+import { TrialQuotaBanner } from '../common/TrialQuotaBanner';
+import { showGenerationBlockedToast } from '../../lib/generationBlockedNotice';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-hot-toast';
 import { SafeMarkdown } from '../common/SafeMarkdown';
@@ -14,7 +16,7 @@ import { exportAssignmentToWord } from '../../lib/wordExport';
 import { registerUnicodeFonts } from '../../lib/fonts/unicodeFonts';
 
 export default function AssignmentGenerator() {
-  const { canGenerate } = useAuth();
+  const { canGenerate, consumeCredit, getGenerationBlockReason } = useAuth();
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
@@ -51,8 +53,7 @@ export default function AssignmentGenerator() {
 
   const handleGenerate = async () => {
     if (!canGenerate()) {
-      toast.error('Please upgrade your membership to generate premium assignments.');
-      navigate('/billing');
+      showGenerationBlockedToast(getGenerationBlockReason(), 'assignments');
       return;
     }
 
@@ -135,6 +136,7 @@ export default function AssignmentGenerator() {
         synced: false
       });
 
+      await consumeCredit();
       toast.success('Assignment created & cached offline! 🇬🇭');
     } catch (error: any) {
       console.error(error);
@@ -252,6 +254,7 @@ export default function AssignmentGenerator() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
+      <TrialQuotaBanner />
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-6">
         <div>
@@ -548,7 +551,7 @@ export default function AssignmentGenerator() {
               {/* Branded Footer */}
               <div className="px-6 py-3 border-t border-slate-100 bg-slate-50 flex items-center justify-between text-[10px] text-slate-400 font-bold">
                 <span>TeachSmartGH v2.0 • Catalyst Creative</span>
-                <span className="uppercase text-emerald-600">3-H Pedagogy Approved</span>
+                <span className="uppercase text-emerald-600">3-H Pedagogy Aligned</span>
               </div>
             </div>
           ) : (
@@ -557,7 +560,7 @@ export default function AssignmentGenerator() {
                 <Award size={28} />
               </div>
               <h3 className="text-xl font-black text-slate-900">Your AI-generated assignment will appear here</h3>
-              <p className="text-slate-500 text-sm max-w-sm mt-2">Adjust details in the left panel and click generate to build fully compliant homework tasks or hands-on activities instantly.</p>
+              <p className="text-slate-500 text-sm max-w-sm mt-2">Adjust details in the left panel and click generate to build curriculum-aligned homework tasks or hands-on activities instantly.</p>
             </div>
           )}
         </div>

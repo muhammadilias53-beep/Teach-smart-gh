@@ -107,9 +107,9 @@ export const Logo = ({ className, iconOnly = false, size = 'md' }: LogoProps) =>
       </motion.div>
 
       {!iconOnly && (
-        <div className="flex flex-col min-w-0">
+        <div className="flex flex-col min-w-0 max-w-full overflow-hidden">
           <div className="flex items-center">
-            <span className="text-xl font-black text-[#001C3D] tracking-tighter uppercase leading-none truncate max-w-full">
+            <span className="text-xl font-black text-[#001C3D] dark:text-slate-100 tracking-tighter uppercase leading-none truncate max-w-full">
               Teach<span className="text-[#006B3F]">Smart</span><span className="text-[#FCD116]">GH</span>
             </span>
           </div>
@@ -120,11 +120,13 @@ export const Logo = ({ className, iconOnly = false, size = 'md' }: LogoProps) =>
              </span>
              <div className="h-[2px] w-2 bg-[#006B3F] shrink-0" />
           </div>
-          <div className="mt-1.5 flex items-center gap-1 bg-sky-50 border border-sky-100 px-1.5 py-0.5 rounded-md w-fit shrink-0">
-            <CheckCircle size={8} className="text-sky-600 fill-current shrink-0" />
-            <span className="text-[6.5px] font-black text-sky-700 uppercase tracking-widest whitespace-nowrap">GES/NaCCA CERTIFIED</span>
+          <div className="mt-1.5 inline-flex items-center gap-1 bg-sky-50 dark:bg-sky-950/40 border border-sky-100 dark:border-sky-900/50 px-1.5 py-0.5 rounded-md max-w-full">
+            <CheckCircle size={8} className="text-sky-600 dark:text-sky-400 fill-current shrink-0" />
+            <span className="text-[6.5px] font-black text-sky-700 dark:text-sky-300 uppercase tracking-wider leading-tight">
+              NaCCA CURRICULUM ALIGNED
+            </span>
           </div>
-          <span className="text-[7.5px] font-semibold text-slate-500 uppercase tracking-tight mt-1 leading-snug break-words">
+          <span className="text-[7.5px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-tight mt-1 leading-snug break-words">
             AI-Powered Teaching. Smarter Tomorrow.
           </span>
         </div>

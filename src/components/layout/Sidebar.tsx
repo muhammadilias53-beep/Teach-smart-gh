@@ -94,7 +94,7 @@ interface SidebarContentProps {
 }
 
 const SidebarContent = ({ onCloseMobile, onShowCompliance, onShowTerms, onShowLogoutConfirm, isMobile = false }: SidebarContentProps) => {
-  const { profile, isSubscriptionActive, user, daysLeft } = useAuth();
+  const { profile, isSubscriptionActive, user, daysLeft, trialGenerationsLeftToday, trialDailyLimit } = useAuth();
   const { isCollapsed, toggleCollapse } = useSidebar();
   const location = useLocation();
   const isAdmin = user?.email === 'muhammadilias53@gmail.com';
@@ -175,7 +175,7 @@ const SidebarContent = ({ onCloseMobile, onShowCompliance, onShowTerms, onShowLo
       {/* Header */}
       <div className={cn(
         "py-2 mb-2 flex items-center border-b border-slate-100 dark:border-slate-800 transition-all duration-300",
-        isDesktopCollapsed ? "px-2 justify-center flex-col gap-2" : "px-5 justify-between"
+        isDesktopCollapsed ? "px-2 justify-center flex-col gap-2" : "px-4 sm:px-5 justify-between"
       )}>
         <Logo iconOnly={isDesktopCollapsed} size={isDesktopCollapsed ? "sm" : "md"} />
       </div>
@@ -454,9 +454,28 @@ const SidebarContent = ({ onCloseMobile, onShowCompliance, onShowTerms, onShowLo
                     Status
                   </span>
                   <span className="text-[9px] font-black text-ghana-gold uppercase tracking-tighter">
-                    {user?.isAnonymous ? 'GUEST' : (hasActiveSubscription ? 'ELITE PRO' : 'TRIAL')}
+                    {user?.isAnonymous 
+                      ? 'GUEST' 
+                      : (hasActiveSubscription 
+                          ? 'ELITE PRO' 
+                          : ((profile?.aiCredits ?? 0) > 0 ? `${profile?.aiCredits} CREDITS` : 'TRIAL'))}
                   </span>
                 </div>
+                {(profile?.aiCredits !== undefined && profile.aiCredits > 0) && (
+                  <div className="flex items-center justify-between mt-1 pt-0.5 border-t border-slate-100 dark:border-slate-800">
+                    <span className="text-[8px] font-black text-amber-600 dark:text-amber-400 uppercase tracking-widest flex items-center gap-0.5">
+                      <Zap size={9} className="text-amber-500 fill-amber-500" />
+                      Credits
+                    </span>
+                    <Link 
+                      to="/billing" 
+                      className="text-[9px] font-mono font-black text-amber-600 dark:text-amber-400 hover:underline text-right"
+                      title="Manage credits"
+                    >
+                      {profile.aiCredits} gen{profile.aiCredits === 1 ? '' : 's'}
+                    </Link>
+                  </div>
+                )}
                 {!user?.isAnonymous && hasActiveSubscription && subTimeLeft && (
                   <div className="flex items-center justify-between mt-1 pt-0.5 border-t border-slate-100 dark:border-slate-800">
                     <span className="text-[8px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
@@ -471,14 +490,26 @@ const SidebarContent = ({ onCloseMobile, onShowCompliance, onShowTerms, onShowLo
                   </div>
                 )}
                 {!user?.isAnonymous && !hasActiveSubscription && (
-                  <div className="flex items-center justify-between mt-1 pt-0.5 border-t border-slate-100 dark:border-slate-800">
-                    <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">
-                      Trial
-                    </span>
-                    <span className="text-[9px] font-mono font-black text-slate-600 dark:text-slate-400 text-right">
-                      {daysLeft}d left
-                    </span>
-                  </div>
+                  <>
+                    <div className="flex items-center justify-between mt-1 pt-0.5 border-t border-slate-100 dark:border-slate-800">
+                      <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">
+                        Trial
+                      </span>
+                      <span className="text-[9px] font-mono font-black text-slate-600 dark:text-slate-400 text-right">
+                        {daysLeft}d left
+                      </span>
+                    </div>
+                    {daysLeft > 0 && (
+                      <div className="flex items-center justify-between pt-0.5">
+                        <span className="text-[8px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
+                          Today
+                        </span>
+                        <span className="text-[9px] font-mono font-black text-emerald-700 dark:text-emerald-400 text-right">
+                          {trialGenerationsLeftToday}/{trialDailyLimit} left
+                        </span>
+                      </div>
+                    )}
+                  </>
                 )}
                 {user?.isAnonymous && (
                   <Link to="/login" className="block text-[8px] font-black text-emerald-600 dark:text-emerald-400 hover:text-ghana-gold uppercase tracking-widest mt-0.5 animate-pulse">
@@ -629,7 +660,7 @@ const Sidebar = () => {
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="lg:hidden fixed left-0 top-0 bottom-0 w-[280px] bg-white dark:bg-slate-900 z-[70] shadow-2xl transition-colors duration-300"
+              className="lg:hidden fixed left-0 top-0 bottom-0 w-[280px] max-w-[calc(100vw-56px)] bg-white dark:bg-slate-900 z-[70] shadow-2xl transition-colors duration-300"
             >
               <SidebarContent 
                 onCloseMobile={() => setIsMobileOpen(false)}

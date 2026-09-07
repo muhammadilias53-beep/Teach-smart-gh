@@ -122,7 +122,7 @@ export const ComplianceModal = ({ isOpen, onClose }: ComplianceModalProps) => {
             <div className="pt-6 border-t border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
                <div>
                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Registry ID</p>
-                  <p className="text-xs font-black text-slate-900">TSG-NA-2024-COMPLIANT</p>
+                  <p className="text-xs font-black text-slate-900">TSG-NA-2024-ALIGNED</p>
                </div>
                <div className="flex items-center gap-3">
                  <div className="w-8 h-8 rounded-full bg-slate-900 flex items-center justify-center text-white font-black text-[10px]">GH</div>

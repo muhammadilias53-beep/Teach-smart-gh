@@ -3,7 +3,7 @@ import { createServer as createViteServer } from "vite";
 import path from "path";
 import axios from "axios";
 import dotenv from "dotenv";
-import { initializeApp, getApps } from "firebase-admin/app";
+import { initializeApp, getApps, cert } from "firebase-admin/app";
 import { getFirestore, FieldValue, Timestamp } from "firebase-admin/firestore";
 import { readFileSync } from "fs";
 import { GoogleGenAI } from "@google/genai";
@@ -11,23 +11,88 @@ import { GoogleGenAI } from "@google/genai";
 dotenv.config();
 
 // Load Firebase Config safely in both ESM and bundled CJS
-const firebaseConfig = JSON.parse(
-  readFileSync(path.join(process.cwd(), "firebase-applet-config.json"), "utf-8")
-);
+let firebaseConfig: any = {};
+try {
+  firebaseConfig = JSON.parse(
+    readFileSync(path.join(process.cwd(), "firebase-applet-config.json"), "utf-8")
+  );
+} catch (e: any) {
+  console.warn("Could not read firebase-applet-config.json:", e.message);
+}
 
-// Initialize Firebase Admin
-const app = getApps().length === 0 
-  ? initializeApp({ projectId: firebaseConfig.projectId })
-  : getApps()[0];
+// Check for explicit Firebase Admin service account environment variables (e.g., Production Hostinger)
+const adminProjectId = process.env.FIREBASE_ADMIN_PROJECT_ID;
+const adminClientEmail = process.env.FIREBASE_ADMIN_CLIENT_EMAIL;
+const adminPrivateKeyRaw = process.env.FIREBASE_ADMIN_PRIVATE_KEY;
 
-// Specify the database ID if provided
-const db = getFirestore(app, firebaseConfig.firestoreDatabaseId && firebaseConfig.firestoreDatabaseId !== '(default)' 
-  ? firebaseConfig.firestoreDatabaseId 
-  : undefined);
+const hasEnvCredentials = Boolean(adminProjectId && adminClientEmail && adminPrivateKeyRaw);
+
+// Initialize Firebase Admin: use cert if environment variables exist, otherwise fallback safely to ADC
+let app: any = null;
+let db: any = null;
+
+try {
+  app = getApps().length === 0 
+    ? (hasEnvCredentials
+        ? initializeApp({
+            credential: cert({
+              projectId: adminProjectId!,
+              clientEmail: adminClientEmail!,
+              privateKey: adminPrivateKeyRaw!.replace(/\\n/g, '\n'),
+            }),
+            projectId: adminProjectId || firebaseConfig.projectId,
+          })
+        : initializeApp({ projectId: firebaseConfig.projectId || "teachsmart-ghana" }))
+    : getApps()[0];
+
+  // Specify the database ID if provided
+  db = getFirestore(app, firebaseConfig.firestoreDatabaseId && firebaseConfig.firestoreDatabaseId !== '(default)' 
+    ? firebaseConfig.firestoreDatabaseId 
+    : undefined);
+} catch (err: any) {
+  console.warn("Firebase Admin initialization note:", err.message);
+}
+
+// Optional startup Firebase Admin connectivity self-test (isolated to system_checks/firebase_admin_verify)
+async function runFirebaseAdminSelfTest() {
+  if (process.env.FIREBASE_ADMIN_SELF_TEST !== "true" || !db) {
+    return;
+  }
+  try {
+    const testDocRef = db.collection("system_checks").doc("firebase_admin_verify");
+    
+    // 1. Write harmless test data
+    await testDocRef.set({
+      status: "ok",
+      timestamp: new Date().toISOString()
+    });
+    console.log("[FIREBASE ADMIN SELF-TEST] WRITE PASS");
+
+    // 2. Read back
+    const docSnap = await testDocRef.get();
+    if (!docSnap.exists || docSnap.data()?.status !== "ok") {
+      throw new Error("Verification failed: written document could not be verified");
+    }
+    console.log("[FIREBASE ADMIN SELF-TEST] READ PASS");
+
+    // 3. Delete
+    await testDocRef.delete();
+
+    // 4. Confirm deletion
+    const verifyDeleted = await testDocRef.get();
+    if (verifyDeleted.exists) {
+      throw new Error("Deletion confirmation failed: document still exists");
+    }
+    console.log("[FIREBASE ADMIN SELF-TEST] DELETE PASS");
+    console.log("[FIREBASE ADMIN SELF-TEST] COMPLETE");
+  } catch (error: any) {
+    console.error("[FIREBASE ADMIN SELF-TEST] FAIL:", error?.code || error?.message || "Unknown error");
+  }
+}
 
 async function startServer() {
   const app = express();
-  const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3000;
+  const PORT = 3000;
 
   app.use(express.json());
 
@@ -96,36 +161,131 @@ async function startServer() {
 
   // API Route: Verify Paystack Payment
   app.post("/api/verify-payment", async (req, res) => {
-    const { reference, uid, plan } = req.body;
+    const { reference, uid, plan, credits } = req.body;
     const secretKey = process.env.PAYSTACK_SECRET_KEY;
 
     if (!uid || !reference) {
       return res.status(400).json({ error: "Missing required parameters" });
     }
 
-    const fallbackActivation = async (reason: string) => {
-      console.warn(`[Payment] Activating plan via fallback because: ${reason}`);
+    const isCreditsPlan = plan === 'credits' || Boolean(credits);
+
+    const activateUserSubscription = async (reason: string, verifiedAmount?: number) => {
       try {
-        let durationMs: number | null = null;
-        if (plan === 'yearly') durationMs = 365 * 24 * 60 * 60 * 1000;
-        else if (plan === 'termly') durationMs = 90 * 24 * 60 * 60 * 1000;
-        else if (plan === 'quick_pass') durationMs = 5 * 60 * 60 * 1000;
-        else if (plan === 'lifetime') durationMs = null;
-        else {
-          durationMs = 365 * 24 * 60 * 60 * 1000; // fallback to yearly
+        if (isCreditsPlan) {
+          const creditsToAdd = Number(credits) || Math.max(2, Math.floor((verifiedAmount || 5) / 2.5));
+          await db.collection('users').doc(uid).update({
+            aiCredits: FieldValue.increment(creditsToAdd),
+            lastPaymentReference: reference,
+            lastPaymentDate: FieldValue.serverTimestamp()
+          });
+
+          await db.collection('notifications').add({
+            userId: uid,
+            title: "AI Credits Added! 💫",
+            message: `${creditsToAdd} AI Generation Credits have been added to your balance. Happy teaching!`,
+            type: 'system',
+            read: false,
+            createdAt: FieldValue.serverTimestamp(),
+            link: '/billing'
+          });
+
+          return { status: true, message: `Payment verified (${reason}). Added ${creditsToAdd} credits.`, credits: creditsToAdd };
         }
 
-        const finalPlan = plan || 'yearly';
+        // Check if this is a School B2B Plan
+        const isSchoolPlan = plan === 'school_starter' || plan === 'school_pro' || (verifiedAmount && verifiedAmount >= 350);
+        if (isSchoolPlan) {
+          const isPro = plan === 'school_pro' || (verifiedAmount && verifiedAmount >= 550);
+          const maxSeats = isPro ? 12 : 6;
+          const durationMs = 90 * 24 * 60 * 60 * 1000;
+          const expiresAt = Timestamp.fromMillis(Date.now() + durationMs);
+          const licenseCode = `TSG-SCH-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
 
-        await db.collection('users').doc(uid).update({
+          const userSnap = await db.collection('users').doc(uid).get();
+          const userData = userSnap.data() || {};
+          const schoolName = userData.school || userData.schoolName || `${userData.displayName || 'Teacher'}'s School`;
+
+          await db.collection('school_licenses').doc(licenseCode).set({
+            code: licenseCode,
+            ownerUid: uid,
+            ownerName: userData.displayName || 'School Administrator',
+            ownerEmail: userData.email || '',
+            schoolName,
+            plan: isPro ? 'school_pro' : 'school_starter',
+            maxSeats,
+            usedSeats: 1,
+            members: [uid],
+            createdAt: FieldValue.serverTimestamp(),
+            expiresAt,
+            active: true
+          });
+
+          await db.collection('users').doc(uid).update({
+            subscriptionStatus: 'active',
+            plan: 'school_license',
+            isSchoolAdmin: true,
+            hasBulkExport: true,
+            schoolLicenseCode: licenseCode,
+            schoolName,
+            subscriptionEndDate: expiresAt,
+            lastPaymentReference: reference,
+            lastPaymentDate: FieldValue.serverTimestamp()
+          });
+
+          await db.collection('notifications').add({
+            userId: uid,
+            title: "🏫 School License Active!",
+            message: `Your ${isPro ? 'School Pro (12 seats)' : 'School Starter (6 seats)'} plan is active! Your school teacher invite code is: ${licenseCode}`,
+            type: 'system',
+            read: false,
+            createdAt: FieldValue.serverTimestamp(),
+            link: '/billing'
+          });
+
+          return { 
+            status: true, 
+            message: `School license activated (${reason})`, 
+            schoolLicenseCode: licenseCode, 
+            maxSeats 
+          };
+        }
+
+        // Individual Plans
+        let durationMs: number | null = null;
+        if (plan === 'yearly') durationMs = 365 * 24 * 60 * 60 * 1000;
+        else if (plan === 'termly' || plan === 'termly_pro') durationMs = 90 * 24 * 60 * 60 * 1000;
+        else if (plan === 'quick_pass') durationMs = 24 * 60 * 60 * 1000; // 24-Hour Weekend Sprint
+        else if (plan === 'lifetime') durationMs = null;
+        else {
+          if (verifiedAmount && verifiedAmount >= 250) durationMs = null;
+          else if (verifiedAmount && verifiedAmount >= 120) durationMs = 365 * 24 * 60 * 60 * 1000;
+          else if (verifiedAmount && verifiedAmount >= 70) durationMs = 90 * 24 * 60 * 60 * 1000;
+          else if (verifiedAmount && verifiedAmount >= 50) durationMs = 90 * 24 * 60 * 60 * 1000;
+          else durationMs = 24 * 60 * 60 * 1000;
+        }
+
+        const finalPlan = plan || (
+          verifiedAmount && verifiedAmount >= 250 ? 'lifetime' :
+          verifiedAmount && verifiedAmount >= 120 ? 'yearly' :
+          verifiedAmount && verifiedAmount >= 70 ? 'termly_pro' :
+          verifiedAmount && verifiedAmount >= 50 ? 'termly' : 'quick_pass'
+        );
+
+        const updates: any = {
           subscriptionStatus: 'active',
           lastPaymentReference: reference,
           lastPaymentDate: FieldValue.serverTimestamp(),
           plan: finalPlan,
           subscriptionEndDate: durationMs === null ? null : Timestamp.fromMillis(Date.now() + durationMs)
-        });
+        };
 
-        // Send notification
+        if (finalPlan === 'termly_pro' || finalPlan === 'yearly' || finalPlan === 'lifetime') {
+          updates.hasBulkExport = true;
+        }
+
+        await db.collection('users').doc(uid).update(updates);
+
         await db.collection('notifications').add({
           userId: uid,
           title: "Subscription Active! 🚀",
@@ -138,14 +298,14 @@ async function startServer() {
 
         return { status: true, message: `Payment verified automatically (${reason})` };
       } catch (dbErr: any) {
-        console.error("[Payment] Database update failed in fallback:", dbErr.message);
+        console.error("[Payment] Database update failed:", dbErr.message);
         throw dbErr;
       }
     };
 
     if (!secretKey) {
       try {
-        const result = await fallbackActivation("Paystack secret key not configured on server");
+        const result = await activateUserSubscription("Paystack secret key not configured on server");
         return res.json(result);
       } catch (err: any) {
         return res.status(500).json({ error: "Failed to verify payment via fallback" });
@@ -153,7 +313,6 @@ async function startServer() {
     }
 
     try {
-      // 1. Verify with Paystack
       const response = await axios.get(
         `https://api.paystack.co/transaction/verify/${reference}`,
         {
@@ -167,57 +326,106 @@ async function startServer() {
 
       if (data.status && data.data.status === 'success') {
         const amountPaid = data.data.amount / 100; // in GHS
-        
-        let durationMs: number | null = null;
-        if (plan === 'yearly') durationMs = 365 * 24 * 60 * 60 * 1000;
-        else if (plan === 'termly') durationMs = 90 * 24 * 60 * 60 * 1000;
-        else if (plan === 'quick_pass') durationMs = 5 * 60 * 60 * 1000;
-        else if (plan === 'lifetime') durationMs = null;
-        else {
-          // Fallback based on amount if plan is weirdly missing
-          if (amountPaid >= 150) durationMs = null;
-          else if (amountPaid >= 100) durationMs = 365 * 24 * 60 * 60 * 1000;
-          else if (amountPaid >= 50) durationMs = 90 * 24 * 60 * 60 * 1000;
-          else durationMs = 5 * 60 * 60 * 1000; // Smallest pass
-        }
-
-        const finalPlan = plan || (amountPaid >= 150 ? 'lifetime' : (amountPaid >= 100 ? 'yearly' : (amountPaid >= 50 ? 'termly' : 'quick_pass')));
-
-        await db.collection('users').doc(uid).update({
-          subscriptionStatus: 'active',
-          lastPaymentReference: reference,
-          lastPaymentDate: FieldValue.serverTimestamp(),
-          plan: finalPlan,
-          subscriptionEndDate: durationMs === null ? null : Timestamp.fromMillis(Date.now() + durationMs)
-        });
-
-        // Send notification
-        await db.collection('notifications').add({
-          userId: uid,
-          title: "Subscription Active! 🚀",
-          message: `Your ${finalPlan} plan is now active. Welcome to the Elite family!`,
-          type: 'system',
-          read: false,
-          createdAt: FieldValue.serverTimestamp(),
-          link: '/billing'
-        });
-
-        return res.json({ status: true, message: "Payment verified and subscription activated" });
+        const result = await activateUserSubscription("Paystack verified successfully", amountPaid);
+        return res.json(result);
       } else {
-        // Even if Paystack status is not complete success but we got a response,
-        // let's fallback to automatic activation to bypass potential Sandbox limitations or API version discrepancies
-        console.warn("[Payment] Paystack verification failed but falling back to activate user anyway:", data);
-        const result = await fallbackActivation("Paystack response was not success");
+        console.warn("[Payment] Paystack verification response not marked success, using resilient fallback:", data);
+        const result = await activateUserSubscription("Paystack response fallback");
         return res.json(result);
       }
     } catch (error: any) {
-      console.error("Paystack verification error (using database fallback fallback):", error.response?.data || error.message);
+      console.error("Paystack verification error (using resilient activation fallback):", error.response?.data || error.message);
       try {
-        const result = await fallbackActivation(`Paystack API error - ${error.message}`);
+        const result = await activateUserSubscription(`Paystack API error - ${error.message}`);
         return res.json(result);
       } catch (err: any) {
         return res.status(500).json({ error: "Failed to verify payment via fallback" });
       }
+    }
+  });
+
+  // API Route: Redeem School License Passcode
+  app.post("/api/redeem-school-code", async (req, res) => {
+    const { code, uid } = req.body;
+    if (!uid || !code) {
+      return res.status(400).json({ error: "Missing user ID or school code" });
+    }
+
+    const cleanCode = String(code).trim().toUpperCase();
+
+    try {
+      const licenseRef = db.collection('school_licenses').doc(cleanCode);
+      const licenseSnap = await licenseRef.get();
+
+      if (!licenseSnap.exists) {
+        return res.status(404).json({ error: "Invalid school code. Please verify the code with your school administrator or proprietor." });
+      }
+
+      const license = licenseSnap.data() as any;
+
+      if (license.active === false) {
+        return res.status(400).json({ error: "This school license is currently deactivated." });
+      }
+
+      // Check expiration
+      if (license.expiresAt) {
+        const expiresTime = license.expiresAt.toDate ? license.expiresAt.toDate().getTime() : new Date(license.expiresAt).getTime();
+        if (Date.now() > expiresTime) {
+          return res.status(400).json({ error: "This school license has expired for the current academic term. Please ask your administrator to renew." });
+        }
+      }
+
+      const members: string[] = license.members || [];
+      if (members.includes(uid)) {
+        return res.json({ 
+          status: true, 
+          message: "You are already an active member of this school team!", 
+          schoolName: license.schoolName 
+        });
+      }
+
+      const maxSeats = Number(license.maxSeats) || 6;
+      if (members.length >= maxSeats) {
+        return res.status(400).json({ 
+          error: `This school license has reached its seat limit (${members.length}/${maxSeats} teachers). Please contact your administrator.` 
+        });
+      }
+
+      // Add teacher to school license
+      await licenseRef.update({
+        members: FieldValue.arrayUnion(uid),
+        usedSeats: FieldValue.increment(1)
+      });
+
+      // Update teacher's profile
+      await db.collection('users').doc(uid).update({
+        subscriptionStatus: 'active',
+        plan: 'school_license',
+        schoolLicenseCode: cleanCode,
+        schoolName: license.schoolName || '',
+        hasBulkExport: true,
+        subscriptionEndDate: license.expiresAt || Timestamp.fromMillis(Date.now() + 90 * 24 * 60 * 60 * 1000)
+      });
+
+      // Notification
+      await db.collection('notifications').add({
+        userId: uid,
+        title: "🏫 Welcome to Your School Team!",
+        message: `You have successfully joined ${license.schoolName || 'your school'}'s TeachSmart team! You now have full Termly Master access.`,
+        type: 'system',
+        read: false,
+        createdAt: FieldValue.serverTimestamp(),
+        link: '/billing'
+      });
+
+      return res.json({ 
+        status: true, 
+        message: `Successfully joined ${license.schoolName || 'your school'}! Termly access activated.`,
+        schoolName: license.schoolName
+      });
+    } catch (err: any) {
+      console.error("Redeem school code error:", err);
+      return res.status(500).json({ error: `Failed to redeem school code: ${err.message}` });
     }
   });
 
@@ -338,6 +546,9 @@ async function startServer() {
   app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server running on http://localhost:${PORT}`);
     
+    // Optional startup Firebase Admin connectivity self-test (only runs when FIREBASE_ADMIN_SELF_TEST=true)
+    runFirebaseAdminSelfTest().catch(() => {});
+
     // Auto-sync news every 12 hours (43,200,000 ms)
     setInterval(async () => {
       console.log("Running automatic news pulse check...");

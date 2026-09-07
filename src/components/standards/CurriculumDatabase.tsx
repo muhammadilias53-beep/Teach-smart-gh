@@ -236,7 +236,7 @@ export const CurriculumDatabase: React.FC = () => {
             Curriculum Standards & Indicators Database
           </h1>
           <p className="text-sm sm:text-base text-slate-300 leading-relaxed mb-6">
-            Instantly search, reference, bookmark, and import certified NaCCA content standards and learning indicators directly into your lesson plans, schemes of work, and assessment papers.
+            Instantly search, reference, bookmark, and import standardized NaCCA content standards and learning indicators directly into your lesson plans, schemes of work, and assessment papers.
           </p>
 
           {/* Quick Metrics Bar */}
@@ -491,7 +491,7 @@ export const CurriculumDatabase: React.FC = () => {
                       Showing <strong className="text-slate-800">{Math.min(displayLimit, filteredResults.length)}</strong> of <strong className="text-slate-800">{filteredResults.length}</strong> learning indicators
                     </span>
                     <span className="text-emerald-700 font-semibold bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-100">
-                      NaCCA Ghana Compliant
+                      NaCCA Curriculum Aligned
                     </span>
                   </div>
 
@@ -626,7 +626,7 @@ export const CurriculumDatabase: React.FC = () => {
             <div className="mb-6">
               <h2 className="text-lg font-bold text-slate-900">NaCCA Curriculum Subject & Strand Taxonomy</h2>
               <p className="text-xs text-slate-500 mt-0.5">
-                Overview of all accredited subjects, learning strands, and sub-strands across the Ghanaian national curriculum.
+                Overview of standard curriculum subjects, learning strands, and sub-strands across the Ghanaian national curriculum.
               </p>
             </div>
 

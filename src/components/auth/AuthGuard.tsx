@@ -197,11 +197,33 @@ const AuthGuard = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
           >
-            {isUserBlocked && !isPublicPath ? (
-              <LockedOverlay />
-            ) : (
-              <Outlet />
+            {isUserBlocked && !isPublicPath && (
+              <div className="mb-6 p-4 sm:p-5 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/40 dark:to-orange-950/30 border border-amber-200/80 dark:border-amber-800/60 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-amber-900 dark:text-amber-100 shadow-sm">
+                <div className="flex items-start sm:items-center gap-3.5">
+                  <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 border border-amber-500/20 mt-0.5 sm:mt-0">
+                    <Lock size={20} />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="px-2 py-0.5 bg-amber-500/10 text-amber-700 dark:text-amber-300 font-black text-[9px] uppercase tracking-wider rounded border border-amber-500/20">
+                        Subscription Inactive • Read-Only Access
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-600 dark:text-slate-300 font-medium mt-1 leading-relaxed">
+                      You have full access to view, search, review, and export all your resources, saved materials, and curriculum. New AI generations require an active subscription.
+                    </p>
+                  </div>
+                </div>
+                <Link
+                  to="/billing"
+                  className="shrink-0 w-full sm:w-auto px-5 py-2.5 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-black uppercase tracking-wider transition-all shadow-md shadow-amber-600/20 flex items-center justify-center gap-2"
+                >
+                  <CreditCard size={15} />
+                  Renew Subscription
+                </Link>
+              </div>
             )}
+            <Outlet />
           </motion.div>
         </div>
       </main>

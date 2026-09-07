@@ -15,7 +15,8 @@ import {
   Book,
   CheckCircle,
   ShieldCheck,
-  Star
+  Star,
+  Layers
 } from 'lucide-react';
 import { 
   collection, 
@@ -42,6 +43,7 @@ import { SearchableDropdown } from '../ui/SearchableDropdown';
 import { ConfirmationModal } from '../common/ConfirmationModal';
 import { safeLocalStorage } from '../../lib/storage';
 import { Link } from 'react-router';
+import { BulkTermExportModal } from '../generators/BulkTermExportModal';
 
 const getSelectableStrands = (subj: string, lvl: string) => {
   if (subj === 'English' && lvl === 'JHS') {
@@ -535,6 +537,7 @@ export default function ContentLibrary() {
   const [favorites, setFavorites] = useState<string[]>([]);
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
   const [resourceToDelete, setResourceToDelete] = useState<string | null>(null);
+  const [showBulkExportModal, setShowBulkExportModal] = useState(false);
 
   // Curriculum Coverage states
   const [coverageSubject, setCoverageSubject] = useState('Science');
@@ -1079,13 +1082,26 @@ export default function ContentLibrary() {
             Coverage Tracking
           </button>
         </div>
-        <button 
-          onClick={() => setShowAddModal(true)}
-          className="btn-primary flex items-center justify-center gap-2 py-3 px-6"
-        >
-          <Plus size={20} />
-          <span>Add Resource</span>
-        </button>
+        <div className="flex items-center gap-3">
+          <button 
+            onClick={() => setShowBulkExportModal(true)}
+            className="flex items-center justify-center gap-2 py-3 px-5 bg-slate-900 hover:bg-slate-800 text-white rounded-full text-xs font-black uppercase tracking-wider shadow-md border border-slate-700 transition-all hover:shadow-lg cursor-pointer group"
+            title="Bulk Export Term Lesson Plans (Word .docx or PDF) - Special Subscription Mode"
+          >
+            <Layers size={16} className="text-ghana-gold group-hover:scale-110 transition-transform" />
+            <span>Export Term Book</span>
+            <span className="px-1.5 py-0.5 bg-ghana-gold/20 text-ghana-gold text-[9px] font-black rounded uppercase tracking-wider border border-ghana-gold/30">
+              Special Mode
+            </span>
+          </button>
+          <button 
+            onClick={() => setShowAddModal(true)}
+            className="btn-primary flex items-center justify-center gap-2 py-3 px-6"
+          >
+            <Plus size={20} />
+            <span>Add Resource</span>
+          </button>
+        </div>
       </div>
 
       {activeTab === 'library' ? (
@@ -1658,7 +1674,7 @@ export default function ContentLibrary() {
                             </span>
                             <div className="w-1 h-1 bg-slate-300 rounded-full" />
                             <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">
-                              NaCCA Approved
+                              NaCCA Curriculum
                             </span>
                           </div>
                           
@@ -2747,6 +2763,10 @@ export default function ContentLibrary() {
         title="Delete Resource?"
         message="This action cannot be undone. This resource will be permanently removed from your library."
         confirmLabel="Delete"
+      />
+      <BulkTermExportModal
+        isOpen={showBulkExportModal}
+        onClose={() => setShowBulkExportModal(false)}
       />
     </div>
   );

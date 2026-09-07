@@ -23,6 +23,8 @@ import {
   Eye
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
+import { TrialQuotaBanner } from '../common/TrialQuotaBanner';
+import { showGenerationBlockedToast } from '../../lib/generationBlockedNotice';
 import { useNavigate } from 'react-router';
 import { generateExam } from '../../lib/gemini';
 import { db } from '../../lib/firebase';
@@ -84,7 +86,7 @@ const GHANAIAN_LANGUAGES_FOR_BILINGUAL = [
 ];
 
 export default function ExamGenerator() {
-  const { user, profile } = useAuth();
+  const { user, profile, canGenerate, consumeCredit, aiCredits, getGenerationBlockReason } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<{ questions: string; markingScheme: string } | null>(null);
@@ -175,6 +177,11 @@ export default function ExamGenerator() {
   const handleGenerate = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!canGenerate()) {
+      showGenerationBlockedToast(getGenerationBlockReason(), 'exams');
+      return;
+    }
+
     setLoading(true);
     setResult(null);
     setSaved(false);
@@ -233,6 +240,7 @@ export default function ExamGenerator() {
         });
       }
 
+      await consumeCredit();
       toast.success("Examination generated & cached offline! 🇬🇭");
     } catch (error: any) {
       console.error("Exam generation failed:", error);
@@ -499,6 +507,7 @@ export default function ExamGenerator() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-10 p-4 md:p-8">
+      <TrialQuotaBanner />
       <div className="text-center space-y-4">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-500/10 text-emerald-600 rounded-full text-xs font-black uppercase tracking-widest border border-emerald-500/20">
           <Sparkles size={14} />

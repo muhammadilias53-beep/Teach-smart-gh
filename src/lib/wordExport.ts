@@ -1513,7 +1513,7 @@ export async function exportLessonPlanToWord(
   const doc = new Document({
     creator: 'TeachSmartGH (Catalyst Creative)',
     title: `${officialTitle} - ${displaySubject}`,
-    description: 'NaCCA Compliant GES Official Lesson Plan Notebook Page',
+    description: 'NaCCA-Aligned GES Standard Lesson Plan Notebook Page',
     sections: [
       {
         properties: {

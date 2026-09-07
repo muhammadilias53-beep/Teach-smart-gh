@@ -1,9 +1,11 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged, User, signOut } from 'firebase/auth';
-import { doc, getDoc, setDoc, serverTimestamp, onSnapshot } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, increment, serverTimestamp, onSnapshot } from 'firebase/firestore';
 import { differenceInCalendarDays } from 'date-fns';
 import { auth, db } from '../lib/firebase';
 import { UserProfile } from '../types';
+
+export type GenerationBlockReason = 'none' | 'trial_daily_limit' | 'trial_expired' | 'no_credits';
 
 interface AuthContextType {
   user: User | null;
@@ -12,10 +14,18 @@ interface AuthContextType {
   logout: () => Promise<void>;
   refreshProfile: () => Promise<void>;
   canGenerate: () => boolean;
+  consumeCredit: () => Promise<boolean>;
+  canBulkExport: () => boolean;
   isTrialActive: () => boolean;
   isSubscriptionActive: () => boolean;
   getTrialDaysLeft: () => number;
   daysLeft: number;
+  aiCredits: number;
+  trialDailyLimit: number;
+  trialGenerationsLeftToday: number;
+  getTrialGenerationsUsedToday: () => number;
+  getTrialGenerationsLeftToday: () => number;
+  getGenerationBlockReason: () => GenerationBlockReason;
   completeOnboarding: (data: Partial<UserProfile>) => Promise<void>;
   completeOnboardingTour: (data?: Partial<UserProfile>) => Promise<void>;
   dismissOnboardingTour: () => Promise<void>;
@@ -96,12 +106,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const TRIAL_RESET_DATE = new Date('2026-05-11T00:00:00Z');
   const TRIAL_DURATION_DAYS = 3;
+  const TRIAL_DAILY_LIMIT = 2; // Option B: 2 generations per day during 3-day trial (max 6 total)
 
-  const isTrialActive = () => {
-    return getTrialDaysLeft() > 0;
-  };
+  const isAdmin = user?.email === 'muhammadilias53@gmail.com';
+  const aiCredits = profile?.aiCredits ?? 0;
 
-  const getTrialDaysLeft = () => {
+  function isSubscriptionActive(): boolean {
+    if (!profile) return false;
+    if (profile.subscriptionStatus !== 'active') return false;
+    
+    const subEndDate: any = profile.subscriptionEndDate;
+    if (!subEndDate) return true; // Lifetime/Null end date
+    
+    const endDate = (typeof subEndDate === 'object' && 'toDate' in subEndDate)
+      ? subEndDate.toDate()
+      : new Date(subEndDate);
+    
+    return new Date() < endDate;
+  }
+
+  function getTodayDateString(): string {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  function getTrialDaysLeft(): number {
     if (!profile) return 0;
 
     let startDate = getSafeDate(profile.trialStartDate);
@@ -127,7 +159,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const remainingDays = Math.ceil(remainingMs / msInDay);
     
     return isNaN(remainingDays) ? 0 : Math.max(0, Math.min(TRIAL_DURATION_DAYS, remainingDays));
-  };
+  }
+
+  function isTrialActive(): boolean {
+    return getTrialDaysLeft() > 0;
+  }
+
+  function getTrialGenerationsUsedToday(): number {
+    if (!profile) return 0;
+    const today = getTodayDateString();
+    if (profile.trialGenerationsDate === today) {
+      return profile.trialGenerationsToday || 0;
+    }
+    return 0;
+  }
+
+  function getTrialGenerationsLeftToday(): number {
+    if (!isTrialActive()) return 0;
+    const used = getTrialGenerationsUsedToday();
+    return Math.max(0, TRIAL_DAILY_LIMIT - used);
+  }
+
+  const trialDailyLimit = TRIAL_DAILY_LIMIT;
+  const trialGenerationsLeftToday = getTrialGenerationsLeftToday();
+
+  function getGenerationBlockReason(): GenerationBlockReason {
+    if (isAdmin) return 'none';
+    if (isSubscriptionActive()) return 'none';
+    if (aiCredits > 0) return 'none';
+    if (isTrialActive()) {
+      return getTrialGenerationsLeftToday() > 0 ? 'none' : 'trial_daily_limit';
+    }
+    return 'trial_expired';
+  }
 
   // Auto-update daysLeft every minute to catch day changes reliably
   useEffect(() => {
@@ -144,32 +208,105 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => clearInterval(interval);
   }, [profile]);
 
-  const isAdmin = user?.email === 'muhammadilias53@gmail.com';
-
-  const isSubscriptionActive = () => {
-    if (!profile) return false;
-    if (profile.subscriptionStatus !== 'active') return false;
-    
-    const subEndDate: any = profile.subscriptionEndDate;
-    if (!subEndDate) return true; // Lifetime/Null end date
-    
-    const endDate = (typeof subEndDate === 'object' && 'toDate' in subEndDate)
-      ? subEndDate.toDate()
-      : new Date(subEndDate);
-    
-    return new Date() < endDate;
-  };
-
-  const canGenerate = () => {
+  function canGenerate(): boolean {
     if (isAdmin) return true;
     
-    // Full access during the 3-day period regardless of status (Restarted for all)
-    // We check if trial is active first
-    if (isTrialActive()) return true;
+    // Active subscription grants unlimited generation
+    if (isSubscriptionActive()) return true;
+
+    // Flexible Pay-As-You-Go: check if teacher has purchased AI credits available
+    if ((profile?.aiCredits ?? 0) > 0) return true;
+
+    // Option B: 3-day trial with daily limit of 2 generations per day (max 6 total)
+    if (isTrialActive()) {
+      return getTrialGenerationsLeftToday() > 0;
+    }
+
+    return false;
+  }
+
+  async function consumeCredit(): Promise<boolean> {
+    // Unlimited access for admins or active paid subscription
+    if (isAdmin || isSubscriptionActive()) {
+      return true;
+    }
+
+    const today = getTodayDateString();
+    const trialActive = isTrialActive();
+    const trialUsedToday = getTrialGenerationsUsedToday();
+
+    // 1. If teacher has free trial generations left today, consume trial quota first
+    if (trialActive && trialUsedToday < TRIAL_DAILY_LIMIT) {
+      const newTodayCount = trialUsedToday + 1;
+      const currentTotal = profile?.trialTotalGenerations || 0;
+      const newTotal = currentTotal + 1;
+
+      // Optimistic local state update
+      if (profile) {
+        setProfile(prev => prev ? {
+          ...prev,
+          trialGenerationsDate: today,
+          trialGenerationsToday: newTodayCount,
+          trialTotalGenerations: newTotal
+        } : null);
+      }
+
+      // Persist to Firestore
+      if (user) {
+        try {
+          await updateDoc(doc(db, 'users', user.uid), {
+            trialGenerationsDate: today,
+            trialGenerationsToday: newTodayCount,
+            trialTotalGenerations: newTotal,
+            lastGenerationAt: serverTimestamp()
+          });
+        } catch (err) {
+          console.error("Failed to update daily trial generation quota in Firestore:", err);
+        }
+      }
+      return true;
+    }
+
+    // 2. Otherwise, check if teacher has purchased AI credits
+    const currentCredits = profile?.aiCredits ?? 0;
+    if (currentCredits <= 0) {
+      return false;
+    }
+
+    const newCredits = Math.max(0, currentCredits - 1);
+
+    // Optimistic local state update
+    if (profile) {
+      setProfile(prev => prev ? { ...prev, aiCredits: newCredits } : null);
+    }
+
+    // Persist decrement in Firestore
+    if (user) {
+      try {
+        await updateDoc(doc(db, 'users', user.uid), {
+          aiCredits: increment(-1),
+          lastGenerationAt: serverTimestamp()
+        });
+      } catch (err) {
+        console.error("Failed to decrement AI credit in Firestore:", err);
+      }
+    }
+    return true;
+  }
+
+  function canBulkExport(): boolean {
+    if (isAdmin) return true;
+    if (!isSubscriptionActive()) return false;
     
-    // Otherwise check for subscription
-    return isSubscriptionActive();
-  };
+    // Explicit bulk export flag granted on user profile
+    if (profile?.hasBulkExport === true) return true;
+
+    // Special subscription modes that include Bulk Termly Export:
+    // 'termly_pro' (Termly Master & Bulk Export), 'yearly' (Professional Yearly), 'lifetime', or 'school_license' / 'school_starter' / 'school_pro'
+    const specialBulkPlans = ['termly_pro', 'yearly', 'lifetime', 'school_license', 'school_starter', 'school_pro'];
+    const userPlan = profile?.plan || profile?.planType || '';
+    return specialBulkPlans.includes(userPlan);
+  }
 
   const completeOnboarding = async (data: Partial<UserProfile>) => {
     if (!user) return;
@@ -525,7 +662,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   return (
     <AuthContext.Provider value={{ 
       user, profile, loading, logout, refreshProfile, 
-      canGenerate, isTrialActive, isSubscriptionActive, getTrialDaysLeft, daysLeft,
+      canGenerate, consumeCredit, canBulkExport, isTrialActive, isSubscriptionActive, getTrialDaysLeft, daysLeft, aiCredits,
+      trialDailyLimit, trialGenerationsLeftToday, getTrialGenerationsUsedToday, getTrialGenerationsLeftToday, getGenerationBlockReason,
       completeOnboarding, completeOnboardingTour, dismissOnboardingTour, acceptTermsAndConditions, updateProfileData, updateProfileEmail
     }}>
       {children}

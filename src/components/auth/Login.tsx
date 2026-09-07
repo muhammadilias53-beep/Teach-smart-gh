@@ -358,31 +358,34 @@ const Login = () => {
       </div>
 
       {/* Top logo/navigation header bar */}
-      <header className="w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pt-6 sm:pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 z-10 relative">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-emerald-deep flex items-center justify-center text-white shadow-md shadow-emerald-900/10 z-10">
+      <header className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 pt-6 sm:pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 z-10 relative">
+        <div className="shrink-0 flex items-center gap-3 min-w-fit">
+          <div className="w-10 h-10 rounded-xl bg-emerald-deep flex items-center justify-center text-white shadow-md shadow-emerald-900/10 z-10 shrink-0">
             <GraduationCap size={20} />
           </div>
-          <div>
-            <span className="text-lg font-black tracking-tight text-slate-800 uppercase block leading-none z-10">
+          <div className="shrink-0">
+            <span className="text-lg font-black tracking-tight text-slate-800 uppercase block leading-none z-10 whitespace-nowrap">
               TeachSmartGH
             </span>
-            <span className="text-[7px] font-black uppercase text-emerald-600 tracking-[0.15em] block mt-0.5 z-10">
+            <span className="text-[7px] font-black uppercase text-emerald-600 tracking-[0.15em] block mt-0.5 z-10 whitespace-nowrap">
               CATALYST CREATIVE
             </span>
           </div>
         </div>
 
         {/* Public Page Navigations */}
-        <div className="flex items-center gap-6 z-10">
-          <Link to="/features" className="text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-emerald-deep transition-colors">
+        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 z-10">
+          <Link to="/features" className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-slate-500 hover:text-emerald-deep transition-colors whitespace-nowrap">
             Features
           </Link>
-          <Link to="/about" className="text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-emerald-deep transition-colors">
+          <Link to="/about" className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-slate-500 hover:text-emerald-deep transition-colors whitespace-nowrap">
             About Team
           </Link>
-          <Link to="/blog" className="text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-emerald-deep transition-colors">
+          <Link to="/blog" className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-slate-500 hover:text-emerald-deep transition-colors whitespace-nowrap">
             Resources Hub
+          </Link>
+          <Link to="/privacy" className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-slate-500 hover:text-emerald-deep transition-colors whitespace-nowrap">
+            Privacy Policy
           </Link>
         </div>
 
@@ -394,7 +397,7 @@ const Login = () => {
               element.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
           }}
-          className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-slate-600 hover:text-emerald-deep transition-colors bg-white hover:bg-slate-50 border border-slate-200 px-4 py-2 rounded-xl shadow-sm z-10"
+          className="shrink-0 whitespace-nowrap text-[10px] sm:text-xs font-black uppercase tracking-wider text-slate-600 hover:text-emerald-deep transition-colors bg-white hover:bg-slate-50 border border-slate-200 px-4 py-2 rounded-xl shadow-sm z-10 cursor-pointer"
         >
           Sign In
         </button>
@@ -866,12 +869,14 @@ const Login = () => {
 
       {/* Footer bar */}
       <footer className="w-full bg-slate-900 text-slate-400 py-8 text-center text-[10px] font-bold tracking-wider uppercase z-10 relative space-y-3">
-        <div className="flex justify-center items-center gap-6">
+        <div className="flex flex-wrap justify-center items-center gap-4 sm:gap-6">
           <Link to="/features" className="hover:text-emerald-400 transition-colors">Features</Link>
           <span className="text-slate-700">|</span>
           <Link to="/about" className="hover:text-emerald-400 transition-colors">About Us</Link>
           <span className="text-slate-700">|</span>
           <Link to="/blog" className="hover:text-emerald-400 transition-colors">Resources Hub</Link>
+          <span className="text-slate-700">|</span>
+          <Link to="/privacy" className="hover:text-emerald-400 transition-colors">Privacy Policy</Link>
         </div>
         <div className="h-px bg-slate-850/30 max-w-xs mx-auto" />
         <p>© {new Date().getFullYear()} TeachSmartGH (Catalyst Creative). Created for Professional Ghanaian Educators. Aligned with NaCCA Standards.</p>

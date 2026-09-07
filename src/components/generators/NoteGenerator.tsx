@@ -7,11 +7,13 @@ import { saveOffline } from '../../lib/indexedDB';
 import { cacheGeneratedDocument } from '../../lib/offlineDocumentCache';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../contexts/AuthContext';
+import { TrialQuotaBanner } from '../common/TrialQuotaBanner';
+import { showGenerationBlockedToast } from '../../lib/generationBlockedNotice';
 import { useNavigate, useLocation } from 'react-router';
 import { CurriculumReferenceModal } from '../standards/CurriculumReferenceModal';
-import { CurriculumIndicatorItem } from '../../lib/curriculumDatabase';
 import { cn, formatPerformanceIndicator } from '../../lib/utils';
 import { 
+  CurriculumIndicatorItem,
   filterStandardsForClass, 
   matchStandardToClass,
   getCurriculumStrands,
@@ -94,7 +96,7 @@ const GHANAIAN_LANGUAGES_FOR_BILINGUAL = [
 ];
 
 const NoteGenerator = () => {
-  const { user, profile } = useAuth();
+  const { user, profile, canGenerate, consumeCredit, aiCredits, getGenerationBlockReason } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [loading, setLoading] = useState(false);
@@ -302,6 +304,12 @@ const NoteGenerator = () => {
       }
 
       if (isAuto) {
+        if (!canGenerate()) {
+          showGenerationBlockedToast(getGenerationBlockReason(), 'lesson notes');
+          setStep(3);
+          return;
+        }
+
         // Defensive Curriculum Class Isolation Check before auto-generating
         if (loadedFormData.contentStandard && loadedFormData.class) {
           if (!matchStandardToClass(loadedFormData.contentStandard, loadedFormData.class, loadedFormData.level)) {
@@ -339,7 +347,7 @@ const NoteGenerator = () => {
             locality: loadedFormData.locality,
             isBstemSchool: profile?.isBstemSchool
           }
-        ).then(data => {
+        ).then(async (data) => {
           setResult(data);
           setStep(4);
           if (user) {
@@ -358,6 +366,7 @@ const NoteGenerator = () => {
               synced: false
             });
           }
+          await consumeCredit();
           toast.success("Learner notes generated successfully from your lesson plan! 🇬🇭");
         }).catch(err => {
           console.error("Auto-generation from lesson plan failed:", err);
@@ -588,6 +597,11 @@ const NoteGenerator = () => {
   };
 
   const handleGenerate = async () => {
+    if (!canGenerate()) {
+      showGenerationBlockedToast(getGenerationBlockReason(), 'lesson notes');
+      return;
+    }
+
     if (formData.subject === 'Ghanaian Language' && !formData.ghanaianLanguage) {
       toast.error("Please select a specific Ghanaian Language.");
       return;
@@ -651,6 +665,7 @@ const NoteGenerator = () => {
         });
       }
 
+      await consumeCredit();
       toast.success("Lesson notes generated & cached offline! 🇬🇭");
     } catch (err) {
       console.error(err);
@@ -1186,6 +1201,7 @@ const NoteGenerator = () => {
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
+      <TrialQuotaBanner />
       <div className="flex items-center justify-between">
         <div>
            <h1 className="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">

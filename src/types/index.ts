@@ -2,11 +2,29 @@ export type Level = 'KG' | 'Primary' | 'JHS' | 'SHS';
 export type SchemeType = 'weekly' | 'termly' | 'yearly';
 export type SubscriptionStatus = 'trial' | 'active' | 'expired';
 
+export type PlanType = 'quick_pass' | 'credits' | 'termly' | 'termly_pro' | 'yearly' | 'lifetime' | 'school_license' | 'school_starter' | 'school_pro';
+
+export interface SchoolLicense {
+  code: string;
+  ownerUid: string;
+  ownerEmail?: string;
+  ownerName?: string;
+  schoolName?: string;
+  plan: 'school_starter' | 'school_pro';
+  maxSeats: number;
+  usedSeats: number;
+  members: string[];
+  createdAt: any;
+  expiresAt: any;
+  active: boolean;
+}
+
 export interface UserProfile {
   uid: string;
   email: string;
   displayName: string;
   school?: string;
+  schoolName?: string;
   region?: string;
   district?: string;
   town?: string;
@@ -17,16 +35,23 @@ export interface UserProfile {
   trialStartDate: string;
   subscriptionStatus: SubscriptionStatus;
   subscriptionEndDate?: string;
+  aiCredits?: number;
+  isSchoolAdmin?: boolean;
+  schoolLicenseCode?: string;
   onboardingComplete?: boolean;
   lastGenerationAt?: any;
   photoURL?: string;
   lastPaymentId?: string;
-  planType?: 'quick_pass' | 'termly' | 'yearly' | 'lifetime';
-  plan?: 'quick_pass' | 'termly' | 'yearly' | 'lifetime';
+  planType?: PlanType;
+  plan?: PlanType;
+  hasBulkExport?: boolean;
   locality?: string;
   classSize?: string;
   trialResetApril2024Applied?: boolean;
   trialResetMay2026Applied?: boolean;
+  trialGenerationsDate?: string;
+  trialGenerationsToday?: number;
+  trialTotalGenerations?: number;
   isBstemSchool?: boolean;
   isAnonymous?: boolean;
   hasSeenOnboardingTour?: boolean;
@@ -46,6 +71,10 @@ export interface LessonPlan {
   level: string;
   subject: string;
   class?: string;
+  term?: string;
+  academicYear?: string;
+  locality?: string;
+  specificLocality?: string;
   week?: string;
   weekNumber?: string;
   weekEnding?: string;

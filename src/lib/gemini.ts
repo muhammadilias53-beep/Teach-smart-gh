@@ -1,5 +1,21 @@
 // Gemini client helper using server-side proxy with resilient client-side fallback
 import { GoogleGenAI } from '@google/genai';
+import { 
+  buildSchemeCurriculumFrame, 
+  buildSchemeCoveragePlan,
+  getSchemeTermCurriculumFrame,
+  formatCurriculumFrameForPrompt, 
+  formatYearlyCoveragePlanForPrompt,
+  buildTermWeeklyDistributionPlan,
+  buildYearWeeklyDistributionPlan,
+  formatWeeklyDistributionForPrompt,
+  formatYearlyWeeklyDistributionForPrompt,
+  SchemeCurriculumFrame,
+  SchemeTermCoveragePlan,
+  WeeklyDistributionConfig,
+  TermWeeklyDistributionPlan,
+  YearWeeklyDistributionPlan
+} from './schemeGrounding';
 
 
 export const getLanguageInstruction = (language?: string, bilingualLanguage?: string) => {
@@ -434,7 +450,13 @@ export const generateSchemeOfWork = async (
     customPrompt?: string,
     language?: string,
     bilingualLanguage?: string,
-    isBstemSchool?: boolean
+    isBstemSchool?: boolean,
+    educationalLevel?: string,
+    curriculumFrame?: SchemeCurriculumFrame,
+    coveragePlan?: SchemeTermCoveragePlan,
+    weeklyConfig?: WeeklyDistributionConfig,
+    weeklyDistributionPlan?: TermWeeklyDistributionPlan,
+    yearlyWeeklyDistributionPlan?: YearWeeklyDistributionPlan
   }
 ) => {
   const isGhanaianLanguage = subject.toLowerCase().includes('ghanaian language') || subject.toLowerCase().includes('ghanaian languages') || subject.toLowerCase().includes('ghanaian') || (options?.language && options.language !== 'English');
@@ -449,47 +471,102 @@ export const generateSchemeOfWork = async (
       }
     }
   }
-  
+
+  // Determine educational stage and class for curriculum grounding
+  const classLevel = level;
+  let edLevel = options?.educationalLevel || '';
+  if (!edLevel) {
+    if (/^Basic\s*([1-6])\b/i.test(classLevel) || /^B[1-6]\b/i.test(classLevel)) {
+      edLevel = 'Primary';
+    } else if (/^Basic\s*([7-9])\b/i.test(classLevel) || /^B[7-9]\b/i.test(classLevel)) {
+      edLevel = 'JHS';
+    } else if (/^KG/i.test(classLevel)) {
+      edLevel = 'KG';
+    } else if (/^SHS|^Basic\s*(1[0-2])/i.test(classLevel)) {
+      edLevel = 'SHS';
+    } else {
+      edLevel = 'JHS';
+    }
+  }
+
+  // Obtain deterministic full-year coverage plan
+  const coveragePlan = options?.coveragePlan || buildSchemeCoveragePlan(subject, edLevel, classLevel);
+
+  let curriculumGroundingPrompt = "";
   let formatInstructions = "";
+
   if (type === 'yearly') {
+    const yearlyWeeklyPlan = options?.yearlyWeeklyDistributionPlan || 
+      buildYearWeeklyDistributionPlan(coveragePlan, options?.weeklyConfig);
+    curriculumGroundingPrompt = formatYearlyWeeklyDistributionForPrompt(yearlyWeeklyPlan);
     formatInstructions = `
       STRICT CURRICULUM REQUIREMENT: 
-      1. This document serves as the MASTER STRATEGIC ROADMAP for the entire academic year.
+      1. This document serves as the MASTER STRATEGIC ROADMAP for the entire academic year (${yearlyWeeklyPlan.academicYear}).
       2. PERSPECTIVE: Act as a highly experienced Ghana Education Service (GES) curriculum expert.
-      3. SYSTEMATIC DISTRIBUTION: You MUST systematically distribute ALL strands and sub-strands from the NaCCA curriculum across Term 1, Term 2, and Term 3.
-      4. STRAND PARITY: You MUST ensure that a bit of EACH Strand is represented and taught in EVERY term (Term 1, Term 2, and Term 3) to ensure continuous engagement and reinforcement.
-      5. FULL COVERAGE: By the end of Term 3, 100% of the curriculum for ${subject} ${level} MUST be exhausted. No sub-strand should be left out.
+      3. DETERMINISTIC WEEKLY ALIGNMENT: You MUST strictly adhere to the TeachSmartGH full-year curriculum coverage and weekly distribution plan provided below.
+         - Term 1 Topics and Indicators must derive strictly from the verified TERM 1 WEEKLY ALLOCATIONS.
+         - Term 2 Topics and Indicators must derive strictly from the verified TERM 2 WEEKLY ALLOCATIONS.
+         - Term 3 Topics and Indicators must derive strictly from the verified TERM 3 WEEKLY ALLOCATIONS.
+      4. FULL COVERAGE: By the end of Term 3, 100% of the verified curriculum items in the plan MUST be accounted for without omission or cross-term duplication.
       
       Format the entire scheme as ONE SINGLE Markdown Table.
       Headers MUST be:
       | Week | Term 1 Topics | Term 2 Topics | Term 3 Topics | Key Performance Indicators |
       | :--- | :--- | :--- | :--- | :--- |
       
-      Include exactly one row per week (Week 1 to Week 12).
+      Include exactly one row per week (Week 1 to Week ${yearlyWeeklyPlan.totalWeeksPerTerm}).
+      - Weeks 1 to ${yearlyWeeklyPlan.instructionalWeeksPerTerm}: Progressive teaching based on the respective weekly inventories.
+      ${yearlyWeeklyPlan.revisionWeeksPerTerm > 0 ? `- Revision Week(s): Revision of core competencies, remedial review, and project consolidation (NO new curriculum indicators).` : ''}
+      ${yearlyWeeklyPlan.assessmentWeeksPerTerm > 0 ? `- Assessment Week(s): End of Term Assessment, Examinations, and Vacation (NO new curriculum indicators).` : ''}
       At the end of the document, include the footer:
       Vetted by: ................................ Signature: ................................ Date: ................................
     `;
   } else if (type === 'termly') {
-    const termLabel = term ? `TERM ${term}` : 'a specific term';
+    const termNum = (term && ['1', '2', '3'].includes(term)) ? (parseInt(term, 10) as 1 | 2 | 3) : 1;
+    const termLabel = `TERM ${termNum}`;
+    const weeklyPlan = options?.weeklyDistributionPlan || 
+      buildTermWeeklyDistributionPlan(coveragePlan, termNum, options?.weeklyConfig);
+    curriculumGroundingPrompt = formatWeeklyDistributionForPrompt(weeklyPlan);
+
+    const headers = options?.includeLearningOutcomes
+      ? `| Week/Period | Strand | Sub-Strand | Content Standard | Indicator(s) | Learning Outcomes | Resources / TLRs | Assessment |`
+      : `| Week/Period | Strand | Sub-Strand | Content Standard | Indicator(s) | TLRs | References |`;
+    const alignment = options?.includeLearningOutcomes
+      ? `| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |`
+      : `| :--- | :--- | :--- | :--- | :--- | :--- | :--- |`;
+
     formatInstructions = `
       STRICT CURRICULUM REQUIREMENT:
       1. This termly scheme MUST be a detailed, week-by-week decomposition of the official yearly roadmap for ${subject} ${level}.
       2. PERSPECTIVE: Act as a highly experienced Ghana Education Service (GES) curriculum expert and NaCCA instructional planning specialist.
-      3. Follow the official NaCCA curriculum exactly. Use only approved strands, sub-strands, content standards, indicators, and exemplars.
-      4. Arrange content progressively from simple to complex.
+      3. DETERMINISTIC WEEKLY ALLOCATION: Follow the week-by-week schedule provided below. For each week, use ONLY the exact Strand, Sub-Strand, Content Standard, and Indicator(s) assigned to that specific week.
+      4. TEACHER-CONFIGURED TERM STRUCTURE (${weeklyPlan.totalWeeks} Weeks Total):
+         - Weeks 1 to ${weeklyPlan.instructionalWeeks}: Progressive teaching using the designated Content Standards and Indicators from the weekly schedule.
+         ${weeklyPlan.revisionWeeks > 0 ? `- Week ${weeklyPlan.instructionalWeeks + 1}${weeklyPlan.revisionWeeks > 1 ? ` to ${weeklyPlan.instructionalWeeks + weeklyPlan.revisionWeeks}` : ''}: Revision of core concepts, remedial consolidation, and project review (NO new curriculum indicators).` : ''}
+         ${weeklyPlan.assessmentWeeks > 0 ? `- Week ${weeklyPlan.totalWeeks}: End of Term Assessment, Examination, and Vacation (NO new curriculum indicators).` : ''}
 
       Format the entire scheme as ONE SINGLE Markdown Table for ${termLabel}.
       Headers MUST be EXACTLY:
-      | Week/Period | Strand | Sub-Strand | Content Standard | Indicator(s) | TLRs | References |
-      | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+      ${headers}
+      ${alignment}
       
-      Include exactly one row per week (Week 1 to Week 12). Include revision and assessment weeks where appropriate (typically Week 11/12).
+      Include exactly one row per week (Week 1 to Week ${weeklyPlan.totalWeeks}).
     `;
   }
 
   const systemInstruction = `
     You are a NaCCA Curriculum Expert. Generate an official ${type.toUpperCase()} STRATEGIC SCHEME OF LEARNING for ${subject} (${level})${term && type === 'termly' ? ` specifically for TERM ${term}` : ''}.
     All content must align strictly with the latest Ghanaian National Curriculum (SBC/CCP) and NaCCA standards.
+
+    ${curriculumGroundingPrompt}
+
+    CRITICAL CURRICULUM GROUNDING MANDATES:
+    1. YOU MUST ONLY USE THE CONTENT STANDARDS, INDICATORS, STRANDS, AND SUB-STRANDS PROVIDED IN THE VERIFIED INVENTORY ABOVE.
+    2. YOU MUST NOT INVENT new, synthetic, or hallucinated curriculum codes (e.g., do NOT invent any codes outside the provided inventory).
+    3. YOU MUST NOT MODIFY or rewrite official Content Standard codes or Indicator codes.
+    4. YOU MUST NOT ALTER official Content Standard text or Indicator text.
+    5. CLASS ISOLATION: YOU ARE STRICTLY FORBIDDEN from using curriculum codes or standards from any other class level. All curriculum records in the scheme must belong strictly to ${classLevel}.
+    6. WEEK-BY-WEEK FIDELITY: Each week row MUST use the exact curriculum codes assigned to that week in the schedule above. Do NOT move codes between weeks. Supply teacher and learner-centered pedagogical content (Topics, Activities, Resources, Assessment) to complete the scheme.
     
     ${options?.language && options.language !== 'English' ? getLanguageInstruction(options.language, options.bilingualLanguage) : (isGhanaianLanguage && selectedLanguage ? `
     CRITICAL LANGUAGE REQUIREMENT (CONFORMS TO OFFICIAL NaCCA GUIDELINES):
@@ -501,8 +578,6 @@ export const generateSchemeOfWork = async (
     ` : '')}
 
     CURRICULUM INTEGRITY: You MUST maintain the EXACT names of Strands and Sub-strands as defined in the NaCCA curriculum standards. Do NOT summarize or rephrase official titles. Specifically for Science, ensure the strand formerly known as "All Around Us" is always referred to as "Diversity of Matter".
-    
-    STRAND PARITY & DISTRIBUTION: When generating schemes, ensure that each Strand of a subject is represented in every term. A bit of every strand should be taught in every term (Term 1, 2, and 3) to ensure continuous engagement. By the end of Term 3, 100% of the curriculum MUST be exhausted.
     
     SUBJECT-SPECIFIC COMPLIANCE:
     - Integrated Curriculum (KG): Follow a thematic and play-based approach. The curriculum is integrated across Language and Literacy, Numeracy, Our World and Our People, and Creative Arts. Focus on the 7 core themes (All About Me, My Family, Values and Beliefs, My Local Community, My Nation Ghana, All Around Us, My Global Community). Activity descriptions must be detailed and play-centered. Use appropriate NaCCA KG Indicator codes (e.g. K1.1.1.1.1).
@@ -545,6 +620,7 @@ export const generateSchemeOfWork = async (
 
   return responseText;
 };
+
 
 export const generateExam = async (
   subject: string, 

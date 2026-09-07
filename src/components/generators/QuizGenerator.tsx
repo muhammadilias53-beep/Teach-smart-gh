@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Sparkles, Download, RefreshCw, Printer, AlertCircle, FileText, CheckSquare, Plus, Trash2, HelpCircle, Edit3, Check, Eye, CheckCircle } from 'lucide-react';
 import { generateWithProxy } from '../../lib/gemini';
 import { useAuth } from '../../contexts/AuthContext';
+import { TrialQuotaBanner } from '../common/TrialQuotaBanner';
+import { showGenerationBlockedToast } from '../../lib/generationBlockedNotice';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-hot-toast';
 import { SafeMarkdown } from '../common/SafeMarkdown';
@@ -14,7 +16,7 @@ import { exportQuizToWord } from '../../lib/wordExport';
 import { registerUnicodeFonts } from '../../lib/fonts/unicodeFonts';
 
 export default function QuizGenerator() {
-  const { canGenerate, profile } = useAuth();
+  const { canGenerate, profile, consumeCredit, getGenerationBlockReason } = useAuth();
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
@@ -51,8 +53,7 @@ export default function QuizGenerator() {
 
   const handleGenerate = async () => {
     if (!canGenerate()) {
-      toast.error('Please upgrade your membership to generate premium quizzes.');
-      navigate('/billing');
+      showGenerationBlockedToast(getGenerationBlockReason(), 'quizzes');
       return;
     }
 
@@ -130,6 +131,7 @@ export default function QuizGenerator() {
         synced: false
       });
 
+      await consumeCredit();
       toast.success('Quiz generated & cached offline! 🇬🇭');
     } catch (error: any) {
       console.error(error);
@@ -241,6 +243,7 @@ export default function QuizGenerator() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
+      <TrialQuotaBanner />
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-6">
         <div>

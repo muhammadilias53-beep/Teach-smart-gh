@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'motion/react';
 import { toast } from 'react-hot-toast';
 import { Sparkles, Save, Download, RefreshCw, FileText, ChevronLeft, ChevronRight, CheckCircle, Users, Layout, AlignLeft, Layers, GraduationCap, MessageSquare, Edit3, Check, RotateCcw, FileEdit, AlertCircle, Compass, Search, BookOpen, ArrowRight } from 'lucide-react';
 import { CurriculumReferenceModal } from '../standards/CurriculumReferenceModal';
-import { CurriculumIndicatorItem } from '../../lib/curriculumDatabase';
 import { generateLessonPlan, generateKGDailyLessonPlan } from '../../lib/gemini';
 import { getKGScheduleForDay, reconcileKGBlocks } from '../../config/kgTimetable';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
@@ -12,8 +11,11 @@ import { saveOffline } from '../../lib/indexedDB';
 import { cacheGeneratedDocument } from '../../lib/offlineDocumentCache';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../contexts/AuthContext';
+import { TrialQuotaBanner } from '../common/TrialQuotaBanner';
+import { showGenerationBlockedToast } from '../../lib/generationBlockedNotice';
 import { cn, formatPerformanceIndicator, formatMultiplePerformanceIndicators, getUpcomingFriday, getSchoolWeekDaysFromWeekEnding, calculateLessonDateFromWeekEnding, formatWeekLessonPlanTitle, SchoolWeekDays } from '../../lib/utils';
 import { 
+  CurriculumIndicatorItem,
   filterStandardsForClass, 
   matchStandardToClass,
   getCurriculumStrands,
@@ -26,6 +28,7 @@ import 'highlight.js/styles/github.css';
 import { exportLessonPlanToPDF } from '../../lib/lessonPlanPdfExport';
 import { exportLessonPlanToWord } from '../../lib/wordExport';
 import { buildMultiDayLessonPhases } from '../../lib/multiDayParser';
+import { BulkTermExportModal } from './BulkTermExportModal';
 import { 
   subjects, 
   levels, 
@@ -108,12 +111,13 @@ export const formatDaysString = (days: string[]): string => {
 };
 
 const LessonPlanGenerator = () => {
-  const { user, profile } = useAuth();
+  const { user, profile, canGenerate, consumeCredit, aiCredits, getGenerationBlockReason } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
   const [isStandardsModalOpen, setIsStandardsModalOpen] = useState(false);
+  const [isBulkExportModalOpen, setIsBulkExportModalOpen] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [result, setResult] = useState<any>(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -124,6 +128,8 @@ const LessonPlanGenerator = () => {
   const initialDate = calculateLessonDateFromWeekEnding(initialFriday, ['Monday']);
 
   const [formData, setFormData] = useState({
+    academicYear: '2025/2026',
+    term: 'Term 1',
     level: 'JHS',
     class: 'Basic 7',
     subject: 'English',
@@ -530,6 +536,11 @@ const LessonPlanGenerator = () => {
   const currentIndicators = getCurriculumIndicators(formData.contentStandard, formData.subject, formData.class);
 
   const handleGenerate = async () => {
+    if (!canGenerate()) {
+      showGenerationBlockedToast(getGenerationBlockReason(), 'lesson plans');
+      return;
+    }
+
     if (!validateStep(3)) return;
 
     // Defensive Curriculum Class Isolation Check
@@ -645,6 +656,7 @@ const LessonPlanGenerator = () => {
           cacheGeneratedDocument(autoDoc);
         }
 
+        await consumeCredit();
         toast.success("KG Daily Lesson Plan generated successfully & cached offline! 🇬🇭");
         return;
       }
@@ -771,6 +783,7 @@ const LessonPlanGenerator = () => {
         cacheGeneratedDocument(autoDoc);
       }
 
+      await consumeCredit();
       toast.success("Lesson plan generated successfully & cached offline! 🇬🇭");
     } catch (err: any) {
       console.error(err);
@@ -782,6 +795,11 @@ const LessonPlanGenerator = () => {
   };
 
   const handleGenerateLessonNotes = () => {
+    if (!canGenerate()) {
+      showGenerationBlockedToast(getGenerationBlockReason(), 'lesson notes');
+      return;
+    }
+
     const isKg = result?.isKgPlan || formData.level === 'KG' || formData.class?.startsWith('KG');
     const activeIndicators = formData.selectedIndicators && formData.selectedIndicators.length > 0
       ? formData.selectedIndicators
@@ -844,7 +862,10 @@ const LessonPlanGenerator = () => {
       level: formData.level,
       class: formData.class,
       subject: displaySubject,
+      term: formData.term || 'Term 1',
+      academicYear: formData.academicYear || '2025/2026',
       locality: formData.locality,
+      specificLocality: formData.specificLocality,
       strand: formData.strand,
       subStrand: formData.subStrand,
       contentStandard: formData.contentStandard,
@@ -1023,6 +1044,7 @@ const LessonPlanGenerator = () => {
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
+      <TrialQuotaBanner />
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
         <div>
            <h1 className="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">
@@ -1032,8 +1054,24 @@ const LessonPlanGenerator = () => {
            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-2 ml-5">Standard-Based Curriculum assistant</p>
         </div>
         
-        {/* Progress Tracker */}
-        <div className="flex items-center gap-4 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+        <div className="flex items-center gap-3 flex-wrap">
+          <button
+            type="button"
+            onClick={() => setIsBulkExportModalOpen(true)}
+            className="flex items-center gap-2.5 px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-2xl text-xs font-black shadow-md border border-slate-700/60 transition-all hover:shadow-lg cursor-pointer group hover:-translate-y-0.5"
+            title="Bulk Export Term Lesson Plans (Word .docx or PDF)"
+          >
+            <div className="w-6 h-6 rounded-lg bg-ghana-gold text-slate-950 flex items-center justify-center font-black text-xs group-hover:scale-110 transition-transform">
+              <Layers size={13} className="stroke-[2.5]" />
+            </div>
+            <div className="text-left">
+              <span className="block leading-none">EXPORT TERM BOOK</span>
+              <span className="text-[9px] text-amber-300 font-semibold tracking-wide">12-Week Word / PDF</span>
+            </div>
+          </button>
+
+          {/* Progress Tracker */}
+          <div className="flex items-center gap-4 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
            {[
              { step: 1, label: 'Data', icon: FileText },
              { step: 2, label: 'Context', icon: Users },
@@ -1062,6 +1100,7 @@ const LessonPlanGenerator = () => {
                )}
              </React.Fragment>
            ))}
+          </div>
         </div>
       </div>
 
@@ -1075,6 +1114,30 @@ const LessonPlanGenerator = () => {
           >
             <h2 className="text-xl font-bold mb-6">Step 1: Academic Data</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-gray-500 uppercase">Academic Year</label>
+                <select 
+                  className="input-field"
+                  value={formData.academicYear}
+                  onChange={(e) => setFormData({ ...formData, academicYear: e.target.value })}
+                >
+                  <option value="2025/2026">2025/2026 (Current Academic Year)</option>
+                  <option value="2024/2025">2024/2025</option>
+                  <option value="2026/2027">2026/2027</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-gray-500 uppercase">Term of Instruction</label>
+                <select 
+                  className="input-field"
+                  value={formData.term}
+                  onChange={(e) => setFormData({ ...formData, term: e.target.value })}
+                >
+                  <option value="Term 1">Term 1 (First Term)</option>
+                  <option value="Term 2">Term 2 (Second Term)</option>
+                  <option value="Term 3">Term 3 (Third Term)</option>
+                </select>
+              </div>
               <div className="space-y-2">
                 <label className="text-sm font-bold text-gray-500 uppercase">Educational Stage</label>
                 <select 
@@ -1540,12 +1603,12 @@ const LessonPlanGenerator = () => {
                   {[
                     {
                       id: 'ges-standard',
-                      name: 'Official GES / NaCCA Notebook',
-                      badge: '⭐ Official GES Standard (Photo Match)',
+                      name: 'GES / NaCCA Standard Notebook',
+                      badge: '⭐ Standard GES Format (Photo Match)',
                       badgeBg: 'bg-emerald-100 text-emerald-900 border border-emerald-300',
                       icon: Layers,
                       iconColor: 'text-emerald-700',
-                      description: '100% exact replica of the official Ghana Education Service (GES) Lesson Notebook page with full metadata grid and 3-phase delivery table.'
+                      description: 'Exact format matching the Ghana Education Service (GES) Lesson Notebook page with full metadata grid and 3-phase delivery table.'
                     },
                     {
                       id: 'comprehensive',
@@ -2027,6 +2090,18 @@ const LessonPlanGenerator = () => {
                 >
                   <FileText size={14} />
                   {exportingWord ? "Word..." : "Word (.docx)"}
+                </button>
+                <button 
+                  type="button"
+                  onClick={() => setIsBulkExportModalOpen(true)} 
+                  className="px-3.5 py-2 sm:px-4 sm:py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold uppercase tracking-wider text-[11px] whitespace-nowrap shrink-0 transition-all border border-slate-700 flex items-center gap-1.5 shadow-md group cursor-pointer"
+                  title="Export complete 12-week Term Lesson Plan book in Word or PDF (Special Mode)"
+                >
+                  <Layers size={14} className="text-ghana-gold group-hover:scale-110 transition-transform" />
+                  <span>Export Term Book</span>
+                  <span className="px-1.5 py-0.5 bg-ghana-gold/20 text-ghana-gold text-[9px] font-black rounded uppercase tracking-wider border border-ghana-gold/30">
+                    Special Mode
+                  </span>
                 </button>
                 <a 
                   href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
@@ -2837,7 +2912,7 @@ const LessonPlanGenerator = () => {
                 </div>
                 <div className="flex flex-wrap bg-white p-1 rounded-xl border border-slate-150 gap-1 self-start md:self-auto">
                   {[
-                    { id: 'ges-standard', name: '⭐ Official GES Notebook', icon: Layers },
+                    { id: 'ges-standard', name: '⭐ Standard GES Notebook', icon: Layers },
                     { id: 'comprehensive', name: 'Comprehensive', icon: Layers },
                     { id: 'minimalist', name: 'Minimalist Format', icon: AlignLeft },
                     { id: 'primary-focused', name: 'Primary/Play-grade', icon: GraduationCap }
@@ -3177,7 +3252,7 @@ const LessonPlanGenerator = () => {
                         className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm"
                       >
                         <Download size={14} />
-                        Download Official GES PDF
+                        Download GES-Format PDF
                       </button>
                       <button
                         onClick={handleDownloadWord}
@@ -3752,6 +3827,16 @@ const LessonPlanGenerator = () => {
         initialSubject={formData.subject}
         initialStrand={formData.strand}
         initialSubStrand={formData.subStrand}
+      />
+
+      <BulkTermExportModal
+        isOpen={isBulkExportModalOpen}
+        onClose={() => setIsBulkExportModalOpen(false)}
+        initialClass={formData.class}
+        initialSubject={displaySubject}
+        initialLevel={formData.level}
+        initialTerm={formData.term}
+        initialAcademicYear={formData.academicYear}
       />
     </div>
   );

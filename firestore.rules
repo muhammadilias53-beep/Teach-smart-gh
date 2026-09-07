@@ -57,14 +57,24 @@ service cloud.firestore {
           'photoURL', 'updatedAt', 'onboardingComplete', 'email',
           'subjects', 'locality', 'classSize', 'mainSubject', 
           'trialStartDate', 'trialResetApril2024Applied', 'trialResetMay2026Applied', 'subscriptionEndDate',
+          'trialGenerationsDate', 'trialGenerationsToday', 'trialTotalGenerations',
           'subscriptionStatus', 'lastLoginAt', 'isAnonymous', 'uid', 'createdAt',
           'lastGenerationAt', 'lastPaymentId', 'planType', 'plan', 'preferences',
           'isTrialResetApplied', 'schoolType', 'grade', 'isBstemSchool',
           'lastPaymentReference', 'lastPaymentDate',
           'hasSeenOnboardingTour', 'onboardingTourDismissed', 'profileCompleted',
-          'acceptedTerms', 'acceptedTermsAt', 'termsVersion', 'acceptedResponsibleAiTerms'
+          'acceptedTerms', 'acceptedTermsAt', 'termsVersion', 'acceptedResponsibleAiTerms',
+          'aiCredits', 'isSchoolAdmin', 'schoolLicenseCode', 'schoolName', 'hasBulkExport'
         ])
       );
+      allow delete: if isAdmin();
+    }
+
+    // School Licenses (B2B School & Proprietor Accounts)
+    match /school_licenses/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+      allow update: if isSignedIn();
       allow delete: if isAdmin();
     }
 

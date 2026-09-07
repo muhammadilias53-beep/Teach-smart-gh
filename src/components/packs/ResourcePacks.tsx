@@ -65,7 +65,7 @@ export default function ResourcePacks() {
   const [isCustomMode, setIsCustomMode] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
-  const { user, profile } = useAuth();
+  const { user, profile, canGenerate } = useAuth();
 
   const teacherResources: ResourceAction[] = [
     {
@@ -211,6 +211,14 @@ export default function ResourcePacks() {
   };
 
   const handleAction = async (resource: ResourceAction) => {
+    if (!canGenerate()) {
+      toast.error('Your subscription has expired. You have full access to view existing resource packs, but an active subscription is required to generate new pack materials.', {
+        duration: 5000,
+        icon: '🔒'
+      });
+      return;
+    }
+
     setIsGenerating(true);
     setCurrentResource(resource.title);
     setGeneratedContent(null);

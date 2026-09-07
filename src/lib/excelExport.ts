@@ -557,7 +557,7 @@ export async function exportRosterToExcel(
   // 13. FOOTER & CREDITS
   const footerRowIndex = sheet.rowCount + 2;
   const footerRow = sheet.getRow(footerRowIndex);
-  footerRow.getCell(1).value = `Generated via TeachSmartGH • Catalyst Creative • Official NaCCA Curriculum & GES Assessment Framework • Date: ${new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}`;
+  footerRow.getCell(1).value = `Generated via TeachSmartGH • Catalyst Creative • Aligned to NaCCA Curriculum & GES Assessment Framework • Date: ${new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}`;
   sheet.mergeCells(footerRowIndex, 1, footerRowIndex, totalCols);
   const footerCell = sheet.getCell(`A${footerRowIndex}`);
   footerCell.font = { name: 'Calibri', size: 8, italic: true, color: { argb: COLORS.SLATE_TEXT_MUTED } };

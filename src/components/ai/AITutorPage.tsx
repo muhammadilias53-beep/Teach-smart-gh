@@ -130,8 +130,10 @@ export default function AITutorPage() {
 
   const handleSendMessage = async (customText?: string) => {
     if (!canGenerate()) {
-      toast.error("Please upgrade to an active package to use the full AI Tutor.");
-      navigate('/billing');
+      toast.error("Your subscription has expired. You can review all previous messages, but an active subscription is required to continue learning with the AI Tutor.", {
+        duration: 5000,
+        icon: '🔒'
+      });
       return;
     }
 

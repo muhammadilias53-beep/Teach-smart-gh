@@ -21,7 +21,7 @@ const VALID_PROTECTED_ROUTES = [
   '/admin',
 ];
 
-const PUBLIC_ROUTES = ['/login', '/about', '/features', '/blog'];
+const PUBLIC_ROUTES = ['/login', '/about', '/features', '/blog', '/privacy'];
 
 /**
  * RouteStateManager
