@@ -27,7 +27,7 @@ export interface VerifiedContentStandard {
 
 /**
  * Authoritative Basic 4 English Curriculum Database
- * 52 Content Standards | 58 Indicators | Exactly 0 Synthetic Indicators
+ * 52 Content Standards | 59 Indicators | Exactly 0 Synthetic Indicators
  */
 export const VERIFIED_BASIC_4_ENGLISH_STANDARDS: VerifiedContentStandard[] = [
   // ==========================================

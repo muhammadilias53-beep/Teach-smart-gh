@@ -523,39 +523,51 @@ export const generateSchemeOfWork = async (
     `;
   } else if (type === 'termly') {
     const termNum = (term && ['1', '2', '3'].includes(term)) ? (parseInt(term, 10) as 1 | 2 | 3) : 1;
-    const termLabel = `TERM ${termNum}`;
     const weeklyPlan = options?.weeklyDistributionPlan || 
       buildTermWeeklyDistributionPlan(coveragePlan, termNum, options?.weeklyConfig);
     curriculumGroundingPrompt = formatWeeklyDistributionForPrompt(weeklyPlan);
 
-    const headers = options?.includeLearningOutcomes
-      ? `| Week/Period | Strand | Sub-Strand | Content Standard | Indicator(s) | Learning Outcomes | Resources / TLRs | Assessment |`
-      : `| Week/Period | Strand | Sub-Strand | Content Standard | Indicator(s) | TLRs | References |`;
-    const alignment = options?.includeLearningOutcomes
-      ? `| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |`
-      : `| :--- | :--- | :--- | :--- | :--- | :--- | :--- |`;
+    const headers = `| WEEK | STRAND | SUB-STRAND | CONTENT STANDARDS | INDICATOR | RESOURCES |`;
+    const alignment = `| :--- | :--- | :--- | :--- | :--- | :--- |`;
 
     formatInstructions = `
-      STRICT CURRICULUM REQUIREMENT:
-      1. This termly scheme MUST be a detailed, week-by-week decomposition of the official yearly roadmap for ${subject} ${level}.
+      AUTHORITATIVE TERMLY SCHEME OF LEARNING FORMAT:
+      1. DOCUMENT TITLE: Start the document with:
+         # TERMLY SCHEME OF LEARNING
       2. PERSPECTIVE: Act as a highly experienced Ghana Education Service (GES) curriculum expert and NaCCA instructional planning specialist.
-      3. DETERMINISTIC WEEKLY ALLOCATION: Follow the week-by-week schedule provided below. For each week, use ONLY the exact Strand, Sub-Strand, Content Standard, and Indicator(s) assigned to that specific week.
-      4. TEACHER-CONFIGURED TERM STRUCTURE (${weeklyPlan.totalWeeks} Weeks Total):
+      3. EXACT SIX-COLUMN FORMAT: The table MUST have EXACTLY SIX columns in this EXACT order:
+         ${headers}
+         ${alignment}
+      4. STRICT COLUMN CONTENT:
+         - Column 1: WEEK -> Format as "Week 1", "Week 2", etc. (exactly one row per week, Week 1 to Week ${weeklyPlan.totalWeeks}).
+         - Column 2: STRAND -> The official NaCCA Strand name assigned to this week.
+         - Column 3: SUB-STRAND -> The official NaCCA Sub-Strand name assigned to this week.
+         - Column 4: CONTENT STANDARDS -> The official Content Standard code + exact text (e.g., B4.1.1.1: Demonstrate understanding...). YOU MUST NOT rewrite, shorten, or modify the code or text.
+         - Column 5: INDICATOR -> The official Indicator code + exact text (e.g., B4.1.1.1.1: Discuss and use...). YOU MUST NOT rewrite, shorten, or modify the code or text.
+         - Column 6: RESOURCES -> Concise, practical Teaching and Learning Resources (TLRs) appropriate to the specific indicator. Focus on locally available, affordable, realistic, and safe Ghanaian classroom resources (e.g., manila cards, word cards, realia, charts, pictures, sentence strips). Avoid long prose.
+      5. STRICT EXCLUSIONS:
+         - Do NOT include a "Learning Outcomes" column.
+         - Do NOT include a "Teaching & Learning Activities" column.
+         - Do NOT include an "Assessment" column.
+         - Do NOT include a "Core Competencies" column.
+         - Do NOT include a "References" column.
+         - Do NOT include a "Week Ending" column.
+         - Do NOT invent textbook titles, page numbers, NaCCA page citations, or publisher references.
+      6. TEACHER-CONFIGURED TERM STRUCTURE (${weeklyPlan.totalWeeks} Weeks Total):
          - Weeks 1 to ${weeklyPlan.instructionalWeeks}: Progressive teaching using the designated Content Standards and Indicators from the weekly schedule.
          ${weeklyPlan.revisionWeeks > 0 ? `- Week ${weeklyPlan.instructionalWeeks + 1}${weeklyPlan.revisionWeeks > 1 ? ` to ${weeklyPlan.instructionalWeeks + weeklyPlan.revisionWeeks}` : ''}: Revision of core concepts, remedial consolidation, and project review (NO new curriculum indicators).` : ''}
          ${weeklyPlan.assessmentWeeks > 0 ? `- Week ${weeklyPlan.totalWeeks}: End of Term Assessment, Examination, and Vacation (NO new curriculum indicators).` : ''}
+      7. ENDORSEMENT FOOTER: At the very end of the document, below the table, you MUST include:
+         Vetted by: ______________________
 
-      Format the entire scheme as ONE SINGLE Markdown Table for ${termLabel}.
-      Headers MUST be EXACTLY:
-      ${headers}
-      ${alignment}
-      
-      Include exactly one row per week (Week 1 to Week ${weeklyPlan.totalWeeks}).
+         Signature: ______________________
+
+         Date: ___________________________
     `;
   }
 
   const systemInstruction = `
-    You are a NaCCA Curriculum Expert. Generate an official ${type.toUpperCase()} STRATEGIC SCHEME OF LEARNING for ${subject} (${level})${term && type === 'termly' ? ` specifically for TERM ${term}` : ''}.
+    You are a NaCCA Curriculum Expert. Generate an official ${type.toUpperCase()} SCHEME OF LEARNING for ${subject} (${level})${term && type === 'termly' ? ` specifically for TERM ${term}` : ''}.
     All content must align strictly with the latest Ghanaian National Curriculum (SBC/CCP) and NaCCA standards.
 
     ${curriculumGroundingPrompt}
@@ -566,7 +578,7 @@ export const generateSchemeOfWork = async (
     3. YOU MUST NOT MODIFY or rewrite official Content Standard codes or Indicator codes.
     4. YOU MUST NOT ALTER official Content Standard text or Indicator text.
     5. CLASS ISOLATION: YOU ARE STRICTLY FORBIDDEN from using curriculum codes or standards from any other class level. All curriculum records in the scheme must belong strictly to ${classLevel}.
-    6. WEEK-BY-WEEK FIDELITY: Each week row MUST use the exact curriculum codes assigned to that week in the schedule above. Do NOT move codes between weeks. Supply teacher and learner-centered pedagogical content (Topics, Activities, Resources, Assessment) to complete the scheme.
+    6. WEEK-BY-WEEK FIDELITY: Each week row MUST use the exact curriculum codes assigned to that week in the schedule above. Do NOT move codes between weeks. Supply concise, relevant Resources to complete the table. Do NOT invent references or citations.
     
     ${options?.language && options.language !== 'English' ? getLanguageInstruction(options.language, options.bilingualLanguage) : (isGhanaianLanguage && selectedLanguage ? `
     CRITICAL LANGUAGE REQUIREMENT (CONFORMS TO OFFICIAL NaCCA GUIDELINES):
@@ -607,10 +619,12 @@ export const generateSchemeOfWork = async (
     ${formatInstructions}
     
     Rules:
-    1. ONLY return the markdown table. No preambles.
-    2. Ensure columns are correctly aligned.
+    1. For termly schemes, start with '# TERMLY SCHEME OF LEARNING', followed by the 6-column table, followed by the endorsement footer (Vetted by, Signature, Date).
+    2. Ensure columns are correctly aligned and in the exact order: WEEK, STRAND, SUB-STRAND, CONTENT STANDARDS, INDICATOR, RESOURCES.
     3. Content must be rigorous and strictly aligned with the official NaCCA Scheme of Learning for the specified grade and term.
-    4. Ensure indicators include official codes (e.g., B7.1.3.1.1).
+    4. Ensure Content Standards and Indicators include official codes and verbatim text.
+    5. Do NOT include Learning Outcomes, Teaching & Learning Activities, Assessment, Core Competencies, References, or Week Ending in the termly scheme table.
+    6. Do NOT invent textbook titles, page numbers, or publisher citations.
   `;
 
   const responseText = await generateWithProxy(

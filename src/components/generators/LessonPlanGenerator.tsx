@@ -52,7 +52,7 @@ import {
   OWOP_B4_B6_LESSON_FRAMES,
   PE_LESSON_FRAMES,
   RME_LESSON_FRAMES,
-  subjectsByLevel
+  getSubjectsForClass
 } from '../../constants';
 import { SearchableDropdown } from '../ui/SearchableDropdown';
 
@@ -1146,13 +1146,14 @@ const LessonPlanGenerator = () => {
                   onChange={(e) => {
                     const newLvl = e.target.value;
                     const newClasses = CLASSES_BY_LEVEL[newLvl] || [];
-                    const levelSubjects = subjectsByLevel[newLvl] || [];
+                    const newClass = newClasses[0] || '';
+                    const levelSubjects = getSubjectsForClass(newLvl, newClass);
                     const currentSubj = formData.subject;
-                    const newSubj = levelSubjects.includes(currentSubj) ? currentSubj : '';
+                    const newSubj = levelSubjects.includes(currentSubj) ? currentSubj : (levelSubjects[0] || '');
                     setFormData({
                       ...formData,
                       level: newLvl,
-                      class: newClasses[0] || '',
+                      class: newClass,
                       subject: newSubj,
                       ghanaianLanguage: newSubj === 'Ghanaian Language' ? formData.ghanaianLanguage : '',
                       strand: '',
@@ -1173,11 +1174,16 @@ const LessonPlanGenerator = () => {
                   value={formData.class}
                   onChange={(e) => {
                     const newClass = e.target.value;
-                    const validStrands = getSubjectStrands(formData.subject, formData.level, newClass);
-                    const isStrandValid = validStrands.includes(formData.strand);
+                    const validSubjects = getSubjectsForClass(formData.level, newClass);
+                    const isSubjectValid = validSubjects.includes(formData.subject);
+                    const nextSubj = isSubjectValid ? formData.subject : (validSubjects[0] || '');
+                    const validStrands = getSubjectStrands(nextSubj, formData.level, newClass);
+                    const isStrandValid = isSubjectValid && validStrands.includes(formData.strand);
                     setFormData({
                       ...formData, 
                       class: newClass,
+                      subject: nextSubj,
+                      ghanaianLanguage: nextSubj === 'Ghanaian Language' ? formData.ghanaianLanguage : '',
                       strand: isStrandValid ? formData.strand : '',
                       subStrand: isStrandValid ? formData.subStrand : '',
                       contentStandard: '',
@@ -1195,7 +1201,7 @@ const LessonPlanGenerator = () => {
                 <label className="text-sm font-bold text-gray-500 uppercase">Subject Area</label>
                 <SearchableDropdown
                   value={formData.subject}
-                  options={formData.level ? (subjectsByLevel[formData.level] || []).slice().sort((a,b) => a.localeCompare(b)) : []}
+                  options={formData.level ? getSubjectsForClass(formData.level, formData.class).slice().sort((a,b) => a.localeCompare(b)) : []}
                   placeholder="Select Subject"
                   error={errors.subject}
                   onChange={(val) => setFormData({

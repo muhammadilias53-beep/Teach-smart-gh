@@ -40,7 +40,7 @@ import autoTable from 'jspdf-autotable';
 import { toast } from 'react-hot-toast';
 import { exportExamToWord } from '../../lib/wordExport';
 import { registerUnicodeFonts } from '../../lib/fonts/unicodeFonts';
-import { subjects as sharedSubjects, levels, CLASSES_BY_LEVEL, subjectsByLevel } from '../../constants';
+import { subjects as sharedSubjects, levels, CLASSES_BY_LEVEL, getSubjectsForClass } from '../../constants';
 import { SearchableDropdown } from '../ui/SearchableDropdown';
 
 const difficulties = ["Easy", "Standard", "Challenging"];
@@ -138,14 +138,15 @@ export default function ExamGenerator() {
 
   const handleLevelChange = (lvl: any) => {
     const classes = CLASSES_BY_LEVEL[lvl] || [];
-    const levelSubjects = subjectsByLevel[lvl] || [];
+    const firstClass = classes[0] || '';
+    const levelSubjects = getSubjectsForClass(lvl, firstClass);
     setFormData(prev => {
       const currentSubj = prev.subject;
       const newSubj = levelSubjects.includes(currentSubj) ? currentSubj : '';
       return {
         ...prev,
         level: lvl,
-        classLevel: classes[0] || '',
+        classLevel: firstClass,
         subject: newSubj,
         ghanaianLanguage: newSubj === 'Ghanaian Language' ? prev.ghanaianLanguage : ''
       };
@@ -881,7 +882,7 @@ export default function ExamGenerator() {
               <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Subject Area</label>
               <SearchableDropdown
                 value={formData.subject}
-                options={formData.level ? (subjectsByLevel[formData.level] || []).slice().sort((a,b) => a.localeCompare(b)) : []}
+                options={formData.level ? getSubjectsForClass(formData.level, formData.classLevel).slice().sort((a,b) => a.localeCompare(b)) : []}
                 placeholder="Select Subject"
                 onChange={(val) => setFormData({
                   ...formData,
@@ -924,7 +925,17 @@ export default function ExamGenerator() {
                 required
                 className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all font-bold text-slate-700"
                 value={formData.classLevel}
-                onChange={(e) => setFormData({...formData, classLevel: e.target.value})}
+                onChange={(e) => {
+                  const newClass = e.target.value;
+                  const validSubjects = getSubjectsForClass(formData.level, newClass);
+                  const isSubjValid = validSubjects.includes(formData.subject);
+                  setFormData({
+                    ...formData,
+                    classLevel: newClass,
+                    subject: isSubjValid ? formData.subject : '',
+                    ghanaianLanguage: isSubjValid && formData.subject === 'Ghanaian Language' ? formData.ghanaianLanguage : ''
+                  });
+                }}
               >
                 {currentClasses.map(c => <option key={c} value={c}>{c}</option>)}
               </select>

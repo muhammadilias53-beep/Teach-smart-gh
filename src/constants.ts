@@ -70,6 +70,32 @@ export const CLASSES_BY_LEVEL: Record<string, string[]> = {
   ]
 };
 
+export const PRIMARY_LOWER_SUBJECTS: string[] = [
+  "English",
+  "Mathematics",
+  "Science",
+  "Our World Our People",
+  "History",
+  "RME",
+  "Creative Arts",
+  "Ghanaian Language",
+  "Physical Education"
+];
+
+export const PRIMARY_UPPER_SUBJECTS: string[] = [
+  "English",
+  "Mathematics",
+  "Science",
+  "Our World Our People",
+  "History",
+  "RME",
+  "Creative Arts",
+  "Ghanaian Language",
+  "Physical Education",
+  "Computing",
+  "French"
+];
+
 export const subjectsByLevel: Record<string, string[]> = {
   "KG": [
     "Integrated Curriculum (KG)"
@@ -79,14 +105,13 @@ export const subjectsByLevel: Record<string, string[]> = {
     "Mathematics",
     "Science",
     "Our World Our People",
-    "Social Studies",
-    "Computing",
+    "History",
     "RME",
     "Creative Arts",
     "Ghanaian Language",
-    "French",
-    "History",
-    "Physical Education"
+    "Physical Education",
+    "Computing",
+    "French"
   ],
   "JHS": [
     "English",
@@ -129,6 +154,30 @@ export const subjectsByLevel: Record<string, string[]> = {
     "Art and Design Studio"
   ]
 };
+
+/**
+ * Canonical helper for class-aware subject selection.
+ * Enforces NaCCA Primary class distinction:
+ * - Basic 1-3 (Lower Primary): Computing & French excluded; Social Studies excluded; OWOP preserved.
+ * - Basic 4-6 (Upper Primary): Computing & French included; Social Studies excluded; OWOP preserved.
+ */
+export function getSubjectsForClass(level?: string, className?: string): string[] {
+  if (!level) return [];
+  const lvl = level.trim();
+  const cls = (className || '').trim();
+
+  if (lvl === 'Primary') {
+    if (['Basic 1', 'Basic 2', 'Basic 3', 'B1', 'B2', 'B3'].includes(cls)) {
+      return [...PRIMARY_LOWER_SUBJECTS];
+    }
+    if (['Basic 4', 'Basic 5', 'Basic 6', 'B4', 'B5', 'B6'].includes(cls)) {
+      return [...PRIMARY_UPPER_SUBJECTS];
+    }
+    return [...PRIMARY_LOWER_SUBJECTS];
+  }
+
+  return (subjectsByLevel[lvl] || []).slice();
+}
 
 export const SUBJECT_STRANDS: Record<string, string[]> = {
   "Arabic": [

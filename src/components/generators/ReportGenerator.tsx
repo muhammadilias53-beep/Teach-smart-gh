@@ -44,11 +44,42 @@ const GES_LEVELS = [
   'KG 1', 'KG 2'
 ];
 
-const DEFAULT_SUBJECTS = [
+export const PRIMARY_LOWER_REPORT_SUBJECTS = [
+  'Mathematics', 'English Language', 'Integrated Science', 'History',
+  'Creative Arts & Design', 'Religious & Moral Education (RME)', 
+  'Ghanaian Language', 'Physical Education'
+];
+
+export const PRIMARY_UPPER_REPORT_SUBJECTS = [
+  'Mathematics', 'English Language', 'Integrated Science', 'History',
+  'Computing / ICT', 'Creative Arts & Design', 
+  'Religious & Moral Education (RME)', 'Ghanaian Language', 'French', 'Physical Education'
+];
+
+export const JHS_REPORT_SUBJECTS = [
   'Mathematics', 'English Language', 'Integrated Science', 'Social Studies', 
   'Computing / ICT', 'Career Technology', 'Creative Arts & Design', 
   'Religious & Moral Education (RME)', 'Ghanaian Language', 'French', 'Physical Education'
 ];
+
+export const KG_REPORT_SUBJECTS = [
+  'Language & Literacy', 'Numeracy', 'Our World Our People', 'Creative Arts'
+];
+
+export const getReportSubjectsForClass = (className: string): string[] => {
+  if (['Basic 1', 'Basic 2', 'Basic 3'].includes(className)) {
+    return PRIMARY_LOWER_REPORT_SUBJECTS;
+  }
+  if (['Basic 4', 'Basic 5', 'Basic 6'].includes(className)) {
+    return PRIMARY_UPPER_REPORT_SUBJECTS;
+  }
+  if (['KG 1', 'KG 2'].includes(className)) {
+    return KG_REPORT_SUBJECTS;
+  }
+  return JHS_REPORT_SUBJECTS;
+};
+
+const DEFAULT_SUBJECTS = JHS_REPORT_SUBJECTS;
 
 const TITLE_PRESETS = [
   'Terminal Continuous Assessment & Examination Broad Sheet',
@@ -886,7 +917,14 @@ Rules:
           <label className="block text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1.5">Class / Level</label>
           <select
             value={selectedClass}
-            onChange={(e) => setSelectedClass(e.target.value)}
+            onChange={(e) => {
+              const newClass = e.target.value;
+              setSelectedClass(newClass);
+              const available = getReportSubjectsForClass(newClass);
+              if (!available.includes(selectedSubject)) {
+                setSelectedSubject(available[0] || 'Mathematics');
+              }
+            }}
             className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-slate-200 focus:outline-none"
           >
             {GES_LEVELS.map(c => (
@@ -903,7 +941,7 @@ Rules:
             onChange={(e) => setSelectedSubject(e.target.value)}
             className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 dark:text-slate-200 focus:outline-none"
           >
-            {DEFAULT_SUBJECTS.map(s => (
+            {getReportSubjectsForClass(selectedClass).map(s => (
               <option key={s} value={s}>{s}</option>
             ))}
           </select>

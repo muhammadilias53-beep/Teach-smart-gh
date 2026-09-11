@@ -42,7 +42,7 @@ import {
   MATH_B7_LESSON_FRAMES,
   ENGLISH_B7_LESSON_FRAMES,
   FRENCH_B4_B6_LESSON_FRAMES,
-  subjectsByLevel
+  getSubjectsForClass
 } from '../../constants';
 import { SearchableDropdown } from '../ui/SearchableDropdown';
 
@@ -429,7 +429,7 @@ const NoteGenerator = () => {
     const firstClass = matchedClasses[0] || '';
     
     let nextSubject = formData.subject;
-    const levelSubjects = subjectsByLevel[newLevel] || [];
+    const levelSubjects = getSubjectsForClass(newLevel, firstClass);
     if (!levelSubjects.includes(nextSubject)) {
       if (newLevel === 'KG') {
         nextSubject = 'Integrated Curriculum (KG)';
@@ -461,20 +461,25 @@ const NoteGenerator = () => {
   };
 
   const handleClassChange = (newClass: string) => {
-    const nextStrands = getCurriculumStrands(formData.subject, formData.level, newClass);
-    const isCurrentStrandValid = nextStrands.includes(formData.strand);
+    const validSubjects = getSubjectsForClass(formData.level, newClass);
+    const isSubjectValid = validSubjects.includes(formData.subject);
+    const activeSubject = isSubjectValid ? formData.subject : (validSubjects[0] || '');
+
+    const nextStrands = getCurriculumStrands(activeSubject, formData.level, newClass);
+    const isCurrentStrandValid = isSubjectValid && nextStrands.includes(formData.strand);
     const activeStrand = isCurrentStrandValid ? formData.strand : (nextStrands[0] || '');
-    const nextSubStrands = getCurriculumSubStrands(formData.subject, activeStrand, formData.level);
+    const nextSubStrands = getCurriculumSubStrands(activeSubject, activeStrand, formData.level);
     const isSubStrandValid = isCurrentStrandValid && nextSubStrands.includes(formData.subStrand);
     const activeSubStrand = isSubStrandValid ? formData.subStrand : (nextSubStrands[0] || '');
-    const nextStandards = getCurriculumStandards(formData.subject, activeStrand, activeSubStrand, formData.level, newClass);
+    const nextStandards = getCurriculumStandards(activeSubject, activeStrand, activeSubStrand, formData.level, newClass);
     const nextStandard = nextStandards[0] || '';
-    const nextIndicators = getCurriculumIndicators(nextStandard, formData.subject, newClass);
+    const nextIndicators = getCurriculumIndicators(nextStandard, activeSubject, newClass);
     const nextIndicator = nextIndicators[0] || '';
 
     setFormData(prev => ({ 
       ...prev, 
       class: newClass,
+      subject: activeSubject,
       strand: activeStrand,
       subStrand: activeSubStrand,
       contentStandard: nextStandard,
@@ -1313,7 +1318,7 @@ const NoteGenerator = () => {
                 <label className="text-sm font-bold text-gray-500 uppercase">Subject Area</label>
                 <SearchableDropdown
                   value={formData.subject}
-                  options={formData.level ? (subjectsByLevel[formData.level] || []).slice().sort((a,b) => a.localeCompare(b)) : []}
+                  options={formData.level ? getSubjectsForClass(formData.level, formData.class).slice().sort((a,b) => a.localeCompare(b)) : []}
                   placeholder="Select Subject"
                   onChange={handleSubjectChange}
                 />

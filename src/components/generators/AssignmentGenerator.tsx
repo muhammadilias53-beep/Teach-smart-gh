@@ -8,7 +8,7 @@ import { showGenerationBlockedToast } from '../../lib/generationBlockedNotice';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-hot-toast';
 import { SafeMarkdown } from '../common/SafeMarkdown';
-import { levels, CLASSES_BY_LEVEL, subjectsByLevel } from '../../constants';
+import { levels, CLASSES_BY_LEVEL, getSubjectsForClass } from '../../constants';
 import { SearchableDropdown } from '../ui/SearchableDropdown';
 import { cacheGeneratedDocument } from '../../lib/offlineDocumentCache';
 import jsPDF from 'jspdf';
@@ -37,7 +37,7 @@ export default function AssignmentGenerator() {
   const [hasEdited, setHasEdited] = useState(false);
 
   const classes = CLASSES_BY_LEVEL[level] || [];
-  const subjects = subjectsByLevel[level] || [];
+  const subjects = getSubjectsForClass(level, selectedClass);
 
   React.useEffect(() => {
     if (classes.length > 0) {
@@ -46,10 +46,11 @@ export default function AssignmentGenerator() {
   }, [level]);
 
   React.useEffect(() => {
-    if (subjects.length > 0) {
-      setSubject(subjects[0]);
+    const validSubjects = getSubjectsForClass(level, selectedClass);
+    if (validSubjects.length > 0 && !validSubjects.includes(subject)) {
+      setSubject(validSubjects[0]);
     }
-  }, [level]);
+  }, [level, selectedClass]);
 
   const handleGenerate = async () => {
     if (!canGenerate()) {

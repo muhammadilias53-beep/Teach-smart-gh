@@ -1,10 +1,11 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
-import Markdown from 'react-markdown';
+import Markdown, { Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
 interface SafeMarkdownProps {
   children?: string | null | any;
   className?: string;
+  components?: Partial<Components>;
 }
 
 interface ErrorBoundaryProps {
@@ -43,7 +44,43 @@ class MarkdownErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryS
   }
 }
 
-export const SafeMarkdown: React.FC<SafeMarkdownProps> = ({ children, className }) => {
+/**
+ * Safely converts string-based HTML break tags (<br>, <br/>, <br />, <br><br>, etc.)
+ * into genuine React <br /> elements without using dangerouslySetInnerHTML.
+ */
+export function renderSafeLineBreaks(node: React.ReactNode): React.ReactNode {
+  if (typeof node === 'string') {
+    if (!/<br\s*\/?>/i.test(node)) {
+      return node;
+    }
+    const parts = node.split(/<br\s*\/?>/gi);
+    return parts.map((part, index) => (
+      <React.Fragment key={index}>
+        {index > 0 && <br />}
+        {part}
+      </React.Fragment>
+    ));
+  }
+
+  if (Array.isArray(node)) {
+    return React.Children.map(node, (child) => renderSafeLineBreaks(child));
+  }
+
+  if (React.isValidElement(node)) {
+    const elementProps = node.props as { children?: React.ReactNode; [key: string]: any };
+    if (elementProps && elementProps.children) {
+      return React.cloneElement(
+        node,
+        undefined,
+        renderSafeLineBreaks(elementProps.children)
+      );
+    }
+  }
+
+  return node;
+}
+
+export const SafeMarkdown: React.FC<SafeMarkdownProps> = ({ children, className, components }) => {
   const content = typeof children === 'string' ? children : (children != null ? String(children) : '');
 
   if (!content) {
@@ -61,7 +98,14 @@ export const SafeMarkdown: React.FC<SafeMarkdownProps> = ({ children, className 
                 return null; // Don't render images with empty src
               }
               return <img src={src} {...props} />;
-            }
+            },
+            td: ({ node, children, ...props }) => (
+              <td {...props}>{renderSafeLineBreaks(children)}</td>
+            ),
+            th: ({ node, children, ...props }) => (
+              <th {...props}>{renderSafeLineBreaks(children)}</th>
+            ),
+            ...components
           }}
         >
           {content}

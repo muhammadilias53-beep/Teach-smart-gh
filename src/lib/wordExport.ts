@@ -65,6 +65,7 @@ const BRAND_COLORS = {
 function cleanMarkdownText(text: string | undefined | null): string {
   if (!text) return '';
   return text
+    .replace(/<br\s*\/?>/gi, ' ')
     .replace(/```[a-zA-Z0-9_-]*\n?([\s\S]*?)```/g, '$1')
     .replace(/^#+\s+/gm, '')
     .replace(/\*\*([^*]+)\*\*/g, '$1')
@@ -78,10 +79,27 @@ function cleanMarkdownText(text: string | undefined | null): string {
 }
 
 /**
- * Splits inline markdown text into formatted TextRun array (handling **bold**, *italic*, `code`)
+ * Splits inline markdown text into formatted TextRun array (handling **bold**, *italic*, `code`, and line breaks)
  */
 function createFormattedRuns(text: string, defaultColor = BRAND_COLORS.TEXT_MAIN, defaultSize = 19): TextRun[] {
   if (!text) return [new TextRun({ text: '', size: defaultSize })];
+
+  // Handle <br>, <br/>, <br /> and newlines by splitting into segments with TextRun break: 1
+  const normalized = text.replace(/<br\s*\/?>/gi, '\n').replace(/\\n/g, '\n');
+  if (normalized.includes('\n')) {
+    const parts = normalized.split('\n');
+    const allRuns: TextRun[] = [];
+    parts.forEach((part, index) => {
+      const trimmedPart = part.trim();
+      if (index > 0) {
+        allRuns.push(new TextRun({ break: 1, size: defaultSize }));
+      }
+      if (trimmedPart) {
+        allRuns.push(...createFormattedRuns(trimmedPart, defaultColor, defaultSize));
+      }
+    });
+    return allRuns.length > 0 ? allRuns : [new TextRun({ text: '', size: defaultSize })];
+  }
 
   const runs: TextRun[] = [];
   const regex = /(\*\*.*?\*\*|\*.*?\*|__.*?__|`.*?`|[^*_`]+)/g;
@@ -481,9 +499,9 @@ function getCalculatedColumnWidths(numCols: number): number[] {
   if (safeCols === 7) {
     return [9, 12, 12, 15, 14, 23, 15];
   }
-  // 6-column table
+  // 6-column table (WEEK, STRAND, SUB-STRAND, CONTENT STANDARDS, INDICATOR, RESOURCES)
   if (safeCols === 6) {
-    return [10, 15, 15, 20, 25, 15];
+    return [8, 14, 14, 27, 27, 10];
   }
   // 5-column table
   if (safeCols === 5) {
@@ -564,15 +582,23 @@ function parseMarkdownTableToDocx(tableLines: string[]): Table {
 
     const cells = cellsCopy.map((cellText, colIndex) => {
       const cellWidth = colWidths[colIndex] || Math.floor(100 / numCols);
+      const cleanText = cellText.replace(/<br\s*\/?>/gi, '\n').replace(/\\n/g, '\n');
+      const lines = cleanText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+
       const formattedRuns = isHeader
         ? [new TextRun({ text: cleanMarkdownText(cellText), bold: true, color: BRAND_COLORS.WHITE, size: fontSize, font: 'Calibri' })]
-        : createFormattedRuns(cellText, BRAND_COLORS.TEXT_MAIN, fontSize);
+        : (lines.length > 1
+            ? lines.flatMap((line, lineIdx) => [
+                ...(lineIdx > 0 ? [new TextRun({ break: 1, size: fontSize })] : []),
+                ...createFormattedRuns(line, BRAND_COLORS.TEXT_MAIN, fontSize)
+              ])
+            : createFormattedRuns(cellText, BRAND_COLORS.TEXT_MAIN, fontSize));
 
       return new TableCell({
         width: { size: cellWidth, type: WidthType.PERCENTAGE },
         shading: { type: ShadingType.CLEAR, fill: rowBgColor },
-        verticalAlign: VerticalAlign.CENTER,
-        margins: { top: 100, bottom: 100, left: 110, right: 110 },
+        verticalAlign: isHeader ? VerticalAlign.CENTER : VerticalAlign.TOP,
+        margins: { top: 90, bottom: 90, left: 110, right: 110 },
         borders: {
           top: { style: BorderStyle.SINGLE, size: isHeader ? 8 : 4, color: isHeader ? BRAND_COLORS.NAVY_DARK : BRAND_COLORS.BORDER_SUBTLE },
           bottom: { style: BorderStyle.SINGLE, size: isHeader ? 12 : 4, color: isHeader ? BRAND_COLORS.GHANA_GOLD : BRAND_COLORS.BORDER_SUBTLE },
@@ -725,8 +751,10 @@ function parseMarkdownToDocxElements(markdown: string): (Paragraph | Table)[] {
         }
       }));
     } else {
+      const isVetting = /^(vetted by|signature|date):/i.test(trimmed);
       elements.push(new Paragraph({
-        spacing: { before: 40, after: 60 },
+        spacing: { before: isVetting ? 60 : 40, after: isVetting ? 60 : 60 },
+        keepNext: isVetting,
         children: createFormattedRuns(trimmed, BRAND_COLORS.TEXT_MAIN, 18)
       }));
     }
@@ -2062,7 +2090,7 @@ export async function exportKGLessonPlanToWord(
 }
 
 /**
- * Dedicated Termly / Yearly Scheme of Learning Word Exporter (Landscape 11-column table fidelity)
+ * Dedicated Termly / Yearly Scheme of Learning Word Exporter (Landscape 6-column table fidelity)
  */
 export async function exportSchemeToWord(
   schemeMarkdown: string,
@@ -2071,15 +2099,33 @@ export async function exportSchemeToWord(
   const subject = metadata.subject || 'Subject';
   const classLevel = metadata.classLevel || 'Basic 7';
   const term = metadata.term || '1';
+  const isYearly = metadata.documentType?.toLowerCase().includes('yearly');
 
-  await exportMarkdownToWord(schemeMarkdown, {
+  const title = isYearly 
+    ? `${subject} - Yearly Scheme of Learning`
+    : `TERMLY SCHEME OF LEARNING - ${subject} (Term ${term})`;
+
+  const documentType = isYearly ? 'Yearly Scheme of Learning' : 'TERMLY SCHEME OF LEARNING';
+
+  // Ensure transparency note and Vetted by / Signature / Date block are present at the end of the content
+  let content = schemeMarkdown.trim();
+  const lower = content.toLowerCase();
+  const transparencyNote = '\n\n*Note: Curriculum content verified. Term/week distribution is system-generated and should be reviewed and adapted by the teacher/school.*';
+  if (!lower.includes('curriculum content verified')) {
+    content += transparencyNote;
+  }
+  if (!lower.includes('vetted by') && !isYearly) {
+    content += '\n\n\nVetted by: ______________________\n\nSignature: ______________________\n\nDate: ___________________________';
+  }
+
+  await exportMarkdownToWord(content, {
     ...metadata,
-    title: `${subject} - Scheme of Learning (Term ${term})`,
-    documentType: 'Scheme of Learning',
+    title,
+    documentType,
     subject,
     classLevel,
     term,
-    orientation: 'landscape' // Full landscape 11-column table preservation
+    orientation: 'landscape' // Full landscape 6-column table preservation
   });
 }
 

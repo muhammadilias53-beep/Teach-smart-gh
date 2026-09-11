@@ -35,14 +35,14 @@ import { cacheGeneratedDocument } from '../../lib/offlineDocumentCache';
 import { collection, addDoc, serverTimestamp, query, where, getDocs, limit, orderBy } from 'firebase/firestore';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../../lib/utils';
-import { SafeMarkdown } from '../common/SafeMarkdown';
+import { SafeMarkdown, renderSafeLineBreaks } from '../common/SafeMarkdown';
 import 'highlight.js/styles/github.css';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { toast } from 'react-hot-toast';
 import { exportSchemeToWord } from '../../lib/wordExport';
 import { registerUnicodeFonts } from '../../lib/fonts/unicodeFonts';
-import { subjects as sharedSubjects, levels, CLASSES_BY_LEVEL, SUBJECT_STRANDS, SUBJECT_SUB_STRANDS, subjectsByLevel } from '../../constants';
+import { subjects as sharedSubjects, levels, CLASSES_BY_LEVEL, SUBJECT_STRANDS, SUBJECT_SUB_STRANDS, getSubjectsForClass } from '../../constants';
 import { SearchableDropdown } from '../ui/SearchableDropdown';
 import { 
   buildSchemeCurriculumFrame, 
@@ -131,6 +131,20 @@ export default function SchemeGenerator() {
   });
 
   const [showWeeklyPreview, setShowWeeklyPreview] = useState(false);
+
+  // Safe table cell renderer for Scheme preview: converts <br>, <br/>, <br><br> into genuine React breaks safely
+  const schemeTableComponents = useMemo(() => ({
+    td: ({ node, children, className, ...props }: any) => (
+      <td {...props} className={cn(className, "align-top")}>
+        {renderSafeLineBreaks(children)}
+      </td>
+    ),
+    th: ({ node, children, className, ...props }: any) => (
+      <th {...props} className={cn(className, "align-top")}>
+        {renderSafeLineBreaks(children)}
+      </th>
+    )
+  }), []);
 
   const displaySubject = formData.subject === 'Ghanaian Language' && formData.ghanaianLanguage
     ? `Ghanaian Language (${formData.ghanaianLanguage})`
@@ -455,8 +469,7 @@ export default function SchemeGenerator() {
     if (!result) return;
     const doc = new jsPDF('l', 'mm', 'a4'); // Landscape for tables
     const fontName = registerUnicodeFonts(doc);
-    const displayType = formData.type === 'yearly' ? 'YEARLY' : `TERM ${formData.term} - TERMLY`;
-    const mainTitle = `STRATEGIC ${displayType} SCHEME OF LEARNING`;
+    const mainTitle = formData.type === 'yearly' ? 'YEARLY SCHEME OF LEARNING' : 'TERMLY SCHEME OF LEARNING';
     
     // Custom Header Branding
     doc.setFillColor(0, 28, 61); // TeachSmart Deep Blue
@@ -478,7 +491,8 @@ export default function SchemeGenerator() {
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(11);
     doc.setFont(fontName, "normal");
-    const metaText = `Subject: ${displaySubject.toUpperCase()} | Class: ${formData.class.toUpperCase()} (${formData.level.toUpperCase()}) | Academic Year: ${formData.academicYear}`;
+    const termInfo = formData.type === 'termly' ? ` | Term: ${formData.term}` : '';
+    const metaText = `Subject: ${displaySubject.toUpperCase()} | Class: ${formData.class.toUpperCase()} (${formData.level.toUpperCase()})${termInfo} | Academic Year: ${formData.academicYear}`;
     doc.text(metaText, 148.5, 40, { align: 'center' });
 
     // Parse markdown table to array for autoTable
@@ -486,7 +500,17 @@ export default function SchemeGenerator() {
     const tableData: string[][] = [];
     let headers: string[] = [];
     let processingTable = false;
-    let footerText = '';
+
+    const cleanCellForPdf = (cellStr: string): string => {
+      if (!cellStr) return '';
+      return cellStr
+        .replace(/<br\s*\/?>/gi, '\n')
+        .replace(/\\n/g, '\n')
+        .split('\n')
+        .map(part => part.trim())
+        .join('\n')
+        .trim();
+    };
 
     lines.forEach(line => {
       const trimmedLine = line.trim();
@@ -494,14 +518,12 @@ export default function SchemeGenerator() {
         const row = trimmedLine.split('|').filter((_, i, arr) => i > 0 && i < arr.length - 1).map(c => c.trim());
         if (row.length > 0) {
           if (!processingTable && !trimmedLine.includes('---')) {
-            headers = row;
+            headers = row.map(cleanCellForPdf);
             processingTable = true;
           } else if (processingTable && !trimmedLine.includes('---')) {
-            tableData.push(row);
+            tableData.push(row.map(cleanCellForPdf));
           }
         }
-      } else if (trimmedLine.toLowerCase().includes('vetted by')) {
-        footerText = trimmedLine;
       }
     });
 
@@ -509,14 +531,58 @@ export default function SchemeGenerator() {
       autoTable(doc, {
         head: [headers],
         body: tableData,
-        startY: 50,
+        startY: 48,
         theme: 'grid',
-        styles: { font: fontName, fontSize: 8, cellPadding: 3, valign: 'middle' },
-        headStyles: { font: fontName, fillColor: [30, 41, 59], textColor: 255, fontStyle: 'bold', halign: 'center' },
+        rowPageBreak: 'avoid',
+        showHead: 'everyPage',
+        styles: { 
+          font: fontName, 
+          fontSize: 7.8, 
+          cellPadding: 2.5, 
+          valign: 'top', 
+          overflow: 'linebreak',
+          lineColor: [203, 213, 225],
+          lineWidth: 0.2
+        },
+        headStyles: { 
+          font: fontName, 
+          fillColor: [0, 28, 61], 
+          textColor: 255, 
+          fontStyle: 'bold', 
+          halign: 'center', 
+          valign: 'middle' 
+        },
         alternateRowStyles: { fillColor: [248, 250, 252] },
-        margin: { top: 35 },
+        columnStyles: headers.length === 6 ? {
+          0: { cellWidth: 22, halign: 'center' },
+          1: { cellWidth: 38 },
+          2: { cellWidth: 38 },
+          3: { cellWidth: 78 },
+          4: { cellWidth: 78 },
+          5: { cellWidth: 23 }
+        } : undefined,
+        margin: { top: 25, left: 10, right: 10, bottom: 20 },
         didDrawPage: (data) => {
           const pageHeight = doc.internal.pageSize.height;
+
+          // Running header on page 2 and beyond
+          if (data.pageNumber > 1) {
+            doc.setFont(fontName, 'bold');
+            doc.setFontSize(8.5);
+            doc.setTextColor(0, 28, 61);
+            doc.text(mainTitle, 10, 12);
+            
+            doc.setFont(fontName, 'normal');
+            doc.setFontSize(7.5);
+            doc.setTextColor(100, 116, 139);
+            doc.text(metaText, 10, 17);
+            
+            doc.setDrawColor(226, 232, 240);
+            doc.setLineWidth(0.4);
+            doc.line(10, 19.5, 287, 19.5);
+          }
+
+          // Bottom footer on all pages
           doc.setDrawColor(220, 220, 220);
           doc.setLineWidth(0.5);
           doc.line(10, pageHeight - 12, 287, pageHeight - 12);
@@ -525,7 +591,7 @@ export default function SchemeGenerator() {
             doc.setFontSize(6.5);
             doc.setTextColor(120);
             doc.setFont(fontName, 'normal');
-            doc.text('Note: Teachers should review and adapt generated material to the needs of their learners.', 148.5, pageHeight - 7.5, { align: 'center' });
+            doc.text('Curriculum content verified. Term/week distribution is system-generated and should be reviewed and adapted by the teacher/school.', 148.5, pageHeight - 7.5, { align: 'center' });
           }
 
           doc.setFont(fontName, 'bold');
@@ -541,18 +607,33 @@ export default function SchemeGenerator() {
       });
     }
 
-    // Add footer logic
-    const lastY = (doc as any).lastAutoTable?.finalY || 40;
-    const finalFooter = footerText || (formData.type === 'yearly' ? 'Vetted by: ................................ Signature: ................................ Date: ................................' : '');
+    // Add Vetted by / Signature / Date endorsement footer
+    const pageHeight = doc.internal.pageSize.height;
+    let lastY = (doc as any).lastAutoTable?.finalY || 40;
     
-    if (finalFooter) {
-      // If footer would overflow, add a new page
-      if (lastY > 180) doc.addPage();
-      doc.setFontSize(9);
-      doc.setFont(fontName, "bold");
-      const footerY = doc.internal.pageSize.height - 20;
-      doc.text(finalFooter, 20, footerY);
+    if (lastY + 24 > pageHeight - 20) {
+      doc.addPage();
+      const newPageHeight = doc.internal.pageSize.height;
+      doc.setDrawColor(220, 220, 220);
+      doc.setLineWidth(0.5);
+      doc.line(10, newPageHeight - 12, 287, newPageHeight - 12);
+
+      doc.setFont(fontName, 'bold');
+      doc.setTextColor(0, 107, 63);
+      doc.setFontSize(7.5);
+      doc.text('TEACHSMART GHANA • DESIGNED TO ALIGN WITH NaCCA/GES CURRICULUM REQUIREMENTS', 10, newPageHeight - 4);
+
+      lastY = 25;
+    } else {
+      lastY += 8;
     }
+    
+    doc.setFont(fontName, "bold");
+    doc.setFontSize(9);
+    doc.setTextColor(30, 41, 59);
+    doc.text('Vetted by: ______________________', 15, lastY);
+    doc.text('Signature: ______________________', 15, lastY + 7);
+    doc.text('Date: ___________________________', 15, lastY + 14);
     
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-').replace('T', '_').slice(0, 19);
     const filename = `${displaySubject}_${formData.level}_Scheme_${formData.type}_${timestamp}`.replace(/[\s\W]+/g, '_');
@@ -607,7 +688,7 @@ export default function SchemeGenerator() {
               <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Subject Area</label>
               <SearchableDropdown
                 value={formData.subject}
-                options={formData.level ? (subjectsByLevel[formData.level] || []).slice().sort((a, b) => a.localeCompare(b)) : []}
+                options={formData.level ? getSubjectsForClass(formData.level, formData.class).slice().sort((a, b) => a.localeCompare(b)) : []}
                 placeholder="Select Subject"
                 onChange={(val) => setFormData({
                   ...formData,
@@ -643,13 +724,14 @@ export default function SchemeGenerator() {
                 onChange={(e) => {
                   const newLvl = e.target.value;
                   const newClasses = CLASSES_BY_LEVEL[newLvl] || [];
-                  const levelSubjects = subjectsByLevel[newLvl] || [];
+                  const newClass = newClasses[0] || '';
+                  const levelSubjects = getSubjectsForClass(newLvl, newClass);
                   const currentSubj = formData.subject;
                   const newSubj = levelSubjects.includes(currentSubj) ? currentSubj : '';
                   setFormData({
                     ...formData,
                     level: newLvl,
-                    class: newClasses[0] || '',
+                    class: newClass,
                     subject: newSubj,
                     ghanaianLanguage: newSubj === 'Ghanaian Language' ? formData.ghanaianLanguage : ''
                   });
@@ -665,7 +747,17 @@ export default function SchemeGenerator() {
                 required
                 className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-ghana-red outline-none transition-all font-bold text-slate-700"
                 value={formData.class}
-                onChange={(e) => setFormData({...formData, class: e.target.value})}
+                onChange={(e) => {
+                  const newClass = e.target.value;
+                  const validSubjects = getSubjectsForClass(formData.level, newClass);
+                  const isSubjValid = validSubjects.includes(formData.subject);
+                  setFormData({
+                    ...formData,
+                    class: newClass,
+                    subject: isSubjValid ? formData.subject : '',
+                    ghanaianLanguage: isSubjValid && formData.subject === 'Ghanaian Language' ? formData.ghanaianLanguage : ''
+                  });
+                }}
               >
                 {(CLASSES_BY_LEVEL[formData.level] || []).map(c => <option key={c} value={c}>{c}</option>)}
               </select>
@@ -680,10 +772,10 @@ export default function SchemeGenerator() {
                   <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
                   <div className="text-xs space-y-1">
                     <p className="font-bold text-emerald-900">
-                      NaCCA Official Curriculum Verified (Strict Authority Active)
+                      Verified Curriculum Content
                     </p>
                     <p className="text-emerald-700">
-                      Basic 4 English is grounded in official NaCCA curriculum documents: <strong>52 Content Standards</strong>, <strong>59 Explicit Indicators</strong>, and <strong>0 synthetic fallbacks</strong>. Full-year coverage and weekly pacing are mathematically locked.
+                      Basic 4 English uses verified curriculum content: <strong>52 Content Standards</strong> and <strong>59 Explicit Indicators</strong>. Term and weekly placement is currently a system-generated suggested distribution and should be reviewed by the teacher or school before use.
                     </p>
                   </div>
                 </div>
@@ -1008,27 +1100,6 @@ export default function SchemeGenerator() {
             )}
           </div>
 
-          <div className="flex flex-col md:flex-row gap-8 items-start md:items-center justify-between p-6 bg-slate-50 rounded-3xl border border-slate-100">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-ghana-red/10 rounded-2xl flex items-center justify-center text-ghana-red">
-                <Target size={24} />
-              </div>
-              <div>
-                <h3 className="font-black uppercase tracking-tight text-slate-900">Learning Outcomes</h3>
-                <p className="text-xs font-medium text-slate-500">Include specific measurable goals for each week</p>
-              </div>
-            </div>
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input 
-                type="checkbox" 
-                checked={formData.includeLearningOutcomes}
-                onChange={(e) => setFormData({...formData, includeLearningOutcomes: e.target.checked})}
-                className="sr-only peer"
-              />
-              <div className="w-14 h-8 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-ghana-red"></div>
-            </label>
-          </div>
-
           <button 
             disabled={loading}
             className="w-full btn-primary !bg-ghana-red py-5 text-base font-black flex items-center justify-center gap-3 shadow-xl shadow-red-900/10 group relative overflow-hidden"
@@ -1144,7 +1215,7 @@ export default function SchemeGenerator() {
                   onClick={downloadWord}
                   disabled={exportingWord}
                   className="py-2 px-4 sm:px-5 sm:py-2.5 bg-blue-700 hover:bg-blue-800 text-white rounded-xl font-bold text-xs whitespace-nowrap shrink-0 flex items-center justify-center gap-1.5 transition-all shadow-md shadow-blue-700/20"
-                  title="Download NaCCA 11-column Scheme of Learning Word Document (.docx)"
+                  title="Download Termly Scheme of Learning Word Document (.docx)"
                 >
                   <FileText size={15} />
                   {exportingWord ? "Word..." : "Word (.docx)"}
@@ -1242,9 +1313,12 @@ export default function SchemeGenerator() {
             {!isEditing && (
             <div className="bg-white p-10 lg:p-16 rounded-[4rem] shadow-2xl border border-slate-100 relative min-h-[600px] ghana-border-red overflow-x-auto">
                <div className="markdown-body prose prose-slate max-w-none prose-headings:font-black prose-headings:uppercase prose-headings:tracking-tighter prose-headings:mt-10 first:prose-headings:mt-0 prose-p:font-medium prose-li:font-medium prose-table:border prose-table:border-slate-100 prose-th:bg-slate-50 prose-th:p-4 prose-td:p-4">
-                <SafeMarkdown>
+                <SafeMarkdown components={schemeTableComponents}>
                   {result || ""}
                 </SafeMarkdown>
+              </div>
+              <div className="mt-8 pt-4 border-t border-slate-100 text-xs text-slate-500 text-center font-medium">
+                Curriculum content verified. Term/week distribution is system-generated and should be reviewed and adapted by the teacher/school.
               </div>
             </div>
             )}
