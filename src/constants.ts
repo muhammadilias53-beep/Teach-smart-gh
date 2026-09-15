@@ -74,7 +74,6 @@ export const PRIMARY_LOWER_SUBJECTS: string[] = [
   "English",
   "Mathematics",
   "Science",
-  "Our World Our People",
   "History",
   "RME",
   "Creative Arts",
@@ -86,7 +85,6 @@ export const PRIMARY_UPPER_SUBJECTS: string[] = [
   "English",
   "Mathematics",
   "Science",
-  "Our World Our People",
   "History",
   "RME",
   "Creative Arts",
@@ -104,7 +102,6 @@ export const subjectsByLevel: Record<string, string[]> = {
     "English",
     "Mathematics",
     "Science",
-    "Our World Our People",
     "History",
     "RME",
     "Creative Arts",
@@ -157,9 +154,9 @@ export const subjectsByLevel: Record<string, string[]> = {
 
 /**
  * Canonical helper for class-aware subject selection.
- * Enforces NaCCA Primary class distinction:
- * - Basic 1-3 (Lower Primary): Computing & French excluded; Social Studies excluded; OWOP preserved.
- * - Basic 4-6 (Upper Primary): Computing & French included; Social Studies excluded; OWOP preserved.
+ * Enforces NaCCA Primary class distinction (2026/2027 Taxonomy):
+ * - Basic 1-3 (Lower Primary): 8 subjects (English, Mathematics, Science, History, RME, Creative Arts, Ghanaian Language, Physical Education). Computing, French, Social Studies, and standalone OWOP excluded.
+ * - Basic 4-6 (Upper Primary): 10 subjects (Lower Primary subjects + Computing and French). Social Studies and standalone OWOP excluded.
  */
 export function getSubjectsForClass(level?: string, className?: string): string[] {
   if (!level) return [];

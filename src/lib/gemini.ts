@@ -108,6 +108,16 @@ export const generateLessonPlan = async (
 
     SOURCE OF TRUTH: If the prompt provides specific "LESSON FRAME" details such as activities, keywords, or resources, you MUST treat these as the PRIMARY constraints and incorporate them into the lesson plan.
     
+    STRICT SUBJECT PURITY & ISOLATION MANDATE (CRITICAL):
+    Every generated lesson plan MUST remain 100% faithful and strictly isolated to the specified Subject in the prompt.
+    - UNDER NO CIRCUMSTANCES should you cross-contaminate, borrow, or merge themes, topics, activities, teaching resources (TLRs), or references from OTHER, UNRELATED subjects.
+    - For example:
+      * If the Subject is COMPUTING: ALL activities, keywords, TLRs, and objectives MUST be strictly about computer systems, hardware, software, peripherals, operating systems, data processing, networks, digital safety, algorithms, or programming. You are STRICTLY FORBIDDEN from mentioning religious texts (Holy Bible, Holy Quran), religious creation accounts, nature walks observing living organisms/plants, or illegal mining (galamsey), which belong exclusively to Religious and Moral Education (RME) or Science.
+      * If the Subject is RELIGIOUS AND MORAL EDUCATION (RME): Focus purely on religious traditions, moral values, ethics, and civic duties. Do NOT introduce computing hardware, programming, or unrelated mathematical formulas.
+      * If the Subject is SCIENCE: Focus purely on scientific inquiry, matter, living systems, energy, and forces.
+      * If the Subject is MATHEMATICS: Focus purely on numeracy, algebra, geometry, and data handling.
+    - Any cross-subject leakage or confusion of concepts is a SEVERE defect. The subject boundary must be airtight.
+    
     CURRICULUM INTEGRITY: You MUST maintain the EXACT names of Strands and Sub-strands provided in the prompt. Do NOT summarize or rephrase them. Use the official codes and titles exactly as they appear in the data provided. Specifically for Science, ensure the strand formerly known as "All Around Us" is always referred to as "Diversity of Matter".
     
     PERFORMANCE INDICATOR RULE: You MUST automatically use the selected NaCCA Indicator as the Performance Indicator of the lesson when generating. Ensure the performance indicator is formulated ALWAYS starting with 'Learners can [action verb / indicator text]' (e.g., 'Learners can add two proper fractions with same denominators manually.'). Under NO circumstance should you start with 'By the end of the lesson' or 'The learner will be able to' - it MUST always begin with 'Learners can'. Do not invent or add secondary goals.
@@ -1584,6 +1594,12 @@ function parseAIResponse(response: any) {
   }
 
   const trimmedText = text.trim();
+
+  // If response is an HTML page (e.g. proxy redirect, error page)
+  if (trimmedText.startsWith('<!doctype') || trimmedText.startsWith('<!DOCTYPE') || trimmedText.startsWith('<html') || trimmedText.startsWith('<HTML')) {
+    throw new Error("Received an unexpected HTML response from the server rather than JSON. Please check network connectivity or try generating again.");
+  }
+
   try {
     // Try direct parse first
     return JSON.parse(trimmedText);
@@ -1704,6 +1720,9 @@ function parseAIResponse(response: any) {
     }
     
     console.error("AI response did not contain a valid JSON block:", text);
+    if (e && e.message && e.message.includes('Unexpected token')) {
+      throw new Error("The AI response could not be parsed as structured data. Please try generating again.");
+    }
     throw e;
   }
 }
@@ -1856,14 +1875,28 @@ export const generateWithProxy = async (
         }),
       });
 
+      const contentType = response.headers.get('content-type') || '';
+      const isJson = contentType.includes('application/json');
+
       if (!response.ok) {
         if (response.status === 404) {
           serverReturned404 = true;
           break; // Stop proxy retries on 404 and proceed to client fallback
         }
 
-        const errData = await response.json().catch(() => ({}));
-        let rawMessage = errData.error || errData.details || `Server returned status ${response.status}`;
+        let rawMessage = `Server returned status ${response.status}`;
+        if (isJson) {
+          const errData = await response.json().catch(() => ({}));
+          rawMessage = errData.error || errData.details || rawMessage;
+        } else {
+          // If server returned an HTML error page (e.g. 502/504 Bad Gateway, Cloud Run error page, etc.)
+          const rawText = await response.text().catch(() => '');
+          if (rawText.trim().startsWith('<') || rawText.includes('<!DOCTYPE') || rawText.includes('<!doctype')) {
+            rawMessage = `Server returned HTML response with status ${response.status}. The backend service might be restarting or temporarily busy.`;
+          } else if (rawText) {
+            rawMessage = rawText.slice(0, 300);
+          }
+        }
         
         // Try parsing nested JSON string if the server returned raw JSON from the SDK
         if (typeof rawMessage === 'string' && rawMessage.trim().startsWith('{')) {
@@ -1879,18 +1912,38 @@ export const generateWithProxy = async (
 
         const isUnavailable = 
           response.status === 503 || 
+          response.status === 502 ||
+          response.status === 504 ||
           response.status === 429 || 
           rawMessage.includes('503') || 
+          rawMessage.includes('502') ||
+          rawMessage.includes('504') ||
           rawMessage.includes('high demand') || 
           rawMessage.includes('UNAVAILABLE') ||
           rawMessage.includes('RESOURCE_EXHAUSTED');
 
         if (isUnavailable && attempt < maxRetries) {
-          console.warn(`[generateWithProxy] Transient 503/high-demand error on attempt ${attempt + 1}. Retrying...`);
+          console.warn(`[generateWithProxy] Transient unavailable/high-demand error (${response.status}) on attempt ${attempt + 1}. Retrying...`);
           continue;
         }
 
         throw new Error(rawMessage);
+      }
+
+      // Check if success response is JSON or an unexpected HTML page
+      if (!isJson) {
+        const responseText = await response.text();
+        if (responseText.trim().startsWith('<') || responseText.includes('<!DOCTYPE') || responseText.includes('<!doctype')) {
+          console.warn('[generateWithProxy] Expected JSON from /api/generate but received HTML page. Falling back to direct client generation...');
+          serverReturned404 = true;
+          throw new Error('Received HTML response instead of JSON from /api/generate.');
+        }
+        try {
+          const parsed = JSON.parse(responseText);
+          return parsed.text;
+        } catch {
+          return responseText;
+        }
       }
 
       const data = await response.json();
@@ -1903,10 +1956,18 @@ export const generateWithProxy = async (
     }
   }
 
-  // Fallback to client-side GoogleGenAI if /api/generate is 404 (static hosting / SPA deployments)
-  if (serverReturned404 || (lastError && (lastError.message?.includes('Failed to fetch') || lastError.message?.includes('NetworkError')))) {
+  // Fallback to client-side GoogleGenAI if /api/generate is 404, returns HTML, or has network issues
+  const isHtmlOrNetworkError = serverReturned404 || (lastError && (
+    lastError.message?.includes('Failed to fetch') || 
+    lastError.message?.includes('NetworkError') ||
+    lastError.message?.includes('HTML response') ||
+    lastError.message?.includes('<!doctype') ||
+    lastError.message?.includes('<!DOCTYPE')
+  ));
+
+  if (isHtmlOrNetworkError) {
     if (clientApiKey) {
-      console.log('[generateWithProxy] Backend /api/generate returned 404. Falling back to direct client-side Gemini generation...');
+      console.log('[generateWithProxy] Backend proxy returned error/HTML. Falling back to direct client-side Gemini generation...');
       try {
         return await generateClientFallback(clientApiKey, prompt, systemInstruction, responseMimeType, preferredModel);
       } catch (clientErr: any) {

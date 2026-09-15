@@ -3,6 +3,8 @@
  * Supports official GES & NaCCA continuous assessment and terminal report formats.
  */
 
+import { getCurrentGesCalendarInfo } from './academicCalendar';
+
 export interface ParsedStudentRow {
   name: string;
   gender?: 'male' | 'female';
@@ -371,8 +373,8 @@ export function generateSampleRosterCSV(options: CSVExportOptions = {}): string 
     schoolName = 'Ghana Model Basic School',
     className = 'Basic 7',
     subjectName = 'Integrated Science',
-    termName = 'Term 1',
-    academicYear = '2025/2026',
+    termName = `Term ${getCurrentGesCalendarInfo().activeTerm}`,
+    academicYear = getCurrentGesCalendarInfo().academicYear,
     classWeight = 30,
     examWeight = 70,
     includeMetadataBlock = true
@@ -430,8 +432,8 @@ export function generateBlankRosterCSV(options: CSVExportOptions = {}): string {
     schoolName = 'Ghana Model Basic School',
     className = 'Basic 7',
     subjectName = 'Integrated Science',
-    termName = 'Term 1',
-    academicYear = '2025/2026',
+    termName = `Term ${getCurrentGesCalendarInfo().activeTerm}`,
+    academicYear = getCurrentGesCalendarInfo().academicYear,
     classWeight = 30,
     examWeight = 70,
     includeMetadataBlock = true
@@ -484,8 +486,8 @@ export function downloadSampleCSVTemplate(
   customTitle = 'Terminal Continuous Assessment & Examination Broad Sheet',
   schoolName = 'Ghana Model Basic School',
   subjectName = 'Integrated Science',
-  termName = 'Term 1',
-  academicYear = '2025/2026',
+  termName = `Term ${getCurrentGesCalendarInfo().activeTerm}`,
+  academicYear = getCurrentGesCalendarInfo().academicYear,
   isTemplateBlank = false
 ) {
   const content = isTemplateBlank

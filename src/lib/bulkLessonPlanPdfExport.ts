@@ -5,6 +5,7 @@ import { registerUnicodeFonts } from './fonts/unicodeFonts';
 import { buildMultiDayLessonPhases } from './multiDayParser';
 import { formatWeekLessonPlanTitle } from './utils';
 import { extractWeekNumber, extractLessonNumber, generateCurriculumKey, getLessonRecordTimestamp } from './bulkExportHelpers';
+import { createDocumentVerification, renderQRCodeInPDF } from './documentVerification';
 
 export interface BulkTermPdfExportOptions {
   academicYear: string;
@@ -88,6 +89,18 @@ export function exportBulkTermLessonPlansToPDF(options: BulkTermPdfExportOptions
   const displaySchool = (schoolName || 'Ghana Basic School').toUpperCase();
   const displayDistrict = (district || 'GES District Education Directorate').toUpperCase();
 
+  // Generate official verification payload for the entire termly lesson book
+  const { data: verifData, verificationUrl } = createDocumentVerification({
+    documentType: '12-Week Term Lesson Book',
+    subject: displaySubject,
+    classLevel: displayClass,
+    term: displayTerm,
+    academicYear,
+    teacherName: displayTeacher,
+    schoolName: displaySchool,
+    district: displayDistrict,
+  });
+
   // ==========================================
   // PAGE 1: COVER PAGE
   // ==========================================
@@ -117,6 +130,17 @@ export function exportBulkTermLessonPlansToPDF(options: BulkTermPdfExportOptions
   doc.setFontSize(9);
   doc.setTextColor(148, 163, 184);
   doc.text('CATALYST CREATIVE  •  NaCCA STANDARD-BASED CURRICULUM ALIGNED', leftMargin + 4, 28);
+
+  // Top Right Vector QR Code on Cover Banner
+  const coverQrSize = 28;
+  const coverQrX = pageWidth - rightMargin - coverQrSize - 2;
+  const coverQrY = 6;
+  renderQRCodeInPDF(doc, verificationUrl, coverQrX, coverQrY, coverQrSize);
+
+  doc.setFontSize(6.5);
+  doc.setFont(fontName, 'bold');
+  doc.setTextColor(252, 209, 22); // Ghana Gold
+  doc.text('SCAN TO VERIFY', coverQrX + coverQrSize / 2, 38, { align: 'center' });
 
   // Central Title
   let currentY = 66;
@@ -174,7 +198,7 @@ export function exportBulkTermLessonPlansToPDF(options: BulkTermPdfExportOptions
           styles: { textColor: [30, 41, 59], fontSize: 9 }
         },
         {
-          content: 'VETTED & APPROVED BY (HEADTEACHER):\n\nStamp & Sign: .....................................\nDate: ................................................',
+          content: `VETTED & APPROVED BY (HEADTEACHER):\n\nStamp & Sign: .....................................\nDate: ................................................\nCurriculum Ledger ID: ${verifData.verificationCode}`,
           styles: { textColor: [30, 41, 59], fontSize: 9 }
         }
       ]
@@ -414,7 +438,7 @@ export function exportBulkTermLessonPlansToPDF(options: BulkTermPdfExportOptions
       head: [["TEACHER'S SELF-REFLECTION", 'HEADTEACHER / SUPERVISOR REMARKS']],
       body: [
         [
-          `${plan.teacherReflection || 'Lesson delivered effectively in accordance with NaCCA SBC competency standards.'}\n\nTeacher Signature: ....................................... Date: ...................`,
+          `Facilitator: ${displayTeacher}\n\n${plan.teacherReflection || 'Lesson delivered effectively in accordance with NaCCA SBC competency standards.'}\n\nTeacher Signature: ....................................... Date: ...................`,
           `${plan.headteacherRemarks || 'Lesson plan approved. Ensure practical learner-centered activities are sustained.'}\n\nSupervisor Stamp & Sign: ............................. Date: ...................`
         ]
       ],
@@ -439,14 +463,14 @@ export function exportBulkTermLessonPlansToPDF(options: BulkTermPdfExportOptions
   const totalPages = doc.getNumberOfPages();
   for (let i = 1; i <= totalPages; i++) {
     doc.setPage(i);
+
     doc.setFont(fontName, 'normal');
-    doc.setFontSize(7.5);
+    doc.setFontSize(6.8);
     doc.setTextColor(100, 116, 139);
-    doc.text(
-      `TeachSmartGH (Catalyst Creative) • NaCCA & GES Standard-Based Curriculum Preparation`,
-      leftMargin,
-      pageHeight - 6
-    );
+    const footerText = teacherName
+      ? `TeachSmartGH • Prepared by: ${displayTeacher} (${displaySchool}) • NaCCA / GES Aligned`
+      : `TeachSmartGH (Catalyst Creative) • NaCCA & GES Standard-Based Curriculum Preparation`;
+    doc.text(footerText, leftMargin, pageHeight - 6);
     doc.text(
       `Page ${i} of ${totalPages}`,
       pageWidth - rightMargin,

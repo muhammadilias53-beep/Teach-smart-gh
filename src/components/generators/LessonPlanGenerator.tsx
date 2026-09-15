@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import { toast } from 'react-hot-toast';
-import { Sparkles, Save, Download, RefreshCw, FileText, ChevronLeft, ChevronRight, CheckCircle, Users, Layout, AlignLeft, Layers, GraduationCap, MessageSquare, Edit3, Check, RotateCcw, FileEdit, AlertCircle, Compass, Search, BookOpen, ArrowRight } from 'lucide-react';
+import { Sparkles, Save, Download, RefreshCw, FileText, ChevronLeft, ChevronRight, CheckCircle, Users, Layout, AlignLeft, Layers, GraduationCap, MessageSquare, Edit3, Check, RotateCcw, FileEdit, AlertCircle, Compass, Search, BookOpen, ArrowRight, ShieldCheck, Award, Clock } from 'lucide-react';
 import { CurriculumReferenceModal } from '../standards/CurriculumReferenceModal';
+import { SubmitForVettingModal } from '../vetting/SubmitForVettingModal';
 import { generateLessonPlan, generateKGDailyLessonPlan } from '../../lib/gemini';
 import { getKGScheduleForDay, reconcileKGBlocks } from '../../config/kgTimetable';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
@@ -29,6 +30,7 @@ import { exportLessonPlanToPDF } from '../../lib/lessonPlanPdfExport';
 import { exportLessonPlanToWord } from '../../lib/wordExport';
 import { buildMultiDayLessonPhases } from '../../lib/multiDayParser';
 import { BulkTermExportModal } from './BulkTermExportModal';
+import { checkTermAccess, getCurrentGesCalendarInfo, getAcademicYearForDate, getTermForDate, getAcademicYearOptions } from '../../lib/academicCalendar';
 import { 
   subjects, 
   levels, 
@@ -37,6 +39,7 @@ import {
   SUBJECT_SUB_STRANDS, 
   SUB_STRAND_STANDARDS, 
   STANDARD_INDICATORS,
+  getSubjectLessonFrame,
   SCIENCE_B7_LESSON_FRAMES,
   SCIENCE_B8_LESSON_FRAMES,
   SCIENCE_B9_LESSON_FRAMES,
@@ -114,6 +117,9 @@ const LessonPlanGenerator = () => {
   const { user, profile, canGenerate, consumeCredit, aiCredits, getGenerationBlockReason } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+
+  const gesCalendar = getCurrentGesCalendarInfo();
+  const isMultiTermUser = ['yearly', 'lifetime', 'school_license', 'school_starter', 'school_pro'].includes(profile?.plan || profile?.planType || '') || profile?.isSchoolAdmin === true || profile?.role === 'admin';
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
   const [isStandardsModalOpen, setIsStandardsModalOpen] = useState(false);
@@ -124,12 +130,15 @@ const LessonPlanGenerator = () => {
   const [hasEdited, setHasEdited] = useState(false);
   const [saving, setSaving] = useState(false);
   const [customIndicatorInput, setCustomIndicatorInput] = useState('');
+  const [showVettingModal, setShowVettingModal] = useState(false);
   const initialFriday = getUpcomingFriday();
   const initialDate = calculateLessonDateFromWeekEnding(initialFriday, ['Monday']);
+  const initialAcademicYear = getAcademicYearForDate(initialFriday);
+  const initialTerm = `Term ${getTermForDate(initialFriday)}`;
 
   const [formData, setFormData] = useState({
-    academicYear: '2025/2026',
-    term: 'Term 1',
+    academicYear: initialAcademicYear,
+    term: initialTerm,
     level: 'JHS',
     class: 'Basic 7',
     subject: 'English',
@@ -230,10 +239,14 @@ const LessonPlanGenerator = () => {
         ? prev.selectedDays
         : [prev.day || 'Monday'];
       const calculatedDate = calculateLessonDateFromWeekEnding(newWeekEnding, activeDays);
+      const matchedYear = getAcademicYearForDate(newWeekEnding);
+      const matchedTerm = `Term ${getTermForDate(newWeekEnding)}`;
       return {
         ...prev,
         weekEnding: newWeekEnding,
-        date: calculatedDate
+        date: calculatedDate,
+        academicYear: matchedYear,
+        term: prev.term || matchedTerm
       };
     });
   };
@@ -543,6 +556,16 @@ const LessonPlanGenerator = () => {
 
     if (!validateStep(3)) return;
 
+    // GES Academic Calendar Term-Locking Check
+    const termAccess = checkTermAccess(profile, formData.term, false, profile?.role === 'admin');
+    if (!termAccess.unlocked) {
+      toast.error(termAccess.reason || "This term is locked to the official GES Academic Calendar.", {
+        duration: 7000,
+        icon: '🔒'
+      });
+      return;
+    }
+
     // Defensive Curriculum Class Isolation Check
     if (formData.contentStandard && formData.class) {
       const isStandardMatch = matchStandardToClass(formData.contentStandard, formData.class, formData.level);
@@ -661,30 +684,12 @@ const LessonPlanGenerator = () => {
         return;
       }
 
-      // Find potential curriculum frames for additional guidance
+      // Find subject-isolated curriculum frames for additional guidance
       let frameDetails = "";
-      
-      const allFrames = {
-        ...SCIENCE_B7_LESSON_FRAMES,
-        ...SCIENCE_B8_LESSON_FRAMES,
-        ...SCIENCE_B9_LESSON_FRAMES,
-        ...MATH_B7_LESSON_FRAMES,
-        ...ENGLISH_B7_LESSON_FRAMES,
-        ...ENGLISH_B1_B6_LESSON_FRAMES,
-        ...FRENCH_B4_B6_LESSON_FRAMES,
-        ...GHANAIAN_LANGUAGE_B1_B3_LESSON_FRAMES,
-        ...KG_INTEGRATED_LESSON_FRAMES,
-        ...MATH_B1_B3_LESSON_FRAMES,
-        ...MATH_B4_B6_LESSON_FRAMES,
-        ...OWOP_B1_B3_LESSON_FRAMES,
-        ...OWOP_B4_B6_LESSON_FRAMES,
-        ...PE_LESSON_FRAMES,
-        ...RME_LESSON_FRAMES
-      };
 
       for (const ind of activeIndicators) {
         const indicatorId = ind.split(':')[0].trim();
-        const foundFrame = (allFrames as Record<string, any>)[indicatorId];
+        const foundFrame = getSubjectLessonFrame(formData.subject, formData.class, indicatorId);
         if (foundFrame) {
           frameDetails += `
           LESSON FRAME CONTEXT (${indicatorId} - ${foundFrame.topic}):
@@ -723,6 +728,7 @@ const LessonPlanGenerator = () => {
 
       const prompt = `Generate a NaCCA-compliant lesson plan for ${formData.class} (${formData.level}) ${displaySubject} strictly following the Standard-Based Curriculum (SBC). 
       Term Week: ${formData.weekNumber || '1'} (${formatWeekLessonPlanTitle(formData.weekNumber || '1')}).
+      Subject: ${displaySubject}.
       Strand: ${formData.strand}.
       Sub-Strand: ${formData.subStrand}.
       Content Standard: ${formData.contentStandard}.
@@ -733,6 +739,9 @@ const LessonPlanGenerator = () => {
       Week Ending: ${formData.weekEnding}.
       Scheduled Day(s): ${daysDescription}.
       Locality: ${formData.locality} (${formData.specificLocality}). 
+
+      STRICT SUBJECT ISOLATION MANDATE:
+      This lesson plan is SOLELY and EXCLUSIVELY for "${displaySubject}". Every activity (Phase 1 Starter, Phase 2 Main, Phase 3 Plenary), keyword, teaching and learning resource (TLR), and assessment MUST be 100% authentic and relevant to "${displaySubject}" and "${formData.subStrand}". DO NOT combine, confuse, or borrow topics, scriptures, or resources from unrelated subjects (e.g., if Subject is Computing, NEVER include religious creation stories, Bible/Quran verses, or nature walks looking at insects/plants which belong to RME or Science).
       
       ${frameDetails}
 
@@ -825,8 +834,8 @@ const LessonPlanGenerator = () => {
           objectives: result?.performanceIndicator || formData.mainObjective || (formData.indicator ? formatPerformanceIndicator(formData.indicator) : ''),
           duration: formData.duration || '60 minutes',
           week: `Week ${result?.weekNumber || formData.weekNumber || '1'}`,
-          term: 'Term 1',
-          academicYear: '2025/2026',
+          term: formData.term || `Term ${gesCalendar.activeTerm}`,
+          academicYear: formData.academicYear || gesCalendar.academicYear,
           locality: formData.locality,
           specificLocality: formData.specificLocality,
           language: formData.language,
@@ -862,8 +871,8 @@ const LessonPlanGenerator = () => {
       level: formData.level,
       class: formData.class,
       subject: displaySubject,
-      term: formData.term || 'Term 1',
-      academicYear: formData.academicYear || '2025/2026',
+      term: formData.term || (result.weekEnding || formData.weekEnding ? `Term ${getTermForDate(result.weekEnding || formData.weekEnding)}` : 'Term 1'),
+      academicYear: formData.academicYear || getAcademicYearForDate(result.weekEnding || formData.weekEnding || new Date()),
       locality: formData.locality,
       specificLocality: formData.specificLocality,
       strand: formData.strand,
@@ -959,7 +968,14 @@ const LessonPlanGenerator = () => {
         specificLocality: formData.specificLocality,
         kgBlocks: result.blocks || result.kgBlocks,
         teacherReflection: result.teacherReflection,
-        headteacherRemarks: result.headteacherRemarks
+        headteacherRemarks: result.headteacherRemarks,
+        vettedBy: result.vettedBy,
+        vettedDesignation: result.vettedDesignation,
+        vettedAt: result.vettedAt,
+        vettingStatus: result.vettingStatus,
+        teacherName: profile?.displayName || user?.displayName || user?.email?.split('@')[0],
+        schoolName: (profile as any)?.schoolName || (profile as any)?.school || 'Ghana Basic School',
+        district: (profile as any)?.district || (profile as any)?.region || 'GES District Directorate'
       });
 
       const timestamp = new Date().toISOString().replace(/[:.]/g, '-').replace('T', '_').slice(0, 19);
@@ -1024,7 +1040,14 @@ const LessonPlanGenerator = () => {
         specificLocality: formData.specificLocality,
         kgBlocks: result.blocks || result.kgBlocks,
         teacherReflection: result.teacherReflection,
-        headteacherRemarks: result.headteacherRemarks
+        headteacherRemarks: result.headteacherRemarks,
+        vettedBy: result.vettedBy,
+        vettedDesignation: result.vettedDesignation,
+        vettedAt: result.vettedAt,
+        vettingStatus: result.vettingStatus,
+        teacherName: profile?.displayName || user?.displayName || user?.email?.split('@')[0],
+        schoolName: (profile as any)?.schoolName || (profile as any)?.school || 'Ghana Basic School',
+        district: (profile as any)?.district || (profile as any)?.region || 'GES District Directorate'
       }, {
         subject: displaySubject,
         classLevel: formData.class,
@@ -1033,6 +1056,9 @@ const LessonPlanGenerator = () => {
         strand: result.strand || formData.strand,
         subStrand: result.subStrand || formData.subStrand,
         indicator: indicatorCodes || formData.indicator,
+        teacherName: profile?.displayName || user?.displayName || user?.email?.split('@')[0],
+        schoolName: (profile as any)?.schoolName || (profile as any)?.school || 'Ghana Basic School',
+        district: (profile as any)?.district || (profile as any)?.region || 'GES District Directorate'
       });
     } catch (err) {
       console.error(err);
@@ -1121,22 +1147,42 @@ const LessonPlanGenerator = () => {
                   value={formData.academicYear}
                   onChange={(e) => setFormData({ ...formData, academicYear: e.target.value })}
                 >
-                  <option value="2025/2026">2025/2026 (Current Academic Year)</option>
-                  <option value="2024/2025">2024/2025</option>
-                  <option value="2026/2027">2026/2027</option>
+                  {getAcademicYearOptions(formData.weekEnding || new Date(), [formData.academicYear]).map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-bold text-gray-500 uppercase">Term of Instruction</label>
+                <div className="flex items-center justify-between">
+                  <label className="text-sm font-bold text-gray-500 uppercase">Term of Instruction</label>
+                  <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+                    GES Active: Term {gesCalendar.activeTerm}
+                  </span>
+                </div>
                 <select 
                   className="input-field"
                   value={formData.term}
-                  onChange={(e) => setFormData({ ...formData, term: e.target.value })}
+                  onChange={(e) => {
+                    const selected = e.target.value;
+                    const access = checkTermAccess(profile, selected, false, profile?.role === 'admin');
+                    if (!access.unlocked) {
+                      toast.error(access.reason || "This term is locked on single-term plans to match the GES academic calendar. Upgrade to Full Academic Year Pass (GHS 130) for advance planning across all 3 terms.", {
+                        icon: '🔒',
+                        duration: 6000
+                      });
+                    }
+                    setFormData({ ...formData, term: selected });
+                  }}
                 >
-                  <option value="Term 1">Term 1 (First Term)</option>
-                  <option value="Term 2">Term 2 (Second Term)</option>
-                  <option value="Term 3">Term 3 (Third Term)</option>
+                  <option value="Term 1">Term 1 (Sep - Dec){gesCalendar.activeTerm === '1' ? ' • Current Term' : (!isMultiTermUser && !gesCalendar.openTerms.includes('1') ? ' 🔒 (Locked)' : '')}</option>
+                  <option value="Term 2">Term 2 (Jan - Apr){gesCalendar.activeTerm === '2' ? ' • Current Term' : (!isMultiTermUser && !gesCalendar.openTerms.includes('2') ? ' 🔒 (Locked)' : '')}</option>
+                  <option value="Term 3">Term 3 (May - Aug){gesCalendar.activeTerm === '3' ? ' • Current Term' : (!isMultiTermUser && !gesCalendar.openTerms.includes('3') ? ' 🔒 (Locked)' : '')}</option>
                 </select>
+                <p className="text-[10px] text-slate-400 font-medium">
+                  {isMultiTermUser ? "Full Academic Year Pass active (all 3 terms unlocked)." : gesCalendar.nextTermUnlockNotice}
+                </p>
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-bold text-gray-500 uppercase">Educational Stage</label>
@@ -1211,7 +1257,9 @@ const LessonPlanGenerator = () => {
                     strand: '', 
                     subStrand: '', 
                     contentStandard: '', 
-                    indicator: ''
+                    indicator: '',
+                    selectedIndicators: [],
+                    mainObjective: ''
                   })}
                 />
                 {errors.subject && <p className="text-[10px] text-red-500 font-bold uppercase tracking-wider">{errors.subject}</p>}
@@ -2082,6 +2130,31 @@ const LessonPlanGenerator = () => {
                   {saving ? "Saving..." : "Save Cloud"}
                 </button>
                 <button 
+                  type="button"
+                  onClick={() => setShowVettingModal(true)} 
+                  className={`px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl font-bold uppercase tracking-wider text-[11px] whitespace-nowrap shrink-0 transition-all flex items-center gap-1.5 shadow-md ${
+                    result?.vettingStatus === 'approved'
+                      ? 'bg-emerald-800 hover:bg-emerald-900 text-white border border-emerald-500'
+                      : result?.vettingStatus === 'needs_revision'
+                      ? 'bg-amber-600 hover:bg-amber-700 text-white'
+                      : result?.vettingStatus === 'pending'
+                      ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                      : 'bg-emerald-950 hover:bg-slate-900 text-ghana-gold border border-ghana-gold/30'
+                  }`}
+                  title="Headteacher Digital Vetting & Endorsement Stamp"
+                >
+                  <ShieldCheck size={14} className={result?.vettingStatus === 'approved' ? 'text-emerald-300' : 'text-ghana-gold'} />
+                  <span>
+                    {result?.vettingStatus === 'approved'
+                      ? 'Vetted ✓'
+                      : result?.vettingStatus === 'needs_revision'
+                      ? 'Needs Revision'
+                      : result?.vettingStatus === 'pending'
+                      ? 'Pending Vetting'
+                      : 'Digital Vetting'}
+                  </span>
+                </button>
+                <button 
                   onClick={handleDownloadPDF} 
                   className="px-3.5 py-2 sm:px-4 sm:py-2.5 bg-emerald-600 text-white rounded-xl font-bold uppercase tracking-wider text-[11px] whitespace-nowrap shrink-0 hover:bg-emerald-700 transition-all border-none flex items-center gap-1.5 shadow-md shadow-emerald-600/20"
                 >
@@ -2228,8 +2301,9 @@ const LessonPlanGenerator = () => {
                       onChange={(e) => {
                         const newWE = e.target.value;
                         const calculatedDate = calculateLessonDateFromWeekEnding(newWE, formData.selectedDays || [formData.day]);
-                        setResult((prev: any) => ({ ...prev, weekEnding: newWE }));
-                        setFormData((prev) => ({ ...prev, weekEnding: newWE, date: calculatedDate }));
+                        const matchedYear = getAcademicYearForDate(newWE);
+                        setResult((prev: any) => ({ ...prev, weekEnding: newWE, academicYear: matchedYear }));
+                        setFormData((prev) => ({ ...prev, weekEnding: newWE, date: calculatedDate, academicYear: matchedYear }));
                         setHasEdited(true);
                       }}
                       className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 focus:bg-white focus:border-emerald-500 focus:outline-none"
@@ -3210,30 +3284,81 @@ const LessonPlanGenerator = () => {
                           </div>
                         </td>
                         <td className="p-3.5 text-slate-800 space-y-2 bg-white">
-                          <div>
-                            <span className="text-[10px] font-black uppercase text-slate-900 block tracking-wider">Headteacher / Supervisor Name</span>
-                            <div className="border-b border-dashed border-slate-400 h-5 mt-0.5" />
-                          </div>
-                          <div className="grid grid-cols-2 gap-3 pt-1">
-                            <div>
-                              <span className="text-[10px] font-black uppercase text-slate-900 block tracking-wider">Signature / Stamp</span>
-                              <div className="border-b border-dashed border-slate-400 h-5 mt-0.5" />
+                          {(result?.vettingStatus === 'approved' || result?.vettedBy) ? (
+                            <div className="bg-emerald-50 border-2 border-emerald-700/80 rounded-xl p-3 space-y-2">
+                              <div className="flex items-center justify-between border-b border-emerald-700/30 pb-1.5">
+                                <div className="flex items-center gap-1.5">
+                                  <ShieldCheck size={16} className="text-emerald-800" />
+                                  <span className="font-black text-[10px] text-emerald-950 uppercase tracking-wider">
+                                    OFFICIAL GES DIGITAL ENDORSEMENT
+                                  </span>
+                                </div>
+                                <span className="px-1.5 py-0.5 bg-emerald-800 text-white font-black text-[9px] uppercase rounded">
+                                  APPROVED ✓
+                                </span>
+                              </div>
+                              <div className="text-[11px] space-y-0.5">
+                                <div>
+                                  <span className="text-slate-500 font-bold uppercase text-[9px] block">Endorsed By:</span>
+                                  <strong className="text-slate-900 font-extrabold">{result.vettedBy || 'Headteacher'}</strong>
+                                  <span className="text-slate-600 text-[10px] ml-1">({result.vettedDesignation || 'Supervisor'})</span>
+                                </div>
+                                <div>
+                                  <span className="text-slate-500 font-bold uppercase text-[9px] block">Date:</span>
+                                  <span className="font-mono font-bold text-slate-800">
+                                    {result.vettedAt ? new Date(result.vettedAt).toLocaleDateString('en-GB') : new Date().toLocaleDateString('en-GB')}
+                                  </span>
+                                </div>
+                                {result.headteacherRemarks && (
+                                  <div className="mt-1 p-1.5 bg-white/90 rounded border border-emerald-200 italic text-[10.5px] text-emerald-950">
+                                    "{result.headteacherRemarks}"
+                                  </div>
+                                )}
+                              </div>
+                              <div className="pt-1 flex items-center justify-between border-t border-emerald-700/20 text-[9px]">
+                                <span className="font-bold text-emerald-800">Status: Approved for Delivery</span>
+                                <button
+                                  type="button"
+                                  onClick={() => setShowVettingModal(true)}
+                                  className="text-emerald-900 font-black hover:underline cursor-pointer"
+                                >
+                                  View Official Stamp →
+                                </button>
+                              </div>
                             </div>
-                            <div>
-                              <span className="text-[10px] font-black uppercase text-slate-900 block tracking-wider">Date</span>
-                              <div className="border-b border-dashed border-slate-400 h-5 mt-0.5" />
-                            </div>
-                          </div>
-                          <div className="text-[10px] text-slate-500 pt-1 flex items-center gap-4">
-                            <label className="flex items-center gap-1.5 cursor-pointer">
-                              <input type="checkbox" className="rounded text-emerald-600 focus:ring-emerald-500" />
-                              <span>Approved for Delivery</span>
-                            </label>
-                            <label className="flex items-center gap-1.5 cursor-pointer">
-                              <input type="checkbox" className="rounded text-blue-600 focus:ring-blue-500" />
-                              <span>Inspected & Monitored</span>
-                            </label>
-                          </div>
+                          ) : (
+                            <>
+                              <div>
+                                <span className="text-[10px] font-black uppercase text-slate-900 block tracking-wider">Headteacher / Supervisor Name</span>
+                                <div className="border-b border-dashed border-slate-400 h-5 mt-0.5" />
+                              </div>
+                              <div className="grid grid-cols-2 gap-3 pt-1">
+                                <div>
+                                  <span className="text-[10px] font-black uppercase text-slate-900 block tracking-wider">Signature / Stamp</span>
+                                  <div className="border-b border-dashed border-slate-400 h-5 mt-0.5" />
+                                </div>
+                                <div>
+                                  <span className="text-[10px] font-black uppercase text-slate-900 block tracking-wider">Date</span>
+                                  <div className="border-b border-dashed border-slate-400 h-5 mt-0.5" />
+                                </div>
+                              </div>
+                              <div className="pt-1.5 flex items-center justify-between">
+                                <div className="text-[10px] text-slate-500 flex items-center gap-2">
+                                  <span className={result?.vettingStatus === 'pending' ? 'font-bold text-blue-700' : ''}>
+                                    {result?.vettingStatus === 'pending' ? '⏳ Under Review' : '[  ] Pending Vetting'}
+                                  </span>
+                                </div>
+                                <button
+                                  type="button"
+                                  onClick={() => setShowVettingModal(true)}
+                                  className="px-2.5 py-1 bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-[10px] rounded-lg flex items-center gap-1 shadow-xs cursor-pointer"
+                                >
+                                  <ShieldCheck size={12} />
+                                  <span>Digital Vetting</span>
+                                </button>
+                              </div>
+                            </>
+                          )}
                         </td>
                       </tr>
                     </tbody>
@@ -3844,6 +3969,64 @@ const LessonPlanGenerator = () => {
         initialTerm={formData.term}
         initialAcademicYear={formData.academicYear}
       />
+
+      {showVettingModal && result && (
+        <SubmitForVettingModal
+          plan={{
+            id: result.id || 'plan_' + Date.now(),
+            authorId: user?.uid || profile?.uid || 'local_user',
+            title: formatWeekLessonPlanTitle(result.weekNumber || formData.weekNumber || '1'),
+            subject: displaySubject,
+            class: formData.class,
+            level: formData.level,
+            week: `Week ${result.weekNumber || formData.weekNumber || '1'}`,
+            weekNumber: result.weekNumber || formData.weekNumber || '1',
+            term: formData.term,
+            academicYear: formData.academicYear,
+            strand: result.strand || formData.strand,
+            subStrand: result.subStrand || formData.subStrand,
+            contentStandard: formData.contentStandard,
+            contentStandardCode: formData.contentStandard,
+            indicator: result.indicator || formData.indicator,
+            indicatorCode: result.indicatorCode || formData.indicator,
+            performanceIndicator: result.performanceIndicator || result.indicator || formData.indicator,
+            phase1: result.phase1,
+            phase2: result.phase2,
+            phase3: result.phase3,
+            tlrs: result.tlrs,
+            coreCompetencies: result.coreCompetencies,
+            assessment: result.assessment,
+            keyWords: result.keyWords,
+            remarks: result.remarks,
+            headteacherRemarks: result.headteacherRemarks,
+            references: Array.isArray(result.references) ? result.references : ['Official NaCCA / GES Curriculum Framework'],
+            vettingStatus: result.vettingStatus,
+            vettedBy: result.vettedBy,
+            vettedDesignation: result.vettedDesignation,
+            vettedAt: result.vettedAt,
+            createdAt: result.createdAt || new Date().toISOString()
+          }}
+          profile={profile}
+          onClose={() => setShowVettingModal(false)}
+          onVettingSubmitted={(submission) => {
+            setResult((prev: any) => ({
+              ...prev,
+              vettingStatus: submission.status,
+              headteacherRemarks: submission.headteacherRemarks,
+              vettedBy: submission.vettedByName,
+              vettedDesignation: submission.vettedByDesignation,
+              vettedAt: submission.vettedAt,
+              vettingSubmissionId: submission.id
+            }));
+          }}
+          onPlanUpdated={(updatedPlan) => {
+            setResult((prev: any) => ({
+              ...prev,
+              ...updatedPlan
+            }));
+          }}
+        />
+      )}
     </div>
   );
 };

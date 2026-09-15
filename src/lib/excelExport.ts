@@ -1,4 +1,5 @@
 import ExcelJS from 'exceljs';
+import { getCurrentGesCalendarInfo } from './academicCalendar';
 
 export interface StudentExcelRecord {
   id?: string;
@@ -88,8 +89,8 @@ export async function exportRosterToExcel(
     schoolName = 'Ghana Model Basic School',
     className = 'Basic 7',
     subjectName = 'Integrated Science',
-    selectedTerm = 'Term 1',
-    academicYear = '2025/2026',
+    selectedTerm = `Term ${getCurrentGesCalendarInfo().activeTerm}`,
+    academicYear = getCurrentGesCalendarInfo().academicYear,
     classWeight = 30,
     examWeight = 70,
     gradingSystem = 'ges_numeric',
@@ -653,8 +654,8 @@ export async function exportTemplateToExcel(
     customTitle = 'Terminal Continuous Assessment & Examination Broad Sheet',
     schoolName = 'Ghana Model Basic School',
     subjectName = 'Integrated Science',
-    termName = 'Term 1',
-    academicYear = '2025/2026',
+    termName = `Term ${getCurrentGesCalendarInfo().activeTerm}`,
+    academicYear = getCurrentGesCalendarInfo().academicYear,
     isTemplateBlank = false
   } = options;
 

@@ -42,6 +42,7 @@ import {
 } from '../../lib/bulkExportHelpers';
 import { exportBulkTermLessonPlansToWord } from '../../lib/bulkLessonPlanWordExport';
 import { exportBulkTermLessonPlansToPDF } from '../../lib/bulkLessonPlanPdfExport';
+import { checkTermAccess, getCurrentGesCalendarInfo, getAcademicYearOptions } from '../../lib/academicCalendar';
 import { toast } from 'react-hot-toast';
 
 interface BulkTermExportModalProps {
@@ -86,12 +87,6 @@ const GHANA_CLASSES = [
   'SHS 3'
 ];
 
-const ACADEMIC_YEARS = [
-  '2025/2026',
-  '2024/2025',
-  '2026/2027'
-];
-
 export function BulkTermExportModal({
   isOpen,
   onClose,
@@ -99,14 +94,19 @@ export function BulkTermExportModal({
   initialClass = 'Basic 7',
   initialLevel = 'JHS',
   initialTerm = 'Term 1',
-  initialAcademicYear = '2025/2026'
+  initialAcademicYear
 }: BulkTermExportModalProps) {
   const { user, profile, canBulkExport } = useAuth();
   const navigate = useNavigate();
+  const gesCalendar = useMemo(() => getCurrentGesCalendarInfo(), []);
+  const isMultiTermUser = useMemo(() => {
+    const userPlan = profile?.plan || profile?.planType || '';
+    return ['yearly', 'lifetime', 'school_license', 'school_starter', 'school_pro'].includes(userPlan) || profile?.isSchoolAdmin === true || profile?.role === 'admin';
+  }, [profile]);
   const hasBulkAccess = canBulkExport();
 
   // Filter states
-  const [academicYear, setAcademicYear] = useState(initialAcademicYear || '2025/2026');
+  const [academicYear, setAcademicYear] = useState(initialAcademicYear || gesCalendar.academicYear);
   const [term, setTerm] = useState<'Term 1' | 'Term 2' | 'Term 3'>((initialTerm as any) || 'Term 1');
   const [selectedSubject, setSelectedSubject] = useState(initialSubject);
   const [selectedClass, setSelectedClass] = useState(initialClass);
@@ -296,6 +296,15 @@ export function BulkTermExportModal({
       return;
     }
 
+    const termAccess = checkTermAccess(profile, term, false, profile?.role === 'admin');
+    if (!termAccess.unlocked) {
+      toast.error(termAccess.reason || "This term is locked to the official GES Academic Calendar. Multi-term access requires Full Academic Year Pass (GHS 130).", {
+        duration: 7000,
+        icon: '🔒'
+      });
+      return;
+    }
+
     const lessonsToExport = matchedPlans.filter(p => 
       selectedLessonIds.includes(getPlanKey(p))
     );
@@ -330,6 +339,15 @@ export function BulkTermExportModal({
       toast.error('Bulk Termly Export requires the Termly Master or Professional Yearly special subscription mode. Please upgrade your subscription to export compiled term books.', {
         duration: 6000,
         icon: '👑'
+      });
+      return;
+    }
+
+    const termAccess = checkTermAccess(profile, term, false, profile?.role === 'admin');
+    if (!termAccess.unlocked) {
+      toast.error(termAccess.reason || "This term is locked to the official GES Academic Calendar. Multi-term access requires Full Academic Year Pass (GHS 130).", {
+        duration: 7000,
+        icon: '🔒'
       });
       return;
     }
@@ -477,8 +495,8 @@ export function BulkTermExportModal({
                   onChange={(e) => setAcademicYear(e.target.value)}
                   className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
                 >
-                  {ACADEMIC_YEARS.map(yr => (
-                    <option key={yr} value={yr}>{yr}</option>
+                  {getAcademicYearOptions(new Date(), [academicYear]).map(opt => (
+                    <option key={opt.value} value={opt.value}>{opt.label}</option>
                   ))}
                 </select>
               </div>
@@ -488,12 +506,22 @@ export function BulkTermExportModal({
                 <label className="text-[11px] font-bold text-slate-500 uppercase">Term</label>
                 <select
                   value={term}
-                  onChange={(e) => setTerm(e.target.value as any)}
+                  onChange={(e) => {
+                    const val = e.target.value as any;
+                    const access = checkTermAccess(profile, val, false, profile?.role === 'admin');
+                    if (!access.unlocked) {
+                      toast.error(access.reason || "This term is locked on single-term plans to match the GES academic calendar. Multi-term access requires Full Academic Year Pass (GHS 130).", {
+                        duration: 6000,
+                        icon: '🔒'
+                      });
+                    }
+                    setTerm(val);
+                  }}
                   className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
                 >
-                  <option value="Term 1">Term 1</option>
-                  <option value="Term 2">Term 2</option>
-                  <option value="Term 3">Term 3</option>
+                  <option value="Term 1">Term 1{gesCalendar.activeTerm === '1' ? ' (Active)' : (!isMultiTermUser && !gesCalendar.openTerms.includes('1') ? ' 🔒' : '')}</option>
+                  <option value="Term 2">Term 2{gesCalendar.activeTerm === '2' ? ' (Active)' : (!isMultiTermUser && !gesCalendar.openTerms.includes('2') ? ' 🔒' : '')}</option>
+                  <option value="Term 3">Term 3{gesCalendar.activeTerm === '3' ? ' (Active)' : (!isMultiTermUser && !gesCalendar.openTerms.includes('3') ? ' 🔒' : '')}</option>
                 </select>
               </div>
 

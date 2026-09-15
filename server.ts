@@ -1,6 +1,7 @@
 import express from "express";
 import { createServer as createViteServer } from "vite";
 import path from "path";
+import crypto from "crypto";
 import axios from "axios";
 import dotenv from "dotenv";
 import { initializeApp, getApps, cert } from "firebase-admin/app";
@@ -165,182 +166,262 @@ async function startServer() {
     const secretKey = process.env.PAYSTACK_SECRET_KEY;
 
     if (!uid || !reference) {
-      return res.status(400).json({ error: "Missing required parameters" });
+      return res.status(400).json({ error: "Missing required parameters (uid or reference)" });
     }
 
+    const cleanReference = String(reference).trim();
+    if (!cleanReference) {
+      return res.status(400).json({ error: "Invalid transaction reference" });
+    }
+
+    // 1. Check for Replay Attacks: Has this reference already been processed?
+    const paymentDocRef = db.collection('processed_payments').doc(cleanReference);
+    const existingSnap = await paymentDocRef.get();
+    if (existingSnap.exists) {
+      return res.status(400).json({ 
+        error: "This transaction reference has already been processed and credited. Replay attempts are rejected." 
+      });
+    }
+
+    // Pricing tables for strict amount validation
+    const PLAN_PRICES: Record<string, number> = {
+      quick_pass: 20,
+      termly: 50,
+      termly_pro: 70,
+      yearly: 130,
+      lifetime: 300,
+      school_starter: 350,
+      school_pro: 600
+    };
+
+    const CREDIT_PACK_PRICES: Record<number, number> = {
+      2: 5,
+      4: 10,
+      12: 25,
+      25: 50,
+      60: 100
+    };
+
     const isCreditsPlan = plan === 'credits' || Boolean(credits);
+    let amountPaid = 0;
+    let paymentChannel = 'paystack';
 
-    const activateUserSubscription = async (reason: string, verifiedAmount?: number) => {
+    // 2. Cryptographic / Gateway Verification with Paystack
+    if (secretKey) {
       try {
-        if (isCreditsPlan) {
-          const creditsToAdd = Number(credits) || Math.max(2, Math.floor((verifiedAmount || 5) / 2.5));
-          await db.collection('users').doc(uid).update({
-            aiCredits: FieldValue.increment(creditsToAdd),
-            lastPaymentReference: reference,
-            lastPaymentDate: FieldValue.serverTimestamp()
-          });
-
-          await db.collection('notifications').add({
-            userId: uid,
-            title: "AI Credits Added! 💫",
-            message: `${creditsToAdd} AI Generation Credits have been added to your balance. Happy teaching!`,
-            type: 'system',
-            read: false,
-            createdAt: FieldValue.serverTimestamp(),
-            link: '/billing'
-          });
-
-          return { status: true, message: `Payment verified (${reason}). Added ${creditsToAdd} credits.`, credits: creditsToAdd };
-        }
-
-        // Check if this is a School B2B Plan
-        const isSchoolPlan = plan === 'school_starter' || plan === 'school_pro' || (verifiedAmount && verifiedAmount >= 350);
-        if (isSchoolPlan) {
-          const isPro = plan === 'school_pro' || (verifiedAmount && verifiedAmount >= 550);
-          const maxSeats = isPro ? 12 : 6;
-          const durationMs = 90 * 24 * 60 * 60 * 1000;
-          const expiresAt = Timestamp.fromMillis(Date.now() + durationMs);
-          const licenseCode = `TSG-SCH-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
-
-          const userSnap = await db.collection('users').doc(uid).get();
-          const userData = userSnap.data() || {};
-          const schoolName = userData.school || userData.schoolName || `${userData.displayName || 'Teacher'}'s School`;
-
-          await db.collection('school_licenses').doc(licenseCode).set({
-            code: licenseCode,
-            ownerUid: uid,
-            ownerName: userData.displayName || 'School Administrator',
-            ownerEmail: userData.email || '',
-            schoolName,
-            plan: isPro ? 'school_pro' : 'school_starter',
-            maxSeats,
-            usedSeats: 1,
-            members: [uid],
-            createdAt: FieldValue.serverTimestamp(),
-            expiresAt,
-            active: true
-          });
-
-          await db.collection('users').doc(uid).update({
-            subscriptionStatus: 'active',
-            plan: 'school_license',
-            isSchoolAdmin: true,
-            hasBulkExport: true,
-            schoolLicenseCode: licenseCode,
-            schoolName,
-            subscriptionEndDate: expiresAt,
-            lastPaymentReference: reference,
-            lastPaymentDate: FieldValue.serverTimestamp()
-          });
-
-          await db.collection('notifications').add({
-            userId: uid,
-            title: "🏫 School License Active!",
-            message: `Your ${isPro ? 'School Pro (12 seats)' : 'School Starter (6 seats)'} plan is active! Your school teacher invite code is: ${licenseCode}`,
-            type: 'system',
-            read: false,
-            createdAt: FieldValue.serverTimestamp(),
-            link: '/billing'
-          });
-
-          return { 
-            status: true, 
-            message: `School license activated (${reason})`, 
-            schoolLicenseCode: licenseCode, 
-            maxSeats 
-          };
-        }
-
-        // Individual Plans
-        let durationMs: number | null = null;
-        if (plan === 'yearly') durationMs = 365 * 24 * 60 * 60 * 1000;
-        else if (plan === 'termly' || plan === 'termly_pro') durationMs = 90 * 24 * 60 * 60 * 1000;
-        else if (plan === 'quick_pass') durationMs = 24 * 60 * 60 * 1000; // 24-Hour Weekend Sprint
-        else if (plan === 'lifetime') durationMs = null;
-        else {
-          if (verifiedAmount && verifiedAmount >= 250) durationMs = null;
-          else if (verifiedAmount && verifiedAmount >= 120) durationMs = 365 * 24 * 60 * 60 * 1000;
-          else if (verifiedAmount && verifiedAmount >= 70) durationMs = 90 * 24 * 60 * 60 * 1000;
-          else if (verifiedAmount && verifiedAmount >= 50) durationMs = 90 * 24 * 60 * 60 * 1000;
-          else durationMs = 24 * 60 * 60 * 1000;
-        }
-
-        const finalPlan = plan || (
-          verifiedAmount && verifiedAmount >= 250 ? 'lifetime' :
-          verifiedAmount && verifiedAmount >= 120 ? 'yearly' :
-          verifiedAmount && verifiedAmount >= 70 ? 'termly_pro' :
-          verifiedAmount && verifiedAmount >= 50 ? 'termly' : 'quick_pass'
+        const response = await axios.get(
+          `https://api.paystack.co/transaction/verify/${encodeURIComponent(cleanReference)}`,
+          {
+            headers: {
+              Authorization: `Bearer ${secretKey}`,
+            },
+            timeout: 15000
+          }
         );
 
-        const updates: any = {
-          subscriptionStatus: 'active',
-          lastPaymentReference: reference,
-          lastPaymentDate: FieldValue.serverTimestamp(),
-          plan: finalPlan,
-          subscriptionEndDate: durationMs === null ? null : Timestamp.fromMillis(Date.now() + durationMs)
-        };
-
-        if (finalPlan === 'termly_pro' || finalPlan === 'yearly' || finalPlan === 'lifetime') {
-          updates.hasBulkExport = true;
+        const data = response.data;
+        if (!data || !data.status || !data.data || data.data.status !== 'success') {
+          return res.status(400).json({ 
+            error: `Paystack reported transaction status: ${data?.data?.status || 'failed'}. Payment was not completed.` 
+          });
         }
 
-        await db.collection('users').doc(uid).update(updates);
+        amountPaid = data.data.amount / 100; // convert pesewas to GHS
+        paymentChannel = data.data.channel || 'paystack';
+      } catch (paystackError: any) {
+        const msg = paystackError.response?.data?.message || paystackError.message || "Failed to communicate with Paystack";
+        return res.status(400).json({ 
+          error: `Payment verification failed: ${msg}. If your account was debited, please contact support with reference: ${cleanReference}` 
+        });
+      }
+    } else {
+      // In development mode only: allow mock references for local simulation
+      if (process.env.NODE_ENV !== 'production' && (cleanReference.startsWith('TEST-') || cleanReference.startsWith('DEMO-') || cleanReference.startsWith('mock_'))) {
+        amountPaid = Number(req.body.amount) || 50;
+        paymentChannel = 'dev_mock';
+      } else {
+        return res.status(500).json({ 
+          error: "Payment verification gateway key is not configured on the server. Please contact administrator." 
+        });
+      }
+    }
+
+    // 3. Strict Amount Validation to Prevent Tampering
+    if (isCreditsPlan) {
+      const creditsToAdd = Number(credits) || 2;
+      const expectedMinPrice = CREDIT_PACK_PRICES[creditsToAdd] || Math.ceil(creditsToAdd * 1.6);
+      if (amountPaid < expectedMinPrice) {
+        return res.status(400).json({ 
+          error: `Verified amount of GHS ${amountPaid} is insufficient for ${creditsToAdd} AI credits (requires GHS ${expectedMinPrice}).` 
+        });
+      }
+    } else {
+      const expectedPrice = PLAN_PRICES[plan];
+      if (expectedPrice && amountPaid < expectedPrice) {
+        return res.status(400).json({ 
+          error: `Verified amount of GHS ${amountPaid} is insufficient for plan '${plan}' (requires GHS ${expectedPrice}).` 
+        });
+      }
+    }
+
+    // 4. Record the processed payment immediately to prevent concurrent replay attacks
+    try {
+      await paymentDocRef.set({
+        reference: cleanReference,
+        uid,
+        plan: isCreditsPlan ? 'credits' : plan,
+        credits: isCreditsPlan ? (Number(credits) || 2) : null,
+        amount: amountPaid,
+        currency: 'GHS',
+        channel: paymentChannel,
+        status: 'verified',
+        processedAt: FieldValue.serverTimestamp()
+      });
+    } catch (saveErr: any) {
+      console.error("[Payment] Failed to record in processed_payments:", saveErr.message);
+      return res.status(500).json({ error: "Failed to securely record payment transaction." });
+    }
+
+    // 5. Activate Subscription or Credits in Firestore with Admin SDK
+    try {
+      if (isCreditsPlan) {
+        const creditsToAdd = Number(credits) || Math.max(2, Math.floor(amountPaid / 2.5));
+        await db.collection('users').doc(uid).update({
+          aiCredits: FieldValue.increment(creditsToAdd),
+          lastPaymentReference: cleanReference,
+          lastPaymentDate: FieldValue.serverTimestamp()
+        });
 
         await db.collection('notifications').add({
           userId: uid,
-          title: "Subscription Active! 🚀",
-          message: `Your ${finalPlan} plan is active. Welcome to the Elite family!`,
+          title: "AI Credits Added! 💫",
+          message: `${creditsToAdd} AI Generation Credits have been added to your balance. Happy teaching!`,
           type: 'system',
           read: false,
           createdAt: FieldValue.serverTimestamp(),
           link: '/billing'
         });
 
-        return { status: true, message: `Payment verified automatically (${reason})` };
-      } catch (dbErr: any) {
-        console.error("[Payment] Database update failed:", dbErr.message);
-        throw dbErr;
+        return res.json({ 
+          status: true, 
+          message: `Payment verified. Added ${creditsToAdd} credits.`, 
+          credits: creditsToAdd 
+        });
       }
-    };
 
-    if (!secretKey) {
-      try {
-        const result = await activateUserSubscription("Paystack secret key not configured on server");
-        return res.json(result);
-      } catch (err: any) {
-        return res.status(500).json({ error: "Failed to verify payment via fallback" });
+      // Check if this is a School B2B Plan
+      const isSchoolPlan = plan === 'school_starter' || plan === 'school_pro' || amountPaid >= 350;
+      if (isSchoolPlan) {
+        const isPro = plan === 'school_pro' || amountPaid >= 550;
+        const maxSeats = isPro ? 12 : 6;
+        const durationMs = 90 * 24 * 60 * 60 * 1000;
+        const expiresAt = Timestamp.fromMillis(Date.now() + durationMs);
+        const randomHex = crypto.randomBytes(3).toString('hex').toUpperCase();
+        const licenseCode = `TSG-SCH-${randomHex}`;
+
+        const userSnap = await db.collection('users').doc(uid).get();
+        const userData = userSnap.data() || {};
+        const schoolName = userData.school || userData.schoolName || `${userData.displayName || 'Teacher'}'s School`;
+
+        await db.collection('school_licenses').doc(licenseCode).set({
+          code: licenseCode,
+          ownerUid: uid,
+          ownerName: userData.displayName || 'School Administrator',
+          ownerEmail: userData.email || '',
+          schoolName,
+          plan: isPro ? 'school_pro' : 'school_starter',
+          maxSeats,
+          usedSeats: 1,
+          members: [uid],
+          createdAt: FieldValue.serverTimestamp(),
+          expiresAt,
+          active: true
+        });
+
+        await db.collection('users').doc(uid).update({
+          subscriptionStatus: 'active',
+          plan: 'school_license',
+          isSchoolAdmin: true,
+          hasBulkExport: true,
+          schoolLicenseCode: licenseCode,
+          schoolName,
+          subscriptionEndDate: expiresAt,
+          lastPaymentReference: cleanReference,
+          lastPaymentDate: FieldValue.serverTimestamp()
+        });
+
+        await db.collection('notifications').add({
+          userId: uid,
+          title: "🏫 School License Active!",
+          message: `Your ${isPro ? 'School Pro (12 seats)' : 'School Starter (6 seats)'} plan is active! Your school teacher invite code is: ${licenseCode}`,
+          type: 'system',
+          read: false,
+          createdAt: FieldValue.serverTimestamp(),
+          link: '/billing'
+        });
+
+        return res.json({ 
+          status: true, 
+          message: "School license activated", 
+          schoolLicenseCode: licenseCode, 
+          maxSeats 
+        });
       }
-    }
 
-    try {
-      const response = await axios.get(
-        `https://api.paystack.co/transaction/verify/${reference}`,
-        {
-          headers: {
-            Authorization: `Bearer ${secretKey}`,
-          },
-        }
+      // Individual Plans
+      let durationMs: number | null = null;
+      if (plan === 'yearly') durationMs = 365 * 24 * 60 * 60 * 1000;
+      else if (plan === 'termly' || plan === 'termly_pro') durationMs = 90 * 24 * 60 * 60 * 1000;
+      else if (plan === 'quick_pass') durationMs = 24 * 60 * 60 * 1000; // 24-Hour Weekend Sprint
+      else if (plan === 'lifetime') durationMs = null;
+      else {
+        if (amountPaid >= 300) durationMs = null;
+        else if (amountPaid >= 130) durationMs = 365 * 24 * 60 * 60 * 1000;
+        else if (amountPaid >= 70) durationMs = 90 * 24 * 60 * 60 * 1000;
+        else if (amountPaid >= 50) durationMs = 90 * 24 * 60 * 60 * 1000;
+        else durationMs = 24 * 60 * 60 * 1000;
+      }
+
+      const finalPlan = plan || (
+        amountPaid >= 300 ? 'lifetime' :
+        amountPaid >= 130 ? 'yearly' :
+        amountPaid >= 70 ? 'termly_pro' :
+        amountPaid >= 50 ? 'termly' : 'quick_pass'
       );
 
-      const data = response.data;
+      const updates: any = {
+        subscriptionStatus: 'active',
+        lastPaymentReference: cleanReference,
+        lastPaymentDate: FieldValue.serverTimestamp(),
+        plan: finalPlan,
+        subscriptionEndDate: durationMs === null ? null : Timestamp.fromMillis(Date.now() + durationMs)
+      };
 
-      if (data.status && data.data.status === 'success') {
-        const amountPaid = data.data.amount / 100; // in GHS
-        const result = await activateUserSubscription("Paystack verified successfully", amountPaid);
-        return res.json(result);
-      } else {
-        console.warn("[Payment] Paystack verification response not marked success, using resilient fallback:", data);
-        const result = await activateUserSubscription("Paystack response fallback");
-        return res.json(result);
+      if (finalPlan === 'termly_pro' || finalPlan === 'yearly' || finalPlan === 'lifetime') {
+        updates.hasBulkExport = true;
       }
-    } catch (error: any) {
-      console.error("Paystack verification error (using resilient activation fallback):", error.response?.data || error.message);
-      try {
-        const result = await activateUserSubscription(`Paystack API error - ${error.message}`);
-        return res.json(result);
-      } catch (err: any) {
-        return res.status(500).json({ error: "Failed to verify payment via fallback" });
+
+      // If user activated quick_pass, reset quickPassGenerationsUsed
+      if (finalPlan === 'quick_pass') {
+        updates.quickPassGenerationsUsed = 0;
       }
+
+      await db.collection('users').doc(uid).update(updates);
+
+      await db.collection('notifications').add({
+        userId: uid,
+        title: "Subscription Active! 🚀",
+        message: `Your ${finalPlan} plan is active. Welcome to the TeachSmartGH Elite family!`,
+        type: 'system',
+        read: false,
+        createdAt: FieldValue.serverTimestamp(),
+        link: '/billing'
+      });
+
+      return res.json({ status: true, message: `Payment verified. Activated plan: ${finalPlan}` });
+    } catch (dbErr: any) {
+      console.error("[Payment] Database activation failed:", dbErr.message);
+      return res.status(500).json({ error: "Payment verified but account activation failed. Please contact support with reference: " + cleanReference });
     }
   });
 

@@ -4,6 +4,7 @@ import { doc, getDoc, setDoc, updateDoc, increment, serverTimestamp, onSnapshot 
 import { differenceInCalendarDays } from 'date-fns';
 import { auth, db } from '../lib/firebase';
 import { UserProfile } from '../types';
+import { canonicalizeEmail } from '../lib/emailSecurity';
 
 export type GenerationBlockReason = 'none' | 'trial_daily_limit' | 'trial_expired' | 'no_credits';
 
@@ -211,8 +212,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   function canGenerate(): boolean {
     if (isAdmin) return true;
     
-    // Active subscription grants unlimited generation
-    if (isSubscriptionActive()) return true;
+    // Active subscription grants access (with fair-use cap on 24-hour sprint)
+    if (isSubscriptionActive()) {
+      if (profile?.plan === 'quick_pass') {
+        const quickUsed = profile?.quickPassGenerationsUsed ?? 0;
+        return quickUsed < 15;
+      }
+      return true;
+    }
 
     // Flexible Pay-As-You-Go: check if teacher has purchased AI credits available
     if ((profile?.aiCredits ?? 0) > 0) return true;
@@ -226,8 +233,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   async function consumeCredit(): Promise<boolean> {
-    // Unlimited access for admins or active paid subscription
-    if (isAdmin || isSubscriptionActive()) {
+    // Admin access
+    if (isAdmin) return true;
+
+    // Active subscription access
+    if (isSubscriptionActive()) {
+      // For 24-Hour Weekend Sprint, enforce fair-use cap of 15 generations
+      if (profile?.plan === 'quick_pass') {
+        const quickUsed = profile?.quickPassGenerationsUsed ?? 0;
+        if (quickUsed >= 15) return false;
+        const newUsed = quickUsed + 1;
+        if (profile) {
+          setProfile(prev => prev ? { ...prev, quickPassGenerationsUsed: newUsed } : null);
+        }
+        if (user) {
+          try {
+            await updateDoc(doc(db, 'users', user.uid), {
+              quickPassGenerationsUsed: newUsed,
+              lastGenerationAt: serverTimestamp()
+            });
+          } catch (err) {
+            console.error("Failed to update quickPass generation usage in Firestore:", err);
+          }
+        }
+        return true;
+      }
       return true;
     }
 
@@ -493,10 +523,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               // Backfill / enforce used_emails for existing users
               const currentEmail = data.email || user.email;
               if (currentEmail) {
-                const cleanedEmail = currentEmail.trim().toLowerCase();
+                const canonicalKey = canonicalizeEmail(currentEmail);
                 try {
                   // Fetch the existing record to see if they already had a trial started earlier
-                  const usedEmailRef = doc(db, 'used_emails', cleanedEmail);
+                  const usedEmailRef = doc(db, 'used_emails', canonicalKey);
                   const usedEmailSnap = await getDoc(usedEmailRef);
                   let originalTrialStart: Date | null = null;
                   
@@ -561,11 +591,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
               const checkAndBuildProfile = async () => {
                 const targetEmail = (user.email || pendingEmail || '').trim().toLowerCase();
+                const canonicalKey = canonicalizeEmail(targetEmail);
                 let originalTrialStart: any = pendingTrialStart || null;
                 
-                if (targetEmail && !originalTrialStart) {
+                if (canonicalKey && !originalTrialStart) {
                   try {
-                    const emailDocSnap = await getDoc(doc(db, 'used_emails', targetEmail));
+                    const emailDocSnap = await getDoc(doc(db, 'used_emails', canonicalKey));
                     if (emailDocSnap.exists()) {
                       const emailData = emailDocSnap.data();
                       if (emailData && emailData.createdAt) {
@@ -596,9 +627,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 try {
                   await setDoc(docRef, newProfile);
                   if (newProfile.email) {
-                    const cleanedEmail = newProfile.email.trim().toLowerCase();
                     try {
-                      await setDoc(doc(db, 'used_emails', cleanedEmail), {
+                      await setDoc(doc(db, 'used_emails', canonicalKey), {
                         uid: user.uid,
                         isAnonymous: isAnonymous,
                         createdAt: originalTrialStart ? new Date(originalTrialStart).toISOString() : serverTimestamp()

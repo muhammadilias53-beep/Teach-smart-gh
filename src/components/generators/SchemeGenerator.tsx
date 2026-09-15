@@ -42,6 +42,8 @@ import autoTable from 'jspdf-autotable';
 import { toast } from 'react-hot-toast';
 import { exportSchemeToWord } from '../../lib/wordExport';
 import { registerUnicodeFonts } from '../../lib/fonts/unicodeFonts';
+import { createDocumentVerification, renderQRCodeInPDF } from '../../lib/documentVerification';
+import { checkTermAccess, getCurrentGesCalendarInfo, getAcademicYearOptions } from '../../lib/academicCalendar';
 import { subjects as sharedSubjects, levels, CLASSES_BY_LEVEL, SUBJECT_STRANDS, SUBJECT_SUB_STRANDS, getSubjectsForClass } from '../../constants';
 import { SearchableDropdown } from '../ui/SearchableDropdown';
 import { 
@@ -112,6 +114,12 @@ export default function SchemeGenerator() {
   const [isEditing, setIsEditing] = useState(false);
   const [hasEdited, setHasEdited] = useState(false);
   const [saved, setSaved] = useState(false);
+
+  const gesCalendar = useMemo(() => getCurrentGesCalendarInfo(), []);
+  const isMultiTermUser = useMemo(() => {
+    const userPlan = profile?.plan || profile?.planType || '';
+    return ['yearly', 'lifetime', 'school_license', 'school_starter', 'school_pro'].includes(userPlan) || profile?.isSchoolAdmin === true || profile?.role === 'admin';
+  }, [profile]);
   
   const [formData, setFormData] = useState({
     subject: '',
@@ -119,8 +127,8 @@ export default function SchemeGenerator() {
     level: 'JHS',
     class: 'Basic 7',
     type: 'termly',
-    term: '1',
-    academicYear: '2025/2026',
+    term: getCurrentGesCalendarInfo().activeTerm,
+    academicYear: getCurrentGesCalendarInfo().academicYear,
     totalWeeks: 12,
     revisionWeeks: 1,
     assessmentWeeks: 1,
@@ -233,6 +241,21 @@ export default function SchemeGenerator() {
     }
     if (formData.type === 'termly' && !['1', '2', '3'].includes(formData.term)) {
       toast.error("Please select a valid Academic Term (1, 2, or 3).");
+      return;
+    }
+
+    // GES Academic Calendar Term-Locking & Multi-Term Commercial Protection
+    const termAccess = checkTermAccess(
+      profile,
+      formData.term,
+      formData.type === 'yearly',
+      profile?.role === 'admin'
+    );
+    if (!termAccess.unlocked) {
+      toast.error(termAccess.reason || "This term is locked to the official GES Academic Calendar.", {
+        duration: 7000,
+        icon: '🔒'
+      });
       return;
     }
 
@@ -470,7 +493,21 @@ export default function SchemeGenerator() {
     const doc = new jsPDF('l', 'mm', 'a4'); // Landscape for tables
     const fontName = registerUnicodeFonts(doc);
     const mainTitle = formData.type === 'yearly' ? 'YEARLY SCHEME OF LEARNING' : 'TERMLY SCHEME OF LEARNING';
+    const teacherDisplayName = (profile?.displayName || user?.displayName || user?.email?.split('@')[0] || '').toUpperCase();
+    const schoolDisplayName = ((profile as any)?.schoolName || (profile as any)?.school || '').toUpperCase();
     
+    // Generate official verification payload
+    const { data: verifData, verificationUrl } = createDocumentVerification({
+      documentType: formData.type === 'yearly' ? 'Yearly Scheme of Learning' : 'Termly Scheme of Learning',
+      subject: displaySubject,
+      classLevel: `${formData.class} (${formData.level})`,
+      term: formData.type === 'termly' ? `Term ${formData.term}` : 'Full Year',
+      academicYear: formData.academicYear,
+      teacherName: teacherDisplayName,
+      schoolName: schoolDisplayName,
+      district: (profile as any)?.district,
+    });
+
     // Custom Header Branding
     doc.setFillColor(0, 28, 61); // TeachSmart Deep Blue
     doc.rect(0, 0, 297, 30, 'F');
@@ -487,6 +524,13 @@ export default function SchemeGenerator() {
     doc.setDrawColor(252, 209, 22); // Ghana Gold
     doc.setLineWidth(0.8);
     doc.line(60, 26, 237, 26);
+
+    // Vector QR Code on top right of banner
+    renderQRCodeInPDF(doc, verificationUrl, 267, 2.5, 23.5);
+    doc.setFontSize(6.5);
+    doc.setFont(fontName, "bold");
+    doc.setTextColor(252, 209, 22); // Ghana Gold
+    doc.text(`VERIFY: ${verifData.verificationCode}`, 278.5, 28.5, { align: 'center' });
 
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(11);
@@ -597,7 +641,10 @@ export default function SchemeGenerator() {
           doc.setFont(fontName, 'bold');
           doc.setTextColor(0, 107, 63); // Green
           doc.setFontSize(7.5);
-          doc.text('TEACHSMART GHANA • DESIGNED TO ALIGN WITH NaCCA/GES CURRICULUM REQUIREMENTS', 10, pageHeight - 4);
+          const teacherFooter = teacherDisplayName
+            ? `TEACHSMART GHANA • PREPARED BY ${teacherDisplayName}${schoolDisplayName ? ` (${schoolDisplayName})` : ''} • NaCCA / GES ALIGNED`
+            : 'TEACHSMART GHANA • DESIGNED TO ALIGN WITH NaCCA/GES CURRICULUM REQUIREMENTS';
+          doc.text(teacherFooter, 10, pageHeight - 4);
           
           doc.setTextColor(140);
           doc.setFont(fontName, 'normal');
@@ -621,7 +668,10 @@ export default function SchemeGenerator() {
       doc.setFont(fontName, 'bold');
       doc.setTextColor(0, 107, 63);
       doc.setFontSize(7.5);
-      doc.text('TEACHSMART GHANA • DESIGNED TO ALIGN WITH NaCCA/GES CURRICULUM REQUIREMENTS', 10, newPageHeight - 4);
+      const teacherFooter = teacherDisplayName
+        ? `TEACHSMART GHANA • PREPARED BY ${teacherDisplayName}${schoolDisplayName ? ` (${schoolDisplayName})` : ''} • NON-TRANSFERABLE ASSET`
+        : 'TEACHSMART GHANA • DESIGNED TO ALIGN WITH NaCCA/GES CURRICULUM REQUIREMENTS';
+      doc.text(teacherFooter, 10, newPageHeight - 4);
 
       lastY = 25;
     } else {
@@ -631,9 +681,9 @@ export default function SchemeGenerator() {
     doc.setFont(fontName, "bold");
     doc.setFontSize(9);
     doc.setTextColor(30, 41, 59);
-    doc.text('Vetted by: ______________________', 15, lastY);
+    doc.text(`Facilitator: ${teacherDisplayName || '______________________'}`, 15, lastY);
     doc.text('Signature: ______________________', 15, lastY + 7);
-    doc.text('Date: ___________________________', 15, lastY + 14);
+    doc.text(`Date: ${new Date().toLocaleDateString('en-GB')}`, 15, lastY + 14);
     
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-').replace('T', '_').slice(0, 19);
     const filename = `${displaySubject}_${formData.level}_Scheme_${formData.type}_${timestamp}`.replace(/[\s\W]+/g, '_');
@@ -653,7 +703,10 @@ export default function SchemeGenerator() {
         term: formData.term,
         academicYear: formData.academicYear,
         documentType: `${formData.type === 'termly' ? 'Termly' : 'Yearly'} Scheme of Learning`,
-        orientation: 'landscape'
+        orientation: 'landscape',
+        teacherName: profile?.displayName || user?.displayName || user?.email?.split('@')[0],
+        schoolName: (profile as any)?.schoolName || (profile as any)?.school || 'Ghana Basic School',
+        district: (profile as any)?.district || (profile as any)?.region || 'GES District Directorate',
       });
     } catch (err) {
       console.error(err);
@@ -829,25 +882,43 @@ export default function SchemeGenerator() {
           <div className="space-y-4">
             <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 text-center block">Planning Horizon</label>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {types.map(t => (
-                <button
-                  key={t.id}
-                  type="button"
-                  onClick={() => setFormData({...formData, type: t.id})}
-                  className={cn(
-                    "p-6 rounded-[2rem] border text-left transition-all group",
-                    formData.type === t.id 
-                      ? "bg-slate-900 border-slate-900 text-white shadow-xl shadow-slate-200" 
-                      : "bg-white border-slate-200 text-slate-500 hover:border-ghana-red/40"
-                  )}
-                >
-                  <t.icon size={24} className={cn("mb-4", formData.type === t.id ? "text-ghana-gold" : "text-slate-300")} />
-                  <h3 className="font-black uppercase tracking-tighter text-lg">{t.label}</h3>
-                  <p className={cn("text-xs mt-1 font-medium", formData.type === t.id ? "text-slate-400" : "text-slate-400")}>
-                    {t.desc}
-                  </p>
-                </button>
-              ))}
+              {types.map(t => {
+                const isLockedForPlan = t.id === 'yearly' && !isMultiTermUser;
+                return (
+                  <button
+                    key={t.id}
+                    type="button"
+                    onClick={() => {
+                      if (isLockedForPlan) {
+                        toast.error("Full-Year Schemes across all 3 terms require the Full Academic Year Pass (GHS 130) or a School License.", {
+                          icon: '👑',
+                          duration: 5000
+                        });
+                      }
+                      setFormData({...formData, type: t.id});
+                    }}
+                    className={cn(
+                      "p-6 rounded-[2rem] border text-left transition-all group relative",
+                      formData.type === t.id 
+                        ? "bg-slate-900 border-slate-900 text-white shadow-xl shadow-slate-200" 
+                        : "bg-white border-slate-200 text-slate-500 hover:border-ghana-red/40"
+                    )}
+                  >
+                    <div className="flex items-center justify-between mb-4">
+                      <t.icon size={24} className={cn(formData.type === t.id ? "text-ghana-gold" : "text-slate-300")} />
+                      {isLockedForPlan && (
+                        <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-600 border border-amber-500/30">
+                          Yearly Pass (GHS 130)
+                        </span>
+                      )}
+                    </div>
+                    <h3 className="font-black uppercase tracking-tighter text-lg">{t.label}</h3>
+                    <p className={cn("text-xs mt-1 font-medium", formData.type === t.id ? "text-slate-400" : "text-slate-400")}>
+                      {t.desc}
+                    </p>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -862,28 +933,47 @@ export default function SchemeGenerator() {
                 <div className="space-y-4">
                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 text-center block">Select Academic Term</label>
                   <div className="flex justify-center gap-4">
-                    {['1', '2', '3'].map((term) => (
-                      <button
-                        key={term}
-                        type="button"
-                        onClick={() => setFormData({...formData, term})}
-                        className={cn(
-                          "w-16 h-16 rounded-full border-2 font-black transition-all flex items-center justify-center",
-                          formData.term === term
-                            ? "bg-ghana-red border-ghana-red text-white shadow-lg"
-                            : "bg-white border-slate-100 text-slate-400 hover:border-ghana-red/50"
-                        )}
-                      >
-                        T{term}
-                      </button>
-                    ))}
+                    {(['1', '2', '3'] as const).map((term) => {
+                      const isCurrent = gesCalendar.activeTerm === term;
+                      const isOpen = isMultiTermUser || gesCalendar.openTerms.includes(term);
+                      return (
+                        <div key={term} className="flex flex-col items-center">
+                          <button
+                            key={term}
+                            type="button"
+                            onClick={() => {
+                              if (!isOpen) {
+                                toast.error(`Term ${term} is locked on single-term plans to align with the GES academic calendar. Upgrade to Full Academic Year Pass (GHS 130) for advance planning across all 3 terms.`, {
+                                  icon: '🔒',
+                                  duration: 6000
+                                });
+                              }
+                              setFormData({...formData, term});
+                            }}
+                            className={cn(
+                              "w-16 h-16 rounded-full border-2 font-black transition-all flex flex-col items-center justify-center relative",
+                              formData.term === term
+                                ? "bg-ghana-red border-ghana-red text-white shadow-lg"
+                                : "bg-white border-slate-100 text-slate-500 hover:border-ghana-red/50",
+                              !isOpen && "opacity-75 border-dashed"
+                            )}
+                          >
+                            <span>T{term}</span>
+                            {!isOpen && <span className="text-[10px]">🔒</span>}
+                          </button>
+                          {isCurrent && (
+                            <span className="text-[9px] font-black text-emerald-600 uppercase tracking-tight mt-1">Active</span>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 justify-center text-slate-400 text-center px-4 bg-slate-50 p-4 rounded-2xl">
-                  <AlertCircle size={12} className="shrink-0 text-ghana-red" />
-                  <p className="text-[10px] font-bold uppercase tracking-widest leading-relaxed">
-                    Note: The roadmap will be generated based on the official NaCCA curriculum standards.
+                <div className="flex items-center gap-2 justify-center text-slate-600 text-center px-4 bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80">
+                  <AlertCircle size={14} className="shrink-0 text-ghana-red" />
+                  <p className="text-[11px] font-medium leading-relaxed">
+                    <strong>Official GES Calendar:</strong> {gesCalendar.activeTermLabel}. {isMultiTermUser ? "Full Academic Year Pass active (all 3 terms unlocked)." : gesCalendar.nextTermUnlockNotice}
                   </p>
                 </div>
               </motion.div>
@@ -911,9 +1001,11 @@ export default function SchemeGenerator() {
                   onChange={(e) => setFormData({ ...formData, academicYear: e.target.value })}
                   className="w-full p-3.5 bg-white border border-slate-200 rounded-2xl font-bold text-slate-700 text-sm focus:ring-2 focus:ring-ghana-red outline-none transition-all"
                 >
-                  <option value="2025/2026">2025/2026</option>
-                  <option value="2024/2025">2024/2025</option>
-                  <option value="2026/2027">2026/2027</option>
+                  {getAcademicYearOptions(new Date(), [formData.academicYear]).map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
                 </select>
               </div>
 

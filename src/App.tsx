@@ -23,6 +23,7 @@ import BstemMathGuide from './components/packs/BstemMathGuide';
 import BstemTechGuide from './components/packs/BstemTechGuide';
 import AdminCommandCenter from './components/admin/AdminCommandCenter';
 import OfflineVaultPage from './components/pages/OfflineVaultPage';
+import HeadteacherVettingHub from './components/vetting/HeadteacherVettingHub';
 import { CurriculumDatabase } from './components/standards/CurriculumDatabase';
 import { PWALifecycleTracker } from './components/PWALifecycleTracker';
 import ScrollToTop from './components/common/ScrollToTop';
@@ -34,6 +35,7 @@ import { About } from './components/public/About';
 import { Features } from './components/public/Features';
 import { BlogResources } from './components/public/BlogResources';
 import { PrivacyPolicy } from './components/public/PrivacyPolicy';
+import VerifyDocumentPage from './pages/VerifyDocumentPage';
 
 // Generic placeholder for other features
 const Placeholder = ({ name }: { name: string }) => (
@@ -66,6 +68,7 @@ function App() {
             <Route path="/features" element={<Features />} />
             <Route path="/blog" element={<BlogResources />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/verify" element={<VerifyDocumentPage />} />
             
             <Route element={<AuthGuard />}>
               <Route path="/" element={<Dashboard />} />
@@ -73,6 +76,8 @@ function App() {
               <Route path="/curriculum" element={<CurriculumDatabase />} />
               <Route path="/ai" element={<AITutorPage />} />
               <Route path="/lessons" element={<LessonPlanGenerator />} />
+              <Route path="/vetting" element={<HeadteacherVettingHub />} />
+              <Route path="/headteacher" element={<HeadteacherVettingHub />} />
               <Route path="/notes" element={<NoteGenerator />} />
               <Route path="/schemes" element={<SchemeGenerator />} />
               <Route path="/bstem-guide" element={<BstemLabGuide />} />

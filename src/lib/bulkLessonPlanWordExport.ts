@@ -15,13 +15,15 @@ import {
   PageOrientation, 
   ShadingType,
   VerticalAlign,
-  PageNumber
+  PageNumber,
+  ImageRun
 } from 'docx';
 import { toast } from 'react-hot-toast';
 import { LessonPlan } from '../types';
 import { buildMultiDayLessonPhases } from './multiDayParser';
 import { formatWeekLessonPlanTitle } from './utils';
 import { extractWeekNumber, extractLessonNumber, generateCurriculumKey, getLessonRecordTimestamp } from './bulkExportHelpers';
+import { createDocumentVerification, generateQRCodeBytes, DocumentVerificationData } from './documentVerification';
 
 // TeachSmartGH Brand Color Palette (Hex values without '#' for docx compatibility)
 const BRAND_COLORS = {
@@ -198,7 +200,7 @@ async function downloadDocxBlob(doc: Document, filename: string, successMessage:
 /**
  * Build Single Lesson Plan Tables for the Book
  */
-function buildLessonPlanSection(plan: LessonPlan, index: number, total: number): (Paragraph | Table)[] {
+function buildLessonPlanSection(plan: LessonPlan, index: number, total: number, options?: BulkTermExportOptions): (Paragraph | Table)[] {
   const elements: (Paragraph | Table)[] = [];
 
   const weekNumStr = plan.weekNumber || (plan.week ? plan.week.replace(/[^0-9]/g, '') : `${index + 1}`);
@@ -677,7 +679,13 @@ function buildLessonPlanSection(plan: LessonPlan, index: number, total: number):
               new Paragraph({
                 spacing: { before: 40, after: 20 },
                 children: [
-                  new TextRun({ text: "Teacher Signature: ............................. Date: ..................", size: 13, color: BRAND_COLORS.SLATE_MUTED })
+                  new TextRun({ 
+                    text: options?.teacherName 
+                      ? `Facilitator: ${options.teacherName.toUpperCase()} • Signature: ............................. Date: ..................`
+                      : "Teacher Signature: ............................. Date: ..................", 
+                    size: 13, 
+                    color: BRAND_COLORS.SLATE_MUTED 
+                  })
                 ]
               })
             ]
@@ -717,9 +725,137 @@ function buildLessonPlanSection(plan: LessonPlan, index: number, total: number):
 }
 
 /**
+ * Creates the Official Scan-to-Verify Table with QR code image for Term Lesson Book in Word
+ */
+function createBulkWordVerificationTable(
+  verifData: DocumentVerificationData,
+  qrBytes: Uint8Array | null
+): Table {
+  const tableCellBorder = {
+    top: { style: BorderStyle.SINGLE, size: 6, color: BRAND_COLORS.BORDER_SUBTLE },
+    bottom: { style: BorderStyle.SINGLE, size: 6, color: BRAND_COLORS.BORDER_SUBTLE },
+    left: { style: BorderStyle.SINGLE, size: 6, color: BRAND_COLORS.BORDER_SUBTLE },
+    right: { style: BorderStyle.SINGLE, size: 6, color: BRAND_COLORS.BORDER_SUBTLE }
+  };
+
+  const qrChildren: Paragraph[] = qrBytes
+    ? [
+        new Paragraph({
+          alignment: AlignmentType.CENTER,
+          children: [
+            new ImageRun({
+              type: 'png',
+              data: qrBytes,
+              transformation: {
+                width: 75,
+                height: 75,
+              },
+            }),
+          ]
+        }),
+        new Paragraph({
+          alignment: AlignmentType.CENTER,
+          spacing: { before: 20, after: 0 },
+          children: [
+            new TextRun({
+              text: 'SCAN TO VERIFY',
+              bold: true,
+              size: 11,
+              color: BRAND_COLORS.NAVY_DARK,
+              font: 'Calibri'
+            })
+          ]
+        })
+      ]
+    : [
+        new Paragraph({
+          alignment: AlignmentType.CENTER,
+          children: [
+            new TextRun({
+              text: '[QR CODE]',
+              bold: true,
+              size: 13,
+              color: BRAND_COLORS.SLATE_MUTED,
+              font: 'Calibri'
+            })
+          ]
+        })
+      ];
+
+  return new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    rows: [
+      new TableRow({
+        cantSplit: true,
+        children: [
+          new TableCell({
+            width: { size: 22, type: WidthType.PERCENTAGE },
+            borders: tableCellBorder,
+            shading: { type: ShadingType.CLEAR, fill: BRAND_COLORS.SLATE_HEADER_BG },
+            margins: { top: 70, bottom: 70, left: 60, right: 60 },
+            verticalAlign: VerticalAlign.CENTER,
+            children: qrChildren
+          }),
+          new TableCell({
+            width: { size: 78, type: WidthType.PERCENTAGE },
+            borders: tableCellBorder,
+            margins: { top: 70, bottom: 70, left: 100, right: 100 },
+            verticalAlign: VerticalAlign.CENTER,
+            children: [
+              new Paragraph({
+                spacing: { before: 0, after: 30 },
+                children: [
+                  new TextRun({
+                    text: 'OFFICIAL TERM CURRICULUM ACCREDITATION & INTEGRITY SEAL',
+                    bold: true,
+                    size: 14,
+                    color: BRAND_COLORS.GHANA_GREEN,
+                    font: 'Calibri'
+                  })
+                ]
+              }),
+              new Paragraph({
+                spacing: { before: 0, after: 30 },
+                children: [
+                  new TextRun({ text: 'Verification Code: ', bold: true, size: 14, color: BRAND_COLORS.NAVY_DARK, font: 'Calibri' }),
+                  new TextRun({ text: verifData.verificationCode, bold: true, size: 15, color: BRAND_COLORS.NAVY_DARK, font: 'Calibri' }),
+                  new TextRun({ text: '  |  Standard: ', size: 13, color: BRAND_COLORS.TEXT_MUTED, font: 'Calibri' }),
+                  new TextRun({ text: 'NaCCA & GES 12-Week Portfolio Model', bold: true, size: 13, color: BRAND_COLORS.NAVY_DARK, font: 'Calibri' })
+                ]
+              }),
+              new Paragraph({
+                spacing: { before: 0, after: 20 },
+                children: [
+                  new TextRun({ text: 'Licensed Facilitator: ', bold: true, size: 13, color: BRAND_COLORS.NAVY_DARK, font: 'Calibri' }),
+                  new TextRun({ text: (verifData.teacherName || 'Facilitator').toUpperCase(), size: 13, color: BRAND_COLORS.TEXT_BODY, font: 'Calibri' }),
+                  new TextRun({ text: '   •   School: ', bold: true, size: 13, color: BRAND_COLORS.NAVY_DARK, font: 'Calibri' }),
+                  new TextRun({ text: (verifData.schoolName || 'Ghana Basic School').toUpperCase(), size: 13, color: BRAND_COLORS.TEXT_BODY, font: 'Calibri' })
+                ]
+              }),
+              new Paragraph({
+                spacing: { before: 0, after: 0 },
+                children: [
+                  new TextRun({
+                    text: 'Anti-Counterfeit Protection: This entire termly compilation was generated with TeachSmartGH. Scan the QR code or visit teachsmartgh.com to verify official curriculum alignment and school ownership.',
+                    italics: true,
+                    size: 11,
+                    color: BRAND_COLORS.SLATE_MUTED,
+                    font: 'Calibri'
+                  })
+                ]
+              })
+            ]
+          })
+        ]
+      })
+    ]
+  });
+}
+
+/**
  * Builds the Cover Page and Term Curriculum Table of Contents
  */
-function buildFrontMatter(options: BulkTermExportOptions, sortedLessons: LessonPlan[]): (Paragraph | Table)[] {
+async function buildFrontMatter(options: BulkTermExportOptions, sortedLessons: LessonPlan[]): Promise<(Paragraph | Table)[]> {
   const elements: (Paragraph | Table)[] = [];
 
   const school = options.schoolName || 'Ghana Basic School';
@@ -729,6 +865,20 @@ function buildFrontMatter(options: BulkTermExportOptions, sortedLessons: LessonP
   const yearName = options.academicYear;
   const subjectName = options.subject.toUpperCase();
   const className = options.classLevel.toUpperCase();
+
+  // Generate official verification QR and payload
+  const { data: verifData, verificationUrl } = createDocumentVerification({
+    documentType: '12-Week Term Lesson Book',
+    subject: options.subject,
+    classLevel: options.classLevel,
+    term: options.term,
+    academicYear: options.academicYear,
+    teacherName: options.teacherName,
+    schoolName: options.schoolName,
+    district: options.district,
+  });
+  const qrBytes = await generateQRCodeBytes(verificationUrl);
+  const verifTable = createBulkWordVerificationTable(verifData, qrBytes);
 
   // Cover Page Header Banner
   elements.push(
@@ -950,7 +1100,9 @@ function buildFrontMatter(options: BulkTermExportOptions, sortedLessons: LessonP
       width: { size: 100, type: WidthType.PERCENTAGE },
       rows: coverMetadataRows
     }),
-    new Paragraph({ spacing: { before: 180, after: 120 } }),
+    new Paragraph({ spacing: { before: 120, after: 100 } }),
+    verifTable,
+    new Paragraph({ spacing: { before: 140, after: 120 } }),
     // Endorsement Sign-off block
     new Table({
       width: { size: 100, type: WidthType.PERCENTAGE },
@@ -965,7 +1117,7 @@ function buildFrontMatter(options: BulkTermExportOptions, sortedLessons: LessonP
               children: [
                 new Paragraph({
                   spacing: { before: 0, after: 40 },
-                  children: [new TextRun({ text: 'PREPARED BY (FACILITATOR):', bold: true, size: 14, color: BRAND_COLORS.NAVY_DARK })]
+                  children: [new TextRun({ text: `PREPARED BY (FACILITATOR): ${teacher.toUpperCase()}`, bold: true, size: 14, color: BRAND_COLORS.NAVY_DARK })]
                 }),
                 new Paragraph({
                   spacing: { before: 20, after: 20 },
@@ -1029,9 +1181,9 @@ function buildFrontMatter(options: BulkTermExportOptions, sortedLessons: LessonP
                   spacing: { before: 0, after: 0 },
                   children: [
                     new TextRun({ 
-                      text: 'This material was generated and formatted using TeachSmartGH. Teachers should review and adapt the content to the needs of their learners before classroom use.', 
+                      text: `This material was prepared using TeachSmartGH by ${teacher} for instructional delivery at ${school} in alignment with official NaCCA / GES standards.`, 
                       italics: true, 
-                      size: 14, 
+                      size: 13, 
                       color: BRAND_COLORS.TEXT_MUTED 
                     })
                   ]
@@ -1279,7 +1431,9 @@ export async function exportBulkTermLessonPlansToWord(options: BulkTermExportOpt
                   new Paragraph({
                     children: [
                       new TextRun({
-                        text: 'TeachSmartGH (Catalyst Creative) • Designed to Align with NaCCA / GES Curriculum Requirements',
+                        text: options.teacherName
+                          ? `TeachSmartGH • Prepared by: ${options.teacherName} (${options.schoolName || 'Ghana Basic School'}) • NaCCA / GES Aligned`
+                          : 'TeachSmartGH (Catalyst Creative) • Designed to Align with NaCCA / GES Curriculum Requirements',
                         size: 13,
                         color: BRAND_COLORS.SLATE_MUTED,
                         font: 'Calibri'
@@ -1309,12 +1463,12 @@ export async function exportBulkTermLessonPlansToWord(options: BulkTermExportOpt
   });
 
   // Build Front Matter
-  const frontMatterElements = buildFrontMatter(options, deduplicatedLessons);
+  const frontMatterElements = await buildFrontMatter(options, deduplicatedLessons);
 
   // Build Lesson Sections
   const lessonSectionsElements: (Paragraph | Table)[] = [];
   deduplicatedLessons.forEach((plan, idx) => {
-    const sec = buildLessonPlanSection(plan, idx, deduplicatedLessons.length);
+    const sec = buildLessonPlanSection(plan, idx, deduplicatedLessons.length, options);
     lessonSectionsElements.push(...sec);
   });
 

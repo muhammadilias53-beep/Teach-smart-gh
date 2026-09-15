@@ -14,6 +14,7 @@ import {
 import { exportTemplateToExcel, parseExcelFileToCSV } from '../../lib/excelExport';
 import { StudentScore } from './ReportGenerator';
 import { toast } from 'react-hot-toast';
+import { getCurrentGesCalendarInfo } from '../../lib/academicCalendar';
 
 interface BulkStudentImportModalProps {
   isOpen: boolean;
@@ -50,8 +51,8 @@ export const BulkStudentImportModal: React.FC<BulkStudentImportModalProps> = ({
   gradingSystem,
   documentTitle = 'Terminal Continuous Assessment & Examination Broad Sheet',
   schoolName = 'Ghana Model Basic School',
-  selectedTerm = 'Term 1',
-  academicYear = '2025/2026',
+  selectedTerm = `Term ${getCurrentGesCalendarInfo().activeTerm}`,
+  academicYear = getCurrentGesCalendarInfo().academicYear,
   onTitleDetected,
   calculateMetrics
 }) => {

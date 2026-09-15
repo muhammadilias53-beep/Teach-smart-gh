@@ -35,6 +35,7 @@ export interface UserProfile {
   trialStartDate: string;
   subscriptionStatus: SubscriptionStatus;
   subscriptionEndDate?: string;
+  role?: 'teacher' | 'admin' | 'school_admin' | 'superadmin' | string;
   aiCredits?: number;
   isSchoolAdmin?: boolean;
   schoolLicenseCode?: string;
@@ -52,6 +53,7 @@ export interface UserProfile {
   trialGenerationsDate?: string;
   trialGenerationsToday?: number;
   trialTotalGenerations?: number;
+  quickPassGenerationsUsed?: number;
   isBstemSchool?: boolean;
   isAnonymous?: boolean;
   hasSeenOnboardingTour?: boolean;
@@ -104,11 +106,19 @@ export interface LessonPlan {
   remarks?: string;
   teacherReflection?: string;
   headteacherRemarks?: string;
+  vettingStatus?: 'draft' | 'pending' | 'approved' | 'needs_revision' | 'rejected';
+  vettedBy?: string;
+  vettedDesignation?: string;
+  vettedAt?: string;
+  vettingSubmissionId?: string;
+  headteacherSignature?: string;
   isKgPlan?: boolean;
   kgBlocks?: any[];
   differentiation?: any;
   createdAt: any;
 }
+
+export * from './vetting';
 
 export interface SchemeOfWork {
   id?: string;

@@ -28,6 +28,8 @@ export default defineConfig(({mode}) => {
       },
     },
     build: {
+      outDir: 'dist',
+      emptyOutDir: true,
       target: 'esnext',
       chunkSizeWarningLimit: 2000,
       rollupOptions: {

@@ -28,6 +28,7 @@ import autoTable from 'jspdf-autotable';
 import { toast } from 'react-hot-toast';
 import { exportNoteToWord } from '../../lib/wordExport';
 import { registerUnicodeFonts } from '../../lib/fonts/unicodeFonts';
+import { getCurrentGesCalendarInfo, getAcademicYearOptions } from '../../lib/academicCalendar';
 import { 
   subjects, 
   levels,
@@ -36,6 +37,7 @@ import {
   SUBJECT_SUB_STRANDS,
   SUB_STRAND_STANDARDS,
   STANDARD_INDICATORS,
+  getSubjectLessonFrame,
   SCIENCE_B7_LESSON_FRAMES,
   SCIENCE_B8_LESSON_FRAMES,
   SCIENCE_B9_LESSON_FRAMES,
@@ -242,8 +244,8 @@ const NoteGenerator = () => {
       coreCompetencies: 'Critical Thinking and Problem Solving (CP), Communication and Collaboration (CC)',
       week: 'Week 1',
       duration: '60 minutes',
-      term: 'Term 1',
-      academicYear: '2025/2026',
+      term: `Term ${getCurrentGesCalendarInfo().activeTerm}`,
+      academicYear: getCurrentGesCalendarInfo().academicYear,
       locality: profile?.locality || 'Urban',
       specificLocality: profile?.town || '',
       differentiation: '',
@@ -396,21 +398,16 @@ const NoteGenerator = () => {
     }));
   };
 
-  // Helper to find pre-defined lesson frames
+  // Helper to find pre-defined lesson frames strictly isolated by subject
   const getActiveFrame = () => {
     const indicatorId = formData.indicator.split(':')[0].trim();
     const standardId = formData.contentStandard.split(':')[0].trim();
     
-    const allFrames: Record<string, any> = {
-      ...SCIENCE_B7_LESSON_FRAMES,
-      ...SCIENCE_B8_LESSON_FRAMES,
-      ...SCIENCE_B9_LESSON_FRAMES,
-      ...MATH_B7_LESSON_FRAMES,
-      ...ENGLISH_B7_LESSON_FRAMES,
-      ...FRENCH_B4_B6_LESSON_FRAMES
-    };
-    
-    return allFrames[indicatorId] || allFrames[standardId] || null;
+    return (
+      getSubjectLessonFrame(formData.subject, formData.class, indicatorId) ||
+      getSubjectLessonFrame(formData.subject, formData.class, standardId) ||
+      null
+    );
   };
 
   // Selectors
@@ -1399,13 +1396,17 @@ const NoteGenerator = () => {
 
               <div className="space-y-2">
                 <label className="text-sm font-bold text-gray-500 uppercase">Academic Year</label>
-                <input 
-                  type="text" 
+                <select 
                   className="input-field"
-                  placeholder="e.g. 2025/2026"
                   value={formData.academicYear}
                   onChange={(e) => setFormData({...formData, academicYear: e.target.value})}
-                />
+                >
+                  {getAcademicYearOptions(new Date(), [formData.academicYear]).map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div className="space-y-2 md:col-span-2">

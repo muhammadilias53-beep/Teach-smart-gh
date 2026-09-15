@@ -735,14 +735,16 @@ export function getCurriculumIndicators(
   const code = match ? match[1].trim() : standard.trim();
   const text = match ? match[2]?.trim() : '';
 
-  // 1. Authoritative Verified Curriculum Check
-  const verifiedInds = getVerifiedIndicatorsForStandard(code);
-  if (verifiedInds && verifiedInds.length > 0) {
-    return verifiedInds.map(ind => `${ind.code}: ${ind.text}`);
+  // 1. Authoritative Verified Curriculum Check (ONLY for verified subjects)
+  const isSubjectVerified = subject && classLevel ? isSubjectClassVerified(subject, classLevel) : false;
+  if (isSubjectVerified) {
+    const verifiedInds = getVerifiedIndicatorsForStandard(code);
+    if (verifiedInds && verifiedInds.length > 0) {
+      return verifiedInds.map(ind => `${ind.code}: ${ind.text}`);
+    }
   }
 
   // 2. Strict Verified Mode Check: DO NOT manufacture synthetic indicators
-  const isSubjectVerified = subject && classLevel ? isSubjectClassVerified(subject, classLevel) : false;
   if (strictMode || isSubjectVerified) {
     // Under strict mode or verified scope, missing indicators must fail closed (return empty)
     return [];

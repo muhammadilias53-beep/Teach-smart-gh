@@ -47,25 +47,46 @@ service cloud.firestore {
       allow get: if isSignedIn() && (request.auth.uid == userId || isAdmin());
       allow list: if isAdmin();
       
-      allow create: if isOwner(userId) && isValidUser(incoming());
+      allow create: if isOwner(userId) && isValidUser(incoming()) && (
+        isAdmin() || (
+          (!('subscriptionStatus' in incoming()) || incoming().subscriptionStatus == 'trial') &&
+          (!('plan' in incoming()) || incoming().plan == null || incoming().plan == '') &&
+          (!('planType' in incoming()) || incoming().planType == null || incoming().planType == '') &&
+          (!('hasBulkExport' in incoming()) || incoming().hasBulkExport == false) &&
+          (!('isSchoolAdmin' in incoming()) || incoming().isSchoolAdmin == false) &&
+          (!('aiCredits' in incoming()) || incoming().aiCredits == 0)
+        )
+      );
       
       allow update: if (isOwner(userId) || isAdmin()) && (
-        isAdmin() || 
-        incoming().diff(existing()).affectedKeys().hasOnly([
-          'displayName', 'school', 'region', 'district', 'town', 
-          'level', 'subjectsTaught', 'teachingExperienceYears', 
-          'photoURL', 'updatedAt', 'onboardingComplete', 'email',
-          'subjects', 'locality', 'classSize', 'mainSubject', 
-          'trialStartDate', 'trialResetApril2024Applied', 'trialResetMay2026Applied', 'subscriptionEndDate',
-          'trialGenerationsDate', 'trialGenerationsToday', 'trialTotalGenerations',
-          'subscriptionStatus', 'lastLoginAt', 'isAnonymous', 'uid', 'createdAt',
-          'lastGenerationAt', 'lastPaymentId', 'planType', 'plan', 'preferences',
-          'isTrialResetApplied', 'schoolType', 'grade', 'isBstemSchool',
-          'lastPaymentReference', 'lastPaymentDate',
-          'hasSeenOnboardingTour', 'onboardingTourDismissed', 'profileCompleted',
-          'acceptedTerms', 'acceptedTermsAt', 'termsVersion', 'acceptedResponsibleAiTerms',
-          'aiCredits', 'isSchoolAdmin', 'schoolLicenseCode', 'schoolName', 'hasBulkExport'
-        ])
+        isAdmin() || (
+          incoming().diff(existing()).affectedKeys().hasOnly([
+            'displayName', 'school', 'region', 'district', 'town', 
+            'level', 'subjectsTaught', 'teachingExperienceYears', 
+            'photoURL', 'updatedAt', 'onboardingComplete', 'email',
+            'subjects', 'locality', 'classSize', 'mainSubject', 
+            'trialGenerationsDate', 'trialGenerationsToday', 'trialTotalGenerations',
+            'lastLoginAt', 'isAnonymous', 'uid', 'createdAt',
+            'lastGenerationAt', 'preferences',
+            'schoolType', 'grade', 'isBstemSchool',
+            'hasSeenOnboardingTour', 'onboardingTourDismissed', 'profileCompleted',
+            'acceptedTerms', 'acceptedTermsAt', 'termsVersion', 'acceptedResponsibleAiTerms',
+            'aiCredits', 'quickPassGenerationsUsed', 'schoolName'
+          ]) &&
+          // Prevent client from increasing their own AI credits (consumption/decrement only)
+          (!('aiCredits' in incoming().diff(existing()).affectedKeys()) || 
+            incoming().aiCredits <= existing().get('aiCredits', 0)) &&
+          // Prevent client from reducing their recorded trial generations on the same date
+          (!('trialGenerationsToday' in incoming().diff(existing()).affectedKeys()) || 
+            incoming().get('trialGenerationsDate', '') != existing().get('trialGenerationsDate', '') || 
+            incoming().trialGenerationsToday >= existing().get('trialGenerationsToday', 0)) &&
+          // Prevent client from reducing their lifetime total trial generations
+          (!('trialTotalGenerations' in incoming().diff(existing()).affectedKeys()) || 
+            incoming().trialTotalGenerations >= existing().get('trialTotalGenerations', 0)) &&
+          // Prevent client from decreasing their quick pass usage
+          (!('quickPassGenerationsUsed' in incoming().diff(existing()).affectedKeys()) || 
+            incoming().quickPassGenerationsUsed >= existing().get('quickPassGenerationsUsed', 0))
+        )
       );
       allow delete: if isAdmin();
     }
@@ -73,9 +94,12 @@ service cloud.firestore {
     // School Licenses (B2B School & Proprietor Accounts)
     match /school_licenses/{id} {
       allow read: if isSignedIn();
-      allow create: if isSignedIn();
-      allow update: if isSignedIn();
-      allow delete: if isAdmin();
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Processed Payments Ledger (Replay Protection)
+    match /processed_payments/{id} {
+      allow read, write: if isAdmin();
     }
 
     // 2. Notifications

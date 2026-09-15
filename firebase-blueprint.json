@@ -304,6 +304,12 @@
     "generation_feedback/{id}": {
       "schema": "GenerationFeedback",
       "description": "Teacher ratings and feedback on NaCCA alignment quality"
+    },
+    "school_licenses/{id}": {
+      "description": "School group licenses for multi-teacher access"
+    },
+    "processed_payments/{id}": {
+      "description": "Secure payment transaction ledger for replay attack prevention"
     }
   }
 }

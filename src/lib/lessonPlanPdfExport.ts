@@ -4,6 +4,8 @@ import { formatWeekLessonPlanTitle } from './utils';
 import { buildMultiDayLessonPhases } from './multiDayParser';
 import { getKGScheduleForDay, getSupportedKGBlockDuration, reconcileKGBlocks } from '../config/kgTimetable';
 import { registerUnicodeFonts } from './fonts/unicodeFonts';
+import { createDocumentVerification, renderQRCodeInPDF } from './documentVerification';
+import { getAcademicYearForDate } from './academicCalendar';
 
 export interface LessonPlanExportData {
   title?: string;
@@ -15,6 +17,8 @@ export interface LessonPlanExportData {
   weekNumber?: string;
   week?: string;
   weekEnding?: string;
+  academicYear?: string;
+  term?: string;
   day?: string;
   date?: string;
   period?: string;
@@ -40,10 +44,17 @@ export interface LessonPlanExportData {
   remarks?: string;
   teacherReflection?: string;
   headteacherRemarks?: string;
+  vettedBy?: string;
+  vettedDesignation?: string;
+  vettedAt?: string;
+  vettingStatus?: string;
   isKgPlan?: boolean;
   kgBlocks?: any[];
   locality?: string;
   specificLocality?: string;
+  teacherName?: string;
+  schoolName?: string;
+  district?: string;
   differentiation?: {
     strugglingLearners?: { activities?: string; resources?: string; assessments?: string };
     averageLearners?: { activities?: string; resources?: string; assessments?: string };
@@ -132,6 +143,18 @@ export function exportLessonPlanToPDF(data: LessonPlanExportData): jsPDF {
   // ==========================================
   // TOP BRANDING BANNER (Page 1)
   // ==========================================
+  // Generate verification code and QR verification URL
+  const { data: verifData, verificationUrl } = createDocumentVerification({
+    documentType: 'Weekly Lesson Plan',
+    subject: displaySubject,
+    classLevel: className,
+    term: data.term || (data.weekNumber ? `Week ${data.weekNumber}` : 'Term 1'),
+    academicYear: data.academicYear || getAcademicYearForDate(data.weekEnding || data.date || new Date()),
+    teacherName: data.teacherName,
+    schoolName: data.schoolName,
+    district: data.district,
+  });
+
   doc.setFillColor(0, 28, 61); // Deep Navy Blue
   doc.rect(0, 0, pageWidth, 16.5, 'F');
 
@@ -154,17 +177,22 @@ export function exportLessonPlanToPDF(data: LessonPlanExportData): jsPDF {
   doc.setTextColor(226, 232, 240);
   doc.text('AI-Powered Teaching. Smarter Tomorrow.  |  Catalyst Creative', leftMargin, 14);
 
-  // Right Side: Standard Badge
+  // Right Side: Standard Badge & Vector QR Code
+  const qrSize = 13.5;
+  const qrX = pageWidth - rightMargin - qrSize;
+  const qrY = 1.5;
+  renderQRCodeInPDF(doc, verificationUrl, qrX, qrY, qrSize);
+
   doc.setFillColor(0, 107, 63);
-  doc.roundedRect(pageWidth - rightMargin - 46, 4, 46, 9.5, 1.5, 1.5, 'F');
+  doc.roundedRect(pageWidth - rightMargin - 62, 3.5, 46, 9.5, 1.5, 1.5, 'F');
   doc.setTextColor(255, 255, 255);
-  doc.setFontSize(7.5);
+  doc.setFontSize(7);
   doc.setFont(fontName, 'bold');
-  doc.text('NaCCA / GES Aligned', pageWidth - rightMargin - 23, 8.5, { align: 'center' });
-  doc.setFontSize(6);
+  doc.text('NaCCA / GES Aligned', pageWidth - rightMargin - 39, 7.8, { align: 'center' });
+  doc.setFontSize(5.5);
   doc.setFont(fontName, 'normal');
-  doc.setTextColor(226, 232, 240);
-  doc.text('Standard-Based Curriculum', pageWidth - rightMargin - 23, 12, { align: 'center' });
+  doc.setTextColor(252, 209, 22); // Ghana Gold
+  doc.text(`SCAN QR • ${verifData.verificationCode}`, pageWidth - rightMargin - 39, 11.4, { align: 'center' });
 
   // ==========================================
   // NOTEBOOK HEADER ROW
@@ -474,12 +502,14 @@ export function exportLessonPlanToPDF(data: LessonPlanExportData): jsPDF {
     ]],
     body: [[
       {
-        content: `Teacher's Name: ................................................................\n\nSignature: ........................................... Date: ......................\n\nRemarks: [  ] Submitted on Time    [  ] Revision Required`,
+        content: `Teacher's Name: ${data.teacherName ? data.teacherName.toUpperCase() : '................................................................'}${data.schoolName ? `\nSchool: ${data.schoolName.toUpperCase()}` : ''}\n\nSignature: ........................................... Date: ......................\n\nRemarks: [  ] Submitted on Time    [  ] Revision Required`,
         styles: { fontSize: 7.5, cellPadding: 3, textColor: [30, 41, 59] }
       },
       {
-        content: `Headteacher/Supervisor: .................................................\n\nSignature / Stamp: ............................ Date: ......................\n\nStatus: [  ] Approved for Delivery    [  ] Inspected & Monitored`,
-        styles: { fontSize: 7.5, cellPadding: 3, textColor: [30, 41, 59] }
+        content: (data.vettingStatus === 'approved' || data.vettedBy)
+          ? `Headteacher/Supervisor: ${(data.vettedBy || 'HEADTEACHER').toUpperCase()}${data.vettedDesignation ? ` (${data.vettedDesignation})` : ''}\nDigital Stamp: [✓ OFFICIAL GES DIGITAL VETTING STAMP AFFIXED]\nDate Endorsed: ${data.vettedAt ? new Date(data.vettedAt).toLocaleDateString('en-GB') : new Date().toLocaleDateString('en-GB')}\nSupervisor Remarks: "${data.headteacherRemarks || 'Lesson plan approved. Ensure learner-centered activities are sustained.'}"\nStatus: [✓] Approved for Delivery    [✓] NaCCA Standards Certified\nVerification ID: ${verifData.verificationCode} (Scan QR at top)`
+          : `Headteacher/Supervisor: .................................................\n\nSignature / Stamp: ............................ Date: ......................\n\nStatus: [  ] Approved for Delivery    [  ] Inspected & Monitored\nCurriculum Verification ID: ${verifData.verificationCode} (Scan QR at top to verify)`,
+        styles: { fontSize: 7.2, cellPadding: 2.5, textColor: [30, 41, 59] }
       }
     ]],
     headStyles: {
@@ -522,10 +552,13 @@ export function exportLessonPlanToPDF(data: LessonPlanExportData): jsPDF {
     doc.setLineWidth(0.3);
     doc.line(leftMargin, footerY - 2.5, pageWidth - rightMargin, footerY - 2.5);
 
-    doc.setFontSize(7);
+    doc.setFontSize(6.8);
     doc.setFont(fontName, 'bold');
     doc.setTextColor(0, 107, 63);
-    doc.text('TEACHSMART GHANA • DESIGNED TO ALIGN WITH NaCCA/GES CURRICULUM REQUIREMENTS', leftMargin, footerY);
+    const teacherLicenseStamp = data.teacherName
+      ? `TEACHSMART GHANA • PREPARED BY ${data.teacherName.toUpperCase()}${data.schoolName ? ` (${data.schoolName.toUpperCase()})` : ''} • NaCCA / GES ALIGNED`
+      : 'TEACHSMART GHANA • DESIGNED TO ALIGN WITH NaCCA/GES CURRICULUM REQUIREMENTS';
+    doc.text(teacherLicenseStamp, leftMargin, footerY);
 
     doc.setFont(fontName, 'normal');
     doc.setTextColor(140);
@@ -584,6 +617,17 @@ export function exportKGLessonPlanToPDF(data: LessonPlanExportData): jsPDF {
   // ==========================================
   // TOP BRANDING BANNER (Page 1)
   // ==========================================
+  const { data: kgVerifData, verificationUrl: kgVerificationUrl } = createDocumentVerification({
+    documentType: 'Kindergarten Daily Plan',
+    subject: data.subject || 'Integrated Curriculum (KG1 / KG2)',
+    classLevel: className,
+    term: data.term || (data.weekNumber ? `Week ${data.weekNumber}` : 'Term 1'),
+    academicYear: data.academicYear || getAcademicYearForDate(data.weekEnding || data.date || new Date()),
+    teacherName: data.teacherName,
+    schoolName: data.schoolName,
+    district: data.district,
+  });
+
   doc.setFillColor(0, 28, 61); // Deep Navy Blue
   doc.rect(0, 0, pageWidth, 16.5, 'F');
 
@@ -606,17 +650,22 @@ export function exportKGLessonPlanToPDF(data: LessonPlanExportData): jsPDF {
   doc.setTextColor(226, 232, 240);
   doc.text('AI-Powered Early Childhood Teaching  |  Catalyst Creative', leftMargin, 14);
 
-  // Right Side: Standard Badge
+  // Right Side: Standard Badge & Vector QR Code
+  const kgQrSize = 13.5;
+  const kgQrX = pageWidth - rightMargin - kgQrSize;
+  const kgQrY = 1.5;
+  renderQRCodeInPDF(doc, kgVerificationUrl, kgQrX, kgQrY, kgQrSize);
+
   doc.setFillColor(0, 107, 63);
-  doc.roundedRect(pageWidth - rightMargin - 62, 4, 62, 9.5, 1.5, 1.5, 'F');
+  doc.roundedRect(pageWidth - rightMargin - 66, 3.5, 50, 9.5, 1.5, 1.5, 'F');
   doc.setTextColor(255, 255, 255);
-  doc.setFontSize(7);
+  doc.setFontSize(6.8);
   doc.setFont(fontName, 'bold');
-  doc.text('Designed for NaCCA/GES ECE Alignment', pageWidth - rightMargin - 31, 8.5, { align: 'center' });
-  doc.setFontSize(6);
+  doc.text('NaCCA / GES ECE Aligned', pageWidth - rightMargin - 41, 7.8, { align: 'center' });
+  doc.setFontSize(5.5);
   doc.setFont(fontName, 'normal');
-  doc.setTextColor(226, 232, 240);
-  doc.text('Universal KG Timetable Model', pageWidth - rightMargin - 31, 12, { align: 'center' });
+  doc.setTextColor(252, 209, 22); // Ghana Gold
+  doc.text(`SCAN QR • ${kgVerifData.verificationCode}`, pageWidth - rightMargin - 41, 11.4, { align: 'center' });
 
   // ==========================================
   // NOTEBOOK HEADER ROW
@@ -857,10 +906,13 @@ export function exportKGLessonPlanToPDF(data: LessonPlanExportData): jsPDF {
     doc.setLineWidth(0.3);
     doc.line(leftMargin, footerY - 2.5, pageWidth - rightMargin, footerY - 2.5);
 
-    doc.setFontSize(7);
+    doc.setFontSize(6.8);
     doc.setFont(fontName, 'bold');
     doc.setTextColor(0, 107, 63);
-    doc.text('TEACHSMART GHANA • DESIGNED TO ALIGN WITH NaCCA/GES CURRICULUM REQUIREMENTS', leftMargin, footerY);
+    const teacherLicenseStamp = data.teacherName
+      ? `TEACHSMART GHANA • PREPARED BY ${data.teacherName.toUpperCase()}${data.schoolName ? ` (${data.schoolName.toUpperCase()})` : ''} • NaCCA / GES ALIGNED`
+      : 'TEACHSMART GHANA • DESIGNED TO ALIGN WITH NaCCA/GES CURRICULUM REQUIREMENTS';
+    doc.text(teacherLicenseStamp, leftMargin, footerY);
 
     doc.setFont(fontName, 'normal');
     doc.setTextColor(140);
@@ -872,5 +924,16 @@ export function exportKGLessonPlanToPDF(data: LessonPlanExportData): jsPDF {
     );
   }
 
+  return doc;
+}
+
+/**
+ * Saves and downloads the Lesson Plan PDF directly with custom filename and overrides
+ */
+export function exportLessonPlanPDF(data: any, overrides?: any): jsPDF {
+  const merged = { ...data, ...overrides };
+  const doc = exportLessonPlanToPDF(merged);
+  const filename = `${merged.subject || 'Lesson'}_${merged.strand || 'Plan'}_Vetted_${new Date().toISOString().slice(0, 10)}.pdf`.replace(/[\s\W]+/g, '_');
+  doc.save(filename);
   return doc;
 }

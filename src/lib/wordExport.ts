@@ -14,12 +14,15 @@ import {
   Footer, 
   PageOrientation, 
   ShadingType,
-  VerticalAlign
+  VerticalAlign,
+  ImageRun
 } from 'docx';
 import { toast } from 'react-hot-toast';
 import { formatWeekLessonPlanTitle } from './utils';
 import { buildMultiDayLessonPhases } from './multiDayParser';
 import { getKGScheduleForDay, getSupportedKGBlockDuration, reconcileKGBlocks } from '../config/kgTimetable';
+import { createDocumentVerification, generateQRCodeBytes, DocumentVerificationData } from './documentVerification';
+import { getAcademicYearForDate } from './academicCalendar';
 
 export interface DocumentExportMetadata {
   title?: string;
@@ -28,6 +31,7 @@ export interface DocumentExportMetadata {
   level?: string;
   term?: string;
   week?: string;
+  weekEnding?: string;
   strand?: string;
   subStrand?: string;
   contentStandard?: string;
@@ -37,6 +41,8 @@ export interface DocumentExportMetadata {
   teacherName?: string;
   academicYear?: string;
   locality?: string;
+  district?: string;
+  region?: string;
   documentType?: string; // 'Scheme of Learning', 'Lesson Plan', 'Exam Question Paper', 'Marking Scheme', 'Lesson Notes', 'Assignment', 'Quiz', 'Student Report'
   orientation?: 'portrait' | 'landscape';
 }
@@ -221,7 +227,8 @@ function createFormattedParagraphs(
  */
 function createBrandHeaderBanner(meta: DocumentExportMetadata): Table {
   const school = meta.schoolName || 'Ghana Basic School';
-  const academicYear = meta.academicYear || '2025/2026 Academic Year';
+  const resolvedYear = meta.academicYear || getAcademicYearForDate(meta.weekEnding || new Date());
+  const academicYear = meta.academicYear ? meta.academicYear : `${resolvedYear} Academic Year`;
 
   return new Table({
     width: { size: 100, type: WidthType.PERCENTAGE },
@@ -281,12 +288,25 @@ function createBrandHeaderBanner(meta: DocumentExportMetadata): Table {
               }),
               new Paragraph({
                 alignment: AlignmentType.CENTER,
-                spacing: { before: 0, after: 0 },
+                spacing: { before: 0, after: 30 },
                 children: [
                   new TextRun({
                     text: `${school.toUpperCase()}  •  ${academicYear.toUpperCase()}`,
                     size: 15,
                     color: 'E2E8F0',
+                    font: 'Calibri'
+                  })
+                ]
+              }),
+              new Paragraph({
+                alignment: AlignmentType.CENTER,
+                spacing: { before: 0, after: 0 },
+                children: [
+                  new TextRun({
+                    text: `PREPARED BY: ${(meta.teacherName || 'CLASSROOM FACILITATOR').toUpperCase()}${meta.schoolName ? `  •  ${meta.schoolName.toUpperCase()}` : ''}`,
+                    size: 13,
+                    color: BRAND_COLORS.GHANA_GOLD,
+                    bold: true,
                     font: 'Calibri'
                   })
                 ]
@@ -304,7 +324,8 @@ function createBrandHeaderBanner(meta: DocumentExportMetadata): Table {
  */
 function createKGBrandHeaderBanner(meta: DocumentExportMetadata): Table {
   const school = meta.schoolName || 'Basic School / Early Childhood Centre';
-  const academicYear = meta.academicYear || '2025/2026 Academic Year';
+  const resolvedYear = meta.academicYear || getAcademicYearForDate(meta.weekEnding || new Date());
+  const academicYear = meta.academicYear ? meta.academicYear : `${resolvedYear} Academic Year`;
 
   return new Table({
     width: { size: 100, type: WidthType.PERCENTAGE },
@@ -364,12 +385,153 @@ function createKGBrandHeaderBanner(meta: DocumentExportMetadata): Table {
               }),
               new Paragraph({
                 alignment: AlignmentType.CENTER,
-                spacing: { before: 0, after: 0 },
+                spacing: { before: 0, after: 30 },
                 children: [
                   new TextRun({
                     text: `${school.toUpperCase()}  •  ${academicYear.toUpperCase()}  •  UNIVERSAL KG TIMETABLE MODEL`,
                     size: 15,
                     color: 'E2E8F0',
+                    font: 'Calibri'
+                  })
+                ]
+              }),
+              new Paragraph({
+                alignment: AlignmentType.CENTER,
+                spacing: { before: 0, after: 0 },
+                children: [
+                  new TextRun({
+                    text: `PREPARED BY: ${(meta.teacherName || 'CLASSROOM FACILITATOR').toUpperCase()}${meta.schoolName ? `  •  ${meta.schoolName.toUpperCase()}` : ''}`,
+                    size: 13,
+                    color: BRAND_COLORS.GHANA_GOLD,
+                    bold: true,
+                    font: 'Calibri'
+                  })
+                ]
+              })
+            ]
+          })
+        ]
+      })
+    ]
+  });
+}
+
+/**
+ * Creates the Official Scan-to-Verify Table with QR code image for Word Documents
+ */
+function createWordVerificationTable(
+  verifData: DocumentVerificationData,
+  qrBytes: Uint8Array | null
+): Table {
+  const tableCellBorder = {
+    top: { style: BorderStyle.SINGLE, size: 6, color: BRAND_COLORS.BORDER_SUBTLE },
+    bottom: { style: BorderStyle.SINGLE, size: 6, color: BRAND_COLORS.BORDER_SUBTLE },
+    left: { style: BorderStyle.SINGLE, size: 6, color: BRAND_COLORS.BORDER_SUBTLE },
+    right: { style: BorderStyle.SINGLE, size: 6, color: BRAND_COLORS.BORDER_SUBTLE }
+  };
+
+  const qrChildren: Paragraph[] = qrBytes
+    ? [
+        new Paragraph({
+          alignment: AlignmentType.CENTER,
+          children: [
+            new ImageRun({
+              type: 'png',
+              data: qrBytes,
+              transformation: {
+                width: 75,
+                height: 75,
+              },
+            }),
+          ]
+        }),
+        new Paragraph({
+          alignment: AlignmentType.CENTER,
+          spacing: { before: 20, after: 0 },
+          children: [
+            new TextRun({
+              text: 'SCAN TO VERIFY',
+              bold: true,
+              size: 11,
+              color: BRAND_COLORS.NAVY_DARK,
+              font: 'Calibri'
+            })
+          ]
+        })
+      ]
+    : [
+        new Paragraph({
+          alignment: AlignmentType.CENTER,
+          children: [
+            new TextRun({
+              text: '[QR CODE]',
+              bold: true,
+              size: 13,
+              color: BRAND_COLORS.SLATE_MUTED,
+              font: 'Calibri'
+            })
+          ]
+        })
+      ];
+
+  return new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    rows: [
+      new TableRow({
+        cantSplit: true,
+        children: [
+          new TableCell({
+            width: { size: 22, type: WidthType.PERCENTAGE },
+            borders: tableCellBorder,
+            shading: { type: ShadingType.CLEAR, fill: BRAND_COLORS.SLATE_HEADER_BG },
+            margins: { top: 70, bottom: 70, left: 60, right: 60 },
+            verticalAlign: VerticalAlign.CENTER,
+            children: qrChildren
+          }),
+          new TableCell({
+            width: { size: 78, type: WidthType.PERCENTAGE },
+            borders: tableCellBorder,
+            margins: { top: 70, bottom: 70, left: 100, right: 100 },
+            verticalAlign: VerticalAlign.CENTER,
+            children: [
+              new Paragraph({
+                spacing: { before: 0, after: 30 },
+                children: [
+                  new TextRun({
+                    text: 'OFFICIAL CURRICULUM ACCREDITATION & INTEGRITY SEAL',
+                    bold: true,
+                    size: 14,
+                    color: BRAND_COLORS.GHANA_GREEN,
+                    font: 'Calibri'
+                  })
+                ]
+              }),
+              new Paragraph({
+                spacing: { before: 0, after: 30 },
+                children: [
+                  new TextRun({ text: 'Verification Code: ', bold: true, size: 14, color: BRAND_COLORS.NAVY_DARK, font: 'Calibri' }),
+                  new TextRun({ text: verifData.verificationCode, bold: true, size: 15, color: BRAND_COLORS.NAVY_DARK, font: 'Calibri' }),
+                  new TextRun({ text: '  |  Curriculum: ', size: 13, color: BRAND_COLORS.TEXT_MUTED, font: 'Calibri' }),
+                  new TextRun({ text: 'NaCCA & GES Standards-Based (SBC)', bold: true, size: 13, color: BRAND_COLORS.NAVY_DARK, font: 'Calibri' })
+                ]
+              }),
+              new Paragraph({
+                spacing: { before: 0, after: 20 },
+                children: [
+                  new TextRun({ text: 'Licensed Facilitator: ', bold: true, size: 13, color: BRAND_COLORS.NAVY_DARK, font: 'Calibri' }),
+                  new TextRun({ text: (verifData.teacherName || 'Facilitator').toUpperCase(), size: 13, color: BRAND_COLORS.TEXT_BODY, font: 'Calibri' }),
+                  new TextRun({ text: '   •   School: ', bold: true, size: 13, color: BRAND_COLORS.NAVY_DARK, font: 'Calibri' }),
+                  new TextRun({ text: (verifData.schoolName || 'Ghana Basic School').toUpperCase(), size: 13, color: BRAND_COLORS.TEXT_BODY, font: 'Calibri' })
+                ]
+              }),
+              new Paragraph({
+                spacing: { before: 0, after: 0 },
+                children: [
+                  new TextRun({
+                    text: 'Anti-Counterfeit Protection: This pedagogical asset was officially created with TeachSmartGH and is non-transferable. Scan the QR code or visit teachsmartgh.com to verify licensing authenticity.',
+                    italics: true,
+                    size: 11,
+                    color: BRAND_COLORS.SLATE_MUTED,
                     font: 'Calibri'
                   })
                 ]
@@ -390,7 +552,9 @@ function createMetadataStripTable(meta: DocumentExportMetadata): Table {
     { label: 'DOCUMENT', val: meta.documentType || meta.title || 'Curriculum Resource' },
     { label: 'SUBJECT', val: meta.subject || 'General' },
     { label: 'CLASS / LEVEL', val: `${meta.classLevel || 'Basic 7'} (${meta.level || 'JHS'})` },
-    { label: 'TERM / ACADEMIC YEAR', val: `${meta.term ? `Term ${meta.term}` : 'All Terms'} • ${meta.academicYear || '2025/2026'}` },
+    { label: 'TERM / ACADEMIC YEAR', val: `${meta.term ? `Term ${meta.term}` : 'All Terms'} • ${meta.academicYear || getAcademicYearForDate(meta.weekEnding || new Date())}` },
+    { label: 'PREPARED EXCLUSIVELY BY', val: `${meta.teacherName || 'Licensed Classroom Facilitator'} • ${meta.schoolName || 'Ghana Basic School'}` },
+    { label: 'LICENSE & ATTRIBUTION', val: `${meta.locality || 'Ghana Education Service'} • Non-Transferable Single-Teacher Asset` },
   ];
 
   if (meta.strand) {
@@ -767,7 +931,7 @@ function parseMarkdownToDocxElements(markdown: string): (Paragraph | Table)[] {
 /**
  * Common running header and footer creator
  */
-function createRunningHeaderAndFooter(documentType: string) {
+function createRunningHeaderAndFooter(documentType: string, meta?: DocumentExportMetadata) {
   const header = new Header({
     children: [
       new Paragraph({
@@ -783,6 +947,10 @@ function createRunningHeaderAndFooter(documentType: string) {
       })
     ]
   });
+
+  const teacherFootnote = meta?.teacherName
+    ? `TeachSmartGH • Prepared by: ${meta.teacherName} (${meta.schoolName || 'Ghana Basic School'}) • NaCCA / GES Aligned`
+    : 'TeachSmartGH by Catalyst Creative • Designed to Align with NaCCA/GES Curriculum Requirements';
 
   const footer = new Footer({
     children: [
@@ -805,8 +973,8 @@ function createRunningHeaderAndFooter(documentType: string) {
                     alignment: AlignmentType.CENTER,
                     children: [
                       new TextRun({
-                        text: 'TeachSmartGH by Catalyst Creative • Designed to Align with NaCCA/GES Curriculum Requirements',
-                        size: 14,
+                        text: teacherFootnote,
+                        size: 13,
                         color: BRAND_COLORS.SLATE_MUTED,
                         italics: true,
                         font: 'Calibri'
@@ -828,7 +996,7 @@ function createRunningHeaderAndFooter(documentType: string) {
 /**
  * Dedicated Kindergarten Running Header and Footer with Safe Branding
  */
-function createKGRunningHeaderAndFooter(weekNumber: string, className: string) {
+function createKGRunningHeaderAndFooter(weekNumber: string, className: string, meta?: DocumentExportMetadata) {
   const header = new Header({
     children: [
       new Paragraph({
@@ -844,6 +1012,10 @@ function createKGRunningHeaderAndFooter(weekNumber: string, className: string) {
       })
     ]
   });
+
+  const teacherFootnote = meta?.teacherName
+    ? `TeachSmartGH ECE • Prepared by: ${meta.teacherName} (${meta.schoolName || 'Ghana Basic School'}) • NaCCA / GES Aligned`
+    : 'TeachSmartGH | TeachSmartGH Kindergarten Daily Lesson Plan — Designed to Align with NaCCA/GES Requirements | Catalyst Creative';
 
   const footer = new Footer({
     children: [
@@ -866,7 +1038,7 @@ function createKGRunningHeaderAndFooter(weekNumber: string, className: string) {
                     alignment: AlignmentType.CENTER,
                     children: [
                       new TextRun({
-                        text: 'TeachSmartGH | TeachSmartGH Kindergarten Daily Lesson Plan — Designed to Align with NaCCA/GES Requirements | Catalyst Creative',
+                        text: teacherFootnote,
                         size: 13,
                         color: BRAND_COLORS.SLATE_MUTED,
                         font: 'Calibri'
@@ -930,7 +1102,21 @@ export async function exportMarkdownToWord(
   const brandHeader = createBrandHeaderBanner({ ...metadata, title, documentType, subject, classLevel, level });
   const metaTable = createMetadataStripTable({ ...metadata, title, documentType, subject, classLevel, level });
   const contentElements = parseMarkdownToDocxElements(markdownContent);
-  const { header, footer } = createRunningHeaderAndFooter(documentType);
+  const { header, footer } = createRunningHeaderAndFooter(documentType, metadata);
+
+  // Generate official verification QR and Accreditation table
+  const { data: verifData, verificationUrl } = createDocumentVerification({
+    documentType: documentType || 'Curriculum Document',
+    subject: subject || 'General',
+    classLevel: classLevel || 'General',
+    term: metadata.term ? `Term ${metadata.term}` : 'Term 1',
+    academicYear: metadata.academicYear || getAcademicYearForDate(metadata.weekEnding || new Date()),
+    teacherName: metadata.teacherName,
+    schoolName: metadata.schoolName,
+    district: metadata.district,
+  });
+  const qrBytes = await generateQRCodeBytes(verificationUrl);
+  const verifTable = createWordVerificationTable(verifData, qrBytes);
 
   const doc = new Document({
     creator: 'TeachSmartGH (Catalyst Creative)',
@@ -957,6 +1143,8 @@ export async function exportMarkdownToWord(
           brandHeader,
           new Paragraph({ spacing: { after: 120 } }),
           metaTable,
+          new Paragraph({ spacing: { after: 120 } }),
+          verifTable,
           new Paragraph({ spacing: { after: 160 } }),
           ...contentElements
         ]
@@ -1452,9 +1640,27 @@ export async function exportLessonPlanToWord(
               new Paragraph({
                 spacing: { before: 40, after: 60 },
                 children: [
-                  new TextRun({ text: "Teacher's Name: ................................................................", size: 15, color: BRAND_COLORS.TEXT_BODY })
+                  new TextRun({ 
+                    text: `Teacher's Name: ${(planData.teacherName || metadata.teacherName) ? (planData.teacherName || metadata.teacherName).toUpperCase() : '................................................................'}`, 
+                    bold: Boolean(planData.teacherName || metadata.teacherName), 
+                    size: 15, 
+                    color: BRAND_COLORS.NAVY_DARK 
+                  })
                 ]
               }),
+              ...((planData.schoolName || metadata.schoolName) ? [
+                new Paragraph({
+                  spacing: { before: 0, after: 60 },
+                  children: [
+                    new TextRun({ 
+                      text: `School: ${(planData.schoolName || metadata.schoolName).toUpperCase()}`, 
+                      bold: true, 
+                      size: 14, 
+                      color: BRAND_COLORS.NAVY_DARK 
+                    })
+                  ]
+                })
+              ] : []),
               new Paragraph({
                 spacing: { before: 40, after: 60 },
                 children: [
@@ -1473,7 +1679,38 @@ export async function exportLessonPlanToWord(
             width: { size: 50, type: WidthType.PERCENTAGE },
             borders: table1CellBorder,
             margins: { top: 90, bottom: 90, left: 100, right: 100 },
-            children: [
+            children: (planData.vettingStatus === 'approved' || planData.vettedBy || planData.headteacherRemarks) ? [
+              new Paragraph({
+                spacing: { before: 40, after: 40 },
+                children: [
+                  new TextRun({ text: `Headteacher/Supervisor: ${(planData.vettedBy || 'HEADTEACHER').toUpperCase()}${planData.vettedDesignation ? ` (${planData.vettedDesignation})` : ''}`, bold: true, size: 15, color: BRAND_COLORS.NAVY_DARK })
+                ]
+              }),
+              new Paragraph({
+                spacing: { before: 0, after: 40 },
+                children: [
+                  new TextRun({ text: `Digital Stamp: [✓ OFFICIAL GES VETTING ENDORSEMENT]`, bold: true, size: 13, color: BRAND_COLORS.GHANA_GREEN })
+                ]
+              }),
+              new Paragraph({
+                spacing: { before: 0, after: 40 },
+                children: [
+                  new TextRun({ text: `Date Endorsed: ${planData.vettedAt ? new Date(planData.vettedAt).toLocaleDateString('en-GB') : new Date().toLocaleDateString('en-GB')}`, size: 14, color: BRAND_COLORS.TEXT_BODY })
+                ]
+              }),
+              new Paragraph({
+                spacing: { before: 0, after: 40 },
+                children: [
+                  new TextRun({ text: `Remarks: "${planData.headteacherRemarks || 'Approved. Ensure learner-centered activities are sustained.'}"`, italics: true, size: 14, color: BRAND_COLORS.NAVY_DARK })
+                ]
+              }),
+              new Paragraph({
+                spacing: { before: 0, after: 40 },
+                children: [
+                  new TextRun({ text: 'Status: [✓] Approved for Delivery    [✓] NaCCA Standards Certified', bold: true, size: 14, color: BRAND_COLORS.GHANA_GREEN })
+                ]
+              })
+            ] : [
               new Paragraph({
                 spacing: { before: 40, after: 60 },
                 children: [
@@ -1499,7 +1736,7 @@ export async function exportLessonPlanToWord(
     ]
   });
 
-  const { header, footer } = createRunningHeaderAndFooter('Lesson Plan');
+  const { header, footer } = createRunningHeaderAndFooter('Lesson Plan', { ...metadata, teacherName: planData.teacherName || metadata.teacherName, schoolName: planData.schoolName || metadata.schoolName });
 
   // Notebook Header Block (Subject, Class, Size)
   const notebookHeaderParagraphs: Paragraph[] = [
@@ -1538,6 +1775,20 @@ export async function exportLessonPlanToWord(
     classLevel: className
   });
 
+  // Generate official verification QR and Accreditation table
+  const { data: verifData, verificationUrl } = createDocumentVerification({
+    documentType: 'Weekly Lesson Plan',
+    subject: displaySubject,
+    classLevel: className,
+    term: weekNumber ? `Week ${weekNumber}` : 'Term 1',
+    academicYear: metadata.academicYear || getAcademicYearForDate(metadata.weekEnding || planData.date || new Date()),
+    teacherName: metadata.teacherName,
+    schoolName: metadata.schoolName,
+    district: metadata.district,
+  });
+  const qrBytes = await generateQRCodeBytes(verificationUrl);
+  const verifTable = createWordVerificationTable(verifData, qrBytes);
+
   const doc = new Document({
     creator: 'TeachSmartGH (Catalyst Creative)',
     title: `${officialTitle} - ${displaySubject}`,
@@ -1560,7 +1811,9 @@ export async function exportLessonPlanToWord(
           new Paragraph({ spacing: { after: 120 } }),
           table2,
           new Paragraph({ spacing: { after: 140 } }),
-          table3
+          table3,
+          new Paragraph({ spacing: { after: 120 } }),
+          verifTable
         ]
       }
     ]
@@ -2036,7 +2289,7 @@ export async function exportKGLessonPlanToWord(
     ]
   });
 
-  const { header, footer } = createKGRunningHeaderAndFooter(weekNumber, className);
+  const { header, footer } = createKGRunningHeaderAndFooter(weekNumber, className, { ...metadata, teacherName: planData.teacherName || metadata.teacherName, schoolName: planData.schoolName || metadata.schoolName });
 
   const brandHeader = createKGBrandHeaderBanner({
     ...metadata,
@@ -2045,6 +2298,20 @@ export async function exportKGLessonPlanToWord(
     subject: 'Integrated Curriculum (KG1 / KG2)',
     classLevel: className
   });
+
+  // Generate official verification QR and Accreditation table
+  const { data: verifData, verificationUrl } = createDocumentVerification({
+    documentType: 'Kindergarten Daily Plan',
+    subject: 'Integrated Curriculum (KG1 / KG2)',
+    classLevel: className,
+    term: weekNumber ? `Week ${weekNumber}` : 'Term 1',
+    academicYear: metadata.academicYear || getAcademicYearForDate(metadata.weekEnding || planData.date || new Date()),
+    teacherName: planData.teacherName || metadata.teacherName,
+    schoolName: planData.schoolName || metadata.schoolName,
+    district: metadata.district,
+  });
+  const qrBytes = await generateQRCodeBytes(verificationUrl);
+  const verifTable = createWordVerificationTable(verifData, qrBytes);
 
   const doc = new Document({
     creator: 'TeachSmartGH (Catalyst Creative)',
@@ -2076,7 +2343,9 @@ export async function exportKGLessonPlanToWord(
           new Paragraph({ spacing: { after: 120 } }),
           table2,
           new Paragraph({ spacing: { after: 120 } }),
-          table4
+          table4,
+          new Paragraph({ spacing: { after: 120 } }),
+          verifTable
         ]
       }
     ]

@@ -49,6 +49,7 @@ const menuGroups: MenuGroup[] = [
     items: [
       { icon: Compass, label: 'NaCCA Standards DB', path: '/standards' },
       { icon: FileText, label: 'Lesson Plans', path: '/lessons' },
+      { icon: ShieldCheck, label: 'Headteacher Vetting', path: '/vetting' },
       { icon: BookOpen, label: 'Lesson Notes', path: '/notes' },
       { icon: Calendar, label: 'Schemes of Work', path: '/schemes' },
     ]

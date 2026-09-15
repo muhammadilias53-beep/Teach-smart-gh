@@ -299,127 +299,50 @@ const Billing = () => {
                     }] : [])
                 ]
             },
-            callback: (response: any) => {
+            callback: async (response: any) => {
                 setProcessing(true);
-                toast.loading("Verifying payment automatically...", { id: "payment-verify" });
+                toast.loading("Verifying transaction securely with Paystack...", { id: "payment-verify" });
                 
-                // 1. Automatically and instantly grant local client-side firestore access first
-                const grantAccessLocally = async () => {
-                    try {
-                        const userDocRef = doc(db, 'users', user.uid);
-                        if (isCredits) {
-                            await updateDoc(userDocRef, {
-                                aiCredits: increment(creditsAmount),
-                                lastPaymentId: response.reference,
-                                updatedAt: new Date().toISOString()
-                            });
-                            console.log(`[Payment] Added ${creditsAmount} AI credits locally in Firestore.`);
-                        } else if (isSchoolPlan) {
-                            const durationMs = 90 * 24 * 60 * 60 * 1000;
-                            const endDate = new Date(Date.now() + durationMs).toISOString();
-                            const schoolCode = `TSG-SCH-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
-
-                            await setDoc(doc(db, 'school_licenses', schoolCode), {
-                                code: schoolCode,
-                                ownerUid: user.uid,
-                                ownerEmail: user.email || emailToUse,
-                                ownerName: profile.displayName || 'School Administrator',
-                                schoolName: profile.school || profile.schoolName || `${profile.displayName || 'Teacher'}'s School`,
-                                plan: activePlan.id,
-                                maxSeats: activePlan.id === 'school_pro' ? 12 : 6,
-                                usedSeats: 1,
-                                members: [user.uid],
-                                createdAt: new Date().toISOString(),
-                                expiresAt: endDate,
-                                active: true
-                            });
-
-                            await updateDoc(userDocRef, {
-                                subscriptionStatus: 'active',
-                                plan: 'school_license',
-                                isSchoolAdmin: true,
-                                hasBulkExport: true,
-                                schoolLicenseCode: schoolCode,
-                                schoolName: profile.school || profile.schoolName || `${profile.displayName || 'Teacher'}'s School`,
-                                subscriptionEndDate: endDate,
-                                lastPaymentId: response.reference,
-                                updatedAt: new Date().toISOString()
-                            });
-                            console.log(`[Payment] School license ${schoolCode} created locally.`);
-                        } else {
-                            let durationMs: number | null = null;
-                            if (activePlan.id === 'yearly') durationMs = 365 * 24 * 60 * 60 * 1000;
-                            else if (activePlan.id === 'termly' || activePlan.id === 'termly_pro') durationMs = 90 * 24 * 60 * 60 * 1000;
-                            else if (activePlan.id === 'quick_pass') durationMs = 24 * 60 * 60 * 1000;
-                            else if (activePlan.id === 'lifetime') durationMs = null;
-
-                            const endDate = durationMs === null ? null : new Date(Date.now() + durationMs).toISOString();
-                            const isProMode = activePlan.id === 'termly_pro' || activePlan.id === 'yearly' || activePlan.id === 'lifetime';
-
-                            await updateDoc(userDocRef, {
-                                subscriptionStatus: 'active',
-                                lastPaymentId: response.reference,
-                                plan: activePlan.id,
-                                hasBulkExport: isProMode,
-                                subscriptionEndDate: endDate,
-                                updatedAt: new Date().toISOString()
-                            });
-                            console.log("[Payment] Locally activated and granted access successfully.");
-                        }
-                    } catch (firestoreErr) {
-                        console.error("[Payment] Local Firestore upgrade bypass error (will rely on backend):", firestoreErr);
-                    }
-                };
-
-                // Run client-side grant in parallel for instantaneous access!
-                grantAccessLocally();
-
-                axios.post('/api/verify-payment', {
-                  reference: response.reference,
-                  uid: user.uid,
-                  plan: isCredits ? 'credits' : activePlan.id,
-                  credits: isCredits ? creditsAmount : undefined,
-                  amount: activePlan.price
-                }).then((verifyRes) => {
-                    toast.dismiss("payment-verify");
-                    setShowConfirm(false);
-                    setSelectedPlan(null);
-                    
-                    refreshProfile().then(() => {
-                        toast.success(
-                          isCredits 
-                            ? `🎉 ${creditsAmount} AI Generation Credits added to your balance!` 
-                            : (isSchoolPlan 
-                                ? `🏫 School License Activated! Code: ${verifyRes.data.schoolLicenseCode || 'Generated'}` 
-                                : 'Subscription activated! Welcome to the Elite family.'), 
-                          {
-                            duration: 7000,
-                            icon: isCredits ? '⚡' : '🚀'
-                          }
-                        );
+                try {
+                    const verifyRes = await axios.post('/api/verify-payment', {
+                        reference: response.reference,
+                        uid: user.uid,
+                        plan: isCredits ? 'credits' : activePlan.id,
+                        credits: isCredits ? creditsAmount : undefined,
+                        amount: activePlan.price
                     });
-                }).catch((err) => {
-                    console.error('Verification warning (local update succeeded):', err);
-                    toast.dismiss("payment-verify");
-                    setShowConfirm(false);
-                    setSelectedPlan(null);
-                    
-                    refreshProfile().then(() => {
+
+                    if (verifyRes.data && verifyRes.data.status) {
+                        toast.dismiss("payment-verify");
+                        setShowConfirm(false);
+                        setSelectedPlan(null);
+                        
+                        await refreshProfile();
                         toast.success(
                             isCredits 
-                              ? `Payment completed! ${creditsAmount} AI credits credited to your account.` 
-                              : (isSchoolPlan 
-                                  ? 'School license activated! Share the code with your staff.' 
-                                  : 'Payment completed successfully! Access granted automatically.'), 
+                                ? `🎉 ${creditsAmount} AI Generation Credits added to your balance!` 
+                                : (isSchoolPlan 
+                                    ? `🏫 School License Activated! Staff Invite Code: ${verifyRes.data.schoolLicenseCode || 'Generated'}` 
+                                    : 'Subscription activated! Welcome to TeachSmartGH Elite.'), 
                             {
                                 duration: 7000,
                                 icon: isCredits ? '⚡' : '🚀'
                             }
                         );
-                    });
-                }).finally(() => {
+                    } else {
+                        throw new Error(verifyRes.data?.error || "Payment verification failed.");
+                    }
+                } catch (err: any) {
+                    console.error('[Payment] Verification error:', err);
+                    toast.dismiss("payment-verify");
+                    const errMsg = err.response?.data?.error || err.message || "Payment verification failed.";
+                    toast.error(
+                        `Verification issue: ${errMsg}. If your account was debited, please contact support with transaction reference: ${response.reference}`, 
+                        { duration: 10000 }
+                    );
+                } finally {
                     setProcessing(false);
-                });
+                }
             },
             onClose: () => {
                 setProcessing(false);

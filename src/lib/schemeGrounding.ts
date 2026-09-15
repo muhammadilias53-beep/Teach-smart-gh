@@ -20,6 +20,7 @@ import {
   getVerifiedStandards,
   CurriculumVerificationError
 } from '../data/verifiedCurriculum';
+import { getCurrentGesCalendarInfo } from './academicCalendar';
 
 export {
   isSubjectClassVerified,
@@ -861,7 +862,7 @@ export function buildTermWeeklyDistributionPlan(
   term: 1 | 2 | 3,
   config?: WeeklyDistributionConfig
 ): TermWeeklyDistributionPlan {
-  const academicYear = config?.academicYear || '2025/2026';
+  const academicYear = config?.academicYear || getCurrentGesCalendarInfo().academicYear;
   const totalWeeks = Math.max(10, Math.min(14, config?.totalWeeks ?? 12));
   const revisionWeeks = Math.max(0, Math.min(3, config?.revisionWeeks ?? 1));
   const assessmentWeeks = Math.max(0, Math.min(3, config?.assessmentWeeks ?? 1));

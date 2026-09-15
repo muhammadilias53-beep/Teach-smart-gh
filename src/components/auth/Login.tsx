@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { auth } from '../../lib/firebase';
 import { useAuth } from '../../contexts/AuthContext';
+import { isDisposableEmail, canonicalizeEmail } from '../../lib/emailSecurity';
 import { useNavigate, useLocation, Link } from 'react-router';
 import { 
   signInWithPopup, 
@@ -268,13 +269,20 @@ const Login = () => {
         await signInWithEmailAndPassword(auth, email, password);
         toast.success('Welcome back, Teacher!', { id: 'auth-toast' });
       } else {
+        if (isDisposableEmail(email)) {
+          toast.error('Please use an authentic personal or school email address (e.g. Gmail, Yahoo, Outlook) to register.', { duration: 6000 });
+          setLoading(false);
+          return;
+        }
+
         toast.loading('Creating professional profile...', { id: 'auth-toast' });
         
-        // Find existing trial records in used_emails to enforce unique 3-day trial limit
-        const cleanedEmail = email.trim().toLowerCase();
+        // Find existing trial records in used_emails using canonical email address
+        // to prevent +alias or dot-churning trial bypass
+        const canonicalKey = canonicalizeEmail(email);
         let originalTrialStart: any = null;
         try {
-          const usedEmailRef = doc(db, 'used_emails', cleanedEmail);
+          const usedEmailRef = doc(db, 'used_emails', canonicalKey);
           const usedEmailSnap = await getDoc(usedEmailRef);
           if (usedEmailSnap.exists()) {
             const usedData = usedEmailSnap.data();
@@ -317,9 +325,9 @@ const Login = () => {
         
         await setDoc(doc(db, 'users', newUser.uid), newProfile);
         
-        // Record / update used_emails record securely
+        // Record / update used_emails record securely with canonical email
         try {
-          await setDoc(doc(db, 'used_emails', cleanedEmail), {
+          await setDoc(doc(db, 'used_emails', canonicalKey), {
             uid: newUser.uid,
             isAnonymous: false,
             createdAt: originalTrialStart ? new Date(originalTrialStart).toISOString() : serverTimestamp()

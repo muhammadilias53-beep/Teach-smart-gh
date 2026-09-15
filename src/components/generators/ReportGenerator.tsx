@@ -21,6 +21,7 @@ import { exportRosterToExcel, exportTemplateToExcel } from '../../lib/excelExpor
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { registerUnicodeFonts } from '../../lib/fonts/unicodeFonts';
+import { getCurrentGesCalendarInfo, getAcademicYearOptions } from '../../lib/academicCalendar';
 
 export interface StudentScore {
   id: string;
@@ -107,8 +108,8 @@ export default function ReportGenerator() {
   const [schoolName, setSchoolName] = useState(() => safeLocalStorage.getItem('teachsmart_school_name') || 'Ghana Model Basic School');
   const [selectedClass, setSelectedClass] = useState('Basic 7');
   const [selectedSubject, setSelectedSubject] = useState('Integrated Science');
-  const [selectedTerm, setSelectedTerm] = useState('Term 1');
-  const [academicYear, setAcademicYear] = useState('2025/2026');
+  const [selectedTerm, setSelectedTerm] = useState(() => `Term ${getCurrentGesCalendarInfo().activeTerm}`);
+  const [academicYear, setAcademicYear] = useState(() => getCurrentGesCalendarInfo().academicYear);
   const [gradingSystem, setGradingSystem] = useState<'ges_numeric' | 'letter'>('ges_numeric'); // GES 1-9 vs A-F
 
   // Assessment Weights
@@ -960,13 +961,15 @@ Rules:
               <option value="Term 2">Term 2</option>
               <option value="Term 3">Term 3</option>
             </select>
-            <input
-              type="text"
+            <select
               value={academicYear}
               onChange={(e) => setAcademicYear(e.target.value)}
-              placeholder="2025/2026"
               className="w-1/2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-2 py-2 text-xs font-bold text-slate-800 dark:text-slate-200 focus:outline-none"
-            />
+            >
+              {getAcademicYearOptions(new Date(), [academicYear]).map(opt => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
           </div>
         </div>
 

@@ -37,6 +37,10 @@ import {
   SCIENCE_B7_LESSON_FRAMES,
   SCIENCE_B8_LESSON_FRAMES,
   SCIENCE_B9_LESSON_FRAMES,
+  COMPUTING_B7_LESSON_FRAMES,
+  COMPUTING_B8_LESSON_FRAMES,
+  COMPUTING_B9_LESSON_FRAMES,
+  RME_LESSON_FRAMES,
   ENGLISH_B7_LESSON_FRAMES,
   FRENCH_B4_B6_LESSON_FRAMES,
   GHANAIAN_LANGUAGE_B1_B3_LESSON_FRAMES
@@ -479,13 +483,12 @@ export default function ResourcePacks() {
       {activeTab === 'jhs_frames' && (
         <div className="mb-12 space-y-6">
           <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
-            {['Mathematics', 'Science', 'English', 'French', 'Ghanaian Language'].map(sub => (
+            {['Mathematics', 'Science', 'Computing', 'English', 'RME', 'French', 'Ghanaian Language'].map(sub => (
               <button
                 key={sub}
                 onClick={() => {
                   setSelectedFrameSubject(sub);
-                  // Reset grade if Mathematics or English selected as we only have B7 for now
-                  if (sub === 'Mathematics' || sub === 'English') {
+                  if (sub === 'Mathematics' || sub === 'English' || sub === 'RME') {
                     setSelectedGrade('B7');
                   } else if (sub === 'French') {
                     setSelectedGrade('B4');
@@ -510,7 +513,7 @@ export default function ResourcePacks() {
               <button
                 key={grade}
                 onClick={() => setSelectedGrade(grade)}
-                disabled={(selectedFrameSubject === 'Mathematics' || selectedFrameSubject === 'English') && grade !== 'B7'}
+                disabled={(selectedFrameSubject === 'Mathematics' || selectedFrameSubject === 'English' || selectedFrameSubject === 'RME') && grade !== 'B7'}
                 className={cn(
                   "px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all",
                   selectedGrade === grade 
@@ -534,15 +537,19 @@ export default function ResourcePacks() {
                 ? MATH_B7_LESSON_FRAMES 
                 : selectedFrameSubject === 'English'
                   ? ENGLISH_B7_LESSON_FRAMES
-                  : selectedFrameSubject === 'French'
-                    ? FRENCH_B4_B6_LESSON_FRAMES
-                    : selectedFrameSubject === 'Ghanaian Language'
-                      ? GHANAIAN_LANGUAGE_B1_B3_LESSON_FRAMES
-                      : selectedGrade === 'B7' 
-                        ? SCIENCE_B7_LESSON_FRAMES 
-                        : selectedGrade === 'B8' 
-                          ? SCIENCE_B8_LESSON_FRAMES 
-                          : SCIENCE_B9_LESSON_FRAMES
+                  : selectedFrameSubject === 'Computing'
+                    ? (selectedGrade === 'B8' ? COMPUTING_B8_LESSON_FRAMES : (selectedGrade === 'B9' ? COMPUTING_B9_LESSON_FRAMES : COMPUTING_B7_LESSON_FRAMES))
+                    : selectedFrameSubject === 'RME'
+                      ? RME_LESSON_FRAMES
+                      : selectedFrameSubject === 'French'
+                        ? FRENCH_B4_B6_LESSON_FRAMES
+                        : selectedFrameSubject === 'Ghanaian Language'
+                          ? GHANAIAN_LANGUAGE_B1_B3_LESSON_FRAMES
+                          : selectedGrade === 'B7' 
+                            ? SCIENCE_B7_LESSON_FRAMES 
+                            : selectedGrade === 'B8' 
+                              ? SCIENCE_B8_LESSON_FRAMES 
+                              : SCIENCE_B9_LESSON_FRAMES
             ).filter(([id]) => {
               if (selectedFrameSubject === 'French' || selectedFrameSubject === 'Ghanaian Language') {
                 return id.startsWith(selectedGrade);
