@@ -16,14 +16,48 @@ export default defineConfig(({mode}) => {
     resolve: {
       alias: {
         '@': path.resolve(process.cwd(), '.'),
+        'react': path.resolve(process.cwd(), 'node_modules/react'),
+        'react-dom': path.resolve(process.cwd(), 'node_modules/react-dom'),
+        'react-dom/client': path.resolve(process.cwd(), 'node_modules/react-dom/client.js'),
+        'react/jsx-runtime': path.resolve(process.cwd(), 'node_modules/react/jsx-runtime.js'),
+        'react/jsx-dev-runtime': path.resolve(process.cwd(), 'node_modules/react/jsx-dev-runtime.js'),
+        'react-router': path.resolve(process.cwd(), 'node_modules/react-router'),
       },
-      dedupe: ['react', 'react-dom', 'react-router'],
+      dedupe: [
+        'react',
+        'react-dom',
+        'react-router',
+        'motion',
+        'framer-motion',
+        'react-hot-toast',
+        'lucide-react',
+        'react-markdown'
+      ],
     },
     esbuild: {
       target: 'esnext',
     },
     optimizeDeps: {
-      include: ['react', 'react-dom', 'react-router'],
+      include: [
+        'react',
+        'react-dom',
+        'react-dom/client',
+        'react/jsx-runtime',
+        'react/jsx-dev-runtime',
+        'react-router',
+        'motion/react',
+        'framer-motion',
+        'react-hot-toast',
+        'lucide-react',
+        'react-markdown',
+        'clsx',
+        'tailwind-merge',
+        'date-fns',
+        'axios',
+        'firebase/app',
+        'firebase/auth',
+        'firebase/firestore'
+      ],
       esbuildOptions: {
         target: 'esnext',
       },
@@ -49,7 +83,14 @@ export default defineConfig(({mode}) => {
               if (id.includes('lucide-react')) {
                 return 'vendor-icons';
               }
-              if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) {
+              if (
+                id.includes('react') || 
+                id.includes('react-dom') || 
+                id.includes('react-router') || 
+                id.includes('motion') || 
+                id.includes('framer-motion') || 
+                id.includes('react-hot-toast')
+              ) {
                 return 'vendor-react';
               }
             }

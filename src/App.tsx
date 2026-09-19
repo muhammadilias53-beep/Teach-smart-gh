@@ -54,51 +54,49 @@ import { Toaster } from 'react-hot-toast';
 
 function App() {
   return (
-    <>
-      <ScrollToTop />
-      <AuthProvider>
+    <AuthProvider>
+      <SidebarProvider>
+        <ScrollToTop />
         <RouteStateManager />
-        <SidebarProvider>
-          <PWALifecycleTracker />
-          <Toaster position="top-right" />
-          <ConnectivityToast />
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/features" element={<Features />} />
-            <Route path="/blog" element={<BlogResources />} />
-            <Route path="/privacy" element={<PrivacyPolicy />} />
-            <Route path="/verify" element={<VerifyDocumentPage />} />
-            
-            <Route element={<AuthGuard />}>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/standards" element={<CurriculumDatabase />} />
-              <Route path="/curriculum" element={<CurriculumDatabase />} />
-              <Route path="/ai" element={<AITutorPage />} />
-              <Route path="/lessons" element={<LessonPlanGenerator />} />
-              <Route path="/vetting" element={<HeadteacherVettingHub />} />
-              <Route path="/headteacher" element={<HeadteacherVettingHub />} />
-              <Route path="/notes" element={<NoteGenerator />} />
-              <Route path="/schemes" element={<SchemeGenerator />} />
-              <Route path="/bstem-guide" element={<BstemLabGuide />} />
-              <Route path="/bstem-math" element={<BstemMathGuide />} />
-              <Route path="/bstem-tech" element={<BstemTechGuide />} />
-              <Route path="/exams" element={<ExamGenerator />} />
-              <Route path="/assignments" element={<AssignmentGenerator />} />
-              <Route path="/reports" element={<ReportGenerator />} />
-              <Route path="/billing" element={<Billing />} />
-              <Route path="/offline-vault" element={<OfflineVaultPage />} />
-              <Route path="/profile" element={<ProfileSettings />} />
-              <Route path="/admin" element={<AdminCommandCenter />} />
-            </Route>
-            
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
+        <PWALifecycleTracker />
+        <Toaster position="top-right" />
+        <ConnectivityToast />
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/features" element={<Features />} />
+          <Route path="/blog" element={<BlogResources />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/verify" element={<VerifyDocumentPage />} />
           
-          <GeminiAssistant />
-        </SidebarProvider>
-      </AuthProvider>
-    </>
+          <Route element={<AuthGuard />}>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/standards" element={<CurriculumDatabase />} />
+            <Route path="/curriculum" element={<CurriculumDatabase />} />
+            <Route path="/ai" element={<AITutorPage />} />
+            <Route path="/lessons" element={<LessonPlanGenerator />} />
+            <Route path="/vetting" element={<HeadteacherVettingHub />} />
+            <Route path="/headteacher" element={<HeadteacherVettingHub />} />
+            <Route path="/notes" element={<NoteGenerator />} />
+            <Route path="/schemes" element={<SchemeGenerator />} />
+            <Route path="/bstem-guide" element={<BstemLabGuide />} />
+            <Route path="/bstem-math" element={<BstemMathGuide />} />
+            <Route path="/bstem-tech" element={<BstemTechGuide />} />
+            <Route path="/exams" element={<ExamGenerator />} />
+            <Route path="/assignments" element={<AssignmentGenerator />} />
+            <Route path="/reports" element={<ReportGenerator />} />
+            <Route path="/billing" element={<Billing />} />
+            <Route path="/offline-vault" element={<OfflineVaultPage />} />
+            <Route path="/profile" element={<ProfileSettings />} />
+            <Route path="/admin" element={<AdminCommandCenter />} />
+          </Route>
+          
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+        
+        <GeminiAssistant />
+      </SidebarProvider>
+    </AuthProvider>
   );
 }
 

@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient -->
+    <radialGradient id="bgGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#0F2B5C" />
+      <stop offset="85%" stop-color="#001C3D" />
+      <stop offset="100%" stop-color="#001226" />
+    </radialGradient>
+    
+    <!-- Gold Gradient -->
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFE15D" />
+      <stop offset="100%" stop-color="#FCD116" />
+    </linearGradient>
+
+    <!-- Ghana Tricolor Gradient -->
+    <linearGradient id="ghanaGreen" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#008850" />
+      <stop offset="100%" stop-color="#006B3F" />
+    </linearGradient>
+  </defs>
+
+  <!-- Circular Base Badge (Deep Navy) -->
+  <circle cx="50" cy="50" r="47" fill="url(#bgGlow)" stroke="#0F2B5C" stroke-width="1" />
+
+  <!-- Ghanaian Tricolor Outer Arc Rings -->
+  <!-- Red Top-Left Arc -->
+  <path d="M 20 20 A 42 42 0 0 1 80 20" fill="none" stroke="#CE1126" stroke-width="5" stroke-linecap="round" />
+  <!-- Gold Right Arc -->
+  <path d="M 85 28 A 42 42 0 0 1 78 82" fill="none" stroke="#FCD116" stroke-width="5" stroke-linecap="round" />
+  <!-- Green Bottom-Left Arc -->
+  <path d="M 70 87 A 42 42 0 0 1 15 62" fill="none" stroke="#006B3F" stroke-width="5" stroke-linecap="round" />
+
+  <!-- The Open Book Base -->
+  <path d="M 23 68 Q 50 60 77 68 L 77 74 Q 50 66 23 74 Z" fill="url(#goldGrad)" />
+  <path d="M 25 64 Q 50 56 75 64 L 75 67 Q 50 59 25 67 Z" fill="#FFFFFF" opacity="0.9" />
+
+  <!-- Stylized "T" & "S" / AI Brain + Education Crest -->
+  <!-- Center Stem / Quill (White) -->
+  <path d="M 48 24 L 52 24 L 52 61 L 48 61 Z" fill="#FFFFFF" />
+  <path d="M 33 24 L 67 24 L 67 31 L 33 31 Z" fill="url(#goldGrad)" />
+
+  <!-- AI Circuit Nodes (S-curve around the T) -->
+  <path d="M 36 38 C 30 44, 40 50, 50 50 C 62 50, 68 56, 62 62" fill="none" stroke="#00E5FF" stroke-width="3.2" stroke-linecap="round" />
+  
+  <!-- Neural Nodes -->
+  <circle cx="36" cy="38" r="3" fill="#00E5FF" />
+  <circle cx="50" cy="50" r="2.5" fill="#FFFFFF" />
+  <circle cx="62" cy="62" r="3" fill="#FCD116" />
+
+  <!-- Center Black Star of Ghana -->
+  <polygon points="50,12 52.5,18 58.5,18.5 54,22.5 55.5,28 50,25 44.5,28 46,22.5 41.5,18.5 47.5,18" fill="#FCD116" stroke="#001C3D" stroke-width="1" />
+</svg>

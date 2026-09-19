@@ -1,12 +1,15 @@
-const SHELL_CACHE_NAME = 'teachsmartgh-shell-v3';
-const DOCS_CACHE_NAME = 'teachsmartgh-documents-v3';
+const SHELL_CACHE_NAME = 'teachsmartgh-shell-v4';
+const DOCS_CACHE_NAME = 'teachsmartgh-documents-v4';
 
 const ASSETS_TO_PRECACHE = [
   '/',
   '/index.html',
   '/manifest.json',
-  '/icon-192.jpg',
-  '/icon-512.jpg'
+  '/favicon.svg',
+  '/favicon.png',
+  '/favicon-32x32.png',
+  '/icon-192.png',
+  '/icon-512.png'
 ];
 
 // Install Event - Pre-cache critical application shells resiliently
