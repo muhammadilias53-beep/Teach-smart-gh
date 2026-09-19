@@ -1,5 +1,6 @@
 // NaCCA / GES Official Ghanaian Curriculum Reference Dataset
 // Auto-generated & optimized for complete coverage across KG, Primary, JHS, and SHS levels.
+import { AUTHORITATIVE_INDICATORS } from './data/curriculumIndicators';
 
 export const subjects = [
   "Arabic",
@@ -1710,7 +1711,7 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "2.1.3.CS.1: Demonstrate knowledge and understanding of the Law of Contract."
     ],
     "Glocal Business": [
-      "1.2.1.CS1: Demonstrate knowledge and understanding of the business environment and corporate social responsibility.",
+      "1.2.1.CS.1: Demonstrate knowledge and understanding of the business environment and corporate social responsibility.",
       "2.2.1.CS.1: Demonstrate knowledge and understanding of the approaches to international business.",
       "3.2.1.CS.1: Demonstrate knowledge and understanding of digital marketing."
     ],
@@ -1802,7 +1803,7 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "2.2.1.CS.1: Demonstrate knowledge and understanding of the approaches to international business.",
       "2.2.1.CS.2: Demonstrate knowledge and understanding of Domestic and International Trade.",
       "3.2.1.CS.1: Demonstrate knowledge and understanding of digital marketing.",
-      "1.2.2.CS1: Demonstrate knowledge and understanding of globalization and international business and how to transform Ghanaian companies into multinational corporations."
+      "1.2.2.CS.1: Demonstrate knowledge and understanding of globalization and international business and how to transform Ghanaian companies into multinational corporations."
     ],
     "Approaches to International Business": [
       "2.2.1.CS.1: Demonstrate knowledge and understanding of the approaches to international business."
@@ -1814,10 +1815,10 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "2.2.1.CS.2: Demonstrate knowledge and understanding of Domestic and International Trade."
     ],
     "Multinational Corporations & E-Business": [
-      "1.2.2.CS1: Demonstrate knowledge and understanding of globalization and international business and how to transform Ghanaian companies into multinational corporations."
+      "1.2.2.CS.1: Demonstrate knowledge and understanding of globalization and international business and how to transform Ghanaian companies into multinational corporations."
     ],
     "Business Development": [
-      "1.2.1.CS1: Demonstrate knowledge and understanding of the business environment and corporate social responsibility.",
+      "1.2.1.CS.1: Demonstrate knowledge and understanding of the business environment and corporate social responsibility.",
       "3.2.2.CS.1: Demonstrate knowledge and understanding of entrepreneurship and setting up businesses."
     ],
     "Entrepreneurship and Setting up a Business": [
@@ -1827,10 +1828,10 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "3.2.2.CS.1: Demonstrate knowledge and understanding of entrepreneurship and setting up businesses."
     ],
     "Factors affecting Business Environment": [
-      "1.2.1.CS1: Demonstrate knowledge and understanding of the business environment and corporate social responsibility."
+      "1.2.1.CS.1: Demonstrate knowledge and understanding of the business environment and corporate social responsibility."
     ],
     "Business Ethics and CSR": [
-      "1.2.1.CS1: Demonstrate knowledge and understanding of the business environment and corporate social responsibility."
+      "1.2.1.CS.1: Demonstrate knowledge and understanding of the business environment and corporate social responsibility."
     ],
     "Nature of Management": [
       "1.1.1.CS.1: Demonstrate functional knowledge and understanding of business and its various forms of ownership.",
@@ -5054,7 +5055,7 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
   },
   "Visual Arts": {
     "Thinking and exploring ideas": [
-      "B1-B6.1.1.1: Demonstrate understanding of how to generate own ideas for artistic expressions on the people, based on their history and culture, the environment and the topical local/national/global issues",
+      "B1.1.1.1: Demonstrate understanding of how to generate own ideas for artistic expressions on the people, based on their history and culture, the environment and the topical local/national/global issues",
       "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Thinking and exploring ideas",
       "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Thinking and exploring ideas",
       "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Thinking and exploring ideas",
@@ -5062,12 +5063,11 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Thinking and exploring ideas",
       "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Thinking and exploring ideas",
       "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Thinking and exploring ideas",
-      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Thinking and exploring ideas",
-      "B1.1.1.1: Demonstrate understanding, practical skills, and core competencies in Thinking and exploring ideas under Visual Arts"
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Thinking and exploring ideas"
     ],
     "Planning, making and composing": [
-      "B1-B6.1.2.2: Demonstrate understanding of how to organise own ideas through experimenting with available media and techniques for creating/composing artworks, based on history and culture, the environment and topical local/national/global issues",
-      "B1-B6.1.2.3: Demonstrate understanding of how to create expressive artworks based on own ideas by applying knowledge of media and methods of production to reflect other cultures in Africa, visual artists, their culture, the environment and emerging topical issues",
+      "B1.1.2.2: Demonstrate understanding of how to organise own ideas through experimenting with available media and techniques for creating/composing artworks, based on history and culture, the environment and topical local/national/global issues",
+      "B1.1.2.3: Demonstrate understanding of how to create expressive artworks based on own ideas by applying knowledge of media and methods of production to reflect other cultures in Africa, visual artists, their culture, the environment and emerging topical issues",
       "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Planning, making and composing",
       "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Planning, making and composing",
       "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Planning, making and composing",
@@ -5075,12 +5075,11 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Planning, making and composing",
       "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Planning, making and composing",
       "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Planning, making and composing",
-      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Planning, making and composing",
-      "B1.1.2.1: Demonstrate understanding, practical skills, and core competencies in Planning, making and composing under Visual Arts"
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Planning, making and composing"
     ],
     "Displaying and sharing": [
-      "B1-B6.1.3.4: Demonstrate understanding of how to plan a display/presentation of a portfolio of own artworks",
-      "B1-B6.1.3.5: Demonstrate understanding of how to display/present a portfolio of art works that share own knowledge, concepts, ideas and experiences",
+      "B1.1.3.4: Demonstrate understanding of how to plan a display/presentation of a portfolio of own artworks",
+      "B1.1.3.5: Demonstrate understanding of how to display/present a portfolio of art works that share own knowledge, concepts, ideas and experiences",
       "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Displaying and sharing",
       "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Displaying and sharing",
       "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Displaying and sharing",
@@ -5088,12 +5087,11 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Displaying and sharing",
       "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Displaying and sharing",
       "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Displaying and sharing",
-      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Displaying and sharing",
-      "B1.1.3.1: Demonstrate understanding, practical skills, and core competencies in Displaying and sharing under Visual Arts"
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Displaying and sharing"
     ],
     "Appreciating and appraising": [
-      "B1-B6.1.4.6: Demonstrate understanding of how to analyse, appreciate, appraise/critique and present report on own works and that of others",
-      "B1-B6.1.4.7: Demonstrate the ability to make informed decisions on displays, presentations, performances, recordings and/or reports",
+      "B1.1.4.6: Demonstrate understanding of how to analyse, appreciate, appraise/critique and present report on own works and that of others",
+      "B1.1.4.7: Demonstrate the ability to make informed decisions on displays, presentations, performances, recordings and/or reports",
       "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Appreciating and appraising",
       "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Appreciating and appraising",
       "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Appreciating and appraising",
@@ -5101,13 +5099,12 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Appreciating and appraising",
       "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Appreciating and appraising",
       "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Appreciating and appraising",
-      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Appreciating and appraising",
-      "B1.1.4.1: Demonstrate understanding, practical skills, and core competencies in Appreciating and appraising under Visual Arts"
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Appreciating and appraising"
     ]
   },
   "Performing Arts": {
     "Thinking and exploring ideas": [
-      "B1-B6.2.1.1: Demonstrate understanding of how to generate own ideas for artistic expressions on the people, based on their history and culture, the environment and the topical local/national/global issues",
+      "B1.2.1.1: Demonstrate understanding of how to generate own ideas for artistic expressions on the people, based on their history and culture, the environment and the topical local/national/global issues",
       "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Thinking and exploring ideas",
       "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Thinking and exploring ideas",
       "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Thinking and exploring ideas",
@@ -5115,12 +5112,11 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Thinking and exploring ideas",
       "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Thinking and exploring ideas",
       "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Thinking and exploring ideas",
-      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Thinking and exploring ideas",
-      "B1.2.1.1: Demonstrate understanding, practical skills, and core competencies in Thinking and exploring ideas under Performing Arts"
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Thinking and exploring ideas"
     ],
     "Planning, making and composing": [
-      "B1-B6.2.2.2: Demonstrate understanding of how to organise own ideas through experimenting with available media and techniques for creating/composing artworks",
-      "B1-B6.2.2.3: Demonstrate understanding of how to create expressive artworks based on own ideas by applying knowledge of media and methods of production",
+      "B1.2.2.2: Demonstrate understanding of how to organise own ideas through experimenting with available media and techniques for creating/composing artworks",
+      "B1.2.2.3: Demonstrate understanding of how to create expressive artworks based on own ideas by applying knowledge of media and methods of production",
       "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Planning, making and composing",
       "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Planning, making and composing",
       "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Planning, making and composing",
@@ -5128,12 +5124,11 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Planning, making and composing",
       "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Planning, making and composing",
       "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Planning, making and composing",
-      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Planning, making and composing",
-      "B1.2.2.1: Demonstrate understanding, practical skills, and core competencies in Planning, making and composing under Performing Arts"
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Planning, making and composing"
     ],
     "Displaying and sharing": [
-      "B1-B6.2.3.4: Demonstrate understanding of how to plan a display/presentation of a portfolio of own artworks",
-      "B1-B6.2.3.5: Demonstrate understanding of how to display/present a portfolio of art works that share own knowledge, concepts, ideas and experiences",
+      "B1.2.3.4: Demonstrate understanding of how to plan a display/presentation of a portfolio of own artworks",
+      "B1.2.3.5: Demonstrate understanding of how to display/present a portfolio of art works that share own knowledge, concepts, ideas and experiences",
       "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Displaying and sharing",
       "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Displaying and sharing",
       "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Displaying and sharing",
@@ -5141,12 +5136,11 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Displaying and sharing",
       "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Displaying and sharing",
       "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Displaying and sharing",
-      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Displaying and sharing",
-      "B1.2.3.1: Demonstrate understanding, practical skills, and core competencies in Displaying and sharing under Performing Arts"
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Displaying and sharing"
     ],
     "Appreciating and appraising": [
-      "B1-B6.2.4.6: Demonstrate understanding of how to analyse, appreciate, appraise/critique and present report on own works and that of others",
-      "B1-B6.2.4.7: Demonstrate the ability to make informed decisions on displays, presentations, performances, recordings and/or reports",
+      "B1.2.4.6: Demonstrate understanding of how to analyse, appreciate, appraise/critique and present report on own works and that of others",
+      "B1.2.4.7: Demonstrate the ability to make informed decisions on displays, presentations, performances, recordings and/or reports",
       "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Appreciating and appraising",
       "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Appreciating and appraising",
       "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Appreciating and appraising",
@@ -5154,13 +5148,12 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Appreciating and appraising",
       "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Appreciating and appraising",
       "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Appreciating and appraising",
-      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Appreciating and appraising",
-      "B1.2.4.1: Demonstrate understanding, practical skills, and core competencies in Appreciating and appraising under Performing Arts"
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Appreciating and appraising"
     ]
   },
   "Introduction to Computing": {
     "Generation of computers and parts of a computer and other gadgets": [
-      "B4-B6.1.1.1: Identify parts of a computer and technology tools",
+      "B4.1.1.1: Identify parts of a computer and technology tools",
       "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Generation of computers and parts of a computer and other gadgets",
       "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Generation of computers and parts of a computer and other gadgets",
       "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Generation of computers and parts of a computer and other gadgets",
@@ -5168,11 +5161,10 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Generation of computers and parts of a computer and other gadgets",
       "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Generation of computers and parts of a computer and other gadgets",
       "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Generation of computers and parts of a computer and other gadgets",
-      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Generation of computers and parts of a computer and other gadgets",
-      "B4.1.1.1: Demonstrate understanding, practical skills, and core competencies in Generation of computers and parts of a computer and other gadgets under Introduction to Computing"
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Generation of computers and parts of a computer and other gadgets"
     ],
     "Introduction to MS-Windows Interface": [
-      "B4-B6.1.2.1: Demonstrate the use of the Desktop Background as well as working with folders",
+      "B4.1.2.1: Demonstrate the use of the Desktop Background as well as working with folders",
       "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-Windows Interface",
       "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-Windows Interface",
       "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-Windows Interface",
@@ -5180,11 +5172,10 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-Windows Interface",
       "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-Windows Interface",
       "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-Windows Interface",
-      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-Windows Interface",
-      "B4.1.2.1: Demonstrate understanding, practical skills, and core competencies in Introduction to MS-Windows Interface under Introduction to Computing"
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-Windows Interface"
     ],
     "Data, sources and usage": [
-      "B4-B6.1.3.1: Identify Data and collect data from different sources",
+      "B4.1.3.1: Identify Data and collect data from different sources",
       "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Data, sources and usage",
       "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Data, sources and usage",
       "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Data, sources and usage",
@@ -5192,11 +5183,10 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Data, sources and usage",
       "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Data, sources and usage",
       "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Data, sources and usage",
-      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Data, sources and usage",
-      "B4.1.3.1: Demonstrate understanding, practical skills, and core competencies in Data, sources and usage under Introduction to Computing"
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Data, sources and usage"
     ],
     "Technology in the community (communication)": [
-      "B4-B6.1.4.1: Demonstrate the use of technology in the community",
+      "B4.1.4.1: Demonstrate the use of technology in the community",
       "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Technology in the community (communication)",
       "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Technology in the community (communication)",
       "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Technology in the community (communication)",
@@ -5204,13 +5194,12 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Technology in the community (communication)",
       "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Technology in the community (communication)",
       "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Technology in the community (communication)",
-      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Technology in the community (communication)",
-      "B4.1.4.1: Demonstrate understanding, practical skills, and core competencies in Technology in the community (communication) under Introduction to Computing"
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Technology in the community (communication)"
     ]
   },
   "Word Processing": {
     "Introduction to Word Processing": [
-      "B4-B6.3.1.1: Demonstrate understanding of the use of word processing application",
+      "B4.3.1.1: Demonstrate understanding of the use of word processing application",
       "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Word Processing",
       "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Word Processing",
       "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Word Processing",
@@ -5218,11 +5207,10 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Word Processing",
       "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Word Processing",
       "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Word Processing",
-      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Word Processing",
-      "B4.2.1.1: Demonstrate understanding, practical skills, and core competencies in Introduction to Word Processing under Word Processing"
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Word Processing"
     ],
     "Tabs and ribbons of word processing": [
-      "B4-B6.3.2.1: Demonstrate how to use the ribbons under the home ribbons",
+      "B4.3.2.1: Demonstrate how to use the ribbons under the home ribbons",
       "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons of word processing",
       "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons of word processing",
       "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons of word processing",
@@ -5230,13 +5218,12 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons of word processing",
       "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons of word processing",
       "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons of word processing",
-      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons of word processing",
-      "B4.2.2.1: Demonstrate understanding, practical skills, and core competencies in Tabs and ribbons of word processing under Word Processing"
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons of word processing"
     ]
   },
   "Presentation": {
     "Introduction to MS-PowerPoint": [
-      "B4-B6.2.1.1: Demonstrate how to use Microsoft PowerPoint",
+      "B4.2.1.1: Demonstrate how to use Microsoft PowerPoint",
       "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-PowerPoint",
       "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-PowerPoint",
       "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-PowerPoint",
@@ -5244,11 +5231,10 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-PowerPoint",
       "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-PowerPoint",
       "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-PowerPoint",
-      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-PowerPoint",
-      "B4.3.1.1: Demonstrate understanding, practical skills, and core competencies in Introduction to MS-PowerPoint under Presentation"
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-PowerPoint"
     ],
     "Tabs and ribbons of MS-PowerPoint": [
-      "B4-B6.2.2.1: Demonstrate how to use the ribbons under the home ribbons",
+      "B4.2.2.1: Demonstrate how to use the ribbons under the home ribbons",
       "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons of MS-PowerPoint",
       "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons of MS-PowerPoint",
       "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons of MS-PowerPoint",
@@ -5256,13 +5242,12 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons of MS-PowerPoint",
       "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons of MS-PowerPoint",
       "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons of MS-PowerPoint",
-      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons of MS-PowerPoint",
-      "B4.3.2.1: Demonstrate understanding, practical skills, and core competencies in Tabs and ribbons of MS-PowerPoint under Presentation"
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons of MS-PowerPoint"
     ]
   },
   "Desktop Publishing": {
     "Introduction to MS-Publisher": [
-      "B4-B6.4.1.1: Demonstrate how to use MS-Publisher",
+      "B4.4.1.1: Demonstrate how to use MS-Publisher",
       "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-Publisher",
       "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-Publisher",
       "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-Publisher",
@@ -5270,13 +5255,12 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-Publisher",
       "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-Publisher",
       "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-Publisher",
-      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-Publisher",
-      "B4.4.1.1: Demonstrate understanding, practical skills, and core competencies in Introduction to MS-Publisher under Desktop Publishing"
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to MS-Publisher"
     ]
   },
   "Programming and Databases": {
     "Introduction to databases, algorithm and programming": [
-      "B4-B6.5.1.1: Display understanding of basic database concepts",
+      "B4.5.1.1: Display understanding of basic database concepts",
       "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to databases, algorithm and programming",
       "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to databases, algorithm and programming",
       "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to databases, algorithm and programming",
@@ -5284,11 +5268,10 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to databases, algorithm and programming",
       "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to databases, algorithm and programming",
       "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to databases, algorithm and programming",
-      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to databases, algorithm and programming",
-      "B4.5.1.1: Demonstrate understanding, practical skills, and core competencies in Introduction to databases, algorithm and programming under Programming and Databases"
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to databases, algorithm and programming"
     ],
     "Introduction to programming languages (e.g. MS-Excel, Scratch, VB dot Net etc.)": [
-      "B4-B6.5.2.1: Demonstrate understanding of the concept of programming",
+      "B4.5.2.1: Demonstrate understanding of the concept of programming",
       "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to programming languages (e.g. MS-Excel, Scratch, VB dot Net etc.)",
       "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to programming languages (e.g. MS-Excel, Scratch, VB dot Net etc.)",
       "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to programming languages (e.g. MS-Excel, Scratch, VB dot Net etc.)",
@@ -5296,11 +5279,10 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to programming languages (e.g. MS-Excel, Scratch, VB dot Net etc.)",
       "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to programming languages (e.g. MS-Excel, Scratch, VB dot Net etc.)",
       "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to programming languages (e.g. MS-Excel, Scratch, VB dot Net etc.)",
-      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to programming languages (e.g. MS-Excel, Scratch, VB dot Net etc.)",
-      "B4.5.2.1: Demonstrate understanding, practical skills, and core competencies in Introduction to programming languages (e.g. MS-Excel, Scratch, VB dot Net etc.) under Programming and Databases"
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to programming languages (e.g. MS-Excel, Scratch, VB dot Net etc.)"
     ],
     "Introduction to Electronic Spreadsheet": [
-      "B4-B6.5.3.1: Demonstrate how to use Electronic Spreadsheet",
+      "B4.5.3.1: Demonstrate how to use Electronic Spreadsheet",
       "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Electronic Spreadsheet",
       "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Electronic Spreadsheet",
       "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Electronic Spreadsheet",
@@ -5308,11 +5290,10 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Electronic Spreadsheet",
       "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Electronic Spreadsheet",
       "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Electronic Spreadsheet",
-      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Electronic Spreadsheet",
-      "B4.5.3.1: Demonstrate understanding, practical skills, and core competencies in Introduction to Electronic Spreadsheet under Programming and Databases"
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Introduction to Electronic Spreadsheet"
     ],
     "Tabs and ribbons manipulation": [
-      "B4-B6.5.4.1: Demonstrate how to use the ribbons under the home ribbons",
+      "B4.5.4.1: Demonstrate how to use the ribbons under the home ribbons",
       "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons manipulation",
       "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons manipulation",
       "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons manipulation",
@@ -5320,13 +5301,12 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons manipulation",
       "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons manipulation",
       "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons manipulation",
-      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons manipulation",
-      "B4.5.4.1: Demonstrate understanding, practical skills, and core competencies in Tabs and ribbons manipulation under Programming and Databases"
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Tabs and ribbons manipulation"
     ]
   },
   "Internet and Social Media": {
     "Network Overview": [
-      "B4-B6.6.1.1: Demonstrate how to Network computers",
+      "B4.6.1.1: Demonstrate how to Network computers",
       "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Network Overview",
       "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Network Overview",
       "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Network Overview",
@@ -5334,11 +5314,10 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Network Overview",
       "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Network Overview",
       "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Network Overview",
-      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Network Overview",
-      "B4.6.1.1: Demonstrate understanding, practical skills, and core competencies in Network Overview under Internet and Social Media"
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Network Overview"
     ],
     "Web browsers and Web Pages": [
-      "B4-B6.6.2.1: Demonstrate how to use Web Pages",
+      "B4.6.2.1: Demonstrate how to use Web Pages",
       "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Web browsers and Web Pages",
       "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Web browsers and Web Pages",
       "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Web browsers and Web Pages",
@@ -5346,11 +5325,10 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Web browsers and Web Pages",
       "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Web browsers and Web Pages",
       "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Web browsers and Web Pages",
-      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Web browsers and Web Pages",
-      "B4.6.2.1: Demonstrate understanding, practical skills, and core competencies in Web browsers and Web Pages under Internet and Social Media"
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Web browsers and Web Pages"
     ],
     "Surfing the world wide web": [
-      "B4-B6.6.3.1: Demonstrate Surfing The World Wide Web",
+      "B4.6.3.1: Demonstrate Surfing The World Wide Web",
       "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Surfing the world wide web",
       "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Surfing the world wide web",
       "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Surfing the world wide web",
@@ -5358,11 +5336,10 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Surfing the world wide web",
       "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Surfing the world wide web",
       "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Surfing the world wide web",
-      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Surfing the world wide web",
-      "B4.6.3.1: Demonstrate understanding, practical skills, and core competencies in Surfing the world wide web under Internet and Social Media"
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Surfing the world wide web"
     ],
     "Favourite places and Search engine": [
-      "B4-B6.6.4.1: Demonstrate searching for information on the Web",
+      "B4.6.4.1: Demonstrate searching for information on the Web",
       "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Favourite places and Search engine",
       "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Favourite places and Search engine",
       "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Favourite places and Search engine",
@@ -5370,11 +5347,10 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Favourite places and Search engine",
       "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Favourite places and Search engine",
       "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Favourite places and Search engine",
-      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Favourite places and Search engine",
-      "B4.6.4.1: Demonstrate understanding, practical skills, and core competencies in Favourite places and Search engine under Internet and Social Media"
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Favourite places and Search engine"
     ],
     "Using Online Forms": [
-      "B4-B6.6.5.1: Demonstrate the Usage of Forms",
+      "B4.6.5.1: Demonstrate the Usage of Forms",
       "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Using Online Forms",
       "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Using Online Forms",
       "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Using Online Forms",
@@ -5382,11 +5358,10 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Using Online Forms",
       "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Using Online Forms",
       "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Using Online Forms",
-      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Using Online Forms",
-      "B4.6.5.1: Demonstrate understanding, practical skills, and core competencies in Using Online Forms under Internet and Social Media"
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Using Online Forms"
     ],
     "Customising your browser": [
-      "B4-B6.6.6.1: Show how to Customize a Browser",
+      "B4.6.6.1: Show how to Customize a Browser",
       "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Customising your browser",
       "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Customising your browser",
       "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Customising your browser",
@@ -5394,11 +5369,10 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Customising your browser",
       "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Customising your browser",
       "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Customising your browser",
-      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Customising your browser",
-      "B4.6.6.1: Demonstrate understanding, practical skills, and core competencies in Customising your browser under Internet and Social Media"
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Customising your browser"
     ],
     "Electronic Email": [
-      "B4-B6.6.7.1: Demonstrate the use of Electronic Mail",
+      "B4.6.7.1: Demonstrate the use of Electronic Mail",
       "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Electronic Email",
       "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Electronic Email",
       "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Electronic Email",
@@ -5406,11 +5380,10 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Electronic Email",
       "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Electronic Email",
       "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Electronic Email",
-      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Electronic Email",
-      "B4.6.7.1: Demonstrate understanding, practical skills, and core competencies in Electronic Email under Internet and Social Media"
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Electronic Email"
     ],
     "Internet of things (IoT)": [
-      "B4-B6.6.8.1: Demonstrate the use of Internet of Things (IoT)",
+      "B4.6.8.1: Demonstrate the use of Internet of Things (IoT)",
       "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Internet of things (IoT)",
       "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Internet of things (IoT)",
       "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Internet of things (IoT)",
@@ -5418,11 +5391,10 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Internet of things (IoT)",
       "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Internet of things (IoT)",
       "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Internet of things (IoT)",
-      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Internet of things (IoT)",
-      "B4.6.8.1: Demonstrate understanding, practical skills, and core competencies in Internet of things (IoT) under Internet and Social Media"
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Internet of things (IoT)"
     ],
     "Digital Literacy": [
-      "B4-B6.6.9.1: Demonstrate proficiency in Digital Literacy",
+      "B4.6.9.1: Demonstrate proficiency in Digital Literacy",
       "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Digital Literacy",
       "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Digital Literacy",
       "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Digital Literacy",
@@ -5430,11 +5402,10 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Digital Literacy",
       "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Digital Literacy",
       "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Digital Literacy",
-      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Digital Literacy",
-      "B4.6.9.1: Demonstrate understanding, practical skills, and core competencies in Digital Literacy under Internet and Social Media"
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Digital Literacy"
     ],
     "Network Etiquette": [
-      "B4-B6.6.10.1: Demonstrated the application of Network Etiquette (Netiquette)",
+      "B4.6.10.1: Demonstrated the application of Network Etiquette (Netiquette)",
       "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Network Etiquette",
       "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Network Etiquette",
       "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Network Etiquette",
@@ -5442,13 +5413,12 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Network Etiquette",
       "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Network Etiquette",
       "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Network Etiquette",
-      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Network Etiquette",
-      "B4.6.10.1: Demonstrate understanding, practical skills, and core competencies in Network Etiquette under Internet and Social Media"
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Network Etiquette"
     ]
   },
   "Health and Safety in Using ICT Tools": {
     "Health and safety in using ICT tools": [
-      "B4-B6.7.1.1: Demonstrate the application of Health and safety measures, in using ICT tools",
+      "B4.7.1.1: Demonstrate the application of Health and safety measures, in using ICT tools",
       "B1.1.1.1: Demonstrate understanding, practical application, and core competencies in Health and safety in using ICT tools",
       "B2.1.1.1: Demonstrate understanding, practical application, and core competencies in Health and safety in using ICT tools",
       "B3.1.1.1: Demonstrate understanding, practical application, and core competencies in Health and safety in using ICT tools",
@@ -5456,8 +5426,7 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B6.1.1.1: Demonstrate understanding, practical application, and core competencies in Health and safety in using ICT tools",
       "B7.1.1.1: Demonstrate understanding, practical application, and core competencies in Health and safety in using ICT tools",
       "B8.1.1.1: Demonstrate understanding, practical application, and core competencies in Health and safety in using ICT tools",
-      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Health and safety in using ICT tools",
-      "B4.7.1.1: Demonstrate understanding, practical skills, and core competencies in Health and safety in using ICT tools under Health and Safety in Using ICT Tools"
+      "B9.1.1.1: Demonstrate understanding, practical application, and core competencies in Health and safety in using ICT tools"
     ]
   },
   "Oral Language": {
@@ -5473,12 +5442,9 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B4.1.7.1: Listen critically extracting main ideas and supporting details",
       "B5.1.7.1: Synthesize information and take structured notes from broadcasts",
       "B6.1.7.1: Analyze and evaluate oral presentations for tone, logic, and bias",
-      "B7.1.7.1: Demonstrate understanding, practical skills, and core competencies in Listening Comprehension under Oral Language",
-      "B8.1.7.1: Demonstrate understanding, practical skills, and core competencies in Listening Comprehension under Oral Language",
-      "B9.1.7.1: Demonstrate understanding, practical skills, and core competencies in Listening Comprehension under Oral Language",
-      "B10.1.7.1: Demonstrate understanding, practical skills, and core competencies in Listening Comprehension under Oral Language",
-      "B11.1.7.1: Demonstrate understanding, practical skills, and core competencies in Listening Comprehension under Oral Language",
-      "B12.1.7.1: Demonstrate understanding, practical skills, and core competencies in Listening Comprehension under Oral Language"
+      "B7.1.2.1: Listen attentively to extract main points, supporting details, and infer implicit meaning from spoken texts",
+      "B8.1.2.1: Analyze and evaluate oral arguments, debates, and broadcasts for objectivity, logic, and bias",
+      "B9.1.2.1: Synthesize multi-source spoken presentations and summarize technical information with precision"
     ],
     "English Sounds": [
       "B7.1.3.1: Articulate English speech sounds to develop confidence and skills in listening and speaking",
@@ -5633,12 +5599,9 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B4.2.7.1: Analyze plot structures, character traits, and central themes",
       "B5.2.7.1: Compare and contrast multiple texts on similar topics or themes",
       "B6.2.7.1: Critically evaluate arguments, evidence, and perspectives in texts",
-      "B7.2.7.1: Demonstrate understanding, practical skills, and core competencies in Comprehension under Reading",
-      "B8.2.7.1: Demonstrate understanding, practical skills, and core competencies in Comprehension under Reading",
-      "B9.2.7.1: Demonstrate understanding, practical skills, and core competencies in Comprehension under Reading",
-      "B10.2.7.1: Demonstrate understanding, practical skills, and core competencies in Comprehension under Reading",
-      "B11.2.7.1: Demonstrate understanding, practical skills, and core competencies in Comprehension under Reading",
-      "B12.2.7.1: Demonstrate understanding, practical skills, and core competencies in Comprehension under Reading"
+      "B7.2.1.1: Apply skimming, scanning, and in-depth analytical reading strategies to expository texts",
+      "B8.2.1.1: Evaluate authorial intent, tone, figurative language, and perspective across varied texts",
+      "B9.2.1.1: Critically deconstruct complex literary and informational articles synthesizing key themes"
     ],
     "Summarising": [
       "B1.2.10.1: Retell the beginning, middle, and end of a read-aloud story",
@@ -5647,12 +5610,9 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "B4.2.10.1: Summarize informational articles highlighting 3 key takeaway points",
       "B5.2.10.1: Write concise summaries eliminating redundant illustrative details",
       "B6.2.10.1: Synthesize multi-page texts into structured executive summaries",
-      "B7.2.10.1: Demonstrate understanding, practical skills, and core competencies in Summarising under Reading",
-      "B8.2.10.1: Demonstrate understanding, practical skills, and core competencies in Summarising under Reading",
-      "B9.2.10.1: Demonstrate understanding, practical skills, and core competencies in Summarising under Reading",
-      "B10.2.10.1: Demonstrate understanding, practical skills, and core competencies in Summarising under Reading",
-      "B11.2.10.1: Demonstrate understanding, practical skills, and core competencies in Summarising under Reading",
-      "B12.2.10.1: Demonstrate understanding, practical skills, and core competencies in Summarising under Reading"
+      "B7.2.2.1: Identify topic sentences and extract main ideas to write brief passage summaries",
+      "B8.2.2.1: Paraphrase complex passages and draft concise summaries within specified word limits",
+      "B9.2.2.1: Synthesize multiple informational texts into structured executive summaries"
     ],
     "Phonics": [
       "B1.2.2.1: Identify single letter sounds and blend simple CVC words",
@@ -7057,7 +7017,7 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
     ],
     "Writing Simple Words /Names of People and Places": [
       "B1.3.3.1: Show an understanding of combining strokes",
-      "B2.3.3.2.1: Show understanding of items in the environment",
+      "B2.3.3.2: Show understanding of items in the environment",
       "B3.3.3.1: Write simple words/names of people and places",
       "B4.1.1.1: Demonstrate understanding, practical application, and core competencies in Writing Simple Words /Names of People and Places",
       "B5.1.1.1: Demonstrate understanding, practical application, and core competencies in Writing Simple Words /Names of People and Places",
@@ -7361,10 +7321,203 @@ export const SUB_STRAND_STANDARDS: Record<string, Record<string, string[]>> = {
       "K1.7.1.1: Demonstrate understanding of how we connect with people around the world",
       "K2.7.1.1: Demonstrate understanding of connecting and communicating globally"
     ]
+  },
+  "Reading JHS": {
+    "Comprehension": [
+      "B7.2.1.1: Apply skimming, scanning, and in-depth analytical reading strategies to expository texts",
+      "B8.2.1.1: Evaluate authorial intent, tone, figurative language, and perspective across varied texts",
+      "B9.2.1.1: Critically deconstruct complex literary and informational articles synthesizing key themes"
+    ],
+    "Comprehension / Reading Strategies": [
+      "B7.2.1.1: Apply skimming, scanning, and in-depth analytical reading strategies to expository texts",
+      "B8.2.1.1: Evaluate authorial intent, tone, figurative language, and perspective across varied texts",
+      "B9.2.1.1: Critically deconstruct complex literary and informational articles synthesizing key themes"
+    ],
+    "Reading": [
+      "B7.2.1.1: Apply skimming, scanning, and in-depth analytical reading strategies to expository texts",
+      "B8.2.1.1: Evaluate authorial intent, tone, figurative language, and perspective across varied texts",
+      "B9.2.1.1: Critically deconstruct complex literary and informational articles synthesizing key themes"
+    ],
+    "Summarising": [
+      "B7.2.2.1: Identify topic sentences and extract main ideas to write brief passage summaries",
+      "B8.2.2.1: Paraphrase complex passages and draft concise summaries within specified word limits",
+      "B9.2.2.1: Synthesize multiple informational texts into structured executive summaries"
+    ],
+    "Vocabulary and Word Analysis": [
+      "B7.2.2.1: Decode unfamiliar words using prefixes, suffixes, root words, and contextual clues",
+      "B8.2.2.1: Distinguish between denotative and connotative meanings and nuances of academic vocabulary",
+      "B9.2.2.1: Utilize specialized academic and technical register across discipline-specific reading"
+    ],
+    "Silent Reading and Fluency": [
+      "B7.2.3.1: Read grade-level texts silently with sustained comprehension and target reading speed",
+      "B8.2.3.1: Demonstrate accelerated silent reading fluency adjusting pace to text complexity",
+      "B9.2.3.1: Read diverse informational and literary materials with high-level comprehension and retention"
+    ]
+  },
+  "Oral Language JHS": {
+    "Conversation/Everyday Discourse": [
+      "B7.1.1.1: Demonstrate use of appropriate language orally in specific situations",
+      "B8.1.1.1: Demonstrate use of appropriate language orally in specific situations",
+      "B9.1.1.1: Demonstrate the use of appropriate language orally in specific situations"
+    ],
+    "Listening Comprehension": [
+      "B7.1.2.1: Listen attentively to extract main points and infer implicit meaning from complex audio and oral presentations",
+      "B8.1.2.1: Analyze and evaluate oral arguments, debates, and broadcasts for objectivity and bias",
+      "B9.1.2.1: Synthesize multi-source spoken presentations and summarize technical information with precision"
+    ],
+    "English Sounds": [
+      "B7.1.3.1: Articulate English consonant clusters, vowel contrasts, and diphthongs with phonological accuracy",
+      "B8.1.3.1: Apply correct syllabic stress, rhythm, and sentence intonation in connected speech",
+      "B9.1.3.1: Demonstrate mastery of phonological variations, accent neutralisation, and expressive cadence"
+    ],
+    "Speech Sounds": [
+      "B7.1.3.1: Articulate English speech sounds to develop confidence and skills in listening and speaking",
+      "B8.1.3.1: Articulate English speech sounds to develop confidence and skills in listening and speaking",
+      "B9.1.3.1: Articulate English speech sounds to develop confidence and skills in listening and speaking"
+    ],
+    "Presentation and Public Speaking": [
+      "B7.1.4.1: Plan and deliver structured 3-minute oral presentations using visual aids and vocal modulation",
+      "B8.1.4.1: Construct and defend arguments in formal debates and panel discussions adhering to parliamentary rules",
+      "B9.1.4.1: Deliver persuasive capstone speeches and ceremonial presentations with rhetorical techniques"
+    ]
+  },
+  "Grammar Usage JHS": {
+    "Grammar": [
+      "B7.3.1.1: Apply nouns, pronouns, adjectives, verbs, adverbs, prepositions, and conjunctions in spoken and written sentences",
+      "B8.3.1.1: Analyze grammatical functions of phrases (noun phrases, adjectival phrases, adverbial phrases)",
+      "B9.3.1.1: Analyze and construct complex clause structures (noun clauses, relative clauses, adverbial clauses)"
+    ],
+    "Parts of Speech": [
+      "B7.3.1.1: Apply nouns, pronouns, adjectives, verbs, adverbs, prepositions, and conjunctions in spoken and written sentences",
+      "B8.3.1.1: Analyze grammatical functions of phrases (noun phrases, adjectival phrases, adverbial phrases)",
+      "B9.3.1.1: Analyze and construct complex clause structures (noun clauses, relative clauses, adverbial clauses)"
+    ],
+    "Punctuation and Capitalisation": [
+      "B7.3.4.1: Use punctuation marks (full stop, comma, colon, semi-colon, apostrophe) and capitalization correctly",
+      "B8.3.4.1: Apply punctuation accurately in direct speech, complex lists, and parenthetical elements",
+      "B9.3.4.1: Master advanced punctuation conventions (dashes, hyphens, brackets, ellipses) in varied text types"
+    ],
+    "Vocabulary": [
+      "B7.3.5.1: Expand active vocabulary through synonyms, antonyms, word formation, and contextual usage",
+      "B8.3.5.1: Use domain-specific terminology, idioms, and collocations accurately in speech and writing",
+      "B9.3.5.1: Demonstrate command of nuanced academic register, connotations, and etymological root analysis"
+    ],
+    "Integrating Grammar (Nouns, Pronouns, Adjectives)": [
+      "B7.3.1.1: Apply proper, common, collective, and abstract nouns with correct determiners and pronouns",
+      "B8.3.1.1: Use reflexive, relative, demonstrative, and interrogative pronouns accurately with antecedent concord",
+      "B9.3.1.1: Use comparative and superlative adjectives and compound modifiers in formal writing"
+    ],
+    "Integrating Grammar (Verbs, Adverbs, Conjunctions, Prepositions)": [
+      "B7.3.2.1: Use transitive, intransitive, and modal auxiliary verbs with appropriate adverbs of time and manner",
+      "B8.3.2.1: Use phrasal verbs, idioms, and complex prepositional phrases with grammatical precision",
+      "B9.3.2.1: Apply correlative and subordinating conjunctions to express sophisticated logical relationships"
+    ],
+    "Tenses and Aspect": [
+      "B7.3.2.1: Use simple present, past, future, and continuous aspects correctly in spoken and written contexts",
+      "B8.3.2.1: Use perfect and perfect continuous tenses with appropriate temporal markers",
+      "B9.3.2.1: Apply conditional clauses (types 0, 1, 2, 3) and subjunctive moods in sophisticated writing"
+    ],
+    "Sentence Structure and Concord": [
+      "B7.3.3.1: Apply rules of subject-verb agreement and pronoun-antecedent agreement",
+      "B8.3.3.1: Construct compound, complex, and compound-complex sentences avoiding run-ons and fragments",
+      "B9.3.3.1: Transform active and passive voice and direct to indirect speech accurately"
+    ]
+  },
+  "Writing JHS": {
+    "Production and Distribution of Writing": [
+      "B7.4.1.1: Develop, organise and express ideas coherently and cohesively in writing",
+      "B7.4.1.2: Create different paragraphs on a given topic",
+      "B8.4.1.1: Develop, organise and express ideas coherently and cohesively in writing",
+      "B8.4.1.2: Create different paragraphs within a composition on a given topic",
+      "B9.4.1.1: Develop, organise and express ideas coherently and cohesively in writing",
+      "B9.4.1.2: Create different paragraphs a given topic"
+    ],
+    "Text Types and Purposes": [
+      "B7.4.2.1: Develop, organise and express ideas coherently and cohesively in writing for a variety of purposes",
+      "B7.4.2.2: Apply writing skills to specific life situations",
+      "B8.4.2.1: Use a process approach to compose descriptive, narrative/ imaginative, informational, persuasive and argumentative texts",
+      "B8.4.2.2: Apply writing skills to specific life situations",
+      "B9.4.2.1: Use a process approach to compose descriptive, narrative/ imaginative, informational and persuasive, argumentative texts",
+      "B9.4.2.2: Apply writing skills to specific life situations"
+    ],
+    "Building and Presenting Knowledge": [
+      "B7.4.3.1: Research to build and present knowledge",
+      "B8.4.3.1: Research to build and present knowledge",
+      "B9.4.3.1: Research to build and present knowledge"
+    ],
+    "Structure and Organise Ideas in Composition Writing": [
+      "B7.4.1.1: Generate, plan, and organize ideas using brainstorm webs, outlines, and coherent paragraphs",
+      "B8.4.1.1: Develop unified multi-paragraph essays with logical progression and smooth transitions",
+      "B9.4.1.1: Organize complex essays incorporating introductory hooks, body argumentation, and strong conclusions"
+    ],
+    "Paragraph Development": [
+      "B7.4.1.1: Write coherent paragraphs with clear topic sentences, supporting details, and transitional devices",
+      "B8.4.1.1: Develop unified multi-paragraph essays with logical progression and smooth transitions",
+      "B9.4.1.1: Organize complex essays incorporating introductory hooks, body argumentation, and strong conclusions"
+    ],
+    "Narrative Writing": [
+      "B7.4.2.1: Compose imaginative and personal narratives with character development and descriptive settings",
+      "B8.4.2.1: Write narrative stories incorporating plot climax, dialogue, and suspenseful conflict resolution",
+      "B9.4.2.1: Produce creative biographical and fictional narratives utilizing literary techniques"
+    ],
+    "Descriptive Writing": [
+      "B7.4.3.1: Write vivid descriptive essays depicting people, places, objects, and cultural events",
+      "B8.4.3.1: Compose descriptive accounts using sensory imagery, similes, metaphors, and rich adjectives",
+      "B9.4.3.1: Create atmospheric descriptive compositions capturing nuanced mood and setting"
+    ],
+    "Argumentative Writing": [
+      "B7.4.4.1: Write simple argumentative texts supporting a claim with relevant evidence and reasons",
+      "B8.4.4.1: Draft balanced persuasive essays addressing counterarguments and refuting opposing views",
+      "B9.4.4.1: Write formal debate speeches and opinion essays defending complex policy positions"
+    ],
+    "Informative / Expository Writing": [
+      "B7.4.5.1: Write procedural instructions, recipes, and informative reports using sequential markers",
+      "B8.4.5.1: Compose cause-and-effect and compare-and-contrast expository essays",
+      "B9.4.5.1: Author formal research reports and analytical articles citing factual data"
+    ],
+    "Letter Writing": [
+      "B7.4.6.1: Write informal and semi-formal letters adhering to standard formatting and tone",
+      "B8.4.6.1: Write formal letters of application, permission, and apology with appropriate conventions",
+      "B9.4.6.1: Draft formal business correspondence, emails, memos, and letters to the editor"
+    ],
+    "Summary Writing": [
+      "B7.4.7.1: Identify topic sentences and extract main ideas to write brief passage summaries",
+      "B8.4.7.1: Paraphrase complex passages and draft concise summaries within specified word limits",
+      "B9.4.7.1: Synthesize multiple informational texts into structured executive summaries"
+    ]
+  },
+  "Literature JHS": {
+    "Narrative, Drama and Poetry": [
+      "B7.5.1.1: Analyze plot, setting, characterization, and central themes in selected African and Ghanaian literature",
+      "B8.5.1.1: Examine conflict, foreshadowing, character motives, and poetic devices in prescribed literary texts",
+      "B9.5.1.1: Critique narrative point of view, figurative language, dramatic irony, and socio-cultural themes"
+    ],
+    "Oral and Written Literature": [
+      "B7.5.1.1: Analyze plot, setting, characterization, and central themes in selected African and Ghanaian literature",
+      "B8.5.1.1: Examine conflict, foreshadowing, character motives, and poetic devices in prescribed literary texts",
+      "B9.5.1.1: Critique narrative point of view, figurative language, dramatic irony, and socio-cultural themes"
+    ],
+    "Prose": [
+      "B7.5.1.1: Analyze plot, setting, characterization, and central themes in selected African and Ghanaian prose",
+      "B8.5.1.1: Examine conflict, foreshadowing, and character motives in prescribed prose texts",
+      "B9.5.1.1: Critique narrative point of view, style, and socio-cultural themes in African novels"
+    ],
+    "Poetry": [
+      "B7.5.2.1: Analyze poetic devices (rhyme, rhythm, stanza form, imagery, alliteration) in selected poems",
+      "B8.5.2.1: Interpret figurative language (similes, metaphors, personification) and underlying messages in poems",
+      "B9.5.2.1: Critically appreciate theme, tone, mood, and diction in prescribed African and non-African poetry"
+    ],
+    "Drama": [
+      "B7.5.3.1: Explore dramatic elements including dialogue, stage directions, act/scene division, and character roles",
+      "B8.5.3.1: Perform script readings and analyze dramatic conflict and tension in Ghanaian plays",
+      "B9.5.3.1: Evaluate tragic and comedic conventions, satire, and dramatic irony in prescribed plays"
+    ]
   }
 };
 
-export const STANDARD_INDICATORS: Record<string, string[]> = {};
+export const STANDARD_INDICATORS: Record<string, string[]> = {
+  ...AUTHORITATIVE_INDICATORS
+};
 
 export const GHANA_REGIONS = [
   "Ahafo",

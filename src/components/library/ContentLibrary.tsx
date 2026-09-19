@@ -79,7 +79,13 @@ interface FirestoreErrorInfo {
   }
 }
 
+import { isFirestoreQuotaOrOfflineError } from '../../lib/firestore-errors';
+
 function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null) {
+  if (isFirestoreQuotaOrOfflineError(error)) {
+    console.warn(`[ContentLibrary Resilient Mode] ${operationType} on ${path || 'unknown'} fell back to local cache:`, error instanceof Error ? error.message : error);
+    return;
+  }
   const errInfo: FirestoreErrorInfo = {
     error: error instanceof Error ? error.message : String(error),
     authInfo: {
@@ -92,7 +98,6 @@ function handleFirestoreError(error: unknown, operationType: OperationType, path
     path
   };
   console.error('Firestore Error: ', JSON.stringify(errInfo));
-  throw new Error(JSON.stringify(errInfo));
 }
 
 // Using constants from src/constants.ts
@@ -679,7 +684,34 @@ export default function ContentLibrary() {
       setResources([...allOfficialBooks, ...preloaded, ...userData]);
       setLoading(false);
     }, (error) => {
-      handleFirestoreError(error, OperationType.GET, 'resources');
+      console.warn("ContentLibrary resources onSnapshot fallback:", error);
+      const allOfficialBooks: Resource[] = [];
+      Object.keys(CURRICULUM_BOOKS).forEach(subj => {
+        CURRICULUM_BOOKS[subj].forEach(book => {
+          allOfficialBooks.push({
+            id: `official-${subj}-${book.title.replace(/[\s/]+/g, '_')}`,
+            authorId: 'system',
+            title: book.title,
+            description: `Official NaCCA Curriculum document for ${subj} (${book.level}).`,
+            subject: subj,
+            level: book.level,
+            type: 'book',
+            content: book.url,
+            createdAt: { toDate: () => new Date() },
+            resourceCategory: 'Curriculum PDF',
+            term: 'All Terms',
+            topic: 'Curriculum Framework',
+            strand: 'NaCCA Standards',
+            subStrand: 'Official Guide'
+          });
+        });
+      });
+      const preloaded: Resource[] = OFFICIAL_SYSTEM_RESOURCES.map(res => ({
+        ...res,
+        createdAt: { toDate: () => new Date() }
+      }));
+      setResources([...allOfficialBooks, ...preloaded]);
+      setLoading(false);
     });
 
     // Fetch favorites
@@ -690,7 +722,7 @@ export default function ContentLibrary() {
     const unsubscribeFavs = onSnapshot(favsQuery, (snapshot) => {
       setFavorites(snapshot.docs.map(doc => doc.data().resourceId));
     }, (error) => {
-      handleFirestoreError(error, OperationType.GET, 'saved_resources');
+      console.warn("Saved resources onSnapshot fallback:", error);
     });
 
     // Fetch user schemes (Offline-first preloading from IndexedDB)

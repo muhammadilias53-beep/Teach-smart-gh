@@ -1,7 +1,13 @@
 import { useEffect } from 'react';
-import { useLocation } from 'react-router';
+import { useLocation, useInRouterContext } from 'react-router';
 
 export default function ScrollToTop() {
+  const inRouter = useInRouterContext();
+  if (!inRouter) return null;
+  return <ScrollToTopInner />;
+}
+
+function ScrollToTopInner() {
   const { pathname } = useLocation();
 
   useEffect(() => {

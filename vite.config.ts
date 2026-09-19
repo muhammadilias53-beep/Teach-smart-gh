@@ -17,12 +17,13 @@ export default defineConfig(({mode}) => {
       alias: {
         '@': path.resolve(process.cwd(), '.'),
       },
-      dedupe: ['react', 'react-dom'],
+      dedupe: ['react', 'react-dom', 'react-router'],
     },
     esbuild: {
       target: 'esnext',
     },
     optimizeDeps: {
+      include: ['react', 'react-dom', 'react-router'],
       esbuildOptions: {
         target: 'esnext',
       },

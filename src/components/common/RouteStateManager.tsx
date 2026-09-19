@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useLocation, useNavigate } from 'react-router';
+import { useLocation, useNavigate, useInRouterContext } from 'react-router';
 import { useAuth } from '../../contexts/AuthContext';
 
 const VALID_PROTECTED_ROUTES = [
@@ -30,6 +30,12 @@ const PUBLIC_ROUTES = ['/login', '/about', '/features', '/blog', '/privacy'];
  * 3. Preserves the exact active route when refreshing the page.
  */
 export default function RouteStateManager() {
+  const inRouter = useInRouterContext();
+  if (!inRouter) return null;
+  return <RouteStateManagerInner />;
+}
+
+function RouteStateManagerInner() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, loading } = useAuth();

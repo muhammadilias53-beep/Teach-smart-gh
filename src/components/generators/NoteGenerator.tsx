@@ -228,7 +228,7 @@ const NoteGenerator = () => {
     );
     const initialStandards = filterStandardsForClass(rawInitialStandards, initialClass, initialLevel);
     const initialStandard = initialStandards[0] || '';
-    const initialIndicators = STANDARD_INDICATORS[initialStandard] || getFallbackIndicators(initialStandard);
+    const initialIndicators = getCurriculumIndicators(initialStandard, initialSubject, initialClass);
     const initialIndicator = initialIndicators[0] || '';
 
     return {
@@ -541,7 +541,7 @@ const NoteGenerator = () => {
   };
 
   const handleContentStandardChange = (newStandard: string) => {
-    const nextIndicators = STANDARD_INDICATORS[newStandard] || getFallbackIndicators(newStandard);
+    const nextIndicators = getCurriculumIndicators(newStandard, formData.subject, formData.class);
     const nextIndicator = nextIndicators[0] || '';
 
     setFormData(prev => ({

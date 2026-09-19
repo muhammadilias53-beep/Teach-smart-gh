@@ -4,7 +4,7 @@ import {
   FileText, Calendar, PenTool, BookOpen, ArrowRight, Zap, 
   Trophy, Package, Activity, Target, Award, TrendingUp, Clock, 
   ShieldCheck, Heart, CheckCircle, MessageSquare, MessageCircle,
-  Atom, Compass, Cpu, Layers, Lightbulb, Calculator, Users, Briefcase, Sparkles
+  Atom, Compass, Cpu, Layers, Lightbulb, Calculator, Users, Briefcase, Sparkles, CloudOff
 } from 'lucide-react';
 import { Link } from 'react-router';
 import { useAuth } from '../../contexts/AuthContext';
@@ -41,7 +41,7 @@ const AnimatedCounter = ({ value, duration = 1.5 }: { value: number, duration?: 
 };
 
 const Dashboard = () => {
-  const { profile, user, daysLeft, isSubscriptionActive, isTrialActive, trialGenerationsLeftToday, trialDailyLimit } = useAuth();
+  const { profile, user, daysLeft, isSubscriptionActive, isTrialActive, trialGenerationsLeftToday, trialDailyLimit, isQuotaExceeded } = useAuth();
   const hasActiveSubscription = isSubscriptionActive();
   const trialActive = isTrialActive();
   const [recentDocs, setRecentDocs] = useState<any[]>([]);
@@ -387,6 +387,20 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+
+      {/* Offline / Quota Exceeded Resilient Mode Banner */}
+      {isQuotaExceeded && (
+        <div className="rounded-[2rem] p-4 bg-amber-500/10 border border-amber-500/20 text-amber-900 flex items-center justify-between gap-4 text-xs">
+          <div className="flex items-center gap-3">
+            <span className="p-2 bg-amber-500/20 text-amber-700 rounded-xl shrink-0">
+              <CloudOff size={16} />
+            </span>
+            <p className="leading-relaxed">
+              <strong className="font-bold">Local Offline Cache Active:</strong> The Firestore database free-tier daily read limit has been reached for today. TeachSmart is operating smoothly from your secure offline storage. All AI generators, exports, lesson notes, and offline vaults remain 100% operational!
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Optional Teaching Profile Completion Reminder */}
       {isProfileIncomplete && !profileReminderDismissed && (

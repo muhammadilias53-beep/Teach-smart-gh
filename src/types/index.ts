@@ -64,6 +64,7 @@ export interface UserProfile {
   termsVersion?: string;
   acceptedResponsibleAiTerms?: boolean;
   createdAt?: any;
+  lastLoginAt?: any;
 }
 
 export interface LessonPlan {

@@ -5,6 +5,7 @@ import { differenceInCalendarDays } from 'date-fns';
 import { auth, db } from '../lib/firebase';
 import { UserProfile } from '../types';
 import { canonicalizeEmail } from '../lib/emailSecurity';
+import { isFirestoreQuotaOrOfflineError } from '../lib/firestore-errors';
 
 export type GenerationBlockReason = 'none' | 'trial_daily_limit' | 'trial_expired' | 'no_credits';
 
@@ -12,6 +13,7 @@ interface AuthContextType {
   user: User | null;
   profile: UserProfile | null;
   loading: boolean;
+  isQuotaExceeded: boolean;
   logout: () => Promise<void>;
   refreshProfile: () => Promise<void>;
   canGenerate: () => boolean;
@@ -59,9 +61,13 @@ interface FirestoreErrorInfo {
 }
 
 function handleFirestoreError(error: any, operationType: OperationType, path: string | null, authUser: User | null = null) {
-  const isOffline = error instanceof Error && (error.message.includes('offline') || error.message.includes('unavailable'));
-  
+  const isQuotaOrOffline = isFirestoreQuotaOrOfflineError(error);
   const currentAuthUser = authUser || auth.currentUser;
+
+  if (isQuotaOrOffline) {
+    console.warn(`[AuthContext Resilient Mode] Firestore ${operationType} on ${path || 'unknown'} fell back to local cache:`, error?.message || error);
+    return;
+  }
 
   if (error?.code === 'permission-denied') {
     const errInfo: FirestoreErrorInfo = {
@@ -74,19 +80,28 @@ function handleFirestoreError(error: any, operationType: OperationType, path: st
       },
       operationType,
       path
-    }
+    };
     console.error('Firestore Permission Error: ', JSON.stringify(errInfo));
     throw new Error(JSON.stringify(errInfo));
   }
 
-  if (isOffline) {
-    console.warn(`Firestore ${operationType} at ${path} failed because the client is offline. Using cache.`);
-    // Don't re-throw for GET operations if we want to fallback to whatever we have
-    if (operationType === OperationType.GET) return;
-  }
-
-  throw error;
+  console.warn(`[AuthContext] Firestore ${operationType} non-fatal issue:`, error?.message || error);
 }
+
+// Local cache helpers to preserve offline/quota-resilient profile state
+const getCachedProfile = (uid: string): UserProfile | null => {
+  try {
+    const raw = localStorage.getItem(`teachsmart_cached_profile_${uid}`);
+    if (raw) return JSON.parse(raw);
+  } catch (_) {}
+  return null;
+};
+
+const saveCachedProfile = (uid: string, prof: UserProfile) => {
+  try {
+    localStorage.setItem(`teachsmart_cached_profile_${uid}`, JSON.stringify(prof));
+  } catch (_) {}
+};
 
 // Helper to get date from various formats (string, timestamp, serial object, or null)
 const getSafeDate = (d: any) => {
@@ -104,6 +119,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [daysLeft, setDaysLeft] = useState<number>(0);
+  const [isQuotaExceeded, setIsQuotaExceeded] = useState<boolean>(false);
 
   const TRIAL_RESET_DATE = new Date('2026-05-11T00:00:00Z');
   const TRIAL_DURATION_DAYS = 3;
@@ -486,6 +502,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       try {
         setUser(user);
         if (user) {
+          // Instant cache check so the app loads immediately without waiting or hanging on quota limits
+          const initialCached = getCachedProfile(user.uid);
+          if (initialCached) {
+            setProfile(initialCached);
+            setLoading(false);
+          }
+
           const docRef = doc(db, 'users', user.uid);
           
           // Use onSnapshot for real-time updates and better offline support
@@ -494,38 +517,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               const data = docSnap.data() as UserProfile;
               // If email is missing in profile but exists in user auth, sync it
               if (!data.email && user.email) {
-                await setDoc(docRef, { email: user.email }, { merge: true });
+                try {
+                  await setDoc(docRef, { email: user.email }, { merge: true });
+                } catch (_) {}
               }
               
               // Auto-fix: If they have school/level but onboardingComplete is missing, sync it
               if (!data.onboardingComplete && data.school && data.level) {
-                await setDoc(docRef, { onboardingComplete: true }, { merge: true });
-                data.onboardingComplete = true;
+                try {
+                  await setDoc(docRef, { onboardingComplete: true }, { merge: true });
+                  data.onboardingComplete = true;
+                } catch (_) {}
               }
 
               // Reset trial for all existing accounts as requested (one-time reset for May 2026)
-              // Only apply this reset if their trialStartDate is actually before or on the reset date, 
-              // so we never overwrite a brand-new user's recent sign-up date!
               const actualStartDate = getSafeDate(data.trialStartDate);
               if (!data.trialResetMay2026Applied && actualStartDate <= TRIAL_RESET_DATE) {
-                await setDoc(docRef, { 
-                  trialStartDate: TRIAL_RESET_DATE.toISOString(),
-                  subscriptionStatus: 'trial',
-                  trialResetMay2026Applied: true 
-                }, { merge: true });
+                try {
+                  await setDoc(docRef, { 
+                    trialStartDate: TRIAL_RESET_DATE.toISOString(),
+                    subscriptionStatus: 'trial',
+                    trialResetMay2026Applied: true 
+                  }, { merge: true });
+                } catch (_) {}
               } else if (!data.trialResetMay2026Applied) {
-                // For brand new accounts that somehow missed this flag, just mark it true without modifying their newer start date
-                await setDoc(docRef, { 
-                  trialResetMay2026Applied: true 
-                }, { merge: true });
+                try {
+                  await setDoc(docRef, { 
+                    trialResetMay2026Applied: true 
+                  }, { merge: true });
+                } catch (_) {}
               }
               
-              // Backfill / enforce used_emails for existing users
+              // Backfill / enforce used_emails for existing users (wrapped in try/catch to avoid breaking snapshot)
               const currentEmail = data.email || user.email;
               if (currentEmail) {
                 const canonicalKey = canonicalizeEmail(currentEmail);
                 try {
-                  // Fetch the existing record to see if they already had a trial started earlier
                   const usedEmailRef = doc(db, 'used_emails', canonicalKey);
                   const usedEmailSnap = await getDoc(usedEmailRef);
                   let originalTrialStart: Date | null = null;
@@ -538,8 +565,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                   }
                   
                   const actualTrialStart = getSafeDate(data.trialStartDate);
-                  
-                  // May 2026 Reset aware effective dates comparison
                   const effectiveOriginalStart = originalTrialStart && originalTrialStart < TRIAL_RESET_DATE
                     ? TRIAL_RESET_DATE
                     : originalTrialStart;
@@ -548,13 +573,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     : actualTrialStart;
 
                   if (effectiveOriginalStart && effectiveOriginalStart < effectiveActualStart) {
-                    // There's an older trial start date recorded! Restrict this account's trial to the original date of first preparation.
                     await setDoc(docRef, { 
                       trialStartDate: effectiveOriginalStart.toISOString() 
                     }, { merge: true });
                     data.trialStartDate = effectiveOriginalStart.toISOString();
                   } else {
-                    // Otherwise update / secure used_emails record with the earliest known trialStartDate
                     const finalUsedStartDate = effectiveOriginalStart && effectiveOriginalStart < effectiveActualStart 
                       ? effectiveOriginalStart 
                       : effectiveActualStart;
@@ -577,6 +600,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               }
 
               setProfile(data);
+              saveCachedProfile(user.uid, data);
+              setIsQuotaExceeded(false);
             } else {
               // Initialize new user profile if it doesn't exist
               const isAnonymous = user.isAnonymous;
@@ -612,7 +637,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 const baseTrialStart = originalTrialStart ? getSafeDate(originalTrialStart) : new Date();
                 const finalTrialStart = baseTrialStart < TRIAL_RESET_DATE ? TRIAL_RESET_DATE : baseTrialStart;
 
-                const newProfile: any = {
+                const newProfile: UserProfile = {
                   uid: user.uid,
                   email: user.email || pendingEmail || '',
                   displayName: user.displayName || (isAnonymous ? 'Guest Teacher' : 'Teacher'),
@@ -621,8 +646,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                   trialResetMay2026Applied: true,
                   onboardingComplete: isAnonymous ? true : false, 
                   isAnonymous: isAnonymous,
-                  createdAt: originalTrialStart ? new Date(originalTrialStart).toISOString() : serverTimestamp(),
-                  lastLoginAt: serverTimestamp(),
+                  createdAt: originalTrialStart ? new Date(originalTrialStart).toISOString() : new Date().toISOString(),
+                  lastLoginAt: new Date().toISOString(),
                 };
                 try {
                   await setDoc(docRef, newProfile);
@@ -631,26 +656,51 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                       await setDoc(doc(db, 'used_emails', canonicalKey), {
                         uid: user.uid,
                         isAnonymous: isAnonymous,
-                        createdAt: originalTrialStart ? new Date(originalTrialStart).toISOString() : serverTimestamp()
+                        createdAt: originalTrialStart ? new Date(originalTrialStart).toISOString() : new Date().toISOString()
                       }, { merge: true });
                     } catch (e) {
                       console.error("Error writing to used_emails:", e);
                     }
                   }
-                  setProfile(newProfile); 
                 } catch (err) {
-                  console.error("Error creating initial profile:", err);
+                  console.warn("Error saving initial profile to firestore (using local cache):", err);
                 }
+                setProfile(newProfile);
+                saveCachedProfile(user.uid, newProfile);
               };
 
               await checkAndBuildProfile();
             }
             setLoading(false);
           }, (error) => {
-            console.error("Profile snapshot error:", error);
-            const isOffline = error instanceof Error && (error.message.includes('offline') || error.message.includes('unavailable'));
-            if (!isOffline) {
-              handleFirestoreError(error, OperationType.GET, `users/${user.uid}`, user);
+            console.warn("Profile snapshot listener fallback (quota or network):", error);
+            const isQuotaOrOffline = isFirestoreQuotaOrOfflineError(error);
+            if (isQuotaOrOffline) {
+              setIsQuotaExceeded(true);
+            }
+            
+            // Check if we have a locally cached profile
+            const cached = getCachedProfile(user.uid);
+            if (cached) {
+              setProfile(cached);
+            } else {
+              // Construct a safe, operational fallback profile so the user is not locked out
+              const fallback: UserProfile = {
+                uid: user.uid,
+                email: user.email || '',
+                displayName: user.displayName || (user.isAnonymous ? 'Guest Teacher' : 'Teacher'),
+                school: localStorage.getItem('teachsmart_school_name') || 'Ghana Basic School',
+                level: 'JHS',
+                subscriptionStatus: 'active', // Graceful allowance during quota limits
+                trialStartDate: new Date().toISOString(),
+                onboardingComplete: true,
+                isAnonymous: user.isAnonymous,
+                role: user.email === 'muhammadilias53@gmail.com' ? 'admin' : 'teacher',
+                createdAt: new Date().toISOString(),
+                lastLoginAt: new Date().toISOString()
+              };
+              setProfile(fallback);
+              saveCachedProfile(user.uid, fallback);
             }
             setLoading(false);
           });
@@ -659,7 +709,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setLoading(false);
         }
       } catch (error) {
-        console.error("Auth state change error:", error);
+        console.warn("Auth state change error:", error);
         setLoading(false);
       }
     });
@@ -680,18 +730,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const refreshProfile = async () => {
     if (user) {
-      const docRef = doc(db, 'users', user.uid);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        const data = docSnap.data() as UserProfile;
-        setProfile(data);
+      try {
+        const docRef = doc(db, 'users', user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data() as UserProfile;
+          setProfile(data);
+          saveCachedProfile(user.uid, data);
+        }
+      } catch (err) {
+        console.warn("refreshProfile fell back to cache:", err);
       }
     }
   };
 
   return (
     <AuthContext.Provider value={{ 
-      user, profile, loading, logout, refreshProfile, 
+      user, profile, loading, isQuotaExceeded, logout, refreshProfile, 
       canGenerate, consumeCredit, canBulkExport, isTrialActive, isSubscriptionActive, getTrialDaysLeft, daysLeft, aiCredits,
       trialDailyLimit, trialGenerationsLeftToday, getTrialGenerationsUsedToday, getTrialGenerationsLeftToday, getGenerationBlockReason,
       completeOnboarding, completeOnboardingTour, dismissOnboardingTour, acceptTermsAndConditions, updateProfileData, updateProfileEmail

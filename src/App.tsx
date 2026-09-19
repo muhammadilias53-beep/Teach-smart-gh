@@ -3,7 +3,7 @@
  * Version: 1.0.1
  */
 import React from 'react';
-import { HashRouter as Router, Routes, Route, Navigate } from 'react-router';
+import { Routes, Route, Navigate } from 'react-router';
 import { AuthProvider } from './contexts/AuthContext';
 import AuthGuard from './components/auth/AuthGuard';
 import Login from './components/auth/Login';
@@ -54,7 +54,7 @@ import { Toaster } from 'react-hot-toast';
 
 function App() {
   return (
-    <Router>
+    <>
       <ScrollToTop />
       <AuthProvider>
         <RouteStateManager />
@@ -98,7 +98,7 @@ function App() {
           <GeminiAssistant />
         </SidebarProvider>
       </AuthProvider>
-    </Router>
+    </>
   );
 }
 

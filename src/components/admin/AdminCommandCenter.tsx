@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Users, Shield, Zap, Search, Filter, Mail, Calendar, CheckCircle, XCircle, AlertCircle, Loader2, ArrowRight, Download, MoreVertical, Trash2, Eye, FileText, RotateCcw, Clock } from 'lucide-react';
+import { Users, Shield, Zap, Search, Filter, Mail, Calendar, CheckCircle, XCircle, AlertCircle, Loader2, ArrowRight, Download, MoreVertical, Trash2, Eye, FileText, RotateCcw, Clock, AlertTriangle } from 'lucide-react';
 import { collection, query, getDocs, orderBy, updateDoc, doc, where, writeBatch, serverTimestamp, getCountFromServer, limit } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../contexts/AuthContext';
 import { motion, AnimatePresence } from 'motion/react';
 import { toast } from 'react-hot-toast';
 import { format } from 'date-fns';
+import { isFirestoreQuotaOrOfflineError } from '../../lib/firestore-errors';
 
 interface UserProfile {
   uid: string;
@@ -22,6 +23,7 @@ const AdminCommandCenter = () => {
   const { user } = useAuth();
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isQuotaExceeded, setIsQuotaExceeded] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [updating, setUpdating] = useState<string | null>(null);
@@ -48,9 +50,42 @@ const AdminCommandCenter = () => {
         ...doc.data()
       })) as UserProfile[];
       setUsers(userList);
+      setIsQuotaExceeded(false);
+      try {
+        localStorage.setItem('teachsmart_admin_cached_users', JSON.stringify(userList));
+      } catch (_) {}
     } catch (err) {
-      console.error("Error fetching users:", err);
-      toast.error("Failed to load users list.");
+      const isQuotaOrOffline = isFirestoreQuotaOrOfflineError(err);
+      if (isQuotaOrOffline) {
+        setIsQuotaExceeded(true);
+        console.warn("Operating in offline/cached mode for admin dashboard (Firestore quota reached):", err);
+      } else {
+        console.warn("Could not fetch remote users:", err);
+      }
+      
+      // Attempt to load cached users from localStorage
+      try {
+        const cached = localStorage.getItem('teachsmart_admin_cached_users');
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setUsers(parsed);
+            toast("Showing cached teachers (Firestore daily free quota limit reached).", { icon: 'ℹ️' });
+            return;
+          }
+        }
+      } catch (_) {}
+
+      // If no cache, populate with current admin user so interface remains functional
+      if (user) {
+        setUsers([{
+          uid: user.uid,
+          email: user.email || '',
+          displayName: user.displayName || 'System Admin',
+          subscriptionStatus: 'active',
+          school: 'Ghana Basic Schools HQ'
+        }]);
+      }
     } finally {
       setLoading(false);
     }
@@ -172,6 +207,16 @@ const AdminCommandCenter = () => {
           </button>
         </div>
       </div>
+
+      {/* Quota Exceeded Notice Banner */}
+      {isQuotaExceeded && (
+        <div className="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-4 flex items-center gap-3 text-amber-900 text-xs font-medium">
+          <AlertTriangle size={18} className="text-amber-600 shrink-0" />
+          <div className="flex-1">
+            <span className="font-bold">Operating in Local Cache Mode:</span> Firestore daily free-tier read quota has reached its limit for project 231902616940. Showing locally cached teacher profiles. Database live reads will resume when the daily quota resets at midnight Pacific Time.
+          </div>
+        </div>
+      )}
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -398,7 +443,7 @@ const UserOverviewModal = ({ user, onClose, onRefresh }: { user: UserProfile, on
         const snap = await getDocs(q);
         setDocs(snap.docs.map(d => ({ id: d.id, ...d.data() })));
       } catch (err) {
-        console.error(err);
+        console.warn("Could not fetch user docs (quota or offline):", err);
       } finally {
         setLoadingDocs(false);
       }

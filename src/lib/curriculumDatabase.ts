@@ -13,6 +13,10 @@ import {
   getVerifiedStandards,
   isSubjectClassVerified
 } from '../data/verifiedCurriculum';
+import {
+  getAuthoritativeIndicatorsForStandard,
+  AUTHORITATIVE_INDICATORS
+} from '../data/curriculumIndicators';
 
 export interface CurriculumIndicatorItem {
   id: string;
@@ -234,10 +238,21 @@ export function getIndexedCurriculumDatabase(): CurriculumIndicatorItem[] {
       if (!Array.isArray(standards)) continue;
 
       for (const standard of standards) {
-        const indicators = STANDARD_INDICATORS[standard] || [];
         const standardCodeMatch = standard.match(/^([A-Za-z0-9\.]+):/);
         const standardCode = standardCodeMatch ? standardCodeMatch[1].trim() : '';
         const standardText = standardCodeMatch ? standard.replace(/^([A-Za-z0-9\.]+):\s*/, '').trim() : standard.trim();
+        const verifiedList = standardCode ? getVerifiedIndicatorsForStandard(standardCode) : null;
+        let indicators: string[] = [];
+        if (verifiedList && verifiedList.length > 0) {
+          indicators = verifiedList.map(v => `${v.code}: ${v.text}`);
+        } else {
+          const authInds = standardCode ? getAuthoritativeIndicatorsForStandard(standardCode, resolvedSubject) : null;
+          if (authInds && authInds.length > 0) {
+            indicators = authInds;
+          } else {
+            indicators = STANDARD_INDICATORS[standard] || [];
+          }
+        }
 
         const addRecord = (indString: string | null) => {
           idCounter++;
@@ -258,19 +273,21 @@ export function getIndexedCurriculumDatabase(): CurriculumIndicatorItem[] {
           let classLevel = 'Basic 7';
 
           const codeToCheck = indCode || standardCode;
-          const bMatch = codeToCheck.match(/^B(\d+)/i);
+          const detectedClass = extractClassFromStandardCode(codeToCheck) || extractClassFromStandardCode(standard);
 
-          if (bMatch) {
-            const bNum = parseInt(bMatch[1], 10);
-            classLevel = `Basic ${bNum}`;
-            if (bNum <= 3) {
-              level = 'Primary';
-            } else if (bNum <= 6) {
-              level = 'Primary';
-            } else if (bNum <= 9) {
-              level = 'JHS';
-            } else {
-              level = 'SHS';
+          if (detectedClass) {
+            classLevel = detectedClass;
+            if (detectedClass.startsWith('KG')) {
+              level = 'KG';
+            } else if (detectedClass.startsWith('Basic')) {
+              const num = parseInt(detectedClass.replace('Basic', '').trim(), 10);
+              if (num <= 6) {
+                level = 'Primary';
+              } else if (num <= 9) {
+                level = 'JHS';
+              } else {
+                level = 'SHS';
+              }
             }
           } else if (/^K(G)?\s*([12])/i.test(codeToCheck) || /KG/i.test(resolvedSubject)) {
             level = 'KG';
@@ -671,6 +688,14 @@ export function getCurriculumStandards(
 ): string[] {
   if (!strand || !subStrand) return [];
 
+  // Determine effective level if not explicitly provided
+  const effectiveLevel = level || (
+    classLevel && /^Basic\s*(7|8|9)$/i.test(classLevel) ? 'JHS' :
+    classLevel && /^Basic\s*([1-6])$/i.test(classLevel) ? 'Primary' :
+    classLevel && /^(SHS|Senior High)/i.test(classLevel) ? 'SHS' :
+    classLevel && /^(KG|Kindergarten)/i.test(classLevel) ? 'KG' : undefined
+  );
+
   // 1. Authoritative Verified Curriculum Priority
   if (subject && classLevel && isSubjectClassVerified(subject, classLevel)) {
     const verified = getVerifiedStandards(subject, classLevel);
@@ -683,7 +708,7 @@ export function getCurriculumStandards(
     }
   }
 
-  const lookupStrand = getLookupStrand(subject, strand, level);
+  const lookupStrand = getLookupStrand(subject, strand, effectiveLevel);
 
   const rawList = (
     SUB_STRAND_STANDARDS[lookupStrand]?.[subStrand] ||
@@ -694,7 +719,7 @@ export function getCurriculumStandards(
   );
 
   if (rawList.length > 0) {
-    const classFiltered = filterStandardsForClass(rawList, classLevel || '', level);
+    const classFiltered = filterStandardsForClass(rawList, classLevel || '', effectiveLevel);
     if (classFiltered.length > 0) {
       return classFiltered;
     }
@@ -704,18 +729,32 @@ export function getCurriculumStandards(
   for (const [key, subMap] of Object.entries(SUB_STRAND_STANDARDS)) {
     if (subMap[subStrand] && subMap[subStrand].length > 0) {
       const candidates = subMap[subStrand];
-      const classFiltered = filterStandardsForClass(candidates, classLevel || '', level);
+      const classFiltered = filterStandardsForClass(candidates, classLevel || '', effectiveLevel);
       if (classFiltered.length > 0) {
         return classFiltered;
       }
     }
   }
 
-  // If we have classLevel and subStrand, generate authentic NaCCA standard for that class (legacy fallback)
+  // If we have classLevel and subStrand, generate authentic NaCCA standard for that class
   if (classLevel && subStrand) {
     const prefix = getClassPrefix(classLevel);
+    let strandIndex = 1;
+    let subStrandIndex = 1;
+
+    if (subject && SUBJECT_STRANDS[subject]) {
+      const sIdx = SUBJECT_STRANDS[subject].findIndex(s => s.toLowerCase() === strand.toLowerCase());
+      if (sIdx !== -1) strandIndex = sIdx + 1;
+    }
+
+    const subList = SUBJECT_SUB_STRANDS[strand] || (subject ? SUBJECT_SUB_STRANDS[subject] : undefined);
+    if (subList) {
+      const subIdx = subList.findIndex(sub => sub.toLowerCase() === subStrand.toLowerCase());
+      if (subIdx !== -1) subStrandIndex = subIdx + 1;
+    }
+
     return [
-      `${prefix}.1.1.1: Demonstrate understanding, practical application, and core competencies in ${subStrand}`
+      `${prefix}.${strandIndex}.${subStrandIndex}.1: Demonstrate understanding, practical application, and core competencies in ${subStrand}`
     ];
   }
 
@@ -735,7 +774,7 @@ export function getCurriculumIndicators(
   const code = match ? match[1].trim() : standard.trim();
   const text = match ? match[2]?.trim() : '';
 
-  // 1. Authoritative Verified Curriculum Check (ONLY for verified subjects)
+  // 1. Authoritative Verified Curriculum Check (ONLY for verified subjects in verifiedCurriculum)
   const isSubjectVerified = subject && classLevel ? isSubjectClassVerified(subject, classLevel) : false;
   if (isSubjectVerified) {
     const verifiedInds = getVerifiedIndicatorsForStandard(code);
@@ -744,13 +783,19 @@ export function getCurriculumIndicators(
     }
   }
 
-  // 2. Strict Verified Mode Check: DO NOT manufacture synthetic indicators
+  // 2. Authoritative Subject-Scoped NaCCA Indicators Check
+  const authInds = getAuthoritativeIndicatorsForStandard(code, subject);
+  if (authInds && authInds.length > 0) {
+    return authInds;
+  }
+
+  // 3. Strict Verified Mode Check: DO NOT manufacture synthetic indicators
   if (strictMode || isSubjectVerified) {
     // Under strict mode or verified scope, missing indicators must fail closed (return empty)
     return [];
   }
 
-  // 3. Fallback: STANDARD_INDICATORS direct map
+  // 4. Fallback: STANDARD_INDICATORS direct map
   if (STANDARD_INDICATORS[standard] && STANDARD_INDICATORS[standard].length > 0) {
     return STANDARD_INDICATORS[standard];
   }
@@ -762,7 +807,7 @@ export function getCurriculumIndicators(
     }
   }
 
-  // 4. Non-strict legacy synthetic fallback
+  // 5. Non-strict legacy synthetic fallback
   const fallbackText = text || 'the curriculum standard';
   return [
     `${code}.1: Identify, describe, and explain key principles and concepts of ${fallbackText.toLowerCase()}`,
