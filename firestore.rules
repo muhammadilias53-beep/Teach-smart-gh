@@ -141,6 +141,29 @@ service cloud.firestore {
       allow update, delete: if (isSignedIn() && existing().authorId == request.auth.uid) || isAdmin();
     }
 
+    // Official Headteacher Vetting Submissions
+    match /vetting_submissions/{id} {
+      allow list, get: if isSignedIn();
+      allow create: if isSignedIn();
+      allow update: if isSignedIn();
+      allow delete: if isAdmin();
+    }
+
+    // Public Curriculum Verification Ledger (QR scan verification for SISOs & Supervisors)
+    match /document_verifications/{id} {
+      allow get: if true;
+      allow list: if isSignedIn();
+      allow create, update: if true;
+      allow delete: if isAdmin();
+    }
+
+    // Official School Vetting Portals (Headteachers & Teacher Roster Directing)
+    match /school_vetting_portals/{id} {
+      allow get, list: if isSignedIn();
+      allow create, update: if isSignedIn();
+      allow delete: if isAdmin();
+    }
+
     match /exams/{id} {
       allow list, get: if isSignedIn() && (resource.data.authorId == request.auth.uid || isAdmin());
       allow create: if isVerified() && incoming().authorId == request.auth.uid;

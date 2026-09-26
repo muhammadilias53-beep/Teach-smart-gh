@@ -3,7 +3,7 @@ import {
   MessageSquare, MessageCircle, FileText, Calendar, BookOpen, PenTool, CheckCircle, Menu, X, 
   LogOut, LayoutDashboard, CreditCard, Zap, User, Package, Library, ShieldCheck, Shield, 
   Atom, Calculator, Cpu, Award, Users, Briefcase, FolderOpen, ChevronDown, ChevronRight,
-  ChevronLeft, Compass, HardDrive
+  ChevronLeft, Compass, HardDrive, Download
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useSidebar } from '../../contexts/SidebarContext';
@@ -14,8 +14,8 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Logo } from '../common/Logo';
 import { ComplianceModal } from '../common/ComplianceModal';
 import { ConfirmationModal } from '../common/ConfirmationModal';
-import { PWAInstallButton } from '../common/PWAInstallButton';
 import { TermsAndConditionsModal } from '../legal/TermsAndConditionsModal';
+import { isHeadteacherUser } from '../../lib/vettingService';
 
 interface MenuItem {
   icon: any;
@@ -99,6 +99,7 @@ const SidebarContent = ({ onCloseMobile, onShowCompliance, onShowTerms, onShowLo
   const { isCollapsed, toggleCollapse } = useSidebar();
   const location = useLocation();
   const isAdmin = user?.email === 'muhammadilias53@gmail.com';
+  const isHead = isHeadteacherUser(profile);
 
   const isDesktopCollapsed = !isMobile && isCollapsed;
 
@@ -300,20 +301,31 @@ const SidebarContent = ({ onCloseMobile, onShowCompliance, onShowTerms, onShowLo
                     >
                       {visibleItems.map((item) => {
                         const isActive = location.pathname === item.path;
+                        const itemLabel = item.path === '/vetting'
+                          ? (isHead ? 'Headteacher Portal' : 'Headteacher Vetting')
+                          : item.label;
+
                         return (
                           <Link
                             key={item.path}
                             to={item.path}
                             onClick={onCloseMobile}
                             className={cn(
-                              "flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold transition-all duration-200 group relative",
+                              "flex items-center justify-between gap-2.5 px-3 py-2 rounded-xl text-xs font-bold transition-all duration-200 group relative",
                               isActive
                                 ? "bg-slate-900 dark:bg-emerald-900 text-white shadow-md shadow-slate-900/10 dark:shadow-emerald-950/20"
                                 : "text-slate-600 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-800 hover:text-emerald-700 dark:hover:text-emerald-400"
                             )}
                           >
-                            <item.icon size={15} className={cn("transition-transform duration-200 shrink-0", !isActive && "group-hover:scale-110")} />
-                            <span className="truncate">{item.label}</span>
+                            <div className="flex items-center gap-2.5 min-w-0">
+                              <item.icon size={15} className={cn("transition-transform duration-200 shrink-0", !isActive && "group-hover:scale-110")} />
+                              <span className="truncate">{itemLabel}</span>
+                            </div>
+                            {item.path === '/vetting' && isHead && (
+                              <span className="text-[9px] font-black uppercase tracking-wider bg-ghana-gold text-slate-950 px-1.5 py-0.5 rounded-md shadow-2xs">
+                                HQ
+                              </span>
+                            )}
                             {isActive && (
                               <motion.div
                                 layoutId="activeTab"
@@ -335,8 +347,6 @@ const SidebarContent = ({ onCloseMobile, onShowCompliance, onShowTerms, onShowLo
       {/* Quick Links & Support Container */}
       {!isDesktopCollapsed ? (
         <div className="px-3 pt-2 pb-1 space-y-1.5 border-t border-slate-100 dark:border-slate-800">
-          <PWAInstallButton />
-
           <div className="grid grid-cols-2 gap-1.5">
             <button
               onClick={onShowCompliance}
@@ -395,6 +405,17 @@ const SidebarContent = ({ onCloseMobile, onShowCompliance, onShowTerms, onShowLo
         </div>
       ) : (
         <div className="px-2 pt-2 pb-1 flex flex-col items-center space-y-1.5 border-t border-slate-100 dark:border-slate-800">
+          <button
+            onClick={() => window.dispatchEvent(new CustomEvent('teachsmart:open-install-prompt'))}
+            className="relative group/pwa flex items-center justify-center w-11 h-11 bg-[#FCD116]/20 text-slate-900 dark:text-[#FCD116] rounded-xl hover:bg-[#FCD116]/30 transition-all border border-[#FCD116]/40 cursor-pointer"
+            title="Install TeachSmartGH App"
+          >
+            <Download size={18} className="stroke-[2.5]" />
+            <div className="absolute left-full ml-3 px-3 py-1.5 bg-slate-900 text-white text-xs font-bold rounded-lg shadow-xl opacity-0 group-hover/pwa:opacity-100 pointer-events-none transition-all duration-200 whitespace-nowrap z-[100]">
+              Install App (1-Click)
+            </div>
+          </button>
+
           <button
             onClick={onShowCompliance}
             className="relative group/comp flex items-center justify-center w-11 h-11 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 rounded-xl hover:bg-emerald-100 transition-all"

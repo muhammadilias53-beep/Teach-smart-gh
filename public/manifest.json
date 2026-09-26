@@ -4,10 +4,12 @@
   "description": "AI-Powered Teaching. Smarter Tomorrow. Aligned with NaCCA Standards.",
   "id": "/",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "orientation": "portrait",
+  "orientation": "portrait-primary",
   "background_color": "#0A192F",
   "theme_color": "#0A192F",
+  "prefer_related_applications": false,
   "categories": ["education", "productivity"],
   "icons": [
     {

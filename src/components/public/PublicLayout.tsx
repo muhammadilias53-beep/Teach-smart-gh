@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router';
-import { GraduationCap, Menu, X, ArrowRight, Sparkles, ShieldCheck, MessageCircle } from 'lucide-react';
+import { GraduationCap, Menu, X, ArrowRight, Sparkles, ShieldCheck, MessageCircle, Download, Smartphone } from 'lucide-react';
 import { TermsAndConditionsModal } from '../legal/TermsAndConditionsModal';
 
 interface PublicLayoutProps {
@@ -13,6 +13,10 @@ export const PublicLayout: React.FC<PublicLayoutProps> = ({ children }) => {
   const [termsTab, setTermsTab] = useState<'ai_ethics' | 'curriculum' | 'privacy' | 'general'>('general');
   const location = useLocation();
   const navigate = useNavigate();
+
+  const handleOpenInstall = () => {
+    window.dispatchEvent(new CustomEvent('teachsmart:open-install-prompt'));
+  };
 
   // Close mobile drawer on route change
   React.useEffect(() => {
@@ -75,6 +79,14 @@ export const PublicLayout: React.FC<PublicLayoutProps> = ({ children }) => {
 
           {/* Right Action CTA (Desktop 1024px+) */}
           <div className="hidden lg:flex items-center gap-3 xl:gap-4 shrink-0">
+            <button
+              onClick={handleOpenInstall}
+              className="flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-slate-800 bg-[#FCD116]/20 hover:bg-[#FCD116]/30 border border-[#FCD116]/50 px-3.5 xl:px-4 py-2.5 rounded-xl shadow-xs transition-all cursor-pointer group"
+              title="Install TeachSmartGH app on your device"
+            >
+              <Download size={14} className="stroke-[2.5] text-slate-900 group-hover:scale-110 transition-transform" />
+              <span>Install App</span>
+            </button>
             <Link
               to="/login"
               className="text-xs font-black uppercase tracking-wider text-slate-600 hover:text-emerald-deep transition-colors bg-white hover:bg-slate-50 border border-slate-200 px-4 xl:px-5 py-2.5 rounded-xl shadow-sm whitespace-nowrap"
@@ -144,6 +156,17 @@ export const PublicLayout: React.FC<PublicLayoutProps> = ({ children }) => {
             
             <div className="h-px bg-slate-100 my-1" />
             
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                handleOpenInstall();
+              }}
+              className="w-full flex items-center justify-center gap-2 text-xs font-black uppercase tracking-widest text-slate-900 bg-[#FCD116] hover:bg-[#ebd534] py-3.5 rounded-xl shadow-md transition-colors cursor-pointer"
+            >
+              <Download size={15} className="stroke-[2.5]" />
+              <span>Install TeachSmart App</span>
+            </button>
+
             <div className="flex flex-col sm:flex-row gap-3">
               <Link
                 to="/login"

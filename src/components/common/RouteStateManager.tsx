@@ -5,6 +5,9 @@ import { useAuth } from '../../contexts/AuthContext';
 const VALID_PROTECTED_ROUTES = [
   '/',
   '/lessons',
+  '/vetting',
+  '/headteacher',
+  '/offline-vault',
   '/exams',
   '/schemes',
   '/notes',
@@ -21,7 +24,7 @@ const VALID_PROTECTED_ROUTES = [
   '/admin',
 ];
 
-const PUBLIC_ROUTES = ['/login', '/about', '/features', '/blog', '/privacy'];
+const PUBLIC_ROUTES = ['/login', '/about', '/features', '/blog', '/privacy', '/verify'];
 
 /**
  * RouteStateManager

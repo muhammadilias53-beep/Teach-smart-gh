@@ -28,6 +28,8 @@ export interface UserProfile {
   region?: string;
   district?: string;
   town?: string;
+  phone?: string;
+  phoneNumber?: string;
   level?: Level;
   subjects?: string[];
   subjectsTaught?: string[];
@@ -39,6 +41,9 @@ export interface UserProfile {
   aiCredits?: number;
   isSchoolAdmin?: boolean;
   schoolLicenseCode?: string;
+  schoolVettingCode?: string;
+  pairedHeadteacherUid?: string;
+  pairedHeadteacherName?: string;
   onboardingComplete?: boolean;
   lastGenerationAt?: any;
   photoURL?: string;
@@ -112,6 +117,7 @@ export interface LessonPlan {
   vettedDesignation?: string;
   vettedAt?: string;
   vettingSubmissionId?: string;
+  schoolVettingCode?: string;
   headteacherSignature?: string;
   isKgPlan?: boolean;
   kgBlocks?: any[];

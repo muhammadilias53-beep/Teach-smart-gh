@@ -153,6 +153,11 @@ export function exportLessonPlanToPDF(data: LessonPlanExportData): jsPDF {
     teacherName: data.teacherName,
     schoolName: data.schoolName,
     district: data.district,
+    vettingStatus: data.vettingStatus,
+    vettedBy: data.vettedBy,
+    vettedDesignation: data.vettedDesignation,
+    vettedAt: data.vettedAt,
+    headteacherRemarks: data.headteacherRemarks,
   });
 
   doc.setFillColor(0, 28, 61); // Deep Navy Blue
@@ -183,16 +188,31 @@ export function exportLessonPlanToPDF(data: LessonPlanExportData): jsPDF {
   const qrY = 1.5;
   renderQRCodeInPDF(doc, verificationUrl, qrX, qrY, qrSize);
 
-  doc.setFillColor(0, 107, 63);
-  doc.roundedRect(pageWidth - rightMargin - 62, 3.5, 46, 9.5, 1.5, 1.5, 'F');
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(7);
-  doc.setFont(fontName, 'bold');
-  doc.text('NaCCA / GES Aligned', pageWidth - rightMargin - 39, 7.8, { align: 'center' });
-  doc.setFontSize(5.5);
-  doc.setFont(fontName, 'normal');
-  doc.setTextColor(252, 209, 22); // Ghana Gold
-  doc.text(`SCAN QR • ${verifData.verificationCode}`, pageWidth - rightMargin - 39, 11.4, { align: 'center' });
+  const isApproved = data.vettingStatus === 'approved';
+
+  if (isApproved) {
+    doc.setFillColor(0, 107, 63); // Ghana Green
+    doc.roundedRect(pageWidth - rightMargin - 66, 3.5, 50, 9.5, 1.5, 1.5, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(7);
+    doc.setFont(fontName, 'bold');
+    doc.text('[✓] GES VETTED & APPROVED', pageWidth - rightMargin - 41, 7.8, { align: 'center' });
+    doc.setFontSize(5.5);
+    doc.setFont(fontName, 'normal');
+    doc.setTextColor(252, 209, 22); // Ghana Gold
+    doc.text(`SCAN QR • ${verifData.verificationCode}`, pageWidth - rightMargin - 41, 11.4, { align: 'center' });
+  } else {
+    doc.setFillColor(180, 83, 9); // Amber / Warning
+    doc.roundedRect(pageWidth - rightMargin - 68, 3.5, 52, 9.5, 1.5, 1.5, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(6.8);
+    doc.setFont(fontName, 'bold');
+    doc.text('[ ! ] UNVETTED DRAFT NOTE', pageWidth - rightMargin - 42, 7.8, { align: 'center' });
+    doc.setFontSize(5.2);
+    doc.setFont(fontName, 'normal');
+    doc.setTextColor(254, 240, 138); // Yellow Light
+    doc.text(`AWAITING HEADTEACHER ENDORSEMENT`, pageWidth - rightMargin - 42, 11.4, { align: 'center' });
+  }
 
   // ==========================================
   // NOTEBOOK HEADER ROW
@@ -508,7 +528,7 @@ export function exportLessonPlanToPDF(data: LessonPlanExportData): jsPDF {
       {
         content: (data.vettingStatus === 'approved' || data.vettedBy)
           ? `Headteacher/Supervisor: ${(data.vettedBy || 'HEADTEACHER').toUpperCase()}${data.vettedDesignation ? ` (${data.vettedDesignation})` : ''}\nDigital Stamp: [✓ OFFICIAL GES DIGITAL VETTING STAMP AFFIXED]\nDate Endorsed: ${data.vettedAt ? new Date(data.vettedAt).toLocaleDateString('en-GB') : new Date().toLocaleDateString('en-GB')}\nSupervisor Remarks: "${data.headteacherRemarks || 'Lesson plan approved. Ensure learner-centered activities are sustained.'}"\nStatus: [✓] Approved for Delivery    [✓] NaCCA Standards Certified\nVerification ID: ${verifData.verificationCode} (Scan QR at top)`
-          : `Headteacher/Supervisor: .................................................\n\nSignature / Stamp: ............................ Date: ......................\n\nStatus: [  ] Approved for Delivery    [  ] Inspected & Monitored\nCurriculum Verification ID: ${verifData.verificationCode} (Scan QR at top to verify)`,
+          : `STATUS: [ UNVETTED DRAFT - PENDING HEADTEACHER ENDORSEMENT ]\nHeadteacher/Supervisor: .................................................\n\nSignature / Stamp: ............................ Date: ......................\n\nNOTICE: This lesson plan has NOT been verified by the school Headteacher.\nUnder GES Code of Conduct, lesson plans must be verified before classroom delivery.\nCurriculum Verification ID: ${verifData.verificationCode} (Awaiting Headteacher Vetting)`,
         styles: { fontSize: 7.2, cellPadding: 2.5, textColor: [30, 41, 59] }
       }
     ]],
@@ -525,11 +545,29 @@ export function exportLessonPlanToPDF(data: LessonPlanExportData): jsPDF {
   });
 
   // ==========================================
-  // UNIFIED MULTI-PAGE HEADERS & FOOTERS
+  // UNIFIED MULTI-PAGE HEADERS & FOOTERS & WATERMARKS
   // ==========================================
   const totalPages = doc.getNumberOfPages();
   for (let i = 1; i <= totalPages; i++) {
     doc.setPage(i);
+
+    // Diagonal Unvetted Draft Watermark (When not officially approved by Headteacher)
+    if (data.vettingStatus !== 'approved') {
+      doc.saveGraphicsState();
+      doc.setTextColor(226, 232, 240); // Soft subtle watermark slate
+      doc.setFontSize(23);
+      doc.setFont(fontName, 'bold');
+      doc.text('UNVETTED DRAFT  -  NOT CERTIFIED', pageWidth / 2, pageHeight / 2 - 12, {
+        align: 'center',
+        angle: 35
+      });
+      doc.setFontSize(13);
+      doc.text('GES REGULATIONS REQUIRE HEADTEACHER SIGN-OFF BEFORE USE', pageWidth / 2, pageHeight / 2 + 6, {
+        align: 'center',
+        angle: 35
+      });
+      doc.restoreGraphicsState();
+    }
 
     // Subsequent pages top header (pages 2+)
     if (i > 1) {
@@ -626,6 +664,11 @@ export function exportKGLessonPlanToPDF(data: LessonPlanExportData): jsPDF {
     teacherName: data.teacherName,
     schoolName: data.schoolName,
     district: data.district,
+    vettingStatus: data.vettingStatus,
+    vettedBy: data.vettedBy,
+    vettedDesignation: data.vettedDesignation,
+    vettedAt: data.vettedAt,
+    headteacherRemarks: data.headteacherRemarks,
   });
 
   doc.setFillColor(0, 28, 61); // Deep Navy Blue
@@ -882,10 +925,86 @@ export function exportKGLessonPlanToPDF(data: LessonPlanExportData): jsPDF {
     ]],
   });
 
-  // Multi-page header and footer
+  // ==========================================
+  // KG TEACHER & HEADTEACHER SIGNATURE / ENDORSEMENT SECTION
+  // ==========================================
+  const finalYKGReflection = (doc as any).lastAutoTable?.finalY || finalYTable2 + 35;
+  const requiredSignHeight = 32;
+  const bottomReserve = 14;
+  let didAddPageKG = false;
+  if (finalYKGReflection + requiredSignHeight + bottomReserve > pageHeight) {
+    doc.addPage();
+    didAddPageKG = true;
+  }
+
+  const kgSignStartY = didAddPageKG ? 16 : finalYKGReflection + 4;
+
+  autoTable(doc, {
+    startY: kgSignStartY,
+    margin: { top: 14, bottom: 15, left: leftMargin, right: rightMargin },
+    tableWidth: contentWidth,
+    theme: 'grid',
+    pageBreak: 'avoid',
+    columnStyles: {
+      0: { cellWidth: contentWidth / 2 },
+      1: { cellWidth: contentWidth / 2 },
+    },
+    head: [[
+      { 
+        content: 'EARLY CHILDHOOD FACILITATOR DECLARATION', 
+        styles: { halign: 'left', fontStyle: 'bold', fillColor: [241, 245, 249], textColor: [15, 23, 42], fontSize: 8 } 
+      },
+      { 
+        content: 'HEADTEACHER / SUPERVISOR VETTING & ENDORSEMENT', 
+        styles: { halign: 'left', fontStyle: 'bold', fillColor: [241, 245, 249], textColor: [15, 23, 42], fontSize: 8 } 
+      }
+    ]],
+    body: [[
+      {
+        content: `Facilitator's Name: ${data.teacherName ? data.teacherName.toUpperCase() : '................................................................'}${data.schoolName ? `\nSchool: ${data.schoolName.toUpperCase()}` : ''}\n\nSignature: ........................................... Date: ......................\n\nPlay-Based Status: [✓] Age-Appropriate TLRs Prepared`,
+        styles: { fontSize: 7.5, cellPadding: 3, textColor: [30, 41, 59] }
+      },
+      {
+        content: (data.vettingStatus === 'approved' || data.vettedBy)
+          ? `Headteacher/Supervisor: ${(data.vettedBy || 'HEADTEACHER').toUpperCase()}${data.vettedDesignation ? ` (${data.vettedDesignation})` : ''}\nDigital Stamp: [✓ OFFICIAL GES DIGITAL VETTING STAMP AFFIXED]\nDate Endorsed: ${data.vettedAt ? new Date(data.vettedAt).toLocaleDateString('en-GB') : new Date().toLocaleDateString('en-GB')}\nSupervisor Remarks: "${data.headteacherRemarks || 'KG daily plan approved for child-friendly play delivery.'}"\nStatus: [✓] Approved for Delivery    [✓] NaCCA KG Standards Certified\nVerification ID: ${kgVerifData.verificationCode} (Scan QR at top)`
+          : `STATUS: [ UNVETTED DRAFT - PENDING HEADTEACHER ENDORSEMENT ]\nHeadteacher/Supervisor: .................................................\n\nSignature / Stamp: ............................ Date: ......................\n\nNOTICE: This kindergarten plan has NOT been verified by the school Headteacher.\nUnder GES regulations, early childhood notes must be certified before class delivery.\nCurriculum Verification ID: ${kgVerifData.verificationCode} (Awaiting Headteacher Vetting)`,
+        styles: { fontSize: 7.2, cellPadding: 2.5, textColor: [30, 41, 59] }
+      }
+    ]],
+    headStyles: {
+      lineColor: [30, 41, 59],
+      lineWidth: 0.35,
+      cellPadding: 2.5,
+    },
+    bodyStyles: {
+      lineColor: [30, 41, 59],
+      lineWidth: 0.35,
+      cellPadding: 3,
+    }
+  });
+
+  // Multi-page header and footer and watermarks
   const totalPages = doc.getNumberOfPages();
   for (let i = 1; i <= totalPages; i++) {
     doc.setPage(i);
+
+    // Diagonal Unvetted Draft Watermark (When not officially approved by Headteacher)
+    if (data.vettingStatus !== 'approved') {
+      doc.saveGraphicsState();
+      doc.setTextColor(226, 232, 240); // Soft subtle watermark slate
+      doc.setFontSize(23);
+      doc.setFont(fontName, 'bold');
+      doc.text('UNVETTED DRAFT  -  NOT CERTIFIED', pageWidth / 2, pageHeight / 2 - 12, {
+        align: 'center',
+        angle: 35
+      });
+      doc.setFontSize(13);
+      doc.text('GES REGULATIONS REQUIRE HEADTEACHER SIGN-OFF BEFORE USE', pageWidth / 2, pageHeight / 2 + 6, {
+        align: 'center',
+        angle: 35
+      });
+      doc.restoreGraphicsState();
+    }
 
     if (i > 1) {
       doc.setFillColor(0, 28, 61);

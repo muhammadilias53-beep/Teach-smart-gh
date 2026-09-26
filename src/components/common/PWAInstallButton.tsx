@@ -1,62 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { Download, Sparkles, Smartphone, Check, HelpCircle, Share, PlusSquare } from 'lucide-react';
+import React, { useState } from 'react';
+import { Download, Smartphone, Check, Share, PlusSquare, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-
-interface BeforeInstallPromptEvent extends Event {
-  readonly platforms: string[];
-  readonly userChoice: Promise<{
-    outcome: 'accepted' | 'dismissed';
-    platform: string;
-  }>;
-  prompt(): Promise<void>;
-}
+import { usePWAInstall } from '../../hooks/usePWAInstall';
+import { toast } from 'react-hot-toast';
 
 export const PWAInstallButton: React.FC = () => {
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
-  const [isReady, setIsReady] = useState(false);
-  const [isInstalled, setIsInstalled] = useState(false);
-  const [isIOS, setIsIOS] = useState(false);
+  const { isInstallable, isInstalled, isIOS, install } = usePWAInstall();
   const [showIosGuide, setShowIosGuide] = useState(false);
-
-  useEffect(() => {
-    // Detect standalone mode (already installed)
-    const isInStandaloneMode = 
-      window.matchMedia('(display-mode: standalone)').matches || 
-      (window.navigator as any).standalone || 
-      document.referrer.includes('android-app://');
-
-    if (isInStandaloneMode) {
-      setIsInstalled(true);
-    }
-
-    // Detect iOS
-    const userAgent = window.navigator.userAgent.toLowerCase();
-    const isIOSDevice = /iphone|ipad|ipod/.test(userAgent);
-    setIsIOS(isIOSDevice);
-
-    // Watch beforeinstallprompt
-    const handleBeforeInstallPrompt = (e: Event) => {
-      e.preventDefault();
-      setDeferredPrompt(e as BeforeInstallPromptEvent);
-      setIsReady(true);
-    };
-
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-
-    // Watch appinstalled event
-    const handleAppInstalled = () => {
-      setIsInstalled(true);
-      setIsReady(false);
-      setDeferredPrompt(null);
-    };
-
-    window.addEventListener('appinstalled', handleAppInstalled);
-
-    return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-      window.removeEventListener('appinstalled', handleAppInstalled);
-    };
-  }, []);
+  const [isInstalling, setIsInstalling] = useState(false);
 
   const handleInstallClick = async () => {
     if (isIOS) {
@@ -64,22 +15,22 @@ export const PWAInstallButton: React.FC = () => {
       return;
     }
 
-    if (!deferredPrompt) return;
-
-    // Show native prompt
-    await deferredPrompt.prompt();
-
-    // Check choice
-    const choiceResult = await deferredPrompt.userChoice;
-    if (choiceResult.outcome === 'accepted') {
-      console.log('[PWA] User accepted the install prompt');
-      setIsInstalled(true);
-      setIsReady(false);
+    if (isInstallable) {
+      setIsInstalling(true);
+      try {
+        const choice = await install();
+        if (choice.outcome === 'accepted') {
+          toast.success('TeachSmartGH Installed! 🇬🇭 Launch anytime from your device home screen.');
+        }
+      } catch (err) {
+        console.error('[PWAInstallButton] install error:', err);
+      } finally {
+        setIsInstalling(false);
+      }
     } else {
-      console.log('[PWA] User dismissed the install prompt');
+      // Fire global install prompt dialog
+      window.dispatchEvent(new CustomEvent('teachsmart:open-install-prompt'));
     }
-
-    setDeferredPrompt(null);
   };
 
   if (isInstalled) {
@@ -96,12 +47,6 @@ export const PWAInstallButton: React.FC = () => {
     );
   }
 
-  // If not ready and not iOS, don't show the setup bar unless we want to allow users to trigger it.
-  // We can show it for iOS users as a guide anyway since iOS doesn't trigger beforeinstallprompt!
-  if (!isReady && !isIOS) {
-    return null;
-  }
-
   return (
     <div className="relative">
       <motion.div
@@ -112,28 +57,29 @@ export const PWAInstallButton: React.FC = () => {
         transition={{ duration: 0.4 }}
       >
         <div className="flex items-start gap-3">
-          <div className="w-9 h-9 rounded-2xl bg-ghana-gold/10 text-ghana-gold flex items-center justify-center shrink-0 border border-ghana-gold/20 shadow-inner">
+          <div className="w-9 h-9 rounded-2xl bg-[#FCD116]/10 text-[#FCD116] flex items-center justify-center shrink-0 border border-[#FCD116]/20 shadow-inner">
             <Smartphone size={18} className="animate-pulse" />
           </div>
           <div className="flex-grow min-w-0">
             <h4 className="text-[11px] font-black uppercase tracking-wider text-white flex items-center gap-1.5 leading-none mb-1">
               <span>TeachSmartGH App</span>
-              <span className="text-[8px] bg-ghana-gold text-slate-950 font-black px-1.5 py-0.5 rounded-full uppercase tracking-tighter">
+              <span className="text-[8px] bg-[#FCD116] text-slate-950 font-black px-1.5 py-0.5 rounded-full uppercase tracking-tighter">
                 PWA
               </span>
             </h4>
             <p className="text-[10px] font-medium text-slate-400 leading-normal">
-              Install to your home screen for quick, offline-ready curriculum access.
+              Install to your device for 1-click launch and offline NaCCA curriculum access.
             </p>
           </div>
         </div>
 
         <button
           onClick={handleInstallClick}
-          className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 shadow-md shadow-emerald-950/10 active:scale-[0.98]"
+          disabled={isInstalling}
+          className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 shadow-md shadow-emerald-950/10 active:scale-[0.98] cursor-pointer disabled:opacity-70"
         >
           <Download size={12} className="stroke-[3]" />
-          <span>Install TeachSmartGH</span>
+          <span>{isInstalling ? 'Opening Browser Prompt...' : 'Install TeachSmartGH (1-Click)'}</span>
         </button>
       </motion.div>
 
@@ -157,8 +103,8 @@ export const PWAInstallButton: React.FC = () => {
             >
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-xl bg-ghana-gold/20 flex items-center justify-center">
-                    <Smartphone size={16} className="text-emerald-deep" />
+                  <div className="w-8 h-8 rounded-xl bg-[#FCD116]/20 flex items-center justify-center">
+                    <Smartphone size={16} className="text-emerald-700" />
                   </div>
                   <h4 className="text-xs font-black uppercase tracking-wider text-slate-900">Install iOS App</h4>
                 </div>
@@ -172,7 +118,7 @@ export const PWAInstallButton: React.FC = () => {
 
               <div className="space-y-4">
                 <p className="text-[11px] font-bold text-slate-500 leading-normal">
-                  To install **TeachSmartGH** on your iPhone or iPad, please follow these simple steps using Safari:
+                  To install TeachSmartGH on your iPhone or iPad, follow these simple steps in Safari:
                 </p>
 
                 <div className="flex items-start gap-3">
@@ -181,7 +127,7 @@ export const PWAInstallButton: React.FC = () => {
                   </div>
                   <div className="min-w-0">
                     <p className="text-[10px] text-slate-700 leading-normal">
-                      Tap the <strong className="inline-flex items-center gap-1 font-black bg-slate-100 px-1.5 py-0.5 rounded text-emerald-deep"><Share size={10} /> Share</strong> button at the bottom of Safari.
+                      Tap the <strong className="inline-flex items-center gap-1 font-black bg-slate-100 px-1.5 py-0.5 rounded text-emerald-800"><Share size={10} /> Share</strong> button at the bottom of Safari.
                     </p>
                   </div>
                 </div>
@@ -192,7 +138,7 @@ export const PWAInstallButton: React.FC = () => {
                   </div>
                   <div className="min-w-0">
                     <p className="text-[10px] text-slate-700 leading-normal">
-                      Scroll down and tap <strong className="inline-flex items-center gap-1 font-black bg-slate-100 px-1.5 py-0.5 rounded text-emerald-deep"><PlusSquare size={10} /> Add to Home Screen</strong>.
+                      Scroll down and tap <strong className="inline-flex items-center gap-1 font-black bg-slate-100 px-1.5 py-0.5 rounded text-emerald-800"><PlusSquare size={10} /> Add to Home Screen</strong>.
                     </p>
                   </div>
                 </div>
@@ -203,7 +149,7 @@ export const PWAInstallButton: React.FC = () => {
                   </div>
                   <div className="min-w-0">
                     <p className="text-[10px] text-slate-700 leading-normal">
-                      Provide standard details and click **Add** to complete installation.
+                      Tap <strong>Add</strong> in the top right to complete installation.
                     </p>
                   </div>
                 </div>

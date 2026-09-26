@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import { toast } from 'react-hot-toast';
-import { Sparkles, Save, Download, RefreshCw, FileText, ChevronLeft, ChevronRight, CheckCircle, Users, Layout, AlignLeft, Layers, GraduationCap, MessageSquare, Edit3, Check, RotateCcw, FileEdit, AlertCircle, Compass, Search, BookOpen, ArrowRight, ShieldCheck, Award, Clock } from 'lucide-react';
+import { Sparkles, Save, Download, RefreshCw, FileText, ChevronLeft, ChevronRight, CheckCircle, CheckCircle2, AlertTriangle, Send, Users, Layout, AlignLeft, Layers, GraduationCap, MessageSquare, Edit3, Check, RotateCcw, FileEdit, AlertCircle, Compass, Search, BookOpen, ArrowRight, ShieldCheck, Award, Clock } from 'lucide-react';
 import { CurriculumReferenceModal } from '../standards/CurriculumReferenceModal';
 import { SubmitForVettingModal } from '../vetting/SubmitForVettingModal';
 import { generateLessonPlan, generateKGDailyLessonPlan } from '../../lib/gemini';
@@ -2207,6 +2207,122 @@ const LessonPlanGenerator = () => {
               </div>
             )}
 
+            {/* GES OFFICIAL VETTING STATUS & REGULATORY COMPLIANCE BANNER */}
+            {result?.vettingStatus === 'approved' ? (
+              <div className="bg-emerald-900 border-2 border-emerald-500/80 rounded-2xl sm:rounded-3xl p-4 sm:p-5 text-white shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-500 text-slate-950 flex items-center justify-center shrink-0 mt-0.5 shadow-md">
+                    <CheckCircle2 size={22} className="stroke-[2.5]" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2 mb-0.5 flex-wrap">
+                      <span className="text-[10px] font-black uppercase tracking-wider bg-emerald-400 text-slate-950 px-2.5 py-0.5 rounded-full">
+                        Official GES Endorsement Certified
+                      </span>
+                      <span className="text-xs text-emerald-200 font-bold">
+                        Vetted by {result.vettedBy || 'Headteacher'} • {result.vettedAt ? new Date(result.vettedAt).toLocaleDateString('en-GB') : 'Approved'}
+                      </span>
+                    </div>
+                    <h4 className="text-sm sm:text-base font-black text-white">Lesson Plan Legally Certified for Classroom Delivery</h4>
+                    <p className="text-xs text-emerald-100/90 max-w-2xl mt-0.5 leading-relaxed">
+                      This plan has undergone full 5-point NaCCA rubric inspection and carries the official institutional digital stamp. Verified for Circuit Supervisor (SISO) monitoring.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowVettingModal(true)}
+                  className="w-full sm:w-auto px-4 py-2.5 sm:px-5 sm:py-3 bg-ghana-gold hover:bg-yellow-400 text-slate-950 font-black text-xs uppercase tracking-wider rounded-xl sm:rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-yellow-500/20 transition-all shrink-0 cursor-pointer"
+                >
+                  <Award size={15} />
+                  <span>View Official Stamp</span>
+                </button>
+              </div>
+            ) : result?.vettingStatus === 'pending' ? (
+              <div className="bg-blue-950 border-2 border-blue-500/80 rounded-2xl sm:rounded-3xl p-4 sm:p-5 text-white shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-blue-500 text-white flex items-center justify-center shrink-0 mt-0.5 shadow-md">
+                    <Clock size={22} className="animate-spin-slow" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <span className="text-[10px] font-black uppercase tracking-wider bg-blue-500/30 text-blue-300 border border-blue-400/40 px-2 py-0.5 rounded-full">
+                        Awaiting Headteacher Review
+                      </span>
+                      <span className="text-xs text-blue-200 font-medium">Pending Digital Vetting</span>
+                    </div>
+                    <h4 className="text-sm sm:text-base font-bold text-white">Submitted to School Headteacher Queue</h4>
+                    <p className="text-xs text-slate-300 max-w-2xl mt-0.5 leading-relaxed">
+                      This plan is currently in your school's queue. Once reviewed by your Headteacher, the official digital stamp and remarks will be applied.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowVettingModal(true)}
+                  className="w-full sm:w-auto px-4 py-2.5 sm:px-5 sm:py-3 bg-blue-500 hover:bg-blue-400 text-white font-black text-xs uppercase tracking-wider rounded-xl sm:rounded-2xl flex items-center justify-center gap-2 shadow-lg transition-all shrink-0 cursor-pointer"
+                >
+                  <span>Check Status</span>
+                </button>
+              </div>
+            ) : result?.vettingStatus === 'needs_revision' ? (
+              <div className="bg-amber-950 border-2 border-amber-500/80 rounded-2xl sm:rounded-3xl p-4 sm:p-5 text-white shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center shrink-0 mt-0.5 shadow-md">
+                    <AlertTriangle size={22} />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <span className="text-[10px] font-black uppercase tracking-wider bg-amber-400 text-slate-950 px-2 py-0.5 rounded-full">
+                        Revision Requested by Headteacher
+                      </span>
+                    </div>
+                    <h4 className="text-sm sm:text-base font-bold text-white">Curriculum Adjustments Required</h4>
+                    <p className="text-xs text-amber-200 max-w-2xl mt-0.5 leading-relaxed italic">
+                      "{result.headteacherRemarks || 'Please revise Phase 2 activities or local resources.'}"
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowVettingModal(true)}
+                  className="w-full sm:w-auto px-4 py-2.5 sm:px-5 sm:py-3 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs uppercase tracking-wider rounded-xl sm:rounded-2xl flex items-center justify-center gap-2 shadow-lg transition-all shrink-0 cursor-pointer"
+                >
+                  <span>Re-Submit Plan</span>
+                </button>
+              </div>
+            ) : (
+              <div className="bg-gradient-to-r from-red-950 via-slate-900 to-amber-950 border-2 border-amber-500/60 rounded-2xl sm:rounded-3xl p-4 sm:p-5 text-white shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-400/40 text-ghana-gold flex items-center justify-center shrink-0 mt-0.5">
+                    <ShieldCheck size={22} />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2 mb-0.5 flex-wrap">
+                      <span className="text-[10px] font-black uppercase tracking-wider bg-red-600 text-white px-2 py-0.5 rounded-full animate-pulse">
+                        Unvetted Draft Notice
+                      </span>
+                      <span className="text-xs text-amber-300 font-bold">
+                        GES & NaCCA Supervision Code
+                      </span>
+                    </div>
+                    <h4 className="text-sm sm:text-base font-black text-white">Lesson Plan Awaiting Headteacher Verification</h4>
+                    <p className="text-xs text-slate-300 max-w-2xl mt-0.5 leading-relaxed">
+                      Under Ghana Education Service policy, <strong>lesson plans must be verified and stamped by only the Headteacher before classroom use</strong>. Unvetted plans are drafts and not certified for SISO inspection.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowVettingModal(true)}
+                  className="w-full sm:w-auto px-4 py-2.5 sm:px-5 sm:py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs uppercase tracking-wider rounded-xl sm:rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 transition-all shrink-0 cursor-pointer"
+                >
+                  <Send size={15} />
+                  <span>Submit for Vetting</span>
+                </button>
+              </div>
+            )}
+
             {/* TEACHER WORKFLOW BANNER: NEXT STEP LESSON NOTES */}
             <div className="bg-gradient-to-r from-emerald-950 via-slate-900 to-teal-950 border border-emerald-500/30 rounded-2xl sm:rounded-3xl p-4 sm:p-5 text-white shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="flex items-start gap-3">
@@ -3327,25 +3443,35 @@ const LessonPlanGenerator = () => {
                               </div>
                             </div>
                           ) : (
-                            <>
+                            <div className="relative space-y-2 rounded-xl border border-dashed border-amber-300 bg-amber-50/40 p-2.5">
+                              {/* Unvetted watermark banner badge */}
+                              <div className="flex items-center justify-between pb-1 border-b border-amber-200">
+                                <span className="px-2 py-0.5 rounded bg-amber-200 text-amber-900 font-black text-[9px] uppercase tracking-wider">
+                                  {result?.vettingStatus === 'pending' ? '⏳ Queue: Awaiting Headteacher' : '⚠️ Unvetted Draft'}
+                                </span>
+                                <span className="text-[9px] font-bold text-amber-800">
+                                  GES Supervised
+                                </span>
+                              </div>
+
                               <div>
-                                <span className="text-[10px] font-black uppercase text-slate-900 block tracking-wider">Headteacher / Supervisor Name</span>
-                                <div className="border-b border-dashed border-slate-400 h-5 mt-0.5" />
+                                <span className="text-[10px] font-black uppercase text-slate-900 block tracking-wider">Headteacher / Supervisor Inspection</span>
+                                <div className="border-b border-dashed border-slate-400 h-4 mt-0.5" />
                               </div>
-                              <div className="grid grid-cols-2 gap-3 pt-1">
+                              <div className="grid grid-cols-2 gap-2 pt-0.5">
                                 <div>
-                                  <span className="text-[10px] font-black uppercase text-slate-900 block tracking-wider">Signature / Stamp</span>
-                                  <div className="border-b border-dashed border-slate-400 h-5 mt-0.5" />
+                                  <span className="text-[9.5px] font-black uppercase text-slate-800 block tracking-wider">Signature / Stamp</span>
+                                  <div className="border-b border-dashed border-slate-400 h-4 mt-0.5" />
                                 </div>
                                 <div>
-                                  <span className="text-[10px] font-black uppercase text-slate-900 block tracking-wider">Date</span>
-                                  <div className="border-b border-dashed border-slate-400 h-5 mt-0.5" />
+                                  <span className="text-[9.5px] font-black uppercase text-slate-800 block tracking-wider">Date Inspected</span>
+                                  <div className="border-b border-dashed border-slate-400 h-4 mt-0.5" />
                                 </div>
                               </div>
-                              <div className="pt-1.5 flex items-center justify-between">
-                                <div className="text-[10px] text-slate-500 flex items-center gap-2">
-                                  <span className={result?.vettingStatus === 'pending' ? 'font-bold text-blue-700' : ''}>
-                                    {result?.vettingStatus === 'pending' ? '⏳ Under Review' : '[  ] Pending Vetting'}
+                              <div className="pt-1 flex items-center justify-between">
+                                <div className="text-[10px] text-slate-600">
+                                  <span className={result?.vettingStatus === 'pending' ? 'font-bold text-blue-700' : 'text-slate-500 font-medium'}>
+                                    {result?.vettingStatus === 'pending' ? '⏳ In Headteacher Queue' : '[  ] Uncertified for class delivery'}
                                   </span>
                                 </div>
                                 <button
@@ -3354,10 +3480,10 @@ const LessonPlanGenerator = () => {
                                   className="px-2.5 py-1 bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-[10px] rounded-lg flex items-center gap-1 shadow-xs cursor-pointer"
                                 >
                                   <ShieldCheck size={12} />
-                                  <span>Digital Vetting</span>
+                                  <span>{result?.vettingStatus === 'pending' ? 'View Queue' : 'Submit for Vetting'}</span>
                                 </button>
                               </div>
-                            </>
+                            </div>
                           )}
                         </td>
                       </tr>

@@ -12,12 +12,40 @@ import {
 } from 'firebase/firestore';
 import { db } from './firebase';
 import { LessonPlan, UserProfile } from '../types';
-import { VettingSubmission, VettingStatus, VettingRubricChecks, HeadteacherStampConfig } from '../types/vetting';
+import { 
+  VettingSubmission, 
+  VettingStatus, 
+  VettingRubricChecks, 
+  HeadteacherStampConfig,
+  SchoolVettingPortal,
+  SchoolTeacherMember
+} from '../types/vetting';
 import { saveOffline, getOffline } from './indexedDB';
 import { getCurrentGesCalendarInfo, getAcademicYearForDate, getTermForDate } from './academicCalendar';
 
 const LOCAL_STORAGE_VETTING_KEY = 'teachsmart_vetting_submissions';
 const LOCAL_STORAGE_STAMP_KEY = 'teachsmart_headteacher_stamp';
+const LOCAL_STORAGE_PORTAL_KEY = 'teachsmart_headteacher_portal';
+const LOCAL_STORAGE_ALL_PORTALS_KEY = 'teachsmart_all_school_portals';
+
+/**
+ * Checks if the current user profile has official Headteacher, Academic Supervisor, or School Admin privileges.
+ * Under Ghana Education Service (GES) supervisory regulations, only these authorized roles
+ * are legally permitted to vet, rubric-score, and stamp lesson notes.
+ */
+export function isHeadteacherUser(profile?: UserProfile | null): boolean {
+  if (!profile) return false;
+  if (profile.isSchoolAdmin) return true;
+  const role = (profile.role || '').toLowerCase();
+  return (
+    role === 'headteacher' ||
+    role === 'school_admin' ||
+    role === 'admin' ||
+    role === 'superadmin' ||
+    role === 'circuit_supervisor' ||
+    role === 'siso'
+  );
+}
 
 export const GES_DEFAULT_REMARKS_PRESETS = [
   {
@@ -121,6 +149,352 @@ export function saveHeadteacherStampConfig(config: HeadteacherStampConfig): void
 }
 
 /**
+ * Generate human-friendly School Vetting Code (e.g. PBS-782, GES-409)
+ */
+export function generateSchoolVettingCode(schoolName: string): string {
+  const clean = schoolName.replace(/[^a-zA-Z\s]/g, '').trim();
+  const words = clean.split(/\s+/).filter(Boolean);
+  let prefix = '';
+  if (words.length >= 3) {
+    prefix = (words[0][0] + words[1][0] + words[2][0]).toUpperCase();
+  } else if (words.length === 2) {
+    prefix = (words[0].substring(0, 2) + words[1][0]).toUpperCase();
+  } else if (words.length === 1 && words[0].length >= 3) {
+    prefix = words[0].substring(0, 3).toUpperCase();
+  } else {
+    prefix = 'GES';
+  }
+  const randomDigits = Math.floor(100 + Math.random() * 900);
+  return `${prefix}-${randomDigits}`;
+}
+
+const DEFAULT_SAMPLE_TEACHERS: SchoolTeacherMember[] = [
+  {
+    uid: 'sample_teacher_kofi',
+    name: 'Kofi Mensah Boateng',
+    email: 'kofi.boateng@ges.gov.gh',
+    phone: '024 412 8891',
+    classLevel: 'Basic 4',
+    subject: 'Science',
+    joinedAt: new Date(Date.now() - 30 * 24 * 3600 * 1000).toISOString(),
+    status: 'active'
+  },
+  {
+    uid: 'sample_teacher_ama',
+    name: 'Ama Serwaa Darko',
+    email: 'ama.darko@ges.gov.gh',
+    phone: '055 623 1544',
+    classLevel: 'JHS 2 (Basic 8)',
+    subject: 'Mathematics',
+    joinedAt: new Date(Date.now() - 45 * 24 * 3600 * 1000).toISOString(),
+    status: 'active'
+  },
+  {
+    uid: 'sample_teacher_grace',
+    name: 'Grace Abena Osei',
+    email: 'grace.osei@ges.gov.gh',
+    phone: '020 891 0022',
+    classLevel: 'KG 2',
+    subject: 'Our World Our People',
+    joinedAt: new Date(Date.now() - 60 * 24 * 3600 * 1000).toISOString(),
+    status: 'active'
+  }
+];
+
+function getAllCachedPortals(): SchoolVettingPortal[] {
+  try {
+    const raw = localStorage.getItem(LOCAL_STORAGE_ALL_PORTALS_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {
+    console.warn('Error reading all portals cache:', e);
+  }
+  return [];
+}
+
+function saveCachedPortals(portals: SchoolVettingPortal[]): void {
+  try {
+    localStorage.setItem(LOCAL_STORAGE_ALL_PORTALS_KEY, JSON.stringify(portals));
+  } catch (e) {
+    console.error('Error saving cached portals:', e);
+  }
+}
+
+/**
+ * Get or create a dedicated School Vetting Portal for a Headteacher
+ */
+export async function getOrCreateHeadteacherPortal(profile?: UserProfile | null): Promise<SchoolVettingPortal> {
+  const uid = profile?.uid || 'headteacher_local';
+  const schoolName = profile?.schoolName || profile?.school || 'Presbyterian Basic School, Adabraka';
+  const district = profile?.district || profile?.region ? `${profile?.district || 'Accra Metro'} (${profile?.region || 'Greater Accra'})` : 'Accra Metro District';
+  const headteacherName = profile?.displayName || 'Rev. Emmanuel Mensah';
+
+  // 1. Try local storage first for instant load
+  try {
+    const local = localStorage.getItem(LOCAL_STORAGE_PORTAL_KEY);
+    if (local) {
+      const parsed = JSON.parse(local) as SchoolVettingPortal;
+      if (parsed && (parsed.headteacherUid === uid || !profile?.uid)) {
+        return parsed;
+      }
+    }
+  } catch (e) {
+    console.warn('Error reading local portal:', e);
+  }
+
+  // 2. Try Firestore
+  try {
+    if (profile?.uid) {
+      const portalsCol = collection(db, 'school_vetting_portals');
+      const q = query(portalsCol, where('headteacherUid', '==', profile.uid));
+      const snap = await getDocs(q);
+      if (!snap.empty) {
+        const docData = snap.docs[0].data() as SchoolVettingPortal;
+        localStorage.setItem(LOCAL_STORAGE_PORTAL_KEY, JSON.stringify(docData));
+        return docData;
+      }
+    }
+  } catch (err) {
+    console.warn('Firestore fetch failed for school portal:', err);
+  }
+
+  // 3. Create default / initial portal
+  const portalCode = profile?.schoolLicenseCode || generateSchoolVettingCode(schoolName);
+  const nowIso = new Date().toISOString();
+  const calendarInfo = getCurrentGesCalendarInfo();
+
+  const newPortal: SchoolVettingPortal = {
+    id: portalCode,
+    code: portalCode,
+    schoolName,
+    district,
+    headteacherUid: uid,
+    headteacherName,
+    headteacherDesignation: profile?.role === 'school_admin' ? 'Headteacher' : 'Headteacher / Academic Supervisor',
+    headteacherEmail: profile?.email || '',
+    headteacherPhone: profile?.phone || '',
+    teachers: DEFAULT_SAMPLE_TEACHERS,
+    activeTerm: `Term ${calendarInfo.activeTerm}`,
+    academicYear: calendarInfo.academicYear,
+    createdAt: nowIso,
+    updatedAt: nowIso
+  };
+
+  // Cache locally
+  localStorage.setItem(LOCAL_STORAGE_PORTAL_KEY, JSON.stringify(newPortal));
+  const cachedAll = getAllCachedPortals();
+  const existingIdx = cachedAll.findIndex(p => p.code === newPortal.code);
+  if (existingIdx >= 0) cachedAll[existingIdx] = newPortal;
+  else cachedAll.push(newPortal);
+  saveCachedPortals(cachedAll);
+
+  // Persist to Firestore if online
+  try {
+    const docRef = doc(db, 'school_vetting_portals', portalCode);
+    await setDoc(docRef, {
+      ...newPortal,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    }, { merge: true });
+  } catch (err) {
+    console.warn('Could not persist school portal to Firestore:', err);
+  }
+
+  return newPortal;
+}
+
+/**
+ * Look up a school vetting portal by its unique Code (e.g. PBS-782)
+ */
+export async function getSchoolPortalByCode(code: string): Promise<SchoolVettingPortal | null> {
+  const cleanCode = code.toUpperCase().trim();
+  if (!cleanCode) return null;
+
+  // 1. Check local cache
+  const cachedAll = getAllCachedPortals();
+  const foundInAll = cachedAll.find(p => p.code.toUpperCase() === cleanCode || p.id.toUpperCase() === cleanCode);
+  if (foundInAll) return foundInAll;
+
+  const currentLocal = localStorage.getItem(LOCAL_STORAGE_PORTAL_KEY);
+  if (currentLocal) {
+    const parsed = JSON.parse(currentLocal) as SchoolVettingPortal;
+    if (parsed.code.toUpperCase() === cleanCode || parsed.id.toUpperCase() === cleanCode) {
+      return parsed;
+    }
+  }
+
+  // 2. Query Firestore
+  try {
+    const docRef = doc(db, 'school_vetting_portals', cleanCode);
+    const snap = await getDoc(docRef);
+    if (snap.exists()) {
+      const data = snap.data() as SchoolVettingPortal;
+      cachedAll.push(data);
+      saveCachedPortals(cachedAll);
+      return data;
+    }
+
+    const col = collection(db, 'school_vetting_portals');
+    const q = query(col, where('code', '==', cleanCode));
+    const querySnap = await getDocs(q);
+    if (!querySnap.empty) {
+      const data = querySnap.docs[0].data() as SchoolVettingPortal;
+      cachedAll.push(data);
+      saveCachedPortals(cachedAll);
+      return data;
+    }
+  } catch (err) {
+    console.warn('Error fetching school portal by code from Firestore:', err);
+  }
+
+  // 3. Fallback for sample PBS school
+  if (cleanCode.startsWith('PBS') || cleanCode === 'GES-ACC-01') {
+    const calendarInfo = getCurrentGesCalendarInfo();
+    const fallbackPortal: SchoolVettingPortal = {
+      id: cleanCode,
+      code: cleanCode,
+      schoolName: 'Presbyterian Basic School, Adabraka',
+      district: 'Accra Metro District',
+      headteacherUid: 'sample_headteacher_emmanuel',
+      headteacherName: 'Rev. Emmanuel Mensah',
+      headteacherDesignation: 'Headteacher',
+      headteacherEmail: 'emmanuel.mensah@ges.gov.gh',
+      headteacherPhone: '024 498 7712',
+      teachers: DEFAULT_SAMPLE_TEACHERS,
+      activeTerm: `Term ${calendarInfo.activeTerm}`,
+      academicYear: calendarInfo.academicYear,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    cachedAll.push(fallbackPortal);
+    saveCachedPortals(cachedAll);
+    return fallbackPortal;
+  }
+
+  return null;
+}
+
+/**
+ * Links a teacher to a Headteacher's School Vetting Portal
+ */
+export async function joinSchoolPortal(
+  teacherProfile: UserProfile | null,
+  code: string,
+  details?: { classLevel?: string; subject?: string; phone?: string }
+): Promise<SchoolVettingPortal> {
+  const portal = await getSchoolPortalByCode(code);
+  if (!portal) {
+    throw new Error(`School Vetting Code "${code}" was not found. Please verify the code with your Headteacher.`);
+  }
+
+  const teacherUid = teacherProfile?.uid || `teacher_${Date.now()}`;
+  const teacherName = teacherProfile?.displayName || 'Educator';
+  const teacherEmail = teacherProfile?.email || '';
+
+  const existingIdx = portal.teachers.findIndex(t => t.uid === teacherUid || (t.email && t.email === teacherEmail));
+
+  const updatedTeacher: SchoolTeacherMember = {
+    uid: teacherUid,
+    name: teacherName,
+    email: teacherEmail,
+    phone: details?.phone || teacherProfile?.phone || '',
+    classLevel: details?.classLevel || (teacherProfile as any)?.class || teacherProfile?.level || 'Basic',
+    subject: details?.subject || teacherProfile?.subjects?.[0] || 'General',
+    joinedAt: new Date().toISOString(),
+    status: 'active'
+  };
+
+  if (existingIdx >= 0) {
+    portal.teachers[existingIdx] = { ...portal.teachers[existingIdx], ...updatedTeacher };
+  } else {
+    portal.teachers.push(updatedTeacher);
+  }
+
+  portal.updatedAt = new Date().toISOString();
+
+  // Save updated portal
+  await updateSchoolPortal(portal);
+
+  // Cache teacher's linked code
+  try {
+    localStorage.setItem('teachsmart_linked_school_code', portal.code);
+    localStorage.setItem('teachsmart_linked_school_name', portal.schoolName);
+  } catch (e) {
+    console.warn('Error saving linked code:', e);
+  }
+
+  return portal;
+}
+
+/**
+ * Updates a School Vetting Portal
+ */
+export async function updateSchoolPortal(portal: SchoolVettingPortal): Promise<SchoolVettingPortal> {
+  portal.updatedAt = new Date().toISOString();
+
+  // Save locally
+  localStorage.setItem(LOCAL_STORAGE_PORTAL_KEY, JSON.stringify(portal));
+  const cachedAll = getAllCachedPortals();
+  const idx = cachedAll.findIndex(p => p.id === portal.id || p.code === portal.code);
+  if (idx >= 0) cachedAll[idx] = portal;
+  else cachedAll.push(portal);
+  saveCachedPortals(cachedAll);
+
+  // Update in Firestore
+  try {
+    const docRef = doc(db, 'school_vetting_portals', portal.id || portal.code);
+    await setDoc(docRef, {
+      ...portal,
+      updatedAt: serverTimestamp()
+    }, { merge: true });
+  } catch (err) {
+    console.warn('Error updating school portal in Firestore:', err);
+  }
+
+  return portal;
+}
+
+/**
+ * Computes teacher roster with real-time submission statistics for a school portal
+ */
+export async function getSchoolTeachersWithStats(portalCode: string): Promise<Array<SchoolTeacherMember & {
+  totalPlans: number;
+  pendingPlans: number;
+  approvedPlans: number;
+  needsRevisionPlans: number;
+}>> {
+  const portal = await getSchoolPortalByCode(portalCode);
+  const teachers = portal?.teachers || DEFAULT_SAMPLE_TEACHERS;
+
+  // Load all submissions for this portal
+  const allSubmissions = await getVettingSubmissions({
+    schoolLicenseCode: portalCode,
+    schoolVettingCode: portalCode,
+    isHeadteacherView: true
+  });
+
+  return teachers.map(teacher => {
+    const teacherPlans = allSubmissions.filter(s => 
+      s.teacherUid === teacher.uid || 
+      (s.teacherEmail && teacher.email && s.teacherEmail.toLowerCase() === teacher.email.toLowerCase()) ||
+      s.teacherName.toLowerCase() === teacher.name.toLowerCase()
+    );
+
+    const totalPlans = teacherPlans.length;
+    const pendingPlans = teacherPlans.filter(p => p.status === 'pending').length;
+    const approvedPlans = teacherPlans.filter(p => p.status === 'approved').length;
+    const needsRevisionPlans = teacherPlans.filter(p => p.status === 'needs_revision').length;
+
+    return {
+      ...teacher,
+      totalPlans,
+      pendingPlans,
+      approvedPlans,
+      needsRevisionPlans
+    };
+  });
+}
+
+/**
  * Read all local submissions from localStorage fallback
  */
 function getLocalSubmissions(): VettingSubmission[] {
@@ -153,11 +527,14 @@ export async function submitPlanForVetting(
     schoolName?: string;
     district?: string;
     schoolLicenseCode?: string;
+    schoolVettingCode?: string;
   }
 ): Promise<VettingSubmission> {
   const planId = plan.id || `plan_${Date.now()}`;
   const submissionId = `vet_${planId}_${Date.now()}`;
   const nowIso = new Date().toISOString();
+
+  const code = options?.schoolVettingCode || options?.schoolLicenseCode || profile?.schoolLicenseCode || '';
 
   const submission: VettingSubmission = {
     id: submissionId,
@@ -165,9 +542,10 @@ export async function submitPlanForVetting(
     teacherUid: profile?.uid || 'anonymous_teacher',
     teacherName: profile?.displayName || 'Ghanaian Educator',
     teacherEmail: profile?.email || '',
-    schoolName: options?.schoolName || profile?.schoolName || profile?.school || 'Ghana Basic School',
-    district: options?.district || profile?.district || 'Ghana Education Service',
-    schoolLicenseCode: options?.schoolLicenseCode || profile?.schoolLicenseCode || '',
+    schoolName: options?.schoolName || profile?.schoolName || profile?.school || 'Presbyterian Basic School',
+    district: options?.district || profile?.district || 'Accra Metro District',
+    schoolLicenseCode: code,
+    schoolVettingCode: code,
     title: plan.title || `${plan.subject} - Week ${plan.week || plan.weekNumber || '1'}`,
     subject: plan.subject || 'General',
     classLevel: plan.class || plan.level || 'Basic',
@@ -245,10 +623,12 @@ export async function submitPlanForVetting(
 export async function getVettingSubmissions(options?: {
   teacherUid?: string;
   schoolLicenseCode?: string;
+  schoolVettingCode?: string;
   schoolName?: string;
   isHeadteacherView?: boolean;
 }): Promise<VettingSubmission[]> {
   let list: VettingSubmission[] = [];
+  const targetCode = options?.schoolVettingCode || options?.schoolLicenseCode;
 
   // Try Firestore first
   try {
@@ -257,8 +637,8 @@ export async function getVettingSubmissions(options?: {
 
     if (options?.teacherUid && !options.isHeadteacherView) {
       q = query(submissionsCol, where('teacherUid', '==', options.teacherUid), orderBy('submittedAt', 'desc'));
-    } else if (options?.schoolLicenseCode) {
-      q = query(submissionsCol, where('schoolLicenseCode', '==', options.schoolLicenseCode), orderBy('submittedAt', 'desc'));
+    } else if (targetCode) {
+      q = query(submissionsCol, where('schoolLicenseCode', '==', targetCode), orderBy('submittedAt', 'desc'));
     } else {
       q = query(submissionsCol, orderBy('submittedAt', 'desc'));
     }
@@ -295,8 +675,12 @@ export async function getVettingSubmissions(options?: {
   // Filter if needed
   if (options?.teacherUid && !options.isHeadteacherView) {
     merged = merged.filter(s => s.teacherUid === options.teacherUid);
-  } else if (options?.schoolLicenseCode) {
-    merged = merged.filter(s => s.schoolLicenseCode === options.schoolLicenseCode || !s.schoolLicenseCode);
+  } else if (targetCode) {
+    merged = merged.filter(s => 
+      s.schoolLicenseCode === targetCode || 
+      s.schoolVettingCode === targetCode || 
+      !s.schoolLicenseCode
+    );
   }
 
   // Sort by submittedAt descending
@@ -327,10 +711,18 @@ export async function recordVettingDecision(
   }
 ): Promise<VettingSubmission> {
   const nowIso = new Date().toISOString();
+  const currentYear = new Date().getFullYear();
   const localList = getLocalSubmissions();
   const idx = localList.findIndex(s => s.id === submissionId);
 
   let targetSubmission: VettingSubmission;
+
+  // Generate or preserve official GES vetting serial code
+  const verificationCode = details.headteacherConfig.serialCode || `GES-VET-${currentYear}-${Math.floor(100000 + Math.random() * 900000)}`;
+  const stampConfigWithSerial: HeadteacherStampConfig = {
+    ...details.headteacherConfig,
+    serialCode: verificationCode
+  };
 
   if (idx >= 0) {
     targetSubmission = {
@@ -344,7 +736,8 @@ export async function recordVettingDecision(
       vettedByUid: details.vettedByUid || 'headteacher_local',
       vettedByName: details.headteacherConfig.headteacherName,
       vettedByDesignation: details.headteacherConfig.designation,
-      digitalStamp: details.headteacherConfig,
+      digitalStamp: stampConfigWithSerial,
+      verificationCode: decision === 'approved' ? verificationCode : undefined,
       revisionNotes: details.revisionNotes || ''
     };
     localList[idx] = targetSubmission;
@@ -387,9 +780,40 @@ export async function recordVettingDecision(
       vettedByUid: details.vettedByUid || 'headteacher',
       vettedByName: details.headteacherConfig.headteacherName,
       vettedByDesignation: details.headteacherConfig.designation,
-      digitalStamp: details.headteacherConfig,
+      digitalStamp: stampConfigWithSerial,
+      verificationCode: decision === 'approved' ? verificationCode : null,
       revisionNotes: details.revisionNotes || ''
     });
+
+    // Also register verification ledger document in Firestore so SISO/Inspector QR scanner can verify immediately
+    if (decision === 'approved' && verificationCode) {
+      try {
+        const verifDocRef = doc(db, 'document_verifications', verificationCode);
+        await setDoc(verifDocRef, {
+          verificationCode,
+          documentType: 'Weekly Lesson Plan',
+          subject: targetSubmission.subject,
+          classLevel: targetSubmission.classLevel,
+          term: targetSubmission.term,
+          academicYear: targetSubmission.academicYear,
+          teacherName: targetSubmission.teacherName,
+          schoolName: targetSubmission.schoolName,
+          district: targetSubmission.district || 'GES Directorate',
+          issuedAt: nowIso,
+          vettingStatus: 'approved',
+          vettedBy: details.headteacherConfig.headteacherName,
+          vettedDesignation: details.headteacherConfig.designation,
+          vettedAt: nowIso,
+          headteacherRemarks: details.headteacherRemarks,
+          rubricScore: details.rubricScore,
+          rubricChecks: details.rubricChecks,
+          verified: true,
+          registeredAt: serverTimestamp()
+        }, { merge: true });
+      } catch (err) {
+        console.warn('Could not register in document_verifications ledger:', err);
+      }
+    }
 
     if (targetSubmission.planId) {
       try {

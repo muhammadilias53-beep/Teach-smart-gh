@@ -1,16 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   X, ShieldCheck, CheckCircle2, AlertTriangle, Clock, Send, 
-  Award, Download, FileText, School, User, Check, ExternalLink 
+  Award, Download, FileText, School, User, Check, ExternalLink,
+  Search, Building2, UserCheck
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { LessonPlan, UserProfile } from '../../types';
-import { VettingSubmission, HeadteacherStampConfig } from '../../types/vetting';
+import { VettingSubmission, HeadteacherStampConfig, SchoolVettingPortal } from '../../types/vetting';
 import { 
   submitPlanForVetting, 
   getHeadteacherStampConfig, 
-  recordVettingDecision 
+  recordVettingDecision,
+  isHeadteacherUser,
+  getSchoolPortalByCode,
+  joinSchoolPortal
 } from '../../lib/vettingService';
 import { DigitalStamp } from './DigitalStamp';
 import { Link } from 'react-router';
@@ -31,26 +35,83 @@ export const SubmitForVettingModal: React.FC<SubmitForVettingModalProps> = ({
   onPlanUpdated
 }) => {
   const [submitting, setSubmitting] = useState(false);
-  const [schoolName, setSchoolName] = useState(plan.locality || profile?.schoolName || profile?.school || 'Presbyterian Basic School');
+  const [schoolName, setSchoolName] = useState(
+    plan.locality || profile?.schoolName || profile?.school || 'Presbyterian Basic School, Adabraka'
+  );
   const [district, setDistrict] = useState(profile?.district || 'Accra Metro District');
-  const [targetCode, setTargetCode] = useState(profile?.schoolLicenseCode || '');
-  const [isSelfVetting, setIsSelfVetting] = useState(false);
+  const [targetCode, setTargetCode] = useState(() => {
+    return localStorage.getItem('teachsmart_linked_school_code') || profile?.schoolLicenseCode || 'PBS-782';
+  });
+  const [verifiedPortal, setVerifiedPortal] = useState<SchoolVettingPortal | null>(null);
+  const [verifyingCode, setVerifyingCode] = useState(false);
+
+  const isHeadteacher = isHeadteacherUser(profile);
 
   // Vetting Status from plan
   const isApproved = plan.vettingStatus === 'approved';
   const isPending = plan.vettingStatus === 'pending';
   const isRevision = plan.vettingStatus === 'needs_revision';
 
+  // Check portal on mount or targetCode change
+  useEffect(() => {
+    let isCurrent = true;
+    if (!targetCode.trim()) {
+      setVerifiedPortal(null);
+      return;
+    }
+
+    const checkCode = async () => {
+      setVerifyingCode(true);
+      try {
+        const portal = await getSchoolPortalByCode(targetCode.trim());
+        if (isCurrent) {
+          if (portal) {
+            setVerifiedPortal(portal);
+            setSchoolName(portal.schoolName);
+            setDistrict(portal.district);
+          } else {
+            setVerifiedPortal(null);
+          }
+        }
+      } catch (e) {
+        console.warn('Error checking school code:', e);
+      } finally {
+        if (isCurrent) setVerifyingCode(false);
+      }
+    };
+
+    const timer = setTimeout(checkCode, 350);
+    return () => {
+      isCurrent = false;
+      clearTimeout(timer);
+    };
+  }, [targetCode]);
+
   const handleSubmit = async () => {
     setSubmitting(true);
     try {
+      // 1. Link teacher to this school portal if code is valid
+      if (targetCode.trim()) {
+        try {
+          await joinSchoolPortal(profile, targetCode.trim(), {
+            classLevel: plan.class || plan.level,
+            subject: plan.subject
+          });
+        } catch (e) {
+          console.warn('Could not auto-join school portal, proceeding with submission:', e);
+        }
+      }
+
+      // 2. Submit the plan with school vetting code
       const submission = await submitPlanForVetting(plan, profile, {
-        schoolName,
-        district,
-        schoolLicenseCode: targetCode
+        schoolName: verifiedPortal?.schoolName || schoolName,
+        district: verifiedPortal?.district || district,
+        schoolLicenseCode: targetCode.trim(),
+        schoolVettingCode: targetCode.trim()
       });
 
-      toast.success('🎉 Lesson plan successfully submitted to Headteacher Vetting Hub!');
+      const headName = verifiedPortal?.headteacherName ? ` (${verifiedPortal.headteacherName})` : '';
+      toast.success(`🎉 Lesson plan directed to Headteacher${headName} for official vetting!`);
       onVettingSubmitted(submission);
 
       if (onPlanUpdated) {
@@ -74,12 +135,13 @@ export const SubmitForVettingModal: React.FC<SubmitForVettingModalProps> = ({
     try {
       // 1. Submit
       const submission = await submitPlanForVetting(plan, profile, {
-        schoolName,
-        district,
-        schoolLicenseCode: targetCode
+        schoolName: verifiedPortal?.schoolName || schoolName,
+        district: verifiedPortal?.district || district,
+        schoolLicenseCode: targetCode.trim(),
+        schoolVettingCode: targetCode.trim()
       });
 
-      // 2. Self-Approve with default stamp
+      // 2. Self-Approve with official stamp
       const stamp = getHeadteacherStampConfig(profile);
       const vetted = await recordVettingDecision(submission.id, 'approved', {
         headteacherRemarks: 'Lesson plan certified and aligned with official NaCCA curriculum standards. Approved for delivery.',
@@ -183,6 +245,28 @@ export const SubmitForVettingModal: React.FC<SubmitForVettingModalProps> = ({
           </div>
         )}
 
+        {/* Official GES Supervision & Compliance Requirement Notice */}
+        {!isApproved && (
+          <div className="bg-amber-50/80 border border-amber-300 p-3.5 rounded-2xl flex items-start gap-3 text-amber-950 text-xs">
+            <div className="w-8 h-8 rounded-xl bg-amber-100 border border-amber-300 text-amber-800 flex items-center justify-center shrink-0 mt-0.5">
+              <ShieldCheck size={18} />
+            </div>
+            <div className="space-y-1">
+              <div className="flex items-center gap-1.5 font-black text-amber-900 uppercase tracking-wide">
+                <span>GES & NaCCA Supervision Requirement</span>
+              </div>
+              <p className="text-amber-800 leading-relaxed">
+                Under official Ghana Education Service (GES) regulations, <strong>an unvetted lesson plan is legally invalid for classroom instruction</strong>. Teachers cannot self-approve lesson notes. Only the verified Headteacher or Academic Supervisor can inspect, rubric-score, and stamp this plan.
+              </p>
+              <p className="text-[11px] text-amber-700 font-medium">
+                {isHeadteacher 
+                  ? '👑 You are signed in with Headteacher / Admin privileges and can endorse this plan directly.' 
+                  : 'Submitting directs this plan to your school Headteacher\'s queue for official verification.'}
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Plan Summary Card */}
         <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 text-xs space-y-1.5">
           <div className="font-extrabold text-slate-900 text-sm truncate">
@@ -196,8 +280,60 @@ export const SubmitForVettingModal: React.FC<SubmitForVettingModalProps> = ({
           </div>
         </div>
 
-        {/* Submission Form Fields */}
+        {/* Submission Form Fields & Directing */}
         <div className="space-y-3 text-xs">
+          {/* School Vetting Code / Direct Routing */}
+          <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 space-y-2">
+            <div className="flex items-center justify-between">
+              <label className="font-black text-slate-800 flex items-center gap-1.5 uppercase text-[11px] tracking-wider">
+                <Building2 size={14} className="text-emerald-700" />
+                <span>Headteacher's School Code</span>
+              </label>
+              <span className="text-[10px] text-slate-500 font-bold">
+                Directs to your Headteacher
+              </span>
+            </div>
+
+            <div className="relative">
+              <input
+                type="text"
+                value={targetCode}
+                onChange={(e) => setTargetCode(e.target.value.toUpperCase())}
+                placeholder="e.g. PBS-782"
+                className="w-full py-2.5 px-3 bg-white border border-slate-300 rounded-xl font-mono font-bold text-slate-900 uppercase tracking-widest text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+              />
+              {verifyingCode && (
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-[10px] animate-pulse">
+                  Verifying...
+                </div>
+              )}
+            </div>
+
+            {/* Verified Portal Feedback */}
+            {verifiedPortal ? (
+              <div className="bg-emerald-50/80 border border-emerald-300 p-2.5 rounded-xl flex items-start gap-2.5 text-emerald-950">
+                <UserCheck size={16} className="text-emerald-700 shrink-0 mt-0.5" />
+                <div className="text-[11px] leading-tight space-y-0.5">
+                  <div className="font-black text-emerald-900">
+                    Directing to: {verifiedPortal.headteacherName}
+                  </div>
+                  <div className="text-emerald-800 text-[10px]">
+                    {verifiedPortal.schoolName} • {verifiedPortal.district}
+                  </div>
+                </div>
+              </div>
+            ) : targetCode.trim() ? (
+              <div className="text-[10px] text-slate-500 flex items-center gap-1">
+                <span>Directing submission with code</span>
+                <span className="font-mono font-bold text-slate-700">{targetCode}</span>
+              </div>
+            ) : (
+              <div className="text-[10px] text-amber-700">
+                Ask your Headteacher for your school's unique 6-character vetting code (e.g. PBS-782).
+              </div>
+            )}
+          </div>
+
           <div>
             <label className="font-bold text-slate-700 block mb-1">School / Institution</label>
             <input
@@ -217,22 +353,6 @@ export const SubmitForVettingModal: React.FC<SubmitForVettingModalProps> = ({
               className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-semibold text-slate-800"
             />
           </div>
-
-          <div>
-            <label className="font-bold text-slate-700 block mb-1">
-              School License Code (Optional)
-            </label>
-            <input
-              type="text"
-              value={targetCode}
-              onChange={(e) => setTargetCode(e.target.value)}
-              placeholder="e.g. SCH-78291"
-              className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-mono text-slate-800"
-            />
-            <span className="text-[10px] text-slate-400 mt-0.5 block">
-              Directs submission to your school's dedicated Headteacher vetting dashboard.
-            </span>
-          </div>
         </div>
 
         {/* Action Buttons */}
@@ -241,22 +361,35 @@ export const SubmitForVettingModal: React.FC<SubmitForVettingModalProps> = ({
             type="button"
             onClick={handleSubmit}
             disabled={submitting}
-            className="w-full py-3 bg-emerald-700 hover:bg-emerald-800 text-white font-black text-xs uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-2 shadow-md shadow-emerald-700/20 disabled:opacity-50"
+            className="w-full py-3 bg-emerald-700 hover:bg-emerald-800 text-white font-black text-xs uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-2 shadow-md shadow-emerald-700/20 disabled:opacity-50 cursor-pointer"
           >
             <Send size={15} />
-            <span>{submitting ? 'Submitting...' : isRevision ? 'Re-Submit for Vetting' : 'Submit to Headteacher Queue'}</span>
+            <span>{submitting ? 'Submitting...' : isRevision ? 'Re-Submit to Headteacher for Vetting' : 'Submit to Headteacher Vetting Queue'}</span>
           </button>
 
-          {/* Quick Endorse / Headteacher direct mode */}
-          <button
-            type="button"
-            onClick={handleInstantSelfVet}
-            disabled={submitting}
-            className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-ghana-gold font-bold text-xs uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-2 shadow-sm disabled:opacity-50"
-          >
-            <Award size={15} />
-            <span>Headteacher Instant Digital Stamp & Endorse</span>
-          </button>
+          {/* Headteacher Direct Endorsement Mode (RESTRICTED TO HEADTEACHERS / SCHOOL ADMINS ONLY) */}
+          {isHeadteacher ? (
+            <div className="pt-1 border-t border-slate-100 space-y-1.5">
+              <div className="text-[10px] font-black uppercase text-emerald-800 tracking-wider flex items-center gap-1">
+                <span>Headteacher Authority</span>
+              </div>
+              <button
+                type="button"
+                onClick={handleInstantSelfVet}
+                disabled={submitting}
+                className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-ghana-gold font-bold text-xs uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-2 shadow-sm disabled:opacity-50 cursor-pointer"
+              >
+                <Award size={15} />
+                <span>Headteacher Official Digital Stamp & Endorse</span>
+              </button>
+            </div>
+          ) : (
+            <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-center">
+              <span className="text-[11px] text-slate-500 font-medium">
+                🔒 Vetting endorsement is locked to Headteacher & Academic Supervisor accounts.
+              </span>
+            </div>
+          )}
 
           <div className="text-center pt-1">
             <Link

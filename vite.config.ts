@@ -21,7 +21,6 @@ export default defineConfig(({mode}) => {
         'react-dom/client': path.resolve(process.cwd(), 'node_modules/react-dom/client.js'),
         'react/jsx-runtime': path.resolve(process.cwd(), 'node_modules/react/jsx-runtime.js'),
         'react/jsx-dev-runtime': path.resolve(process.cwd(), 'node_modules/react/jsx-dev-runtime.js'),
-        'react-router': path.resolve(process.cwd(), 'node_modules/react-router'),
       },
       dedupe: [
         'react',
@@ -66,7 +65,9 @@ export default defineConfig(({mode}) => {
       outDir: 'dist',
       emptyOutDir: true,
       target: 'esnext',
-      chunkSizeWarningLimit: 2000,
+      cssCodeSplit: true,
+      minify: 'esbuild',
+      chunkSizeWarningLimit: 1000,
       rollupOptions: {
         output: {
           manualChunks(id) {
@@ -84,11 +85,20 @@ export default defineConfig(({mode}) => {
                 return 'vendor-icons';
               }
               if (
+                id.includes('react-markdown') ||
+                id.includes('remark-gfm') ||
+                id.includes('rehype-highlight') ||
+                id.includes('highlight.js')
+              ) {
+                return 'vendor-markdown';
+              }
+              if (id.includes('motion') || id.includes('framer-motion')) {
+                return 'vendor-motion';
+              }
+              if (
                 id.includes('react') || 
                 id.includes('react-dom') || 
                 id.includes('react-router') || 
-                id.includes('motion') || 
-                id.includes('framer-motion') || 
                 id.includes('react-hot-toast')
               ) {
                 return 'vendor-react';

@@ -16,6 +16,13 @@ export interface DocumentVerificationData {
   issuedAt: string;
   signature: string;
   authorId?: string;
+  vettingStatus?: string;
+  vettedBy?: string;
+  vettedDesignation?: string;
+  vettedAt?: string;
+  headteacherRemarks?: string;
+  rubricScore?: number;
+  rubricChecks?: Record<string, boolean>;
 }
 
 /**
@@ -71,11 +78,19 @@ export function createDocumentVerification(params: {
   schoolName?: string;
   district?: string;
   authorId?: string;
+  verificationCode?: string;
+  vettingStatus?: string;
+  vettedBy?: string;
+  vettedDesignation?: string;
+  vettedAt?: string;
+  headteacherRemarks?: string;
+  rubricScore?: number;
+  rubricChecks?: Record<string, boolean>;
 }): {
   data: DocumentVerificationData;
   verificationUrl: string;
 } {
-  const code = generateVerificationCode();
+  const code = params.verificationCode || generateVerificationCode();
   const docType = params.documentType || 'Lesson Plan';
   const subject = params.subject || 'General Subject';
   const classLevel = params.classLevel || 'Basic Stage';
@@ -111,6 +126,13 @@ export function createDocumentVerification(params: {
     issuedAt,
     signature,
     authorId: params.authorId,
+    vettingStatus: params.vettingStatus,
+    vettedBy: params.vettedBy,
+    vettedDesignation: params.vettedDesignation,
+    vettedAt: params.vettedAt,
+    headteacherRemarks: params.headteacherRemarks,
+    rubricScore: params.rubricScore,
+    rubricChecks: params.rubricChecks,
   };
 
   // Build browser URL origin (or fallback)
@@ -131,6 +153,22 @@ export function createDocumentVerification(params: {
     t: issuedAt,
     sig: signature,
   });
+
+  if (params.vettingStatus) {
+    queryParams.set('vet', params.vettingStatus);
+  }
+  if (params.vettedBy) {
+    queryParams.set('vb', params.vettedBy);
+  }
+  if (params.vettedDesignation) {
+    queryParams.set('vd', params.vettedDesignation);
+  }
+  if (params.vettedAt) {
+    queryParams.set('va', params.vettedAt);
+  }
+  if (params.headteacherRemarks) {
+    queryParams.set('rem', params.headteacherRemarks.slice(0, 200));
+  }
 
   // Use HashRouter path format so URL works immediately on static/SPA hosting
   const verificationUrl = `${origin}/#/verify?${queryParams.toString()}`;

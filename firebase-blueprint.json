@@ -254,12 +254,71 @@
         "createdAt": { "type": "string", "format": "date-time" }
       },
       "required": ["userId", "generatorType", "rating"]
+    },
+    "VettingSubmission": {
+      "title": "VettingSubmission",
+      "description": "Weekly lesson plan submitted to Headteacher for digital vetting, rubric scoring, and official stamp",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "planId": { "type": "string" },
+        "teacherUid": { "type": "string" },
+        "teacherName": { "type": "string" },
+        "schoolName": { "type": "string" },
+        "district": { "type": "string" },
+        "status": { "type": "string", "enum": ["draft", "pending", "approved", "needs_revision", "rejected"] },
+        "submittedAt": { "type": "string", "format": "date-time" },
+        "vettedAt": { "type": "string", "format": "date-time" },
+        "vettedByName": { "type": "string" },
+        "headteacherRemarks": { "type": "string" },
+        "rubricScore": { "type": "number" },
+        "verificationCode": { "type": "string" }
+      },
+      "required": ["id", "teacherUid", "status"]
+    },
+    "DocumentVerification": {
+      "title": "DocumentVerification",
+      "description": "Public accredited ledger record for SISO and supervisor QR code verification",
+      "type": "object",
+      "properties": {
+        "verificationCode": { "type": "string" },
+        "documentType": { "type": "string" },
+        "subject": { "type": "string" },
+        "classLevel": { "type": "string" },
+        "teacherName": { "type": "string" },
+        "schoolName": { "type": "string" },
+        "district": { "type": "string" },
+        "vettingStatus": { "type": "string" },
+        "vettedBy": { "type": "string" },
+        "issuedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["verificationCode"]
+    },
+    "SchoolVettingPortal": {
+      "title": "SchoolVettingPortal",
+      "description": "Headteacher school registry portal for routing and managing teacher lesson plan submissions",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "code": { "type": "string" },
+        "schoolName": { "type": "string" },
+        "district": { "type": "string" },
+        "headteacherUid": { "type": "string" },
+        "headteacherName": { "type": "string" },
+        "activeTerm": { "type": "string" },
+        "academicYear": { "type": "string" }
+      },
+      "required": ["id", "code", "schoolName", "headteacherUid"]
     }
   },
   "firestore": {
     "users/{userId}": {
       "schema": "User",
       "description": "Individual teacher profile"
+    },
+    "school_vetting_portals/{id}": {
+      "schema": "SchoolVettingPortal",
+      "description": "Headteacher school registration and teacher routing hub"
     },
     "used_emails/{email}": {
       "schema": "UsedEmail",
@@ -268,6 +327,14 @@
     "lessonPlans/{id}": {
       "schema": "LessonPlan",
       "description": "Generated lesson plans"
+    },
+    "vetting_submissions/{id}": {
+      "schema": "VettingSubmission",
+      "description": "Official lesson plan vetting submissions for Headteacher review"
+    },
+    "document_verifications/{id}": {
+      "schema": "DocumentVerification",
+      "description": "Public curriculum accreditation and endorsement records for QR verification"
     },
     "exams/{id}": {
       "schema": "Exam",

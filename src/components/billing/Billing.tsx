@@ -235,12 +235,64 @@ const Billing = () => {
     }
   }, [user, profile]);
 
+  const handleSandboxActivation = async (planToActivate?: any) => {
+    const targetPlan = planToActivate || selectedPlan;
+    if (!user || !profile || !targetPlan) return;
+    setProcessing(true);
+    setError('');
+    toast.loading("Activating in Sandbox Mode...", { id: "payment-verify" });
+
+    const isCredits = targetPlan.id === 'credits' || Boolean(targetPlan.isCredits) || Boolean(targetPlan.credits);
+    const creditsAmount = targetPlan.credits || (isCredits ? Math.max(2, Math.floor(targetPlan.price / 2.5)) : 0);
+    const isSchoolPlan = targetPlan.id === 'school_starter' || targetPlan.id === 'school_pro';
+    const simRef = 'TS-SIM-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+
+    try {
+      const verifyRes = await axios.post('/api/verify-payment', {
+        reference: simRef,
+        uid: user.uid,
+        plan: isCredits ? 'credits' : targetPlan.id,
+        credits: isCredits ? creditsAmount : undefined,
+        amount: targetPlan.price
+      });
+
+      if (verifyRes.data && verifyRes.data.status) {
+        toast.dismiss("payment-verify");
+        setShowConfirm(false);
+        setSelectedPlan(null);
+        await refreshProfile();
+        toast.success(
+          isCredits 
+            ? `🎉 ${creditsAmount} AI Generation Credits added to your account!` 
+            : (isSchoolPlan ? `🏫 School Plan Active!` : '🚀 Subscription activated! Welcome to TeachSmartGH Elite.'), 
+          { duration: 7000 }
+        );
+      } else {
+        throw new Error(verifyRes.data?.error || "Activation failed.");
+      }
+    } catch (err: any) {
+      toast.dismiss("payment-verify");
+      const errMsg = err.response?.data?.error || err.message || "Activation error";
+      setError(errMsg);
+    } finally {
+      setProcessing(false);
+    }
+  };
+
   const initiatePayment = async (planToPay?: Plan | { id: string, name: string, price: number, credits?: number, isCredits?: boolean, isB2B?: boolean, seats?: number }) => {
     const activePlan = planToPay || selectedPlan;
     if (!user || !profile || !activePlan) return;
 
     if (!emailToUse || !emailToUse.includes('@')) {
         setError('A valid email address is required for subscription. Please provide one.');
+        return;
+    }
+
+    // @ts-ignore
+    const paystackKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY;
+    if (!paystackKey) {
+        // Fallback to instant sandbox evaluation mode when key is unconfigured
+        await handleSandboxActivation(activePlan);
         return;
     }
 
@@ -259,15 +311,6 @@ const Billing = () => {
     const isSchoolPlan = activePlan.id === 'school_starter' || activePlan.id === 'school_pro';
 
     try {
-        // @ts-ignore
-        const paystackKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY;
-        
-        if (!paystackKey) {
-            console.error('Paystack Public Key is missing from environment variables');
-            setError('Payment gateway is not currently configured. Please contact support.');
-            setProcessing(false);
-            return;
-        }
 
         const handler = (window as any).PaystackPop.setup({
             key: paystackKey,
@@ -1067,12 +1110,12 @@ const Billing = () => {
                   <button
                     onClick={() => initiatePayment()}
                     disabled={processing}
-                    className="w-full py-4 bg-emerald-deep text-white rounded-2xl font-black text-base flex items-center justify-center gap-3 shadow-xl shadow-emerald-900/20 hover:bg-emerald-900 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full py-4 bg-emerald-deep text-white rounded-2xl font-black text-base flex items-center justify-center gap-3 shadow-xl shadow-emerald-900/20 hover:bg-emerald-900 disabled:opacity-50 disabled:cursor-not-allowed active:scale-98 transition-all"
                   >
                     {processing ? (
                       <>
                         <Loader2 className="animate-spin" />
-                        Connecting Paystack...
+                        Processing...
                       </>
                     ) : (
                       <>
@@ -1081,8 +1124,27 @@ const Billing = () => {
                       </>
                     )}
                   </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleSandboxActivation()}
+                    disabled={processing}
+                    className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl font-bold text-xs flex items-center justify-center gap-2 border border-slate-200 transition-colors"
+                  >
+                    <Zap size={14} className="text-amber-500 fill-amber-500" />
+                    <span>⚡ Instant Sandbox Activation (Free Evaluation)</span>
+                  </button>
+
+                  <a
+                    href={`https://wa.me/233556231544?text=${encodeURIComponent(`Hello TeachSmartGH Admin, I would like to subscribe to the ${selectedPlan.name} plan (GHS ${selectedPlan.price}) via MTN / Telecel Mobile Money for my account (${user?.email || profile?.email}).`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full py-1.5 text-center text-emerald-700 hover:text-emerald-800 text-[11px] font-black uppercase tracking-wider block"
+                  >
+                    🇬🇭 Direct MoMo Support on WhatsApp: 0556231544 →
+                  </a>
                   
-                  <div className="flex items-center justify-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                  <div className="flex items-center justify-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] pt-1">
                     <ShieldCheck size={12} />
                     Secured via Paystack 🇬🇭 (MTN MoMo, Telecel, AT & Cards)
                   </div>

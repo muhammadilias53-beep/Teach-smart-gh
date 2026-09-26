@@ -28,8 +28,7 @@ import {
   setDoc,
   deleteDoc, 
   doc, 
-  serverTimestamp,
-  getDocFromServer
+  serverTimestamp
 } from 'firebase/firestore';
 import { db, auth } from '../../lib/firebase';
 import { getOffline } from '../../lib/indexedDB';
@@ -621,23 +620,6 @@ export default function ContentLibrary() {
   });
 
   useEffect(() => {
-    async function testConnection(retries = 3, delay = 1000) {
-      try {
-        await getDocFromServer(doc(db, 'test', 'connection'));
-      } catch (error) {
-        if (retries > 0) {
-          setTimeout(() => {
-            testConnection(retries - 1, delay * 1.5);
-          }, delay);
-        } else {
-          if (error instanceof Error && error.message.includes('the client is offline')) {
-            console.error("Please check your Firebase configuration.");
-          }
-        }
-      }
-    }
-    testConnection();
-
     if (!user) return;
 
     const q = query(

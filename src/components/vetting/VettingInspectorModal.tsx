@@ -695,27 +695,42 @@ export const VettingInspectorModal: React.FC<VettingInspectorModalProps> = ({
         <div className="bg-white p-4 sm:p-5 border-t border-slate-200 shrink-0 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="text-xs text-slate-500 flex items-center gap-1.5 self-start sm:self-center">
             <Info size={14} className="text-emerald-700 shrink-0" />
-            <span>Approved plans receive the official GES verification badge and stamp in exports.</span>
+            <span>
+              {isHeadteacherView 
+                ? 'Approved plans receive the official GES verification badge, serial code, and stamp in exports.' 
+                : 'Supervisory inspection view. Decisions and stamps can only be issued by your verified Headteacher.'}
+            </span>
           </div>
 
           <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
-            <button
-              onClick={() => handleSaveDecision('needs_revision')}
-              disabled={isSubmittingDecision}
-              className="px-4 py-2.5 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 font-bold uppercase tracking-wider text-xs rounded-xl transition-all flex items-center gap-1.5 shadow-sm"
-            >
-              <AlertTriangle size={15} />
-              <span>Request Revision</span>
-            </button>
+            {isHeadteacherView ? (
+              <>
+                <button
+                  onClick={() => handleSaveDecision('needs_revision')}
+                  disabled={isSubmittingDecision}
+                  className="px-4 py-2.5 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 font-bold uppercase tracking-wider text-xs rounded-xl transition-all flex items-center gap-1.5 shadow-sm cursor-pointer"
+                >
+                  <AlertTriangle size={15} />
+                  <span>Request Revision</span>
+                </button>
 
-            <button
-              onClick={() => handleSaveDecision('approved')}
-              disabled={isSubmittingDecision}
-              className="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white font-black uppercase tracking-wider text-xs rounded-xl transition-all flex items-center gap-1.5 shadow-md shadow-emerald-700/20"
-            >
-              <CheckCircle size={16} />
-              <span>{isSubmittingDecision ? 'Endorsing...' : 'Approve & Endorse'}</span>
-            </button>
+                <button
+                  onClick={() => handleSaveDecision('approved')}
+                  disabled={isSubmittingDecision}
+                  className="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white font-black uppercase tracking-wider text-xs rounded-xl transition-all flex items-center gap-1.5 shadow-md shadow-emerald-700/20 cursor-pointer"
+                >
+                  <CheckCircle size={16} />
+                  <span>{isSubmittingDecision ? 'Endorsing...' : 'Approve & Endorse'}</span>
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={onClose}
+                className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold uppercase tracking-wider text-xs rounded-xl transition-all cursor-pointer"
+              >
+                Close Inspector
+              </button>
+            )}
           </div>
         </div>
       </div>

@@ -71,6 +71,9 @@ export const PWALifecycleTracker: React.FC = () => {
       e.preventDefault();
       // Stash the event so it can be triggered later if wanted
       console.log('[PWA Tracker] beforeinstallprompt event fired. App is installable!');
+      if (!window.__teachsmart_deferred_prompt) {
+        window.__teachsmart_deferred_prompt = e as any;
+      }
       setDeferredPrompt(e);
 
       // Log installability event if not already logged this session

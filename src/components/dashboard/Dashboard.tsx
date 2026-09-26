@@ -19,6 +19,7 @@ import { handleFirestoreError, OperationType } from '../../lib/firestore-errors'
 import { Logo } from '../common/Logo';
 import { SafeMarkdown } from '../common/SafeMarkdown';
 import { BrandedPlaceholder } from '../common/BrandedPlaceholder';
+import { usePWAInstall } from '../../hooks/usePWAInstall';
 import { toast } from 'react-hot-toast';
 import { Download, X, ExternalLink, Mail, Loader2, Send } from 'lucide-react';
 import jsPDF from 'jspdf';
@@ -42,6 +43,7 @@ const AnimatedCounter = ({ value, duration = 1.5 }: { value: number, duration?: 
 
 const Dashboard = () => {
   const { profile, user, daysLeft, isSubscriptionActive, isTrialActive, trialGenerationsLeftToday, trialDailyLimit, isQuotaExceeded } = useAuth();
+  const { isInstalled, isInstallable, install } = usePWAInstall();
   const hasActiveSubscription = isSubscriptionActive();
   const trialActive = isTrialActive();
   const [recentDocs, setRecentDocs] = useState<any[]>([]);
@@ -72,6 +74,49 @@ const Dashboard = () => {
   });
 
   const isProfileIncomplete = !profile?.school || !profile?.subjectsTaught?.length;
+
+  const [pulseAnnouncement, setPulseAnnouncement] = useState<{
+    id: string;
+    title: string;
+    message: string;
+    link?: string;
+  } | null>(null);
+
+  useEffect(() => {
+    const loadPulse = async () => {
+      try {
+        const notifQuery = query(
+          collection(db, 'notifications'),
+          where('userId', '==', 'all'),
+          limit(5)
+        );
+        const snap = await getDocs(notifQuery);
+        if (!snap.empty) {
+          for (const docSnap of snap.docs) {
+            const data = docSnap.data();
+            const isDismissed = localStorage.getItem(`pulse_dismissed_${docSnap.id}`);
+            if (!isDismissed) {
+              setPulseAnnouncement({
+                id: docSnap.id,
+                title: data.title || "Education Pulse 🇬🇭",
+                message: data.message || "",
+                link: data.link || "/standards"
+              });
+              break;
+            }
+          }
+        }
+      } catch (err) {
+        // Fallback pulse silently handled
+      }
+    };
+    loadPulse();
+  }, []);
+
+  const dismissPulse = (id: string) => {
+    localStorage.setItem(`pulse_dismissed_${id}`, 'true');
+    setPulseAnnouncement(null);
+  };
 
   const dismissReminder = () => {
     setProfileReminderDismissed(true);
@@ -325,6 +370,7 @@ const Dashboard = () => {
   const quickActions = [
     { icon: Compass, label: 'NaCCA Standards DB', path: '/standards', color: 'bg-[#006B3F]', bg: 'bg-emerald-50' },
     { icon: FileText, label: 'New Lesson Plan', path: '/lessons', color: 'bg-emerald-500', bg: 'bg-emerald-50' },
+    { icon: ShieldCheck, label: 'Headteacher Vetting', path: '/vetting', color: 'bg-emerald-800', bg: 'bg-emerald-50' },
     { icon: BookOpen, label: 'Lesson Notes', path: '/notes', color: 'bg-teal-600', bg: 'bg-teal-50' },
     { icon: Calendar, label: 'Scheme of Work', path: '/schemes', color: 'bg-ghana-gold', bg: 'bg-amber-50' },
     { icon: PenTool, label: 'Create Exam', path: '/exams', color: 'bg-slate-900', bg: 'bg-slate-100' },
@@ -531,6 +577,61 @@ const Dashboard = () => {
         </motion.div>
       )}
 
+      {/* GES & NaCCA Education Pulse Banner */}
+      {pulseAnnouncement && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          className="relative bg-gradient-to-r from-emerald-950 via-slate-900 to-emerald-900 border-2 border-emerald-500/30 rounded-[2.5rem] p-6 sm:p-8 -mt-4 mb-10 text-white shadow-xl shadow-emerald-950/20 overflow-hidden"
+        >
+          <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+          
+          <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-ghana-gold/20 text-ghana-gold border border-ghana-gold/30 flex items-center justify-center shrink-0 text-xl font-black shadow-inner">
+                🇬🇭
+              </div>
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-black uppercase tracking-widest border border-emerald-400/20">
+                    Official Education Pulse
+                  </span>
+                  <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+                    NaCCA & GES Aligned
+                  </span>
+                </div>
+                <h3 className="text-lg sm:text-xl font-black text-white tracking-tight">
+                  {pulseAnnouncement.title}
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-300 font-medium max-w-2xl leading-relaxed">
+                  {pulseAnnouncement.message}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 shrink-0 self-end md:self-center">
+              {pulseAnnouncement.link && (
+                <Link
+                  to={pulseAnnouncement.link}
+                  className="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 rounded-xl text-xs font-black uppercase tracking-wider transition-all flex items-center gap-2 shadow-lg shadow-emerald-500/20 active:scale-95"
+                >
+                  <span>Explore Now</span>
+                  <ArrowRight size={14} />
+                </Link>
+              )}
+              <button
+                onClick={() => dismissPulse(pulseAnnouncement.id)}
+                className="p-2.5 text-slate-400 hover:text-white hover:bg-white/10 rounded-xl transition-colors"
+                title="Dismiss announcement"
+              >
+                <X size={18} />
+              </button>
+            </div>
+          </div>
+        </motion.div>
+      )}
+
       {/* Stats Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <motion.div 
@@ -707,6 +808,25 @@ const Dashboard = () => {
               <Link to="/ai" className="btn-ghost backdrop-blur-md">
                 Consult AI Tutor
               </Link>
+              {!isInstalled && (
+                <button
+                  onClick={async () => {
+                    if (isInstallable) {
+                      const res = await install();
+                      if (res.outcome === 'accepted') {
+                        toast.success('TeachSmartGH successfully installed on your device! 🇬🇭');
+                      }
+                    } else {
+                      window.dispatchEvent(new CustomEvent('teachsmart:open-install-prompt'));
+                    }
+                  }}
+                  className="btn-ghost backdrop-blur-md flex items-center gap-2 cursor-pointer hover:bg-[#FCD116]/20 text-[#FCD116] border border-[#FCD116]/40"
+                  title="Install TeachSmartGH app on your device"
+                >
+                  <Download size={16} className="stroke-[2.5]" />
+                  <span>Install App (1-Click)</span>
+                </button>
+              )}
             </div>
           </div>
 

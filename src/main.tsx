@@ -1,26 +1,11 @@
 import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
-import { HashRouter as Router } from 'react-router';
 import App from './App.tsx';
 import './index.css';
 
 // Force TeachSmartGH to remain in light theme always for all users as per branding rules
 localStorage.setItem('theme', 'light');
 document.documentElement.classList.remove('dark');
-
-// Automatically reset route to Dashboard on page refresh / initial load unless on a public page
-try {
-  const rawHash = window.location.hash || '';
-  const currentPath = rawHash.replace(/^#\/?/, '/');
-  const publicPrefixes = ['/login', '/about', '/features', '/blog'];
-  const isPublicRoute = publicPrefixes.some(p => currentPath === p || currentPath.startsWith(`${p}/`) || currentPath.startsWith(`${p}?`));
-  
-  if (!isPublicRoute && currentPath !== '/' && currentPath !== '') {
-    window.location.hash = '#/';
-  }
-} catch (e) {
-  console.warn('[TeachSmart] Route reset check:', e);
-}
 
 // Register PWA Service Worker for offline asset caching and resilient routing
 if ('serviceWorker' in navigator) {
@@ -37,8 +22,6 @@ if ('serviceWorker' in navigator) {
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <Router>
-      <App />
-    </Router>
+    <App />
   </StrictMode>,
 );

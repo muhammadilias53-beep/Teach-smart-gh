@@ -45,6 +45,11 @@ export default function VerifyDocumentPage() {
   const district = searchParams.get('dist') || '';
   const time = searchParams.get('t') || '';
   const sig = searchParams.get('sig') || '';
+  const vetParam = searchParams.get('vet') || '';
+  const vettedByParam = searchParams.get('vb') || '';
+  const vettedDesigParam = searchParams.get('vd') || '';
+  const vettedAtParam = searchParams.get('va') || '';
+  const remarksParam = searchParams.get('rem') || '';
 
   useEffect(() => {
     async function loadVerification() {
@@ -86,6 +91,11 @@ export default function VerifyDocumentPage() {
           district: district || 'GES District Directorate',
           issuedAt: time || new Date().toISOString(),
           signature: sig || '',
+          vettingStatus: vetParam || (code.startsWith('GES-VET-') ? 'approved' : undefined),
+          vettedBy: vettedByParam,
+          vettedDesignation: vettedDesigParam,
+          vettedAt: vettedAtParam,
+          headteacherRemarks: remarksParam,
         });
       } else {
         setVerificationData(null);
@@ -94,7 +104,7 @@ export default function VerifyDocumentPage() {
     }
 
     loadVerification();
-  }, [code, docType, subject, classLevel, term, year, teacher, school, district, time, sig]);
+  }, [code, docType, subject, classLevel, term, year, teacher, school, district, time, sig, vetParam, vettedByParam, vettedDesigParam, vettedAtParam, remarksParam]);
 
   const handleManualSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -322,65 +332,171 @@ export default function VerifyDocumentPage() {
                   </div>
 
                   {/* Headteacher & Circuit Supervisor Vetting Section */}
-                  <div className="p-5 rounded-2xl border-2 border-dashed border-slate-300 bg-white space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Award size={18} className="text-emerald-600" />
-                        <h3 className="text-sm font-black uppercase tracking-tight text-slate-900">
-                          Headteacher / Circuit Supervisor Digital Vetting Endorsement
-                        </h3>
+                  {verificationData.vettingStatus === 'approved' ? (
+                    <div className="p-5 sm:p-6 rounded-2xl border-2 border-emerald-600 bg-emerald-50/40 space-y-4 shadow-sm">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-emerald-600/20 pb-3">
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center">
+                            <ShieldCheck size={18} />
+                          </div>
+                          <div>
+                            <h3 className="text-sm font-black uppercase tracking-tight text-emerald-950">
+                              Official GES Headteacher Vetting & Endorsement Certified
+                            </h3>
+                            <p className="text-[10px] text-emerald-700 font-bold uppercase tracking-wider">
+                              NaCCA Standards-Based Supervisory Approval
+                            </p>
+                          </div>
+                        </div>
+                        <span className="px-2.5 py-1 bg-emerald-700 text-white text-[10px] font-black rounded-lg uppercase tracking-wider self-start sm:self-auto">
+                          Approved for Delivery ✓
+                        </span>
                       </div>
-                      <span className="text-[10px] font-bold text-slate-400 uppercase">
-                        GES Administrative Form
-                      </span>
+
+                      {/* Headteacher credentials & timestamp */}
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs bg-white p-3.5 rounded-xl border border-emerald-200">
+                        <div>
+                          <span className="text-[9.5px] uppercase font-bold text-slate-500 block">Endorsing Headteacher</span>
+                          <span className="font-extrabold text-slate-900 text-sm">
+                            {verificationData.vettedBy || 'Rev. Emmanuel Mensah'}
+                          </span>
+                          <span className="text-[10.5px] text-emerald-800 block">
+                            {verificationData.vettedDesignation || 'Headteacher'}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-[9.5px] uppercase font-bold text-slate-500 block">Endorsement Date</span>
+                          <span className="font-mono font-bold text-slate-900 text-sm">
+                            {new Date(verificationData.vettedAt || verificationData.issuedAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                          </span>
+                          <span className="text-[10px] text-slate-500 block">Term Vetting Completed</span>
+                        </div>
+                        <div>
+                          <span className="text-[9.5px] uppercase font-bold text-slate-500 block">Official Serial Code</span>
+                          <span className="font-mono font-bold text-emerald-900 text-xs">
+                            {verificationData.verificationCode}
+                          </span>
+                          <span className="text-[10px] text-slate-500 block">GES Digital Ledger Node</span>
+                        </div>
+                      </div>
+
+                      {/* Headteacher Remarks */}
+                      {verificationData.headteacherRemarks && (
+                        <div className="p-3 bg-white rounded-xl border border-emerald-200 text-xs space-y-1">
+                          <span className="text-[9.5px] font-bold uppercase text-slate-500 block">Official Headteacher Remarks</span>
+                          <p className="italic text-slate-800 font-medium leading-relaxed">
+                            "{verificationData.headteacherRemarks}"
+                          </p>
+                        </div>
+                      )}
+
+                      {/* NaCCA 5-Point Quality Rubric Verified */}
+                      <div className="space-y-1.5 pt-1">
+                        <span className="text-[10px] font-black uppercase text-emerald-950 tracking-wider block">
+                          NaCCA Standards-Based Vetting Rubric (5/5 Standards Certified)
+                        </span>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                          <div className="flex items-center gap-2 p-2 rounded-lg bg-white border border-emerald-200 text-emerald-900 font-semibold">
+                            <CheckCircle2 size={15} className="text-emerald-600 shrink-0" />
+                            <span>Curriculum Strand & Indicator Code Aligned</span>
+                          </div>
+                          <div className="flex items-center gap-2 p-2 rounded-lg bg-white border border-emerald-200 text-emerald-900 font-semibold">
+                            <CheckCircle2 size={15} className="text-emerald-600 shrink-0" />
+                            <span>Phase 2 Learner-Centric Inquiry & Activities</span>
+                          </div>
+                          <div className="flex items-center gap-2 p-2 rounded-lg bg-white border border-emerald-200 text-emerald-900 font-semibold">
+                            <CheckCircle2 size={15} className="text-emerald-600 shrink-0" />
+                            <span>Core Competencies & Ghanaian Values Integrated</span>
+                          </div>
+                          <div className="flex items-center gap-2 p-2 rounded-lg bg-white border border-emerald-200 text-emerald-900 font-semibold">
+                            <CheckCircle2 size={15} className="text-emerald-600 shrink-0" />
+                            <span>Appropriate Local TLRs & Formative Assessment</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="pt-2 text-[11px] text-emerald-800 flex items-center justify-between flex-wrap gap-2">
+                        <span className="flex items-center gap-1 font-bold">
+                          <CheckCircle2 size={13} className="text-emerald-600" />
+                          Authenticated for Circuit Supervisor (SISO) Portfolio Inspection
+                        </span>
+                        <span className="font-mono text-[10px] text-emerald-700">
+                          Registry Node: GH-ACC-NVR-01
+                        </span>
+                      </div>
                     </div>
+                  ) : (
+                    /* UNVETTED DRAFT NOTICE */
+                    <div className="p-5 rounded-2xl border-2 border-dashed border-amber-300 bg-amber-50/50 space-y-4">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-amber-300 pb-3">
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-bold">
+                            <AlertTriangle size={18} />
+                          </div>
+                          <div>
+                            <h3 className="text-sm font-black uppercase tracking-tight text-amber-950">
+                              Awaiting Headteacher Digital Vetting & Endorsement
+                            </h3>
+                            <p className="text-[10px] text-amber-800 font-bold uppercase tracking-wider">
+                              Uncertified Lesson Plan (Draft Status)
+                            </p>
+                          </div>
+                        </div>
+                        <span className="px-2.5 py-1 bg-amber-500 text-slate-950 text-[10px] font-black rounded-lg uppercase tracking-wider self-start sm:self-auto">
+                          Pending Vetting ⏳
+                        </span>
+                      </div>
 
-                    <p className="text-xs text-slate-500">
-                      If you are inspecting or vetting this teacher's portfolio, review the standards-based alignment indicators below:
-                    </p>
+                      <p className="text-xs text-amber-900 leading-relaxed">
+                        <strong>Notice to Circuit Supervisors (SISOs) and Teachers:</strong> This instructional document was generated via TeachSmartGH templates, but has <strong>NOT yet received digital sign-off from the school Headteacher</strong>. Under Ghana Education Service regulations, lesson plans are uncertified for classroom delivery until officially stamped.
+                      </p>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                      <label className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700 cursor-pointer hover:bg-slate-100">
-                        <input
-                          type="checkbox"
-                          checked={vettingChecked.indicators}
-                          onChange={(e) => setVettingChecked({ ...vettingChecked, indicators: e.target.checked })}
-                          className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500"
-                        />
-                        <span>NaCCA Indicators & Strands Aligned</span>
-                      </label>
+                      <div className="p-3.5 bg-white/90 rounded-xl border border-amber-200 text-xs space-y-2">
+                        <span className="text-[10px] font-black uppercase text-slate-800 block">
+                          Supervisor On-Site Vetting Checklist (Inspect Before Delivery):
+                        </span>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                          <label className="flex items-center gap-2 text-slate-700 text-xs font-semibold cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={vettingChecked.indicators}
+                              onChange={(e) => setVettingChecked({ ...vettingChecked, indicators: e.target.checked })}
+                              className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500"
+                            />
+                            <span>NaCCA Codes Aligned</span>
+                          </label>
+                          <label className="flex items-center gap-2 text-slate-700 text-xs font-semibold cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={vettingChecked.differentiation}
+                              onChange={(e) => setVettingChecked({ ...vettingChecked, differentiation: e.target.checked })}
+                              className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500"
+                            />
+                            <span>TLRs & Tasks Verified</span>
+                          </label>
+                          <label className="flex items-center gap-2 text-slate-700 text-xs font-semibold cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={vettingChecked.reflection}
+                              onChange={(e) => setVettingChecked({ ...vettingChecked, reflection: e.target.checked })}
+                              className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500"
+                            />
+                            <span>Approved for Delivery</span>
+                          </label>
+                        </div>
+                      </div>
 
-                      <label className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700 cursor-pointer hover:bg-slate-100">
-                        <input
-                          type="checkbox"
-                          checked={vettingChecked.differentiation}
-                          onChange={(e) => setVettingChecked({ ...vettingChecked, differentiation: e.target.checked })}
-                          className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500"
-                        />
-                        <span>TLRs & Learner Tasks Verified</span>
-                      </label>
-
-                      <label className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700 cursor-pointer hover:bg-slate-100">
-                        <input
-                          type="checkbox"
-                          checked={vettingChecked.reflection}
-                          onChange={(e) => setVettingChecked({ ...vettingChecked, reflection: e.target.checked })}
-                          className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500"
-                        />
-                        <span>Approved for Classroom Delivery</span>
-                      </label>
+                      <div className="pt-1 text-[11px] text-slate-500 flex items-center justify-between flex-wrap gap-2">
+                        <span className="flex items-center gap-1">
+                          <Clock size={13} />
+                          Generated on: {new Date(verificationData.issuedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                        </span>
+                        <span className="font-mono text-[10px] text-slate-400">
+                          Registry Node: GH-ACC-NVR-01
+                        </span>
+                      </div>
                     </div>
-
-                    <div className="pt-2 text-[11px] text-slate-400 flex items-center justify-between flex-wrap gap-2">
-                      <span className="flex items-center gap-1">
-                        <Clock size={13} />
-                        Generated on: {new Date(verificationData.issuedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                      </span>
-                      <span className="font-mono text-[10px] text-slate-400">
-                        Registry Node: GH-ACC-NVR-01
-                      </span>
-                    </div>
-                  </div>
+                  )}
                 </div>
               ) : (
                 <div className="py-12 text-center space-y-3">

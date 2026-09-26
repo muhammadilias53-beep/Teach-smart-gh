@@ -20,6 +20,7 @@ import { toast } from 'react-hot-toast';
 import { TermsAndConditionsModal } from '../legal/TermsAndConditionsModal';
 
 import { Logo } from '../common/Logo';
+import { usePWAInstall } from '../../hooks/usePWAInstall';
 
 const Login = () => {
   const { user } = useAuth();
@@ -27,58 +28,22 @@ const Login = () => {
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
 
-  // PWA Install State
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
-  const [isInstalled, setIsInstalled] = useState(false);
+  // Unified PWA Install Hook
+  const { isInstallable, isInstalled, isIOS, install } = usePWAInstall();
   const [showInstructions, setShowInstructions] = useState(false);
 
-  useEffect(() => {
-    // Check if already in standalone display mode
-    const isStandalone = 
-      window.matchMedia('(display-mode: standalone)').matches || 
-      (window.navigator as any).standalone === true;
-      
-    if (isStandalone) {
-      setIsInstalled(true);
-    }
-
-    const handleBeforePrompt = (e: Event) => {
-      e.preventDefault();
-      setDeferredPrompt(e);
-    };
-
-    const handleAppInstalled = () => {
-      setIsInstalled(true);
-      setDeferredPrompt(null);
-      toast.success('TeachSmartGH successfully installed! Feel free to run it offline 🇬🇭');
-    };
-
-    window.addEventListener('beforeinstallprompt', handleBeforePrompt);
-    window.addEventListener('appinstalled', handleAppInstalled);
-
-    return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforePrompt);
-      window.removeEventListener('appinstalled', handleAppInstalled);
-    };
-  }, []);
-
   const handleInstallClick = async () => {
-    if (!deferredPrompt) {
-      // No native prompt available; show instructions
-      setShowInstructions(prev => !prev);
-      return;
-    }
-    
-    // Show the native browser install prompt
-    deferredPrompt.prompt();
-    
-    // Wait for the user to respond to the prompt
-    const { outcome } = await deferredPrompt.userChoice;
-    console.log(`User response to install prompt: ${outcome}`);
-    
-    if (outcome === 'accepted') {
-      setIsInstalled(true);
-      setDeferredPrompt(null);
+    if (isInstallable) {
+      try {
+        const choice = await install();
+        if (choice.outcome === 'accepted') {
+          toast.success('TeachSmartGH successfully installed! Feel free to run it offline 🇬🇭');
+        }
+      } catch (err) {
+        console.error('Install error:', err);
+      }
+    } else {
+      window.dispatchEvent(new CustomEvent('teachsmart:open-install-prompt'));
     }
   };
 
@@ -818,7 +783,7 @@ const Login = () => {
                     className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-white border border-slate-200 hover:border-emerald-500/20 hover:bg-emerald-50/10 text-slate-700 hover:text-emerald-deep font-black text-[9px] uppercase tracking-widest rounded-xl transition-all shadow-sm active:scale-[0.98] cursor-pointer"
                   >
                     <Download size={12} />
-                    <span>{deferredPrompt ? 'Install App (Offline)' : 'Offline Installation Guide'}</span>
+                    <span>{isInstallable ? 'Install App (Single Click)' : 'Install TeachSmartGH App'}</span>
                   </button>
 
                   {/* Instructive prompt collapsed details */}

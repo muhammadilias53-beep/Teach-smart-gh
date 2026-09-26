@@ -29,6 +29,7 @@ export interface VettingSubmission {
   schoolName: string;
   district?: string;
   schoolLicenseCode?: string;
+  schoolVettingCode?: string;
   title: string;
   subject: string;
   classLevel: string;
@@ -50,3 +51,33 @@ export interface VettingSubmission {
   verificationCode?: string;
   updatedAt?: string;
 }
+
+export interface SchoolTeacherMember {
+  uid: string;
+  name: string;
+  email?: string;
+  phone?: string;
+  classLevel?: string;
+  subject?: string;
+  joinedAt: string;
+  status: 'active' | 'transferred';
+}
+
+export interface SchoolVettingPortal {
+  id: string; // Document ID (usually equals the vetting code, e.g. "PBS-782")
+  code: string; // e.g. "PBS-782"
+  schoolName: string;
+  district: string;
+  region?: string;
+  headteacherUid: string;
+  headteacherName: string;
+  headteacherDesignation?: string;
+  headteacherEmail?: string;
+  headteacherPhone?: string;
+  teachers: SchoolTeacherMember[];
+  activeTerm?: string;
+  academicYear?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+

@@ -1712,21 +1712,27 @@ export async function exportLessonPlanToWord(
               })
             ] : [
               new Paragraph({
-                spacing: { before: 40, after: 60 },
+                spacing: { before: 40, after: 30 },
+                children: [
+                  new TextRun({ text: 'STATUS: [ UNVETTED DRAFT - PENDING HEADTEACHER ENDORSEMENT ]', bold: true, size: 14, color: 'B45309' })
+                ]
+              }),
+              new Paragraph({
+                spacing: { before: 20, after: 40 },
                 children: [
                   new TextRun({ text: 'Headteacher/Supervisor: .................................................', size: 15, color: BRAND_COLORS.TEXT_BODY })
                 ]
               }),
               new Paragraph({
-                spacing: { before: 40, after: 60 },
+                spacing: { before: 20, after: 40 },
                 children: [
                   new TextRun({ text: 'Signature / Stamp: ............................ Date: ......................', size: 15, color: BRAND_COLORS.TEXT_BODY })
                 ]
               }),
               new Paragraph({
-                spacing: { before: 40, after: 40 },
+                spacing: { before: 20, after: 20 },
                 children: [
-                  new TextRun({ text: 'Status: [  ] Approved for Delivery    [  ] Inspected & Monitored', size: 14, color: BRAND_COLORS.SLATE_MUTED })
+                  new TextRun({ text: 'Notice: Under GES Code of Conduct, lesson plans must be verified before classroom delivery.', italics: true, size: 13, color: BRAND_COLORS.SLATE_MUTED })
                 ]
               })
             ]
