@@ -22,6 +22,7 @@ import { toast } from 'react-hot-toast';
 import { LessonPlan } from '../types';
 import { buildMultiDayLessonPhases } from './multiDayParser';
 import { formatWeekLessonPlanTitle } from './utils';
+import { saveOrDownloadBlob } from './fileDownload';
 import { extractWeekNumber, extractLessonNumber, generateCurriculumKey, getLessonRecordTimestamp } from './bulkExportHelpers';
 import { createDocumentVerification, generateQRCodeBytes, DocumentVerificationData } from './documentVerification';
 
@@ -181,15 +182,11 @@ function createFormattedParagraphs(
 async function downloadDocxBlob(doc: Document, filename: string, successMessage: string) {
   try {
     const blob = await Packer.toBlob(doc);
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    setTimeout(() => URL.revokeObjectURL(url), 2000);
-    toast.success(successMessage);
+    const safeFilename = filename.endsWith('.docx') ? filename : `${filename}.docx`;
+    const success = await saveOrDownloadBlob(blob, safeFilename, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+    if (success) {
+      toast.success(successMessage);
+    }
   } catch (error) {
     console.error('Docx generation error:', error);
     toast.error('Failed to export Word document. Please try again.');

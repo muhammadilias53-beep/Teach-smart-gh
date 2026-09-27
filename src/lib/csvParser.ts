@@ -4,6 +4,7 @@
  */
 
 import { getCurrentGesCalendarInfo } from './academicCalendar';
+import { saveOrDownloadBlob } from './fileDownload';
 
 export interface ParsedStudentRow {
   name: string;
@@ -479,7 +480,7 @@ export function generateBlankRosterCSV(options: CSVExportOptions = {}): string {
 /**
  * Triggers browser download of the sample CSV template with custom title & school metadata.
  */
-export function downloadSampleCSVTemplate(
+export async function downloadSampleCSVTemplate(
   className = 'Basic_7', 
   classWeight = 30, 
   examWeight = 70,
@@ -513,14 +514,8 @@ export function downloadSampleCSVTemplate(
       });
 
   const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.setAttribute('href', url);
   const sanitizedTitle = customTitle.replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 30);
-  link.setAttribute('download', `TeachSmartGH_${sanitizedTitle}_${className}_Template.csv`);
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  URL.revokeObjectURL(url);
+  const filename = `TeachSmartGH_${sanitizedTitle}_${className}_Template.csv`;
+  await saveOrDownloadBlob(blob, filename, 'text/csv;charset=utf-8;');
 }
 

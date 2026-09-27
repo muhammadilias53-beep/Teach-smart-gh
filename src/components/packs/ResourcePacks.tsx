@@ -28,6 +28,7 @@ import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { generateAIPackResource } from '../../lib/gemini';
 import { SafeMarkdown } from '../common/SafeMarkdown';
 import jsPDF from 'jspdf';
+import { saveOrDownloadText } from '../../lib/fileDownload';
 import autoTable from 'jspdf-autotable';
 import 'highlight.js/styles/github.css';
 
@@ -772,13 +773,7 @@ export default function ResourcePacks() {
                    <button 
                      onClick={() => {
                         if (!generatedContent) return;
-                        const element = document.createElement("a");
-                        const file = new Blob([generatedContent], {type: 'text/plain'});
-                        element.href = URL.createObjectURL(file);
-                        element.download = `${currentResource?.replace(/\s+/g, '_')}_TeachSmart.txt`;
-                        document.body.appendChild(element);
-                        element.click();
-                        document.body.removeChild(element);
+                        saveOrDownloadText(generatedContent, `${currentResource?.replace(/\s+/g, '_')}_TeachSmart.txt`);
                      }}
                      className="px-6 py-3 bg-white text-slate-900 border border-slate-200 rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-slate-100 transition-all flex items-center gap-2"
                    >

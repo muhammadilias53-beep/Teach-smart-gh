@@ -1,5 +1,6 @@
 import ExcelJS from 'exceljs';
 import { getCurrentGesCalendarInfo } from './academicCalendar';
+import { saveOrDownloadBlob } from './fileDownload';
 
 export interface StudentExcelRecord {
   id?: string;
@@ -567,19 +568,13 @@ export async function exportRosterToExcel(
   // 14. Trigger browser download of buffer
   const buffer = await workbook.xlsx.writeBuffer();
   const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.setAttribute('href', url);
 
   const cleanTitle = documentTitle.replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 25);
   const cleanClass = className.replace(/[^a-zA-Z0-9_-]/g, '_');
   const cleanSubj = subjectName.replace(/[^a-zA-Z0-9_-]/g, '_');
-  link.setAttribute('download', `TeachSmartGH_${cleanTitle}_${cleanClass}_${cleanSubj}.xlsx`);
+  const filename = `TeachSmartGH_${cleanTitle}_${cleanClass}_${cleanSubj}.xlsx`;
 
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  URL.revokeObjectURL(url);
+  await saveOrDownloadBlob(blob, filename, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 }
 
 /**

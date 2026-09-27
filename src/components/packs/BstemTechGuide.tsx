@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../../lib/utils';
 import { useAuth } from '../../contexts/AuthContext';
 import { toast } from 'react-hot-toast';
+import { saveOrDownloadText } from '../../lib/fileDownload';
 
 // ----------------------------------------------------
 // Safe Web Audio Tone Player
@@ -482,13 +483,7 @@ TeachSmartGH • Aligned with NaCCA & Ghana Education Service Guidelines
 
   const downloadNoteTxt = () => {
     if (!generatedNote) return;
-    const element = document.createElement("a");
-    const file = new Blob([generatedNote], {type: 'text/plain'});
-    element.href = URL.createObjectURL(file);
-    element.download = `TeachSmart_${selectedActivity.title.replace(/\s+/g, '_')}_LessonPlan.txt`;
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
+    saveOrDownloadText(generatedNote, `TeachSmart_${selectedActivity.title.replace(/\s+/g, '_')}_LessonPlan.txt`);
     toast.success("TXT Lesson note downloaded!");
   };
 

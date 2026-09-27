@@ -23,6 +23,7 @@ import { buildMultiDayLessonPhases } from './multiDayParser';
 import { getKGScheduleForDay, getSupportedKGBlockDuration, reconcileKGBlocks } from '../config/kgTimetable';
 import { createDocumentVerification, generateQRCodeBytes, DocumentVerificationData } from './documentVerification';
 import { getAcademicYearForDate } from './academicCalendar';
+import { saveOrDownloadBlob } from './fileDownload';
 
 export interface DocumentExportMetadata {
   title?: string;
@@ -1062,18 +1063,11 @@ function createKGRunningHeaderAndFooter(weekNumber: string, className: string, m
  */
 async function downloadDocxBlob(doc: Document, filename: string, successMessage = 'Word document (.docx) downloaded successfully! 📝'): Promise<void> {
   const blob = await Packer.toBlob(doc);
-  if (typeof document !== 'undefined') {
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+  const safeFilename = filename.endsWith('.docx') ? filename : `${filename}.docx`;
+  const success = await saveOrDownloadBlob(blob, safeFilename, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+  if (success) {
+    toast.success(successMessage);
   }
-
-  toast.success(successMessage);
 }
 
 /**

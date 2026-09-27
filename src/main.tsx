@@ -2,6 +2,7 @@ import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
+import './lib/fileDownload';
 
 // Force TeachSmartGH to remain in light theme always for all users as per branding rules
 localStorage.setItem('theme', 'light');

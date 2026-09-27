@@ -43,6 +43,7 @@ import { ConfirmationModal } from '../common/ConfirmationModal';
 import { safeLocalStorage } from '../../lib/storage';
 import { Link } from 'react-router';
 import { BulkTermExportModal } from '../generators/BulkTermExportModal';
+import { saveOrDownloadBlob } from '../../lib/fileDownload';
 
 const getSelectableStrands = (subj: string, lvl: string) => {
   if (subj === 'English' && lvl === 'JHS') {
@@ -884,14 +885,7 @@ export default function ContentLibrary() {
       const response = await fetch(url);
       if (!response.ok) throw new Error("Network response was not ok");
       const blob = await response.blob();
-      const blobUrl = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = blobUrl;
-      link.download = filename;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(blobUrl);
+      await saveOrDownloadBlob(blob, filename);
       toast.success("Download started successfully!", { id: "download-status" });
     } catch (error) {
       console.warn('Direct fetch download failed (CORS or network). Redirecting securely...', error);
@@ -980,14 +974,7 @@ export default function ContentLibrary() {
             }
           }
           
-          const blobUrl = URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.href = blobUrl;
-          link.download = `${cleanTitle}.pdf`;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          URL.revokeObjectURL(blobUrl);
+          await saveOrDownloadBlob(blob, `${cleanTitle}.pdf`, 'application/pdf');
           toast.success("PDF Downloaded successfully!", { id: "download-status" });
         } else {
           // Normal raw notes / text markdown download
@@ -996,15 +983,7 @@ export default function ContentLibrary() {
           const mimeType = isMD ? 'text/markdown' : 'text/plain';
           
           const file = new Blob([content], { type: `${mimeType};charset=utf-8` });
-          const blobUrl = URL.createObjectURL(file);
-          
-          const link = document.createElement('a');
-          link.href = blobUrl;
-          link.download = `${cleanTitle}_TeachSmart.${fileExtension}`;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          URL.revokeObjectURL(blobUrl);
+          await saveOrDownloadBlob(file, `${cleanTitle}_TeachSmart.${fileExtension}`, mimeType);
           toast.success(`Document downloaded as ${fileExtension.toUpperCase()} successfully!`, { id: "download-status" });
         }
       } catch (error) {
